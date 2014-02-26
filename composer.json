@@ -1,0 +1,16 @@
+{
+    "name": "olcs/back-end",
+    "description": "Back End Application for OLCS",
+    "homepage": "http://framework.zend.com/",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.2.*",
+        "doctrine/doctrine-orm-module": "0.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Olcs\\Db\\": "module/Olcs/Db/src"
+        }
+    }
+}
