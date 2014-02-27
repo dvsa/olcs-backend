@@ -12,5 +12,23 @@
  */
 
 return array(
-    // ...
+    'doctrine' => array(
+
+        // Configuration details for the ORM.
+        // See http://docs.doctrine-project.org/en/latest/reference/configuration.html
+
+        'configuration' => array(
+
+            'orm_default' => array(
+
+                // directory where proxies will be stored. We are
+                'proxy_dir'         => '/tmp/OlcsBe/Proxy',
+
+                // namespace for generated proxy classes
+                'proxy_namespace'   => 'OlcsBe\Proxy',
+
+                //'types' => array('yesno' => 'OlcsDb\Entity\Types\YesNoType')
+            ),
+        )
+    ),
 );

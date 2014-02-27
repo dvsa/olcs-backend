@@ -47,4 +47,9 @@ abstract class AbstractController extends ZendAbstractRestfulController
             'content' => 'Page not found'
         ));
     }
+
+    public function getControllerName()
+    {
+        return $this->params()->fromRoute('controller');
+    }
 }
