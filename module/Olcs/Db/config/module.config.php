@@ -8,6 +8,20 @@
  */
 
 return array(
+    'doctrine' => array(
+        'driver' => array(
+            'Olcs_Db_Driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(realpath(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR. 'src/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'Olcs\Db\Entity' => 'Olcs_Db_Driver'
+                )
+            )
+        )
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -15,7 +29,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Olcs\Db\Controller\Index',
+                        'controller' => 'Index',
                     ),
                 ),
             ),
@@ -24,10 +38,22 @@ return array(
                 'options' => array(
                     'route' => '/application[/:id]',
                     'constraints' => array(
-                    'id' => '[0-9]+',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application',
+                    ),
                 ),
-                'defaults' => array(
-                    'controller' => 'Olcs\Db\Controller\Application',
+            ),
+            'user' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/user[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User',
                     ),
                 ),
             ),
@@ -38,11 +64,19 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'factories' => array(
+            'User' => function ($serviceManager) {
+                $s = new \Olcs\Db\Service\User();
+                $s->setEntityManager($serviceManager->get('doctrine.entitymanager.orm_default'));
+                return $s;
+            }
+        ),
     ),
     'controllers' => array(
         'invokables' => array(
-            'Olcs\Db\Controller\Index' => 'Olcs\Db\Controller\IndexController',
-            'Olcs\Db\Controller\Application' => 'Olcs\Db\Controller\ApplicationController',
+            'Index'       => 'Olcs\Db\Controller\IndexController',
+            'Application' => 'Olcs\Db\Controller\ApplicationController',
+            'User'        => 'Olcs\Db\Controller\UserController',
         ),
     ),
     'view_manager' => array(

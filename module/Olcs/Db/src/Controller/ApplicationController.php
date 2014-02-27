@@ -2,13 +2,12 @@
 namespace Olcs\Db\Controller;
 
 use Zend\View\Model\JsonModel;
+use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 
-class ApplicationController extends AbstractController
+class ApplicationController extends AbstractController implements OlcsRestServerInterface
 {
     public function getList()
     {
-        //throw new \Exception();
-
         return new JsonModel(array('Application'=>'getList'));
     }
 
@@ -25,6 +24,11 @@ class ApplicationController extends AbstractController
     public function update($id, $data)
     {
         return new JsonModel(array('Application'=>'update'));
+    }
+
+    public function patch($id, $data)
+    {
+        //
     }
 
     public function delete($id)
