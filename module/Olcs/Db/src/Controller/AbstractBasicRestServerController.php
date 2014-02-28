@@ -15,7 +15,12 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
     public function getList()
     {
-        $result = $this->getService()->getList($this->getParams());
+        $routeParams = $this->plugin('params')->fromRoute();
+        $queryParams = $this->plugin('params')->fromQuery();
+
+        $data = array_merge($routeParams, $queryParams);
+
+        $result = $this->getService()->getList($data);
 
         return new JsonModel(array('data' => $result));
     }
@@ -43,7 +48,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
     public function delete($id)
     {
-        $result = $this->getService()->delete($data);
+        $result = $this->getService()->delete($id);
 
         return new JsonModel(array('result' => $result));
     }
