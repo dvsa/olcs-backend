@@ -8,6 +8,18 @@ class User extends ServiceAbstract
      *
      * @var string
      */
-    protected $entity = '\Olcs\Db\Entity\User';
+    protected $entityName = '\Olcs\Db\Entity\User';
+
+    /**
+     * Returns an indexed array of valid search terms for this service / entity.
+     *
+     * @return array
+     */
+    public function getValidSearchFields()
+    {
+        return array(
+            'username',
+        );
+    }
 
 }
