@@ -68,6 +68,7 @@ return array(
             'User' => function ($serviceManager) {
                 $s = new \Olcs\Db\Service\User();
                 $s->setEntityManager($serviceManager->get('doctrine.entitymanager.orm_default'));
+                $s->setServiceLocator($serviceManager);
                 return $s;
             }
         ),

@@ -4,6 +4,7 @@ namespace Olcs\Db\Service;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
 use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
+use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ZendClassMethodsHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -12,6 +13,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 {
     use ZendServiceLocatorAwareTrait;
     use OlcsEntityManagerAwareTrait;
+    use OlcsLoggerAwareTrait;
 
     /**
      * Should enter a value into the database and return the
@@ -22,18 +24,19 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function create($data)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         $entity = $this->getNewEntity();
 
         $hydrator = new ZendClassMethodsHydrator();
         $hydrator->hydrate($data, $entity);
 
-        /* $hydrator = new DoctrineHydrator($this->getEntityManager());
-        $entity = $hydrator->hydrate($data, $entity); */
-
         $this->dbPersist($entity);
         $this->dbFlush();
 
-        return $entity->getId();
+        $id = $entity->getId();
+
+        return $id;
     }
 
     /**
@@ -43,6 +46,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function getList()
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         $data = func_get_arg(0);
 
         $listControlParams = $this->extractListControlParams($data);
@@ -85,6 +90,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function get($id)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
         $hydrator = new DoctrineHydrator($this->getEntityManager());
         return $hydrator->extract($entity);
@@ -100,6 +107,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function update($id, $data)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
 
         if (!$entity) {
@@ -124,6 +133,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function patch($id, $data)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         return $this->update($id, $data);
     }
 
@@ -136,6 +147,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function delete($id)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
         $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
 
         if (!$entity) {
