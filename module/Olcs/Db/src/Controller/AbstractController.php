@@ -7,9 +7,52 @@ use Zend\View\Model\ViewModel;
 use Zend\Stdlib\RequestInterface as Request;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\Mvc\Exception;
+use Zend\Mvc\MvcEvent;
+use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 
 abstract class AbstractController extends ZendAbstractRestfulController
 {
+    use OlcsLoggerAwareTrait;
+
+    /**
+     * Handle the request
+     *
+     * @todo   try-catch in "patch" for patchList should be removed in the future
+     * @param  MvcEvent $e
+     * @return mixed
+     * @throws Exception\DomainException if no route matches in event or invalid HTTP method
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        // Log the incoming request headers...
+        $this->log('Request Headers: ' . $e->getRequest()->getHeaders()->toString());
+
+        // Log the incoming request parameters...
+        $routeParams = $this->plugin('params')->fromRoute();
+        $queryParams = $this->plugin('params')->fromQuery();
+        $postParams = $this->plugin('params')->fromPost();
+
+        $this->log(sprintf('Input Route Params: %1$s', print_r($routeParams, true)));
+        $this->log(sprintf('Input Get Params: %1$s', print_r($queryParams, true)));
+        $this->log(sprintf('Input Post Params: %1$s', print_r($postParams, true)));
+
+        // Is action request?...
+        $action = $e->getRouteMatch()->getParam('action', false);
+        if ($action) {
+            $this->log(sprintf('Dispatching Incomming Action Request: \'%1$s\'', $action));
+            return parent::onDispatch($e);
+        }
+
+        // Is method request?...
+        $method = strtolower($e->getRequest()->getMethod());
+        if ($method) {
+            $this->log(sprintf('Dispatching Incomming Method Request: \'%1$s\' ', $method));
+            return parent::onDispatch($e);
+        }
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * Dispatch a request
      *

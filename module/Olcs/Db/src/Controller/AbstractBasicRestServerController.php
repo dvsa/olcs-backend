@@ -10,7 +10,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     {
         $result = $this->getService()->create($data);
 
-        return new JsonModel(array('id' => $result, 'inputData' => $data));
+        return new JsonModel(array('id' => $result));
     }
 
     public function getList()
