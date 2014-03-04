@@ -44,7 +44,7 @@ class User extends AbstractEntity
      * @var string
      *
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="users", fetch="LAZY")
-     * @ORM\JoinTable(name="users_roles")
+     * @ORM\JoinTable(name="user_role")
      */
     private $roles;
 

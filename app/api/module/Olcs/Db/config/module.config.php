@@ -48,7 +48,7 @@ return array(
             'user' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/user[/:id]',
+                    'route' => '/user[/:id][/:action]',
                     'constraints' => array(
                         'id' => '[0-9]+',
                     ),
