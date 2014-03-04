@@ -3,6 +3,8 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Olcs\Db\EntityTraits;
 
 /**
  * @ORM\Table(name="role")
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Role extends AbstractEntity
 {
+    use EntityTraits\Handle;
+
     /**
      * @var integer
      *
@@ -22,16 +26,24 @@ class Role extends AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=100, nullable=true)
+     * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="roles")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\User", mappedBy="roles")
      */
     protected $users;
+
+    /**
+     * @var string
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Permission", inversedBy="roles", fetch="LAZY")
+     * @ORM\JoinTable(name="role_permission")
+     */
+    protected $permissions;
 
     /**
      * Constructor
@@ -40,7 +52,8 @@ class Role extends AbstractEntity
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     /**
@@ -54,5 +67,31 @@ class Role extends AbstractEntity
     {
         $ths->users[] = $user;
         return $this;
+    }
+
+    /**
+     * Adds a permission to the role.
+     *
+     * @param Permission $permission
+     *
+     * @return \Olcs\Db\Entity\Role
+     */
+    public function addPermission(Permission $permission)
+    {
+        $permission->addRole($this);
+
+        $ths->permissions[] = $permission;
+
+        return $this;
+    }
+
+    /**
+     * Gets the related permnissions.
+     *
+     * @return string
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }
