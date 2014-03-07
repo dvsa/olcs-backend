@@ -151,4 +151,9 @@ class User extends AbstractEntity
 
         return $this;
     }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
 }
