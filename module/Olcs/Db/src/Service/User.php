@@ -1,5 +1,6 @@
 <?php
 namespace Olcs\Db\Service;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 class User extends ServiceAbstract
 {
@@ -9,6 +10,31 @@ class User extends ServiceAbstract
      * @var string
      */
     protected $entityName = '\Olcs\Db\Entity\User';
+
+    public function getRoles($user, $includePermissions = true)
+    {
+        if (!($user instanceof \Olcs\Db\Entity\User)) {
+            $user = $this->getEntityManager()->find($this->getEntityName(), (int)$user);
+        }
+
+        $roles = $user->getRoles();
+
+        $output = [];
+
+        $hydrator = new DoctrineHydrator($this->getEntityManager());
+        foreach ($roles as $role) {
+
+            $extracted = $hydrator->extract($role);
+
+            if (true === $includePermissions) {
+                $role->getPermissions();
+            }
+
+            $output[] = $extracted;
+        }
+
+        return $output;
+    }
 
     /**
      * Returns an indexed array of valid search terms for this service / entity.

@@ -93,6 +93,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
         $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        if (!$entity) {
+            return null;
+        }
         $hydrator = new DoctrineHydrator($this->getEntityManager());
         return $hydrator->extract($entity);
     }
