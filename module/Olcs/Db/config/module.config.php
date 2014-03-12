@@ -8,7 +8,7 @@
  */
 
 return array(
-    'doctrine' => array(
+    /* 'doctrine' => array(
         'driver' => array(
             'Olcs_Db_Driver' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
@@ -21,7 +21,7 @@ return array(
                 )
             )
         )
-    ),
+    ), */
     'router' => array(
         'routes' => array(
             'home' => array(
