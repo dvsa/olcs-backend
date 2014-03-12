@@ -5,7 +5,7 @@
         "type": "package",
         "package": {
             "name": "olcs/olcs-entities",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "url": "gitolite@git.clb.npm:olcs-entities.git",
                 "type": "git",
@@ -23,7 +23,7 @@
     "autoload": {
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
-            "OlcsEntities\\": "vendor/olcs/olcs-entities/OlcsEntities/src/OlcsEntities",
+            "OlcsEntities\\": "vendor/olcs/olcs-entities/OlcsEntities/src/OlcsEntities"
         }
     }
 }
