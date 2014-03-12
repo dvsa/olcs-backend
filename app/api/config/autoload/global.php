@@ -22,7 +22,7 @@ return array(
             'orm_default' => array(
 
                 // directory where proxies will be stored. We are
-                'proxy_dir'         => '/tmp/OlcsBe/Proxy',
+                'proxy_dir'         => sys_get_temp_dir() . '/OlcsBe/Proxy',
 
                 // namespace for generated proxy classes
                 'proxy_namespace'   => 'OlcsBe\Proxy',
@@ -47,7 +47,7 @@ return array(
                 $filter = new \Zend\Log\Filter\Priority(LOG_DEBUG);
 
                 // Log file
-                $fileWriter = new \Zend\Log\Writer\Stream('/tmp/olcs-application.log');
+                $fileWriter = new \Zend\Log\Writer\Stream(sys_get_temp_dir() . '/olcs-application.log');
                 $fileWriter->addFilter($filter);
                 $log->addWriter($fileWriter);
 
