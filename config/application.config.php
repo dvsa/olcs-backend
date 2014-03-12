@@ -17,6 +17,7 @@ return array(
         'module_paths' => array(
             './module',
             './vendor',
+            './vendor/olcs/olcs-entities',
         ),
 
         // An array of paths from which to glob configuration files after
