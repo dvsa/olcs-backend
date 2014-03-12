@@ -1,12 +1,24 @@
 {
     "name": "olcs/back-end",
-    "description": "Back End Application for OLCS",
-    "homepage": "http://framework.zend.com/",
+    "description": "Back End Application for OLCS Project",
+    "repositories": [{
+        "type": "package",
+        "package": {
+            "name": "olcs/olcs-entities",
+            "version": "0.1.0",
+            "source": {
+                "url": "gitolite@git.clb.npm:olcs-entities.git",
+                "type": "git",
+                "reference": "origin/master"
+            }
+        }
+    }],
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
         "doctrine/doctrine-orm-module": "0.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "olcs/olcs-entities": "0.1.*"
     },
     "autoload": {
         "psr-4": {
