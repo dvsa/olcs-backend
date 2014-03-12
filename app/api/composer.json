@@ -22,7 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Olcs\\Db\\": "module/Olcs/Db/src"
+            "Olcs\\Db\\": "module/Olcs/Db/src",
+            "OlcsEntities\\": "vendor/olcs/olcs-entities/OlcsEntities/src/OlcsEntities",
         }
     }
 }
