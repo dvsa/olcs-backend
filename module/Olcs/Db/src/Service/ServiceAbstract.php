@@ -8,6 +8,7 @@ use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ZendClassMethodsHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Olcs\Db\Helpers\BundleHelper;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
@@ -26,10 +27,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $entity = $this->getNewEntity();
+        $bundleHelper = new BundleHelper();
 
-        $hydrator = new ZendClassMethodsHydrator();
-        $hydrator->hydrate($data, $entity);
+        $entity = $bundleHelper->getNestedEntityFromEntities($data);
 
         $this->dbPersist($entity);
         $this->dbFlush();
