@@ -17,7 +17,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function create($data)
     {
-        $data = $this->formatData($data);
+        $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
 
@@ -76,16 +76,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     public function getList()
     {
         $routeParams = $this->plugin('params')->fromRoute();
-        $data = $this->plugin('params')->fromQuery();
+        $queryParams = $this->plugin('params')->fromQuery();
 
-        $data = $this->formatData($data);
-
-        if ($data instanceof Response) {
-
-            return $data;
-        }
-
-        $data = array_merge($routeParams, $data);
+        $data = array_merge($routeParams, $queryParams);
 
         try {
             $result = $this->getService()->getList($data);
@@ -112,7 +105,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function update($id, $data)
     {
-        $data = $this->formatData($data);
+        $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
 
@@ -142,7 +135,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function patch($id, $data)
     {
-        $data = $this->formatData($data);
+        $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
 
@@ -238,7 +231,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @param mixed $data
      */
-    private function formatData($data)
+    private function formatDataFromJson($data)
     {
         $data = isset($data['data']) ? $data['data'] : $data;
 
