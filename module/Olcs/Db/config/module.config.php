@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -6,33 +7,23 @@
  * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
 return array(
     /* 'doctrine' => array(
-        'driver' => array(
-            'Olcs_Db_Driver' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => array(realpath(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR. 'src/Entity')
-            ),
-            'orm_default' => array(
-                'drivers' => array(
-                    'Olcs\Db\Entity' => 'Olcs_Db_Driver'
-                )
-            )
-        )
-    ), */
+      'driver' => array(
+      'Olcs_Db_Driver' => array(
+      'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+      'cache' => 'array',
+      'paths' => array(realpath(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR. 'src/Entity')
+      ),
+      'orm_default' => array(
+      'drivers' => array(
+      'Olcs\Db\Entity' => 'Olcs_Db_Driver'
+      )
+      )
+      )
+      ), */
     'router' => array(
         'routes' => array(
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Index',
-                    ),
-                ),
-            ),
             'application' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -57,6 +48,19 @@ return array(
                     ),
                 ),
             ),
+            'default' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/[:route]',
+                    'constraints' => array(
+                        'route' => '[a-zA-Z0-9\/\_\-]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Error',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -66,23 +70,23 @@ return array(
         ),
         'factories' => array(
             'User' => function ($serviceManager) {
-                $s = new \Olcs\Db\Service\User();
-                $s->setEntityManager($serviceManager->get('doctrine.entitymanager.orm_default'));
-                $s->setServiceLocator($serviceManager);
-                return $s;
-            }
+            $s = new \Olcs\Db\Service\User();
+            $s->setEntityManager($serviceManager->get('doctrine.entitymanager.orm_default'));
+            $s->setServiceLocator($serviceManager);
+            return $s;
+        }
         ),
     ),
     'controllers' => array(
         'invokables' => array(
-            'Index'       => 'Olcs\Db\Controller\IndexController',
             'Application' => 'Olcs\Db\Controller\ApplicationController',
-            'User'        => 'Olcs\Db\Controller\UserController',
+            'User' => 'Olcs\Db\Controller\UserController',
+            'Error' => 'Olcs\Db\Controller\ErrorController',
         ),
     ),
     'view_manager' => array(
-        /* 'display_not_found_reason' => false,
-        'display_exceptions'       => false, */
+        'display_not_found_reason' => true,
+        'display_exceptions' => false,
         'strategies' => array(
             'ViewJsonStrategy',
         ),

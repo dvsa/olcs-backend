@@ -1,14 +1,15 @@
 <?php
 namespace Olcs\Db\Controller;
 
-use Zend\View\Model\JsonModel;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Http\Response;
 use Olcs\Db\Exceptions\EntityTypeNotFoundException;
-use OlcsEntities\Entity\AbstractEntity;
+use Olcs\Db\Traits\RestResponseTrait;
 
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
+    use RestResponseTrait;
+
     /**
      * Create an entity
      *
@@ -194,36 +195,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     public function getService()
     {
         return $this->getServiceLocator()->get($this->getControllerName());
-    }
-
-    /**
-     * Creates a response object and set's up the response body
-     *
-     * @param int $errorCode
-     * @param string $summary
-     * @param array $data
-     * @return Response
-     */
-    private function respond($errorCode, $summary = null, $data = array())
-    {
-        $response = new Response();
-
-        $response->setStatusCode($errorCode);
-
-        $response->setContent(
-            json_encode(
-                array(
-                    'Response' => array(
-                        'Code' => $errorCode,
-                        'Message' => $response->getReasonPhrase(),
-                        'Summary' => $summary,
-                        'Data' => $data
-                    )
-                )
-            )
-        );
-
-        return $response;
     }
 
     /**
