@@ -8,22 +8,21 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
-    /* 'doctrine' => array(
-      'driver' => array(
-      'Olcs_Db_Driver' => array(
-      'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-      'cache' => 'array',
-      'paths' => array(realpath(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR. 'src/Entity')
-      ),
-      'orm_default' => array(
-      'drivers' => array(
-      'Olcs\Db\Entity' => 'Olcs_Db_Driver'
-      )
-      )
-      )
-      ), */
     'router' => array(
         'routes' => array(
+            'default' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/[:route]',
+                    'constraints' => array(
+                        'route' => '[a-zA-Z0-9\/\_\-]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Error',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
             'application' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -45,19 +44,6 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'User',
-                    ),
-                ),
-            ),
-            'default' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/[:route]',
-                    'constraints' => array(
-                        'route' => '[a-zA-Z0-9\/\_\-]+'
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Error',
-                        'action' => 'index',
                     ),
                 ),
             ),
