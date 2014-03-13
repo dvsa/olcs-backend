@@ -5,7 +5,7 @@ use Zend\View\Model\JsonModel;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Http\Response;
 use Olcs\Db\Exceptions\EntityTypeNotFoundException;
-use Olcs\Db\Entity\AbstractEntity;
+use OlcsEntities\Entity\AbstractEntity;
 
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
@@ -74,17 +74,20 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             $result = $this->getService()->get($id);
 
             // If we haven't found an entity
-            if (empty($result) || !($result instanceof AbstractEntity)) {
+            if (empty($result)) {
 
                 return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
             }
+
+            // Extract the object and return
+            return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
 
         } catch (\Exception $ex) {
             /**
              *  We should try and catch all known exceptions and provide a reasonable response, if we get here the
              *   we have no idea what went wrong
              */
-            return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred');
+            return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
         }
     }
 
@@ -102,14 +105,14 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
     public function update($id, $data)
     {
-        $result = $this->getService()->update($data);
+        $result = $this->getService()->update($id, $data);
 
         return new JsonModel(array('result' => $result));
     }
 
     public function patch($id, $data)
     {
-        $result = $this->getService()->patch($data);
+        $result = $this->getService()->patch($id, $data);
 
         return new JsonModel(array('result' => $result));
     }

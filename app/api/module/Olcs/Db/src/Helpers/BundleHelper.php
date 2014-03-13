@@ -10,7 +10,7 @@
 
 namespace Olcs\Db\Helpers;
 
-use Olcs\Db\Entity\AbstractEntity;
+use OlcsEntities\Entity\AbstractEntity;
 use Olcs\Db\Exceptions\EntityTypeNotFoundException;
 
 /**
@@ -23,7 +23,7 @@ use Olcs\Db\Exceptions\EntityTypeNotFoundException;
 class BundleHelper
 {
 
-    private $entityNamespace = '\Olcs\Db\Entity\\';
+    private $entityNamespace = '\OlcsEntities\Entity\\';
     private $entities = array();
 
     /**
@@ -52,7 +52,7 @@ class BundleHelper
      */
     public function getTopLevelEntitiesFromNestedEntity(AbstractEntity $object)
     {
-        print_r($object);
+
         return array();
     }
 
