@@ -1,30 +1,42 @@
 <?php
 
 /**
- * Bundle Helper
+ * Bundle Hydrator
  *
  * Takes care of the conversion of entites between top-level referenced entities and nested entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace Olcs\Db\Helpers;
+namespace Olcs\Db\Utility;
 
 use OlcsEntities\Entity\AbstractEntity;
 use Olcs\Db\Exceptions\EntityTypeNotFoundException;
+use Zend\Stdlib\Hydrator\AbstractHydrator;
+use Doctrine\Common\Collections\Collection;
 
 /**
- * Bundle Helper
+ * Bundle Hydrator
  *
  * Takes care of the conversion of entites between top-level referenced entities and nested entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleHelper
+class BundleHydrator
 {
-
     private $entityNamespace = '\OlcsEntities\Entity\\';
     private $entities = array();
+    private $hydrator;
+
+    /**
+     * Inject hydrator dependency
+     *
+     * @param AbstractHydrator $hydrator
+     */
+    public function __construct(AbstractHydrator $hydrator)
+    {
+        $this->hydrator = $hydrator;
+    }
 
     /**
      * Convert an array of top level entites into a nested entity
@@ -47,13 +59,113 @@ class BundleHelper
     /**
      * Convert a nested entity to top level entities
      *
-     * @param AbstractEntity $object
+     * @param mixed $input
+     * @param boolean $recursive
+     * @param string $mainReference
      * @return array
      */
-    public function getTopLevelEntitiesFromNestedEntity(AbstractEntity $object)
+    public function getTopLevelEntitiesFromNestedEntity($input, $recursive = true, $mainReference = null)
     {
+        if ($input instanceof AbstractEntity) {
 
-        return array();
+            return $this->getTopLevelEntitiesFromObject($input, $recursive, $mainReference);
+
+        } elseif (is_array($input)) {
+
+            foreach ($input as $entity) {
+
+                $this->getTopLevelEntitiesFromObject($entity, $recursive, $mainReference);
+            }
+
+            return $this->entities;
+        }
+
+        // TODO: Replace this with an alternative Exception class
+        throw new \Exception('Expected an Entity or an array of Entities');
+    }
+
+    /**
+     * Convert an entity to top level entities
+     *
+     * @param AbstractEntity $object
+     * @param boolean $recursive
+     * @param string $mainReference
+     * @return array
+     */
+    private function getTopLevelEntitiesFromObject(AbstractEntity $object, $recursive = true, $mainReference = null)
+    {
+        if (is_null($mainReference)) {
+            $mainReference = $this->getReference($this->getEntityName($object));
+        }
+
+        $this->entities[$mainReference] = $this->hydrator->extract($object);
+
+        foreach ($this->entities[$mainReference] as $name => $value) {
+
+            if (is_object($value)) {
+
+                unset($this->entities[$mainReference][$name]);
+
+                if ($value instanceof Collection && $recursive) {
+
+                    $references = array();
+
+                    foreach ($value as $entity) {
+
+                        $reference = $this->getReference($this->getEntityName($entity));
+                        $this->getTopLevelEntitiesFromNestedEntity($entity, false, $reference);
+
+                        $references[] = $reference;
+                    }
+
+                    if (!isset($this->entities[$mainReference]['__REFS'])) {
+
+                        $this->entities[$mainReference]['__REFS'] = array();
+                    }
+
+                    $this->entities[$mainReference]['__REFS'][$name] = $references;
+
+                }
+            }
+        }
+
+        return $this->entities;
+    }
+
+    /**
+     * Get the next reference for an entity
+     *
+     * @param string $entityName
+     * @return string
+     */
+    private function getReference($entityName)
+    {
+        $id = -1;
+
+        foreach (array_keys($this->entities) as $reference) {
+
+            if (preg_match('/^' . $entityName . '\/([0-9]+)$/', $reference, $matches)) {
+
+                $id = max($id, (int) $matches[1]);
+            }
+        }
+
+        $id++;
+
+        return $entityName . '/' . $id;
+    }
+
+    /**
+     * Get the entity name
+     *
+     * @param object $entity
+     * @return string
+     */
+    private function getEntityName($entity)
+    {
+        $className = get_class($entity);
+        $parts = explode('\\', (string) $className);
+        return array_pop($parts);
     }
 
     /**
