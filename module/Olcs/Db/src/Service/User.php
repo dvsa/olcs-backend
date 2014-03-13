@@ -9,11 +9,11 @@ class User extends ServiceAbstract
      *
      * @var string
      */
-    protected $entityName = '\Olcs\Db\Entity\User';
+    protected $entityName = '\OlcsEntities\Entity\User';
 
     public function getRoles($user, $includePermissions = true)
     {
-        if (!($user instanceof \Olcs\Db\Entity\User)) {
+        if (!($user instanceof \OlcsEntities\Entity\User)) {
             $user = $this->getEntityManager()->find($this->getEntityName(), (int)$user);
         }
 
