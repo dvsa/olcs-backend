@@ -44,8 +44,7 @@ class User extends ServiceAbstract
     public function getValidSearchFields()
     {
         return array(
-            'username',
+            'username'
         );
     }
-
 }

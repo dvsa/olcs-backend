@@ -8,7 +8,7 @@ use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ZendClassMethodsHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Olcs\Db\Helpers\BundleHelper;
+use Olcs\Db\Utility\BundleHydrator;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
@@ -27,9 +27,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $bundleHelper = new BundleHelper();
+        $hydrator = new DoctrineHydrator($this->getEntityManager());
 
-        $entity = $bundleHelper->getNestedEntityFromEntities($data);
+        $bundleHydrator = new BundleHydrator($hydrator);
+
+        $entity = $bundleHydrator->getNestedEntityFromEntities($data);
 
         $this->dbPersist($entity);
         $this->dbFlush();
@@ -55,12 +57,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return null;
         }
 
-        print '<pre>';
-        print_r($entity->getRoles());
-        print '</pre>';
-
         $hydrator = new DoctrineHydrator($this->getEntityManager());
-        return $hydrator->extract($entity);
+
+        $bundleHydrator = new BundleHydrator($hydrator);
+
+        return $bundleHydrator->getTopLevelEntitiesFromNestedEntity($entity);
     }
 
     /**
@@ -75,10 +76,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $data = func_get_arg(0);
 
         $listControlParams = $this->extractListControlParams($data);
-        //print_r($listControlParams);
 
         $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
-        //print_r($searchFields);
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -86,9 +85,13 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $qb->from($this->getEntityName(), 'a');
 
         foreach ($searchFields as $key => $value) {
+
             if (is_numeric($value)) {
+
                 $qb->where("a.{$key} = :{$key}");
+
             } else {
+
                 $qb->where("a.{$key} LIKE :{$key}");
             }
             $qb->setParameter($key, $value);
@@ -96,17 +99,25 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $results = $qb->getQuery()->getResult();
 
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-        $data = array();
-        foreach ($results as $entity) {
-            $data[] = $hydrator->extract($entity);
+        $responseData = array();
+
+        if (!empty($results)) {
+
+            $hydrator = new DoctrineHydrator($this->getEntityManager());
+
+            $bundleHydrator = new BundleHydrator($hydrator);
+
+            $responseData = $bundleHydrator->getTopLevelEntitiesFromNestedEntity($results);
         }
 
-        return $data;
+        return array(
+            'Count' => count($results),
+            'Results' => $responseData
+        );
     }
 
     /**
-     * NOT WORKING!!!!
+     * Update an entity
      *
      * @param mixed $id
      * @param array $data
@@ -127,6 +138,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $entity = $hydrator->hydrate($data, $entity);
 
         $this->dbPersist($entity);
+        $this->dbFlush();
 
         return true;
     }
@@ -165,6 +177,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $this->getEntityManager()->remove($entity);
         $this->dbFlush();
+
         return true;
     }
 
