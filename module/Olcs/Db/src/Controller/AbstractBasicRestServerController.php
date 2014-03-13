@@ -5,6 +5,8 @@ use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Http\Response;
 use Olcs\Db\Exceptions\EntityTypeNotFoundException;
 use Olcs\Db\Traits\RestResponseTrait;
+use Olcs\Db\Exceptions\NoVersionException;
+use Doctrine\ORM\OptimisticLockException;
 
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
@@ -106,25 +108,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function update($id, $data)
     {
-        $data = $this->formatDataFromJson($data);
-
-        if ($data instanceof Response) {
-
-            return $data;
-        }
-
-        try {
-            if ($this->getService()->update($id, $data)) {
-
-                return $this->respond(Response::STATUS_CODE_200, 'Entity updated');
-            }
-
-            return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
-
-        } catch (\Exception $ex) {
-
-            return $this->unknownError($ex);
-        }
+        return $this->updateOrPatch($id, $data, 'update');
     }
 
     /**
@@ -136,6 +120,19 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function patch($id, $data)
     {
+        return $this->updateOrPatch($id, $data, 'patch');
+    }
+
+    /**
+     * Update and patch give the same response so no need to duplicate
+     *
+     * @param id $id
+     * @param mixed $data
+     * @param string $method
+     * @return Response
+     */
+    private function updateOrPatch($id, $data, $method)
+    {
         $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
@@ -144,12 +141,22 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         }
 
         try {
-            if ($this->getService()->patch($id, $data)) {
+            if ($this->getService()->$method($id, $data)) {
 
-                return $this->respond(Response::STATUS_CODE_200, 'Entity patched');
+                return $this->respond(Response::STATUS_CODE_200, 'Entity updated');
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
+
+        } catch (NoVersionException $ex) {
+
+            return $this->respond(Response::STATUS_CODE_400, 'No version number sent');
+
+        } catch (OptimisticLockException $ex) {
+
+            $result = $this->getService()->get($id);
+
+            return $this->respond(Response::STATUS_CODE_409, 'This entity has been updated since', $result);
 
         } catch (\Exception $ex) {
 

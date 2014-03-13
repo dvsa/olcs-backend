@@ -1,14 +1,14 @@
 <?php
 namespace Olcs\Db\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
 use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
-use Zend\Stdlib\Hydrator\ClassMethods as ZendClassMethodsHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Utility\BundleHydrator;
+use Olcs\Db\Exceptions\NoVersionException;
+use Doctrine\DBAL\LockMode;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
@@ -128,7 +128,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        if (!isset($data['version'])) {
+            throw new NoVersionException('A version number must be specified to update an entity');
+        }
+
+        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
 
         if (!$entity) {
             return false;
@@ -136,6 +140,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $hydrator = new DoctrineHydrator($this->getEntityManager());
         $entity = $hydrator->hydrate($data, $entity);
+
+        $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
 
         $this->dbPersist($entity);
         $this->dbFlush();
