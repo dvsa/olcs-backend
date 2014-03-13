@@ -40,6 +40,30 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
+     * Gets a matching record by identifying value.
+     *
+     * @param string|int $id
+     *
+     * @return array
+     */
+    public function get($id)
+    {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
+        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        if (!$entity) {
+            return null;
+        }
+
+        print '<pre>';
+        print_r($entity->getRoles());
+        print '</pre>';
+
+        $hydrator = new DoctrineHydrator($this->getEntityManager());
+        return $hydrator->extract($entity);
+    }
+
+    /**
      * Returns a list of matching records.
      *
      * @return array
@@ -79,25 +103,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Gets a matching record by identifying value.
-     *
-     * @param string|int $id
-     *
-     * @return array
-     */
-    public function get($id)
-    {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
-
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
-        if (!$entity) {
-            return null;
-        }
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-        return $hydrator->extract($entity);
     }
 
     /**
@@ -206,7 +211,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     /**
      * Returns a new instance of the entity.
      *
-     * @return \Olcs\Db\Entity\AbstractEntity
+     * @return \OlcsEntities\Entity\AbstractEntity
      */
     public function getNewEntity()
     {
