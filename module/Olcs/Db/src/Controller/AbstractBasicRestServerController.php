@@ -17,27 +17,14 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function create($data)
     {
-        // Find the data
-        $data = isset($data['data']) ? $data['data'] : $data;
+        $data = $this->formatData($data);
 
-        // We are expecting a JSON string
-        if (!is_string($data)) {
+        if ($data instanceof Response) {
 
-            return $this->respond(Response::STATUS_CODE_400, 'Expected JSON request data');
+            return $data;
         }
 
-        // Attempt to decode the json
-        $data = json_decode($data, true);
-
-        // If we can't decode the json
-        if (json_last_error() !== JSON_ERROR_NONE) {
-
-            return $this->respond(Response::STATUS_CODE_400, 'JSON request data is invalid');
-        }
-
-        // Try to create the entity
         try {
-
             $id = $this->getService()->create($data);
 
             if (is_numeric($id) && $id > 0) {
@@ -52,11 +39,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             return $this->respond(Response::STATUS_CODE_400, $ex->getMessage() . ' Entity not found');
 
         } catch (\Exception $ex) {
-            /**
-             *  We should try and catch all known exceptions and provide a reasonable response, if we get here the
-             *   we have no idea what went wrong
-             */
-            return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred');
+
+            return $this->unknownError($ex);
         }
     }
 
@@ -68,60 +52,150 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function get($id)
     {
-        // Try to get the entity
         try {
-
             $result = $this->getService()->get($id);
 
-            // If we haven't found an entity
             if (empty($result)) {
 
                 return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
             }
 
-            // Extract the object and return
             return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
 
         } catch (\Exception $ex) {
-            /**
-             *  We should try and catch all known exceptions and provide a reasonable response, if we get here the
-             *   we have no idea what went wrong
-             */
-            return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
+
+            return $this->unknownError($ex);
         }
     }
 
+    /**
+     * Get a list of entities
+     *
+     * @return Response
+     */
     public function getList()
     {
         $routeParams = $this->plugin('params')->fromRoute();
-        $queryParams = $this->plugin('params')->fromQuery();
+        $data = $this->plugin('params')->fromQuery();
 
-        $data = array_merge($routeParams, $queryParams);
+        $data = $this->formatData($data);
 
-        $result = $this->getService()->getList($data);
+        if ($data instanceof Response) {
 
-        return new JsonModel(array('data' => $result));
+            return $data;
+        }
+
+        $data = array_merge($routeParams, $data);
+
+        try {
+            $result = $this->getService()->getList($data);
+
+            if (empty($result)) {
+
+                return $this->respond(Response::STATUS_CODE_200, 'No results found', $result);
+            }
+
+            return $this->respond(Response::STATUS_CODE_200, 'Results found', $result);
+
+        } catch (\Exception $ex) {
+
+            return $this->unknownError($ex);
+        }
     }
 
+    /**
+     * Update a record
+     *
+     * @param id $id
+     * @param mixed $data
+     * @return Response
+     */
     public function update($id, $data)
     {
-        $result = $this->getService()->update($id, $data);
+        $data = $this->formatData($data);
 
-        return new JsonModel(array('result' => $result));
+        if ($data instanceof Response) {
+
+            return $data;
+        }
+
+        try {
+            if ($this->getService()->update($id, $data)) {
+
+                return $this->respond(Response::STATUS_CODE_200, 'Entity updated');
+            }
+
+            return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
+
+        } catch (\Exception $ex) {
+
+            return $this->unknownError($ex);
+        }
     }
 
+    /**
+     * Patch a record
+     *
+     * @param id $id
+     * @param mixed $data
+     * @return Response
+     */
     public function patch($id, $data)
     {
-        $result = $this->getService()->patch($id, $data);
+        $data = $this->formatData($data);
 
-        return new JsonModel(array('result' => $result));
+        if ($data instanceof Response) {
+
+            return $data;
+        }
+
+        try {
+            if ($this->getService()->patch($id, $data)) {
+
+                return $this->respond(Response::STATUS_CODE_200, 'Entity patched');
+            }
+
+            return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
+
+        } catch (\Exception $ex) {
+
+            return $this->unknownError($ex);
+        }
     }
 
+    /**
+     * Delete a record
+     *
+     * @param id $id
+     * @return Response
+     */
     public function delete($id)
     {
-        $result = $this->getService()->delete($id);
+        try {
+            if ($this->getService()->delete($id)) {
 
-        return new JsonModel(array('result' => $result));
+                return $this->respond(Response::STATUS_CODE_200, 'Entity deleted');
+
+            }
+
+            return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
+
+        } catch (\Exception $ex) {
+
+            return $this->unknownError($ex);
+        }
+    }
+
+    /**
+     *  We should try and catch all known exceptions and provide a reasonable response, if we get here the
+     *   we have no idea what went wrong
+     *
+     * @param \Exception $ex
+     * @return Response
+     */
+    private function unknownError($ex)
+    {
+        return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
     }
 
     public function getService()
@@ -157,5 +231,29 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         );
 
         return $response;
+    }
+
+    /**
+     * Format data from json
+     *
+     * @param mixed $data
+     */
+    private function formatData($data)
+    {
+        $data = isset($data['data']) ? $data['data'] : $data;
+
+        if (!is_string($data)) {
+
+            return $this->respond(Response::STATUS_CODE_400, 'Expected JSON request data');
+        }
+
+        $data = json_decode($data, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+
+            return $this->respond(Response::STATUS_CODE_400, 'JSON request data is invalid');
+        }
+
+        return $data;
     }
 }
