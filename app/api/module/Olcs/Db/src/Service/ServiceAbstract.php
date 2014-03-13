@@ -8,6 +8,7 @@ use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ZendClassMethodsHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Olcs\Db\Helpers\BundleHelper;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
@@ -26,10 +27,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $entity = $this->getNewEntity();
+        $bundleHelper = new BundleHelper();
 
-        $hydrator = new ZendClassMethodsHydrator();
-        $hydrator->hydrate($data, $entity);
+        $entity = $bundleHelper->getNestedEntityFromEntities($data);
 
         $this->dbPersist($entity);
         $this->dbFlush();
@@ -37,6 +37,30 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $id = $entity->getId();
 
         return $id;
+    }
+
+    /**
+     * Gets a matching record by identifying value.
+     *
+     * @param string|int $id
+     *
+     * @return array
+     */
+    public function get($id)
+    {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
+        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        if (!$entity) {
+            return null;
+        }
+
+        print '<pre>';
+        print_r($entity->getRoles());
+        print '</pre>';
+
+        $hydrator = new DoctrineHydrator($this->getEntityManager());
+        return $hydrator->extract($entity);
     }
 
     /**
@@ -79,25 +103,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Gets a matching record by identifying value.
-     *
-     * @param string|int $id
-     *
-     * @return array
-     */
-    public function get($id)
-    {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
-
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
-        if (!$entity) {
-            return null;
-        }
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-        return $hydrator->extract($entity);
     }
 
     /**
@@ -206,7 +211,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     /**
      * Returns a new instance of the entity.
      *
-     * @return \Olcs\Db\Entity\AbstractEntity
+     * @return \OlcsEntities\Entity\AbstractEntity
      */
     public function getNewEntity()
     {
