@@ -33,6 +33,10 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $entity = $bundleHydrator->getNestedEntityFromEntities($data);
 
+        // Just get the first entity for now
+        //  This is where we can work on the magic to save multiple entities at once
+        $entity = current($entity);
+
         $this->dbPersist($entity);
         $this->dbFlush();
 
