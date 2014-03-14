@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace Olcs\Db\Test\Hydrators;
+namespace OlcsTest\Db\Utility;
 
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Olcs\Db\Utility\BundleHydrator;
