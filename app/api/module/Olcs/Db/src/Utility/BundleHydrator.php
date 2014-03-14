@@ -117,26 +117,30 @@ class BundleHydrator
 
                 unset($this->entities[$mainReference][$name]);
 
-                if ($value instanceof Collection && $recursive) {
+                if ($recursive) {
+                    $references = null;
 
-                    $references = array();
+                    if ($value instanceof Collection) {
 
-                    foreach ($value as $entity) {
+                        $references = array();
 
-                        $references[] = $this->getReferenceForEntity($entity);
+                        foreach ($value as $entity) {
+
+                            $references[] = $this->getReferenceForEntity($entity);
+                        }
+
+                    } elseif ($value instanceof AbstractEntity) {
+
+                        $references = $this->getReferenceForEntity($value);
                     }
 
-                } elseif ($value instanceof AbstractEntity) {
+                    if (!isset($this->entities[$mainReference]['__REFS'])) {
 
-                    $references = $this->getReferenceForEntity($value);
+                        $this->entities[$mainReference]['__REFS'] = array();
+                    }
+
+                    $this->entities[$mainReference]['__REFS'][$name] = $references;
                 }
-
-                if (!isset($this->entities[$mainReference]['__REFS'])) {
-
-                    $this->entities[$mainReference]['__REFS'] = array();
-                }
-
-                $this->entities[$mainReference]['__REFS'][$name] = $references;
             }
         }
 
@@ -151,7 +155,7 @@ class BundleHydrator
      */
     private function getReferenceForEntity($entity)
     {
-        if (false !== ($key = array_search($entity, $this->objectReferences))) {
+        if (false !== ($key = array_search($entity, $this->objectReferences, true))) {
 
             $reference = $key;
 
