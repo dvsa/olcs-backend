@@ -27,6 +27,7 @@ class BundleHydrator
     private $entityNamespace = '\OlcsEntities\Entity\\';
     private $entities = array();
     private $hydrator;
+    private $objectReferences = array();
 
     /**
      * Inject hydrator dependency
@@ -36,6 +37,16 @@ class BundleHydrator
     public function __construct(AbstractHydrator $hydrator)
     {
         $this->hydrator = $hydrator;
+    }
+
+    /**
+     * Configure the entity namespace
+     *  - useful for unit testing
+     * @param string $namespace
+     */
+    public function setEntityNamespace($namespace)
+    {
+        $this->entityNamespace = $namespace;
     }
 
     /**
@@ -53,7 +64,7 @@ class BundleHydrator
             $this->setEntityProperties($this->entities[$reference], $entityProperties);
         }
 
-        return $this->entities[array_keys($entityArray)[0]];
+        return $this->entities;
     }
 
     /**
@@ -112,24 +123,46 @@ class BundleHydrator
 
                     foreach ($value as $entity) {
 
-                        $reference = $this->getReference($this->getEntityName($entity));
-                        $this->getTopLevelEntitiesFromNestedEntity($entity, false, $reference);
-
-                        $references[] = $reference;
+                        $references[] = $this->getReferenceForEntity($entity);
                     }
 
-                    if (!isset($this->entities[$mainReference]['__REFS'])) {
+                } elseif ($value instanceof AbstractEntity) {
 
-                        $this->entities[$mainReference]['__REFS'] = array();
-                    }
-
-                    $this->entities[$mainReference]['__REFS'][$name] = $references;
-
+                    $references = $this->getReferenceForEntity($value);
                 }
+
+                if (!isset($this->entities[$mainReference]['__REFS'])) {
+
+                    $this->entities[$mainReference]['__REFS'] = array();
+                }
+
+                $this->entities[$mainReference]['__REFS'][$name] = $references;
             }
         }
 
         return $this->entities;
+    }
+
+    /**
+     * Find a reference for an entity
+     *
+     * @param object $entity
+     * @return string
+     */
+    private function getReferenceForEntity($entity)
+    {
+        if (false !== ($key = array_search($entity, $this->objectReferences))) {
+
+            $reference = $key;
+
+        } else {
+
+            $reference = $this->getReference($this->getEntityName($entity));
+            $this->getTopLevelEntitiesFromNestedEntity($entity, false, $reference);
+            $this->objectReferences[$reference] = $entity;
+        }
+
+        return $reference;
     }
 
     /**
@@ -181,9 +214,13 @@ class BundleHydrator
         foreach (array_keys($array) as $reference) {
 
             $entityClassName = $this->getEntityClassNameFromReference($reference);
-            $entities[$reference] = new $entityClassName();
 
-            if (!$entities[$reference] instanceof AbstractEntity) {
+            if (class_exists($entityClassName)) {
+
+                $entities[$reference] = new $entityClassName();
+
+            } else {
+
                 throw new EntityTypeNotFoundException($entityClassName);
             }
         }
