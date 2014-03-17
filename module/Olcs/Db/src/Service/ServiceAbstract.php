@@ -6,7 +6,7 @@ use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Olcs\Db\Utility\BundleHydrator;
+use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 
