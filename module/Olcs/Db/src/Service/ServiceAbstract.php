@@ -194,7 +194,12 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return false;
         }
 
-        $this->getEntityManager()->remove($entity);
+        if ($this->canSoftDelete()) {
+            $entity->setIsDeleted(true);
+            $this->dbPersist($entity);
+        } else {
+            $this->getEntityManager()->remove($entity);
+        }
         $this->dbFlush();
 
         return true;
