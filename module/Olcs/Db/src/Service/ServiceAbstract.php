@@ -56,7 +56,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        $entity = $this->getEntityById($id);
+
         if (!$entity) {
             return null;
         }
@@ -101,6 +102,10 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             $qb->setParameter($key, $value);
         }
 
+        if ($this->canSoftDelete()) {
+            $qb->where('a.isDeleted = false');
+        }
+
         $results = $qb->getQuery()->getResult();
 
         $responseData = array();
@@ -136,7 +141,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
+        if ($this->canSoftDelete()) {
+            $entity = $this->getUnDeletedById($id);
+        } else {
+            $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
+        }
 
         if (!$entity) {
             return false;
@@ -179,7 +188,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        $entity = $this->getEntityById($id);
 
         if (!$entity) {
             return false;
@@ -250,6 +259,45 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function getEntityName()
     {
         return $this->entityName;
+    }
+
+    /**
+     * Whether you can soft delete the entity
+     *
+     * @return boolean
+     */
+    private function canSoftDelete()
+    {
+        return property_exists($this->getEntityName(), 'isDeleted');
+    }
+
+    /**
+     * Get an entity if it's not soft deleted
+     *
+     * @param int $id
+     *
+     * @return object
+     */
+    private function getUnDeletedById($id)
+    {
+        return $this->getEntityManager()
+            ->getRepository($this->getEntityName())
+            ->findOneBy(array('id' => (int)$id, 'isDeleted' => false));
+    }
+
+    /**
+     * Get ane entity by it's id
+     *
+     * @param int $id
+     * @return object
+     */
+    private function getEntityById($id)
+    {
+        if ($this->canSoftDelete()) {
+            return $this->getUnDeletedById($id);
+        }
+
+        return $this->getEntityManager()->find($this->getEntityName(), (int)$id);
     }
 
     /**
