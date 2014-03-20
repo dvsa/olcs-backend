@@ -13,7 +13,7 @@ trait RestResponseTrait
      * @param array $data
      * @return Response
      */
-    protected function respond($errorCode, $summary = null, $data = array())
+    public function respond($errorCode, $summary = null, $data = array())
     {
         $response = new Response();
 
