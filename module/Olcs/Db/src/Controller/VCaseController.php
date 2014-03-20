@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Application REST controller
+ * VCase REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,11 +9,11 @@
 namespace Olcs\Db\Controller;
 
 /**
- * Application REST controller
+ * VCase REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ApplicationController extends AbstractBasicRestServerController
+class VCaseController extends AbstractBasicRestServerController
 {
 
 }
