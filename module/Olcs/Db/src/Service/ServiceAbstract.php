@@ -263,6 +263,16 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function getEntityName()
     {
+        if (!isset($this->entityName)) {
+            $entityPrefix = '\OlcsEntities\Entity\\';
+
+            $class = get_called_class();
+
+            $parts = explode('\\', $class);
+
+            return $entityPrefix . array_pop($parts);
+        }
+
         return $this->entityName;
     }
 

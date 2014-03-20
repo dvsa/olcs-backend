@@ -201,7 +201,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
     public function getService()
     {
-        return $this->getServiceLocator()->get($this->getControllerName());
+        $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+
+        return $serviceFactory->getService($this->getControllerName());
     }
 
     /**

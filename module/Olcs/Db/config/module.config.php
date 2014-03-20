@@ -40,12 +40,7 @@ return array(
             'Zend\Log\LoggerAbstractServiceFactory'
         ),
         'factories' => array(
-            'User' => function ($serviceManager) {
-              $s = new \Olcs\Db\Service\User();
-              $s->setEntityManager($serviceManager->get('doctrine.entitymanager.orm_default'));
-              $s->setServiceLocator($serviceManager);
-              return $s;
-          }
+            'serviceFactory' => '\Olcs\Db\Service\Factory'
         )
     ),
     'controllers' => array(
