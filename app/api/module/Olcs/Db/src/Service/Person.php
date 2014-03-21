@@ -25,7 +25,10 @@ class Person extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array();
+        return array(
+            'firstName',
+            'surname'
+        );
     }
 
 }
