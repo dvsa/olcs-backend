@@ -1,7 +1,7 @@
 <?php
 
 /**
- * VCase REST controller
+ * VosaCase REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,11 +9,11 @@
 namespace Olcs\Db\Controller;
 
 /**
- * VCase REST controller
+ * VosaCase REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VCaseController extends AbstractBasicRestServerController
+class VosaCaseController extends AbstractBasicRestServerController
 {
 
 }

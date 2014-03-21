@@ -87,7 +87,7 @@ return array(
             'trafficarea' => 'Olcs\Db\Controller\TrafficAreaController',
             'trailer' => 'Olcs\Db\Controller\TrailerController',
             'user' => 'Olcs\Db\Controller\UserController',
-            'vcase' => 'Olcs\Db\Controller\VCaseController',
+            'vosacase' => 'Olcs\Db\Controller\VosaCaseController',
             'vehicle' => 'Olcs\Db\Controller\VehicleController',
             'Error' => 'Olcs\Db\Controller\ErrorController'
         )

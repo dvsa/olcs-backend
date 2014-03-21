@@ -297,7 +297,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         return $this->getEntityManager()
             ->getRepository($this->getEntityName())
-            ->findOneBy(array('id' => (int)$id, 'isDeleted' => false));
+            ->findOneBy(array('id' => (int)$id, 'isDeleted' => 0));
     }
 
     /**
