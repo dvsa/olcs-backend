@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tests VCase Controller
+ * Tests VosaCase Controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,14 +9,14 @@
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Controller\VCaseController;
+use Olcs\Db\Controller\VosaCaseController;
 
 /**
- * Tests VCase Controller
+ * Tests VosaCase Controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VCaseControllerTest extends PHPUnit_Framework_TestCase
+class VosaCaseControllerTest extends PHPUnit_Framework_TestCase
 {
     private $controller;
 
@@ -26,7 +26,7 @@ class VCaseControllerTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // We may want to inject the ServiceLocator in the future
-        $this->controller = new VCaseController();
+        $this->controller = new VosaCaseController();
     }
 
     /**
