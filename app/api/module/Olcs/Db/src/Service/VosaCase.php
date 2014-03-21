@@ -1,8 +1,8 @@
 <?php
 
 /**
- * VCase Service
- *  - Takes care of the CRUD actions VCase entities
+ * VosaCase Service
+ *  - Takes care of the CRUD actions VosaCase entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,12 +10,12 @@
 namespace Olcs\Db\Service;
 
 /**
- * VCase Service
- *  - Takes care of the CRUD actions VCase entities
+ * VosaCase Service
+ *  - Takes care of the CRUD actions VosaCase entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VCase extends ServiceAbstract
+class VosaCase extends ServiceAbstract
 {
 
     /**
