@@ -28,6 +28,7 @@ return array(
                 'options' => array(
                     'route' => '/[:controller][/:id]',
                     'constraints' => array(
+                        'controller' => '[a-zA-Z\-]+',
                         'id' => '[0-9]+'
                     )
                 )
@@ -65,6 +66,9 @@ return array(
             'licence' => 'Olcs\Db\Controller\LicenceController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'note' => 'Olcs\Db\Controller\NoteController',
+            'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
+            'person-search' => 'Olcs\Db\Controller\PersonSearchController',
+            'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'operatingcentrecondition' => 'Olcs\Db\Controller\OperatingCentreConditionController',
             'operatingcentre' => 'Olcs\Db\Controller\OperatingCentreController',
             'organisation' => 'Olcs\Db\Controller\OrganisationController',

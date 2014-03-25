@@ -3,7 +3,8 @@ namespace Olcs\Db\Controller;
 
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Http\Response;
-use Olcs\Db\Exceptions\EntityTypeNotFoundException;
+use Olcs\Db\Exceptions\RestResponseException;
+use OlcsEntities\Exceptions\EntityTypeNotFoundException;
 use Olcs\Db\Traits\RestResponseTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\ORM\OptimisticLockException;
@@ -11,6 +12,15 @@ use Doctrine\ORM\OptimisticLockException;
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
     use RestResponseTrait;
+
+    protected $allowedMethods = array(
+        'create',
+        'get',
+        'getList',
+        'update',
+        'patch',
+        'delete'
+    );
 
     /**
      * Create an entity
@@ -20,6 +30,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function create($data)
     {
+        $this->checkMethod(__METHOD__);
+
         $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
@@ -55,6 +67,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function get($id)
     {
+        $this->checkMethod(__METHOD__);
+
         try {
             $result = $this->getService()->get($id);
 
@@ -78,10 +92,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function getList()
     {
-        $routeParams = $this->plugin('params')->fromRoute();
-        $queryParams = $this->plugin('params')->fromQuery();
+        $this->checkMethod(__METHOD__);
 
-        $data = array_merge($routeParams, $queryParams);
+        $data = $this->getDataFromQuery();
 
         try {
             $result = $this->getService()->getList($data);
@@ -108,6 +121,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function update($id, $data)
     {
+        $this->checkMethod(__METHOD__);
+
         return $this->updateOrPatch($id, $data, 'update');
     }
 
@@ -120,6 +135,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function patch($id, $data)
     {
+        $this->checkMethod(__METHOD__);
+
         return $this->updateOrPatch($id, $data, 'patch');
     }
 
@@ -172,6 +189,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function delete($id)
     {
+        $this->checkMethod(__METHOD__);
+
         try {
             if ($this->getService()->delete($id)) {
 
@@ -199,11 +218,17 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
     }
 
-    public function getService()
+    /**
+     * Get the service
+     *
+     * @param string $name
+     * @return object
+     */
+    public function getService($name = null)
     {
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
-        return $serviceFactory->getService($this->getControllerName());
+        return $serviceFactory->getService(empty($name) ? $this->getControllerName() : $name);
     }
 
     /**
@@ -228,5 +253,31 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         }
 
         return $data;
+    }
+
+    /**
+     * Get data from query
+     *
+     * @return array
+     */
+    protected function getDataFromQuery()
+    {
+        $routeParams = $this->plugin('params')->fromRoute();
+        $queryParams = $this->plugin('params')->fromQuery();
+
+        return array_merge($routeParams, $queryParams);
+    }
+
+    /**
+     * Check if the method is allowed
+     *
+     * @param string $method
+     * @throws RestResponseException
+     */
+    protected function checkMethod($method)
+    {
+        if (!in_array($method, $this->allowedMethods)) {
+            throw new RestResponseException('Method not allowed', Response::STATUS_CODE_405);
+        }
     }
 }

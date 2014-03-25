@@ -9,9 +9,12 @@ use Zend\Stdlib\ResponseInterface as Response;
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
+use Olcs\Db\Exceptions\RestResponseException;
+use Olcs\Db\Traits\RestResponseTrait;
 
 abstract class AbstractController extends ZendAbstractRestfulController
 {
+    use RestResponseTrait;
     use OlcsLoggerAwareTrait;
 
     /**
@@ -40,17 +43,34 @@ abstract class AbstractController extends ZendAbstractRestfulController
         $action = $e->getRouteMatch()->getParam('action', false);
         if ($action) {
             $this->log(sprintf('Dispatching Incomming Action Request: \'%1$s\'', $action));
-            return parent::onDispatch($e);
+            return $this->doDispatch($e);
         }
 
         // Is method request?...
         $method = strtolower($e->getRequest()->getMethod());
         if ($method) {
             $this->log(sprintf('Dispatching Incomming Method Request: \'%1$s\' ', $method));
-            return parent::onDispatch($e);
+            return $this->doDispatch($e);
         }
 
-        return parent::onDispatch($e);
+        return $this->doDispatch($e);
+    }
+
+    /**
+     * Wrap the parent dispatch method
+     *
+     * @param type $e
+     * @return type
+     */
+    private function doDispatch($e)
+    {
+        try {
+            return parent::onDispatch($e);
+
+        } catch (RestResponseException $ex) {
+
+            return $this->respond($ex->getCode(), $ex->getMessage());
+        }
     }
 
     /**

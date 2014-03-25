@@ -86,27 +86,46 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
+        $entityName = $this->getEntityName();
+        $parts = explode('\\', $entityName);
+
+        $tableName = $this->formatFieldName(array_pop($parts));
+
         $qb->select('a');
-        $qb->from($this->getEntityName(), 'a');
+        $qb->from($tableName, 'a');
+
+        $params = array();
 
         foreach ($searchFields as $key => $value) {
 
+            $field = $this->formatFieldName($key);
+
             if (is_numeric($value)) {
 
-                $qb->where("a.{$key} = :{$key}");
+                $qb->where("a.{$field} = :{$key}");
 
             } else {
 
-                $qb->where("a.{$key} LIKE :{$key}");
+                $qb->where("a.{$field} LIKE :{$key}");
             }
-            $qb->setParameter($key, $value);
+            $params[$key] = $value;
+        }
+
+        if (!empty($params)) {
+            $qb->setParameters($params);
         }
 
         if ($this->canSoftDelete()) {
-            $qb->where('a.isDeleted = false');
+            $qb->where('a.isDeleted = 0');
         }
 
-        $results = $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+
+        print '<pre>';
+        print_r($query);
+        print '</pre>';
+
+        $results = $query->getResult();
 
         $responseData = array();
 
@@ -122,6 +141,24 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         return array(
             'Count' => count($results),
             'Results' => $responseData
+        );
+    }
+
+    /**
+     * Converts camel caps to underscore seperated
+     *
+     * @param sting $name
+     *
+     * @return string
+     */
+    private function formatFieldName($name)
+    {
+        return preg_replace_callback(
+            '/[A-Z]/',
+            function($matches) {
+                return '_' . strtolower($matches[0]);
+            },
+            lcfirst($name)
         );
     }
 
