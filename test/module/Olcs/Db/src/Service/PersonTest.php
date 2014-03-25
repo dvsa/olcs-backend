@@ -32,7 +32,10 @@ class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function testGetValidSearchFields()
     {
-        $expected = array();
+        $expected = array(
+            'firstName',
+            'surname'
+        );
 
         $this->assertEquals($expected, $this->service->getValidSearchFields());
     }
