@@ -328,10 +328,6 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
      */
     private function formatOrderByClause($orderBy, $sortOrder)
     {
-        if (empty($orderBy)) {
-            return ' ';
-        }
-
         if (is_array($orderBy)) {
             return 'ORDER BY ' . implode(' ' . $sortOrder . ', ', $orderBy) . ' ' . $sortOrder . ' ';
         }
@@ -345,12 +341,8 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
      * @param int $limit
      * @param int $offset
      */
-    private function formatLimitClause($limit = null, $offset = null)
+    private function formatLimitClause($limit, $offset = null)
     {
-        if (empty($limit)) {
-            return '';
-        }
-
         if (empty($offset)) {
             return 'LIMIT ' . $limit;
         } else {
@@ -385,10 +377,13 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
         switch (strtoupper($type)) {
             case 'LIKE':
                 return '%' . $value . '%';
-            case 'STARTS WITH':
-                return $value . '%';
-            case 'ENDS WITH':
-                return '%' . $value;
+            /**
+             * These could be useful in the future
+             */
+            //case 'STARTS WITH':
+            //    return $value . '%';
+            //case 'ENDS WITH':
+            //    return '%' . $value;
             case 'DATE':
                 $parts = explode('-', $value);
                 $newParts = array_map(
@@ -397,7 +392,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
                     },
                     $parts
                 );
-                return implode('-', $newParts) . '%';
+                return implode('-', $newParts);
             default:
                 return $value;
         }
