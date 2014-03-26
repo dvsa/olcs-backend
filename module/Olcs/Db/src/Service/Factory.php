@@ -18,12 +18,21 @@ class Factory implements FactoryInterface
 
     public function getService($name)
     {
-        $className = '\Olcs\Db\Service\\' . $name;
+        $className = $this->getServiceClassName($name);
+
+        if (!class_exists($className)) {
+            return false;
+        }
 
         $service = new $className();
         $service->setEntityManager($this->serviceLocator->get('doctrine.entitymanager.orm_default'));
         $service->setServiceLocator($this->serviceLocator);
 
         return $service;
+    }
+
+    public function getServiceClassName($name)
+    {
+        return '\Olcs\Db\Service\\' . $name;
     }
 }
