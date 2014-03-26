@@ -6,6 +6,16 @@ use Zend\Http\Response;
 trait RestResponseTrait
 {
     /**
+     * Create a new instance of Response
+     *
+     * @return Response
+     */
+    public function getNewResponse()
+    {
+        return new Response();
+    }
+
+    /**
      * Creates a response object and set's up the response body
      *
      * @param int $errorCode
@@ -15,7 +25,7 @@ trait RestResponseTrait
      */
     public function respond($errorCode, $summary = null, $data = array())
     {
-        $response = new Response();
+        $response = $this->getNewResponse();
 
         $response->setStatusCode($errorCode);
 

@@ -9,10 +9,8 @@
 
 namespace Olcs\Db\Traits;
 
-use \Zend\Log as Log;
 use \Zend\Log\LoggerAwareTrait as ZendLoggerAwareTrait;
-use \Zend\Log\Logger as Logger;
-use \Zend\Log\Writer as Writer;
+use \Zend\Log\Logger;
 
 trait LoggerAwareTrait
 {
@@ -27,7 +25,6 @@ trait LoggerAwareTrait
     {
         if (null === $this->logger) {
 
-            //die(get_class($this->getServiceLocator()->get('Logger')));
             $logger = $this->getServiceLocator()->get('Logger');
 
             if (($logger instanceof \Zend\Log\Logger) !== true) {
