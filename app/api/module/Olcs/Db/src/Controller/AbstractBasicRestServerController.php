@@ -101,7 +101,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
             if (empty($result)) {
 
-                return $this->respond(Response::STATUS_CODE_200, 'No results found', $result);
+                return $this->respond(Response::STATUS_CODE_200, 'No results found');
             }
 
             return $this->respond(Response::STATUS_CODE_200, 'Results found', $result);
@@ -195,7 +195,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             if ($this->getService()->delete($id)) {
 
                 return $this->respond(Response::STATUS_CODE_200, 'Entity deleted');
-
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
@@ -207,8 +206,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     }
 
     /**
-     *  We should try and catch all known exceptions and provide a reasonable response, if we get here the
-     *   we have no idea what went wrong
+     *  We should try and catch all known exceptions and provide a reasonable
+     *  response, if we get here, then we have no idea what went wrong
      *
      * @param \Exception $ex
      * @return Response
@@ -236,9 +235,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @param mixed $data
      */
-    private function formatDataFromJson($data)
+    public function formatDataFromJson($data)
     {
-        $data = isset($data['data']) ? $data['data'] : $data;
+        $data = (is_array($data) && isset($data['data'])) ? $data['data'] : $data;
 
         if (!is_string($data)) {
 
@@ -260,7 +259,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @return array
      */
-    protected function getDataFromQuery()
+    public function getDataFromQuery()
     {
         $routeParams = $this->plugin('params')->fromRoute();
         $queryParams = $this->plugin('params')->fromQuery();
@@ -274,10 +273,22 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * @param string $method
      * @throws RestResponseException
      */
-    protected function checkMethod($method)
+    public function checkMethod($method)
     {
         if (!in_array($method, $this->allowedMethods)) {
             throw new RestResponseException('Method not allowed', Response::STATUS_CODE_405);
         }
+
+        return true;
+    }
+
+    /**
+     * Set allowed methods
+     *
+     * @param array $methods
+     */
+    public function setAllowedMethods(array $methods = array())
+    {
+        $this->allowedMethods = $methods;
     }
 }

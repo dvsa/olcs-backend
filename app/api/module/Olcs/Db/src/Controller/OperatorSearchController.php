@@ -9,6 +9,7 @@
 namespace Olcs\Db\Controller;
 
 use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Operator Search REST controller

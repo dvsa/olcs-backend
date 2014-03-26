@@ -22,7 +22,7 @@ trait EntityManagerAwareTrait
     public function getEntityManager()
     {
         if (null === $this->em) {
-            throw \LogicException('Entity manager must be set before it can be requested.');
+            throw new \LogicException('Entity manager must be set before it can be requested.');
         }
 
         return $this->em;
