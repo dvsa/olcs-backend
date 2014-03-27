@@ -91,7 +91,8 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             array('getList', true),
             array('update', true),
             array('patch', true),
-            array('delete', true)
+            array('delete', true),
+            array('SomeController::delete', true)
         );
     }
 

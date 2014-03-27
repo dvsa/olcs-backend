@@ -947,7 +947,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockRepository->expects($this->once())
             ->method('findOneBy')
-            ->with(array('id' => $id, 'is_deleted' => 0))
+            ->with(array('id' => $id, 'isDeleted' => 0))
             ->will($this->returnValue($return));
 
         $mockEntityManager = $this->getMock('\stdClass', array('getRepository'));

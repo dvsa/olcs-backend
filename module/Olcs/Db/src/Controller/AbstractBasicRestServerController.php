@@ -275,6 +275,10 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     public function checkMethod($method)
     {
+        if (strstr($method, '::')) {
+            list($controller, $method) = explode('::', $method);
+        }
+
         if (!in_array($method, $this->allowedMethods)) {
             throw new RestResponseException('Method not allowed', Response::STATUS_CODE_405);
         }
