@@ -16,6 +16,15 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     use OlcsEntityManagerAwareTrait;
     use OlcsLoggerAwareTrait;
 
+    protected $entityName;
+
+    protected $listControlKeys = array(
+        'sortColumn',
+        'sortReversed',
+        'offset',
+        'limit'
+    );
+
     /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
@@ -27,9 +36,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-
-        $bundleHydrator = new BundleHydrator($hydrator);
+        $bundleHydrator = $this->getBundledHydrator();
 
         $entity = $bundleHydrator->getNestedEntityFromEntities($data);
 
@@ -62,9 +69,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return null;
         }
 
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-
-        $bundleHydrator = new BundleHydrator($hydrator);
+        $bundleHydrator = $this->getBundledHydrator();
 
         return $bundleHydrator->getTopLevelEntitiesFromNestedEntity($entity);
     }
@@ -80,12 +85,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $data = func_get_arg(0);
 
-        $listControlParams = $this->extractListControlParams($data);
-
         $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-
         $entityName = $this->getEntityName();
         $parts = explode('\\', $entityName);
 
@@ -111,19 +113,15 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             $params[$key] = $value;
         }
 
+        if ($this->canSoftDelete()) {
+            $qb->where('a.is_deleted = 0');
+        }
+
         if (!empty($params)) {
             $qb->setParameters($params);
         }
 
-        if ($this->canSoftDelete()) {
-            $qb->where('a.isDeleted = 0');
-        }
-
         $query = $qb->getQuery();
-
-        print '<pre>';
-        print_r($query);
-        print '</pre>';
 
         $results = $query->getResult();
 
@@ -131,9 +129,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         if (!empty($results)) {
 
-            $hydrator = new DoctrineHydrator($this->getEntityManager());
-
-            $bundleHydrator = new BundleHydrator($hydrator);
+            $bundleHydrator = $this->getBundledHydrator();
 
             $responseData = $bundleHydrator->getTopLevelEntitiesFromNestedEntity($results);
         }
@@ -141,24 +137,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         return array(
             'Count' => count($results),
             'Results' => $responseData
-        );
-    }
-
-    /**
-     * Converts camel caps to underscore seperated
-     *
-     * @param sting $name
-     *
-     * @return string
-     */
-    private function formatFieldName($name)
-    {
-        return preg_replace_callback(
-            '/[A-Z]/',
-            function($matches) {
-                return '_' . strtolower($matches[0]);
-            },
-            lcfirst($name)
         );
     }
 
@@ -174,29 +152,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        if (!isset($data['version'])) {
-            throw new NoVersionException('A version number must be specified to update an entity');
-        }
-
-        if ($this->canSoftDelete()) {
-            $entity = $this->getUnDeletedById($id);
-        } else {
-            $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
-        }
-
-        if (!$entity) {
-            return false;
-        }
-
-        $hydrator = new DoctrineHydrator($this->getEntityManager());
-        $entity = $hydrator->hydrate($data, $entity);
-
-        $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
-
-        $this->dbPersist($entity);
-        $this->dbFlush();
-
-        return true;
+        return $this->doUpdate($id, $data);
     }
 
     /**
@@ -211,7 +167,42 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        return $this->update($id, $data);
+        return $this->doUpdate($id, $data);
+    }
+
+    /**
+     * Separated the update logic, as this is used by patch
+     *
+     * @param int $id
+     * @param array $data
+     * @return boolean
+     * @throws NoVersionException
+     */
+    private function doUpdate($id, $data)
+    {
+        if (!isset($data['version'])) {
+            throw new NoVersionException('A version number must be specified to update an entity');
+        }
+
+        if ($this->canSoftDelete()) {
+            $entity = $this->getUnDeletedById($id);
+        } else {
+            $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
+        }
+
+        if (!$entity) {
+            return false;
+        }
+
+        $hydrator = $this->getDoctrineHydrator();
+        $entity = $hydrator->hydrate($data, $entity);
+
+        $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
+
+        $this->dbPersist($entity);
+        $this->dbFlush();
+
+        return true;
     }
 
     /**
@@ -243,30 +234,25 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
-     * Extracts the list control perameters and returns just those.
+     * Return a new instance of DoctrineHydrator
      *
-     * @param array $data
-     *
-     * @return array
+     * @return DoctrineObject
      */
-    public function extractListControlParams(array $data)
+    public function getDoctrineHydrator()
     {
-        return $this->pickValidKeys($data, $this->getListControlKeys());
+        return new DoctrineHydrator($this->getEntityManager());
     }
 
     /**
-     * Returns an indexed array containing keys for list control.
+     * Return an instance of BundleHydrator (Possibly needs moving to a Zend service)
      *
-     * @return array
+     * @return BundleHydrator
      */
-    protected function getListControlKeys()
+    public function getBundledHydrator()
     {
-        return array(
-            'sortColumn',
-            'sortReversed',
-            'offset',
-            'limit'
-        );
+        $hydrator = $this->getDoctrineHydrator();
+
+        return new BundleHydrator($hydrator);
     }
 
     /**
@@ -314,11 +300,21 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
+     * Set the entity name
+     *
+     * @param string $entityName
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+    }
+
+    /**
      * Whether you can soft delete the entity
      *
      * @return boolean
      */
-    private function canSoftDelete()
+    public function canSoftDelete()
     {
         return property_exists($this->getEntityName(), 'isDeleted');
     }
@@ -330,11 +326,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      *
      * @return object
      */
-    private function getUnDeletedById($id)
+    public function getUnDeletedById($id)
     {
         return $this->getEntityManager()
             ->getRepository($this->getEntityName())
-            ->findOneBy(array('id' => (int)$id, 'isDeleted' => 0));
+            ->findOneBy(array('id' => (int)$id, 'is_deleted' => 0));
     }
 
     /**
@@ -343,13 +339,31 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      * @param int $id
      * @return object
      */
-    private function getEntityById($id)
+    public function getEntityById($id)
     {
         if ($this->canSoftDelete()) {
             return $this->getUnDeletedById($id);
         }
 
         return $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+    }
+
+    /**
+     * Converts camel caps to underscore seperated
+     *
+     * @param sting $name
+     *
+     * @return string
+     */
+    protected function formatFieldName($name)
+    {
+        return preg_replace_callback(
+            '/[A-Z]/',
+            function($matches) {
+                return '_' . strtolower($matches[0]);
+            },
+            lcfirst($name)
+        );
     }
 
     /**
