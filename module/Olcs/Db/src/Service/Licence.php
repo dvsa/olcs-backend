@@ -18,15 +18,6 @@ namespace Olcs\Db\Service;
 class Licence extends ServiceAbstract
 {
 
-    private $licenceSearchAddressParts = array(
-        'a.address_line1',
-        'a.address_line2',
-        'a.address_line3',
-        'a.address_line4',
-        'a.city',
-        'a.postcode'
-    );
-
     /**
      * Returns an indexed array of valid search terms for this service / entity.
      *
@@ -46,6 +37,15 @@ class Licence extends ServiceAbstract
      */
     public function findLicences($options = array())
     {
+        $licenceSearchAddressParts = array(
+            'a.address_line1',
+            'a.address_line2',
+            'a.address_line3',
+            'a.address_line4',
+            'a.city',
+            'a.postcode'
+        );
+
         $optionConditions = array(
             'operatorName' => array(
                 'condition' => 'o.name LIKE ?',
@@ -64,7 +64,7 @@ class Licence extends ServiceAbstract
                 'type' => 'LIKE'
             ),
             'address' => array(
-                'condition' => implode(' LIKE ? OR ', $this->licenceSearchAddressParts) . ' LIKE ?',
+                'condition' => implode(' LIKE ? OR ', $licenceSearchAddressParts) . ' LIKE ?',
                 'type' => 'LIKE'
             ),
             'town' => array(
@@ -83,7 +83,7 @@ class Licence extends ServiceAbstract
             'operatorName' => 'o.name',
             'companyNumber' => 'o.registered_company_number',
             'lastActionDate' => 'l.startDate',
-            'correspondenceAddress' => $this->licenceSearchAddressParts,
+            'correspondenceAddress' => $licenceSearchAddressParts,
             'operatorCentre' => 'l.addressLine1',
             'caseNumber' => 'caseCount',
             'mlh' => 'l.id'
@@ -262,7 +262,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
     {
         return (
             isset($options['sortOrder']) && $options['sortOrder'] === 'DESC'
-            ) ? 'DESC' : 'ASC';
+            ) ? 'DESC' : $default;
     }
 
     /**
