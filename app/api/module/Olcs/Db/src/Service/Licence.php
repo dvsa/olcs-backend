@@ -145,7 +145,7 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
                 'type' => 'LIKE'
             ),
             'lastName' => array(
-                'condition' => 'p.surname = ?',
+                'condition' => 'p.surname LIKE ?',
                 'type' => 'LIKE'
             ),
             'dateOfBirth' => array(
