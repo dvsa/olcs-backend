@@ -49,7 +49,7 @@ return array(
             'address' => 'Olcs\Db\Controller\AddressController',
             'application' => 'Olcs\Db\Controller\ApplicationController',
             'cardpaymenttokenusage' => 'Olcs\Db\Controller\CardPaymentTokenUsageController',
-            'casecategorylink' => 'Olcs\Db\Controller\CaseCategoryLinkController',
+            'casecategory' => 'Olcs\Db\Controller\CaseCategoryController',
             'casedetailcomment' => 'Olcs\Db\Controller\CaseDetailCommentController',
             'casedetailtype' => 'Olcs\Db\Controller\CaseDetailTypeController',
             'casenote' => 'Olcs\Db\Controller\CaseNoteController',
@@ -91,7 +91,7 @@ return array(
             'trafficarea' => 'Olcs\Db\Controller\TrafficAreaController',
             'trailer' => 'Olcs\Db\Controller\TrailerController',
             'user' => 'Olcs\Db\Controller\UserController',
-            'vosacase' => 'Olcs\Db\Controller\VosaCaseController',
+            'vosa-case' => 'Olcs\Db\Controller\VosaCaseController',
             'vehicle' => 'Olcs\Db\Controller\VehicleController',
             'Error' => 'Olcs\Db\Controller\ErrorController'
         )

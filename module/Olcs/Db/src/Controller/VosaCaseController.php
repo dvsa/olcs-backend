@@ -15,5 +15,4 @@ namespace Olcs\Db\Controller;
  */
 class VosaCaseController extends AbstractBasicRestServerController
 {
-
 }

@@ -4,7 +4,6 @@ namespace Olcs\Db\Controller;
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use Zend\Http\Response;
 use Olcs\Db\Exceptions\RestResponseException;
-use OlcsEntities\Exceptions\EntityTypeNotFoundException;
 use Olcs\Db\Traits\RestResponseTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\ORM\OptimisticLockException;
@@ -48,10 +47,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             throw new \Exception();
-
-        } catch (EntityTypeNotFoundException $ex) {
-
-            return $this->respond(Response::STATUS_CODE_400, $ex->getMessage() . ' Entity not found');
 
         } catch (\Exception $ex) {
 

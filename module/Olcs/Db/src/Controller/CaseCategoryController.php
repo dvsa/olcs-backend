@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CaseCategoryLink REST controller
+ * CaseCategory REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,11 +9,11 @@
 namespace Olcs\Db\Controller;
 
 /**
- * CaseCategoryLink REST controller
+ * CaseCategory REST controller
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CaseCategoryLinkController extends AbstractBasicRestServerController
+class CaseCategoryController extends AbstractBasicRestServerController
 {
 
 }
