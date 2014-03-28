@@ -221,8 +221,7 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT
-l.id AS licenceId, l.licenceNumber AS licenceNumber, l.status AS licenceStatus,
+        $dataSql = 'SELECT l.id AS licenceId, l.licenceNumber AS licenceNumber, l.status AS licenceStatus,
 MAX(IF(pd.status = \'Y\', 0, 1)) AS disqualificationStatus ';
 
         $countSql = 'SELECT COUNT(DISTINCT p.id, IFNULL(l.id, 0)) AS rowCount ';

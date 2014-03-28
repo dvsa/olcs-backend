@@ -36,13 +36,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $bundleHydrator = $this->getBundledHydrator();
+        $entity = $this->getNewEntity();
 
-        $entity = $bundleHydrator->getNestedEntityFromEntities($data);
+        $hydrator = $this->getDoctrineHydrator();
 
-        // Just get the first entity for now
-        //  This is where we can work on the magic to save multiple entities at once
-        $entity = current($entity);
+        $hydrator->hydrate($data, $entity);
 
         $this->dbPersist($entity);
         $this->dbFlush();
@@ -69,9 +67,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return null;
         }
 
-        $bundleHydrator = $this->getBundledHydrator();
+        $hydrator = $this->getDoctrineHydrator();
 
-        return $bundleHydrator->getTopLevelEntitiesFromNestedEntity($entity);
+        $data = $hydrator->extract($entity);
+
+        return $data;
     }
 
     /**
@@ -364,6 +364,19 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             },
             lcfirst($name)
         );
+    }
+
+    /**
+     * Get the service
+     *
+     * @param string $name
+     * @return object
+     */
+    public function getService($name)
+    {
+        $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+
+        return $serviceFactory->getService($name);
     }
 
     /**

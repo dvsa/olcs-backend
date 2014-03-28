@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CaseCategoryLink Service
+ * CaseCategory Service
  *  - Takes care of the CRUD actions CaseCategoryLink entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
@@ -10,12 +10,12 @@
 namespace Olcs\Db\Service;
 
 /**
- * CaseCategoryLink Service
+ * CaseCategory Service
  *  - Takes care of the CRUD actions CaseCategoryLink entities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CaseCategoryLink extends ServiceAbstract
+class CaseCategory extends ServiceAbstract
 {
 
     /**

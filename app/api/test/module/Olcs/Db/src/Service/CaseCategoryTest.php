@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tests CaseCategoryLink Service
+ * Tests CaseCategory Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,14 +9,14 @@
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Service\CaseCategoryLink;
+use Olcs\Db\Service\CaseCategory;
 
 /**
  * Tests CaseCategoryLink Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CaseCategoryLinkTest extends PHPUnit_Framework_TestCase
+class CaseCategoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Setup the service
@@ -24,7 +24,7 @@ class CaseCategoryLinkTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // We may want to inject the ServiceLocator in the future
-        $this->service = new CaseCategoryLink();
+        $this->service = new CaseCategory();
     }
 
     /**

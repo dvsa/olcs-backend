@@ -98,6 +98,15 @@ abstract class AbstractController extends ZendAbstractRestfulController
      */
     public function getControllerName()
     {
-        return $this->params()->fromRoute('controller');
+        $controller = $this->params()->fromRoute('controller');
+
+        $controller = $this->formatControllerName($controller);
+
+        return $controller;
+    }
+
+    private function formatControllerName($controller)
+    {
+        return str_replace(' ', '', ucwords(str_replace('-', ' ', $controller)));
     }
 }
