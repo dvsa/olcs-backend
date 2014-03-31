@@ -79,12 +79,20 @@ class OperatorSearchControllerTest extends PHPUnit_Framework_TestCase
         );
 
         $return = array(
-            'this' => 'that'
+            array(
+                'resultCount' => 1,
+            ),
+            array(
+                array('foo' => 'bar')
+            )
         );
 
         $result = array(
             'Type' => 'results',
-            'Results' => $return
+            'Count' => 1,
+            'Results' => array(
+                array('foo' => 'bar')
+            )
         );
 
         $mockLicenceService = $this->getMock('\stdClass', array('findLicences'));

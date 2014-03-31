@@ -127,7 +127,7 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
         $dataQuery->execute($params);
         $results = $dataQuery->fetchAll();
 
-        return array($countResults, $results);
+        return array($countResults[0], $results);
     }
 
     /**
@@ -246,7 +246,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
         $dataQuery->execute($params);
         $results = $dataQuery->fetchAll();
 
-        return array($countResults, $results);
+        return array($countResults[0], $results);
     }
 
     /** @todo POTENTIALLY MOVE THE FOLLOWING INTO A TRAIT */
