@@ -43,7 +43,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreate()
     {
-        $this->getMockService(array('log', 'getBundledHydrator', 'dbPersist', 'dbFlush'));
+        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush'));
 
         $data = array();
 
@@ -55,23 +55,23 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue($id));
 
-        $entity = array(
-            'foo' => $firstEntity
-        );
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
-        $mockBundleHydrator = $this->getMock('\stdClass', array('getNestedEntityFromEntities'));
-
-        $mockBundleHydrator->expects($this->once())
-            ->method('getNestedEntityFromEntities')
-            ->with($data)
-            ->will($this->returnValue($entity));
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($data, $firstEntity)
+            ->will($this->returnValue($firstEntity));
 
         $this->service->expects($this->once())
             ->method('log');
 
         $this->service->expects($this->once())
-            ->method('getBundledHydrator')
-            ->will($this->returnValue($mockBundleHydrator));
+            ->method('getNewEntity')
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
 
         $this->service->expects($this->once())
             ->method('dbPersist')
@@ -91,7 +91,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $this->getMockService(array('log', 'getBundledHydrator', 'getEntityById'));
+        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
 
         $id = 7;
 
@@ -101,10 +101,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockEntity = $this->getMock('\stdClass');
 
-        $mockBundleHydrator = $this->getMock('\stdClass', array('getTopLevelEntitiesFromNestedEntity'));
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
 
-        $mockBundleHydrator->expects($this->once())
-            ->method('getTopLevelEntitiesFromNestedEntity')
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('extract')
             ->with($mockEntity)
             ->will($this->returnValue($data));
 
@@ -117,8 +117,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockEntity));
 
         $this->service->expects($this->once())
-            ->method('getBundledHydrator')
-            ->will($this->returnValue($mockBundleHydrator));
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
 
         $this->assertEquals($data, $this->service->get($id));
     }
@@ -1020,5 +1020,31 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockEntityManager));
 
         $this->assertEquals($mockEntity, $this->service->getEntityById($id));
+    }
+
+    public function testGetService()
+    {
+        $this->getMockService(array('getServiceLocator'));
+
+        $name = 'Bob';
+
+        $mockServiceFactory = $this->getMock('\stdClass', array('getService'));
+
+        $mockServiceFactory->expects($this->once())
+            ->method('getService')
+            ->with($name);
+
+        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
+
+        $mockServiceLocator->expects($this->once())
+            ->method('get')
+            ->with('serviceFactory')
+            ->will($this->returnValue($mockServiceFactory));
+
+        $this->service->expects($this->once())
+            ->method('getServiceLocator')
+            ->will($this->returnValue($mockServiceLocator));
+
+        $this->service->getService($name);
     }
 }
