@@ -279,46 +279,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     /**
      * Test create
      *  With valid json data
-     *  Throw EntityTypeNotFoundException
-     *
-     * @group Controller
-     * @group AbstractBasicRestServerController
-     */
-    public function testCreateWithValidJsonDataThrowEntityTypeNotFoundException()
-    {
-        $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
-
-        $data = array(
-            'foo' => 'bar'
-        );
-
-        $mockService = $this->getMock('\stdClass', array('create'));
-
-        $mockService->expects($this->once())
-            ->method('create')
-            ->will($this->throwException(new \OlcsEntities\Exceptions\EntityTypeNotFoundException));
-
-        $this->controller->expects($this->once())
-            ->method('checkMethod');
-
-        $this->controller->expects($this->once())
-            ->method('formatDataFromJson')
-            ->will($this->returnValue($data));
-
-        $this->controller->expects($this->once())
-            ->method('getService')
-            ->will($this->returnValue($mockService));
-
-        $this->controller->expects($this->once())
-            ->method('respond')
-            ->with(Response::STATUS_CODE_400);
-
-        $this->controller->create($data);
-    }
-
-    /**
-     * Test create
-     *  With valid json data
      *  Throw Exception
      *
      * @group Controller
