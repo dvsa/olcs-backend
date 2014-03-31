@@ -33,6 +33,12 @@ class PersonLicenceSearchController extends AbstractBasicRestServerController
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }
 
-        return $this->respond(Response::STATUS_CODE_200, '', $data);
+        $response = array(
+            'Type' => 'results',
+            'Count' => $data[0]['resultCount'],
+            'Results' => $data[1]
+        );
+
+        return $this->respond(Response::STATUS_CODE_200, '', $response);
     }
 }
