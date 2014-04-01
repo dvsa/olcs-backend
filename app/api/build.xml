@@ -30,7 +30,7 @@
  </target>
 
 <target name="phpunit" description="Run unit tests with PHPUnit">
-  <exec executable="${basedir}/vendor/bin/phpunit" failonerror="false"/>
+  <exec executable="phpunit" failonerror="false"/>
  </target>
 
 </project>
