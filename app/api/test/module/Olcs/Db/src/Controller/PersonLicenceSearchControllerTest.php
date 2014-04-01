@@ -79,7 +79,20 @@ class PersonLicenceSearchControllerTest extends PHPUnit_Framework_TestCase
         );
 
         $return = array(
-            'this' => 'that'
+            array(
+                'resultCount' => 1,
+            ),
+            array(
+                array('foo' => 'bar')
+            )
+        );
+
+        $result = array(
+            'Type' => 'results',
+            'Count' => 1,
+            'Results' => array(
+                array('foo' => 'bar')
+            )
         );
 
         $mockLicenceService = $this->getMock('\stdClass', array('findPersonsAndLicences'));
@@ -100,7 +113,7 @@ class PersonLicenceSearchControllerTest extends PHPUnit_Framework_TestCase
 
         $this->controller->expects($this->once())
             ->method('respond')
-            ->with(Response::STATUS_CODE_200, '', $return);
+            ->with(Response::STATUS_CODE_200, '', $result);
 
         $this->controller->getList();
     }

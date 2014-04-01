@@ -65,9 +65,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -89,7 +93,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -123,9 +127,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -147,7 +155,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -164,9 +172,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -188,7 +200,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -207,9 +219,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -231,7 +247,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -254,9 +270,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -278,7 +298,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findPersonsAndLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -304,9 +324,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -328,7 +352,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findPersonsAndLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -345,9 +369,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -369,7 +397,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findPersonsAndLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**
@@ -388,9 +416,13 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
 
-        $mockQuery->expects($this->any())
+        $mockQuery->expects($this->at(1))
             ->method('fetchAll')
-            ->will($this->returnValue(array('foo' => 'bar')));
+            ->will($this->returnValue(array(array('resultCount' => 1))));
+
+        $mockQuery->expects($this->at(3))
+            ->method('fetchAll')
+            ->will($this->returnValue(array(array('foo' => 'bar'))));
 
         $mockQuery->expects($this->any())
             ->method('execute')
@@ -412,7 +444,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
 
         $result = $this->service->findPersonsAndLicences($options);
 
-        $this->assertEquals(array(array('foo' => 'bar'), array('foo' => 'bar')), $result);
+        $this->assertEquals(array(array('resultCount' => 1), array(array('foo' => 'bar'))), $result);
     }
 
     /**

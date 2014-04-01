@@ -5,11 +5,11 @@
         "type": "package",
         "package": {
             "name": "olcs/olcs-entities",
-            "version": "0.1.4",
+            "version": "dev-develop",
             "source": {
                 "url": "gitolite@git.clb.npm:olcs-entities.git",
                 "type": "git",
-                "reference": "origin/master"
+                "reference": "origin/develop"
             }
         }
     }],
@@ -18,7 +18,7 @@
         "zendframework/zendframework": "2.2.*",
         "doctrine/doctrine-orm-module": "0.*",
         "phpunit/phpunit": "4.0.*",
-        "olcs/olcs-entities": "0.1.*"
+        "olcs/olcs-entities": "dev-develop"
     },
     "autoload": {
         "psr-4": {

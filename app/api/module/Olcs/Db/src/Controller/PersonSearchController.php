@@ -33,6 +33,11 @@ class PersonSearchController extends AbstractBasicRestServerController
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }
 
-        return $this->respond(Response::STATUS_CODE_200, '', array('Type' => 'results', 'Results' => $data));
+        $response = array(
+            'Type' => 'results',
+            'Results' => $data
+        );
+
+        return $this->respond(Response::STATUS_CODE_200, '', $response);
     }
 }
