@@ -9,6 +9,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
+use Doctrine\Common\Collections\Collection;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
@@ -67,9 +68,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return null;
         }
 
-        $hydrator = $this->getDoctrineHydrator();
-
-        $data = $hydrator->extract($entity);
+        $data = $this->extract($entity);
 
         return $data;
     }
@@ -91,10 +90,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $entityName = $this->getEntityName();
         $parts = explode('\\', $entityName);
 
-        $tableName = $this->formatFieldName(array_pop($parts));
-
         $qb->select('a');
-        $qb->from($tableName, 'a');
+        $qb->from($entityName, 'a');
 
         $params = array();
 
@@ -125,18 +122,23 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $results = $query->getResult();
 
-        $responseData = array();
-
         if (!empty($results)) {
 
-            $bundleHydrator = $this->getBundledHydrator();
+            $rows = array();
 
-            $responseData = $bundleHydrator->getTopLevelEntitiesFromNestedEntity($results);
+            foreach ($results as $row) {
+
+                $hydrator = $this->getDoctrineHydrator();
+
+                $rows[] = $hydrator->extract($row);
+            }
+
+            $results = $rows;
         }
 
         return array(
             'Count' => count($results),
-            'Results' => $responseData
+            'Results' => $results
         );
     }
 
@@ -190,9 +192,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
         }
 
-        if (!$entity) {
+        if (empty($entity)) {
             return false;
         }
+
+        $entity->clearProperties(array_keys($data));
 
         $hydrator = $this->getDoctrineHydrator();
         $entity = $hydrator->hydrate($data, $entity);
@@ -377,6 +381,50 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
         return $serviceFactory->getService($name);
+    }
+
+    /**
+     * Method to extract data
+     *
+     * @param object $entity
+     * @return array
+     */
+    protected function extract($entity)
+    {
+        $hydrator = $this->getDoctrineHydrator();
+
+        $data = $hydrator->extract($entity);
+
+        $data = $this->extractIds($data);
+
+        return $data;
+    }
+
+    /**
+     * Replace entities with their id's
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function extractIds($data)
+    {
+        foreach ($data as $key => $value) {
+
+            if ($value instanceof \OlcsEntities\Entity\EntityInterface) {
+
+                $data[$key] = $value->getId();
+
+            } elseif ($value instanceof Collection) {
+
+                $data[$key] = $this->extractIds($value->toArray());
+
+            } elseif (is_array($value)) {
+
+                $data[$key] = $this->extractIds($value);
+            }
+        }
+
+        return $data;
     }
 
     /**

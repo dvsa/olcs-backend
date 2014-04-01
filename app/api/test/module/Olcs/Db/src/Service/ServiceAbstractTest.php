@@ -10,6 +10,7 @@ namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
 use Olcs\Db\Service\ServiceAbstract;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Tests ServiceAbstract
@@ -125,6 +126,183 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test get
+     *  With Entity Interface
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testGetWithEntity()
+    {
+        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
+
+        $id = 7;
+
+        $mockEntity = $this->getMockForAbstractClass(
+            '\OlcsEntities\Entity\AbstractEntity',
+             array(),
+            '',
+            true,
+            true,
+            true,
+            array(
+                'getId'
+            )
+        );
+
+        $mockEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue(6));
+
+        $data = array(
+            $mockEntity
+        );
+
+        $expected = array(6);
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('extract')
+            ->with($mockEntity)
+            ->will($this->returnValue($data));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getEntityById')
+            ->with($id)
+            ->will($this->returnValue($mockEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->assertEquals($expected, $this->service->get($id));
+    }
+
+    /**
+     * Test get
+     *  With Nested Entity Interface
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testGetWithNestedEntity()
+    {
+        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
+
+        $id = 7;
+
+        $mockEntity = $this->getMockForAbstractClass(
+            '\OlcsEntities\Entity\AbstractEntity',
+             array(),
+            '',
+            true,
+            true,
+            true,
+            array(
+                'getId'
+            )
+        );
+
+        $mockEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue(6));
+
+        $data = array(
+            array(
+                'foo' => $mockEntity
+            )
+        );
+
+        $expected = array(array('foo' => 6));
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('extract')
+            ->with($mockEntity)
+            ->will($this->returnValue($data));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getEntityById')
+            ->with($id)
+            ->will($this->returnValue($mockEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->assertEquals($expected, $this->service->get($id));
+    }
+
+    /**
+     * Test get
+     *  With Collection Entity Interface
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testGetWithCollectionEntity()
+    {
+        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
+
+        $id = 7;
+
+        $mockEntity = $this->getMockForAbstractClass(
+            '\OlcsEntities\Entity\AbstractEntity',
+             array(),
+            '',
+            true,
+            true,
+            true,
+            array(
+                'getId'
+            )
+        );
+
+        $mockEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue(6));
+
+        $data = array(
+            'foo' => new ArrayCollection(
+                array($mockEntity)
+            )
+        );
+
+        $expected = array(
+            'foo' => array(6)
+        );
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('extract')
+            ->with($mockEntity)
+            ->will($this->returnValue($data));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getEntityById')
+            ->with($id)
+            ->will($this->returnValue($mockEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->assertEquals($expected, $this->service->get($id));
+    }
+
+    /**
+     * Test get
      *  with no entity
      *
      * @group Service
@@ -203,7 +381,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->once())
             ->method('from')
-            ->with('mock_entity');
+            ->with('MockEntity');
 
         $mockQueryBuilder->expects($this->at(2))
             ->method('where')
@@ -265,7 +443,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetList()
     {
-        $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete', 'getBundledHydrator'));
+        $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete', 'getDoctrineHydrator'));
 
         $data = array(
             'fooBar' => 'bar',
@@ -283,21 +461,19 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         );
 
         $results = array(
-            array('foo' => 'bar'),
-            array('bar' => 'log')
+            array('foo' => 'bar')
         );
 
         $expected = array(
-            'Count' => 2,
+            'Count' => 1,
             'Results' => $results
         );
 
-        $mockBundleHydrator = $this->getMock('\stdClass', array('getTopLevelEntitiesFromNestedEntity'));
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
 
-        $mockBundleHydrator->expects($this->once())
-            ->method('getTopLevelEntitiesFromNestedEntity')
-            ->with($results)
-            ->will($this->returnValue($results));
+        $mockDoctrineHydrator->expects($this->any())
+            ->method('extract')
+            ->will($this->returnValue(array('foo' => 'bar')));
 
         $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
 
@@ -316,7 +492,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->once())
             ->method('from')
-            ->with('mock_entity');
+            ->with('MockEntity');
 
         $mockQueryBuilder->expects($this->at(2))
             ->method('where')
@@ -367,9 +543,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('canSoftDelete')
             ->will($this->returnValue(true));
 
-        $this->service->expects($this->once())
-            ->method('getBundledHydrator')
-            ->will($this->returnValue($mockBundleHydrator));
+        $this->service->expects($this->any())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
 
         $this->assertEquals($expected, $this->service->getList($data));
     }
@@ -495,7 +671,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\stdClass');
+        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
+
+        $mockEntity->expects($this->once())
+            ->method('clearProperties');
 
         $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
 
@@ -661,7 +840,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\stdClass');
+        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
+
+        $mockEntity->expects($this->once())
+            ->method('clearProperties');
 
         $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
 
