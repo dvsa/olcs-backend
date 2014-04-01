@@ -29,8 +29,4 @@
   </apply>
  </target>
 
-<target name="phpunit" description="Run unit tests with PHPUnit">
-  <exec executable="phpunit" failonerror="false"/>
- </target>
-
 </project>
