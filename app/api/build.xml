@@ -16,12 +16,12 @@
   <apply executable="php" failonerror="true">
    <arg value="-l" />
 
-   <fileset dir="${basedir}/src/module">
+   <fileset dir="${basedir}/module">
     <include name="**/*.php" />
     <modified />
    </fileset>
 
-   <fileset dir="${basedir}/src/config">
+   <fileset dir="${basedir}/config">
     <include name="**/*.php" />
     <modified />
    </fileset>
@@ -30,7 +30,7 @@
  </target>
 
 <target name="phpunit" description="Run unit tests with PHPUnit">
-  <exec executable="${basedir}/src/vendor/bin/phpunit" failonerror="false"/>
+  <exec executable="${basedir}/vendor/bin/phpunit" failonerror="false"/>
  </target>
 
 </project>
