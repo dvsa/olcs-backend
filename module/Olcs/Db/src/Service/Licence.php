@@ -79,7 +79,7 @@ class Licence extends ServiceAbstract
 
         $lookupColumn = array(
             'licenceNumber' => 'l.licenceNumber',
-            'appId' => 'l.id',
+            'appId' => 'app.application_number',
             'operatorName' => 'o.name',
             'companyNumber' => 'o.registered_company_number',
             'lastActionDate' => 'l.startDate',
@@ -102,13 +102,14 @@ class Licence extends ServiceAbstract
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.*, o.*, l.licenceNumber AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
+        $dataSql = 'SELECT l.*, o.*, a.*, app.application_number as appNumber, app.status as appStatus, l.licenceNumber AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
 
         // Common part of the query
         $sql = 'FROM organisation o
 INNER JOIN licence l ON l.operatorId = o.id
+LEFT JOIN application app ON app.licence_uid = l.id
 LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_details_type = \'correspondence\')
 LEFT JOIN address a ON cd.address_id = a.id
 LEFT JOIN trading_name tm ON l.id = tm.F_Licence_UID
@@ -260,7 +261,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
     private function getSortOrder($options, $default = 'ASC')
     {
         return (
-            isset($options['sortOrder']) && $options['sortOrder'] === 'DESC'
+            isset($options['order']) && $options['order'] === 'DESC'
             ) ? 'DESC' : $default;
     }
 
