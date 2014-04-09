@@ -64,6 +64,7 @@ return array(
             'kvpstore' => 'Olcs\Db\Controller\KvpstoreController',
             'licencecondition' => 'Olcs\Db\Controller\LicenceConditionController',
             'licence' => 'Olcs\Db\Controller\LicenceController',
+            'licenceorganisation' => 'Olcs\Db\Controller\LicenceOrganisationController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'note' => 'Olcs\Db\Controller\NoteController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
