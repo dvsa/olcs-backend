@@ -207,7 +207,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * @param \Exception $ex
      * @return Response
      */
-    private function unknownError($ex)
+    protected function unknownError($ex)
     {
         return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
     }
