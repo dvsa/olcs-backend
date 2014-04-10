@@ -143,7 +143,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * @param string $method
      * @return Response
      */
-    private function updateOrPatch($id, $data, $method)
+    protected function updateOrPatch($id, $data, $method)
     {
         $data = $this->formatDataFromJson($data);
 
