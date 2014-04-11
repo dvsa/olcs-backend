@@ -9,15 +9,8 @@
 
 namespace Olcs\Db\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
-use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
-use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
-use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Organisation Service
@@ -37,7 +30,7 @@ class Organisation extends ServiceAbstract
     {
         return array();
     }
-    
+
     /**
      * Gets an organisation record by licenceId.
      * @todo Possibly use join... needs performence review
@@ -49,7 +42,7 @@ class Organisation extends ServiceAbstract
     public function getByLicenceId($id)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
-        
+
         $licenceEntity = $this->getEntityManager()->getRepository('OlcsEntities\Entity\Licence')->findOneBy(['id' => $id]);
         if (empty($licenceEntity)) {
             return null;
@@ -58,16 +51,16 @@ class Organisation extends ServiceAbstract
         if (empty($orgEntity)) {
             return null;
         }
-        
+
         $data = $this->extract($orgEntity);
         return $data;
     }
-    
+
     /**
      * Update an organisation record by licenceId.
-     * 
+     *
      * @todo Possibly use join... needs performence review
-     * 
+     *
      * @param int $id
      * @param array $data
      * @throws NoVersionException
@@ -78,27 +71,27 @@ class Organisation extends ServiceAbstract
         if (!isset($data['version'])) {
             throw new NoVersionException('A version number must be specified to update an entity');
         }
-        
+
         $licenceEntity = $this->getEntityManager()->getRepository('OlcsEntities\Entity\Licence')->findOneBy(['id' => $id]);
         if (empty($licenceEntity)) {
             return null;
         }
-        
+
         $orgEntity = $licenceEntity->getOrganisation();
         if (empty($orgEntity)) {
             return null;
         }
-        
+
         //$orgEntity->clearProperties(array_keys($data));
-        
+
         $hydrator = $this->getDoctrineHydrator();
         $orgEntity = $hydrator->hydrate($data, $orgEntity);
-        
+
         $this->getEntityManager()->lock($orgEntity, LockMode::OPTIMISTIC, $data['version']);
-        
+
         $this->dbPersist($orgEntity);
         $this->dbFlush();
-        
+
         return true;
     }
 
