@@ -67,6 +67,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $this->checkMethod(__METHOD__);
 
         try {
+
             $result = $this->getService()->get($id);
 
             if (empty($result)) {
@@ -238,7 +239,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         if (!$this->serviceExists($name)) {
 
-            return $serviceFactory->getService('Generic')->setEntityName($name);
+            return $serviceFactory->getService('Generic')->setEntityName('\OlcsEntities\Entity\\' . $name);
         }
 
         return $serviceFactory->getService($name);

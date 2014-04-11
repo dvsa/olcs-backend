@@ -43,7 +43,7 @@ class GenericControllerTest extends PHPUnit_Framework_TestCase
             ->method('fromRoute')
             ->will($this->returnValue('foo-bar'));
 
-        $controller = $this->getMock('\Olcs\Db\Controller\GenericController', array('getDashToCamelCaseFilter', 'params', 'setService', 'logRequest', 'doDispatch'));
+        $controller = $this->getMock('\Olcs\Db\Controller\GenericController', array('getDashToCamelCaseFilter', 'params', 'setServiceName', 'logRequest', 'doDispatch'));
 
         $controller->expects($this->once())
             ->method('getDashToCamelCaseFilter')
@@ -54,7 +54,7 @@ class GenericControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($paramsMock));
 
         $controller->expects($this->once())
-            ->method('setService')
+            ->method('setServiceName')
             ->with('FooBar');
 
         $controller->expects($this->once())

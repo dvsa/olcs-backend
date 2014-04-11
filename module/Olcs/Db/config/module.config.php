@@ -15,7 +15,7 @@ return array(
                 'options' => array(
                     'route' => '/[:service][/:id]',
                     'constraints' => array(
-                        'service' => '[a-zA-Z\-]+',
+                        'service' => '[a-z\-]+',
                         'id' => '[0-9]+'
                     ),
                     'defaults' => array(
@@ -23,13 +23,51 @@ return array(
                     )
                 )
             ),
-            'rest' => array(
+            'licence-organisation' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/[:controller][/:id]',
+                    'route' => '/licence-organisation[/:id]',
                     'constraints' => array(
-                        'controller' => '[a-zA-Z\-]+',
                         'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'licence-organisation'
+                    )
+                )
+            ),
+            'operator-search' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/operator-search[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'operator-search'
+                    )
+                )
+            ),
+            'person-search' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/person-search[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'person-search'
+                    )
+                )
+            ),
+            'person-licence-search' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/person-licence-search[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'person-licence-search'
                     )
                 )
             )
