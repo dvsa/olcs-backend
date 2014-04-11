@@ -70,7 +70,7 @@ abstract class AbstractController extends ZendAbstractRestfulController
      * @param MvcEvent $e
      * @return Response
      */
-    private function doDispatch($e)
+    public function doDispatch($e)
     {
         try {
             return parent::onDispatch($e);
