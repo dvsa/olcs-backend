@@ -12,6 +12,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 {
     use RestResponseTrait;
 
+    protected $serviceName;
+
     protected $allowedMethods = array(
         'create',
         'get',
@@ -65,6 +67,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $this->checkMethod(__METHOD__);
 
         try {
+
             $result = $this->getService()->get($id);
 
             if (empty($result)) {
@@ -222,7 +225,48 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     {
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
-        return $serviceFactory->getService(empty($name) ? $this->getControllerName() : $name);
+        if (empty($name) ) {
+
+            if (!empty($this->serviceName)) {
+
+                $name = $this->serviceName;
+
+            } else {
+
+                $name = $this->getControllerName();
+            }
+        }
+
+        if (!$this->serviceExists($name)) {
+
+            return $serviceFactory->getService('Generic')->setEntityName('\OlcsEntities\Entity\\' . $name);
+        }
+
+        return $serviceFactory->getService($name);
+    }
+
+    /**
+     * Check if a service exists
+     *
+     * @param string $serviceName
+     *
+     * @return boolean
+     */
+    public function serviceExists($serviceName)
+    {
+        $className = '\Olcs\Db\Service\\' . $serviceName;
+
+        return class_exists($className);
+    }
+
+    /**
+     * Set the service name
+     *
+     * @param string $name
+     */
+    public function setServiceName($name)
+    {
+        $this->serviceName = $name;
     }
 
     /**

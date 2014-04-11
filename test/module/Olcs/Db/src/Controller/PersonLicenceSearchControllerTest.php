@@ -6,12 +6,10 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace OlcsTest\Db\Service;
+namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Controller\PersonLicenceSearchController;
 use Zend\Http\Response;
-use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Tests PersonLicenceSearchController
