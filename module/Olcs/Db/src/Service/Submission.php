@@ -25,7 +25,7 @@ class Submission extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array();
+        return array('vosaCase');
     }
 
 }
