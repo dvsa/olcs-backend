@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace OlcsTest\Db\Service;
+namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
 use Olcs\Db\Controller\AbstractBasicRestServerController;
@@ -185,70 +185,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             array(array('data' => '{"foo":"bar"}'), true, array('foo' => 'bar')),
             array(array('data' => '{"foo":"bar","cake":[1,2,3]}'), true, array('foo' => 'bar', 'cake' => array(1, 2, 3)))
         );
-    }
-
-    /**
-     * Test getService
-     *  Without service name
-     *
-     * @group Controller
-     * @group AbstractBasicRestServerController
-     */
-    public function testGetServiceWithoutServiceName()
-    {
-        $this->getMockController(array('getServiceLocator', 'getControllerName'));
-
-        $mockServiceFactory = $this->getMock('\stdClass', array('getService'));
-
-        $mockServiceFactory->expects($this->once())
-            ->method('getService')
-            ->will($this->returnCallback(function($string){ return $string; }));
-
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($mockServiceFactory));
-
-        $this->controller->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
-
-        $this->controller->expects($this->once())
-            ->method('getControllerName')
-            ->will($this->returnValue('Foo'));
-
-        $this->assertEquals('Foo', $this->controller->getService());
-    }
-
-    /**
-     * Test getService
-     *  With service name
-     *
-     * @group Controller
-     * @group AbstractBasicRestServerController
-     */
-    public function testGetServiceWithServiceName()
-    {
-        $this->getMockController(array('getServiceLocator'));
-
-        $mockServiceFactory = $this->getMock('\stdClass', array('getService'));
-
-        $mockServiceFactory->expects($this->once())
-            ->method('getService')
-            ->will($this->returnCallback(function($string){ return $string; }));
-
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($mockServiceFactory));
-
-        $this->controller->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
-
-        $this->assertEquals('Bar', $this->controller->getService('Bar'));
     }
 
     /**
