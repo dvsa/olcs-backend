@@ -66,6 +66,7 @@ return array(
             'licence' => 'Olcs\Db\Controller\LicenceController',
             'licence-organisation' => 'Olcs\Db\Controller\LicenceOrganisationController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
+            'licencevehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
