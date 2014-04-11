@@ -15,11 +15,9 @@ use Doctrine\Common\Collections\Collection;
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
 
-    use ZendServiceLocatorAwareTrait;
-
-use OlcsEntityManagerAwareTrait;
-
-use OlcsLoggerAwareTrait;
+    use ZendServiceLocatorAwareTrait,
+        OlcsEntityManagerAwareTrait,
+        OlcsLoggerAwareTrait;
 
     protected $entityName;
     protected $listControlKeys = array(
@@ -28,6 +26,7 @@ use OlcsLoggerAwareTrait;
         'offset',
         'limit'
     );
+
     protected $validSearchFields = array(
     );
 

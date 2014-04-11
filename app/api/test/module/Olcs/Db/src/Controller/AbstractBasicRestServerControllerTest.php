@@ -1168,8 +1168,8 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
 
         $serviceMock->expects($this->once())
-            ->method('setEntityname')
-            ->with('Bob')
+            ->method('setEntityName')
+            ->with('\OlcsEntities\Entity\Bob')
             ->will($this->returnValue('Service'));
 
         $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
@@ -1243,8 +1243,8 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
 
         $serviceMock->expects($this->once())
-            ->method('setEntityname')
-            ->with('Bob')
+            ->method('setEntityName')
+            ->with('\OlcsEntities\Entity\Bob')
             ->will($this->returnValue('Service'));
 
         $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
@@ -1322,8 +1322,8 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
 
         $serviceMock->expects($this->once())
-            ->method('setEntityname')
-            ->with('Bob')
+            ->method('setEntityName')
+            ->with('\OlcsEntities\Entity\Bob')
             ->will($this->returnValue('Service'));
 
         $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));

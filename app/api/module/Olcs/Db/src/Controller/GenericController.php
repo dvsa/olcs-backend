@@ -29,7 +29,7 @@ class GenericController extends AbstractBasicRestServerController
     {
         $service = $this->params()->fromRoute('service');
 
-        $this->setService($this->getDashToCamelCaseFilter()->filter($service));
+        $this->setServiceName($this->getDashToCamelCaseFilter()->filter($service));
 
         return parent::onDispatch($e);
     }
