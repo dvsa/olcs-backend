@@ -429,7 +429,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
-     * Returns an indexed array of valid search terms for this service / entity.
+     * Returns an array of valid search terms for the service / entity.
      *
      * @return array
      */
@@ -437,12 +437,28 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         if (empty($this->validSearchFields)) {
 
-            $reflectedEntity = new \ReflectionClass($this->getEntityName());
+            $reflectedEntity = $this->getReflectedEntity();
 
-            $this->validSearchFields = $reflectedEntity->getProperties();
+            $properties = $reflectedEntity->getProperties();
+
+            $this->validSearchFields = array();
+
+            foreach ($properties as $property) {
+                $this->validSearchFields[] = $property->getName();
+            }
         }
 
         return $this->validSearchFields;
+    }
+
+    /**
+     * Get a reflected entity
+     *
+     * @return \ReflectionClass
+     */
+    public function getReflectedEntity()
+    {
+        return new \ReflectionClass($this->getEntityName());
     }
 
 }

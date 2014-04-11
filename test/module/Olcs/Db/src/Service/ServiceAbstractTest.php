@@ -1204,6 +1204,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($mockEntity, $this->service->getEntityById($id));
     }
 
+    /**
+     * Test getService
+     */
     public function testGetService()
     {
         $this->getMockService(array('getServiceLocator'));
@@ -1228,5 +1231,59 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockServiceLocator));
 
         $this->service->getService($name);
+    }
+
+    /**
+     * Test getReflectedEntity
+     */
+    public function testGetReflectedEntity()
+    {
+        $this->getMockService(array('getEntityName'));
+
+        $this->service->expects($this->once())
+            ->method('getEntityName')
+            ->will($this->returnValue('\stdClass'));
+
+        $this->assertTrue($this->service->getReflectedEntity() instanceof \ReflectionClass);
+    }
+
+    /**
+     * Test getValidSearchFields
+     */
+    public function testGetValidSearchFields()
+    {
+        $expected = array(
+            'Bob',
+            'Foo'
+        );
+
+        $property1 = $this->getMock('\stdClass', array('getName'));
+        $property1->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('Bob'));
+
+        $property2 = $this->getMock('\stdClass', array('getName'));
+        $property2->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('Foo'));
+
+        $properties = array($property1, $property2);
+
+        $this->getMockService(array('getReflectedEntity'));
+
+        $reflectedMock = $this->getMock('\stdClass', array('getProperties'));
+
+        $reflectedMock->expects($this->once())
+            ->method('getProperties')
+            ->will($this->returnValue($properties));
+
+        $this->service->expects($this->once())
+            ->method('getReflectedEntity')
+            ->will($this->returnValue($reflectedMock));
+
+        $this->assertEquals($expected, $this->service->getValidSearchFields());
+
+        // Test again, so we know it's been cached
+        $this->assertEquals($expected, $this->service->getValidSearchFields());
     }
 }
