@@ -226,7 +226,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         if (empty($name) ) {
 
-            if (empty($this->serviceName)) {
+            if (!empty($this->serviceName)) {
 
                 $name = $this->serviceName;
 
@@ -263,7 +263,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @param string $name
      */
-    protected function setServiceName($name)
+    public function setServiceName($name)
     {
         $this->serviceName = $name;
     }
