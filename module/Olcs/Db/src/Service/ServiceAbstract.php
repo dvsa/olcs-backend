@@ -101,7 +101,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         foreach ($searchFields as $key => $value) {
 
-            $field = $this->formatFieldName($key);
+            $field = $key;
 
             if (is_numeric($value)) {
 
@@ -364,14 +364,14 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      *
      * @return string
      */
-    protected function formatFieldName($name)
+    /* protected function formatFieldName($name)
     {
         return preg_replace_callback(
             '/[A-Z]/', function($matches) {
             return '_' . strtolower($matches[0]);
         }, lcfirst($name)
         );
-    }
+    } */
 
     /**
      * Get the service
