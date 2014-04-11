@@ -12,6 +12,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 {
     use RestResponseTrait;
 
+    protected $serviceName;
+
     protected $allowedMethods = array(
         'create',
         'get',
@@ -65,6 +67,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $this->checkMethod(__METHOD__);
 
         try {
+
             $result = $this->getService()->get($id);
 
             if (empty($result)) {
@@ -143,7 +146,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * @param string $method
      * @return Response
      */
-    private function updateOrPatch($id, $data, $method)
+    protected function updateOrPatch($id, $data, $method)
     {
         $data = $this->formatDataFromJson($data);
 
@@ -207,7 +210,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * @param \Exception $ex
      * @return Response
      */
-    private function unknownError($ex)
+    protected function unknownError($ex)
     {
         return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
     }
@@ -222,7 +225,48 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     {
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
-        return $serviceFactory->getService(empty($name) ? $this->getControllerName() : $name);
+        if (empty($name) ) {
+
+            if (!empty($this->serviceName)) {
+
+                $name = $this->serviceName;
+
+            } else {
+
+                $name = $this->getControllerName();
+            }
+        }
+
+        if (!$this->serviceExists($name)) {
+
+            return $serviceFactory->getService('Generic')->setEntityName('\OlcsEntities\Entity\\' . $name);
+        }
+
+        return $serviceFactory->getService($name);
+    }
+
+    /**
+     * Check if a service exists
+     *
+     * @param string $serviceName
+     *
+     * @return boolean
+     */
+    public function serviceExists($serviceName)
+    {
+        $className = '\Olcs\Db\Service\\' . $serviceName;
+
+        return class_exists($className);
+    }
+
+    /**
+     * Set the service name
+     *
+     * @param string $name
+     */
+    public function setServiceName($name)
+    {
+        $this->serviceName = $name;
     }
 
     /**
