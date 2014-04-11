@@ -1,4 +1,5 @@
 <?php
+
 namespace Olcs\Db\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
@@ -13,17 +14,21 @@ use Doctrine\Common\Collections\Collection;
 
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
+
     use ZendServiceLocatorAwareTrait;
-    use OlcsEntityManagerAwareTrait;
-    use OlcsLoggerAwareTrait;
+
+use OlcsEntityManagerAwareTrait;
+
+use OlcsLoggerAwareTrait;
 
     protected $entityName;
-
     protected $listControlKeys = array(
         'sortColumn',
         'sortReversed',
         'offset',
         'limit'
+    );
+    protected $validSearchFields = array(
     );
 
     /**
@@ -102,7 +107,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             if (is_numeric($value)) {
 
                 $qb->where("a.{$field} = :{$key}");
-
             } else {
 
                 $qb->where("a.{$field} LIKE :{$key}");
@@ -189,7 +193,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         if ($this->canSoftDelete()) {
             $entity = $this->getUnDeletedById($id);
         } else {
-            $entity = $this->getEntityManager()->find($this->getEntityName(), (int)$id, LockMode::OPTIMISTIC, $data['version']);
+            $entity = $this->getEntityManager()->find($this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']);
         }
 
         if (empty($entity)) {
@@ -311,6 +315,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
+
+        return $this;
     }
 
     /**
@@ -333,8 +339,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function getUnDeletedById($id)
     {
         return $this->getEntityManager()
-            ->getRepository($this->getEntityName())
-            ->findOneBy(array('id' => (int)$id, 'isDeleted' => 0));
+                ->getRepository($this->getEntityName())
+                ->findOneBy(array('id' => (int) $id, 'isDeleted' => 0));
     }
 
     /**
@@ -349,7 +355,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return $this->getUnDeletedById($id);
         }
 
-        return $this->getEntityManager()->find($this->getEntityName(), (int)$id);
+        return $this->getEntityManager()->find($this->getEntityName(), (int) $id);
     }
 
     /**
@@ -362,11 +368,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     protected function formatFieldName($name)
     {
         return preg_replace_callback(
-            '/[A-Z]/',
-            function($matches) {
-                return '_' . strtolower($matches[0]);
-            },
-            lcfirst($name)
+            '/[A-Z]/', function($matches) {
+            return '_' . strtolower($matches[0]);
+        }, lcfirst($name)
         );
     }
 
@@ -413,11 +417,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             if ($value instanceof \OlcsEntities\Entity\EntityInterface) {
 
                 $data[$key] = $value->getId();
-
             } elseif ($value instanceof Collection) {
 
                 $data[$key] = $this->extractIds($value->toArray());
-
             } elseif (is_array($value)) {
 
                 $data[$key] = $this->extractIds($value);
@@ -432,5 +434,16 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      *
      * @return array
      */
-    abstract public function getValidSearchFields();
+    public function getValidSearchFields()
+    {
+        if (empty($this->validSearchFields)) {
+
+            $reflectedEntity = new \ReflectionClass($this->getEntityName());
+
+            $this->validSearchFields = $reflectedEntity->getProperties();
+        }
+
+        return $this->validSearchFields;
+    }
+
 }
