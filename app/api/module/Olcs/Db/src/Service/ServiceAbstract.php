@@ -73,6 +73,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         }
 
         $data = $this->extract($entity);
+        $data = $this->convertDates($data);
 
         return $data;
     }
@@ -131,9 +132,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
             foreach ($results as $row) {
 
-//                $hydrator = $this->getDoctrineHydrator();
-
-                $rows[] = $this->extract($row);
+                $newRow = $this->extract($row);
+                $newRow = $this->convertDates($newRow);
+                $rows[] = $newRow;
             }
 
             $results = $rows;
@@ -358,22 +359,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
-     * Converts camel caps to underscore seperated
-     *
-     * @param sting $name
-     *
-     * @return string
-     */
-    /* protected function formatFieldName($name)
-    {
-        return preg_replace_callback(
-            '/[A-Z]/', function($matches) {
-            return '_' . strtolower($matches[0]);
-        }, lcfirst($name)
-        );
-    } */
-
-    /**
      * Get the service
      *
      * @param string $name
@@ -459,6 +444,20 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function getReflectedEntity()
     {
         return new \ReflectionClass($this->getEntityName());
+    }
+
+    /**
+     * Converts dates from DateTime to string for rest response
+     * @param type $data
+     * @return type
+     */
+    public function convertDates($data)
+    {
+        foreach($data as $name => &$column) {
+            if ($column instanceof \DateTime)
+                $column =  $column->format(\DateTime::ISO8601);
+        }
+        return $data;
     }
 
 }
