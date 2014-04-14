@@ -51,8 +51,9 @@ class LicenceVehicle extends ServiceAbstract
 
         foreach ($searchFields as $key => $value) {
 
-            $field = $this->formatFieldName($key);
-
+            //$field = $this->formatFieldName($key);
+            $field = $key;
+            
             if (is_numeric($value)) {
 
                 $qb->where("a.{$field} = :{$key}");
