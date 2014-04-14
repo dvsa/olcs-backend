@@ -1,18 +1,32 @@
 {
     "name": "olcs/back-end",
     "description": "Back End Application for OLCS Project",
-    "repositories": [{
+    "repositories": [
+        {
         "type": "package",
         "package": {
             "name": "olcs/olcs-entities",
             "version": "dev-develop",
             "source": {
-                "url": "gitolite@git.clb.npm:olcs-entities.git",
+                "url": "git@gitlab.clb.npm:/olcs/olcs-entities.git",
                 "type": "git",
                 "reference": "origin/develop"
+                }
+            }
+        },
+        {
+        "type": "package",
+        "package": {
+            "name": "olcs/OlcsCommon",
+            "version": "dev-develop",
+            "source": {
+                "url": "git@gitlab.clb.npm:/olcs/olcs-common.git",
+                "type": "git",
+                "reference": "origin/develop"
+                }
             }
         }
-    }],
+    ],
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
