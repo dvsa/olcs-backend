@@ -131,9 +131,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
             foreach ($results as $row) {
 
-                $hydrator = $this->getDoctrineHydrator();
+//                $hydrator = $this->getDoctrineHydrator();
 
-                $rows[] = $hydrator->extract($row);
+                $rows[] = $this->extract($row);
             }
 
             $results = $rows;
