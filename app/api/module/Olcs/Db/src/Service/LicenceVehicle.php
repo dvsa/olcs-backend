@@ -51,8 +51,7 @@ class LicenceVehicle extends ServiceAbstract
 
         foreach ($searchFields as $key => $value) {
 
-            //$field = $this->formatFieldName($key);
-            $field = $key;
+            $field = $this->formatFieldName($key);
             
             if (is_numeric($value)) {
 
