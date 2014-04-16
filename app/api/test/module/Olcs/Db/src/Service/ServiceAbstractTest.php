@@ -385,15 +385,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->at(2))
             ->method('where')
-            ->with('a.foo_bar LIKE :fooBar');
-
-        $mockQueryBuilder->expects($this->at(3))
-            ->method('where')
-            ->with('a.bar_for LIKE :barFor');
+            ->with('a.fooBar LIKE :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
             ->method('where')
-            ->with('a.number_of_stuff = :numberOfStuff');
+            ->with('a.numberOfStuff = :numberOfStuff');
 
         $mockQueryBuilder->expects($this->at(5))
             ->method('where')
@@ -496,15 +492,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->at(2))
             ->method('where')
-            ->with('a.foo_bar LIKE :fooBar');
-
-        $mockQueryBuilder->expects($this->at(3))
-            ->method('where')
-            ->with('a.bar_for LIKE :barFor');
+            ->with('a.fooBar LIKE :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
             ->method('where')
-            ->with('a.number_of_stuff = :numberOfStuff');
+            ->with('a.numberOfStuff = :numberOfStuff');
 
         $mockQueryBuilder->expects($this->at(5))
             ->method('where')
