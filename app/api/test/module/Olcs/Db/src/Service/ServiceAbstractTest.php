@@ -393,7 +393,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->at(5))
             ->method('where')
-            ->with('a.is_deleted = 0');
+            ->with('a.isDeleted = 0');
 
         $mockQueryBuilder->expects($this->once())
             ->method('setParameters')
@@ -500,7 +500,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->at(5))
             ->method('where')
-            ->with('a.is_deleted = 0');
+            ->with('a.isDeleted = 0');
 
         $mockQueryBuilder->expects($this->once())
             ->method('setParameters')
