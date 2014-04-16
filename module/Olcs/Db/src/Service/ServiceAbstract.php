@@ -171,7 +171,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         }
 
         if ($this->canSoftDelete()) {
-            $qb->where('a.is_deleted = 0');
+            $qb->where('a.isDeleted = 0');
         }
 
         if (!empty($params)) {
@@ -254,6 +254,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         if (empty($entity)) {
             return false;
         }
+
+        $data = $this->processAddressEntity($data);
 
         $entity->clearProperties(array_keys($data));
 
@@ -396,7 +398,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     {
         return $this->getEntityManager()
                 ->getRepository($this->getEntityName())
-                ->findOneBy(array('id' => (int) $id, 'isDeleted' => 0));
+                ->findOneBy(array('id' => (int) $id, 'isDeleted' => '0'));
     }
 
     /**
