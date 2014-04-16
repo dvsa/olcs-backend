@@ -35,6 +35,18 @@ return array(
                     )
                 )
             ),
+            'licence-operating-centre' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/licence-operating-centre[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'licence-operating-centre'
+                    )
+                )
+            ),
             'operator-search' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -86,6 +98,7 @@ return array(
         'invokables' => array(
             'Generic' => 'Olcs\Db\Controller\GenericController',
             'licence-organisation' => 'Olcs\Db\Controller\LicenceOrganisationController',
+            'licence-operating-centre' => 'Olcs\Db\Controller\LicenceOperatingCentreController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController'
