@@ -25,7 +25,7 @@ class LicenceVehicle extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array('licenceId');
+        return array('licence');
     }
 
     /**
@@ -51,7 +51,7 @@ class LicenceVehicle extends ServiceAbstract
 
         foreach ($searchFields as $key => $value) {
 
-            $field = $this->formatFieldName($key);
+            $field = $key;
             
             if (is_numeric($value)) {
 
