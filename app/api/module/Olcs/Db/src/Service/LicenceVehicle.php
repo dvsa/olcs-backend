@@ -76,24 +76,33 @@ class LicenceVehicle extends ServiceAbstract
 
         $results = $query->getResult();
 
-        if (!empty($results)) {
-
-            $rows = array();
-
-            foreach ($results as $row) {
-
-                $hydrator = $this->getDoctrineHydrator();
-
-                $rows[] = $hydrator->extract($row->getVehicle());
-            }
-
-            $results = $rows;
-        }
+        $processedResults = $this->extractResultsArray($results);
 
         return array(
-            'Count' => count($results),
-            'Results' => $results
+            'Count' => count($processedResults),
+            'Results' => $processedResults
         );
     }
     
+    /**
+     * Method to extact vehicle results 
+     * @param type $results
+     */
+    protected function extractResultsArray($results)
+    {
+        $extractedResults = array();
+         if (!empty($results)) {
+
+            $rows = array();
+            $hydrator = $this->getDoctrineHydrator();
+
+            foreach ($results as $row) {
+                $vehicle = $row->getVehicle();
+                $rows[] = $hydrator->extract($vehicle);
+            }
+
+            $extractedResults = $rows;
+        }
+        return $extractedResults;
+    }
 }
