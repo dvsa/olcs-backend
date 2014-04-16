@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Abstract service that handles the generic crud functions for an entity
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+
 namespace Olcs\Db\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
@@ -12,6 +18,11 @@ use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Doctrine\Common\Collections\Collection;
 
+/**
+ * Abstract service that handles the generic crud functions for an entity
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
 abstract class ServiceAbstract implements OlcsRestServerInterface
 {
 
@@ -19,7 +30,18 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         OlcsEntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
 
+    /**
+     * Holds the Entity Name
+     *
+     * @var string
+     */
     protected $entityName;
+
+    /**
+     * Holds the control keys
+     *
+     * @var array
+     */
     protected $listControlKeys = array(
         'sortColumn',
         'sortReversed',
@@ -27,8 +49,12 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         'limit'
     );
 
-    protected $validSearchFields = array(
-    );
+    /**
+     * Holds the valid search fields
+     *
+     * @var array
+     */
+    protected $validSearchFields = array();
 
     /**
      * Should enter a value into the database and return the
@@ -40,6 +66,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function create($data)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+
+        $data = $this->processAddressEntity($data);
 
         $entity = $this->getNewEntity();
 
@@ -53,6 +81,36 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $id = $entity->getId();
 
         return $id;
+    }
+
+    /**
+     * Find the address entities and process them
+     *
+     * @param array $data
+     * @return array
+     */
+    private function processAddressEntity($data)
+    {
+        if (isset($data['addresses']) && is_array($data['addresses'])) {
+
+            foreach ($data['addresses'] as $key => $addressDetails) {
+
+                $addressService = $this->getService('Address');
+
+                // If we are updating an address
+                if (isset($addressDetails['id']) && !empty($addressDetails['id'])) {
+                    $addressService->update($addressDetails['id'], $addressDetails);
+
+                    $data[$key . 'Id'] = $addressDetails['id'];
+                } else {
+                    $data[$key . 'Id'] = $addressService->create($addressDetails);
+                }
+            }
+
+            unset($data['addresses']);
+        }
+
+        return $data;
     }
 
     /**
@@ -73,7 +131,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         }
 
         $data = $this->extract($entity);
-        $data = $this->convertDates($data);
 
         return $data;
     }
@@ -93,7 +150,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $entityName = $this->getEntityName();
-        $parts = explode('\\', $entityName);
 
         $qb->select('a');
         $qb->from($entityName, 'a');
@@ -133,7 +189,6 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             foreach ($results as $row) {
 
                 $newRow = $this->extract($row);
-                $newRow = $this->convertDates($newRow);
                 $rows[] = $newRow;
             }
 
@@ -284,6 +339,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     public function getNewEntity()
     {
         $entityName = $this->getEntityName();
+
         return new $entityName();
     }
 
@@ -385,6 +441,8 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
         $data = $this->extractIds($data);
 
+        $data = $this->convertDates($data);
+
         return $data;
     }
 
@@ -453,11 +511,11 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      */
     public function convertDates($data)
     {
-        foreach($data as $name => &$column) {
-            if ($column instanceof \DateTime)
-                $column =  $column->format(\DateTime::ISO8601);
+        foreach ($data as &$column) {
+            if ($column instanceof \DateTime) {
+                $column = $column->format(\DateTime::ISO8601);
+            }
         }
         return $data;
     }
-
 }
