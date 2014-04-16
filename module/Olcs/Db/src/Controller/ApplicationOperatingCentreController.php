@@ -19,7 +19,7 @@ use Doctrine\ORM\OptimisticLockException;
  *
  * @author Jess Rowbottom <jess.rowbottom@valtech.co.uk>
  */
-class LicenceOperatingCentreController extends AbstractBasicRestServerController
+class ApplicationOperatingCentreController extends AbstractBasicRestServerController
 {
 
     /**
@@ -33,11 +33,7 @@ class LicenceOperatingCentreController extends AbstractBasicRestServerController
         $this->checkMethod(__METHOD__);
 
         try {
-            $result = $this->getService('OperatingCentre')->getByLicenceId($id);
-            if (empty($result)) {
-
-                return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
-            }
+            $result = $this->getService('ApplicationOperatingCentre')->getByApplicationId($id);
 
             return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
 
@@ -45,5 +41,5 @@ class LicenceOperatingCentreController extends AbstractBasicRestServerController
             return $this->unknownError($ex);
         }
     }
-    
+
 }

@@ -17,7 +17,7 @@ use Doctrine\DBAL\LockMode;
  *
  * @author Jess Rowbottom <jess.rowbottom@valtech.co.uk>
  */
-class OperatingCentre extends ServiceAbstract
+class ApplicationOperatingCentre extends ServiceAbstract
 {
 
     /**
@@ -38,26 +38,22 @@ class OperatingCentre extends ServiceAbstract
      *
      * @return array
      */
-    public function getByLicenceId($id)
+    public function getByApplicationId($id)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $ocResult = $this->getEntityManager()->getRepository('OlcsEntities\Entity\OperatingCentre')->findBy(['licence' => $id]);
-        if (empty($ocResult)) {
-            return null;
-        }
+        $sql="SELECT address.*, aoc.no_of_trailers_required, aoc.no_of_vehicles_required,
+                aoc.permission,aoc.ad_placed
+                FROM application_operating_centre aoc
+                LEFT JOIN operating_centre oc ON aoc.operatingCentreId=oc.id
+                LEFT JOIN address ON oc.F_Address_UID=address.id
+                WHERE aoc.applicationId = ?";
+        $dataQuery = $this->em->getConnection()->prepare($sql);
+        $dataQuery->bindValue(1,$id);
+        $dataQuery->execute();
+        $results = $dataQuery->fetchAll();
+        return $results;
 
-        // Assemble the data packets. Because of absence of child entity support,
-        // we need to back-fill the addresses here.
-        $data=Array();
-        foreach($ocResult as $ocEntity) {
-            $ocItem=$this->extract($ocEntity);
-            $address = $this->getEntityManager()->getRepository('OlcsEntities\Entity\Address')->findOneBy(['id' => $ocItem['address']]);
-            $ocItem['address']=$this->extract($address);
-            array_push($data,$ocItem);
-        }
-
-        return $data;
     }
 
 }
