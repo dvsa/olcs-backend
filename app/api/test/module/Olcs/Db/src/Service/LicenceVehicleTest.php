@@ -32,8 +32,7 @@ class LicenceVehicleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetValidSearchFields()
     {
-        $expected = array('licenceId');
-
+        $expected = array('licence', 'vehicle');
         $this->assertEquals($expected, $this->service->getValidSearchFields());
     }
     

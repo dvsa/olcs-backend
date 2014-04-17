@@ -25,7 +25,7 @@ class LicenceVehicle extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array('licence');
+        return array('licence', 'vehicle');
     }
 
     /**
@@ -48,6 +48,7 @@ class LicenceVehicle extends ServiceAbstract
         $qb->select('a');
         $qb->from($entityName, 'a');
         $params = array();
+        $where = array();
 
         foreach ($searchFields as $key => $value) {
 
@@ -55,15 +56,18 @@ class LicenceVehicle extends ServiceAbstract
             
             if (is_numeric($value)) {
 
-                $qb->where("a.{$field} = :{$key}");
+                $where[] = ("a.{$field} = :{$key}");
 
             } else {
 
-                $qb->where("a.{$field} LIKE :{$key}");
+                $where[] = ("a.{$field} LIKE :{$key}");
             }
             $params[$key] = $value;
         }
-
+        if (count($where)){
+            $qb->where(implode(' AND ', $where));
+        }
+                
         if ($this->canSoftDelete()) {
             $qb->where('a.is_deleted = 0');
         }
