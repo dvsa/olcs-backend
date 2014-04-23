@@ -3,7 +3,7 @@
 /**
  * Licence REST controller
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
 
 namespace Olcs\Db\Controller;
@@ -17,7 +17,7 @@ use Doctrine\ORM\OptimisticLockException;
 /**
  * Licence REST controller
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
 class LicenceOrganisationController extends AbstractBasicRestServerController
 {
