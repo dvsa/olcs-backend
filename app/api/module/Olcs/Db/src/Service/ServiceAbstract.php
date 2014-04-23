@@ -11,7 +11,6 @@ namespace Olcs\Db\Service;
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
 use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
-use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
@@ -23,9 +22,8 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class ServiceAbstract implements OlcsRestServerInterface
+abstract class ServiceAbstract
 {
-
     use ZendServiceLocatorAwareTrait,
         OlcsEntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
@@ -120,7 +118,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      *
      * @return array
      */
-    public function get($id)
+    public function get($id, $data)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
@@ -130,7 +128,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             return null;
         }
 
-        $data = $this->extract($entity);
+        $data = $this->buildEntityBundle($entity, $data);
+
+        //$data = $this->extract($entity);
 
         return $data;
     }
@@ -140,11 +140,9 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
      *
      * @return array
      */
-    public function getList()
+    public function getList($data)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
-
-        $data = func_get_arg(0);
 
         $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
 
@@ -188,8 +186,7 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
 
             foreach ($results as $row) {
 
-                $newRow = $this->extract($row);
-                $rows[] = $newRow;
+                $rows[] = $this->buildEntityBundle($row, $data);
             }
 
             $results = $rows;
@@ -199,6 +196,115 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
             'Count' => count($results),
             'Results' => $results
         );
+    }
+
+    /**
+     * Build an entity bundle, this is to reduce rest calls and reduce payload
+     *
+     * @param mixed $entity
+     * @param array $data
+     * @return mixed
+     */
+    private function buildEntityBundle($entity, $data)
+    {
+        if (!isset($data['bundle'])) {
+
+            return $this->extract($entity);
+        }
+
+        /*$bundleConfig = json_decode($data['bundle']);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+
+            throw new \Exception('Invalid bundle configuration: Expected JSON');
+        }*/
+
+        $bundleConfig = array(
+            'vosa-case' => array(
+                '_children' => array(
+                    'categories' => array(
+                        '_entity' => 'CaseCategory',
+                        '_properties' => array(
+                            'id'
+                        )
+                    )
+                )
+            )
+        );
+
+        if (empty($bundleConfig)) {
+
+            throw new \Exception('Invalid bundle configuration: Empty');
+        }
+
+        $entity = $this->formatBundleForEntity($entity, reset($bundleConfig));
+
+        return $entity;
+    }
+
+    /**
+     * Format an entity bundle
+     *
+     * @param object $entity
+     * @param array $config
+     * @return array
+     */
+    private function formatBundleForEntity($entity, $config)
+    {
+        $entityArray = $this->extractEntity($entity);
+
+        if (!isset($config['_properties'])) {
+            $config['_properties'] = 'ALL';
+        }
+
+        if (isset($config['_children'])) {
+
+            foreach ($config['_children'] as $childName => $details) {
+
+                if (is_array($config['_properties']) && !in_array($childName, $config['_properties'])) {
+                    $config['_properties'][] = $childName;
+                }
+
+                $getter = 'get' . ucwords($childName);
+
+                if (method_exists($entity, $getter)) {
+
+                    $children = $entity->$getter();
+
+                    if ($children instanceof Collection) {
+                        $children = (array)$children;
+                    }
+
+                    if (is_array($children)) {
+
+                        $newChildren = array();
+
+                        foreach ($children as $child) {
+
+                            $newChildren[] = $this->formatBundleForEntity($child, $details);
+                        }
+
+                    } else {
+
+                        $newChildren = $this->formatBundleForEntity($children, $details);
+                    }
+
+                    $entityArray[$childName] = $newChildren;
+                }
+            }
+        }
+
+        if (is_array($config['_properties'])) {
+
+            foreach (array_keys($entityArray) as $property) {
+
+                if (!in_array($property, $config['_properties'])) {
+                    unset($entityArray[$property]);
+                }
+            }
+        }
+
+        return $entityArray;
     }
 
     /**
@@ -446,6 +552,19 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         $data = $this->convertDates($data);
 
         return $data;
+    }
+
+    /**
+     * Extract from the entity
+     *
+     * @param type $entity
+     * @return type
+     */
+    protected function extractEntity($entity)
+    {
+        $hydrator = $this->getDoctrineHydrator();
+
+        return $hydrator->extract($entity);
     }
 
     /**

@@ -68,7 +68,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         try {
 
-            $result = $this->getService()->get($id);
+            $data = $this->getDataFromQuery();
+
+            $result = $this->getService()->get($id, $data);
 
             if (empty($result)) {
 
