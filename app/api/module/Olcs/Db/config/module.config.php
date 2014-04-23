@@ -110,10 +110,10 @@ return array(
         'invokables' => array(
             'Generic' => 'Olcs\Db\Controller\GenericController',
             'licence-organisation' => 'Olcs\Db\Controller\LicenceOrganisationController',
-            'application-operating-centre' => 'Olcs\Db\Controller\ApplicationOperatingCentreController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
+            'application-operating-centre' => 'Olcs\Db\Controller\ApplicationOperatingCentreController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController'
