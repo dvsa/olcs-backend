@@ -68,6 +68,8 @@ class Organisation extends ServiceAbstract
      */
     public function updateByLicenceId($id, $data)
     {
+        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        
         if (!isset($data['version'])) {
             throw new NoVersionException('A version number must be specified to update an entity');
         }
@@ -81,8 +83,6 @@ class Organisation extends ServiceAbstract
         if (empty($orgEntity)) {
             return null;
         }
-
-        //$orgEntity->clearProperties(array_keys($data));
 
         $hydrator = $this->getDoctrineHydrator();
         $orgEntity = $hydrator->hydrate($data, $orgEntity);

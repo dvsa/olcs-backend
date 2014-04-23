@@ -27,7 +27,9 @@ class FactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $serviceManager = $this->getMockBuilder('\Zend\ServiceManager\ServiceManager')->disableOriginalConstructor()->getMock();
+        $serviceManager = $this->getMockBuilder(
+            '\Zend\ServiceManager\ServiceManager'
+        )->disableOriginalConstructor()->getMock();
 
         $factory = new Factory();
 
@@ -54,17 +56,45 @@ class FactoryTest extends PHPUnit_Framework_TestCase
      * @group Service
      * @group Factory
      */
-    public function testGetServiceInvalidService()
+    public function testGetServiceMissingService()
     {
+        $missingServiceName = 'Missing';
+
+        $mockEntityManager = $this->getMock('\stdClass');
+
         $serviceManager = $this->getMockBuilder(
-            '\Zend\ServiceManager\ServiceManager'
+            '\Zend\ServiceManager\ServiceManager',
+            array('get')
         )->disableOriginalConstructor()->getMock();
 
-        $factory = new Factory();
+        $serviceManager->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($mockEntityManager));
+
+        $mockGenericService = $this->getMock(
+            'GenericMockService',
+            array('setEntityName', 'setEntityManager', 'setServiceLocator')
+        );
+
+        $mockGenericName = get_class($mockGenericService);
+
+        $factory = $this->getMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
+
+        $factory->expects($this->at(0))
+            ->method('getServiceClassName')
+            ->with($missingServiceName)
+            ->will($this->returnValue('MissingClassName'));
+
+        $factory->expects($this->at(1))
+            ->method('getServiceClassName')
+            ->with('Generic')
+            ->will($this->returnValue($mockGenericName));
 
         $factory->createService($serviceManager);
 
-        $this->assertFalse($factory->getService('Baopsdfjodsjflkdsjfl'));
+        $service = $factory->getService($missingServiceName);
+
+        $this->assertTrue($service instanceof $mockGenericName);
     }
 
     /**
