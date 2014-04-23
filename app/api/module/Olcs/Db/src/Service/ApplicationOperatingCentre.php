@@ -43,6 +43,7 @@ class ApplicationOperatingCentre extends ServiceAbstract
         $dataQuery->execute();
         $results = $dataQuery->fetchAll();
         return $results;
+
     }
 
 }
