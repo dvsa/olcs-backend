@@ -11,6 +11,7 @@ namespace OlcsTest\Db\Service;
 use PHPUnit_Framework_TestCase;
 use Olcs\Db\Service\ServiceAbstract;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Orm\EntityManager;
 
 /**
  * Tests ServiceAbstract
@@ -33,6 +34,38 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             true,
             // Mocked methods
             $methods
+        );
+    }
+
+    /**
+     * Tests that the get pagination method gives us only the required fields.
+     *
+     * @dataProvider dpTestGetPaginationValues
+     */
+    public function testGetPaginationValues($input, $output)
+    {
+        $this->getMockService();
+
+        $this->assertEquals($output, $this->service->getPaginationValues($input));
+    }
+
+    public function dpTestGetPaginationValues()
+    {
+        return array(
+            array(
+                array(
+                    'page' => 1, 'results' => 100, 'sort' => 'somecolumn', 'order' => 'asc', 'other' => 'ovalue'
+                ),
+                array(
+                    'page' => 1, 'results' => 100, 'sort' => 'somecolumn', 'order' => 'asc'
+                ),
+                array(
+                    'page' => 1, 'results' => 100, 'other' => 'ovalue'
+                ),
+                array(
+                    'page' => 1, 'results' => 100
+                ),
+            ),
         );
     }
 
@@ -342,11 +375,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete'));
 
+        $page = '2';
+        $resultLimit = '25';
+
         $data = array(
             'fooBar' => 'bar',
             'cakeBar' => 'bar',
             'barFor' => 'black sheep',
-            'numberOfStuff' => 1
+            'numberOfStuff' => 1,
+            'page' => $page,
+            'results' => $resultLimit
         );
 
         $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
@@ -354,7 +392,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $expectedParams = array(
             'fooBar' => 'bar',
             'barFor' => 'black sheep',
-            'numberOfStuff' => 1
+            'numberOfStuff' => 1,
         );
 
         $results = array();
@@ -374,7 +412,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass', array('select', 'from', 'where', 'setParameters', 'getQuery'));
+        $mockQueryBuilder = $this->getMock('\stdClass',
+            array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
+        );
 
         $mockQueryBuilder->expects($this->once())
             ->method('select');
@@ -402,6 +442,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $mockQueryBuilder->expects($this->once())
             ->method('getQuery')
             ->will($this->returnValue($mockQuery));
+
+        // Start: Pagination
+        $mockQueryBuilder->expects($this->once())
+            ->method('setFirstResult')
+            ->with($this->equalTo(($page * $resultLimit) - $resultLimit));
+        $mockQueryBuilder->expects($this->once())
+            ->method('setMaxResults')
+            ->with($this->equalTo($resultLimit));
+        // End: Pagination
 
         $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder'));
 
@@ -441,11 +490,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete', 'getDoctrineHydrator'));
 
+        $page = '2';
+        $resultLimit = '25';
+
         $data = array(
             'fooBar' => 'bar',
             'cakeBar' => 'bar',
             'barFor' => 'black sheep',
-            'numberOfStuff' => 1
+            'numberOfStuff' => 1,
+            'page' => $page,
+            'results' => $resultLimit
         );
 
         $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
@@ -481,7 +535,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass', array('select', 'from', 'where', 'setParameters', 'getQuery'));
+        $mockQueryBuilder = $this->getMock('\stdClass',
+            array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
+        );
 
         $mockQueryBuilder->expects($this->once())
             ->method('select');
@@ -509,6 +565,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $mockQueryBuilder->expects($this->once())
             ->method('getQuery')
             ->will($this->returnValue($mockQuery));
+
+        // Start: Pagination
+        $mockQueryBuilder->expects($this->once())
+            ->method('setFirstResult')
+            ->with($this->equalTo(($page * $resultLimit) - $resultLimit));
+        $mockQueryBuilder->expects($this->once())
+            ->method('setMaxResults')
+            ->with($this->equalTo($resultLimit));
+        // End: Pagination
 
         $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder'));
 
@@ -1000,6 +1065,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetDoctrineHydrator()
     {
+        //new \Doctrine\Orm\EntityManager();
+
         $this->getMockService(array('getEntityManager'));
 
         $mockEntityManager = $this->getMockBuilder('\Doctrine\Orm\EntityManager')->disableOriginalConstructor()->getMock();
