@@ -38,9 +38,9 @@ return array(
             'application-operating-centre' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/application-operating-centre[/:id]',
+                    'route' => '/application-operating-centre[/:applicationId]',
                     'constraints' => array(
-                        'id' => '[0-9]+'
+                        'applicationId' => '[0-9]+'
                     ),
                     'defaults' => array(
                         'controller' => 'application-operating-centre'
