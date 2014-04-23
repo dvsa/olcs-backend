@@ -34,11 +34,11 @@ class ApplicationOperatingCentre extends ServiceAbstract
      * Gets an organisation record by licenceId.
      * @todo Possibly use join... needs performence review
      *
-     * @param int $id
+     * @param array $options    Array of options, currently only applicationId supported
      *
      * @return array
      */
-    public function getByApplicationId($id)
+    public function getByApplicationId($options)
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
@@ -49,7 +49,7 @@ class ApplicationOperatingCentre extends ServiceAbstract
                 LEFT JOIN address ON oc.F_Address_UID=address.id
                 WHERE aoc.applicationId = ?";
         $dataQuery = $this->em->getConnection()->prepare($sql);
-        $dataQuery->bindValue(1,$id);
+        $dataQuery->bindValue(1,$options['applicationId']);
         $dataQuery->execute();
         $results = $dataQuery->fetchAll();
         return $results;

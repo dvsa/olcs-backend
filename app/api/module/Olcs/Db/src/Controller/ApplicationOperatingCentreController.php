@@ -23,18 +23,18 @@ class ApplicationOperatingCentreController extends AbstractBasicRestServerContro
 {
 
     /**
-     * Get an entity by it's id
+     * Get operating centres in an application by id
      *
      * @param int $id
      * @return Response
      */
-    public function get($id)
+    public function getList()
     {
         $this->checkMethod(__METHOD__);
+        $options = $this->getDataFromQuery();
 
         try {
-            $result = $this->getService('ApplicationOperatingCentre')->getByApplicationId($id);
-
+            $result = $this->getService('ApplicationOperatingCentre')->getByApplicationId($options);
             return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
 
         } catch (\Exception $ex) {
