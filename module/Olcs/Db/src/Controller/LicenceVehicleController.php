@@ -33,9 +33,7 @@ class LicenceVehicleController extends AbstractBasicRestServerController
         $this->checkMethod(__METHOD__);
 
         $data = $this->getDataFromQuery();
-
         try {
-            // TODO this needs to call LicenceVehicle service
             // waiting for mechanism to extract additional table data 
             $result = $this->getService('LicenceVehicle')->getVehicleList($data);
             
