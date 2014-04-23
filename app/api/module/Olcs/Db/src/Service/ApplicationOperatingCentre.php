@@ -21,16 +21,6 @@ class ApplicationOperatingCentre extends ServiceAbstract
 {
 
     /**
-     * Returns an indexed array of valid search terms for this service / entity.
-     *
-     * @return array
-     */
-    public function getValidSearchFields()
-    {
-        return array();
-    }
-
-    /**
      * Gets an organisation record by licenceId.
      * @todo Possibly use join... needs performence review
      *
@@ -53,7 +43,6 @@ class ApplicationOperatingCentre extends ServiceAbstract
         $dataQuery->execute();
         $results = $dataQuery->fetchAll();
         return $results;
-
     }
 
 }
