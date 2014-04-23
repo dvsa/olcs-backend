@@ -35,7 +35,7 @@ class LicenceVehicleTest extends PHPUnit_Framework_TestCase
             'getEntityName', 
             'getDoctrineHydrator',
             'canSoftDelete', 
-            'extractResultsArray'
+            'extractResultsArray',
             ]
         );
     }
@@ -45,7 +45,7 @@ class LicenceVehicleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetValidSearchFields()
     {
-        $expected = array('licence');
+        $expected = array('licence', 'vehicle');
 
         $this->assertEquals($expected, $this->service->getValidSearchFields());
     }
@@ -75,7 +75,7 @@ class LicenceVehicleTest extends PHPUnit_Framework_TestCase
                         'licence' => $licence_id
                       ];
             
-        $validSearchFields = ['licence'];
+        $validSearchFields = ['licence', 'vehicle'];
         
         $searchableFields = ['licence' => $licence_id];
         
@@ -169,7 +169,7 @@ class LicenceVehicleTest extends PHPUnit_Framework_TestCase
             
         $row = ['foo' => 'bar'];
         
-        $validSearchFields = ['licence'];
+        $validSearchFields = ['licence', 'vehicle'];
         
         $searchableFields = ['licence' => $licence_id];
         
