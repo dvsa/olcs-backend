@@ -249,25 +249,12 @@ abstract class ServiceAbstract
             return $this->extract($entity);
         }
 
-        /*$bundleConfig = json_decode($data['bundle']);
+        $bundleConfig = json_decode($data['bundle'], true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
 
             throw new \Exception('Invalid bundle configuration: Expected JSON');
-        }*/
-
-        $bundleConfig = array(
-            'vosa-case' => array(
-                '_children' => array(
-                    'categories' => array(
-                        '_entity' => 'CaseCategory',
-                        '_properties' => array(
-                            'id'
-                        )
-                    )
-                )
-            )
-        );
+        }
 
         if (empty($bundleConfig)) {
 
@@ -290,16 +277,21 @@ abstract class ServiceAbstract
     {
         $entityArray = $this->extractEntity($entity);
 
-        if (!isset($config['_properties'])) {
-            $config['_properties'] = 'ALL';
+        if (!isset($config['properties'])) {
+            $config['properties'] = 'ALL';
         }
 
-        if (isset($config['_children'])) {
+        if (isset($config['children'])) {
 
-            foreach ($config['_children'] as $childName => $details) {
+            foreach ($config['children'] as $childName => $details) {
 
-                if (is_array($config['_properties']) && !in_array($childName, $config['_properties'])) {
-                    $config['_properties'][] = $childName;
+                if (is_numeric($childName) && is_string($details)) {
+                    $childName = $details;
+                    $details = array();
+                }
+
+                if (is_array($config['properties']) && !in_array($childName, $config['properties'])) {
+                    $config['properties'][] = $childName;
                 }
 
                 $getter = 'get' . ucwords($childName);
@@ -309,10 +301,6 @@ abstract class ServiceAbstract
                     $children = $entity->$getter();
 
                     if ($children instanceof Collection) {
-                        $children = (array)$children;
-                    }
-
-                    if (is_array($children)) {
 
                         $newChildren = array();
 
@@ -331,11 +319,11 @@ abstract class ServiceAbstract
             }
         }
 
-        if (is_array($config['_properties'])) {
+        if (is_array($config['properties'])) {
 
             foreach (array_keys($entityArray) as $property) {
 
-                if (!in_array($property, $config['_properties'])) {
+                if (!in_array($property, $config['properties'])) {
                     unset($entityArray[$property]);
                 }
             }
@@ -580,15 +568,9 @@ abstract class ServiceAbstract
      */
     protected function extract($entity)
     {
-        $hydrator = $this->getDoctrineHydrator();
+        $data = $this->extractEntity($entity);
 
-        $data = $hydrator->extract($entity);
-
-        $data = $this->extractIds($data);
-
-        $data = $this->convertDates($data);
-
-        return $data;
+        return $this->extractIds($data);
     }
 
     /**
@@ -601,7 +583,9 @@ abstract class ServiceAbstract
     {
         $hydrator = $this->getDoctrineHydrator();
 
-        return $hydrator->extract($entity);
+        $data = $hydrator->extract($entity);
+
+        return $this->convertDates($data);
     }
 
     /**
