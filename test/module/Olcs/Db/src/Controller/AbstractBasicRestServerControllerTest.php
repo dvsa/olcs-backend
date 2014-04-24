@@ -341,14 +341,20 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetEmptyResult()
     {
-        $this->getMockController(array('checkMethod', 'getService', 'respond'));
+        $data = array('foo' => 'bar');
+
+        $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
         $mockService = $this->getMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
-            ->with(20)
+            ->with(20, $data)
             ->will($this->returnValue(null));
+
+        $this->controller->expects($this->once())
+            ->method('getDataFromQuery')
+            ->will($this->returnValue($data));
 
         $this->controller->expects($this->once())
             ->method('checkMethod');
@@ -373,14 +379,20 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithResult()
     {
-        $this->getMockController(array('checkMethod', 'getService', 'respond'));
+        $data = array('foo' => 'bar');
+
+        $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
         $mockService = $this->getMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
-            ->with(20)
+            ->with(20, $data)
             ->will($this->returnValue(array('foo' => 'bar')));
+
+        $this->controller->expects($this->once())
+            ->method('getDataFromQuery')
+            ->will($this->returnValue($data));
 
         $this->controller->expects($this->once())
             ->method('checkMethod');
@@ -405,14 +417,20 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetThrowsException()
     {
-        $this->getMockController(array('checkMethod', 'getService', 'respond'));
+        $data = array('foo' => 'bar');
+
+        $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
         $mockService = $this->getMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
-            ->with(20)
+            ->with(20, $data)
             ->will($this->throwException(new \Exception));
+
+        $this->controller->expects($this->once())
+            ->method('getDataFromQuery')
+            ->will($this->returnValue($data));
 
         $this->controller->expects($this->once())
             ->method('checkMethod');

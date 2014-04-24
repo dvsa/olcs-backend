@@ -118,6 +118,143 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test create With new Address
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testCreateWithNewAddress()
+    {
+        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService'));
+
+        $data = array(
+            'addresses' => array(
+                'address' => array(
+
+                )
+            )
+        );
+
+        $expected = array(
+            'addressId' => 1
+        );
+
+        $id = 7;
+
+        $firstEntity = $this->getMock('\stdClass', array('getId'));
+
+        $firstEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($id));
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($expected, $firstEntity)
+            ->will($this->returnValue($firstEntity));
+
+        $mockAddressService = $this->getMock('\stdClass', array('create'));
+
+        $mockAddressService->expects($this->once())
+            ->method('create')
+            ->will($this->returnValue(1));
+
+        $this->service->expects($this->once())
+            ->method('getService')
+            ->with('Address')
+            ->will($this->returnValue($mockAddressService));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getNewEntity')
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->service->expects($this->once())
+            ->method('dbPersist')
+            ->with($firstEntity);
+
+        $this->service->expects($this->once())
+            ->method('dbFlush');
+
+        $this->assertEquals($id, $this->service->create($data));
+    }
+
+    /**
+     * Test create With Address
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testCreateWithAddress()
+    {
+        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService'));
+
+        $data = array(
+            'addresses' => array(
+                'address' => array(
+                    'id' => 3
+                )
+            )
+        );
+
+        $expected = array(
+            'addressId' => 3
+        );
+
+        $id = 7;
+
+        $firstEntity = $this->getMock('\stdClass', array('getId'));
+
+        $firstEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($id));
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($expected, $firstEntity)
+            ->will($this->returnValue($firstEntity));
+
+        $mockAddressService = $this->getMock('\stdClass', array('update'));
+
+        $mockAddressService->expects($this->once())
+            ->method('update');
+
+        $this->service->expects($this->once())
+            ->method('getService')
+            ->with('Address')
+            ->will($this->returnValue($mockAddressService));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getNewEntity')
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->service->expects($this->once())
+            ->method('dbPersist')
+            ->with($firstEntity);
+
+        $this->service->expects($this->once())
+            ->method('dbFlush');
+
+        $this->assertEquals($id, $this->service->create($data));
+    }
+
+    /**
      * Test get
      *
      * @group Service
@@ -125,7 +262,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
+        $this->getMockService(array('log', 'getEntityById', 'getBundleCreator'));
 
         $id = 7;
 
@@ -135,12 +272,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockEntity = $this->getMock('\stdClass');
 
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
+        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
 
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('extract')
-            ->with($mockEntity)
+        $mockBundleCreator->expects($this->once())
+            ->method('buildEntityBundle')
             ->will($this->returnValue($data));
+
+        $this->service->expects($this->once())
+            ->method('getBundleCreator')
+            ->will($this->returnValue($mockBundleCreator));
 
         $this->service->expects($this->once())
             ->method('log');
@@ -149,189 +289,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getEntityById')
             ->with($id)
             ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
 
         $this->assertEquals($data, $this->service->get($id));
-    }
-
-    /**
-     * Test get
-     *  With Entity Interface
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetWithEntity()
-    {
-        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
-
-        $id = 7;
-
-        $mockEntity = $this->getMockForAbstractClass(
-            '\OlcsEntities\Entity\AbstractEntity',
-             array(),
-            '',
-            true,
-            true,
-            true,
-            array(
-                'getId'
-            )
-        );
-
-        $mockEntity->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(6));
-
-        $data = array(
-            $mockEntity
-        );
-
-        $expected = array(6);
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('extract')
-            ->with($mockEntity)
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->assertEquals($expected, $this->service->get($id));
-    }
-
-    /**
-     * Test get
-     *  With Nested Entity Interface
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetWithNestedEntity()
-    {
-        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
-
-        $id = 7;
-
-        $mockEntity = $this->getMockForAbstractClass(
-            '\OlcsEntities\Entity\AbstractEntity',
-             array(),
-            '',
-            true,
-            true,
-            true,
-            array(
-                'getId'
-            )
-        );
-
-        $mockEntity->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(6));
-
-        $data = array(
-            array(
-                'foo' => $mockEntity
-            )
-        );
-
-        $expected = array(array('foo' => 6));
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('extract')
-            ->with($mockEntity)
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->assertEquals($expected, $this->service->get($id));
-    }
-
-    /**
-     * Test get
-     *  With Collection Entity Interface
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetWithCollectionEntity()
-    {
-        $this->getMockService(array('log', 'getDoctrineHydrator', 'getEntityById'));
-
-        $id = 7;
-
-        $mockEntity = $this->getMockForAbstractClass(
-            '\OlcsEntities\Entity\AbstractEntity',
-             array(),
-            '',
-            true,
-            true,
-            true,
-            array(
-                'getId'
-            )
-        );
-
-        $mockEntity->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(6));
-
-        $data = array(
-            'foo' => new ArrayCollection(
-                array($mockEntity)
-            )
-        );
-
-        $expected = array(
-            'foo' => array(6)
-        );
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('extract'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('extract')
-            ->with($mockEntity)
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->assertEquals($expected, $this->service->get($id));
     }
 
     /**
@@ -1065,8 +1024,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetDoctrineHydrator()
     {
-        //new \Doctrine\Orm\EntityManager();
-
         $this->getMockService(array('getEntityManager'));
 
         $mockEntityManager = $this->getMockBuilder('\Doctrine\Orm\EntityManager')->disableOriginalConstructor()->getMock();

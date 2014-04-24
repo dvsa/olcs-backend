@@ -1,4 +1,5 @@
 <?php
+
 namespace Olcs\Db\Controller;
 
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
@@ -10,10 +11,10 @@ use Doctrine\ORM\OptimisticLockException;
 
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
+
     use RestResponseTrait;
 
     protected $serviceName;
-
     protected $allowedMethods = array(
         'create',
         'get',
@@ -49,7 +50,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             throw new \Exception();
-
         } catch (\Exception $ex) {
 
             return $this->unknownError($ex);
@@ -78,7 +78,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
-
         } catch (\Exception $ex) {
 
             return $this->unknownError($ex);
@@ -105,7 +104,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             return $this->respond(Response::STATUS_CODE_200, 'Results found', $result);
-
         } catch (\Exception $ex) {
 
             return $this->unknownError($ex);
@@ -164,17 +162,14 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
-
         } catch (NoVersionException $ex) {
 
             return $this->respond(Response::STATUS_CODE_400, 'No version number sent');
-
         } catch (OptimisticLockException $ex) {
 
             $result = $this->getService()->get($id);
 
             return $this->respond(Response::STATUS_CODE_409, 'This entity has been updated since', $result);
-
         } catch (\Exception $ex) {
 
             return $this->unknownError($ex);
@@ -198,7 +193,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
-
         } catch (\Exception $ex) {
 
             return $this->unknownError($ex);
@@ -227,12 +221,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     {
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
-        if (empty($name) ) {
+        if (empty($name)) {
 
             if (!empty($this->serviceName)) {
 
                 $name = $this->serviceName;
-
             } else {
 
                 $name = $this->getControllerName();
