@@ -200,18 +200,11 @@ abstract class ServiceAbstract
             $qb->setParameters($params);
         }
 
-        // Pagination
-
         $pag = $this->getPaginationValues($data);
-        //die(print_r($pag));
         $page = isset($pag['page']) ? $pag['page'] : 1;
         $limit = isset($pag['results']) ? $pag['results'] : 10;
-
         $qb->setFirstResult($this->getOffset($page, $limit));
         $qb->setMaxResults($limit);
-
-
-        // Pagination
 
         $query = $qb->getQuery();
 
