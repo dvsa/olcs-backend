@@ -15,7 +15,6 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
@@ -24,6 +23,7 @@ use Doctrine\Common\Collections\Collection;
  */
 abstract class ServiceAbstract
 {
+
     use ZendServiceLocatorAwareTrait,
         OlcsEntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
@@ -82,43 +82,13 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Find the address entities and process them
-     *
-     * @param array $data
-     * @return array
-     */
-    private function processAddressEntity($data)
-    {
-        if (isset($data['addresses']) && is_array($data['addresses'])) {
-
-            foreach ($data['addresses'] as $key => $addressDetails) {
-
-                $addressService = $this->getService('Address');
-
-                // If we are updating an address
-                if (isset($addressDetails['id']) && !empty($addressDetails['id'])) {
-                    $addressService->update($addressDetails['id'], $addressDetails);
-
-                    $data[$key . 'Id'] = $addressDetails['id'];
-                } else {
-                    $data[$key . 'Id'] = $addressService->create($addressDetails);
-                }
-            }
-
-            unset($data['addresses']);
-        }
-
-        return $data;
-    }
-
-    /**
      * Gets a matching record by identifying value.
      *
      * @param string|int $id
      *
      * @return array
      */
-    public function get($id, $data)
+    public function get($id, array $data = array())
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
@@ -128,11 +98,19 @@ abstract class ServiceAbstract
             return null;
         }
 
-        $data = $this->buildEntityBundle($entity, $data);
-
-        //$data = $this->extract($entity);
+        $data = $this->getBundleCreator()->buildEntityBundle($entity, $data);
 
         return $data;
+    }
+
+    /**
+     * Return an instance of BundleCreator
+     *
+     * @return \Olcs\Db\Service\Bundle\BundleCreator
+     */
+    public function getBundleCreator()
+    {
+        return new Bundle\BundleCreator($this->getDoctrineHydrator());
     }
 
     /**
@@ -154,7 +132,7 @@ abstract class ServiceAbstract
      * @param int $limit
      * @return int
      */
-    private function getOffset($page, $limit)
+    protected function getOffset($page, $limit)
     {
         return ($page * $limit) - $limit;
     }
@@ -216,7 +194,7 @@ abstract class ServiceAbstract
 
             foreach ($results as $row) {
 
-                $rows[] = $this->buildEntityBundle($row, $data);
+                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $data);
             }
 
             $results = $rows;
@@ -226,147 +204,6 @@ abstract class ServiceAbstract
             'Count' => count($results),
             'Results' => $results
         );
-    }
-
-    /**
-     * Build an entity bundle, this is to reduce rest calls and reduce payload
-     *
-     * @param mixed $entity
-     * @param array $data
-     * @return mixed
-     */
-    private function buildEntityBundle($entity, $data)
-    {
-        if (!isset($data['bundle'])) {
-
-            return $this->extract($entity);
-        }
-
-        $bundleConfig = json_decode($data['bundle'], true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-
-            throw new \Exception('Invalid bundle configuration: Expected JSON');
-        }
-
-        if (empty($bundleConfig)) {
-
-            throw new \Exception('Invalid bundle configuration: Empty');
-        }
-
-        $entity = $this->formatBundleForEntity($entity, reset($bundleConfig));
-
-        return $entity;
-    }
-
-    /**
-     * Format an entity bundle
-     *
-     * @param object $entity
-     * @param array $config
-     * @return array
-     */
-    private function formatBundleForEntity($entity, $config)
-    {
-        $entityArray = $this->extractEntity($entity);
-
-        $config = array_merge(array('properties' => 'ALL'), $config);
-
-        if (isset($config['children'])) {
-
-            $this->formatChildren($entity, $entityArray, $config);
-        }
-
-        $this->trimProperties($entityArray, $config['properties']);
-
-        return $entityArray;
-    }
-
-    /**
-     * Format the children of an entity
-     *
-     * @param array $entityArray
-     * @param array $config
-     * @return array
-     */
-    private function formatChildren($entity, &$entityArray, &$config)
-    {
-        foreach ($config['children'] as $childName => $details) {
-
-            if (is_numeric($childName) && is_string($details)) {
-                $childName = $details;
-                $details = array();
-            }
-
-            if (is_array($config['properties']) && !in_array($childName, $config['properties'])) {
-                $config['properties'][] = $childName;
-            }
-
-            $getter = $this->formatGetter($childName);
-
-            if (method_exists($entity, $getter)) {
-
-                $children = $entity->$getter();
-
-                $entityArray[$childName] = $this->formatChild($children, $details);
-            }
-        }
-    }
-
-    /**
-     * Format a child/children
-     *
-     * @param mixed $children
-     * @return array
-     */
-    private function formatChild($children, $details)
-    {
-        if ($children instanceof Collection) {
-
-            $newChildren = array();
-
-            foreach ($children as $child) {
-
-                $newChildren[] = $this->formatBundleForEntity($child, $details);
-            }
-
-        } else {
-
-            $newChildren = $this->formatBundleForEntity($children, $details);
-        }
-
-        return $newChildren;
-    }
-
-    /**
-     * Workout the getter method name for a property
-     *
-     * @param string $property
-     * @return string
-     */
-    private function formatGetter($property)
-    {
-        return 'get' . ucwords($property);
-    }
-
-    /**
-     * Trim entity properties
-     *
-     * @param array $entityArray
-     * @param array $properties
-     * @return array
-     */
-    private function trimProperties(&$entityArray, $properties)
-    {
-        if (is_array($properties)) {
-
-            foreach (array_keys($entityArray) as $property) {
-
-                if (!in_array($property, $properties)) {
-                    unset($entityArray[$property]);
-                }
-            }
-        }
     }
 
     /**
@@ -416,7 +253,12 @@ abstract class ServiceAbstract
         if ($this->canSoftDelete()) {
             $entity = $this->getUnDeletedById($id);
         } else {
-            $entity = $this->getEntityManager()->find($this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']);
+            $entity = $this->getEntityManager()->find(
+                $this->getEntityName(),
+                (int)$id,
+                LockMode::OPTIMISTIC,
+                $data['version']
+            );
         }
 
         if (empty($entity)) {
@@ -598,59 +440,6 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Method to extract data
-     *
-     * @param object $entity
-     * @return array
-     */
-    protected function extract($entity)
-    {
-        $data = $this->extractEntity($entity);
-
-        return $this->extractIds($data);
-    }
-
-    /**
-     * Extract from the entity
-     *
-     * @param type $entity
-     * @return type
-     */
-    protected function extractEntity($entity)
-    {
-        $hydrator = $this->getDoctrineHydrator();
-
-        $data = $hydrator->extract($entity);
-
-        return $this->convertDates($data);
-    }
-
-    /**
-     * Replace entities with their id's
-     *
-     * @param array $data
-     * @return array
-     */
-    protected function extractIds($data)
-    {
-        foreach ($data as $key => $value) {
-
-            if ($value instanceof \OlcsEntities\Entity\EntityInterface) {
-
-                $data[$key] = $value->getId();
-            } elseif ($value instanceof Collection) {
-
-                $data[$key] = $this->extractIds($value->toArray());
-            } elseif (is_array($value)) {
-
-                $data[$key] = $this->extractIds($value);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * Returns an array of valid search terms for the service / entity.
      *
      * @return array
@@ -684,17 +473,32 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Converts dates from DateTime to string for rest response
-     * @param type $data
-     * @return type
+     * Find the address entities and process them
+     *
+     * @param array $data
+     * @return array
      */
-    public function convertDates($data)
+    private function processAddressEntity($data)
     {
-        foreach ($data as &$column) {
-            if ($column instanceof \DateTime) {
-                $column = $column->format(\DateTime::ISO8601);
+        if (isset($data['addresses']) && is_array($data['addresses'])) {
+
+            foreach ($data['addresses'] as $key => $addressDetails) {
+
+                $addressService = $this->getService('Address');
+
+                // If we are updating an address
+                if (isset($addressDetails['id']) && !empty($addressDetails['id'])) {
+                    $addressService->update($addressDetails['id'], $addressDetails);
+
+                    $data[$key . 'Id'] = $addressDetails['id'];
+                } else {
+                    $data[$key . 'Id'] = $addressService->create($addressDetails);
+                }
             }
+
+            unset($data['addresses']);
         }
+
         return $data;
     }
 }

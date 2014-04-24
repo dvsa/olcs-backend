@@ -102,7 +102,8 @@ class Licence extends ServiceAbstract
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.*, o.*, a.*, app.application_number as appNumber, app.status as appStatus, l.licenceNumber AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
+        $dataSql = 'SELECT l.*, o.*, a.*, app.application_number as appNumber, app.status as appStatus,
+            l.licenceNumber AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
 
@@ -250,8 +251,6 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
         return array($countResults[0], $results);
     }
 
-    /** @todo POTENTIALLY MOVE THE FOLLOWING INTO A TRAIT */
-
     /**
      * Get the sort order from the options
      *
@@ -306,18 +305,6 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
         return (
             isset($options['page']) && is_numeric($options['page']) && $options['page'] > 0
             ) ? (int) $options['page'] : $default;
-    }
-
-    /**
-     * Get the result offset
-     *
-     * @param int $page
-     * @param int $limit
-     * @return int
-     */
-    private function getOffset($page, $limit)
-    {
-        return ($page * $limit) - $limit;
     }
 
     /**
@@ -422,5 +409,4 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
 
         return array($conditions, $params);
     }
-
 }
