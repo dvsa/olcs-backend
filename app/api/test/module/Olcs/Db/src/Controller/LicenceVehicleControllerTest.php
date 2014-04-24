@@ -105,4 +105,41 @@ class LicenceVehicleControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->getList();
         
     }
+    
+    /**
+     * Test getList with no results
+     */
+    public function testGetListNoresults()
+    {
+        $options = array(
+            'foo' => 'bar'
+        );
+
+        $return = array(
+            
+        );
+
+        $mockLicenceVehicleService = $this->getMock('\stdClass', array('getVehicleList'));
+
+        $this->controller->expects($this->once())
+            ->method('getDataFromQuery')
+            ->will($this->returnValue($options));
+
+        $mockLicenceVehicleService->expects($this->once())
+            ->method('getVehicleList')
+            ->with($options)
+            ->will($this->returnValue($return));
+
+        $this->controller->expects($this->once())
+            ->method('getService')
+            ->with('LicenceVehicle')
+            ->will($this->returnValue($mockLicenceVehicleService));
+
+        $this->controller->expects($this->once())
+            ->method('respond')
+            ->with(Response::STATUS_CODE_200, 'No results found', $return);
+
+        $this->controller->getList();
+        
+    }
 }
