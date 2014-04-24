@@ -25,7 +25,7 @@ class LicenceVehicle extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array('licenceId');
+        return array('licence', 'vehicle');
     }
 
     /**
@@ -48,23 +48,26 @@ class LicenceVehicle extends ServiceAbstract
         $qb->select('a');
         $qb->from($entityName, 'a');
         $params = array();
+        $where = array();
 
         foreach ($searchFields as $key => $value) {
 
-            //$field = $this->formatFieldName($key);
             $field = $key;
             
             if (is_numeric($value)) {
 
-                $qb->where("a.{$field} = :{$key}");
+                $where[] = ("a.{$field} = :{$key}");
 
             } else {
 
-                $qb->where("a.{$field} LIKE :{$key}");
+                $where[] = ("a.{$field} LIKE :{$key}");
             }
             $params[$key] = $value;
         }
-
+        if (count($where)){
+            $qb->where(implode(' AND ', $where));
+        }
+                
         if ($this->canSoftDelete()) {
             $qb->where('a.is_deleted = 0');
         }
@@ -77,24 +80,33 @@ class LicenceVehicle extends ServiceAbstract
 
         $results = $query->getResult();
 
-        if (!empty($results)) {
-
-            $rows = array();
-
-            foreach ($results as $row) {
-
-                $hydrator = $this->getDoctrineHydrator();
-
-                $rows[] = $hydrator->extract($row->getVehicle());
-            }
-
-            $results = $rows;
-        }
+        $processedResults = $this->extractResultsArray($results);
 
         return array(
-            'Count' => count($results),
-            'Results' => $results
+            'Count' => count($processedResults),
+            'Results' => $processedResults
         );
     }
     
+    /**
+     * Method to extact vehicle results 
+     * @param type $results
+     */
+    protected function extractResultsArray($results)
+    {
+        $extractedResults = array();
+         if (!empty($results)) {
+
+            $rows = array();
+            $hydrator = $this->getDoctrineHydrator();
+
+            foreach ($results as $row) {
+                $vehicle = $row->getVehicle();
+                $rows[] = $hydrator->extract($vehicle);
+            }
+
+            $extractedResults = $rows;
+        }
+        return $extractedResults;
+    }
 }
