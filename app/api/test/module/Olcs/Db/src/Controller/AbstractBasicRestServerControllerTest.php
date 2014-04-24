@@ -9,9 +9,7 @@
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Controller\AbstractBasicRestServerController;
 use Zend\Http\Response;
-use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Tests AbstractBasicRestServerController
@@ -20,6 +18,7 @@ use Olcs\Db\Exceptions\RestResponseException;
  */
 class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 {
+
     private $controller;
 
     /**
@@ -31,12 +30,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     {
         // We may want to inject the ServiceLocator in the future
         $this->controller = $this->getMockForAbstractClass(
-            '\Olcs\Db\Controller\AbstractBasicRestServerController',
-            array(),
-            '',
-            true,
-            true,
-            true,
+            '\Olcs\Db\Controller\AbstractBasicRestServerController', array(), '', true, true, true,
             // Mocked methods
             $methods
         );
@@ -183,7 +177,9 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             array('foo', false, null),
             // Valid JSON
             array(array('data' => '{"foo":"bar"}'), true, array('foo' => 'bar')),
-            array(array('data' => '{"foo":"bar","cake":[1,2,3]}'), true, array('foo' => 'bar', 'cake' => array(1, 2, 3)))
+            array(
+                array('data' => '{"foo":"bar","cake":[1,2,3]}'), true, array('foo' => 'bar', 'cake' => array(1, 2, 3))
+            )
         );
     }
 
@@ -260,7 +256,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      * @group Controller
      * @group AbstractBasicRestServerController
      */
-    public function testCreateWithValidJsonDataUnexpectedID()
+    public function testCreateWithValidJsonDataUnexpectedId()
     {
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
@@ -300,7 +296,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      * @group Controller
      * @group AbstractBasicRestServerController
      */
-    public function testCreateWithValidJsonDataExpectedID()
+    public function testCreateWithValidJsonDataExpectedId()
     {
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
@@ -867,7 +863,9 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
 
-        $optimisticLockingException = $this->getMockBuilder('\Doctrine\ORM\OptimisticLockException')->disableOriginalConstructor()->getMock();
+        $optimisticLockingException = $this->getMockBuilder(
+            '\Doctrine\ORM\OptimisticLockException'
+        )->disableOriginalConstructor()->getMock();
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
@@ -910,7 +908,9 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
 
-        $optimisticLockingException = $this->getMockBuilder('\Doctrine\ORM\OptimisticLockException')->disableOriginalConstructor()->getMock();
+        $optimisticLockingException = $this->getMockBuilder(
+            '\Doctrine\ORM\OptimisticLockException'
+        )->disableOriginalConstructor()->getMock();
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 

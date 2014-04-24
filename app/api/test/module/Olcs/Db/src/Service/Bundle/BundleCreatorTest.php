@@ -147,7 +147,10 @@ class BundleCreatorTest extends PHPUnit_Framework_TestCase
             ->with($entity)
             ->will($this->returnValue($extractedEntity));
 
-        $this->assertEquals(array('id' => '123', 'date' => $date . 'T00:00:00+0100'), $this->service->buildEntityBundle($entity, $config));
+        $this->assertEquals(
+            array('id' => '123', 'date' => $date . 'T00:00:00+0100'),
+            $this->service->buildEntityBundle($entity, $config)
+        );
     }
 
     /**

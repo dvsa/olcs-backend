@@ -9,9 +9,6 @@
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Service\ServiceAbstract;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Orm\EntityManager;
 
 /**
  * Tests ServiceAbstract
@@ -20,18 +17,14 @@ use Doctrine\Orm\EntityManager;
  */
 class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 {
+
     /**
      * Setup the service
      */
     protected function getMockService($methods = array())
     {
         $this->service = $this->getMockForAbstractClass(
-            '\Olcs\Db\Service\ServiceAbstract',
-            array(),
-            '',
-            true,
-            true,
-            true,
+            '\Olcs\Db\Service\ServiceAbstract', array(), '', true, true, true,
             // Mocked methods
             $methods
         );
@@ -125,12 +118,13 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateWithNewAddress()
     {
-        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService'));
+        $this->getMockService(
+            array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService')
+        );
 
         $data = array(
             'addresses' => array(
                 'address' => array(
-
                 )
             )
         );
@@ -194,7 +188,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateWithAddress()
     {
-        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService'));
+        $this->getMockService(
+            array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService')
+        );
 
         $data = array(
             'addresses' => array(
@@ -332,7 +328,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetListEmptyResults()
     {
-        $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete'));
+        $this->getMockService(
+            array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete')
+        );
 
         $page = '2';
         $resultLimit = '25';
@@ -371,7 +369,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass',
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
             array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
         );
 
@@ -447,7 +446,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetList()
     {
-        $this->getMockService(array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete', 'getDoctrineHydrator'));
+        $this->getMockService(
+            array(
+                'log', 'getValidSearchFields', 'getEntityManager', 'getEntityName',
+                'canSoftDelete', 'getDoctrineHydrator'
+            )
+        );
 
         $page = '2';
         $resultLimit = '25';
@@ -494,7 +498,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass',
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
             array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
         );
 
@@ -582,7 +587,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $id = 7;
 
         $data = array(
-
         );
 
         $this->service->expects($this->once())
@@ -679,7 +683,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateWithVersionWithSoftDeleteWithEntity()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator', 'getEntityManager', 'dbPersist', 'dbFlush'));
+        $this->getMockService(
+            array(
+                'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
+                'getEntityManager', 'dbPersist', 'dbFlush'
+            )
+        );
 
         $id = 7;
 
@@ -751,7 +760,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $id = 7;
 
         $data = array(
-
         );
 
         $this->service->expects($this->once())
@@ -848,7 +856,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithVersionWithSoftDeleteWithEntity()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator', 'getEntityManager', 'dbPersist', 'dbFlush'));
+        $this->getMockService(
+            array(
+                'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
+                'getEntityManager', 'dbPersist', 'dbFlush'
+            )
+        );
 
         $id = 7;
 
@@ -1026,7 +1039,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(array('getEntityManager'));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\Orm\EntityManager')->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\Orm\EntityManager'
+        )->disableOriginalConstructor()->getMock();
 
         $this->service->expects($this->once())
             ->method('getEntityManager')
@@ -1047,7 +1062,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(array('getEntityManager'));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\Orm\EntityManager')->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder(
+            '\Doctrine\Orm\EntityManager'
+        )->disableOriginalConstructor()->getMock();
 
         $this->service->expects($this->once())
             ->method('getEntityManager')

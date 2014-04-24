@@ -205,7 +205,7 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
             )
         );
 
-        $lookupColumn  = array(
+        $lookupColumn = array(
             'licence' => 'l.licenceNumber',
             'disqualification' => 'disqualificationStatus',
         );
@@ -376,8 +376,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
                 $newParts = array_map(
                     function ($value) {
                         return empty($value) ? '%' : $value;
-                    },
-                    $parts
+                    }, $parts
                 );
                 return implode('-', $newParts);
             default:
