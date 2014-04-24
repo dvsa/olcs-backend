@@ -35,6 +35,18 @@ return array(
                     )
                 )
             ),
+            'application-operating-centre' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/application-operating-centre[/:applicationId]',
+                    'constraints' => array(
+                        'applicationId' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'application-operating-centre'
+                    )
+                )
+            ),
             'operator-search' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -101,6 +113,7 @@ return array(
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
+            'application-operating-centre' => 'Olcs\Db\Controller\ApplicationOperatingCentreController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController'
