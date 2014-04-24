@@ -254,10 +254,7 @@ abstract class ServiceAbstract
             $entity = $this->getUnDeletedById($id);
         } else {
             $entity = $this->getEntityManager()->find(
-                $this->getEntityName(),
-                (int)$id,
-                LockMode::OPTIMISTIC,
-                $data['version']
+                $this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']
             );
         }
 

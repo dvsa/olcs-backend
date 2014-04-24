@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * AbstractBasicRestServerController
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+
 namespace Olcs\Db\Controller;
 
 use Olcs\Db\Utility\RestServerInterface as OlcsRestServerInterface;
@@ -9,12 +15,18 @@ use Olcs\Db\Traits\RestResponseTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\ORM\OptimisticLockException;
 
+/**
+ * AbstractBasicRestServerController
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
 
     use RestResponseTrait;
 
     protected $serviceName;
+
     protected $allowedMethods = array(
         'create',
         'get',
