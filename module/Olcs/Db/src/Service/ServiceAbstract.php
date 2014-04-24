@@ -136,6 +136,30 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
     }
 
     /**
+     * Returns valid pagination values where they exist in the array given.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function getPaginationValues(array $data)
+    {
+        return array_intersect_key($data, array_flip(['page', 'results', 'sort', 'order']));
+    }
+
+    /**
+     * Get the result offset
+     *
+     * @param int $page
+     * @param int $limit
+     * @return int
+     */
+    private function getOffset($page, $limit)
+    {
+        return ($page * $limit) - $limit;
+    }
+
+    /**
      * Returns a list of matching records.
      *
      * @return array
@@ -177,6 +201,12 @@ abstract class ServiceAbstract implements OlcsRestServerInterface
         if (!empty($params)) {
             $qb->setParameters($params);
         }
+
+        $pag = $this->getPaginationValues($data);
+        $page = isset($pag['page']) ? $pag['page'] : 1;
+        $limit = isset($pag['results']) ? $pag['results'] : 10;
+        $qb->setFirstResult($this->getOffset($page, $limit));
+        $qb->setMaxResults($limit);
 
         $query = $qb->getQuery();
 
