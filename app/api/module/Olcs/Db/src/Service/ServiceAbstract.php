@@ -277,59 +277,103 @@ abstract class ServiceAbstract
     {
         $entityArray = $this->extractEntity($entity);
 
-        if (!isset($config['properties'])) {
-            $config['properties'] = 'ALL';
-        }
+        $config = array_merge(array('properties' => 'ALL'), $config);
 
         if (isset($config['children'])) {
 
-            foreach ($config['children'] as $childName => $details) {
-
-                if (is_numeric($childName) && is_string($details)) {
-                    $childName = $details;
-                    $details = array();
-                }
-
-                if (is_array($config['properties']) && !in_array($childName, $config['properties'])) {
-                    $config['properties'][] = $childName;
-                }
-
-                $getter = 'get' . ucwords($childName);
-
-                if (method_exists($entity, $getter)) {
-
-                    $children = $entity->$getter();
-
-                    if ($children instanceof Collection) {
-
-                        $newChildren = array();
-
-                        foreach ($children as $child) {
-
-                            $newChildren[] = $this->formatBundleForEntity($child, $details);
-                        }
-
-                    } else {
-
-                        $newChildren = $this->formatBundleForEntity($children, $details);
-                    }
-
-                    $entityArray[$childName] = $newChildren;
-                }
-            }
+            $this->formatChildren($entity, $entityArray, $config);
         }
 
-        if (is_array($config['properties'])) {
+        $this->trimProperties($entityArray, $config['properties']);
+
+        return $entityArray;
+    }
+
+    /**
+     * Format the children of an entity
+     *
+     * @param array $entityArray
+     * @param array $config
+     * @return array
+     */
+    private function formatChildren($entity, &$entityArray, &$config)
+    {
+        foreach ($config['children'] as $childName => $details) {
+
+            if (is_numeric($childName) && is_string($details)) {
+                $childName = $details;
+                $details = array();
+            }
+
+            if (is_array($config['properties']) && !in_array($childName, $config['properties'])) {
+                $config['properties'][] = $childName;
+            }
+
+            $getter = $this->formatGetter($childName);
+
+            if (method_exists($entity, $getter)) {
+
+                $children = $entity->$getter();
+
+                $entityArray[$childName] = $this->formatChild($children, $details);
+            }
+        }
+    }
+
+    /**
+     * Format a child/children
+     *
+     * @param mixed $children
+     * @return array
+     */
+    private function formatChild($children, $details)
+    {
+        if ($children instanceof Collection) {
+
+            $newChildren = array();
+
+            foreach ($children as $child) {
+
+                $newChildren[] = $this->formatBundleForEntity($child, $details);
+            }
+
+        } else {
+
+            $newChildren = $this->formatBundleForEntity($children, $details);
+        }
+
+        return $newChildren;
+    }
+
+    /**
+     * Workout the getter method name for a property
+     *
+     * @param string $property
+     * @return string
+     */
+    private function formatGetter($property)
+    {
+        return 'get' . ucwords($property);
+    }
+
+    /**
+     * Trim entity properties
+     *
+     * @param array $entityArray
+     * @param array $properties
+     * @return array
+     */
+    private function trimProperties(&$entityArray, $properties)
+    {
+        if (is_array($properties)) {
 
             foreach (array_keys($entityArray) as $property) {
 
-                if (!in_array($property, $config['properties'])) {
+                if (!in_array($property, $properties)) {
                     unset($entityArray[$property]);
                 }
             }
         }
-
-        return $entityArray;
     }
 
     /**
