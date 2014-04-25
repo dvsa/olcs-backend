@@ -184,6 +184,8 @@ abstract class ServiceAbstract
         $qb->setFirstResult($this->getOffset($page, $limit));
         $qb->setMaxResults($limit);
 
+        $this->setOrderBy($qb, $data);
+
         $query = $qb->getQuery();
 
         $results = $query->getResult();
@@ -204,6 +206,40 @@ abstract class ServiceAbstract
             'Count' => count($results),
             'Results' => $results
         );
+    }
+
+    /**
+     * Returns valid order by values where they exist in the array given.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function getOrderByValues(array $data)
+    {
+        return array_intersect_key($data, array_flip(['sort', 'order']));
+    }
+
+    /**
+     * Sets the sort by columns.
+     *
+     * @param unknown_type $qb
+     * @param unknown_type $data
+     */
+    public function setOrderBy($qb, $data)
+    {
+        $orderByValues = $this->getOrderByValues($data);
+        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
+        if ($sort) {
+            $sortString = 'a.' . $sort;
+
+            $order = isset($orderByValues['order']) ? $orderByValues['order'] : '';
+            if ($order) {
+                $sortString .= ' ' . $order;
+            }
+
+            $qb->orderBy($sortString);
+        }
     }
 
     /**

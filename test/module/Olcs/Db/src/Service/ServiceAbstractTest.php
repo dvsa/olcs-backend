@@ -63,6 +63,32 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that the get order by method gives us only the required fields.
+     *
+     * @dataProvider dpTestGetOrderByValues
+     */
+    public function testGetOrderByValues($input, $output)
+    {
+        $this->getMockService();
+
+        $this->assertEquals($output, $this->service->getOrderByValues($input));
+    }
+
+    public function dpTestGetOrderByValues()
+    {
+        return array(
+            array(
+                array(
+                    'sort' => 'somecolumn', 'order' => 'asc', 'extra' => 'ignored'
+                ),
+                array(
+                    'sort' => 'somecolumn', 'order' => 'asc'
+                )
+            ),
+        );
+    }
+
+    /**
      * Test create
      *
      * @group Service
@@ -329,7 +355,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     public function testGetListEmptyResults()
     {
         $this->getMockService(
-            array('log', 'getValidSearchFields', 'getEntityManager', 'getEntityName', 'canSoftDelete')
+            array(
+                'log',
+                'getValidSearchFields',
+                'getEntityManager',
+                'getEntityName',
+                'canSoftDelete',
+                'setOrderBy'
+            )
         );
 
         $page = '2';
@@ -369,8 +402,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock(
-            '\stdClass',
+        $mockQueryBuilder = $this->getMock('\stdClass',
             array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
         );
 
@@ -432,6 +464,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockEntityName));
 
         $this->service->expects($this->once())
+            ->method('setOrderBy')
+            ->with($this->equalTo($mockQueryBuilder), $this->equalTo($data));
+
+        $this->service->expects($this->once())
             ->method('canSoftDelete')
             ->will($this->returnValue(true));
 
@@ -448,8 +484,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getValidSearchFields', 'getEntityManager', 'getEntityName',
-                'canSoftDelete', 'getDoctrineHydrator'
+                'log',
+                'getValidSearchFields',
+                'getEntityManager', 'getEntityName',
+                'canSoftDelete',
+                'getDoctrineHydrator',
+                'setOrderBy'
             )
         );
 
@@ -500,7 +540,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder = $this->getMock(
             '\stdClass',
-            array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
+            array(
+                'select',
+                'from',
+                'where',
+                'setParameters',
+                'getQuery',
+                'setFirstResult',
+                'setMaxResults'
+            )
         );
 
         $mockQueryBuilder->expects($this->once())
@@ -561,6 +609,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockEntityName));
 
         $this->service->expects($this->once())
+            ->method('setOrderBy')
+            ->with($this->equalTo($mockQueryBuilder), $this->equalTo($data));
+
+        $this->service->expects($this->once())
             ->method('canSoftDelete')
             ->will($this->returnValue(true));
 
@@ -569,6 +621,45 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($mockDoctrineHydrator));
 
         $this->assertEquals($expected, $this->service->getList($data));
+    }
+
+    public function testSetOrderByWithoutOrder()
+    {
+        $data = [
+            'sort' => 'aField',
+            'some' => 'value',
+        ];
+
+        $string = 'a.aField';
+
+        $this->getMockService(array());
+
+        $mockQueryBuilder = $this->getMock('\stdClass', ['orderBy']);
+        $mockQueryBuilder->expects($this->once())
+                         ->method('orderBy')
+                         ->with($string);
+
+        $this->service->setOrderBy($mockQueryBuilder, $data);
+    }
+
+    public function testSetOrderByWithOrder()
+    {
+        $data = [
+            'sort' => 'aField',
+            'order' => 'DESC',
+            'some' => 'value',
+        ];
+
+        $string = 'a.aField DESC';
+
+        $this->getMockService(array());
+
+        $mockQueryBuilder = $this->getMock('\stdClass', ['orderBy']);
+        $mockQueryBuilder->expects($this->once())
+                         ->method('orderBy')
+                         ->with($string);
+
+        $this->service->setOrderBy($mockQueryBuilder, $data);
     }
 
     /**
