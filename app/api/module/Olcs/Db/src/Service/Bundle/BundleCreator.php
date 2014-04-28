@@ -64,7 +64,7 @@ class BundleCreator
             }
         }
 
-        if (empty($bundleConfig)) {
+        if (empty($bundleConfig) && $bundleConfig !== null) {
 
             $bundleConfig = array('properties' => 'ALL');
         }
@@ -194,9 +194,14 @@ class BundleCreator
     {
         $hydrator = $this->getHydrator();
 
-        $data = $hydrator->extract($entity);
+        if ($entity instanceof \OlcsEntities\Entity\EntityInterface) {
 
-        return $this->convertDates($data);
+            $data = $hydrator->extract($entity);
+
+            return $this->convertDates($data);
+        }
+
+        return array();
     }
 
     /**
