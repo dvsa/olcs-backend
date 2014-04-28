@@ -64,7 +64,7 @@ class BundleCreator
             }
         }
 
-        if (empty($bundleConfig) && $bundleConfig !== null) {
+        if (empty($bundleConfig)) {
 
             $bundleConfig = array('properties' => 'ALL');
         }
@@ -173,6 +173,10 @@ class BundleCreator
      */
     private function trimProperties(&$entityArray, $properties)
     {
+        if ($properties === null) {
+            $properties = array();
+        }
+
         if (is_array($properties)) {
 
             foreach (array_keys($entityArray) as $property) {
@@ -194,14 +198,13 @@ class BundleCreator
     {
         $hydrator = $this->getHydrator();
 
-        if ($entity instanceof \OlcsEntities\Entity\EntityInterface) {
-
-            $data = $hydrator->extract($entity);
-
-            return $this->convertDates($data);
+        if ($entity === null) {
+            return array();
         }
 
-        return array();
+        $data = $hydrator->extract($entity);
+
+        return $this->convertDates($data);
     }
 
     /**
