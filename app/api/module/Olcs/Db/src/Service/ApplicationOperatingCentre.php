@@ -39,7 +39,7 @@ class ApplicationOperatingCentre extends ServiceAbstract
                 LEFT JOIN address ON oc.F_Address_UID=address.id
                 WHERE aoc.applicationId = ?";
         $dataQuery = $this->em->getConnection()->prepare($sql);
-        $dataQuery->bindValue(1,$options['applicationId']);
+        $dataQuery->bindValue(1,$options['application']);
         $dataQuery->execute();
         $results = $dataQuery->fetchAll();
         return $results;
