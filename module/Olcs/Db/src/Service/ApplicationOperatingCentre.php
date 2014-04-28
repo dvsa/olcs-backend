@@ -33,7 +33,7 @@ class ApplicationOperatingCentre extends ServiceAbstract
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
         $sql="SELECT address.*, aoc.no_of_trailers_required, aoc.no_of_vehicles_required,
-                aoc.permission,aoc.ad_placed
+                aoc.permission,aoc.ad_placed,aoc.id
                 FROM application_operating_centre aoc
                 LEFT JOIN operating_centre oc ON aoc.operatingCentreId=oc.id
                 LEFT JOIN address ON oc.F_Address_UID=address.id
@@ -45,5 +45,4 @@ class ApplicationOperatingCentre extends ServiceAbstract
         return $results;
 
     }
-
 }

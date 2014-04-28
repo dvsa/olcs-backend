@@ -28,7 +28,7 @@ class ApplicationOperatingCentreController extends AbstractBasicRestServerContro
      * @param int $id
      * @return Response
      */
-    public function getList()
+    /*public function getList()
     {
         $this->checkMethod(__METHOD__);
         $options = $this->getDataFromQuery();
@@ -40,6 +40,6 @@ class ApplicationOperatingCentreController extends AbstractBasicRestServerContro
         } catch (\Exception $ex) {
             return $this->unknownError($ex);
         }
-    }
+    }*/
 
 }
