@@ -32,7 +32,7 @@ class ApplicationOperatingCentreTest extends PHPUnit_Framework_TestCase
     public function testGetByApplicationId()
     {
         $options = array(
-            'applicationId' => '10'
+            'application' => '10'
         );
 
         $this->service->expects($this->any())
