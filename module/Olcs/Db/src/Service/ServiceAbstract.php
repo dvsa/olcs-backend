@@ -523,9 +523,9 @@ abstract class ServiceAbstract
                 if (isset($addressDetails['id']) && !empty($addressDetails['id'])) {
                     $addressService->update($addressDetails['id'], $addressDetails);
 
-                    $data[$key . 'Id'] = $addressDetails['id'];
+                    $data[$key] = $addressDetails['id'];
                 } else {
-                    $data[$key . 'Id'] = $addressService->create($addressDetails);
+                    $data[$key] = $addressService->create($addressDetails);
                 }
             }
 

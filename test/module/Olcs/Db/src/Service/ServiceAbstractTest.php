@@ -156,7 +156,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         );
 
         $expected = array(
-            'addressId' => 1
+            'address' => 1
         );
 
         $id = 7;
@@ -227,7 +227,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         );
 
         $expected = array(
-            'addressId' => 3
+            'address' => 3
         );
 
         $id = 7;
