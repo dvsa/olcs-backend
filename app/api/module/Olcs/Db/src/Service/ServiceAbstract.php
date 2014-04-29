@@ -55,6 +55,13 @@ abstract class ServiceAbstract
     protected $validSearchFields = array();
 
     /**
+     * Holds the entity properties
+     *
+     * @var array
+     */
+    protected $entityProperties = array();
+
+    /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
      *
@@ -474,22 +481,16 @@ abstract class ServiceAbstract
 
     /**
      * Returns an array of valid search terms for the service / entity.
+     * By default this simply wraps getEntityPropertyNames but the
+     * methods are kept separate so they can be overridden individually
+     * since search fields might not always equal all properties
      *
      * @return array
      */
     public function getValidSearchFields()
     {
         if (empty($this->validSearchFields)) {
-
-            $reflectedEntity = $this->getReflectedEntity();
-
-            $properties = $reflectedEntity->getProperties();
-
-            $this->validSearchFields = array();
-
-            foreach ($properties as $property) {
-                $this->validSearchFields[] = $property->getName();
-            }
+            $this->validSearchFields = $this->getEntityPropertyNames();
         }
 
         return $this->validSearchFields;
@@ -506,16 +507,41 @@ abstract class ServiceAbstract
     }
 
     /**
+     * Get an entity's property names as an array
+     *
+     * @return array
+     */
+    public function getEntityPropertyNames()
+    {
+        if (empty($this->entityProperties)) {
+            $this->entityProperties = array_map(
+                function ($property) {
+                    return $property->getName();
+                },
+                $this->getReflectedEntity()->getProperties()
+            );
+        }
+        return $this->entityProperties;
+    }
+
+
+    /**
      * Find the address entities and process them
      *
      * @param array $data
+     *
      * @return array
      */
     private function processAddressEntity($data)
     {
+        $properties = $this->getEntityPropertyNames();
+
         if (isset($data['addresses']) && is_array($data['addresses'])) {
 
             foreach ($data['addresses'] as $key => $addressDetails) {
+                if (!in_array($key, $properties)) {
+                    continue;
+                }
 
                 $addressService = $this->getService('Address');
 
@@ -523,9 +549,9 @@ abstract class ServiceAbstract
                 if (isset($addressDetails['id']) && !empty($addressDetails['id'])) {
                     $addressService->update($addressDetails['id'], $addressDetails);
 
-                    $data[$key . 'Id'] = $addressDetails['id'];
+                    $data[$key] = $addressDetails['id'];
                 } else {
-                    $data[$key . 'Id'] = $addressService->create($addressDetails);
+                    $data[$key] = $addressService->create($addressDetails);
                 }
             }
 
