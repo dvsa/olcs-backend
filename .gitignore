@@ -10,3 +10,4 @@ composer.lock
 vendor
 vendor/bin
 test/coverage-report
+*.sw?
