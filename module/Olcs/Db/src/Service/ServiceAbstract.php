@@ -481,22 +481,16 @@ abstract class ServiceAbstract
 
     /**
      * Returns an array of valid search terms for the service / entity.
+     * By default this simply wraps getEntityPropertyNames but the
+     * methods are kept separate so they can be overridden individually
+     * since search fields might not always equal all properties
      *
      * @return array
      */
     public function getValidSearchFields()
     {
         if (empty($this->validSearchFields)) {
-
-            $reflectedEntity = $this->getReflectedEntity();
-
-            $properties = $reflectedEntity->getProperties();
-
-            $this->validSearchFields = array();
-
-            foreach ($properties as $property) {
-                $this->validSearchFields[] = $property->getName();
-            }
+            $this->validSearchFields = $this->getEntityPropertyNames();
         }
 
         return $this->validSearchFields;
