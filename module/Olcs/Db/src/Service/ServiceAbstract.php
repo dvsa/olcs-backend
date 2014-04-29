@@ -506,16 +506,38 @@ abstract class ServiceAbstract
     }
 
     /**
+     * Get an entity's property names as an array
+     *
+     * @return array
+     */
+    public function getEntityPropertyNames()
+    {
+        return array_map(
+            function ($property) {
+                return $property->getName();
+            },
+            $this->getReflectedEntity()->getProperties()
+        );
+    }
+
+
+    /**
      * Find the address entities and process them
      *
      * @param array $data
+     *
      * @return array
      */
     private function processAddressEntity($data)
     {
+        $properties = $this->getEntityPropertyNames();
+
         if (isset($data['addresses']) && is_array($data['addresses'])) {
 
             foreach ($data['addresses'] as $key => $addressDetails) {
+                if (!in_array($key, $properties)) {
+                    continue;
+                }
 
                 $addressService = $this->getService('Address');
 

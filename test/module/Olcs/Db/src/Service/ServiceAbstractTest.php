@@ -31,6 +31,29 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Helper to generate stubbed entity properties; as we use reflection
+     * these are objects themselves so need their getName method mocking
+     *
+     * @param array $properties
+     *
+     * @return array
+     */
+    protected function generateProperties($properties = array())
+    {
+        $final = [];
+        foreach ($properties as $property) {
+            $mock = $this->getMock('\stdClass', ['getName']);
+            $mock->expects($this->once())
+                ->method('getName')
+                ->will($this->returnValue($property));
+
+            $final[] = $mock;
+        }
+
+        return $final;
+    }
+
+    /**
      * Tests that the get pagination method gives us only the required fields.
      *
      * @dataProvider dpTestGetPaginationValues
@@ -96,7 +119,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreate()
     {
-        $this->getMockService(array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush'));
+        $this->getMockService(
+            array(
+                'log', 'getNewEntity', 'getDoctrineHydrator',
+                'dbPersist', 'dbFlush', 'getEntityPropertyNames'
+            )
+        );
 
         $data = array();
 
@@ -133,6 +161,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('dbFlush');
 
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue([]));
+
         $this->assertEquals($id, $this->service->create($data));
     }
 
@@ -145,7 +177,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     public function testCreateWithNewAddress()
     {
         $this->getMockService(
-            array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService')
+            array(
+                'log', 'getNewEntity', 'getDoctrineHydrator',
+                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+            )
         );
 
         $data = array(
@@ -203,19 +238,26 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('dbFlush');
 
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue(['address']));
+
         $this->assertEquals($id, $this->service->create($data));
     }
 
     /**
-     * Test create With Address
+     * Test create With Existing Address
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testCreateWithAddress()
+    public function testCreateWithExistingAddress()
     {
         $this->getMockService(
-            array('log', 'getNewEntity', 'getDoctrineHydrator', 'dbPersist', 'dbFlush', 'getService')
+            array(
+                'log', 'getNewEntity', 'getDoctrineHydrator',
+                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+            )
         );
 
         $data = array(
@@ -272,6 +314,153 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('dbFlush');
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue(['address']));
+
+        $this->assertEquals($id, $this->service->create($data));
+    }
+
+    /**
+     * Test create With new Address which is not an entity property
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testCreateWithNewAddressInvalidEntityProperty()
+    {
+        $this->getMockService(
+            array(
+                'log', 'getNewEntity', 'getDoctrineHydrator',
+                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+            )
+        );
+
+        $data = array(
+            'validProperty' => 'valid',
+            'addresses' => array(
+                'address' => array(
+                )
+            )
+        );
+
+        $expected = array(
+            'validProperty' => 'valid',
+        );
+
+        $id = 7;
+
+        $firstEntity = $this->getMock('\stdClass', array('getId'));
+
+        $firstEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($id));
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($expected, $firstEntity)
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->never())
+            ->method('getService')
+            ->with('Address');
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getNewEntity')
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->service->expects($this->once())
+            ->method('dbPersist')
+            ->with($firstEntity);
+
+        $this->service->expects($this->once())
+            ->method('dbFlush');
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue(['validProperty']));
+
+        $this->assertEquals($id, $this->service->create($data));
+    }
+
+    /**
+     * Test create With Existing Address which is not an entity property
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testCreateWithExistingAddressInvalidEntityProperty()
+    {
+        $this->getMockService(
+            array(
+                'log', 'getNewEntity', 'getDoctrineHydrator',
+                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+            )
+        );
+
+        $data = array(
+            'validProperty' => 'valid',
+            'addresses' => array(
+                'address' => array(
+                    'id' => 3
+                )
+            )
+        );
+
+        $expected = array(
+            'validProperty' => 'valid',
+        );
+
+        $id = 7;
+
+        $firstEntity = $this->getMock('\stdClass', array('getId'));
+
+        $firstEntity->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($id));
+
+        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
+
+        $mockDoctrineHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($expected, $firstEntity)
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->never())
+            ->method('getService')
+            ->with('Address');
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getNewEntity')
+            ->will($this->returnValue($firstEntity));
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockDoctrineHydrator));
+
+        $this->service->expects($this->once())
+            ->method('dbPersist')
+            ->with($firstEntity);
+
+        $this->service->expects($this->once())
+            ->method('dbFlush');
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue(['validProperty']));
 
         $this->assertEquals($id, $this->service->create($data));
     }
@@ -777,7 +966,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->getMockService(
             array(
                 'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
-                'getEntityManager', 'dbPersist', 'dbFlush'
+                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
             )
         );
 
@@ -824,6 +1013,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue([]));
 
         $this->service->expects($this->once())
             ->method('dbPersist')
@@ -950,7 +1143,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->getMockService(
             array(
                 'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
-                'getEntityManager', 'dbPersist', 'dbFlush'
+                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
             )
         );
 
@@ -1004,6 +1197,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('dbFlush');
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue([]));
 
         $this->assertTrue($this->service->patch($id, $data));
     }
@@ -1369,6 +1566,28 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue('\stdClass'));
 
         $this->assertTrue($this->service->getReflectedEntity() instanceof \ReflectionClass);
+    }
+
+    /**
+     * Test getEntityPropertyNames
+     */
+    public function testGetEntityPropertyNames()
+    {
+        $this->getMockService(array('getReflectedEntity'));
+
+        $mockEntity = $this->getMock('\stdClass', ['getProperties']);
+        $mockEntity->expects($this->once())
+            ->method('getProperties')
+            ->will($this->returnValue($this->generateProperties(['foo', 'bar'])));
+
+        $this->service->expects($this->once())
+            ->method('getReflectedEntity')
+            ->will($this->returnValue($mockEntity));
+
+        $this->assertEquals(
+            ['foo', 'bar'],
+            $this->service->getEntityPropertyNames()
+        );
     }
 
     /**
