@@ -55,6 +55,13 @@ abstract class ServiceAbstract
     protected $validSearchFields = array();
 
     /**
+     * Holds the entity properties
+     *
+     * @var array
+     */
+    protected $entityProperties = array();
+
+    /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
      *
@@ -512,12 +519,15 @@ abstract class ServiceAbstract
      */
     public function getEntityPropertyNames()
     {
-        return array_map(
-            function ($property) {
-                return $property->getName();
-            },
-            $this->getReflectedEntity()->getProperties()
-        );
+        if (empty($this->entityProperties)) {
+            $this->entityProperties = array_map(
+                function ($property) {
+                    return $property->getName();
+                },
+                $this->getReflectedEntity()->getProperties()
+            );
+        }
+        return $this->entityProperties;
     }
 
 
