@@ -106,6 +106,10 @@ class BundleCreator
      */
     private function formatChildren($entity, &$entityArray, &$config)
     {
+        if (is_null($config['properties']) && !empty($config['children'])) {
+            $config['properties'] = array();
+        }
+
         foreach ($config['children'] as $childName => $details) {
 
             if (is_numeric($childName) && is_string($details)) {
@@ -173,6 +177,10 @@ class BundleCreator
      */
     private function trimProperties(&$entityArray, $properties)
     {
+        if ($properties === null) {
+            $properties = array();
+        }
+
         if (is_array($properties)) {
 
             foreach (array_keys($entityArray) as $property) {
@@ -192,6 +200,10 @@ class BundleCreator
      */
     private function extract($entity)
     {
+        if ($entity === null) {
+            return array();
+        }
+
         $hydrator = $this->getHydrator();
 
         $data = $hydrator->extract($entity);

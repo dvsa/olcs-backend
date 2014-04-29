@@ -602,4 +602,202 @@ class BundleCreatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
     }
+
+    /**
+     * Test buildEntityBundles with more nesting with null properties and child
+     */
+    public function testBuildEntityBundlesWithMoreNestingWithNullPropertiesAndChild()
+    {
+        $mockFoo = $this->getMock('\stdClass');
+
+        $mockChild = $this->getMock('\stdClass', array('getFoo'));
+
+        $mockChild->expects($this->once())
+            ->method('getFoo')
+            ->will($this->returnValue($mockFoo));
+
+        $children = array(
+            $mockChild
+        );
+
+        $mockJazz = new \Doctrine\Common\Collections\ArrayCollection($children);
+
+        $extractedJazz = array(
+        );
+
+        $extractedFoo = array(
+            'id' => '7'
+        );
+
+        $entity = $this->getMock('\stdClass', array('getJazz'));
+
+        $entity->expects($this->once())
+            ->method('getJazz')
+            ->will($this->returnValue($mockJazz));
+
+        $extractedEntity = array(
+            'id' => '123',
+            'foo' => 'bar'
+        );
+
+        $expected = array(
+            'id' => '123',
+            'foo' => 'bar',
+            'jazz' => array(
+                array(
+                    'foo' => $extractedFoo
+                )
+            )
+        );
+
+        $config = array(
+            'bundle' => json_encode(
+                array(
+                    'children' => array(
+                        'jazz' => array(
+                            'properties' => null,
+                            'children' => array(
+                                'foo'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->hydrator->expects($this->at(0))
+            ->method('extract')
+            ->with($entity)
+            ->will($this->returnValue($extractedEntity));
+
+        $this->hydrator->expects($this->at(1))
+            ->method('extract')
+            ->with($mockChild)
+            ->will($this->returnValue($extractedJazz));
+
+        $this->hydrator->expects($this->at(2))
+            ->method('extract')
+            ->with($mockFoo)
+            ->will($this->returnValue($extractedFoo));
+
+        $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
+    }
+
+    /**
+     * Test buildEntityBundles with more nesting with null properties
+     */
+    public function testBuildEntityBundlesWithMoreNestingWithNullProperties()
+    {
+        $mockFoo = $this->getMock('\stdClass');
+
+        $mockChild = $this->getMock('\stdClass');
+
+        $children = array(
+            $mockChild
+        );
+
+        $mockJazz = new \Doctrine\Common\Collections\ArrayCollection($children);
+
+        $extractedJazz = array(
+        );
+
+        $entity = $this->getMock('\stdClass', array('getJazz'));
+
+        $entity->expects($this->once())
+            ->method('getJazz')
+            ->will($this->returnValue($mockJazz));
+
+        $extractedEntity = array(
+            'id' => '123',
+            'foo' => 'bar'
+        );
+
+        $expected = array(
+            'id' => '123',
+            'foo' => 'bar',
+            'jazz' => array(
+                array()
+            )
+        );
+
+        $config = array(
+            'bundle' => json_encode(
+                array(
+                    'children' => array(
+                        'jazz' => array(
+                            'properties' => null
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->hydrator->expects($this->at(0))
+            ->method('extract')
+            ->with($entity)
+            ->will($this->returnValue($extractedEntity));
+
+        $this->hydrator->expects($this->at(1))
+            ->method('extract')
+            ->with($mockChild)
+            ->will($this->returnValue($extractedJazz));
+
+        $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
+    }
+
+    /**
+     * Test buildEntityBundles with more nesting with null entity
+     */
+    public function testBuildEntityBundlesWithMoreNestingWithNullEntity()
+    {
+        $mockJazz = null;
+
+        $extractedJazz = array(
+            'id' => '1',
+            'this' => 'something'
+        );
+
+        $extractedFoo = array(
+            'id' => '7'
+        );
+
+        $entity = $this->getMock('\stdClass', array('getJazz'));
+
+        $entity->expects($this->once())
+            ->method('getJazz')
+            ->will($this->returnValue($mockJazz));
+
+        $extractedEntity = array(
+            'id' => '123',
+            'foo' => 'bar'
+        );
+
+        $expected = array(
+            'id' => '123',
+            'foo' => 'bar',
+            'jazz' => array(
+            )
+        );
+
+        $config = array(
+            'bundle' => json_encode(
+                array(
+                    'children' => array(
+                        'jazz' => array(
+                            'children' => array(
+                                'foo'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->hydrator->expects($this->at(0))
+            ->method('extract')
+            ->with($entity)
+            ->will($this->returnValue($extractedEntity));
+
+        $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
+    }
 }
