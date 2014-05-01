@@ -293,6 +293,8 @@ abstract class ServiceAbstract
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
+        $data = $this->processAddressEntity($data);
+
         if ($this->canSoftDelete()) {
             $entity = $this->getUnDeletedById($id);
         } else {
@@ -304,8 +306,6 @@ abstract class ServiceAbstract
         if (empty($entity)) {
             return false;
         }
-
-        $data = $this->processAddressEntity($data);
 
         $entity->clearProperties(array_keys($data));
 
