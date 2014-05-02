@@ -39,10 +39,5 @@
             "Olcs\\Db\\": "module/Olcs/Db/src",
             "OlcsEntities\\": "vendor/olcs/olcs-entities/OlcsEntities/src/OlcsEntities"
         }
-    },
-    "config": {
-        "github-oauth": {
-            "github.com": "ab01b01b13c9454d4e5cbbec3bd14b5f7712e568"
-        }
-    },
+    }
 }
