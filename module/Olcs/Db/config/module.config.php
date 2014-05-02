@@ -83,6 +83,36 @@ return array(
                     )
                 )
             ),
+            'name-search' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/companieshouse/namesearch/:companyname',
+                    'defaults' => array(
+                                'controller' => 'OlcsCommon\Api\CompaniesHouse',
+                                'action' => 'nameSearch'
+                            )
+                ),
+            ),
+            'number-search' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/companieshouse/numbersearch/:companynumber',
+                    'defaults' => array(
+                                'controller' => 'OlcsCommon\Api\CompaniesHouse',
+                                'action' => 'numberSearch'
+                            )
+                ),
+            ),
+            'company-details' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/companieshouse/companydetails/:companynumber',
+                    'defaults' => array(
+                                'controller' => 'OlcsCommon\Api\CompaniesHouse',
+                                'action' => 'companyDetails'
+                            )
+                )
+            )            
         )
     ),
     'service_manager' => array(
