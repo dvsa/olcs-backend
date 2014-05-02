@@ -15,6 +15,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
@@ -129,7 +130,7 @@ abstract class ServiceAbstract
      */
     public function getPaginationValues(array $data)
     {
-        return array_intersect_key($data, array_flip(['page', 'results', 'sort', 'order']));
+        return array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']));
     }
 
     /**
@@ -187,7 +188,7 @@ abstract class ServiceAbstract
 
         $pag = $this->getPaginationValues($data);
         $page = isset($pag['page']) ? $pag['page'] : 1;
-        $limit = isset($pag['results']) ? $pag['results'] : 10;
+        $limit = isset($pag['limit']) ? $pag['limit'] : 10;
         $qb->setFirstResult($this->getOffset($page, $limit));
         $qb->setMaxResults($limit);
 
@@ -209,8 +210,10 @@ abstract class ServiceAbstract
             $results = $rows;
         }
 
+        $paginator = new Paginator($query, $fetchJoinCollection = false);
+
         return array(
-            'Count' => count($results),
+            'Count' => count($paginator),
             'Results' => $results
         );
     }
@@ -239,13 +242,9 @@ abstract class ServiceAbstract
         $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
         if ($sort) {
             $sortString = 'a.' . $sort;
+            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
 
-            $order = isset($orderByValues['order']) ? $orderByValues['order'] : '';
-            if ($order) {
-                $sortString .= ' ' . $order;
-            }
-
-            $qb->orderBy($sortString);
+            $qb->orderBy($sortString, $orderString);
         }
     }
 
