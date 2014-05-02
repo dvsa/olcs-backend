@@ -1,0 +1,4 @@
+<NameSearchRequest xmlns="http://xmlgw.companieshouse.gov.uk/v1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlgw.companieshouse.gov.uk/v1-0/schema/NameSearch.xsd">
+    <CompanyName></CompanyName>
+    <DataSet></DataSet>
+</NameSearchRequest>

@@ -1,0 +1,5 @@
+<CompanyDetailsRequest xmlns="http://xmlgw.companieshouse.gov.uk/v1-0/schema/"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://xmlgw.companieshouse.gov.uk/v1-0/schema/CompanyDetails.xsd">
+    <CompanyNumber></CompanyNumber>
+</CompanyDetailsRequest>
