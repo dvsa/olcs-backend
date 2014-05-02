@@ -1,1 +1,43 @@
-{"name":"olcs\/back-end","description":"Back End Application for OLCS Project","repositories":[{"type":"package","package":{"name":"olcs\/olcs-entities","version":"release-","source":{"url":"git@gitlab.clb.npm:\/olcs\/olcs-entities.git","type":"git","reference":"origin\/release\/"}}},{"type":"package","package":{"name":"olcs\/OlcsCommon","version":"release-","source":{"url":"git@gitlab.clb.npm:\/olcs\/olcs-common.git","type":"git","reference":"origin\/release\/"}}}],"require":{"php":">=5.3.3","zendframework\/zendframework":"2.2.*","doctrine\/doctrine-orm-module":"0.*","phpunit\/phpunit":"4.0.*","olcs\/olcs-entities":"dev-develop"},"autoload":{"psr-4":{"Olcs\\Db\\":"module\/Olcs\/Db\/src","OlcsEntities\\":"vendor\/olcs\/olcs-entities\/OlcsEntities\/src\/OlcsEntities"}}}
+{
+    "name": "olcs/back-end",
+    "description": "Back End Application for OLCS Project",
+    "repositories": [
+        {
+        "type": "package",
+        "package": {
+            "name": "olcs/olcs-entities",
+            "version": "dev-develop",
+            "source": {
+                "url": "git@gitlab.clb.npm:/olcs/olcs-entities.git",
+                "type": "git",
+                "reference": "origin/develop"
+                }
+            }
+        },
+        {
+        "type": "package",
+        "package": {
+            "name": "olcs/OlcsCommon",
+            "version": "dev-develop",
+            "source": {
+                "url": "git@gitlab.clb.npm:/olcs/olcs-common.git",
+                "type": "git",
+                "reference": "origin/develop"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.2.*",
+        "doctrine/doctrine-orm-module": "0.*",
+        "phpunit/phpunit": "4.0.*",
+        "olcs/olcs-entities": "dev-develop"
+    },
+    "autoload": {
+        "psr-4": {
+            "Olcs\\Db\\": "module/Olcs/Db/src",
+            "OlcsEntities\\": "vendor/olcs/olcs-entities/OlcsEntities/src/OlcsEntities"
+        }
+    }
+}
