@@ -163,22 +163,27 @@ abstract class ServiceAbstract
 
         $params = array();
 
+        $whereMethod = 'where';
+
         foreach ($searchFields as $key => $value) {
 
             $field = $key;
 
             if (is_numeric($value)) {
 
-                $qb->where("a.{$field} = :{$key}");
+                $qb->$whereMethod("a.{$field} = :{$key}");
+                $whereMethod = 'andWhere';
             } else {
 
-                $qb->where("a.{$field} LIKE :{$key}");
+                $qb->$whereMethod("a.{$field} LIKE :{$key}");
+                $whereMethod = 'andWhere';
             }
             $params[$key] = $value;
         }
 
         if ($this->canSoftDelete()) {
-            $qb->where('a.isDeleted = 0');
+            $qb->$whereMethod('a.isDeleted = 0');
+            $whereMethod = 'andWhere';
         }
 
         if (!empty($params)) {
