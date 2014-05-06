@@ -517,10 +517,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $data = array(
-            'foo' => 'bar'
-        );
-
         $mockEntity = null;
 
         $this->service->expects($this->once())
@@ -591,8 +587,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass',
-            array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
+            array(
+                'select', 'from', 'where', 'andWhere', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults'
+            )
         );
 
         $mockQueryBuilder->expects($this->once())
@@ -602,16 +601,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('from')
             ->with('MockEntity');
 
-        $mockQueryBuilder->expects($this->at(2))
+        $mockQueryBuilder->expects($this->once())
             ->method('where')
             ->with('a.fooBar LIKE :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
-            ->method('where')
+            ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
 
         $mockQueryBuilder->expects($this->at(5))
-            ->method('where')
+            ->method('andWhere')
             ->with('a.isDeleted = 0');
 
         $mockQueryBuilder->expects($this->once())
@@ -733,6 +732,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'select',
                 'from',
                 'where',
+                'andWhere',
                 'setParameters',
                 'getQuery',
                 'setFirstResult',
@@ -747,16 +747,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('from')
             ->with('MockEntity');
 
-        $mockQueryBuilder->expects($this->at(2))
+        $mockQueryBuilder->expects($this->once())
             ->method('where')
             ->with('a.fooBar LIKE :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
-            ->method('where')
+            ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
 
         $mockQueryBuilder->expects($this->at(5))
-            ->method('where')
+            ->method('andWhere')
             ->with('a.isDeleted = 0');
 
         $mockQueryBuilder->expects($this->once())
