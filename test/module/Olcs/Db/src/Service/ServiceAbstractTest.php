@@ -1113,7 +1113,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithVersionWithoutSoftDeleteEntityNotFound()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity'));
+        $this->getMockService(
+            array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+        );
 
         $id = 7;
 
