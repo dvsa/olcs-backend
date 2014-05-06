@@ -210,12 +210,24 @@ abstract class ServiceAbstract
             $results = $rows;
         }
 
-        $paginator = new Paginator($query, $fetchJoinCollection = false);
+        $paginator = $this->getPaginator($query, false);
 
         return array(
             'Count' => count($paginator),
             'Results' => $results
         );
+    }
+
+    /**
+     * Method to allow easier testing
+     *
+     * @param \Doctrine\ORM\Query $query
+     * @param Bool $fetchJoinCollection
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getPaginator($query, $fetchJoinColumns = false)
+    {
+        return new Paginator($query, $fetchJoinColumns);
     }
 
     /**

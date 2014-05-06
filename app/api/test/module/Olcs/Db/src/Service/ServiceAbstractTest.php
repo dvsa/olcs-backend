@@ -70,16 +70,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 array(
-                    'page' => 1, 'results' => 100, 'sort' => 'somecolumn', 'order' => 'asc', 'other' => 'ovalue'
+                    'page' => 1, 'limit' => 100, 'sort' => 'somecolumn', 'order' => 'asc', 'other' => 'ovalue'
                 ),
                 array(
-                    'page' => 1, 'results' => 100, 'sort' => 'somecolumn', 'order' => 'asc'
+                    'page' => 1, 'limit' => 100, 'sort' => 'somecolumn', 'order' => 'asc'
                 ),
                 array(
-                    'page' => 1, 'results' => 100, 'other' => 'ovalue'
+                    'page' => 1, 'limit' => 100, 'other' => 'ovalue'
                 ),
                 array(
-                    'page' => 1, 'results' => 100
+                    'page' => 1, 'limit' => 100
                 ),
             ),
         );
@@ -550,7 +550,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'getEntityManager',
                 'getEntityName',
                 'canSoftDelete',
-                'setOrderBy'
+                'setOrderBy',
+                'getPaginator'
             )
         );
 
@@ -563,7 +564,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'barFor' => 'black sheep',
             'numberOfStuff' => 1,
             'page' => $page,
-            'results' => $resultLimit
+            'limit' => $resultLimit
         );
 
         $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
@@ -591,7 +592,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getResult')
             ->will($this->returnValue($results));
 
-        $mockQueryBuilder = $this->getMock('\stdClass',
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
             array('select', 'from', 'where', 'setParameters', 'getQuery', 'setFirstResult', 'setMaxResults')
         );
 
@@ -660,6 +662,13 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('canSoftDelete')
             ->will($this->returnValue(true));
 
+        $mockPaginator = $this->getMock('\StdClass');
+
+        $this->service->expects($this->once())
+            ->method('getPaginator')
+            ->with($this->equalTo($mockQuery), false)
+            ->will($this->returnValue(array()));
+
         $this->assertEquals($expected, $this->service->getList($data));
     }
 
@@ -678,7 +687,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'getEntityManager', 'getEntityName',
                 'canSoftDelete',
                 'getDoctrineHydrator',
-                'setOrderBy'
+                'setOrderBy',
+                'getPaginator'
             )
         );
 
@@ -691,7 +701,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'barFor' => 'black sheep',
             'numberOfStuff' => 1,
             'page' => $page,
-            'results' => $resultLimit
+            'limit' => $resultLimit
         );
 
         $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
@@ -809,6 +819,13 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getDoctrineHydrator')
             ->will($this->returnValue($mockDoctrineHydrator));
 
+        $mockPaginator = $this->getMock('\StdClass');
+
+        $this->service->expects($this->once())
+            ->method('getPaginator')
+            ->with($this->equalTo($mockQuery), false)
+            ->will($this->returnValue($results));
+
         $this->assertEquals($expected, $this->service->getList($data));
     }
 
@@ -839,14 +856,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'some' => 'value',
         ];
 
-        $string = 'a.aField DESC';
-
+        $fieldString = 'a.aField';
+        $orderString = 'DESC';
         $this->getMockService(array());
 
         $mockQueryBuilder = $this->getMock('\stdClass', ['orderBy']);
         $mockQueryBuilder->expects($this->once())
                          ->method('orderBy')
-                         ->with($string);
+                         ->with($fieldString, $orderString);
 
         $this->service->setOrderBy($mockQueryBuilder, $data);
     }
