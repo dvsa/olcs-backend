@@ -537,7 +537,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    private function processAddressEntity($data)
+    public function processAddressEntity($data)
     {
         $properties = $this->getEntityPropertyNames();
 
