@@ -886,7 +886,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateWithVersionWithSoftDeleteEntityNotFound()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById'));
+        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'processAddressEntity'));
 
         $id = 7;
 
@@ -898,6 +898,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('processAddressEntity')
+            ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
             ->method('canSoftDelete')
@@ -922,7 +926,9 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateWithVersionWithoutSoftDeleteEntityNotFound()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName'));
+        $this->getMockService(
+            array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+        );
 
         $id = 7;
 
@@ -940,6 +946,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('processAddressEntity')
+            ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
             ->method('canSoftDelete')
@@ -1063,7 +1073,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithVersionWithSoftDeleteEntityNotFound()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById'));
+        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'processAddressEntity'));
 
         $id = 7;
 
@@ -1075,6 +1085,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('processAddressEntity')
+            ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
             ->method('canSoftDelete')
@@ -1099,7 +1113,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithVersionWithoutSoftDeleteEntityNotFound()
     {
-        $this->getMockService(array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName'));
+        $this->getMockService(array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity'));
 
         $id = 7;
 
@@ -1117,6 +1131,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $this->service->expects($this->once())
             ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('processAddressEntity')
+            ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
             ->method('canSoftDelete')
