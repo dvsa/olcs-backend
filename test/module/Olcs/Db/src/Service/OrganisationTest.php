@@ -30,6 +30,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
             'getDoctrineHydrator', 
             'dbPersist', 
             'dbFlush',
+            'getBundleCreator',
         ));
     }
 
@@ -322,6 +323,62 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
             ->method('dbFlush');
     
         $this->assertEquals(true, $this->service->updateByLicenceId($id, $data));
+    }
+
+    public function testGetApplicationsList()
+    {
+        $data = array('operatorId' => 1);
+        $results = array(
+            array('id' => 1),
+        );
+        $return = array(
+            'Count' => count($results),
+            'Results' => $results,
+        );
+
+        $sqlMethods = array('select', 'from', 'innerJoin', 'add', 'setParameter');
+        $mockQb = $this->getMock('\stdClass', array_merge($sqlMethods, array('getQuery')));
+
+        foreach($sqlMethods as $method){
+            $mockQb->expects($this->any())
+                ->method($method)
+                ->will($this->returnValue($mockQb))
+            ;
+        }
+
+        $mockQuery = $this->getMock('\stdClass', array('getResult'));
+        $mockQuery->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue($results))
+        ;
+
+        $mockQb->expects($this->any())
+            ->method('getQuery')
+            ->will($this->returnValue($mockQuery))
+        ;
+
+
+
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('createQueryBuilder'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager->expects($this->any())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQb));
+
+        $this->service->expects($this->once())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager))
+        ;
+
+        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
+        $mockBundleCreator->expects($this->once())
+            ->method('buildEntityBundle')
+            ->will($this->returnValue(array('id' => 1)));
+
+        $this->service->expects($this->once())
+            ->method('getBundleCreator')
+            ->will($this->returnValue($mockBundleCreator));
+
+        $this->assertEquals($return, $this->service->getApplicationsList($data));
     }
     
 }
