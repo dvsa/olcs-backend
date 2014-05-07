@@ -95,4 +95,36 @@ class Organisation extends ServiceAbstract
         return true;
     }
 
+    public function getApplicationsList($data)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $query = $qb->select('a')
+            ->from('OlcsEntities\Entity\Application', 'a')
+            ->innerJoin('OlcsEntities\Entity\Licence', 'l', 'WITH', 'a.licence = l.id')
+            ->add('where', 'l.organisation = :operator')
+            ->add('orderBy', 'a.createdOn DESC')
+            ->setParameter('operator', $data['operatorId'])
+            ->getQuery()
+        ;
+
+        $results = $query->getResult();
+
+        if (!empty($results)) {
+
+            $rows = array();
+
+            foreach ($results as $row) {
+
+                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $data);
+            }
+
+            $results = $rows;
+        }
+
+        return array(
+            'Count' => count($results),
+            'Results' => $results,
+        );
+    }
+
 }
