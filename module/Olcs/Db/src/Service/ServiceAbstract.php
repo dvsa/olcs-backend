@@ -164,22 +164,27 @@ abstract class ServiceAbstract
 
         $params = array();
 
+        $whereMethod = 'where';
+
         foreach ($searchFields as $key => $value) {
 
             $field = $key;
 
             if (is_numeric($value)) {
 
-                $qb->where("a.{$field} = :{$key}");
+                $qb->$whereMethod("a.{$field} = :{$key}");
+                $whereMethod = 'andWhere';
             } else {
 
-                $qb->where("a.{$field} LIKE :{$key}");
+                $qb->$whereMethod("a.{$field} LIKE :{$key}");
+                $whereMethod = 'andWhere';
             }
             $params[$key] = $value;
         }
 
         if ($this->canSoftDelete()) {
-            $qb->where('a.isDeleted = 0');
+            $qb->$whereMethod('a.isDeleted = 0');
+            $whereMethod = 'andWhere';
         }
 
         if (!empty($params)) {
@@ -304,6 +309,8 @@ abstract class ServiceAbstract
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
+        $data = $this->processAddressEntity($data);
+
         if ($this->canSoftDelete()) {
             $entity = $this->getUnDeletedById($id);
         } else {
@@ -315,8 +322,6 @@ abstract class ServiceAbstract
         if (empty($entity)) {
             return false;
         }
-
-        $data = $this->processAddressEntity($data);
 
         $entity->clearProperties(array_keys($data));
 
@@ -543,7 +548,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    private function processAddressEntity($data)
+    public function processAddressEntity($data)
     {
         $properties = $this->getEntityPropertyNames();
 
