@@ -327,7 +327,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
 
     public function testGetApplicationsList()
     {
-        $data = array('operatorId' => 1);
+        $data = array('organisation' => 1);
         $results = array(
             array('id' => 1),
         );

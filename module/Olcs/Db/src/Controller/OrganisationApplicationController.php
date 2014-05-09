@@ -27,7 +27,7 @@ class OrganisationApplicationController extends AbstractBasicRestServerControlle
         $options = $this->getDataFromQuery();
 
         try {
-            if (empty($options['operatorId'])){
+            if (empty($options['organisation'])){
                 throw new RestResponseException('Invalid call', Response::STATUS_CODE_500);
             }
             $response = $this->getService('Organisation')->getApplicationsList($options);

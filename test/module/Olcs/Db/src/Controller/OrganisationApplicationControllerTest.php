@@ -47,7 +47,7 @@ class OrganisationApplicationControllerTest extends PHPUnit_Framework_TestCase
     public function testGetListWithException()
     {
         $options = array(
-            'operatorId' => 104,
+            'organisation' => 104,
         );
 
         $mockService = $this->getMock('\stdClass', array('getApplicationsList'));
@@ -92,7 +92,7 @@ class OrganisationApplicationControllerTest extends PHPUnit_Framework_TestCase
     public function testGetList()
     {
         $options = array(
-            'operatorId' => 104,
+            'organisation' => 104,
         );
 
         $return = array(
