@@ -43,7 +43,10 @@ class Organisation extends ServiceAbstract
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
-        $licenceEntity = $this->getEntityManager()->getRepository('OlcsEntities\Entity\Licence')->findOneBy(['id' => $id]);
+        $licenceEntity = $this->getEntityManager()
+            ->getRepository('OlcsEntities\Entity\Licence')
+            ->findOneBy(['id' => $id]);
+
         if (empty($licenceEntity)) {
             return null;
         }
@@ -59,8 +62,6 @@ class Organisation extends ServiceAbstract
     /**
      * Update an organisation record by licenceId.
      *
-     * @todo Possibly use join... needs performence review
-     *
      * @param int $id
      * @param array $data
      * @throws NoVersionException
@@ -74,7 +75,10 @@ class Organisation extends ServiceAbstract
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
-        $licenceEntity = $this->getEntityManager()->getRepository('OlcsEntities\Entity\Licence')->findOneBy(['id' => $id]);
+        $licenceEntity = $this->getEntityManager()
+            ->getRepository('OlcsEntities\Entity\Licence')
+            ->findOneBy(['id' => $id]);
+
         if (empty($licenceEntity)) {
             return null;
         }
@@ -104,8 +108,7 @@ class Organisation extends ServiceAbstract
             ->add('where', 'l.organisation = :operator')
             ->add('orderBy', 'a.createdOn DESC')
             ->setParameter('operator', $data['organisation'])
-            ->getQuery()
-        ;
+            ->getQuery();
 
         $results = $query->getResult();
 
@@ -126,5 +129,4 @@ class Organisation extends ServiceAbstract
             'Results' => $results,
         );
     }
-
 }
