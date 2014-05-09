@@ -70,19 +70,7 @@ return array(
                         'controller' => 'person-licence-search'
                     )
                 )
-            ),
-            'licence-vehicle' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/licence-vehicle[/:id]',
-                    'constraints' => array(
-                        'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        'controller' => 'licence-vehicle'
-                    )
-                )
-            ),
+            )
         )
     ),
     'service_manager' => array(
