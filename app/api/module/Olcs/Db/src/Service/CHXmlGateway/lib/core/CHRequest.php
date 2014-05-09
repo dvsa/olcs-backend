@@ -1,4 +1,6 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
 /*
 +-------------------------------------------------------------------------------+
 |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -15,7 +17,7 @@
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 /**

@@ -1,4 +1,6 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
 /*
 +-------------------------------------------------------------------------------+
 |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -15,7 +17,7 @@
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 /**
@@ -181,7 +183,7 @@ class CHEnvelope
 
         //echo $xml;exit;
 
-        /* 
+        /*
             +-------------------+
             |   Send request    |
             +-------------------+
@@ -204,11 +206,12 @@ class CHEnvelope
 
             fwrite($fp, $out);
 
-            do {                    // write returned header
+            do {
+                // write returned header
                 $resHeader .= fgets($fp, 128);
-            } while ( strpos ( $resHeader, "\r\n\r\n" ) === false );
-              
-            while (!feof($fp)) {    // write returned response
+            } while (\strpos($resHeader, "\r\n\r\n") === false);
+            while (!feof($fp)) {
+                // write returned response
                 $line = fgets($fp, 128);
                 $response .= $line;
             }

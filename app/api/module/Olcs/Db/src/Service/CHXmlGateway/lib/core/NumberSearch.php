@@ -1,4 +1,6 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
 /*
 +-------------------------------------------------------------------------------+
 |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -15,7 +17,7 @@
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 // for error codes
@@ -73,8 +75,11 @@ class NumberSearch implements CHRequest
 
         $pattern = '/^([A-Z0-9\*]{1,8}[*]{0,1}){1,8}$/';
 
-        if (!preg_match($pattern,$partialCompanyNumber)) {
-            throw new Exception('Company number has to be in this pattern: '.$pattern, AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if (!preg_match($pattern, $partialCompanyNumber)) {
+            throw new Exception(
+                'Company number has to be in this pattern: ' . $pattern,
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['partCnumber'] = $partialCompanyNumber;
 
@@ -83,11 +88,14 @@ class NumberSearch implements CHRequest
 
         $cleanDataSet = array();
         // go trough user's array
-        foreach($dataSet as $value) {
+        foreach ($dataSet as $value) {
             $value = strtoupper($value);
             // check if value is allowed
             if (!$allowedDataSet[$value]) {
-                throw new Exception($value.' is not allowed as data set value', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+                throw new Exception(
+                    $value.' is not allowed as data set value',
+                    AbstractRestfulController::ERROR_INVALID_PARAMETER
+                );
             }
             $cleanDataSet[] = $value;
         }

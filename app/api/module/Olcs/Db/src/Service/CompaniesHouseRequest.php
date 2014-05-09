@@ -8,14 +8,14 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace OlcsCommon\Service;
+namespace Olcs\Db\Service;
 
 /**
  * Companies House Request Service
  */
-class CompaniesHouseRequest  extends ServiceAbstract
+class CompaniesHouseRequest extends ServiceAbstract
 {
-    
+
     /**
      * Saves request information
      * @param string $requestType
@@ -27,18 +27,17 @@ class CompaniesHouseRequest  extends ServiceAbstract
 
         $entityName = $this->getEntityName();
         $entityManager = $this->getEntityManager();
-        
+
         $companiesHouseRequest = new $entityName();
         $companiesHouseRequest->setRequestType($requestType);
         $companiesHouseRequest->setIpAddress($_SERVER['REMOTE_ADDR']);
-      
+
         $companiesHouseRequest->setRequestedOn(new \DateTime('NOW'));
-        
+
         $entityManager->persist($companiesHouseRequest);
         $entityManager->flush();
 
         return $companiesHouseRequest;
-        
+
     }
-    
 }
