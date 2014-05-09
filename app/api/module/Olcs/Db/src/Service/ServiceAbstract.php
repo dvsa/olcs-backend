@@ -15,6 +15,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
@@ -129,7 +130,7 @@ abstract class ServiceAbstract
      */
     public function getPaginationValues(array $data)
     {
-        return array_intersect_key($data, array_flip(['page', 'results', 'sort', 'order']));
+        return array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']));
     }
 
     /**
@@ -163,22 +164,27 @@ abstract class ServiceAbstract
 
         $params = array();
 
+        $whereMethod = 'where';
+
         foreach ($searchFields as $key => $value) {
 
             $field = $key;
 
             if (is_numeric($value)) {
 
-                $qb->where("a.{$field} = :{$key}");
+                $qb->$whereMethod("a.{$field} = :{$key}");
+                $whereMethod = 'andWhere';
             } else {
 
-                $qb->where("a.{$field} LIKE :{$key}");
+                $qb->$whereMethod("a.{$field} LIKE :{$key}");
+                $whereMethod = 'andWhere';
             }
             $params[$key] = $value;
         }
 
         if ($this->canSoftDelete()) {
-            $qb->where('a.isDeleted = 0');
+            $qb->$whereMethod('a.isDeleted = 0');
+            $whereMethod = 'andWhere';
         }
 
         if (!empty($params)) {
@@ -187,7 +193,7 @@ abstract class ServiceAbstract
 
         $pag = $this->getPaginationValues($data);
         $page = isset($pag['page']) ? $pag['page'] : 1;
-        $limit = isset($pag['results']) ? $pag['results'] : 10;
+        $limit = isset($pag['limit']) ? $pag['limit'] : 10;
         $qb->setFirstResult($this->getOffset($page, $limit));
         $qb->setMaxResults($limit);
 
@@ -209,10 +215,24 @@ abstract class ServiceAbstract
             $results = $rows;
         }
 
+        $paginator = $this->getPaginator($query, false);
+
         return array(
-            'Count' => count($results),
+            'Count' => count($paginator),
             'Results' => $results
         );
+    }
+
+    /**
+     * Method to allow easier testing
+     *
+     * @param \Doctrine\ORM\Query $query
+     * @param Bool $fetchJoinCollection
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getPaginator($query, $fetchJoinColumns = false)
+    {
+        return new Paginator($query, $fetchJoinColumns);
     }
 
     /**
@@ -239,13 +259,9 @@ abstract class ServiceAbstract
         $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
         if ($sort) {
             $sortString = 'a.' . $sort;
+            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
 
-            $order = isset($orderByValues['order']) ? $orderByValues['order'] : '';
-            if ($order) {
-                $sortString .= ' ' . $order;
-            }
-
-            $qb->orderBy($sortString);
+            $qb->orderBy($sortString, $orderString);
         }
     }
 
@@ -293,6 +309,8 @@ abstract class ServiceAbstract
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
+        $data = $this->processAddressEntity($data);
+
         if ($this->canSoftDelete()) {
             $entity = $this->getUnDeletedById($id);
         } else {
@@ -304,8 +322,6 @@ abstract class ServiceAbstract
         if (empty($entity)) {
             return false;
         }
-
-        $data = $this->processAddressEntity($data);
 
         $entity->clearProperties(array_keys($data));
 
@@ -532,7 +548,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    private function processAddressEntity($data)
+    public function processAddressEntity($data)
     {
         $properties = $this->getEntityPropertyNames();
 
