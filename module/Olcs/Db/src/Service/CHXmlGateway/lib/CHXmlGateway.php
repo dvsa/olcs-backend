@@ -1,5 +1,7 @@
 <?php
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
+use Olcs\Db\Service\ServiceAbstract;
 // for error codes
 use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
 
@@ -19,7 +21,7 @@ use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 /**
@@ -36,10 +38,10 @@ require_once('core/CHRequest.php');
  * @author Peter Reisinger <p.reisinger@gmail.com> 
  * @license GNU General Public License
  */
-class CHXmlGateway  extends AbstractPlugin
+class CHXmlGateway extends ServiceAbstract
 {
     // --- start editing here --- //
-    
+
     /**
      * password 
      *
@@ -188,12 +190,33 @@ class CHXmlGateway  extends AbstractPlugin
         //$this->insertInto($request->getClass(), $transID, $request->getData());
 
         // --- response xml from companies house ---
+
         $response = $envelope->getResponse();
 
         // --- check response for error and write into db ---
         //$this->setError($transactionID, $response);
-        
+
         // --- return response ---
         return $response;
+    }
+
+    /**
+     * Sets password
+     * 
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Sets sender id
+     * 
+     * @param string $senderID
+     */
+    public function setUserId($senderID)
+    {
+        $this->senderID = $senderID;
     }
 }

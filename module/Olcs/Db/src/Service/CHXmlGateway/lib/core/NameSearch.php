@@ -1,4 +1,6 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
 /*
 +-------------------------------------------------------------------------------+
 |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -15,12 +17,11 @@
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 // for error codes
 use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
-
 
 /**
  * interface is included in CHXmlGateway
@@ -77,16 +78,21 @@ class NameSearch implements CHRequest
         $dataSet = strtoupper($dataSet);
 
         // --- check if data set is allowed ---
-        if ($dataSet != 'LIVE' && $dataSet != 'DISSOLVED' && 
-            $dataSet != 'FORMER' && $dataSet != 'PROPOSED') 
-        {
-            throw new Exception('Data Set can be one of the following: LIVE, DISSOLVED, FORMER, PROPOSED', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if ($dataSet != 'LIVE' && $dataSet != 'DISSOLVED' &&
+            $dataSet != 'FORMER' && $dataSet != 'PROPOSED') {
+            throw new Exception(
+                'Data Set can be one of the following: LIVE, DISSOLVED, FORMER, PROPOSED',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['dataSet'] = $dataSet;
 
         // --- check if company name is allowed ---
         if (! strlen($companyName) >= 1 && strlen($companyName) <= 160) {
-            throw new Exception('Searched company name must be in between 1-160 characters', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+            throw new Exception(
+                'Searched company name must be in between 1-160 characters',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['companyName'] = $companyName;
     }

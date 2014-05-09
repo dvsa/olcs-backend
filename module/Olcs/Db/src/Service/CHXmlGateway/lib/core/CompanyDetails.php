@@ -1,6 +1,9 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
+
 // for error codes
 use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+
 /*
 +-------------------------------------------------------------------------------+
 |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -17,7 +20,7 @@ use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController
 |                                                                               |
 |   You should have received a copy of the GNU General Public License           |
 |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
++-------------------------------------------------------------------------------+
  */
 
 /**
@@ -72,8 +75,11 @@ class CompanyDetails implements CHRequest
 
         $pattern = '/^[A-Z0-9]{8}$/';
 
-        if (!preg_match($pattern,$companyNumber)) {
-            throw new Exception('Company number has to be in this pattern: '.$pattern, AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if (!preg_match($pattern, $companyNumber)) {
+            throw new Exception(
+                'Company number has to be in this pattern: '.$pattern,
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['companyNumber'] = $companyNumber;
     }
@@ -129,7 +135,7 @@ class CompanyDetails implements CHRequest
 
         // fill in compulsory fields
         $body->CompanyNumber = $this->data['companyNumber'];
-        
+
         // fill in optional fields
         if (isset($this->data['giveMortTotals'])) {
             $body->addChild('GiveMortToals', $this->data['giveMortTotals']);
