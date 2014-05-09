@@ -70,7 +70,31 @@ return array(
                         'controller' => 'person-licence-search'
                     )
                 )
-            )
+            ),
+            'licence-vehicle' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/licence-vehicle[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'licence-vehicle'
+                    )
+                )
+            ),
+            'organisation-application' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/organisation-application[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'organisation-application'
+                    )
+                )
+            ),
         )
     ),
     'service_manager' => array(
@@ -91,7 +115,8 @@ return array(
             'note' => 'Olcs\Db\Controller\NoteController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
-            'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController'
+            'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
+            'OrganisationApplication' => 'Olcs\Db\Controller\OrganisationApplicationController'
         )
     ),
     'view_manager' => array(
