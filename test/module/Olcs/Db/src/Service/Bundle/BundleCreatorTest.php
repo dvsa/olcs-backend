@@ -800,4 +800,125 @@ class BundleCreatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
     }
+
+    /**
+     * Test buildEntityBundles with children collection: criteria set and
+     * matches
+     */
+    public function testBuildEntityBundlesWithChildrenCollectionCriteriaMatches()
+    {
+        $mockChild = $this->getMock('\stdClass');
+        $mockChild->foo = 'bar';
+
+        $children = array(
+            $mockChild
+        );
+
+        $mockJazz = new \Doctrine\Common\Collections\ArrayCollection($children);
+
+        $extractedJazz = array(
+            'id' => '1'
+        );
+
+        $entity = $this->getMock('\stdClass', array('getJazz'));
+
+        $entity->expects($this->once())
+            ->method('getJazz')
+            ->will($this->returnValue($mockJazz));
+
+        $extractedEntity = array(
+            'id' => '123',
+            'foo' => 'bar'
+        );
+
+        $expected = array(
+            'id' => '123',
+            'foo' => 'bar',
+            'jazz' => array(
+                $extractedJazz
+            )
+        );
+
+        $config = array(
+            'bundle' => json_encode(
+                array(
+                    'children' => array(
+                        'jazz' => array(
+                            'criteria' => array(
+                                'foo' => 'bar'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->hydrator->expects($this->at(0))
+            ->method('extract')
+            ->with($entity)
+            ->will($this->returnValue($extractedEntity));
+
+        $this->hydrator->expects($this->at(1))
+            ->method('extract')
+            ->with($mockChild)
+            ->will($this->returnValue($extractedJazz));
+
+        $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
+    }
+
+    /**
+     * Test buildEntityBundles with children collection: criteria set but doesnt match
+     */
+    public function testBuildEntityBundlesWithChildrenCollectionCriteriaNoMatches()
+    {
+        $mockChild = $this->getMock('\stdClass');
+        $mockChild->foo = 'barbar';
+
+        $children = array(
+            $mockChild
+        );
+
+        $mockJazz = new \Doctrine\Common\Collections\ArrayCollection($children);
+
+        $extractedJazz = array(
+            'id' => '1'
+        );
+
+        $entity = $this->getMock('\stdClass', array('getJazz'));
+
+        $entity->expects($this->once())
+            ->method('getJazz')
+            ->will($this->returnValue($mockJazz));
+
+        $extractedEntity = array(
+            'id' => '123'
+        );
+
+        $expected = array(
+            'id' => '123',
+            'jazz' => array(
+            )
+        );
+
+        $config = array(
+            'bundle' => json_encode(
+                array(
+                    'children' => array(
+                        'jazz' => array(
+                            'criteria' => array(
+                                'foo' => 'bar'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->hydrator->expects($this->at(0))
+            ->method('extract')
+            ->with($entity)
+            ->will($this->returnValue($extractedEntity));
+
+        $this->assertEquals($expected, $this->service->buildEntityBundle($entity, $config));
+    }
 }
