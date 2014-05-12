@@ -8,6 +8,7 @@
 namespace Olcs\Db\Service\Bundle;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * BundleCreator class, handles the bundling of entities
@@ -126,6 +127,17 @@ class BundleCreator
             if (method_exists($entity, $getter)) {
 
                 $children = $entity->$getter();
+
+                if (isset($details['criteria']) && is_array($details['criteria']))
+                {
+                    foreach($details['criteria'] as $field => $value)
+                    {
+                        $criteria = Criteria::create();
+                        $criteria->where(Criteria::expr()->eq($field, $value));
+                        $children = $children->matching($criteria);
+                    }
+
+                }
 
                 $entityArray[$childName] = $this->formatChild($children, $details);
             }
