@@ -17,24 +17,30 @@ use PHPUnit_Framework_TestCase;
  */
 class OrganisationTest extends PHPUnit_Framework_TestCase
 {
-    
     /**
      * Setup the service
+     *
+     * @return void
      */
     protected function setUp()
     {
-        $this->service = $this->getMock('\Olcs\Db\Service\Organisation', array(
-        	'log',
-            'getEntityManager',
-            'extract',
-            'getDoctrineHydrator', 
-            'dbPersist', 
-            'dbFlush',
-        ));
+        $this->service = $this->getMock(
+            '\Olcs\Db\Service\Organisation', array(
+                'log',
+                'getEntityManager',
+                'extract',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getBundleCreator',
+            )
+        );
     }
 
     /**
      * Test getValidSearchFields
+     *
+     * @return void
      */
     public function testGetValidSearchFields()
     {
@@ -83,7 +89,6 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($entityManagerMock));
-        
     
         $this->assertEquals($data, $this->service->getByLicenceId($id));
     }
@@ -101,24 +106,23 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         );
     
         $this->service->expects($this->once())
-        ->method('log');
+            ->method('log');
     
         $repoMock = $this->getMock('\stdClass', array('findOneBy'));
         $repoMock->expects($this->once())
-        ->method('findOneBy')
-        ->with(array('id' => $id))
-        ->will($this->returnValue(null));
+            ->method('findOneBy')
+            ->with(array('id' => $id))
+            ->will($this->returnValue(null));
     
         $entityManagerMock = $this->getMock('\stdClass', array('getRepository'));
         $entityManagerMock->expects($this->once())
-        ->method('getRepository')
-        ->will($this->returnValue($repoMock));
+            ->method('getRepository')
+            ->will($this->returnValue($repoMock));
     
         $this->service->expects($this->once())
-        ->method('getEntityManager')
-        ->will($this->returnValue($entityManagerMock));
-    
-    
+            ->method('getEntityManager')
+            ->will($this->returnValue($entityManagerMock));
+
         $this->assertEquals(null, $this->service->getByLicenceId($id));
     }
     
@@ -156,8 +160,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($entityManagerMock));
-    
-    
+
         $this->assertEquals(null, $this->service->getByLicenceId($id));
     }
     
@@ -212,8 +215,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($entityManagerMock));
-    
-    
+
         $this->assertEquals(null, $this->service->updateByLicenceId($id, $data));
     }
     
@@ -252,8 +254,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($entityManagerMock));
-    
-    
+
         $this->assertEquals(null, $this->service->updateByLicenceId($id, $data));
     }
     
@@ -297,15 +298,10 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $mockEntityManager->expects($this->once())
             ->method('lock')
             ->will($this->returnValue($orgEntity));
-    
-        
-    
+
         $this->service->expects($this->once())
             ->method('log');
-    
-        
-    
-        
+
         $this->service->expects($this->once())
             ->method('getDoctrineHydrator')
             ->will($this->returnValue($mockHydrator));
@@ -323,5 +319,54 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
     
         $this->assertEquals(true, $this->service->updateByLicenceId($id, $data));
     }
-    
+
+    public function testGetApplicationsList()
+    {
+        $data = array('organisation' => 1);
+        $results = array(
+            array('id' => 1),
+        );
+        $return = array(
+            'Count' => count($results),
+            'Results' => $results,
+        );
+
+        $sqlMethods = array('select', 'from', 'innerJoin', 'add', 'setParameter');
+        $mockQb = $this->getMock('\stdClass', array_merge($sqlMethods, array('getQuery')));
+
+        foreach ($sqlMethods as $method) {
+            $mockQb->expects($this->any())
+                ->method($method)
+                ->will($this->returnValue($mockQb));
+        }
+
+        $mockQuery = $this->getMock('\stdClass', array('getResult'));
+        $mockQuery->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue($results));
+
+        $mockQb->expects($this->any())
+            ->method('getQuery')
+            ->will($this->returnValue($mockQuery));
+
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('createQueryBuilder'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager->expects($this->any())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQb));
+
+        $this->service->expects($this->once())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager));
+
+        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
+        $mockBundleCreator->expects($this->once())
+            ->method('buildEntityBundle')
+            ->will($this->returnValue(array('id' => 1)));
+
+        $this->service->expects($this->once())
+            ->method('getBundleCreator')
+            ->will($this->returnValue($mockBundleCreator));
+
+        $this->assertEquals($return, $this->service->getApplicationsList($data));
+    }
 }
