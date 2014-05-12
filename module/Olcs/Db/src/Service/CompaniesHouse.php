@@ -96,7 +96,16 @@ class CompaniesHouse extends ServiceAbstract
             }
 
             if (isset($result->Error)) {
-                throw new RestResponseException('Companies house API error', Response::STATUS_CODE_500);
+                if ($result->Error->Number == 600) {
+                    // no company found, no need to raise an exception
+                    $finalResult = array();
+                } else {
+                    throw new RestResponseException(
+                        'Companies house API error: Number - ' . $result->Error->Number
+                        . ' type: ' . $result->Error->Type
+                        . ' text: ' . $result->Error->Text, Response::STATUS_CODE_500
+                    );
+                }
             }
             $finalResult = array();
             if (array_key_exists('NameSearch', $result)) {
