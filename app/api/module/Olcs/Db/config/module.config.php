@@ -109,7 +109,6 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Generic' => 'Olcs\Db\Controller\GenericController',
-            'licence-organisation' => 'Olcs\Db\Controller\LicenceOrganisationController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
