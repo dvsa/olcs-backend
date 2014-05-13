@@ -30,7 +30,9 @@ class CompaniesHouseRequest extends ServiceAbstract
 
         $companiesHouseRequest = new $entityName();
         $companiesHouseRequest->setRequestType($requestType);
-        $companiesHouseRequest->setIpAddress($_SERVER['REMOTE_ADDR']);
+
+        $serverIpAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        $companiesHouseRequest->setIpAddress($serverIpAddress);
 
         $companiesHouseRequest->setRequestedOn(new \DateTime('NOW'));
 
