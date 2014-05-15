@@ -193,9 +193,12 @@ abstract class ServiceAbstract
 
         $pag = $this->getPaginationValues($data);
         $page = isset($pag['page']) ? $pag['page'] : 1;
-        $limit = isset($pag['limit']) ? $pag['limit'] : 10;
-        $qb->setFirstResult($this->getOffset($page, $limit));
-        $qb->setMaxResults($limit);
+
+        if (!isset($pag['limit']) || $pag['limit'] != 'all') {
+            $limit = isset($pag['limit']) ? $pag['limit'] : 10;
+            $qb->setFirstResult($this->getOffset($page, $limit));
+            $qb->setMaxResults($limit);
+        }
 
         $this->setOrderBy($qb, $data);
 
