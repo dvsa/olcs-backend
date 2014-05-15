@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Applications list REST controller
+ * Trading Names REST controller
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
@@ -12,37 +12,48 @@ use Zend\Http\Response;
 use Olcs\Db\Exceptions\RestResponseException;
 
 /**
- * Applications list REST controller
+ * Trading Names REST controller
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
-class OrganisationApplicationController extends AbstractBasicRestServerController
+class TradingNamesController extends AbstractBasicRestServerController
 {
     protected $allowedMethods = array(
-        'getList'
+        'create',
     );
 
     /**
-     * Get list
+     * Create bunch of entities
      *
+     * @param mixed $data
      * @return Response
-     * @throws \Olcs\Db\Exceptions\RestResponseException
      */
-    public function getList()
+    public function create($data)
     {
-        $options = $this->getDataFromQuery();
+        $this->checkMethod(__METHOD__);
+
+        $data = $this->formatDataFromJson($data);
+
+        if ($data instanceof Response) {
+
+            return $data;
+        }
 
         try {
-            if (empty($options['organisation'])) {
-                throw new RestResponseException('Invalid call', Response::STATUS_CODE_500);
+
+            $status = $this->getService('TradingName')->removeAll($data[0]['licence']);
+            foreach ($data as $tradingName) {
+                $this->getService('TradingName')->create($tradingName);
             }
-            $response = $this->getService('Organisation')->getApplicationsList($options);
+
+            return $this->respond(Response::STATUS_CODE_201, 'Entities Created', true);
 
         } catch (\Exception $ex) {
 
-            throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
+            return $this->unknownError($ex);
         }
-
-        return $this->respond(Response::STATUS_CODE_200, '', $response);
     }
+
+
+
 }
