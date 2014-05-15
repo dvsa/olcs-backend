@@ -30,8 +30,9 @@ class TradingName extends ServiceAbstract
         /**
          * @todo Soft delete functionality
          */
-        $q = $this->getEntityManager()->createQuery('delete from OlcsEntities\Entity\TradingName tm where tm.licence = ' . $licenceId);
-        $q->execute();
+        $query = $this->getEntityManager()->createQuery(
+            'delete from OlcsEntities\Entity\TradingName tm where tm.licence = ' . $licenceId
+        );
+        $query->execute();
     }
-
 }
