@@ -95,6 +95,18 @@ return array(
                     )
                 )
             ),
+            'trading-names' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/trading-names[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'trading-names'
+                    )
+                )
+            ),
         )
     ),
     'service_manager' => array(
@@ -116,7 +128,8 @@ return array(
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
-            'OrganisationApplication' => 'Olcs\Db\Controller\OrganisationApplicationController'
+            'OrganisationApplication' => 'Olcs\Db\Controller\OrganisationApplicationController',
+            'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
         )
     ),
     'view_manager' => array(
