@@ -30,10 +30,11 @@ class TradingNamesController extends AbstractBasicRestServerController
      */
     public function create($data)
     {
+
         $this->checkMethod(__METHOD__);
 
         $data = $this->formatDataFromJson($data);
-
+        
         if ($data instanceof Response) {
 
             return $data;
@@ -41,7 +42,7 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
 
-            $status = $this->getService('TradingName')->removeAll($data[0]['licence']);
+            $this->getService('TradingName')->removeAll($data[0]['licence']);
             foreach ($data as $tradingName) {
                 $this->getService('TradingName')->create($tradingName);
             }
@@ -53,7 +54,4 @@ class TradingNamesController extends AbstractBasicRestServerController
             return $this->unknownError($ex);
         }
     }
-
-
-
 }
