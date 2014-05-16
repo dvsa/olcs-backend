@@ -1,0 +1,6 @@
+<DocumentRequest xmlns="http://xmlgw.companieshouse.gov.uk/v1-0/schema/"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://xmlgw.companieshouse.gov.uk/v1-0/schema/CompanyDocument.xsd">
+    <UserReference>BLAH</UserReference>
+    <DocRequestKey>630a2beJxjZRd2YnXi4ohPyU9OSS1OBnHYQJzMFCdxfgMDA0dHNzffCC93E1MLEycuzvi0/KLcksqCVCdxFl93A0MnLtb4lOTEEidxRhOYMYklQFkOIwNDQwNLQ5MmNef83ILEvMzUYo/80uJUK6sIXx/3cCsrz9zE9FQo5Z1aSaQybgYGBkYgZgJiZiBmAWJWIGYDYnYg5gBiTiDmAmJuAAqlNOA=</DocRequestKey>
+</DocumentRequest>
