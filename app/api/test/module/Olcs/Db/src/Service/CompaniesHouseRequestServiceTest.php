@@ -23,7 +23,6 @@ class CompaniesHouseRequestServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * Setup the service
-     *
      * @return void
      */
     protected function setUp()

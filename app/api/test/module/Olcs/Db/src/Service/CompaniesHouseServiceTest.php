@@ -33,18 +33,40 @@ class CompaniesHouseServiceTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
 
-        $serviceManager = Bootstrap::getServiceManager();
-        $this->service = new CompaniesHouse();
-        $this->service->setServiceLocator($serviceManager);
-        $mockEntityManager = $this->getMockBuilder(
-            '\Doctrine\ORM\EntityManager',
-            array('getConnection')
-        )
-        ->disableOriginalConstructor()->getMock();
+        $this->service = $this->getMock('\Olcs\Db\Service\CompaniesHouse', array('getService'));
 
-        $this->service->setEntityManager($mockEntityManager);
-        $this->service->setPassword('XMLGatewayTestUserID');
-        $this->service->setUserId('XMLGatewayTestPassword');
+        $mockServiceLocator = $this->getMock('\Zend\ServiceManager\ServiceManager', array('get'));
+
+        $mockServiceLocator->expects($this->once())
+            ->method('get')
+            ->with('Config')
+            ->will(
+                $this->returnValue(
+                    array(
+                        'companies_house_credentials' =>
+                            array(
+                                'password' => 'XMLGatewayTestPassword',
+                                'userId' => 'XMLGatewayTestUserID'
+                            )
+                    )
+                )
+            );
+
+        $this->service->setServiceLocator($mockServiceLocator);
+
+        $mockRequestService = $this->getMock(
+            '\Olcs\Db\Service\CompaniesHouseRequest',
+            array('initiateRequest', 'getId')
+        );
+
+        $mockRequestService->expects($this->any())
+            ->method('initiateRequest')
+            ->will($this->returnValue($mockRequestService));
+
+        $this->service->expects($this->any())
+            ->method('getService')
+            ->with('CompaniesHouseRequest')
+            ->will($this->returnValue($mockRequestService));
 
     }
 
