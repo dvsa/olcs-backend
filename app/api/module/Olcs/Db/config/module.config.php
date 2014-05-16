@@ -119,5 +119,9 @@ return array(
              'error/index' => __DIR__ . '/../view/error/index.phtml',
              'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
          ),
+    ),
+    'companies_house_credentials' => array(
+        'password' => 'XMLGatewayTestPassword',
+        'userId'   => 'XMLGatewayTestUserID'
     )
 );
