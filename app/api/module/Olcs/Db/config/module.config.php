@@ -71,18 +71,6 @@ return array(
                     )
                 )
             ),
-            'organisation-application' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/organisation-application[/:id]',
-                    'constraints' => array(
-                        'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        'controller' => 'organisation-application'
-                    )
-                )
-            ),
             'trading-names' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -115,7 +103,6 @@ return array(
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
-            'OrganisationApplication' => 'Olcs\Db\Controller\OrganisationApplicationController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
         )
     ),
