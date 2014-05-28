@@ -30,12 +30,12 @@ use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController
 require_once('core/CHRequest.php');
 
 /**
- * CHXmlGateway 
- * 
+ * CHXmlGateway
+ *
  * @package chxmlgateway
  * @version $id$
  * @copyright 2009 Peter Reisinger
- * @author Peter Reisinger <p.reisinger@gmail.com> 
+ * @author Peter Reisinger <p.reisinger@gmail.com>
  * @license GNU General Public License
  */
 class CHXmlGateway extends ServiceAbstract
@@ -43,31 +43,31 @@ class CHXmlGateway extends ServiceAbstract
     // --- start editing here --- //
 
     /**
-     * password 
+     * password
      *
      * password from companies house
-     * 
+     *
      * @var string
      * @access private
      */
     private $password       = 'XMLGatewayTestPassword';   // change
 
     /**
-     * senderID 
+     * senderID
      *
      * sender id from companies house
-     * 
+     *
      * @var string
      * @access private
      */
     private $senderID       = 'XMLGatewayTestUserID';   // change
 
     /**
-     * emailAddress 
+     * emailAddress
      *
      * your email address
      * or set to null
-     * 
+     *
      * @var string
      * @access private
      */
@@ -84,8 +84,8 @@ class CHXmlGateway extends ServiceAbstract
     // --- you can stop editing here --- //
 
     /**
-     * getNameSearch 
-     * 
+     * getNameSearch
+     *
      * @access public
      * @return NameSearch
      */
@@ -96,10 +96,10 @@ class CHXmlGateway extends ServiceAbstract
     }
 
     /**
-     * getNumberSearch 
-     * 
-     * @param string $partialCompanyNumber 
-     * @param array $dataSet 
+     * getNumberSearch
+     *
+     * @param string $partialCompanyNumber
+     * @param array $dataSet
      * @access public
      * @return void
      */
@@ -110,9 +110,9 @@ class CHXmlGateway extends ServiceAbstract
     }
 
     /**
-     * getCompanyDetails 
-     * 
-     * @param strin $companyNumber 
+     * getCompanyDetails
+     *
+     * @param strin $companyNumber
      * @access public
      * @return void
      */
@@ -141,10 +141,10 @@ class CHXmlGateway extends ServiceAbstract
     }
 
     /**
-     * getMortgages 
-     * 
-     * @param string $companyNumber 
-     * @param string $companyName 
+     * getMortgages
+     *
+     * @param string $companyNumber
+     * @param string $companyName
      * @access public
      * @return void
      */
@@ -155,10 +155,10 @@ class CHXmlGateway extends ServiceAbstract
     }
 
     /**
-     * getOfficerSearch 
-     * 
-     * @param string $surname 
-     * @param string $officerType CUR | LLP | DIS | EUR  
+     * getOfficerSearch
+     *
+     * @param string $surname
+     * @param string $officerType CUR | LLP | DIS | EUR
      * @access public
      * @return void
      */
@@ -172,8 +172,8 @@ class CHXmlGateway extends ServiceAbstract
      * getResponse
      *
      * returns xml response from companies house
-     * 
-     * @param CHRequest $request 
+     *
+     * @param CHRequest $request
      * @access public
      * @return xml
      */
@@ -202,7 +202,7 @@ class CHXmlGateway extends ServiceAbstract
 
     /**
      * Sets password
-     * 
+     *
      * @param string $password
      */
     public function setPassword($password)
@@ -212,7 +212,7 @@ class CHXmlGateway extends ServiceAbstract
 
     /**
      * Sets sender id
-     * 
+     *
      * @param string $senderID
      */
     public function setUserId($senderID)

@@ -5,15 +5,18 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-
-namespace Service;
+namespace OlcsTest\Db\Service;
 
 use OlcsTest\Bootstrap;
 use Olcs\Db\Service\CompaniesHouseRequest as CompaniesHouseRequest;
-use Zend\ServiceManager\ServiceManager;
 use PHPUnit_Framework_TestCase;
 
-class CompaniesHouseRequestServiceTest extends PHPUnit_Framework_TestCase
+/**
+ * Tests Company House Request Service
+ *
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ */
+class CompaniesHouseRequestTest extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -27,15 +30,13 @@ class CompaniesHouseRequestServiceTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-
         $serviceManager = Bootstrap::getServiceManager();
         $this->service = new CompaniesHouseRequest();
         $this->service->setServiceLocator($serviceManager);
         $mockEntityManager = $this->getMockBuilder(
             '\Doctrine\ORM\EntityManager',
             array('getConnection')
-        )
-        ->disableOriginalConstructor()->getMock();
+        )->disableOriginalConstructor()->getMock();
 
         $this->service->setEntityManager($mockEntityManager);
 

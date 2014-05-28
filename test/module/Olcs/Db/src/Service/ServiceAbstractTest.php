@@ -53,6 +53,13 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         return $final;
     }
 
+    public function testGetPaginator()
+    {
+        $this->getMockService();
+
+        $this->assertInstanceOf('\Doctrine\ORM\Tools\Pagination\Paginator', $this->service->getPaginator('foo'));
+    }
+
     /**
      * Tests that the get pagination method gives us only the required fields.
      *
