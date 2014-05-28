@@ -12,6 +12,7 @@
             <exclude>
                 <file>../module/Olcs/Db/Module.php</file>
                 <directory>../module/*/*/config</directory>
+                <directory>../module/*/*/src/Service/CHXmlGateway</directory>
             </exclude>
         </whitelist>
     </filter>

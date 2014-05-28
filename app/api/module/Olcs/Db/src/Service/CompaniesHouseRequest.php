@@ -2,7 +2,7 @@
 
 /**
  * Companies House Request Service
- * Counts requests to companies house API 
+ * Counts requests to companies house API
  *
  * @author S Lizzio <shaun.lizzio@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
@@ -18,13 +18,12 @@ class CompaniesHouseRequest extends ServiceAbstract
 
     /**
      * Saves request information
-     * @param string $requestType
      *
+     * @param string $requestType
      * @return \OlcsEntities\Entity\CompaniesHouseRequest
      */
     public function initiateRequest($requestType)
     {
-
         $entityName = $this->getEntityName();
         $entityManager = $this->getEntityManager();
 
@@ -40,6 +39,5 @@ class CompaniesHouseRequest extends ServiceAbstract
         $entityManager->flush();
 
         return $companiesHouseRequest;
-
     }
 }
