@@ -61,7 +61,10 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->expects($this->once())
             ->method('formatDataFromJson')
             ->will($this->returnValue(array(
-                array('tradingName' => 'name', 'licence' => 1)
+                'licence' => 7,
+                'tradingNames' => array(
+                    array('tradingName' => 'name', 'licence' => 1)
+                )
             )));
 
 

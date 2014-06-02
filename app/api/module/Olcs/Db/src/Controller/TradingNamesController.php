@@ -9,7 +9,6 @@
 namespace Olcs\Db\Controller;
 
 use Zend\Http\Response;
-use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Trading Names REST controller
@@ -18,9 +17,7 @@ use Olcs\Db\Exceptions\RestResponseException;
  */
 class TradingNamesController extends AbstractBasicRestServerController
 {
-    protected $allowedMethods = array(
-        'create',
-    );
+    protected $allowedMethods = array('create');
 
     /**
      * Create bunch of entities
@@ -30,11 +27,10 @@ class TradingNamesController extends AbstractBasicRestServerController
      */
     public function create($data)
     {
-
         $this->checkMethod(__METHOD__);
 
         $data = $this->formatDataFromJson($data);
-        
+
         if ($data instanceof Response) {
 
             return $data;
@@ -42,8 +38,9 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
 
-            $this->getService('TradingName')->removeAll($data[0]['licence']);
-            foreach ($data as $tradingName) {
+            $this->getService('TradingName')->removeAll($data['licence']);
+            foreach ($data['tradingNames'] as $tradingName) {
+                $tradingName['licence'] = $data['licence'];
                 $this->getService('TradingName')->create($tradingName);
             }
 
