@@ -1384,29 +1384,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getBundledHydrator
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetBundledHydrator()
-    {
-        $this->getMockService(array('getEntityManager'));
-
-        $mockEntityManager = $this->getMockBuilder(
-            '\Doctrine\Orm\EntityManager'
-        )->disableOriginalConstructor()->getMock();
-
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $hydrator = $this->service->getBundledHydrator();
-
-        $this->assertTrue($hydrator instanceof \OlcsEntities\Utility\BundleHydrator);
-    }
-
-    /**
      * Test getNewEntity
      *
      * @group Service

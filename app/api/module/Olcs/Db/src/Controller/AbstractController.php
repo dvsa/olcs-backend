@@ -1,4 +1,5 @@
 <?php
+
 namespace Olcs\Db\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController as ZendAbstractRestfulController;
@@ -9,6 +10,11 @@ use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\RestResponseException;
 use Olcs\Db\Traits\RestResponseTrait;
 
+/**
+ * Abstract Controller
+ *
+ * @author someone <someone@valtech.co.uk>
+ */
 abstract class AbstractController extends ZendAbstractRestfulController
 {
     use RestResponseTrait;
