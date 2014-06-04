@@ -12,7 +12,6 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait
 use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use OlcsEntities\Utility\BundleHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -378,18 +377,6 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Return an instance of BundleHydrator (Possibly needs moving to a Zend service)
-     *
-     * @return BundleHydrator
-     */
-    public function getBundledHydrator()
-    {
-        $hydrator = $this->getDoctrineHydrator();
-
-        return new BundleHydrator($hydrator);
-    }
-
-    /**
      * Picks out expected keys and returns just those.
      *
      * @param array $data
@@ -405,7 +392,7 @@ abstract class ServiceAbstract
     /**
      * Returns a new instance of the entity.
      *
-     * @return \OlcsEntities\Entity\AbstractEntity
+     * @return \OlcsEntities\Entity\EntityInterface
      */
     public function getNewEntity()
     {

@@ -9,9 +9,6 @@
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Controller\PersonSearchController;
-use Zend\Http\Response;
-use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Tests TradingNames

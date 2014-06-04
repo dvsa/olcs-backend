@@ -5,7 +5,6 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace Olcs\Db\Controller;
 
 use Zend\Http\Response;
