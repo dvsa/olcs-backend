@@ -170,15 +170,17 @@ abstract class ServiceAbstract
             $field = $key;
 
             if (is_numeric($value)) {
-
                 $qb->$whereMethod("a.{$field} = :{$key}");
                 $whereMethod = 'andWhere';
+                $params[$key] = $value;
+            } elseif ($value === 'NULL') {
+                $qb->$whereMethod("a.{$field} IS NULL");
+                $whereMethod = 'andWhere';
             } else {
-
                 $qb->$whereMethod("a.{$field} LIKE :{$key}");
                 $whereMethod = 'andWhere';
+                $params[$key] = $value;
             }
-            $params[$key] = $value;
         }
 
         if ($this->canSoftDelete()) {
