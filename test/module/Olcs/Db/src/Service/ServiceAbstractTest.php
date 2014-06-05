@@ -703,7 +703,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $data = array(
             'fooBar' => 'bar',
             'cakeBar' => 'bar',
-            'barFor' => 'black sheep',
+            'barFor' => 'NULL',
             'numberOfStuff' => 1,
             'page' => $page,
             'limit' => $resultLimit
@@ -713,7 +713,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $expectedParams = array(
             'fooBar' => 'bar',
-            'barFor' => 'black sheep',
             'numberOfStuff' => 1
         );
 
