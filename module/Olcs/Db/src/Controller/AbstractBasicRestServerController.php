@@ -323,6 +323,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     {
         if (strstr($method, '::')) {
             list($controller, $method) = explode('::', $method);
+            unset($controller);
         }
 
         if (!in_array($method, $this->allowedMethods)) {
