@@ -29,7 +29,7 @@ class OperatorSearchController extends AbstractBasicRestServerController
         try {
             $data = $this->getService('Licence')->findLicences($options);
 
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
 
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }

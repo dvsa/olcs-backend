@@ -1,28 +1,26 @@
 <?php
+
+/*
+  +-------------------------------------------------------------------------------+
+  |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
+  |                                                                               |
+  |   This program is free software: you can redistribute it and/or modify        |
+  |   it under the terms of the GNU General Public License as published by        |
+  |   the Free Software Foundation, either version 3 of the License, or           |
+  |   (at your option) any later version.                                         |
+  |                                                                               |
+  |   This program is distributed in the hope that it will be useful,             |
+  |   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+  |   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+  |   GNU General Public License for more details.                                |
+  |                                                                               |
+  |   You should have received a copy of the GNU General Public License           |
+  |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
+  +-------------------------------------------------------------------------------+
+ */
 namespace Olcs\Db\Service\CHXmlGateway\lib;
 
 use Olcs\Db\Service\ServiceAbstract;
-// for error codes
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
-
-/*
-+-------------------------------------------------------------------------------+
-|   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
-|                                                                               |
-|   This program is free software: you can redistribute it and/or modify        |
-|   it under the terms of the GNU General Public License as published by        |
-|   the Free Software Foundation, either version 3 of the License, or           |
-|   (at your option) any later version.                                         |
-|                                                                               |
-|   This program is distributed in the hope that it will be useful,             |
-|   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-|   GNU General Public License for more details.                                |
-|                                                                               |
-|   You should have received a copy of the GNU General Public License           |
-|   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+
- */
 
 /**
  * include parent interface used by all requests
@@ -50,7 +48,7 @@ class CHXmlGateway extends ServiceAbstract
      * @var string
      * @access private
      */
-    private $password       = 'XMLGatewayTestPassword';   // change
+    private $password = 'XMLGatewayTestPassword';   // change
 
     /**
      * senderID
@@ -60,7 +58,7 @@ class CHXmlGateway extends ServiceAbstract
      * @var string
      * @access private
      */
-    private $senderID       = 'XMLGatewayTestUserID';   // change
+    private $senderID = 'XMLGatewayTestUserID';   // change
 
     /**
      * emailAddress
@@ -71,15 +69,7 @@ class CHXmlGateway extends ServiceAbstract
      * @var string
      * @access private
      */
-    private $emailAddress   = null; // set to your email or leave null
-
-    /**
-     * db connection - so all requests can be logged
-     */
-    private $dbhost         = 'localhost';      // usually you don't have to change this
-    private $dbuser         = 'root';   // change
-    private $dbpass         = '';   // change
-    private $database       = 'chxmlgateway';   // change
+    private $emailAddress = null; // set to your email or leave null
 
     // --- you can stop editing here --- //
 
@@ -184,18 +174,16 @@ class CHXmlGateway extends ServiceAbstract
         require_once('core/CHEnvelope.php');
 
         // --- create instance of envelope ---
-        $envelope   = new CHEnvelope($request, $transactionID, $this->senderID, $this->password, $this->emailAddress);
+        $envelope = new CHEnvelope($request, $transactionID, $this->senderID, $this->password, $this->emailAddress);
 
         // --- write into db ---
         //$this->insertInto($request->getClass(), $transID, $request->getData());
-
         // --- response xml from companies house ---
 
         $response = $envelope->getResponse();
 
         // --- check response for error and write into db ---
         //$this->setError($transactionID, $response);
-
         // --- return response ---
         return $response;
     }
