@@ -859,6 +859,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateValidDataOptimisticLocking()
     {
+        $this->markTestIncomplete();
         $id = 1;
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
@@ -904,6 +905,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchValidDataOptimisticLocking()
     {
+        $this->markTestIncomplete();
         $id = 1;
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
