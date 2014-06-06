@@ -5,11 +5,9 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Traits\RestResponseTrait;
 use Zend\Http\Response;
 
 /**
@@ -152,5 +150,4 @@ class RestResponseTraitTest extends PHPUnit_Framework_TestCase
             )
         );
     }
-
 }
