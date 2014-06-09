@@ -1,8 +1,19 @@
 <?php
 
+/**
+ * RestResponseTrait
+ *
+ * @author Someone <someone@valtech.co.uk>
+ */
 namespace Olcs\Db\Traits;
+
 use Zend\Http\Response;
 
+/**
+ * RestResponseTrait
+ *
+ * @author Someone <someone@valtech.co.uk>
+ */
 trait RestResponseTrait
 {
     /**

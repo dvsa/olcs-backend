@@ -1,19 +1,23 @@
 <?php
+
 /**
  * A trait that controllers can use to easily interact with the flash messenger.
  *
- * @package     olcscommon
- * @subpackage  utility
- * @author      Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-
 namespace Olcs\Db\Traits;
 
-use \Zend\Log\LoggerAwareTrait as ZendLoggerAwareTrait;
-use \Zend\Log\Logger;
+use Zend\Log\LoggerAwareTrait as ZendLoggerAwareTrait;
+use Zend\Log\Logger;
 
+/**
+ * A trait that controllers can use to easily interact with the flash messenger.
+ *
+ * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ */
 trait LoggerAwareTrait
 {
+
     use ZendLoggerAwareTrait;
 
     /**
@@ -29,7 +33,8 @@ trait LoggerAwareTrait
 
             if (($logger instanceof \Zend\Log\Logger) !== true) {
                 throw new \LogicException(
-                    "Incorrect object. Expecting '\Zend\Log\Logger', found " . get_class($logger));
+                    "Incorrect object. Expecting '\Zend\Log\Logger', found " . get_class($logger)
+                );
             }
 
             $this->setLogger($logger);

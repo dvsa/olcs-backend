@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Olcs\Db\Service\Bundle;
 
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\Criteria;
  */
 class BundleCreator
 {
+
     /**
      * Holds the hydrator
      *
@@ -53,7 +55,7 @@ class BundleCreator
      */
     public function buildEntityBundle($entity, $data)
     {
-        $bundleConfig =  null;
+        $bundleConfig = null;
 
         if (isset($data['bundle'])) {
 
@@ -128,15 +130,12 @@ class BundleCreator
 
                 $children = $entity->$getter();
 
-                if (isset($details['criteria']) && is_array($details['criteria']))
-                {
-                    foreach($details['criteria'] as $field => $value)
-                    {
+                if (isset($details['criteria']) && is_array($details['criteria'])) {
+                    foreach ($details['criteria'] as $field => $value) {
                         $criteria = Criteria::create();
                         $criteria->where(Criteria::expr()->eq($field, $value));
                         $children = $children->matching($criteria);
                     }
-
                 }
 
                 $entityArray[$childName] = $this->formatChild($children, $details);
@@ -160,7 +159,6 @@ class BundleCreator
 
                 $newChildren[] = $this->formatBundleForEntity($child, $details);
             }
-
         } else {
 
             $newChildren = $this->formatBundleForEntity($children, $details);

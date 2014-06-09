@@ -1,6 +1,17 @@
 <?php
+
+/**
+ * RestServerInterface
+ *
+ * @author Someone <someone@somewhere.co.uk>
+ */
 namespace Olcs\Db\Utility;
 
+/**
+ * RestServerInterface
+ *
+ * @author Someone <someone@somewhere.co.uk>
+ */
 interface RestServerInterface
 {
     /**
