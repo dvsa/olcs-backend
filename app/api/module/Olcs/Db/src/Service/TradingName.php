@@ -5,11 +5,7 @@
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
-
 namespace Olcs\Db\Service;
-
-use Olcs\Db\Exceptions\NoVersionException;
-use Doctrine\DBAL\LockMode;
 
 /**
  * Trading Names Service
@@ -27,9 +23,6 @@ class TradingName extends ServiceAbstract
      */
     public function removeAll($licenceId)
     {
-        /**
-         * @todo Soft delete functionality
-         */
         $query = $this->getEntityManager()->createQuery(
             'delete from OlcsEntities\Entity\TradingName tm where tm.licence = ' . $licenceId
         );

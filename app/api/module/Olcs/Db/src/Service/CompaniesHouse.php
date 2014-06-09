@@ -96,7 +96,7 @@ class CompaniesHouse extends ServiceAbstract
      *               are 'LIVE', 'FORMER', 'DISOLVED', 'PROPOSED'. Default is 'LIVE'
      * @return array
      */
-    private function nameSearch($gateway, $companyName, $companyStatus = 'LIVE')
+    protected function nameSearch($gateway, $companyName, $companyStatus = 'LIVE')
     {
         $request = $this->setRequestRows($gateway->getNameSearch($companyName, $companyStatus));
 
@@ -111,7 +111,7 @@ class CompaniesHouse extends ServiceAbstract
      * @param array $companyStatus array of company status's to search for
      * @return array
      */
-    private function numberSearch($gateway, $companyNumber, $companyStatus = array('LIVE'))
+    protected function numberSearch($gateway, $companyNumber, $companyStatus = array('LIVE'))
     {
         $request = $this->setRequestRows($gateway->getNumberSearch($companyNumber, $companyStatus));
 
@@ -125,7 +125,7 @@ class CompaniesHouse extends ServiceAbstract
      * @param string $companyNumber string containing the search parameter
      * @return array
      */
-    private function companyDetails($gateway, $companyNumber)
+    protected function companyDetails($gateway, $companyNumber)
     {
         $request = $gateway->getCompanyDetails($companyNumber);
 
