@@ -83,7 +83,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -145,7 +146,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -190,7 +192,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -237,7 +240,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -288,7 +292,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -342,7 +347,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -387,7 +393,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -434,7 +441,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -481,7 +489,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -531,7 +540,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -572,7 +582,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')
@@ -615,7 +626,8 @@ class LicenceTest extends PHPUnit_Framework_TestCase
             ->method('prepare')
             ->will($this->returnValue($mockQuery));
 
-        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))->disableOriginalConstructor()->getMock();
+        $mockEntityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getConnection'))
+            ->disableOriginalConstructor()->getMock();
 
         $mockEntityManager->expects($this->any())
             ->method('getConnection')

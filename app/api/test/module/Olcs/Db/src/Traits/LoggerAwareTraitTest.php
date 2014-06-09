@@ -9,7 +9,6 @@
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Traits\LoggerAwareTrait;
 use Zend\Log\Logger;
 
 /**
@@ -145,7 +144,8 @@ class LoggerAwareTraitTest extends PHPUnit_Framework_TestCase
                 // Priority defaults to info
                 array('Test Message'), array(Logger::INFO, 'Test Message', array()),
                 array('Test Message', Logger::ALERT), array(Logger::ALERT, 'Test Message', array()),
-                array('Test Message', Logger::ALERT, array('foo' => 'bar')), array(Logger::ALERT, 'Test Message', array('foo' => 'bar'))
+                array('Test Message', Logger::ALERT, array('foo' => 'bar')),
+                array(Logger::ALERT, 'Test Message', array('foo' => 'bar'))
             )
         );
     }

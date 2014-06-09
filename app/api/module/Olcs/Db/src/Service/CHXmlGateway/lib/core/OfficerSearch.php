@@ -1,72 +1,70 @@
 <?php
+
 /*
-+-------------------------------------------------------------------------------+
-|   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
-|                                                                               |
-|   This program is free software: you can redistribute it and/or modify        |
-|   it under the terms of the GNU General Public License as published by        |
-|   the Free Software Foundation, either version 3 of the License, or           |
-|   (at your option) any later version.                                         |
-|                                                                               |
-|   This program is distributed in the hope that it will be useful,             |
-|   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-|   GNU General Public License for more details.                                |
-|                                                                               |
-|   You should have received a copy of the GNU General Public License           |
-|   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
+  +-------------------------------------------------------------------------------+
+  |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
+  |                                                                               |
+  |   This program is free software: you can redistribute it and/or modify        |
+  |   it under the terms of the GNU General Public License as published by        |
+  |   the Free Software Foundation, either version 3 of the License, or           |
+  |   (at your option) any later version.                                         |
+  |                                                                               |
+  |   This program is distributed in the hope that it will be useful,             |
+  |   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+  |   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+  |   GNU General Public License for more details.                                |
+  |                                                                               |
+  |   You should have received a copy of the GNU General Public License           |
+  |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
+  +-------------------------------------------------------------------------------+
  */
 
-/**
- * interface is included in CHXmlGateway
- */
-// for error codes
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController; 
+use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
 
 /**
  * OfficerSearch
- * 
+ *
  * @uses CHRequest
  * @package chxmlgateway
  * @version $id$
  * @copyright 2009 Peter Reisinger
- * @author Peter Reisinger <p.reisinger@gmail.com> 
+ * @author Peter Reisinger <p.reisinger@gmail.com>
  * @license GNU General Public License
  */
 class OfficerSearch implements CHRequest
 {
-    /**
-     * xml file 
-     */
-    const OFFICER_SEARCH_FILE  = "/xml/officer-search.xml";
 
     /**
-     * class 
+     * xml file
+     */
+    const OFFICER_SEARCH_FILE = "/xml/officer-search.xml";
+
+    /**
+     * class
      *
      * class tag in the envelope
-     * 
+     *
      * @var string
      * @access private
      */
-    private $class          = 'OfficerSearch';
+    private $class = 'OfficerSearch';
 
     /**
-     * data 
+     * data
      *
      * data to be submitted
      * like company name, data set etc.
-     * 
+     *
      * @var array
      * @access private
      */
-    private $data           = array();
+    private $data = array();
 
     /**
-     * __construct 
-     * 
-     * @param string $surname 
-     * @param string $officerType 
+     * __construct
+     *
+     * @param string $surname
+     * @param string $officerType
      * @access public
      * @return void
      */
@@ -74,10 +72,12 @@ class OfficerSearch implements CHRequest
     {
         $this->data['surname'] = $surname;
 
-        if ($officerType != 'CUR' && $officerType != 'LLP' && 
-            $officerType != 'DIS' && $officerType != 'EUR') 
-        {
-            throw new Exception('Officer type can be on of: CUR, LLP, DIS, EUR', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if ($officerType != 'CUR' && $officerType != 'LLP' &&
+            $officerType != 'DIS' && $officerType != 'EUR') {
+            throw new Exception(
+                'Officer type can be on of: CUR, LLP, DIS, EUR',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['officerType'] = $officerType;
     }
@@ -103,11 +103,11 @@ class OfficerSearch implements CHRequest
     }
 
     /**
-     * setContinuationKey 
+     * setContinuationKey
      *
      * The continuation key allowing further data sets to be retrieved
-     * 
-     * @param string $continuationKey 
+     *
+     * @param string $continuationKey
      * @access public
      * @return void
      */
@@ -117,10 +117,10 @@ class OfficerSearch implements CHRequest
     }
 
     /**
-     * getClass 
+     * getClass
      *
      * return class - this is used in the envelope
-     * 
+     *
      * @access public
      * @return string
      */
@@ -130,10 +130,10 @@ class OfficerSearch implements CHRequest
     }
 
     /**
-     * getData 
+     * getData
      *
      * contains all data set by user
-     * 
+     *
      * @access public
      * @return array
      */
@@ -143,15 +143,15 @@ class OfficerSearch implements CHRequest
     }
 
     /**
-     * getRequest 
-     * 
+     * getRequest
+     *
      * @access public
      * @return xml
      */
     public function getRequest()
     {
         // load xml file
-        $body = simplexml_load_file(dirname(__FILE__).self::OFFICER_SEARCH_FILE);
+        $body = simplexml_load_file(dirname(__FILE__) . self::OFFICER_SEARCH_FILE);
 
         // fill in compulsory fields
         $body->Surname = $this->data['surname'];
@@ -183,4 +183,3 @@ class OfficerSearch implements CHRequest
         return $body->asXML();
     }
 }
-
