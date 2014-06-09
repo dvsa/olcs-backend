@@ -1,70 +1,70 @@
 <?php
+
 /*
-+-------------------------------------------------------------------------------+
-|   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
-|                                                                               |
-|   This program is free software: you can redistribute it and/or modify        |
-|   it under the terms of the GNU General Public License as published by        |
-|   the Free Software Foundation, either version 3 of the License, or           |
-|   (at your option) any later version.                                         |
-|                                                                               |
-|   This program is distributed in the hope that it will be useful,             |
-|   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
-|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
-|   GNU General Public License for more details.                                |
-|                                                                               |
-|   You should have received a copy of the GNU General Public License           |
-|   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
-+-------------------------------------------------------------------------------+ 
+  +-------------------------------------------------------------------------------+
+  |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
+  |                                                                               |
+  |   This program is free software: you can redistribute it and/or modify        |
+  |   it under the terms of the GNU General Public License as published by        |
+  |   the Free Software Foundation, either version 3 of the License, or           |
+  |   (at your option) any later version.                                         |
+  |                                                                               |
+  |   This program is distributed in the hope that it will be useful,             |
+  |   but WITHOUT ANY WARRANTY; without even the implied warranty of              |
+  |   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               |
+  |   GNU General Public License for more details.                                |
+  |                                                                               |
+  |   You should have received a copy of the GNU General Public License           |
+  |   along with this program.  If not, see <http://www.gnu.org/licenses/>.       |
+  +-------------------------------------------------------------------------------+
  */
 
-// for error codes
 use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
-
 
 /**
  * Mortgages
- * 
+ *
  * @uses CHRequest
  * @package chxmlgateway
  * @version $id$
  * @copyright 2009 Peter Reisinger
- * @author Peter Reisinger <p.reisinger@gmail.com> 
+ * @author Peter Reisinger <p.reisinger@gmail.com>
  * @license GNU General Public License
  */
 class Mortgages implements CHRequest
 {
-    /**
-     * xml template file 
-     */
-    const MORTGAGES_FILE    = "/xml/mortgages.xml";
 
     /**
-     * class 
+     * xml template file
+     */
+    const MORTGAGES_FILE = "/xml/mortgages.xml";
+
+    /**
+     * class
      *
      * class tag in the envelope
-     * 
+     *
      * @var string
      * @access private
      */
-    private $class              = 'Mortgages';
+    private $class = 'Mortgages';
 
     /**
-     * data 
+     * data
      *
-     * holds values set by user - to be 
+     * holds values set by user - to be
      * sent in the request
-     * 
+     *
      * @var array
      * @access private
      */
-    private $data               = array();
+    private $data = array();
 
     /**
-     * __construct 
-     * 
-     * @param string $partialCompanyNumber 
-     * @param array $dataSet 
+     * __construct
+     *
+     * @param string $partialCompanyNumber
+     * @param array $dataSet
      * @access public
      * @return void
      */
@@ -74,14 +74,20 @@ class Mortgages implements CHRequest
 
         $pattern = '/^[A-Z0-9]{8}$/';
 
-        if (!preg_match($pattern,$companyNumber)) {
-            throw new Exception('Company number has to be in this pattern: '.$pattern, AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if (!preg_match($pattern, $companyNumber)) {
+            throw new Exception(
+                'Company number has to be in this pattern: ' . $pattern,
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['companyNumber'] = $companyNumber;
-        
+
         // --- check if company name is allowed ---
-        if (! strlen($companyName) >= 1 && strlen($companyName) <= 160) {
-            throw new Exception('Searched company name must be in between 1-160 characters', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+        if (!strlen($companyName) >= 1 && strlen($companyName) <= 160) {
+            throw new Exception(
+                'Searched company name must be in between 1-160 characters',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['companyName'] = $companyName;
 
@@ -90,11 +96,11 @@ class Mortgages implements CHRequest
     }
 
     /**
-     * setSatisfiedChargesInd 
+     * setSatisfiedChargesInd
      *
      * Indicates whether satisfied charges are required
-     * 
-     * @param boolean $satisfiedChargesInd 
+     *
+     * @param boolean $satisfiedChargesInd
      * @access public
      * @return void
      */
@@ -104,9 +110,9 @@ class Mortgages implements CHRequest
     }
 
     /**
-     * setStartDate 
-     * 
-     * @param string $date YYYY-MM-DD 
+     * setStartDate
+     *
+     * @param string $date YYYY-MM-DD
      * @access public
      * @return void
      */
@@ -114,14 +120,17 @@ class Mortgages implements CHRequest
     {
         $date = trim($date);
         if (!preg_match('/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/', $date)) {
-            throw new Exception('Date has to be in YYYY-MM-DD format', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+            throw new Exception(
+                'Date has to be in YYYY-MM-DD format',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['startDate'] = $date;
     }
 
     /**
-     * setEndDate 
-     * 
+     * setEndDate
+     *
      * @param strin $date YYYY-MM-DD
      * @access public
      * @return void
@@ -129,17 +138,20 @@ class Mortgages implements CHRequest
     public function setEndDate($date)
     {
         if (!preg_match('/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/', $date)) {
-            throw new Exception('Date has to be in YYYY-MM-DD format', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+            throw new Exception(
+                'Date has to be in YYYY-MM-DD format',
+                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            );
         }
         $this->data['endDate'] = $date;
     }
 
     /**
-     * setContinuationKey 
+     * setContinuationKey
      *
      * The continuation key allowing further data sets to be retrieved
-     * 
-     * @param string $continuationKey 
+     *
+     * @param string $continuationKey
      * @access public
      * @return void
      */
@@ -149,8 +161,8 @@ class Mortgages implements CHRequest
     }
 
     /**
-     * getClass 
-     * 
+     * getClass
+     *
      * @access public
      * @return string
      */
@@ -160,10 +172,10 @@ class Mortgages implements CHRequest
     }
 
     /**
-     * getData 
+     * getData
      *
      * contains all data set by user
-     * 
+     *
      * @access public
      * @return array
      */
@@ -173,21 +185,21 @@ class Mortgages implements CHRequest
     }
 
     /**
-     * getRequest 
-     * 
+     * getRequest
+     *
      * @access public
      * @return xml
      */
     public function getRequest()
     {
         // load xml file
-        $body = simplexml_load_file(dirname(__FILE__).self::MORTGAGES_FILE);
+        $body = simplexml_load_file(dirname(__FILE__) . self::MORTGAGES_FILE);
 
         // fill in compulsory fields
         $body->CompanyName = $this->data['companyName'];
         $body->CompanyNumber = $this->data['companyNumber'];
         $body->UserReference = $this->data['userReference'];
-        
+
         // fill in optional fields
         if (isset($this->data['satisfiedChargesInd'])) {
             $body->addChild('SatisfiedChargesInd', $this->data['satisfiedChargesInd']);
@@ -205,4 +217,3 @@ class Mortgages implements CHRequest
         return $body->asXML();
     }
 }
-

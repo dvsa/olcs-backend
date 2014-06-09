@@ -1,8 +1,18 @@
 <?php
+/**
+ * EntityManagerAwareTrait
+ *
+ * @author Someone <someone@valtech.co.uk>
+ */
 namespace Olcs\Db\Traits;
 
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * EntityManagerAwareTrait
+ *
+ * @author Someone <someone@valtech.co.uk>
+ */
 trait EntityManagerAwareTrait
 {
     /**

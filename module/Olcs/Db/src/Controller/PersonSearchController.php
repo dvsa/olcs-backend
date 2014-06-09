@@ -27,7 +27,7 @@ class PersonSearchController extends AbstractBasicRestServerController
 
             $data = $this->getService('Licence')->findAllPersons($options);
 
-        } catch(\Exception $ex) {
+        } catch  (\Exception $ex) {
 
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }

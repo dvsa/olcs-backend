@@ -23,7 +23,6 @@ abstract class AbstractController extends ZendAbstractRestfulController
     /**
      * Handle the request
      *
-     * @todo   try-catch in "patch" for patchList should be removed in the future
      * @param  MvcEvent $e
      * @return mixed
      * @throws Exception\DomainException if no route matches in event or invalid HTTP method
