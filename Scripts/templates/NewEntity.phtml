@@ -3,6 +3,13 @@
 namespace OlcsEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+<?php
+if (!empty($manyToMany)) {
+?>
+use Doctrine\Common\Collections\ArrayCollection;
+<?php
+}
+?>
 
 /**
  * <?php echo $config['name']; ?> Entity
@@ -41,9 +48,69 @@ foreach ($config['entity']['field'] as $field) {
 <?php
 }
 
-foreach ($config['entity']['many-to-one'] as $field) {
+foreach ($manyToOne as $field) {
     ?>
+    /**
+     * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
+     *
+     * @var \<?php echo $field['@attributes']['target-entity']; ?>
+
+     *
+     * @ORM\ManyToOne(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-one'); ?>)
+     * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
+     */
+    protected $<?php echo $field['@attributes']['field']; ?>;
+
+<?php
+}
+
+foreach ($manyToMany as $field) {
+    ?>
+    /**
+     * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
+
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-many'); ?>)
+     */
+    protected $<?php echo $field['@attributes']['field']; ?>;
+
+<?php
+}
+
+foreach ($oneToOne as $field) {
+    ?>
+    /**
+     * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
+
+     *
+     * @var \<?php echo $field['@attributes']['target-entity']; ?>
+     *
+     * @ORM\OneToOne(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'one-to-one'); ?>)
+     * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
+     */
+    protected $<?php echo $field['@attributes']['field']; ?>;
+
+<?php
+}
+
+if (!empty($manyToMany)) {
+?>
+    /**
+     * Setup any ArrayCollections
+     */
+    public function __construct()
+    {
+<?php
+    foreach ($manyToMany as $field) {
+    ?>
+        $this-><?php echo $field['@attributes']['field']; ?> = new ArrayCollection();
+<?php
+    }
+?>
+    }
 <?php
 }
 ?>
@@ -73,6 +140,7 @@ foreach ($config['entity']['many-to-one'] as $field) {
     }
 
 <?php
+
 foreach ($config['entity']['field'] as $field) {
     ?>
     /**
@@ -101,6 +169,109 @@ foreach ($config['entity']['field'] as $field) {
     public function get<?php echo ucfirst($field['@attributes']['name']); ?>()
     {
         return $this-><?php echo $field['@attributes']['name']; ?>;
+    }
+
+<?php
+}
+
+$fields = array_merge($manyToOne, $oneToOne);
+
+foreach ($fields as $field) {
+    ?>
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes']['field']; ?>
+
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function set<?php echo ucfirst($field['@attributes']['field']); ?>($<?php echo $field['@attributes']['field']; ?>)
+    {
+        $this-><?php echo $field['@attributes']['field']; ?> = $<?php echo $field['@attributes']['field']; ?>;
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @return \<?php echo $field['@attributes']['target-entity']; ?>
+
+     */
+    public function get<?php echo ucfirst($field['@attributes']['field']); ?>()
+    {
+        return $this-><?php echo $field['@attributes']['field']; ?>;
+    }
+
+<?php
+}
+
+foreach ($manyToMany as $field) {
+    ?>
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $field['@attributes']['field']; ?>
+
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function set<?php echo ucfirst($field['@attributes']['field']); ?>($<?php echo $field['@attributes']['field']; ?>)
+    {
+        $this-><?php echo $field['@attributes']['field']; ?> = $<?php echo $field['@attributes']['field']; ?>;
+
+        return $this;
+    }
+
+    /**
+     * Add a <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes']['field']; ?>
+
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function add<?php echo ucfirst($field['@attributes']['field']); ?>($<?php echo $field['@attributes']['field']; ?>)
+    {
+        if (!$this-><?php echo $field['@attributes']['field']; ?>->contains($<?php echo $field['@attributes']['field']; ?>)) {
+            $this-><?php echo $field['@attributes']['field']; ?>->add($<?php echo $field['@attributes']['field']; ?>);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes']['field']; ?>
+
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function remove<?php echo ucfirst($field['@attributes']['field']); ?>($<?php echo $field['@attributes']['field']; ?>)
+    {
+        if ($this-><?php echo $field['@attributes']['field']; ?>->contains($<?php echo $field['@attributes']['field']; ?>)) {
+            $this-><?php echo $field['@attributes']['field']; ?>->remove($<?php echo $field['@attributes']['field']; ?>);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
+
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function get<?php echo ucfirst($field['@attributes']['field']); ?>()
+    {
+        return $this-><?php echo $field['@attributes']['field']; ?>;
     }
 
 <?php

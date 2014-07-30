@@ -25,11 +25,18 @@ class CreateEntities
     private $existingClasses = array();
 
     private $optionFormat = array(
-        'name' => '',
+        'name' => array(
+            'column' => '',
+            'join-column' => 'name="%s"'
+        ),
+        'field' => '',
         'type' => 'type="%s"',
         'column' => 'name="%s"',
         'length' => 'length=%s',
-        'nullable' => 'nullable=%s'
+        'nullable' => 'nullable=%s',
+        'target-entity' => 'targetEntity="%s"',
+        'referenced-column-name' => 'referencedColumnName="%s"',
+        'mapped-by' => 'mapperBy="%s"'
     );
 
     public function __construct()
@@ -67,9 +74,33 @@ class CreateEntities
         $xml = file_get_contents($this->mappingDirectory . $mappingFile);
 
         $config = $this->convertXmlToArray($xml);
+        $manyToOne = isset($config['entity']['many-to-one']) ? $config['entity']['many-to-one'] : array();
+        $manyToMany = isset($config['entity']['many-to-many']) ? $config['entity']['many-to-many'] : array();
+        $oneToMany = isset($config['entity']['one-to-many']) ? $config['entity']['one-to-many'] : array();
+        $oneToOne = isset($config['entity']['one-to-one']) ? $config['entity']['one-to-one'] : array();
+
+        if (!empty($manyToOne) && !is_numeric(array_keys($manyToOne)[0])) {
+            $manyToOne = array($manyToOne);
+        }
+
+        if (!empty($manyToMany) && !is_numeric(array_keys($manyToMany)[0])) {
+            $manyToMany = array($manyToMany);
+        }
+
+        if (!empty($oneToMany) && !is_numeric(array_keys($oneToMany)[0])) {
+            $oneToMany = array($oneToMany);
+        }
+
+        if (!empty($oneToOne) && !is_numeric(array_keys($oneToOne)[0])) {
+            $oneToOne = array($oneToOne);
+        }
+
+        if (!isset($config['entity']['one-to-one'])) {
+            return;
+        }
 
         print_r($config);
-        exit;
+        //exit;
 
         ob_start();
             include(__DIR__ . '/templates/NewEntity.phtml');
@@ -87,15 +118,19 @@ class CreateEntities
         return ucfirst(strtolower($formatter->filter($name)));
     }
 
-    private function generateOptionsFromAttributes($attributes)
+    private function generateOptionsFromAttributes($attributes, $which = 'column')
     {
         $options = array();
 
         foreach ($attributes as $key => $value) {
-            $string = sprintf($this->optionFormat[$key], $value);
+
+            $format = isset($this->optionFormat[$key][$which])
+                ? $this->optionFormat[$key][$which] : $this->optionFormat[$key];
+
+            $string = sprintf($format, $value);
 
             if (!empty($string)) {
-                $options[] = sprintf($this->optionFormat[$key], $value);
+                $options[] = $string;
             }
         }
 
