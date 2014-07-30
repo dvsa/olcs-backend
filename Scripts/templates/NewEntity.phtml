@@ -1,0 +1,109 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace OlcsEntities\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * <?php echo $config['name']; ?> Entity
+ *
+ * @ORM\Table(name="<?php echo $config['entity']['@attributes']['table']; ?>")
+ * @ORM\Entity
+ */
+class <?php echo $config['name']; ?> implements EntityInterface
+{
+    /**
+     * Identifier
+     *
+     * @var <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?>
+
+     *
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($config['entity']['id']['@attributes']); ?>)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="<?php echo $config['entity']['id']['generator']['@attributes']['strategy']; ?>")
+     */
+    protected $id;
+
+<?php
+foreach ($config['entity']['field'] as $field) {
+    ?>
+    /**
+     * <?php echo $this->getReadableStringFromName($field['@attributes']['name']); ?>
+
+     *
+     * @var <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+
+     *
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+     */
+    protected $<?php echo $field['@attributes']['name']; ?>;
+
+<?php
+}
+
+foreach ($config['entity']['many-to-one'] as $field) {
+    ?>
+
+<?php
+}
+?>
+    /**
+     * Set the identifier
+     *
+     * @param <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?> $id
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the identifier
+     *
+     * @return <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?>
+
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+<?php
+foreach ($config['entity']['field'] as $field) {
+    ?>
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?>
+
+     *
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $field['@attributes']['name']; ?>
+
+     * @return \<?php echo $config['entity']['@attributes']['name']; ?>
+
+     */
+    public function set<?php echo ucfirst($field['@attributes']['name']); ?>($<?php echo $field['@attributes']['name']; ?>)
+    {
+        $this-><?php echo $field['@attributes']['name']; ?> = $<?php echo $field['@attributes']['name']; ?>;
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?>
+
+     *
+     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+
+     */
+    public function get<?php echo ucfirst($field['@attributes']['name']); ?>()
+    {
+        return $this-><?php echo $field['@attributes']['name']; ?>;
+    }
+
+<?php
+}
+?>
+}
