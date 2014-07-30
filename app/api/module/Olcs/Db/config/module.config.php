@@ -7,95 +7,95 @@
  * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-return array(
-    'router' => array(
-        'routes' => array(
-            'generic' => array(
+return [
+    'router' => [
+        'routes' => [
+            'generic' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/[:service][/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'service' => '[a-z\-]+',
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'Generic'
-                    )
-                )
-            ),
-            'licence-organisation' => array(
+                    ]
+                ]
+            ],
+            'licence-organisation' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/licence-organisation[/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'licence-organisation'
-                    )
-                )
-            ),
-            'operator-search' => array(
+                    ]
+                ]
+            ],
+            'operator-search' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/operator-search[/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'operator-search'
-                    )
-                )
-            ),
-            'person-search' => array(
+                    ]
+                ]
+            ],
+            'person-search' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/person-search[/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'person-search'
-                    )
-                )
-            ),
-            'person-licence-search' => array(
+                    ]
+                ]
+            ],
+            'person-licence-search' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/person-licence-search[/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'person-licence-search'
-                    )
-                )
-            ),
-            'trading-names' => array(
+                    ]
+                ]
+            ],
+            'trading-names' => [
                 'type' => 'segment',
-                'options' => array(
+                'options' => [
                     'route' => '/trading-names[/:id]',
-                    'constraints' => array(
+                    'constraints' => [
                         'id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
+                    ],
+                    'defaults' => [
                         'controller' => 'trading-names'
-                    )
-                )
-            ),
-        )
-    ),
-    'service_manager' => array(
-        'abstract_factories' => array(
+                    ]
+                ]
+            ],
+        ]
+    ],
+    'service_manager' => [
+        'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory'
-        ),
-        'factories' => array(
+        ],
+        'factories' => [
             'serviceFactory' => '\Olcs\Db\Service\Factory'
-        )
-    ),
-    'controllers' => array(
-        'invokables' => array(
+        ]
+    ],
+    'controllers' => [
+        'invokables' => [
             'Generic' => 'Olcs\Db\Controller\GenericController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
@@ -104,24 +104,40 @@ return array(
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
-        )
-    ),
-    'view_manager' => array(
+        ]
+    ],
+    'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions' => false,
-        'strategies' => array(
+        'strategies' => [
             'ViewJsonStrategy'
-        ),
+        ],
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
-        'template_map' => array(
+        'template_map' => [
              'error/404' => __DIR__ . '/../view/error/404.phtml',
              'error/index' => __DIR__ . '/../view/error/index.phtml',
              'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-         ),
-    ),
-    'companies_house_credentials' => array(
+         ],
+    ],
+    'companies_house_credentials' => [
         'password' => 'XMLGatewayTestPassword',
         'userId'   => 'XMLGatewayTestUserID'
-    )
-);
+    ],
+    'doctrine' => [
+        'eventmanager' => [
+            'orm_default' => [
+                'subscribers' => [
+                    'Gedmo\SoftDeleteable\SoftDeleteableListener'
+                ],
+            ],
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'filters' => [
+                    'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
+                ]
+            ],
+        ]
+    ]
+];
