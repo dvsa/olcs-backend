@@ -84,6 +84,31 @@ class CreateEntities
     );
 
     /**
+     * Cache for trait creation
+     *
+     * @var array
+     */
+    private $id = array();
+    private $idDetails = array();
+    private $field = array();
+    private $fieldDetails = array();
+    private $manyToOne = array();
+    private $manyToOneDetails = array();
+    private $manyToMany = array();
+    private $manyToManyDetails = array();
+    private $oneToMany = array();
+    private $oneToManyDetails = array();
+    private $oneToOne = array();
+    private $oneToOneDetails = array();
+
+    /**
+     * Holds the entity configs
+     *
+     * @var array
+     */
+    private $entityConfigs = array();
+
+    /**
      * Init the vars
      */
     public function __construct()
@@ -106,15 +131,21 @@ class CreateEntities
 
         $this->findNewAndOldEntities();
 
-        $this->createNewEntities();
+        $this->createEntities();
     }
 
     /**
-     * Create new entities
+     * Create entities
      */
-    private function createNewEntities()
+    private function createEntities()
     {
-        foreach ($this->newClasses as $className) {
+        $entities = array_merge($this->newClasses, $this->existingClasses);
+
+        $this->cacheComponents($entities);
+
+        $this->createTraits();
+
+        foreach ($entities as $className) {
 
             $fileName = sprintf('%s%s.php', $this->entityFolder, str_replace('\\', '/', $className));
 
@@ -154,6 +185,64 @@ class CreateEntities
         $indexes = $this->standardiseArray(isset($config['entity']['indexes']['index']) ? $config['entity']['indexes']['index'] : array());
         $fields = $this->standardiseArray(isset($config['entity']['field']) ? $config['entity']['field'] : array());
 
+        $constructCollectionProperties = array_merge($manyToMany, $oneToMany);
+
+        $traits = array();
+
+        foreach ($ids as $key => $item) {
+            $key = $this->getCacheKey($item, 'id');
+
+            if ($key !== false && $this->idDetails[$key]['trait'] !== null) {
+                $traits[] = $this->idDetails[$key]['trait'];
+                unset($ids[$key]);
+            }
+        }
+
+        foreach ($fields as $key => $item) {
+            $key = $this->getCacheKey($item, 'field');
+
+            if ($key !== false && $this->fieldDetails[$key]['trait'] !== null) {
+                $traits[] = $this->fieldDetails[$key]['trait'];
+                unset($fields[$key]);
+            }
+        }
+
+        foreach ($manyToOne as $key => $item) {
+            $key = $this->getCacheKey($item, 'manyToOne');
+
+            if ($key !== false && $this->manyToOneDetails[$key]['trait'] !== null) {
+                $traits[] = $this->manyToOneDetails[$key]['trait'];
+                unset($manyToOne[$key]);
+            }
+        }
+
+        foreach ($manyToMany as $key => $item) {
+            $key = $this->getCacheKey($item, 'manyToMany');
+
+            if ($key !== false && $this->manyToManyDetails[$key]['trait'] !== null) {
+                $traits[] = $this->manyToManyDetails[$key]['trait'];
+                unset($manyToMany[$key]);
+            }
+        }
+
+        foreach ($oneToOne as $key => $item) {
+            $key = $this->getCacheKey($item, 'oneToOne');
+
+            if ($key !== false && $this->oneToOneDetails[$key]['trait'] !== null) {
+                $traits[] = $this->oneToOneDetails[$key]['trait'];
+                unset($oneToOne[$key]);
+            }
+        }
+
+        foreach ($oneToMany as $key => $item) {
+            $key = $this->getCacheKey($item, 'oneToMany');
+
+            if ($key !== false && $this->oneToManyDetails[$key]['trait'] !== null) {
+                $traits[] = $this->oneToManyDetails[$key]['trait'];
+                unset($oneToMany[$key]);
+            }
+        }
+
         $settersAndGetters = array_merge($manyToOne, $oneToOne);
         $collectionProperties = array_merge($manyToMany, $oneToMany);
 
@@ -163,6 +252,172 @@ class CreateEntities
         ob_end_clean();
 
         return $content;
+    }
+
+    /**
+     * Cache components
+     *
+     * @param array $entities
+     */
+    private function cacheComponents($entities)
+    {
+        foreach ($entities as $className) {
+
+            $config = $this->getConfigFromMappingFile($this->mappingFiles[$className]);
+
+            $ids = array();
+            if (isset($config['entity']['id'])) {
+
+                if (!is_numeric(array_keys($config['entity']['id'])[0])) {
+                    $ids[$config['entity']['id']['@attributes']['name']] = $config['entity']['id'];
+                } else {
+                    foreach ($config['entity']['id'] as $id) {
+                        $ids[$id['@attributes']['name']] = $id;
+                    }
+                }
+            }
+
+            $manyToOne = $this->standardiseArray(isset($config['entity']['many-to-one']) ? $config['entity']['many-to-one'] : array());
+            $manyToMany = $this->standardiseArray(isset($config['entity']['many-to-many']) ? $config['entity']['many-to-many'] : array());
+            $oneToMany = $this->standardiseArray(isset($config['entity']['one-to-many']) ? $config['entity']['one-to-many'] : array());
+            $oneToOne = $this->standardiseArray(isset($config['entity']['one-to-one']) ? $config['entity']['one-to-one'] : array());
+            $fields = $this->standardiseArray(isset($config['entity']['field']) ? $config['entity']['field'] : array());
+
+            $idFkAndPk = array();
+
+            foreach ($ids as $item) {
+                if (isset($item['@attributes']['association-key'])) {
+                    $idFkAndPk[] = $item['@attributes']['name'];
+                    continue;
+                }
+                $this->cacheComponent($item, 'id');
+            }
+
+            foreach ($fields as $item) {
+                if (in_array($item['@attributes']['name'], $idFkAndPk)) {
+                    continue;
+                }
+                $this->cacheComponent($item, 'field');
+            }
+
+            foreach ($manyToOne as $item) {
+                if (in_array($item['@attributes']['field'], $idFkAndPk)) {
+                    continue;
+                }
+                $this->cacheComponent($item, 'manyToOne');
+            }
+
+            foreach ($manyToMany as $item) {
+                if (in_array($item['@attributes']['field'], $idFkAndPk)) {
+                    continue;
+                }
+                $this->cacheComponent($item, 'manyToMany');
+            }
+
+            foreach ($oneToMany as $item) {
+                if (in_array($item['@attributes']['field'], $idFkAndPk)) {
+                    continue;
+                }
+                $this->cacheComponent($item, 'oneToMany');
+            }
+
+            foreach ($oneToOne as $item) {
+                if (in_array($item['@attributes']['field'], $idFkAndPk)) {
+                    continue;
+                }
+                $this->cacheComponent($item, 'oneToOne');
+            }
+        }
+    }
+
+    /**
+     * Cache a component and count the number of uses
+     *
+     * @param array $item
+     * @param string $which
+     */
+    private function cacheComponent($item, $which)
+    {
+        $encode = json_encode($item);
+
+        $key = array_search($encode, $this->{$which});
+
+        if ($key === false) {
+            $this->{$which}[] = $encode;
+            $this->{$which . 'Details'}[] = array(
+                'count' => 0,
+                'trait' => null
+            );
+
+            $key = count($this->$which) - 1;
+        }
+
+        $this->{$which . 'Details'}[$key]['count']++;
+    }
+
+    private function getCacheKey($item, $which)
+    {
+        $encode = json_encode($item);
+
+        return array_search($encode, $this->{$which});
+    }
+
+    /**
+     * For each component we need to create a trait
+     */
+    private function createTraits()
+    {
+        $this->createComponentTraits('id');
+        $this->createComponentTraits('field');
+        $this->createComponentTraits('manyToOne');
+        $this->createComponentTraits('manyToMany');
+        $this->createComponentTraits('oneToOne');
+        $this->createComponentTraits('oneToMany');
+    }
+
+    /**
+     * Create the ID Traits
+     */
+    private function createComponentTraits($which)
+    {
+        foreach ($this->{$which} as $key => $encode)
+        {
+            $details = &$this->{$which . 'Details'}[$key];
+
+            switch ($which) {
+                case 'id':
+                    $description = 'Identity';
+                    break;
+                default:
+                    $description = ucwords($which);
+            }
+
+            switch ($which) {
+                case 'id':
+                case 'field':
+                    $ref = 'name';
+                    break;
+                default:
+                    $ref = 'field';
+            }
+
+            if ($details['count'] < 2) {
+                continue;
+            }
+
+            $data = json_decode($encode, true);
+            $trait = ucwords($data['@attributes'][$ref]) . $description;
+            $fileName = sprintf('%s%s.php', $this->entityFolder . 'OlcsEntities/Entity/Traits/', $trait);
+
+            $details['trait'] = $trait;
+
+            ob_start();
+                include(__DIR__ . '/templates/trait-' . $which . '.phtml');
+                $content = ob_get_contents();
+            ob_end_clean();
+
+            file_put_contents($fileName, $content);
+        }
     }
 
     /**
