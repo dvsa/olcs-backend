@@ -552,7 +552,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'getValidSearchFields',
                 'getEntityManager',
                 'getEntityName',
-                'canSoftDelete',
                 'setOrderBy',
                 'getPaginator'
             )
@@ -617,10 +616,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
 
-        $mockQueryBuilder->expects($this->at(5))
-            ->method('andWhere')
-            ->with('a.isDeleted = 0');
-
         $mockQueryBuilder->expects($this->once())
             ->method('setParameters')
             ->with($expectedParams);
@@ -663,10 +658,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('setOrderBy')
             ->with($this->equalTo($mockQueryBuilder), $this->equalTo($data));
 
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
         $mockPaginator = $this->getMock('\StdClass');
 
         $this->service->expects($this->once())
@@ -690,7 +681,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'log',
                 'getValidSearchFields',
                 'getEntityManager', 'getEntityName',
-                'canSoftDelete',
                 'getDoctrineHydrator',
                 'setOrderBy',
                 'getPaginator'
@@ -770,10 +760,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
 
-        $mockQueryBuilder->expects($this->at(5))
-            ->method('andWhere')
-            ->with('a.isDeleted = 0');
-
         $mockQueryBuilder->expects($this->once())
             ->method('setParameters')
             ->with($expectedParams);
@@ -815,10 +801,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->service->expects($this->once())
             ->method('setOrderBy')
             ->with($this->equalTo($mockQueryBuilder), $this->equalTo($data));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
 
         $this->service->expects($this->any())
             ->method('getDoctrineHydrator')
@@ -900,56 +882,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Test Update
      *  With Version
-     *  With Soft Delete
-     *  Entity not found
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testUpdateWithVersionWithSoftDeleteEntityNotFound()
-    {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'processAddressEntity'));
-
-        $id = 7;
-
-        $data = array(
-            'version' => 1
-        );
-
-        $mockEntity = null;
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('processAddressEntity')
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('getUnDeletedById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertFalse($this->service->update($id, $data));
-    }
-
-    /**
-     * Test Update
-     *  With Version
      *  Without Soft Delete
      *  Entity not found
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testUpdateWithVersionWithoutSoftDeleteEntityNotFound()
+    public function testUpdateWithVersionEntityNotFound()
     {
         $this->getMockService(
-            array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+            array('log', 'getEntityManager', 'getEntityName', 'processAddressEntity')
         );
 
         $id = 7;
@@ -974,10 +916,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(false));
-
-        $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
 
@@ -987,17 +925,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Test Update
      *  With Version
-     *  With Soft Delete
      *  With Entity
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testUpdateWithVersionWithSoftDeleteWithEntity()
+    public function testUpdateWithVersionWithEntity()
     {
         $this->getMockService(
             array(
-                'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
+                'log', 'getDoctrineHydrator',
                 'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
             )
         );
@@ -1020,29 +957,23 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with($data, $mockEntity)
             ->will($this->returnValue($mockEntity));
 
-        $mockEntityManager = $this->getMock('\stdClass', array('lock'));
+        $mockEntityManager = $this->getMock('\stdClass', array('lock', 'find'));
 
         $mockEntityManager->expects($this->once())
             ->method('lock')
+            ->will($this->returnValue($mockEntity));
+        $mockEntityManager->expects($this->once())
+            ->method('find')
             ->will($this->returnValue($mockEntity));
 
         $this->service->expects($this->once())
             ->method('log');
 
         $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('getUnDeletedById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
             ->method('getDoctrineHydrator')
             ->will($this->returnValue($mockHydrator));
 
-        $this->service->expects($this->once())
+        $this->service->expects($this->any())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
 
@@ -1058,6 +989,76 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('dbFlush');
 
         $this->assertTrue($this->service->update($id, $data));
+    }
+
+    /**
+     * Test Patch
+     *  With Version
+     *  With Soft Delete
+     *  With Entity
+     *
+     * @group Service
+     * @group ServiceAbstract
+     */
+    public function testPatchWithVersionWithEntity()
+    {
+        $this->getMockService(
+            array(
+                'log', 'getDoctrineHydrator',
+                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
+            )
+        );
+
+        $id = 7;
+
+        $data = array(
+            'version' => 1
+        );
+
+        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
+
+        $mockEntity->expects($this->once())
+            ->method('clearProperties');
+
+        $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
+
+        $mockHydrator->expects($this->once())
+            ->method('hydrate')
+            ->with($data, $mockEntity)
+            ->will($this->returnValue($mockEntity));
+
+        $mockEntityManager = $this->getMock('\stdClass', array('lock', 'find'));
+
+        $mockEntityManager->expects($this->once())
+            ->method('lock')
+            ->will($this->returnValue($mockEntity));
+        $mockEntityManager->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($mockEntity));
+
+        $this->service->expects($this->once())
+            ->method('log');
+
+        $this->service->expects($this->once())
+            ->method('getDoctrineHydrator')
+            ->will($this->returnValue($mockHydrator));
+
+        $this->service->expects($this->any())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager));
+
+        $this->service->expects($this->once())
+            ->method('getEntityPropertyNames')
+            ->will($this->returnValue([]));
+
+        $this->service->expects($this->once())
+            ->method('dbPersist')
+            ->will($this->returnValue($mockEntity));
+
+        $this->service->expects($this->once())
+            ->method('dbFlush');
+
+        $this->assertTrue($this->service->patch($id, $data));
     }
 
     /**
@@ -1087,56 +1088,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Test Patch
      *  With Version
-     *  With Soft Delete
-     *  Entity not found
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testPatchWithVersionWithSoftDeleteEntityNotFound()
-    {
-        $this->getMockService(array('log', 'canSoftDelete', 'getUnDeletedById', 'processAddressEntity'));
-
-        $id = 7;
-
-        $data = array(
-            'version' => 1
-        );
-
-        $mockEntity = null;
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('processAddressEntity')
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('getUnDeletedById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertFalse($this->service->patch($id, $data));
-    }
-
-    /**
-     * Test Patch
-     *  With Version
      *  Without Soft Delete
      *  Entity not found
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testPatchWithVersionWithoutSoftDeleteEntityNotFound()
+    public function testPatchWithVersionEntityNotFound()
     {
         $this->getMockService(
-            array('log', 'canSoftDelete', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+            array('log', 'getEntityManager', 'getEntityName', 'processAddressEntity')
         );
 
         $id = 7;
@@ -1161,90 +1122,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($data));
 
         $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(false));
-
-        $this->service->expects($this->once())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
 
         $this->assertFalse($this->service->patch($id, $data));
-    }
-
-    /**
-     * Test Patch
-     *  With Version
-     *  With Soft Delete
-     *  With Entity
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testPatchWithVersionWithSoftDeleteWithEntity()
-    {
-        $this->getMockService(
-            array(
-                'log', 'canSoftDelete', 'getUnDeletedById', 'getDoctrineHydrator',
-                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
-            )
-        );
-
-        $id = 7;
-
-        $data = array(
-            'version' => 1
-        );
-
-        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
-
-        $mockEntity->expects($this->once())
-            ->method('clearProperties');
-
-        $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($data, $mockEntity)
-            ->will($this->returnValue($mockEntity));
-
-        $mockEntityManager = $this->getMock('\stdClass', array('lock'));
-
-        $mockEntityManager->expects($this->once())
-            ->method('lock')
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('getUnDeletedById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockHydrator));
-
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue([]));
-
-        $this->assertTrue($this->service->patch($id, $data));
     }
 
     /**
@@ -1276,56 +1157,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Test Delete
      *  With entity
-     *  With soft delete
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testDeleteWithEntityWithSoftDelete()
-    {
-        $this->getMockService(array('log', 'getEntityById', 'canSoftDelete', 'dbPersist', 'dbFlush'));
-
-        $id = 7;
-
-        $mockEntity = $this->getMock('\stdClass', array('setIsDeleted'));
-
-        $mockEntity->expects($this->once())
-            ->method('setIsDeleted')
-            ->with(true);
-
-        $this->service->expects($this->once())
-            ->method('log');
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($mockEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->assertTrue($this->service->delete($id));
-    }
-
-    /**
-     * Test Delete
-     *  With entity
      *  Without soft delete
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testDeleteWithEntityWithoutSoftDelete()
+    public function testDeleteWithEntity()
     {
-        $this->getMockService(array('log', 'getEntityById', 'canSoftDelete', 'getEntityManager', 'dbFlush'));
+        $this->getMockService(array('log', 'getEntityById', 'getEntityManager', 'dbFlush'));
 
         $id = 7;
 
@@ -1344,10 +1183,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getEntityById')
             ->with($id)
             ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(false));
 
         $this->service->expects($this->once())
             ->method('getEntityManager')
@@ -1437,91 +1272,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test canSoftDelete
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testCanSoftDelete()
-    {
-        $this->getMockService();
-
-        $this->assertFalse($this->service->canSoftDelete());
-    }
-
-    /**
-     * Test getUnDeletedById
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetUnDeletedById()
-    {
-        $this->getMockService(array('getEntityManager'));
-
-        $id = 7;
-
-        $return = array(
-            'foo' => 'bar'
-        );
-
-        $mockRepository = $this->getMock('\stdClass', array('findOneBy'));
-
-        $mockRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(array('id' => $id, 'isDeleted' => 0))
-            ->will($this->returnValue($return));
-
-        $mockEntityManager = $this->getMock('\stdClass', array('getRepository'));
-
-        $mockEntityManager->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue($mockRepository));
-
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->assertEquals($return, $this->service->getUnDeletedById($id));
-    }
-
-    /**
-     * Test getEntityById
-     *  With soft delete
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetEntityByIdWithSoftDelete()
-    {
-        $this->getMockService(array('canSoftDelete', 'getUnDeletedById'));
-
-        $id = 7;
-
-        $mockEntity = array('foo' => 'bar');
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(true));
-
-        $this->service->expects($this->once())
-            ->method('getUnDeletedById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertEquals($mockEntity, $this->service->getEntityById($id));
-    }
-
-    /**
      * Test getEntityById
      *  Without soft delete
      *
      * @group Service
      * @group ServiceAbstract
      */
-    public function testGetEntityByIdWithoutSoftDelete()
+    public function testGetEntityById()
     {
-        $this->getMockService(array('canSoftDelete', 'getEntityManager'));
+        $this->getMockService(array('getEntityManager'));
 
         $id = 7;
 
@@ -1532,10 +1291,6 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $mockEntityManager->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('canSoftDelete')
-            ->will($this->returnValue(false));
 
         $this->service->expects($this->once())
             ->method('getEntityManager')
