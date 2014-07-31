@@ -1,0 +1,87 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace OlcsEntities\Entity\Traits;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * <?php echo $this->getReadableStringFromName($details['trait']); ?> trait
+ *
+ * @Note: Auto-generated (Shared between <?php echo $details['count']; ?> entities)
+ */
+trait <?php echo $details['trait']; ?>
+
+{
+    /**
+     * <?php echo $this->getReadableStringFromName($data['@attributes']['field']); ?>
+
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(<?php echo $this->generateOptionsFromAttributes($data['@attributes'], 'many-to-many'); ?>)
+     */
+    protected $<?php echo $data['@attributes']['field']; ?>;
+
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['field'])); ?>
+
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $data['@attributes']['field']; ?>
+
+     * @return \OlcsEntities\Entity\Interfaces\EntityInterface
+
+     */
+    public function set<?php echo ucfirst($data['@attributes']['field']); ?>($<?php echo $data['@attributes']['field']; ?>)
+    {
+        $this-><?php echo $data['@attributes']['field']; ?> = $<?php echo $data['@attributes']['field']; ?>;
+
+        return $this;
+    }
+
+    /**
+     * Add a <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['field'])); ?>
+
+     *
+     * @param \<?php echo $data['@attributes']['target-entity']; ?> $<?php echo $data['@attributes']['field']; ?>
+
+     * @return \OlcsEntities\Entity\Interfaces\EntityInterface
+
+     */
+    public function add<?php echo ucfirst($data['@attributes']['field']); ?>($<?php echo $data['@attributes']['field']; ?>)
+    {
+        if (!$this-><?php echo $data['@attributes']['field']; ?>->contains($<?php echo $data['@attributes']['field']; ?>)) {
+            $this-><?php echo $data['@attributes']['field']; ?>->add($<?php echo $data['@attributes']['field']; ?>);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['field'])); ?>
+
+     *
+     * @param \<?php echo $data['@attributes']['target-entity']; ?> $<?php echo $data['@attributes']['field']; ?>
+
+     * @return \OlcsEntities\Entity\Interfaces\EntityInterface
+
+     */
+    public function remove<?php echo ucfirst($data['@attributes']['field']); ?>($<?php echo $data['@attributes']['field']; ?>)
+    {
+        if ($this-><?php echo $data['@attributes']['field']; ?>->contains($<?php echo $data['@attributes']['field']; ?>)) {
+            $this-><?php echo $data['@attributes']['field']; ?>->remove($<?php echo $data['@attributes']['field']; ?>);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['field'])); ?>
+
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function get<?php echo ucfirst($data['@attributes']['field']); ?>()
+    {
+        return $this-><?php echo $data['@attributes']['field']; ?>;
+    }
+}

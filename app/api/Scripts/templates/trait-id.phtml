@@ -1,0 +1,55 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace OlcsEntities\Entity\Traits;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * <?php echo $this->getReadableStringFromName($details['trait']); ?> trait
+ *
+ * @Note: Auto-generated (Shared between <?php echo $details['count']; ?> entities)
+ */
+trait <?php echo $details['trait']; ?>
+
+{
+
+    /**
+     * Identifier - <?php echo $this->getReadableStringFromName($data['@attributes']['name']); ?>
+
+     *
+     * @var <?php echo $this->getPhpTypeFromType($data['@attributes']['type']); ?>
+
+     *
+     * @ORM\Id
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($data['@attributes']); ?>)
+<?php if (isset($data['generator'])): ?>
+     * @ORM\GeneratedValue(strategy="<?php echo $data['generator']['@attributes']['strategy']; ?>")
+<?php endif; ?>
+     */
+    protected $<?php echo $data['@attributes']['name']; ?>;
+
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['name'])); ?> identifier
+     *
+     * @param <?php echo $this->getPhpTypeFromType($data['@attributes']['type']); ?> $<?php echo $data['@attributes']['name']; ?>
+
+     * @return \OlcsEntities\Entity\Interfaces\EntityInterface
+     */
+    public function set<?php echo ucfirst($data['@attributes']['name']); ?>($<?php echo $data['@attributes']['name']; ?>)
+    {
+        $this-><?php echo $data['@attributes']['name']; ?> = $<?php echo $data['@attributes']['name']; ?>;
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['name'])); ?> identifier
+     *
+     * @return <?php echo $this->getPhpTypeFromType($data['@attributes']['type']); ?>
+
+     */
+    public function get<?php echo ucfirst($data['@attributes']['name']); ?>()
+    {
+        return $this-><?php echo $data['@attributes']['name']; ?>;
+    }
+}

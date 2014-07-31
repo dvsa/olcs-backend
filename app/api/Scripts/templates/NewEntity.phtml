@@ -3,8 +3,11 @@
 namespace OlcsEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-<?php if (!empty($collectionProperties)): ?>
+<?php if (!empty($constructCollectionProperties)): ?>
 use Doctrine\Common\Collections\ArrayCollection;
+<?php endif; ?>
+<?php if (!empty($traits)): ?>
+use OlcsEntities\Entity\Traits;
 <?php endif; ?>
 
 /**
@@ -24,8 +27,14 @@ if (!empty($indexes)) {
 }
 ?>)
  */
-class <?php echo $config['name']; ?> implements EntityInterface
+class <?php echo $config['name']; ?> implements interfaces\EntityInterface
 {
+<?php if(!empty($traits)): ?>
+    use Traits\<?php echo implode(',
+        Traits\\', $traits);
+    ?>;
+
+<?php endif; ?>
 <?php foreach ($ids as $field): ?>
 <?php
 if (isset($field['@attributes']['association-key']) && $field['@attributes']['association-key']) {
@@ -129,13 +138,13 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     protected $<?php echo $field['@attributes']['field']; ?>;
 
 <?php endforeach; ?>
-<?php if (!empty($collectionProperties)): ?>
+<?php if (!empty($constructCollectionProperties)): ?>
     /**
      * Setup any ArrayCollections
      */
     public function __construct()
     {
-<?php foreach ($collectionProperties as $field): ?>
+<?php foreach ($constructCollectionProperties as $field): ?>
         $this-><?php echo $field['@attributes']['field']; ?> = new ArrayCollection();
 <?php endforeach; ?>
     }
