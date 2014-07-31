@@ -3,37 +3,52 @@
 namespace OlcsEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-<?php
-if (!empty($manyToMany)) {
-?>
+<?php if (!empty($collectionProperties)): ?>
 use Doctrine\Common\Collections\ArrayCollection;
-<?php
-}
-?>
+<?php endif; ?>
 
 /**
  * <?php echo $config['name']; ?> Entity
  *
- * @ORM\Table(name="<?php echo $config['entity']['@attributes']['table']; ?>")
  * @ORM\Entity
+ * @ORM\Table(name="<?php echo $config['entity']['@attributes']['table']; ?>"<?php
+if (!empty($indexes)) {
+?>
+,
+ *    indexes={
+<?php foreach ($indexes as $index): ?>
+ *        @ORM\Index(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'indexes'); ?>)
+<?php endforeach; ?>
+ *    }
+ * <?php
+}
+?>)
  */
 class <?php echo $config['name']; ?> implements EntityInterface
 {
-    /**
-     * Identifier
-     *
-     * @var <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?>
-
-     *
-     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($config['entity']['id']['@attributes']); ?>)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="<?php echo $config['entity']['id']['generator']['@attributes']['strategy']; ?>")
-     */
-    protected $id;
-
+<?php foreach ($ids as $field): ?>
 <?php
-foreach ($config['entity']['field'] as $field) {
-    ?>
+if (isset($field['@attributes']['association-key']) && $field['@attributes']['association-key']) {
+    continue;
+}
+?>
+    /**
+     * Identifier - <?php echo $this->getReadableStringFromName($field['@attributes']['name']); ?>
+
+     *
+     * @var <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+
+     *
+     * @ORM\Id
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php if (isset($field['generator'])): ?>
+     * @ORM\GeneratedValue(strategy="<?php echo $field['generator']['@attributes']['strategy']; ?>")
+<?php endif; ?>
+     */
+    protected $<?php echo $field['@attributes']['name']; ?>;
+
+<?php endforeach; ?>
+<?php foreach ($fields as $field): ?>
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['name']); ?>
 
@@ -41,14 +56,15 @@ foreach ($config['entity']['field'] as $field) {
      * @var <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
 
      *
+<?php if (isset($ids[$field['@attributes']['name']])): ?>
+     * @ORM\ID
+<?php endif; ?>
      * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
      */
     protected $<?php echo $field['@attributes']['name']; ?>;
 
-<?php
-}
-
-foreach ($manyToOne as $field) {
+<?php endforeach; ?>
+<?php foreach ($manyToOne as $field):
     ?>
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
@@ -57,92 +73,107 @@ foreach ($manyToOne as $field) {
      * @var \<?php echo $field['@attributes']['target-entity']; ?>
 
      *
+<?php if (isset($ids[$field['@attributes']['field']])): ?>
+     * @ORM\ID
+<?php endif; ?>
      * @ORM\ManyToOne(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-one'); ?>)
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
      */
     protected $<?php echo $field['@attributes']['field']; ?>;
 
-<?php
-}
-
-foreach ($manyToMany as $field) {
-    ?>
+<?php endforeach; ?>
+<?php foreach ($manyToMany as $field): ?>
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
+<?php if (isset($ids[$field['@attributes']['field']])): ?>
+     * @ORM\ID
+<?php endif; ?>
      * @ORM\ManyToMany(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-many'); ?>)
      */
     protected $<?php echo $field['@attributes']['field']; ?>;
 
-<?php
-}
+<?php endforeach; ?>
+<?php foreach ($oneToMany as $field): ?>
+    /**
+     * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
-foreach ($oneToOne as $field) {
-    ?>
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+<?php if (isset($ids[$field['@attributes']['field']])): ?>
+     * @ORM\ID
+<?php endif; ?>
+     * @ORM\OneToMany(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-many'); ?>)
+     */
+    protected $<?php echo $field['@attributes']['field']; ?>;
+
+<?php endforeach; ?>
+<?php foreach ($oneToOne as $field): ?>
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
      *
      * @var \<?php echo $field['@attributes']['target-entity']; ?>
+
      *
+<?php if (isset($ids[$field['@attributes']['field']])): ?>
+     * @ORM\ID
+<?php endif; ?>
      * @ORM\OneToOne(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'one-to-one'); ?>)
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
      */
     protected $<?php echo $field['@attributes']['field']; ?>;
 
-<?php
-}
-
-if (!empty($manyToMany)) {
-?>
+<?php endforeach; ?>
+<?php if (!empty($collectionProperties)): ?>
     /**
      * Setup any ArrayCollections
      */
     public function __construct()
     {
-<?php
-    foreach ($manyToMany as $field) {
-    ?>
+<?php foreach ($collectionProperties as $field): ?>
         $this-><?php echo $field['@attributes']['field']; ?> = new ArrayCollection();
-<?php
+<?php endforeach; ?>
     }
-?>
-    }
+<?php endif; ?>
+<?php foreach ($ids as $field): ?>
 <?php
+if (isset($field['@attributes']['association-key']) && $field['@attributes']['association-key']) {
+    continue;
 }
 ?>
     /**
-     * Set the identifier
+     * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?> identifier
      *
-     * @param <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?> $id
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $field['@attributes']['name']; ?>
+
      * @return \<?php echo $config['entity']['@attributes']['name']; ?>
 
      */
-    public function setId($id)
+    public function set<?php echo ucfirst($field['@attributes']['name']); ?>($<?php echo $field['@attributes']['name']; ?>)
     {
-        $this->id = $id;
+        $this-><?php echo $field['@attributes']['name']; ?> = $<?php echo $field['@attributes']['name']; ?>;
 
         return $this;
     }
 
     /**
-     * Get the identifier
+     * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?> identifier
      *
-     * @return <?php echo $this->getPhpTypeFromType($config['entity']['id']['@attributes']['type']); ?>
+     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
 
      */
-    public function getId()
+    public function get<?php echo ucfirst($field['@attributes']['name']); ?>()
     {
-        return $this->id;
+        return $this-><?php echo $field['@attributes']['name']; ?>;
     }
 
-<?php
-
-foreach ($config['entity']['field'] as $field) {
-    ?>
+<?php endforeach; ?>
+<?php foreach ($fields as $field): ?>
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?>
 
@@ -171,13 +202,8 @@ foreach ($config['entity']['field'] as $field) {
         return $this-><?php echo $field['@attributes']['name']; ?>;
     }
 
-<?php
-}
-
-$fields = array_merge($manyToOne, $oneToOne);
-
-foreach ($fields as $field) {
-    ?>
+<?php endforeach; ?>
+<?php foreach ($settersAndGetters as $field): ?>
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
 
@@ -206,11 +232,8 @@ foreach ($fields as $field) {
         return $this-><?php echo $field['@attributes']['field']; ?>;
     }
 
-<?php
-}
-
-foreach ($manyToMany as $field) {
-    ?>
+<?php endforeach; ?>
+<?php foreach ($collectionProperties as $field): ?>
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
 
@@ -274,7 +297,5 @@ foreach ($manyToMany as $field) {
         return $this-><?php echo $field['@attributes']['field']; ?>;
     }
 
-<?php
-}
-?>
+<?php endforeach; ?>
 }
