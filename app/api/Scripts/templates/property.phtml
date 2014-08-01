@@ -1,0 +1,29 @@
+    /**
+     * <?php if ($item['isId']): ?>Identifier - <?php endif; ?><?php echo $this->getReadableStringFromName($field['@attributes'][$item['ref']]); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @var \Doctrine\Common\Collections\ArrayCollection
+<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @var \<?php echo $field['@attributes']['target-entity']; ?>
+<?php else: ?>
+     * @var <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+<?php endif; ?>
+
+     *
+<?php if ($item['isId']): ?>
+     * @ORM\Id
+<?php endif; ?>
+<?php if (in_array($item['type'], array('id', 'field'))): ?>
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php else: ?>
+     * @ORM\<?php echo ucfirst($item['type']); ?>(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php endif; ?>
+<?php if (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
+<?php endif; ?>
+<?php if (isset($field['generator'])): ?>
+     * @ORM\GeneratedValue(strategy="<?php echo $field['generator']['@attributes']['strategy']; ?>")
+<?php endif; ?>
+     */
+     protected $<?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;
