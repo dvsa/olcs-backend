@@ -1,0 +1,23 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace OlcsEntities\Entity\Traits;
+
+use Doctrine\ORM\Mapping as ORM;
+<?php if (in_array($which, array('oneToMany', 'manyToMany'))): ?>
+use Doctrine\Common\Collections\ArrayCollection;
+<?php endif; ?>
+
+/**
+ * <?php echo $this->getReadableStringFromName($details['trait']); ?> trait
+ *
+ * @Note: Auto-generated (Shared between <?php echo $details['count']; ?> entities)
+ */
+trait <?php echo $details['trait']; ?>
+
+{
+<?php include('property.phtml'); ?>
+
+
+<?php include('methods.phtml'); ?>
+
+}

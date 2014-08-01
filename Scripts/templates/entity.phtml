@@ -1,0 +1,50 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace OlcsEntities\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+<?php if ($details['hasCollections']): ?>
+use Doctrine\Common\Collections\ArrayCollection;
+<?php endif; ?>
+<?php if (!empty($details['traits'])): ?>
+use OlcsEntities\Entity\Traits;
+<?php endif; ?>
+
+/**
+ * <?php echo $details['name']; ?> Entity
+ *
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="<?php echo $details['table']; ?>"<?php
+if (!empty($details['indexes'])) {
+?>
+,
+ *    indexes={
+<?php foreach ($details['indexes'] as $key => $index): ?>
+ *        @ORM\Index(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'indexes'); ?>)<?php echo ($key < (count($details['indexes']) - 1) ? ',' : ''); ?>
+
+<?php endforeach; ?>
+ *    }
+ * <?php
+}
+?>)
+ */
+class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
+{
+<?php if(!empty($details['traits'])): ?>
+    use Traits\<?php echo implode(',
+        Traits\\', $details['traits']);
+    ?>;
+<?php endif; ?>
+
+<?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
+
+<?php include('property.phtml'); ?>
+
+<?php endforeach; ?>
+<?php foreach ($details['fields'] as $item): $field = $item['config']; $fluidReturn = $className; ?>
+
+<?php include('methods.phtml'); ?>
+
+<?php endforeach; ?>
+}
