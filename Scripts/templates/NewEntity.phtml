@@ -14,26 +14,27 @@ use OlcsEntities\Entity\Traits;
  * <?php echo $config['name']; ?> Entity
  *
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="<?php echo $config['entity']['@attributes']['table']; ?>"<?php
 if (!empty($indexes)) {
 ?>
 ,
  *    indexes={
-<?php foreach ($indexes as $index): ?>
- *        @ORM\Index(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'indexes'); ?>)
+<?php foreach ($indexes as $key => $index): ?>
+ *        @ORM\Index(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'indexes'); ?>)<?php echo ($key < (count($indexes) - 1) ? ',' : ''); ?>
+
 <?php endforeach; ?>
  *    }
  * <?php
 }
 ?>)
  */
-class <?php echo $config['name']; ?> implements interfaces\EntityInterface
+class <?php echo $config['name']; ?> implements Interfaces\EntityInterface
 {
 <?php if(!empty($traits)): ?>
     use Traits\<?php echo implode(',
         Traits\\', $traits);
     ?>;
-
 <?php endif; ?>
 <?php foreach ($ids as $field): ?>
 <?php
@@ -41,6 +42,7 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     continue;
 }
 ?>
+
     /**
      * Identifier - <?php echo $this->getReadableStringFromName($field['@attributes']['name']); ?>
 
@@ -55,9 +57,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
 <?php endif; ?>
      */
     protected $<?php echo $field['@attributes']['name']; ?>;
-
 <?php endforeach; ?>
 <?php foreach ($fields as $field): ?>
+
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['name']); ?>
 
@@ -71,10 +73,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
      * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
      */
     protected $<?php echo $field['@attributes']['name']; ?>;
-
 <?php endforeach; ?>
-<?php foreach ($manyToOne as $field):
-    ?>
+<?php foreach ($manyToOne as $field): ?>
+
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
@@ -89,9 +90,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
      */
     protected $<?php echo $field['@attributes']['field']; ?>;
-
 <?php endforeach; ?>
 <?php foreach ($manyToMany as $field): ?>
+
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
@@ -103,10 +104,10 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
 <?php endif; ?>
      * @ORM\ManyToMany(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-many'); ?>)
      */
-    protected $<?php echo $field['@attributes']['field']; ?>;
-
+    protected $<?php echo $field['@attributes']['field']; ?>s;
 <?php endforeach; ?>
 <?php foreach ($oneToMany as $field): ?>
+
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
@@ -118,10 +119,10 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
 <?php endif; ?>
      * @ORM\OneToMany(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], 'many-to-many'); ?>)
      */
-    protected $<?php echo $field['@attributes']['field']; ?>;
-
+    protected $<?php echo $field['@attributes']['field']; ?>s;
 <?php endforeach; ?>
 <?php foreach ($oneToOne as $field): ?>
+
     /**
      * <?php echo $this->getReadableStringFromName($field['@attributes']['field']); ?>
 
@@ -136,16 +137,16 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
      */
     protected $<?php echo $field['@attributes']['field']; ?>;
-
 <?php endforeach; ?>
 <?php if (!empty($constructCollectionProperties)): ?>
+
     /**
      * Setup any ArrayCollections
      */
     public function __construct()
     {
 <?php foreach ($constructCollectionProperties as $field): ?>
-        $this-><?php echo $field['@attributes']['field']; ?> = new ArrayCollection();
+        $this-><?php echo $field['@attributes']['field']; ?>s = new ArrayCollection();
 <?php endforeach; ?>
     }
 <?php endif; ?>
@@ -155,6 +156,7 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     continue;
 }
 ?>
+
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?> identifier
      *
@@ -180,9 +182,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     {
         return $this-><?php echo $field['@attributes']['name']; ?>;
     }
-
 <?php endforeach; ?>
 <?php foreach ($fields as $field): ?>
+
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['name'])); ?>
 
@@ -210,9 +212,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     {
         return $this-><?php echo $field['@attributes']['name']; ?>;
     }
-
 <?php endforeach; ?>
 <?php foreach ($settersAndGetters as $field): ?>
+
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
 
@@ -240,21 +242,20 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
     {
         return $this-><?php echo $field['@attributes']['field']; ?>;
     }
-
 <?php endforeach; ?>
 <?php foreach ($collectionProperties as $field): ?>
+
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes']['field'])); ?>
 
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $field['@attributes']['field']; ?>
-
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $field['@attributes']['field']; ?>s
      * @return \<?php echo $config['entity']['@attributes']['name']; ?>
 
      */
-    public function set<?php echo ucfirst($field['@attributes']['field']); ?>($<?php echo $field['@attributes']['field']; ?>)
+    public function set<?php echo ucfirst($field['@attributes']['field']); ?>s($<?php echo $field['@attributes']['field']; ?>s)
     {
-        $this-><?php echo $field['@attributes']['field']; ?> = $<?php echo $field['@attributes']['field']; ?>;
+        $this-><?php echo $field['@attributes']['field']; ?>s = $<?php echo $field['@attributes']['field']; ?>;
 
         return $this;
     }
@@ -301,10 +302,9 @@ if (isset($field['@attributes']['association-key']) && $field['@attributes']['as
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function get<?php echo ucfirst($field['@attributes']['field']); ?>()
+    public function get<?php echo ucfirst($field['@attributes']['field']); ?>s()
     {
-        return $this-><?php echo $field['@attributes']['field']; ?>;
+        return $this-><?php echo $field['@attributes']['field']; ?>s;
     }
-
 <?php endforeach; ?>
 }

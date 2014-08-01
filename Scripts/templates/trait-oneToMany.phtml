@@ -20,20 +20,19 @@ trait <?php echo $details['trait']; ?>
      *
      * @ORM\OneToMany(<?php echo $this->generateOptionsFromAttributes($data['@attributes'], 'many-to-many'); ?>)
      */
-    protected $<?php echo $data['@attributes']['field']; ?>;
+    protected $<?php echo $data['@attributes']['field']; ?>s;
 
     /**
      * Set the <?php echo strtolower($this->getReadableStringFromName($data['@attributes']['field'])); ?>
 
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $data['@attributes']['field']; ?>
-
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $data['@attributes']['field']; ?>s
      * @return \OlcsEntities\Entity\Interfaces\EntityInterface
 
      */
-    public function set<?php echo ucfirst($data['@attributes']['field']); ?>($<?php echo $data['@attributes']['field']; ?>)
+    public function set<?php echo ucfirst($data['@attributes']['field']); ?>s($<?php echo $data['@attributes']['field']; ?>s)
     {
-        $this-><?php echo $data['@attributes']['field']; ?> = $<?php echo $data['@attributes']['field']; ?>;
+        $this-><?php echo $data['@attributes']['field']; ?>s = $<?php echo $data['@attributes']['field']; ?>s;
 
         return $this;
     }
@@ -80,8 +79,8 @@ trait <?php echo $details['trait']; ?>
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function get<?php echo ucfirst($data['@attributes']['field']); ?>()
+    public function get<?php echo ucfirst($data['@attributes']['field']); ?>s()
     {
-        return $this-><?php echo $data['@attributes']['field']; ?>;
+        return $this-><?php echo $data['@attributes']['field']; ?>s;
     }
 }

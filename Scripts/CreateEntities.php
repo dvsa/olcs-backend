@@ -1,8 +1,5 @@
 <?php
 
-// /workspace/OLCS/olcs-backend/vendor/bin/doctrine-module orm:convert-mapping --namespace="OlcsEntities\\Entity\\" --force --from-database xml /workspace/OLCS/olcs-backend/data/mapping/
-// /workspace/OLCS/olcs-backend/vendor/bin/doctrine-module orm:generate-entities --generate-annotations true /workspace/OLCS/olcs-backend/data/entities/
-
 namespace Cli;
 
 use DirectoryIterator;
@@ -78,7 +75,7 @@ class CreateEntities
         'nullable' => 'nullable=%s',
         'target-entity' => 'targetEntity="%s"',
         'referenced-column-name' => 'referencedColumnName="%s"',
-        'mapped-by' => 'mapperBy="%s"',
+        'mapped-by' => 'mappedBy="%s"',
         'cascade' => 'cascade={"%s"}',
         'inversed-by' => 'inversedBy="%s"'
     );
@@ -109,6 +106,13 @@ class CreateEntities
     private $entityConfigs = array();
 
     /**
+     * Holds the DB connection
+     *
+     * @var \Pdo
+     */
+    private $pdo;
+
+    /**
      * Init the vars
      */
     public function __construct()
@@ -120,6 +124,23 @@ class CreateEntities
         $this->entityFolder = __DIR__ . '/../../olcs-entities/OlcsEntities/src/';
 
         $this->namespace = 'OlcsEntities\\Entity';
+
+        $this->pdo = new \Pdo('mysql:dbname=olcs;host=localhost', 'olcs_be', 'password');
+    }
+
+    /**
+     * Describe table
+     *
+     * @param string $table
+     * @return array
+     */
+    private function describeTable($table)
+    {
+        $query = $this->pdo->prepare('DESC ' . $table);
+
+        $query->execute();
+
+        return $query->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -178,6 +199,14 @@ class CreateEntities
             }
         }
 
+        $tableDescription = $this->describeTable($config['entity']['@attributes']['table']);
+
+        $defaults = array();
+
+        foreach ($tableDescription as $row) {
+            $defaults[$row['Field']] = $row['Default'];
+        }
+
         $manyToOne = $this->standardiseArray(isset($config['entity']['many-to-one']) ? $config['entity']['many-to-one'] : array());
         $manyToMany = $this->standardiseArray(isset($config['entity']['many-to-many']) ? $config['entity']['many-to-many'] : array());
         $oneToMany = $this->standardiseArray(isset($config['entity']['one-to-many']) ? $config['entity']['one-to-many'] : array());
@@ -187,59 +216,61 @@ class CreateEntities
 
         $constructCollectionProperties = array_merge($manyToMany, $oneToMany);
 
-        $traits = array();
+        $traits = array(
+            'CustomBaseEntity'
+        );
 
-        foreach ($ids as $key => $item) {
+        foreach ($ids as $k => $item) {
             $key = $this->getCacheKey($item, 'id');
 
             if ($key !== false && $this->idDetails[$key]['trait'] !== null) {
                 $traits[] = $this->idDetails[$key]['trait'];
-                unset($ids[$key]);
+                unset($ids[$k]);
             }
         }
 
-        foreach ($fields as $key => $item) {
+        foreach ($fields as $k => $item) {
             $key = $this->getCacheKey($item, 'field');
 
             if ($key !== false && $this->fieldDetails[$key]['trait'] !== null) {
                 $traits[] = $this->fieldDetails[$key]['trait'];
-                unset($fields[$key]);
+                unset($fields[$k]);
             }
         }
 
-        foreach ($manyToOne as $key => $item) {
+        foreach ($manyToOne as $k => $item) {
             $key = $this->getCacheKey($item, 'manyToOne');
 
             if ($key !== false && $this->manyToOneDetails[$key]['trait'] !== null) {
                 $traits[] = $this->manyToOneDetails[$key]['trait'];
-                unset($manyToOne[$key]);
+                unset($manyToOne[$k]);
             }
         }
 
-        foreach ($manyToMany as $key => $item) {
+        foreach ($manyToMany as $k => $item) {
             $key = $this->getCacheKey($item, 'manyToMany');
 
             if ($key !== false && $this->manyToManyDetails[$key]['trait'] !== null) {
                 $traits[] = $this->manyToManyDetails[$key]['trait'];
-                unset($manyToMany[$key]);
+                unset($manyToMany[$k]);
             }
         }
 
-        foreach ($oneToOne as $key => $item) {
+        foreach ($oneToOne as $k => $item) {
             $key = $this->getCacheKey($item, 'oneToOne');
 
             if ($key !== false && $this->oneToOneDetails[$key]['trait'] !== null) {
                 $traits[] = $this->oneToOneDetails[$key]['trait'];
-                unset($oneToOne[$key]);
+                unset($oneToOne[$k]);
             }
         }
 
-        foreach ($oneToMany as $key => $item) {
+        foreach ($oneToMany as $k => $item) {
             $key = $this->getCacheKey($item, 'oneToMany');
 
             if ($key !== false && $this->oneToManyDetails[$key]['trait'] !== null) {
                 $traits[] = $this->oneToManyDetails[$key]['trait'];
-                unset($oneToMany[$key]);
+                unset($oneToMany[$k]);
             }
         }
 
@@ -406,8 +437,23 @@ class CreateEntities
             }
 
             $data = json_decode($encode, true);
+
+            if (isset($data['@attributes']['type'])
+                && $data['@attributes']['type'] == 'string'
+                && isset($data['@attributes']['length'])) {
+                $description = $data['@attributes']['length'] . $description;
+            }
+
             $trait = ucwords($data['@attributes'][$ref]) . $description;
+
             $fileName = sprintf('%s%s.php', $this->entityFolder . 'OlcsEntities/Entity/Traits/', $trait);
+            $customFileName = sprintf('%s%s.php', $this->entityFolder . 'OlcsEntities/Entity/Traits/Custom', $trait);
+
+            // If we have a custom trait that already exists
+            if (file_exists($customFileName)) {
+                $details['trait'] = 'Custom' . $trait;
+                continue;
+            }
 
             $details['trait'] = $trait;
 
@@ -511,7 +557,7 @@ class CreateEntities
         switch ($type) {
             case 'boolean':
 
-                if (isset($context['nullable']) && $context['nullable'] == false) {
+                if (!isset($context['nullable']) || $context['nullable'] == false) {
                     return 'yesno';
                 }
 
