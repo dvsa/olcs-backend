@@ -59,6 +59,18 @@ return [
                     ]
                 ]
             ],
+            'defendant-search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/defendant-search[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
+                    'defaults' => [
+                        'controller' => 'defendant-search'
+                    ]
+                ]
+            ],
             'person-licence-search' => [
                 'type' => 'segment',
                 'options' => [
@@ -102,6 +114,7 @@ return [
             'note' => 'Olcs\Db\Controller\NoteController',
             'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
+            'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
         ]
