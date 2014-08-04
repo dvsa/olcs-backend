@@ -1,4 +1,5 @@
 <?php
+namespace Olcs\Db\Service\CHXmlGateway\lib;
 
 /*
   +-------------------------------------------------------------------------------+
@@ -19,6 +20,7 @@
   +-------------------------------------------------------------------------------+
  */
 
+// for error codes
 use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
 
 /**
