@@ -46,7 +46,8 @@ class AlignEntitiesToSchema
         'p' => '',
         'd' => '',
         'mapping-files' => '',
-        'entity-files' => ''
+        'entity-files' => '',
+        'test-files' => ''
     );
 
     /**
@@ -71,7 +72,9 @@ class AlignEntitiesToSchema
         'name' => array(
             'column' => '',
             'join-column' => 'name="%s"',
-            'indexes' => 'name="%s"'
+            'join-table' => 'name="%s"',
+            'indexes' => 'name="%s"',
+            'unique-constraints' => 'name="%s"'
         ),
         'columns' => 'columns={"%s"}',
         'field' => '',
@@ -81,9 +84,17 @@ class AlignEntitiesToSchema
         'nullable' => 'nullable=%s',
         'target-entity' => 'targetEntity="%s"',
         'referenced-column-name' => 'referencedColumnName="%s"',
-        'mapped-by' => 'mappedBy="%s"',
+        'mapped-by' => array(
+            'column' => 'mappedBy="%s"',
+            'manyToOne' => 'mappedBy="%ss"',
+            'manyToMany' => 'mappedBy="%ss"'
+        ),
         'cascade' => 'cascade={"%s"}',
-        'inversed-by' => 'inversedBy="%s"'
+        'inversed-by' => array(
+            'column' => 'inversedBy="%s"',
+            'manyToOne' => 'inversedBy="%ss"',
+            'manyToMany' => 'inversedBy="%ss"'
+        )
     );
 
     /**
@@ -123,7 +134,7 @@ class AlignEntitiesToSchema
 
         require_once(__DIR__ . '/../init_autoloader.php');
 
-        $this->options = getopt('u:p:d:', array('import-schema:', 'mapping-files:', 'entity-files:'));
+        $this->options = getopt('u:p:d:', array('import-schema:', 'mapping-files:', 'entity-files:', 'test-files:'));
 
         $this->checkForRequiredParams();
     }
@@ -154,6 +165,12 @@ class AlignEntitiesToSchema
         $this->exchangeFieldsForTraits();
 
         $this->createEntities();
+
+        $this->removeOldUnitTests();
+
+        $this->createUnitTests();
+
+        $this->importEntities();
     }
 
     /**
@@ -187,29 +204,9 @@ class AlignEntitiesToSchema
 
             $this->respond('Importing schema: ' . $schema, 'info');
 
-            $dropDatabase = 'mysql -u%s -p%s -e \'DROP DATABASE IF EXISTS %s\'';
-
-            $createDatabase = 'mysql -u%s -p%s -e \'CREATE DATABASE IF NOT EXISTS %s\'';
-
             $importSchemaCommand = 'mysql -u%s -p%s < %s';
 
-            shell_exec(
-                sprintf(
-                    $dropDatabase,
-                    $this->options['u'],
-                    $this->options['p'],
-                    $this->options['d']
-                )
-            );
-
-            shell_exec(
-                sprintf(
-                    $createDatabase,
-                    $this->options['u'],
-                    $this->options['p'],
-                    $this->options['d']
-                )
-            );
+            $this->recreateDatabase();
 
             shell_exec(
                 sprintf(
@@ -220,6 +217,34 @@ class AlignEntitiesToSchema
                 )
             );
         }
+    }
+
+    /**
+     * Rebuild the database
+     */
+    private function recreateDatabase()
+    {
+        $dropDatabase = 'mysql -u%s -p%s -e \'DROP DATABASE IF EXISTS %s\'';
+
+        $createDatabase = 'mysql -u%s -p%s -e \'CREATE DATABASE IF NOT EXISTS %s\'';
+
+        shell_exec(
+            sprintf(
+                $dropDatabase,
+                $this->options['u'],
+                $this->options['p'],
+                $this->options['d']
+            )
+        );
+
+        shell_exec(
+            sprintf(
+                $createDatabase,
+                $this->options['u'],
+                $this->options['p'],
+                $this->options['d']
+            )
+        );
     }
 
     /**
@@ -370,15 +395,19 @@ class AlignEntitiesToSchema
 
             $this->entities[$className] = array(
                 'name' => str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']),
+                'className' => $config['entity']['@attributes']['name'],
                 'table' => $config['entity']['@attributes']['table'],
                 'indexes' => $this->getIndexesFromConfig($config),
+                'unique-constraints' => $this->getUniqueConstraintsFromConfig($config),
                 'traits' => array(
                     'CustomBaseEntity'
                 ),
                 'fields' => $fields,
                 'hasCollections' => $this->getHasCollectionsFromConfig($config),
+                'collections' => $this->getCollectionsFromConfig($config),
                 'mappingFileName' => $fileName,
                 'entityFileName' => $this->formatEntityFileName($className),
+                'testFileName' => $this->formatUnitTestFileName($className)
             );
         }
 
@@ -440,6 +469,23 @@ class AlignEntitiesToSchema
                 $details['trait'] = 'Custom' . $trait;
                 $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
                 continue;
+            }
+
+            // If the trait file exists, we need to rename this one
+            if (file_exists($fileName)) {
+
+                $oldTrait = $trait;
+
+                $i = 0;
+
+                while (file_exists($fileName)) {
+
+                    $i++;
+
+                    $trait = $oldTrait . 'Alt' . $i;
+                    $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'OlcsEntities/Entity/Traits/', $trait);
+                }
+
             }
 
             $details['trait'] = $trait;
@@ -535,6 +581,90 @@ class AlignEntitiesToSchema
     }
 
     /**
+     * Import entities
+     */
+    private function importEntities()
+    {
+        $this->respond('Importing entities...', 'info');
+
+        $this->recreateDatabase();
+
+        $output = shell_exec(realpath(__DIR__ . '/../vendor/bin/doctrine-module') . ' orm:schema:update --force');
+
+        $this->respond($output, 'info');
+
+        $this->respond('Entities imported', 'success');
+    }
+
+    /**
+     * Remove old unit tests
+     */
+    private function removeOldUnitTests()
+    {
+        $this->respond('Removing old entity unit tests...', 'info');
+
+        $directory = $this->options['test-files'] . str_replace('\\', '/', self::ENTITY_NAMESPACE);
+
+        $error = false;
+
+        foreach (new DirectoryIterator($directory) as $fileInfo) {
+
+            if ($fileInfo->isDot() || $fileInfo->isDir()) {
+                continue;
+            }
+
+            $fileName = $fileInfo->getFilename();
+
+            unlink($directory . $fileName);
+            if (!file_exists($directory . $fileName)) {
+                $this->respond('Removed: ' . $fileName);
+            } else {
+                $error = true;
+                $this->respond('Unable to remove: ' . $fileName, 'error');
+            }
+        }
+
+        if ($error) {
+            $this->exitResponse('Unable to remove some entity unit tests');
+        } else {
+            $this->respond('Old entity tests were removed', 'success');
+        }
+    }
+
+    /**
+     * Create new unit tests
+     */
+    private function createUnitTests()
+    {
+        $this->respond('Creating new unit tests...', 'info');
+
+        $error = false;
+
+        foreach ($this->entities as $className => $details) {
+
+            ob_start();
+                include(__DIR__ . '/templates/test-entity.phtml');
+                $content = ob_get_contents();
+            ob_end_clean();
+
+            file_put_contents($details['testFileName'], $content);
+
+            if (file_exists($details['testFileName'])) {
+                $this->respond('Entity tests created: ' . $className);
+            } else {
+                $error = true;
+                $this->respond('Entity tests creation failed: ' . $className, 'error');
+            }
+        }
+
+        if ($error) {
+            $this->exitResponse('Some entity unit tests were not created', 'error');
+        } else {
+            $this->respond('Entity unit tests created', 'success');
+        }
+    }
+
+    /**
      * Cache Fields
      *
      * @param array $fields
@@ -569,7 +699,28 @@ class AlignEntitiesToSchema
      */
     private function getHasCollectionsFromConfig($config)
     {
-        return (int)(isset($config['entity']['manyToMany']) || isset($config['entity']['oneToMany']));
+        return (isset($config['entity']['many-to-many']) || isset($config['entity']['one-to-many']));
+    }
+
+    /**
+     * Get collections from config
+     *
+     * @param array $config
+     * @return array
+     */
+    private function getCollectionsFromConfig($config)
+    {
+        $collections = array();
+
+        if (isset($config['entity']['many-to-many'])) {
+            $collections = array_merge($collections, $this->standardiseArray($config['entity']['many-to-many']));
+        }
+
+        if (isset($config['entity']['one-to-many'])) {
+            $collections = array_merge($collections, $this->standardiseArray($config['entity']['one-to-many']));
+        }
+
+        return $collections;
     }
 
     /**
@@ -602,6 +753,19 @@ class AlignEntitiesToSchema
     {
         return $this->standardiseArray(
             isset($config['entity']['indexes']['index']) ? $config['entity']['indexes']['index'] : array()
+        );
+    }
+
+    /**
+     * Get unique constraints from config
+     *
+     * @param array $config
+     * @return array
+     */
+    private function getUniqueConstraintsFromConfig($config)
+    {
+        return $this->standardiseArray(
+            isset($config['entity']['unique-constraints']['unique-constraint']) ? $config['entity']['unique-constraints']['unique-constraint'] : array()
         );
     }
 
@@ -749,6 +913,21 @@ class AlignEntitiesToSchema
         return sprintf(
             '%s%s.php',
             rtrim($this->options['entity-files'], '/'),
+            str_replace('\\', '/', $className)
+        );
+    }
+
+    /**
+     * Format unit test filename
+     *
+     * @param string $className
+     * @return string
+     */
+    private function formatUnitTestFileName($className)
+    {
+        return sprintf(
+            '%s%sTest.php',
+            rtrim($this->options['test-files'], '/'),
             str_replace('\\', '/', $className)
         );
     }

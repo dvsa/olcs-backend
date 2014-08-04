@@ -20,7 +20,7 @@
         return $this;
     }
 
-<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+<?php /* if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
     /**
      * Add a <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
 
@@ -29,11 +29,11 @@
 
      * @return <?php echo $fluidReturn; ?>
 
-     */
+
     public function add<?php echo ucfirst($field['@attributes'][$item['ref']]); ?>($<?php echo $field['@attributes'][$item['ref']]; ?>)
     {
-        if (!$this-><?php echo $field['@attributes'][$item['ref']]; ?>->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
-            $this-><?php echo $field['@attributes'][$item['ref']]; ?>->add($<?php echo $field['@attributes'][$item['ref']]; ?>);
+        if (!$this-><?php echo $field['@attributes'][$item['ref']]; ?>s->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
+            $this-><?php echo $field['@attributes'][$item['ref']]; ?>s->add($<?php echo $field['@attributes'][$item['ref']]; ?>);
         }
 
         return $this;
@@ -47,17 +47,17 @@
 
      * @return <?php echo $fluidReturn; ?>
 
-     */
+
     public function remove<?php echo ucfirst($field['@attributes'][$item['ref']]); ?>($<?php echo $field['@attributes'][$item['ref']]; ?>)
     {
-        if ($this-><?php echo $field['@attributes'][$item['ref']]; ?>->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
-            $this-><?php echo $field['@attributes'][$item['ref']]; ?>->remove($<?php echo $field['@attributes'][$item['ref']]; ?>);
+        if ($this-><?php echo $field['@attributes'][$item['ref']]; ?>s->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
+            $this-><?php echo $field['@attributes'][$item['ref']]; ?>s->remove($<?php echo $field['@attributes'][$item['ref']]; ?>);
         }
 
         return $this;
     }
 
-<?php endif; ?>
+<?php endif; */ ?>
     /**
      * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
 
