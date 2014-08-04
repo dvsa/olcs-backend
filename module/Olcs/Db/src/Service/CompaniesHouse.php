@@ -47,7 +47,7 @@ class CompaniesHouse extends ServiceAbstract
      * Allowed appointment types
      * @see http://xmlgw.companieshouse.gov.uk/data_usage_guide_apr_2014.pdf
      */
-    private $allowedAppointmenTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR'];
+    private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR'];
 
     /**
      * Returns a list of records after Companies House API's call
@@ -231,7 +231,7 @@ class CompaniesHouse extends ServiceAbstract
                     $appointmentType = (string)$item->AppointmentType;
                     $appointmentStatus = (string)$item->AppointmentStatus;
                     if ($appointmentStatus == 'CURRENT' &&
-                        in_array($appointmentType, $this->allowedAppointmenTypes) !== false) {
+                        in_array($appointmentType, $this->allowedAppointmentTypes) !== false) {
                         $finalResult[] = [
                             'title'       => ucfirst(strtolower((string)$item->Person->Title)),
                             'firstName'   => (string)$item->Person->Forename,
