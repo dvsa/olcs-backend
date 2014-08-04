@@ -44,6 +44,12 @@ class CompaniesHouse extends ServiceAbstract
     private $userId;
 
     /**
+     * Allowed appointment types
+     * @see http://xmlgw.companieshouse.gov.uk/data_usage_guide_apr_2014.pdf
+     */
+    private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR'];
+
+    /**
      * Returns a list of records after Companies House API's call
      *
      * @param array $data array with params
@@ -68,7 +74,7 @@ class CompaniesHouse extends ServiceAbstract
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }
 
-        $finalResult = $this->getFinalResult($result);
+        $finalResult = $this->getFinalResult($result, $method);
 
         return array('Count' => count($finalResult), 'Results' => $finalResult);
     }
@@ -133,6 +139,20 @@ class CompaniesHouse extends ServiceAbstract
     }
 
     /**
+     * Searches Companies House API for company appointments and gets Company Officers with 
+     * specific appointment types and Current status
+     *
+     * @param object $gateway
+     * @param string $companyNumber string containing the search parameter
+     * @return array
+     */
+    protected function currentCompanyOfficers($gateway, $companyNumber)
+    {
+        $request = $gateway->getCompanyAppointments($companyNumber);
+        return $this->handleResponse($gateway, $request);
+    }
+
+    /**
      * detectError
      *
      * Checks for error and if there is any,
@@ -180,28 +200,46 @@ class CompaniesHouse extends ServiceAbstract
      * Get final result from result
      *
      * @param object $result
+     * @param string $method
      * @return array
      */
-    private function getFinalResult($result)
+    private function getFinalResult($result, $method)
     {
         $finalResult = array();
 
-        if (array_key_exists('NameSearch', $result)) {
+        if (array_key_exists('NameSearch', $result) !== false) {
 
             foreach ($result->NameSearch->CoSearchItem as $item) {
                 $finalResult[] = $item;
             }
 
-        } elseif (array_key_exists('NumberSearch', $result)) {
+        } elseif (array_key_exists('NumberSearch', $result) !== false) {
 
             foreach ($result->NumberSearch->CoSearchItem as $item) {
                 $finalResult[] = $item;
             }
 
-        } elseif (array_key_exists('CompanyDetails', $result)) {
+        } elseif (array_key_exists('CompanyDetails', $result) !== false) {
 
             foreach ($result->CompanyDetails as $item) {
                 $finalResult[] = $item;
+            }
+        } elseif (array_key_exists('CompanyAppointments', $result) !== false && $method == 'currentCompanyOfficers') {
+            $result = $result->CompanyAppointments;
+            if (array_key_exists('CoAppt', $result) !== false) {
+                foreach ($result->CoAppt as $item) {
+                    $appointmentType = (string)$item->AppointmentType;
+                    $appointmentStatus = (string)$item->AppointmentStatus;
+                    if ($appointmentStatus == 'CURRENT' &&
+                        in_array($appointmentType, $this->allowedAppointmentTypes) !== false) {
+                        $finalResult[] = [
+                            'title'       => ucfirst(strtolower((string)$item->Person->Title)),
+                            'firstName'   => (string)$item->Person->Forename,
+                            'surname'     => (string)$item->Person->Surname,
+                            'dateOfBirth' => (string)$item->Person->DOB,
+                        ];
+                    }
+                }
             }
         }
 
@@ -217,7 +255,10 @@ class CompaniesHouse extends ServiceAbstract
      */
     private function getRequestType($data)
     {
-        if (!in_array($data['type'], array('nameSearch', 'numberSearch', 'companyDetails'))) {
+        if (!in_array(
+            $data['type'],
+            array('nameSearch', 'numberSearch', 'companyDetails', 'currentCompanyOfficers')
+        )) {
             throw new RestResponseException('Wrong request type - ' . $data['type'], Response::STATUS_CODE_500);
         }
 
