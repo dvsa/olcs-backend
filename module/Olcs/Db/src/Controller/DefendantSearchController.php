@@ -19,6 +19,12 @@ class DefendantSearchController extends AbstractBasicRestServerController
 {
     protected $allowedMethods = array('get', 'getList');
 
+    /**
+     * Get List Service method
+     *
+     * @return array list results
+     * @throws RestResponseException
+     */
     public function getList()
     {
         $options = $this->getDataFromQuery();
