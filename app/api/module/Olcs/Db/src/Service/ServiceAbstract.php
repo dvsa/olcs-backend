@@ -183,11 +183,6 @@ abstract class ServiceAbstract
             }
         }
 
-        if ($this->canSoftDelete()) {
-            $qb->$whereMethod('a.isDeleted = 0');
-            $whereMethod = 'andWhere';
-        }
-
         if (!empty($params)) {
             $qb->setParameters($params);
         }
@@ -315,13 +310,9 @@ abstract class ServiceAbstract
 
         $data = $this->processAddressEntity($data);
 
-        if ($this->canSoftDelete()) {
-            $entity = $this->getUnDeletedById($id);
-        } else {
-            $entity = $this->getEntityManager()->find(
-                $this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']
-            );
-        }
+        $entity = $this->getEntityManager()->find(
+            $this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']
+        );
 
         if (empty($entity)) {
             return false;
@@ -357,12 +348,7 @@ abstract class ServiceAbstract
             return false;
         }
 
-        if ($this->canSoftDelete()) {
-            $entity->setIsDeleted(true);
-            $this->dbPersist($entity);
-        } else {
-            $this->getEntityManager()->remove($entity);
-        }
+        $this->getEntityManager()->remove($entity);
         $this->dbFlush();
 
         return true;
@@ -436,30 +422,6 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Whether you can soft delete the entity
-     *
-     * @return boolean
-     */
-    public function canSoftDelete()
-    {
-        return property_exists($this->getEntityName(), 'isDeleted');
-    }
-
-    /**
-     * Get an entity if it's not soft deleted
-     *
-     * @param int $id
-     *
-     * @return object
-     */
-    public function getUnDeletedById($id)
-    {
-        return $this->getEntityManager()
-                ->getRepository($this->getEntityName())
-                ->findOneBy(array('id' => (int) $id, 'isDeleted' => '0'));
-    }
-
-    /**
      * Get ane entity by it's id
      *
      * @param int $id
@@ -467,10 +429,6 @@ abstract class ServiceAbstract
      */
     public function getEntityById($id)
     {
-        if ($this->canSoftDelete()) {
-            return $this->getUnDeletedById($id);
-        }
-
         return $this->getEntityManager()->find($this->getEntityName(), (int) $id);
     }
 
