@@ -5,7 +5,8 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
         "doctrine/doctrine-orm-module": "0.*",
-        "phpunit/phpunit": "4.0.*"
+        "phpunit/phpunit": "4.0.*",
+        "gedmo/doctrine-extensions": "~2.3.9"
     },
     "autoload": {
         "psr-4": {
