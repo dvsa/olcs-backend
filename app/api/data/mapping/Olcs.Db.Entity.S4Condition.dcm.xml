@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\S4Condition" table="s4_condition">
+    <indexes>
+      <index name="fk_s4_condition_Condition1_idx" columns="source_condition_id"/>
+      <index name="fk_s4_condition_Condition2_idx" columns="target_condition_id"/>
+      <index name="fk_s4_condition_s41_idx" columns="s4_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <many-to-one field="s4" target-entity="Olcs\Db\Entity\S4">
+      <join-columns>
+        <join-column name="s4_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="targetCondition" target-entity="Olcs\Db\Entity\ConditionUndertaking">
+      <join-columns>
+        <join-column name="target_condition_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="sourceCondition" target-entity="Olcs\Db\Entity\ConditionUndertaking">
+      <join-columns>
+        <join-column name="source_condition_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

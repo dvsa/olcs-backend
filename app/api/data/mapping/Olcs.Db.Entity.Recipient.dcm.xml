@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\Recipient" table="recipient">
+    <indexes>
+      <index name="fk_recipient_contact_details1_idx" columns="contact_details_id"/>
+      <index name="fk_recipient_user1_idx" columns="created_by"/>
+      <index name="fk_recipient_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="sendAppDecision" type="boolean" column="send_app_decision" nullable="false"/>
+    <field name="sendNoticesProcs" type="boolean" column="send_notices_procs" nullable="false"/>
+    <field name="isPolice" type="boolean" column="is_police" nullable="false"/>
+    <field name="isObjector" type="boolean" column="is_objector" nullable="false"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="contactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="trafficArea" target-entity="Olcs\Db\Entity\TrafficArea" inversed-by="recipient">
+      <join-table name="recipient_traffic_area">
+        <join-columns>
+          <join-column name="recipient_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="traffic_area_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

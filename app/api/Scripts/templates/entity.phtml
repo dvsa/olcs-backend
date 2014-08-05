@@ -1,13 +1,13 @@
 <<?php /* Cheeky Hack */ ?>?php
 
-namespace OlcsEntities\Entity;
+namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
 <?php endif; ?>
 <?php if (!empty($details['traits'])): ?>
-use OlcsEntities\Entity\Traits;
+use Olcs\Db\Entity\Traits;
 <?php endif; ?>
 
 /**

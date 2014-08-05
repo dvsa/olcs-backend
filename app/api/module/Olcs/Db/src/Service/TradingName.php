@@ -24,7 +24,7 @@ class TradingName extends ServiceAbstract
     public function removeAll($licenceId)
     {
         $query = $this->getEntityManager()->createQuery(
-            'delete from OlcsEntities\Entity\TradingName tm where tm.licence = ' . $licenceId
+            'delete from Olcs\Db\Entity\TradingName tm where tm.licence = ' . $licenceId
         );
         $query->execute();
     }

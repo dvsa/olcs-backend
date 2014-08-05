@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\OperatingCentreOpposition" table="operating_centre_opposition">
+    <indexes>
+      <index name="fk_opposition_operating_centre_opposition1_idx" columns="opposition_id"/>
+      <index name="fk_opposition_operating_centre_operating_centre1_idx" columns="operating_centre_id"/>
+      <index name="fk_operating_centre_opposition_user1_idx" columns="created_by"/>
+      <index name="fk_operating_centre_opposition_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="operatingCentre" target-entity="Olcs\Db\Entity\OperatingCentre">
+      <join-columns>
+        <join-column name="operating_centre_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="opposition" target-entity="Olcs\Db\Entity\Opposition">
+      <join-columns>
+        <join-column name="opposition_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

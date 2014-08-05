@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\TeamPrinter" table="team_printer">
+    <indexes>
+      <index name="fk_team_has_printer_printer1_idx" columns="printer_id"/>
+      <index name="fk_team_has_printer_team1_idx" columns="team_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="documentType" type="string" column="document_type" length="45" nullable="true"/>
+    <many-to-one field="printer" target-entity="Olcs\Db\Entity\Printer">
+      <join-columns>
+        <join-column name="printer_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="team" target-entity="Olcs\Db\Entity\Team">
+      <join-columns>
+        <join-column name="team_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

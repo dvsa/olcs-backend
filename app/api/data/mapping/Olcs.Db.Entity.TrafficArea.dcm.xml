@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\TrafficArea" table="traffic_area">
+    <indexes>
+      <index name="fk_traffic_area_user1_idx" columns="created_by"/>
+      <index name="fk_traffic_area_user2_idx" columns="last_modified_by"/>
+      <index name="fk_traffic_area_contact_details1_idx" columns="contact_details_id"/>
+    </indexes>
+    <id name="id" type="string" column="id" length="1">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="name" length="70" nullable="false"/>
+    <field name="txcName" type="string" column="txc_name" length="70" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="contactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="recipient" target-entity="Olcs\Db\Entity\Recipient" mapped-by="trafficArea"/>
+  </entity>
+</doctrine-mapping>
