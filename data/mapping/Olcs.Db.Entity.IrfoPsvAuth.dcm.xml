@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\IrfoPsvAuth" table="irfo_psv_auth">
+    <indexes>
+      <index name="fk_irfo_psv_auth_user1_idx" columns="created_by"/>
+      <index name="fk_irfo_psv_auth_user2_idx" columns="last_modified_by"/>
+      <index name="fk_irfo_psv_auth_organisation1_idx" columns="organisation_id"/>
+      <index name="fk_irfo_psv_auth_ref_data1_idx" columns="journey_frequency"/>
+      <index name="fk_irfo_psv_auth_irfo_psv_auth_type1_idx" columns="irfo_psv_auth_type_id"/>
+      <index name="fk_irfo_psv_auth_ref_data2_idx" columns="status"/>
+      <index name="fk_irfo_psv_auth_ref_data3_idx" columns="withdrawn_reason"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="exemptionDetails" type="string" column="exemption_details" length="255" nullable="true"/>
+    <field name="expiryDate" type="date" column="expiry_date" nullable="true"/>
+    <field name="isFeeExemptApplication" type="boolean" column="is_fee_exempt_application" nullable="false"/>
+    <field name="isFeeExemptAnnual" type="boolean" column="is_fee_exempt_annual" nullable="false"/>
+    <field name="inForceDate" type="date" column="in_force_date" nullable="true"/>
+    <field name="irfoFeeId" type="string" column="irfo_fee_id" length="10" nullable="false"/>
+    <field name="irfoFileNo" type="string" column="irfo_file_no" length="10" nullable="false"/>
+    <field name="copiesIssued" type="integer" column="copies_issued" nullable="false"/>
+    <field name="copiesRequired" type="integer" column="copies_required" nullable="false"/>
+    <field name="copiesRequiredTotal" type="integer" column="copies_required_total" nullable="false"/>
+    <field name="copiesIssuedTotal" type="integer" column="copies_issued_total" nullable="false"/>
+    <field name="lastDateCopiesReq" type="datetime" column="last_date_copies_req" nullable="true"/>
+    <field name="renewalDate" type="date" column="renewal_date" nullable="true"/>
+    <field name="serviceRouteFrom" type="string" column="service_route_from" length="30" nullable="false"/>
+    <field name="serviceRouteTo" type="string" column="service_route_to" length="30" nullable="false"/>
+    <field name="validityPeriod" type="integer" column="validity_period" nullable="false"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="status" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="status" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="withdrawnReason" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="withdrawn_reason" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="irfoPsvAuthType" target-entity="Olcs\Db\Entity\IrfoPsvAuthType">
+      <join-columns>
+        <join-column name="irfo_psv_auth_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="journeyFrequency" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="journey_frequency" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="organisation" target-entity="Olcs\Db\Entity\Organisation">
+      <join-columns>
+        <join-column name="organisation_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

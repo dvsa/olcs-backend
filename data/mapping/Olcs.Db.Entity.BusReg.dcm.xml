@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\BusReg" table="bus_reg">
+    <indexes>
+      <index name="fk_bus_reg_licence1_idx" columns="licence_id"/>
+      <index name="fk_bus_reg_bus_notice_period1_idx" columns="bus_notice_period_id"/>
+      <index name="fk_bus_reg_ref_data1_idx" columns="subsidised"/>
+      <index name="fk_bus_reg_operating_centre1_idx" columns="operating_centre_id"/>
+      <index name="fk_bus_reg_user1_idx" columns="created_by"/>
+      <index name="fk_bus_reg_user2_idx" columns="last_modified_by"/>
+      <index name="fk_bus_reg_ref_data2_idx" columns="withdrawn_reason"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="routeNo" type="integer" column="route_no" nullable="false"/>
+    <field name="regNo" type="string" column="reg_no" length="70" nullable="false"/>
+    <field name="serviceNo" type="string" column="service_no" length="70" nullable="true"/>
+    <field name="startPoint" type="string" column="start_point" length="100" nullable="true"/>
+    <field name="finishPoint" type="string" column="finish_point" length="100" nullable="true"/>
+    <field name="via" type="string" column="via" length="255" nullable="true"/>
+    <field name="otherDetails" type="string" column="other_details" length="800" nullable="true"/>
+    <field name="receivedDate" type="date" column="received_date" nullable="true"/>
+    <field name="effectiveDate" type="date" column="effective_date" nullable="true"/>
+    <field name="endDate" type="date" column="end_date" nullable="true"/>
+    <field name="isShortNotice" type="boolean" column="is_short_notice" nullable="false"/>
+    <field name="useAllStops" type="boolean" column="use_all_stops" nullable="false"/>
+    <field name="hasManoeuvre" type="boolean" column="has_manoeuvre" nullable="false"/>
+    <field name="manoeuvreDetail" type="string" column="manoeuvre_detail" length="255" nullable="true"/>
+    <field name="needNewStop" type="boolean" column="need_new_stop" nullable="false"/>
+    <field name="newStopDetail" type="string" column="new_stop_detail" length="255" nullable="true"/>
+    <field name="hasNotFixedStop" type="boolean" column="has_not_fixed_stop" nullable="false"/>
+    <field name="notFixedStopDetail" type="string" column="not_fixed_stop_detail" length="255" nullable="true"/>
+    <field name="subsidyDetail" type="string" column="subsidy_detail" length="255" nullable="true"/>
+    <field name="timetableAcceptable" type="boolean" column="timetable_acceptable" nullable="false"/>
+    <field name="mapSupplied" type="boolean" column="map_supplied" nullable="false"/>
+    <field name="routeDescription" type="string" column="route_description" length="1000" nullable="true"/>
+    <field name="copiedToLaPte" type="boolean" column="copied_to_la_pte" nullable="false"/>
+    <field name="laShortNote" type="boolean" column="la_short_note" nullable="false"/>
+    <field name="applicationSigned" type="boolean" column="application_signed" nullable="false"/>
+    <field name="completedDate" type="date" column="completed_date" nullable="true"/>
+    <field name="routeSeq" type="integer" column="route_seq" nullable="false"/>
+    <field name="opNotifiedLaPte" type="boolean" column="op_notified_la_pte" nullable="false"/>
+    <field name="stoppingArrangements" type="string" column="stopping_arrangements" length="800" nullable="true"/>
+    <field name="trcConditionChecked" type="boolean" column="trc_condition_checked" nullable="false"/>
+    <field name="trcNotes" type="string" column="trc_notes" length="255" nullable="true"/>
+    <field name="status" type="string" column="status" length="20" nullable="false"/>
+    <field name="revertStatus" type="string" column="revert_status" length="20" nullable="true"/>
+    <field name="organisationEmail" type="string" column="organisation_email" length="255" nullable="true"/>
+    <field name="isTxcApp" type="boolean" column="is_txc_app" nullable="false"/>
+    <field name="txcAppType" type="string" column="txc_app_type" length="20" nullable="true"/>
+    <field name="reasonCancelled" type="string" column="reason_cancelled" length="255" nullable="true"/>
+    <field name="reasonRefused" type="string" column="reason_refused" length="255" nullable="true"/>
+    <field name="reasonSnRefused" type="string" column="reason_sn_refused" length="255" nullable="true"/>
+    <field name="shortNoticeRefused" type="boolean" column="short_notice_refused" nullable="false"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="withdrawnReason" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="withdrawn_reason" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="licence" target-entity="Olcs\Db\Entity\Licence">
+      <join-columns>
+        <join-column name="licence_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="operatingCentre" target-entity="Olcs\Db\Entity\OperatingCentre">
+      <join-columns>
+        <join-column name="operating_centre_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="busNoticePeriod" target-entity="Olcs\Db\Entity\BusNoticePeriod">
+      <join-columns>
+        <join-column name="bus_notice_period_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="subsidised" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="subsidised" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="variationReason" target-entity="Olcs\Db\Entity\VariationReason" inversed-by="busReg">
+      <join-table name="bus_reg_variation_reason">
+        <join-columns>
+          <join-column name="bus_reg_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="variation_reason_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <many-to-many field="busServiceType" target-entity="Olcs\Db\Entity\BusServiceType" mapped-by="busReg"/>
+  </entity>
+</doctrine-mapping>

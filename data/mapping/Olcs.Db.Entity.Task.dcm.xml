@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\Task" table="task">
+    <indexes>
+      <index name="fk_task_user1_idx" columns="assigned_to_user_id"/>
+      <index name="fk_task_team1_idx" columns="assigned_to_team_id"/>
+      <index name="fk_task_user2_idx" columns="assigned_by_user_id"/>
+      <index name="fk_task_licence1_idx" columns="licence_id"/>
+      <index name="fk_task_application1_idx" columns="application_id"/>
+      <index name="fk_task_bus_reg1_idx" columns="bus_reg_id"/>
+      <index name="fk_task_transport_manager1_idx" columns="transport_manager_id"/>
+      <index name="fk_task_organisation1_idx" columns="irfo_organisation_id"/>
+      <index name="fk_task_user3_idx" columns="created_by"/>
+      <index name="fk_task_user4_idx" columns="last_modified_by"/>
+      <index name="fk_task_category1_idx" columns="category_id"/>
+      <index name="fk_task_task_sub_category1_idx" columns="task_sub_category_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="isClosed" type="boolean" column="is_closed" nullable="false"/>
+    <field name="transportManagerCaseId" type="integer" column="transport_manager_case_id" nullable="true"/>
+    <field name="description" type="string" column="description" length="4000" nullable="true"/>
+    <field name="actionDate" type="date" column="action_date" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="irfoOrganisation" target-entity="Olcs\Db\Entity\Organisation">
+      <join-columns>
+        <join-column name="irfo_organisation_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="category" target-entity="Olcs\Db\Entity\Category">
+      <join-columns>
+        <join-column name="category_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="taskSubCategory" target-entity="Olcs\Db\Entity\TaskSubCategory">
+      <join-columns>
+        <join-column name="task_sub_category_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="transportManager" target-entity="Olcs\Db\Entity\TransportManager">
+      <join-columns>
+        <join-column name="transport_manager_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="busReg" target-entity="Olcs\Db\Entity\BusReg">
+      <join-columns>
+        <join-column name="bus_reg_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="assignedToTeam" target-entity="Olcs\Db\Entity\Team">
+      <join-columns>
+        <join-column name="assigned_to_team_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="assignedByUser" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="assigned_by_user_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="licence" target-entity="Olcs\Db\Entity\Licence">
+      <join-columns>
+        <join-column name="licence_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+      <join-columns>
+        <join-column name="application_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="assignedToUser" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="assigned_to_user_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\PreviousLicence" table="previous_licence">
+    <indexes>
+      <index name="fk_previous_licence_application1_idx" columns="application_id"/>
+      <index name="fk_previous_licence_ref_data1_idx" columns="previous_licence_type"/>
+      <index name="fk_previous_licence_user1_idx" columns="created_by"/>
+      <index name="fk_previous_licence_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="licNo" type="string" column="lic_no" length="18" nullable="true"/>
+    <field name="holderName" type="string" column="holder_name" length="90" nullable="true"/>
+    <field name="purchaseDate" type="date" column="purchase_date" nullable="true"/>
+    <field name="willSurrender" type="boolean" column="will_surrender" nullable="true"/>
+    <field name="disqualificationDate" type="date" column="disqualification_date" nullable="true"/>
+    <field name="disqualificationLength" type="integer" column="disqualification_length" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="previousLicenceType" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="previous_licence_type" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+      <join-columns>
+        <join-column name="application_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

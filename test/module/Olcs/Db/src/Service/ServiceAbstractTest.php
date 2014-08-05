@@ -1433,7 +1433,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $className = get_class($this->service);
 
-        $this->assertEquals('\OlcsEntities\Entity\\' . $className, $this->service->getEntityName());
+        $this->assertEquals('\Olcs\Db\Entity\\' . $className, $this->service->getEntityName());
     }
 
     /**

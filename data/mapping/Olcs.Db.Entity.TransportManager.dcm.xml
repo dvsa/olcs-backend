@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\TransportManager" table="transport_manager">
+    <indexes>
+      <index name="fk_transport_manager_ref_data1_idx" columns="tm_status"/>
+      <index name="fk_transport_manager_ref_data2_idx" columns="tm_type"/>
+      <index name="fk_transport_manager_contact_details1_idx" columns="contact_details_id"/>
+      <index name="fk_transport_manager_user1_idx" columns="created_by"/>
+      <index name="fk_transport_manager_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="disqualificationTmCaseId" type="integer" column="disqualification_tm_case_id" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
+    <field name="nysiisFamilyName" type="string" column="nysiis_family_name" length="100" nullable="true"/>
+    <field name="nysiisForename" type="string" column="nysiis_forename" length="100" nullable="true"/>
+    <field name="notes" type="string" column="notes" length="4000" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="contactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="tmType" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="tm_type" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="tmStatus" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="tm_status" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

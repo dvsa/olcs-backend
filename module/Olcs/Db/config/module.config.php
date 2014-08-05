@@ -123,5 +123,29 @@ return array(
     'companies_house_credentials' => array(
         'password' => 'XMLGatewayTestPassword',
         'userId'   => 'XMLGatewayTestUserID'
-    )
+    ),
+    'doctrine' => [
+        'driver' => [
+            'EntityDriver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    __DIR__ . '/../src/Entity'
+                ]
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'Olcs\Db\Entity' => 'EntityDriver'
+                ]
+            ]
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'types' => [
+                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
+                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
+                ]
+            ]
+        ]
+    ]
 );

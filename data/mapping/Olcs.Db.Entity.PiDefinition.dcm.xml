@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\PiDefinition" table="pi_definition">
+    <indexes>
+      <index name="fk_pi_definition_pi_definition_category1_idx" columns="pi_definition_category_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="goodsOrPsv" type="string" column="goods_or_psv" length="3" nullable="false"/>
+    <field name="sectionCode" type="string" column="section_code" length="20" nullable="false"/>
+    <field name="definition" type="string" column="definition" length="255" nullable="false"/>
+    <field name="isNi" type="boolean" column="is_ni" nullable="false"/>
+    <many-to-one field="piDefinitionCategory" target-entity="Olcs\Db\Entity\PiDefinitionCategory">
+      <join-columns>
+        <join-column name="pi_definition_category_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

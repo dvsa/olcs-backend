@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\PiRescheduleDate" table="pi_reschedule_date">
+    <indexes>
+      <index name="fk_pi_reschedule_dates_pi_detail1_idx" columns="pi_detail_id"/>
+      <index name="fk_pi_reschedule_dates_presiding_tc1_idx" columns="presiding_tc_id"/>
+      <index name="fk_pi_reschedule_dates_ref_data1_idx" columns="presided_by"/>
+      <index name="fk_pi_reschedule_date_user1_idx" columns="created_by"/>
+      <index name="fk_pi_reschedule_date_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="rescheduleDatetime" type="datetime" column="reschedule_datetime" nullable="true"/>
+    <field name="adjournmentDatetime" type="datetime" column="adjournment_datetime" nullable="true"/>
+    <field name="presidingTcOther" type="string" column="presiding_tc_other" length="45" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="presidedBy" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="presided_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="presidingTc" target-entity="Olcs\Db\Entity\PresidingTc">
+      <join-columns>
+        <join-column name="presiding_tc_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="piDetail" target-entity="Olcs\Db\Entity\PiDetail">
+      <join-columns>
+        <join-column name="pi_detail_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

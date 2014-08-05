@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\ApplicationCompletion" table="application_completion">
+    <indexes>
+      <index name="fk_application_completion_user1_idx" columns="created_by"/>
+      <index name="fk_application_completion_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="application" association-key="true"/>
+    <field name="sectionYbStatus" type="boolean" column="section_yb_status" nullable="true"/>
+    <field name="sectionYbBtStatus" type="boolean" column="section_yb_bt_status" nullable="true"/>
+    <field name="sectionYbBdStatus" type="boolean" column="section_yb_bd_status" nullable="true"/>
+    <field name="sectionYbAddStatus" type="boolean" column="section_yb_add_status" nullable="true"/>
+    <field name="sectionYbPeoStatus" type="boolean" column="section_yb_peo_status" nullable="true"/>
+    <field name="sectionTolStatus" type="boolean" column="section_tol_status" nullable="true"/>
+    <field name="sectionTolOlStatus" type="boolean" column="section_tol_ol_status" nullable="true"/>
+    <field name="sectionTolOtStatus" type="boolean" column="section_tol_ot_status" nullable="true"/>
+    <field name="sectionTolLtStatus" type="boolean" column="section_tol_lt_status" nullable="true"/>
+    <field name="sectionOcsStatus" type="boolean" column="section_ocs_status" nullable="true"/>
+    <field name="sectionOcsAuthStatus" type="boolean" column="section_ocs_auth_status" nullable="true"/>
+    <field name="sectionOcsFeStatus" type="boolean" column="section_ocs_fe_status" nullable="true"/>
+    <field name="sectionTmsStatus" type="boolean" column="section_tms_status" nullable="true"/>
+    <field name="sectionVehStatus" type="boolean" column="section_veh_status" nullable="true"/>
+    <field name="sectionVehVStatus" type="boolean" column="section_veh_v_status" nullable="true"/>
+    <field name="sectionVehVpsvStatus" type="boolean" column="section_veh_vpsv_status" nullable="true"/>
+    <field name="sectionVehSStatus" type="boolean" column="section_veh_s_status" nullable="true"/>
+    <field name="sectionPhStatus" type="boolean" column="section_ph_status" nullable="true"/>
+    <field name="sectionPhFhStatus" type="boolean" column="section_ph_fh_status" nullable="true"/>
+    <field name="sectionPhLhStatus" type="boolean" column="section_ph_lh_status" nullable="true"/>
+    <field name="sectionPhCpStatus" type="boolean" column="section_ph_cp_status" nullable="true"/>
+    <field name="sectionRdStatus" type="boolean" column="section_rd_status" nullable="true"/>
+    <field name="sectionPayStatus" type="boolean" column="section_pay_status" nullable="true"/>
+    <field name="sectionSubStatus" type="boolean" column="section_sub_status" nullable="true"/>
+    <field name="sectionPayPayStatus" type="boolean" column="section_pay_pay_status" nullable="true"/>
+    <field name="sectionPaySummaryStatus" type="boolean" column="section_pay_summary_status" nullable="true"/>
+    <field name="sectionTpLicStatus" type="boolean" column="section_tp_lic_status" nullable="true"/>
+    <field name="lastSection" type="string" column="last_section" length="255" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <one-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+      <join-columns>
+        <join-column name="application_id" referenced-column-name="id"/>
+      </join-columns>
+    </one-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

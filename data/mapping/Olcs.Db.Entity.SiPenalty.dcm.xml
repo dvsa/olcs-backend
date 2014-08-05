@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\SiPenalty" table="si_penalty">
+    <indexes>
+      <index name="fk_si_penalty_serious_infringement1_idx" columns="serious_infringement_id"/>
+      <index name="fk_si_penalty_si_penalty_type1_idx" columns="si_penalty_type_id"/>
+      <index name="fk_si_penalty_user1_idx" columns="created_by"/>
+      <index name="fk_si_penalty_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="imposed" type="boolean" column="imposed" nullable="true"/>
+    <field name="startDate" type="date" column="start_date" nullable="true"/>
+    <field name="endDate" type="date" column="end_date" nullable="true"/>
+    <field name="reasonNotImposed" type="string" column="reason_not_imposed" length="500" nullable="true"/>
+    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="siPenaltyType" target-entity="Olcs\Db\Entity\SiPenaltyType">
+      <join-columns>
+        <join-column name="si_penalty_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="seriousInfringement" target-entity="Olcs\Db\Entity\SeriousInfringement">
+      <join-columns>
+        <join-column name="serious_infringement_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

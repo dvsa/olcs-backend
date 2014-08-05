@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\InspectionEmail" table="inspection_email">
+    <indexes>
+      <index name="fk_ea_inspection_email_inspection_request1_idx" columns="inspection_request_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="subject" type="string" column="subject" length="1024" nullable="false"/>
+    <field name="messageBody" type="text" column="message_body" nullable="true"/>
+    <field name="emailStatus" type="string" column="email_status" length="1" nullable="false"/>
+    <field name="processed" type="boolean" column="processed" nullable="false"/>
+    <field name="senderEmailAddress" type="string" column="sender_email_address" length="200" nullable="true"/>
+    <field name="receivedDate" type="datetime" column="received_date" nullable="false"/>
+    <many-to-one field="inspectionRequest" target-entity="Olcs\Db\Entity\InspectionRequest">
+      <join-columns>
+        <join-column name="inspection_request_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

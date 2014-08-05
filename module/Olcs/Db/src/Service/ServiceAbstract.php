@@ -394,7 +394,7 @@ abstract class ServiceAbstract
     /**
      * Returns a new instance of the entity.
      *
-     * @return \OlcsEntities\Entity\EntityInterface
+     * @return \Olcs\Db\Entity\EntityInterface
      */
     public function getNewEntity()
     {
@@ -411,7 +411,7 @@ abstract class ServiceAbstract
     public function getEntityName()
     {
         if (!isset($this->entityName)) {
-            $entityPrefix = '\OlcsEntities\Entity\\';
+            $entityPrefix = '\Olcs\Db\Entity\\';
 
             $class = get_called_class();
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\TrafficAreaEnforcementArea" table="traffic_area_enforcement_area">
+    <indexes>
+      <index name="fk_TrafficAreaVehicleInspectorate_TrafficArea1_idx" columns="traffic_area_id"/>
+      <index name="fk_TrafficAreaVehicleInspectorate_VehicleInspectorate1_idx" columns="enforcement_area_id"/>
+      <index name="fk_traffic_area_enforcement_area_user1_idx" columns="created_by"/>
+      <index name="fk_traffic_area_enforcement_area_user2_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="trafficArea" association-key="true"/>
+    <id name="enforcementArea" association-key="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <one-to-one field="trafficArea" target-entity="Olcs\Db\Entity\TrafficArea">
+      <join-columns>
+        <join-column name="traffic_area_id" referenced-column-name="id"/>
+      </join-columns>
+    </one-to-one>
+    <one-to-one field="enforcementArea" target-entity="Olcs\Db\Entity\EnforcementArea">
+      <join-columns>
+        <join-column name="enforcement_area_id" referenced-column-name="id"/>
+      </join-columns>
+    </one-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

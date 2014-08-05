@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\Hearing" table="hearing">
+    <indexes>
+      <index name="fk_hearing_cases1_idx" columns="case_id"/>
+      <index name="fk_hearing_pi_venue1_idx" columns="venue_id"/>
+      <index name="fk_hearing_user1_idx" columns="created_by"/>
+      <index name="fk_hearing_user2_idx" columns="last_modified_by"/>
+      <index name="fk_hearing_presiding_tc1_idx" columns="presiding_tc_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="hearingDate" type="datetime" column="hearing_date" nullable="true"/>
+    <field name="agreedByTcDate" type="date" column="agreed_by_tc_date" nullable="true"/>
+    <field name="witnessCount" type="integer" column="witness_count" nullable="false"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="presidingTc" target-entity="Olcs\Db\Entity\PresidingTc">
+      <join-columns>
+        <join-column name="presiding_tc_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="venue" target-entity="Olcs\Db\Entity\PiVenue">
+      <join-columns>
+        <join-column name="venue_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="case" target-entity="Olcs\Db\Entity\Cases">
+      <join-columns>
+        <join-column name="case_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

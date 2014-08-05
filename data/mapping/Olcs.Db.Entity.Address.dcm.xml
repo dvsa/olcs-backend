@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\Address" table="address">
+    <indexes>
+      <index name="fk_address_country1_idx" columns="country_code"/>
+      <index name="fk_address_user1_idx" columns="created_by"/>
+      <index name="fk_address_user2_idx" columns="last_modified_by"/>
+      <index name="fk_address_admin_area_traffic_area1_idx" columns="admin_area"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="uprn" type="bigint" column="uprn" nullable="true"/>
+    <field name="paonStart" type="string" column="paon_start" length="5" nullable="true"/>
+    <field name="paonEnd" type="string" column="paon_end" length="5" nullable="true"/>
+    <field name="paonDesc" type="string" column="paon_desc" length="90" nullable="true"/>
+    <field name="saonStart" type="string" column="saon_start" length="5" nullable="true"/>
+    <field name="saonEnd" type="string" column="saon_end" length="5" nullable="true"/>
+    <field name="saonDesc" type="string" column="saon_desc" length="90" nullable="true"/>
+    <field name="street" type="string" column="street" length="100" nullable="true"/>
+    <field name="locality" type="string" column="locality" length="35" nullable="true"/>
+    <field name="town" type="string" column="town" length="30" nullable="true"/>
+    <field name="postcode" type="string" column="postcode" length="8" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="adminArea" target-entity="Olcs\Db\Entity\AdminAreaTrafficArea">
+      <join-columns>
+        <join-column name="admin_area" referenced-column-name="admin_area"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="countryCode" target-entity="Olcs\Db\Entity\Country">
+      <join-columns>
+        <join-column name="country_code" referenced-column-name="country_code"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

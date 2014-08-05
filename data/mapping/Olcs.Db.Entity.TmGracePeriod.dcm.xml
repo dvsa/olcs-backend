@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\TmGracePeriod" table="tm_grace_period">
+    <indexes>
+      <index name="fk_transport_manager_grace_period_licence1_idx" columns="licence_id"/>
+      <index name="fk_transport_manager_grace_period_user1_idx" columns="assigned_to_user_id"/>
+      <index name="fk_transport_manager_grace_period_user2_idx" columns="created_by"/>
+      <index name="fk_transport_manager_grace_period_user3_idx" columns="last_modified_by"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="isActive" type="boolean" column="is_active" nullable="false"/>
+    <field name="startDate" type="date" column="start_date" nullable="false"/>
+    <field name="endDate" type="date" column="end_date" nullable="false"/>
+    <field name="actionDate" type="datetime" column="action_date" nullable="false"/>
+    <field name="gracePeriodNo" type="integer" column="grace_period_no" nullable="false"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="assignedToUser" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="assigned_to_user_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="licence" target-entity="Olcs\Db\Entity\Licence">
+      <join-columns>
+        <join-column name="licence_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

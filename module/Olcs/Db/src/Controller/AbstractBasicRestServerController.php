@@ -246,7 +246,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         if (!$this->serviceExists($name)) {
 
-            return $serviceFactory->getService('Generic')->setEntityName('\OlcsEntities\Entity\\' . $name);
+            return $serviceFactory->getService('Generic')->setEntityName('\Olcs\Db\Entity\\' . $name);
         }
 
         return $serviceFactory->getService($name);

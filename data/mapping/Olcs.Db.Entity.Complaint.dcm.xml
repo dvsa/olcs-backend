@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\Complaint" table="complaint">
+    <indexes>
+      <index name="fk_complaint_contact_details1_idx" columns="complainant_contact_details_id"/>
+      <index name="fk_complaint_user1_idx" columns="created_by"/>
+      <index name="fk_complaint_user2_idx" columns="last_modified_by"/>
+      <index name="fk_complaint_organisation1_idx" columns="organisation_id"/>
+      <index name="fk_complaint_ref_data1_idx" columns="status"/>
+      <index name="fk_complaint_ref_data2_idx" columns="complaint_type"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="complaintDate" type="datetime" column="complaint_date" nullable="true"/>
+    <field name="value" type="string" column="value" length="8" nullable="true"/>
+    <field name="description" type="string" column="description" length="4000" nullable="true"/>
+    <field name="driverId" type="integer" column="driver_id" nullable="true"/>
+    <field name="vrm" type="string" column="vrm" length="20" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="status" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="status" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="complaintType" target-entity="Olcs\Db\Entity\RefData">
+      <join-columns>
+        <join-column name="complaint_type" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="organisation" target-entity="Olcs\Db\Entity\Organisation">
+      <join-columns>
+        <join-column name="organisation_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="complainantContactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="complainant_contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

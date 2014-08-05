@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\User" table="user">
+    <indexes>
+      <index name="fk_user_team1_idx" columns="team_id"/>
+      <index name="fk_user_local_authority1_idx" columns="local_authority_id"/>
+      <index name="fk_user_user1_idx" columns="created_by"/>
+      <index name="fk_user_user2_idx" columns="last_modified_by"/>
+      <index name="fk_user_contact_details1_idx" columns="contact_details_id"/>
+      <index name="fk_user_contact_details2_idx" columns="partner_contact_details_id"/>
+      <index name="fk_user_transport_manager1_idx" columns="transport_manager_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="emailAddress" type="string" column="email_address" length="45" nullable="true"/>
+    <field name="pid" type="integer" column="pid" nullable="true"/>
+    <field name="name" type="string" column="name" length="100" nullable="true"/>
+    <field name="accountDisabled" type="boolean" column="account_disabled" nullable="false"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="partnerContactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="partner_contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="transportManager" target-entity="Olcs\Db\Entity\TransportManager">
+      <join-columns>
+        <join-column name="transport_manager_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="contactDetails" target-entity="Olcs\Db\Entity\ContactDetails">
+      <join-columns>
+        <join-column name="contact_details_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="localAuthority" target-entity="Olcs\Db\Entity\LocalAuthority">
+      <join-columns>
+        <join-column name="local_authority_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="team" target-entity="Olcs\Db\Entity\Team">
+      <join-columns>
+        <join-column name="team_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

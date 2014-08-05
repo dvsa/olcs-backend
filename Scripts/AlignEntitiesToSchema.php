@@ -18,9 +18,11 @@ use Zend\Filter\Word\CamelCaseToSeparator;
  */
 class AlignEntitiesToSchema
 {
+    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs_schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ -uroot -ppassword -dolcs\'';
+
     const PATH_TO_DOCTRINE = '/workspace/OLCS/olcs-backend/vendor/bin/doctrine-module';
 
-    const ENTITY_NAMESPACE = 'OlcsEntities\\Entity\\';
+    const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
 
     /**
      * Store the cli options
@@ -134,7 +136,14 @@ class AlignEntitiesToSchema
 
         require_once(__DIR__ . '/../init_autoloader.php');
 
-        $this->options = getopt('u:p:d:', array('import-schema:', 'mapping-files:', 'entity-files:', 'test-files:'));
+        $this->options = getopt(
+            'u:p:d:',
+            array('help', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:')
+        );
+
+        if (isset($this->options['help'])) {
+            $this->exitResponse(self::HELP);
+        }
 
         $this->checkForRequiredParams();
     }
@@ -309,7 +318,7 @@ class AlignEntitiesToSchema
     {
         $this->respond('Removing old entities...', 'info');
 
-        $entityDirectory = $this->options['entity-files'] . str_replace('\\', '/', self::ENTITY_NAMESPACE);
+        $entityDirectory = $this->options['entity-files'];
 
         $error = false;
 
@@ -344,7 +353,7 @@ class AlignEntitiesToSchema
     {
         $this->respond('Removing non-custom old traits ...', 'info');
 
-        $entityDirectory = $this->options['entity-files'] . str_replace('\\', '/', self::ENTITY_NAMESPACE) . 'Traits/';
+        $entityDirectory = $this->options['entity-files'] . 'Traits/';
 
         $error = false;
 
@@ -461,8 +470,8 @@ class AlignEntitiesToSchema
 
             $trait = ucwords($field['@attributes'][$ref]) . $description;
 
-            $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'OlcsEntities/Entity/Traits/', $trait);
-            $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'OlcsEntities/Entity/Traits/Custom', $trait);
+            $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
+            $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
 
             // If we have a custom trait that already exists, skip it
             if (file_exists($customFileName)) {
@@ -483,14 +492,14 @@ class AlignEntitiesToSchema
                     $i++;
 
                     $trait = $oldTrait . 'Alt' . $i;
-                    $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'OlcsEntities/Entity/Traits/', $trait);
+                    $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
                 }
 
             }
 
             $details['trait'] = $trait;
 
-            $fluidReturn = '\\OlcsEntities\\Entity\\Interfaces\\EntityInterface';
+            $fluidReturn = '\\Olcs\\Db\\Entity\\Interfaces\\EntityInterface';
 
             ob_start();
                 include(__DIR__ . '/templates/trait.phtml');
@@ -603,7 +612,7 @@ class AlignEntitiesToSchema
     {
         $this->respond('Removing old entity unit tests...', 'info');
 
-        $directory = $this->options['test-files'] . str_replace('\\', '/', self::ENTITY_NAMESPACE);
+        $directory = $this->options['test-files'];
 
         $error = false;
 
@@ -765,7 +774,9 @@ class AlignEntitiesToSchema
     private function getUniqueConstraintsFromConfig($config)
     {
         return $this->standardiseArray(
-            isset($config['entity']['unique-constraints']['unique-constraint']) ? $config['entity']['unique-constraints']['unique-constraint'] : array()
+            isset($config['entity']['unique-constraints']['unique-constraint'])
+                ? $config['entity']['unique-constraints']['unique-constraint']
+                : array()
         );
     }
 
@@ -910,10 +921,12 @@ class AlignEntitiesToSchema
      */
     private function formatEntityFileName($className)
     {
+        $classNameParts = explode('\\', $className);
+
         return sprintf(
-            '%s%s.php',
+            '%s/%s.php',
             rtrim($this->options['entity-files'], '/'),
-            str_replace('\\', '/', $className)
+            array_pop($classNameParts)
         );
     }
 
@@ -925,10 +938,12 @@ class AlignEntitiesToSchema
      */
     private function formatUnitTestFileName($className)
     {
+        $classNameParts = explode('\\', $className);
+
         return sprintf(
-            '%s%sTest.php',
+            '%s/%sTest.php',
             rtrim($this->options['test-files'], '/'),
-            str_replace('\\', '/', $className)
+            array_pop($classNameParts)
         );
     }
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\EbsrSubmission" table="ebsr_submission">
+    <indexes>
+      <index name="fk_ebsr_submission_ebsr_submission_status1_idx" columns="ebsr_submission_status_id"/>
+      <index name="fk_ebsr_submission_ebsr_submission_type1_idx" columns="ebsr_submission_type_id"/>
+      <index name="fk_ebsr_submission_document1_idx" columns="document_id"/>
+      <index name="fk_ebsr_submission_bus_reg1_idx" columns="bus_reg_id"/>
+      <index name="fk_ebsr_submission_ebsr_submission_result1_idx" columns="ebsr_submission_result_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="submittedDate" type="datetime" column="submitted_date" nullable="true"/>
+    <field name="licenceNo" type="string" column="licence_no" length="7" nullable="true"/>
+    <field name="organisationEmailAddress" type="string" column="organisation_email_address" length="100" nullable="true"/>
+    <field name="applicationClassification" type="string" column="application_classification" length="32" nullable="true"/>
+    <field name="variationNo" type="integer" column="variation_no" nullable="true"/>
+    <field name="tanCode" type="string" column="tan_code" length="2" nullable="true"/>
+    <field name="registrationNo" type="string" column="registration_no" length="4" nullable="true"/>
+    <field name="validationStart" type="datetime" column="validation_start" nullable="true"/>
+    <field name="validationEnd" type="datetime" column="validation_end" nullable="true"/>
+    <field name="publishStart" type="datetime" column="publish_start" nullable="true"/>
+    <field name="publishEnd" type="datetime" column="publish_end" nullable="true"/>
+    <field name="processStart" type="datetime" column="process_start" nullable="true"/>
+    <field name="processEnd" type="datetime" column="process_end" nullable="true"/>
+    <field name="distributeStart" type="datetime" column="distribute_start" nullable="true"/>
+    <field name="distributeEnd" type="datetime" column="distribute_end" nullable="true"/>
+    <field name="distributeExpire" type="datetime" column="distribute_expire" nullable="true"/>
+    <field name="isFromFtp" type="boolean" column="is_from_ftp" nullable="false"/>
+    <field name="organisationId" type="integer" column="organisation_id" nullable="true"/>
+    <many-to-one field="ebsrSubmissionResult" target-entity="Olcs\Db\Entity\EbsrSubmissionResult">
+      <join-columns>
+        <join-column name="ebsr_submission_result_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="busReg" target-entity="Olcs\Db\Entity\BusReg">
+      <join-columns>
+        <join-column name="bus_reg_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="document" target-entity="Olcs\Db\Entity\Document">
+      <join-columns>
+        <join-column name="document_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="ebsrSubmissionType" target-entity="Olcs\Db\Entity\EbsrSubmissionType">
+      <join-columns>
+        <join-column name="ebsr_submission_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="ebsrSubmissionStatus" target-entity="Olcs\Db\Entity\EbsrSubmissionStatus">
+      <join-columns>
+        <join-column name="ebsr_submission_status_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

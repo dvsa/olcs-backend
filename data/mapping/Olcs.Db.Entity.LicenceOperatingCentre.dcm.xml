@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\LicenceOperatingCentre" table="licence_operating_centre">
+    <indexes>
+      <index name="fk_LicenceOperatingCentre_licence_idx" columns="licence_id"/>
+      <index name="fk_LicenceOperatingCentre_OperatingCentre1_idx" columns="operating_centre_id"/>
+      <index name="fk_licence_operating_centre_user1_idx" columns="created_by"/>
+      <index name="fk_licence_operating_centre_user2_idx" columns="last_modified_by"/>
+      <index name="fk_licence_operating_centre_s41_idx" columns="s4_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="adPlaced" type="boolean" column="ad_placed" nullable="false"/>
+    <field name="adPlacedIn" type="string" column="ad_placed_in" length="70" nullable="true"/>
+    <field name="adPlacedDate" type="date" column="ad_placed_date" nullable="true"/>
+    <field name="sufficientParking" type="boolean" column="sufficient_parking" nullable="false"/>
+    <field name="permission" type="boolean" column="permission" nullable="false"/>
+    <field name="noOfTrailersRequired" type="integer" column="no_of_trailers_required" nullable="true"/>
+    <field name="noOfVehiclesRequired" type="integer" column="no_of_vehicles_required" nullable="true"/>
+    <field name="noOfVehiclesPossessed" type="integer" column="no_of_vehicles_possessed" nullable="true"/>
+    <field name="noOfTrailersPossessed" type="integer" column="no_of_trailers_possessed" nullable="true"/>
+    <field name="viAction" type="string" column="vi_action" length="1" nullable="true"/>
+    <field name="addedDate" type="date" column="added_date" nullable="true"/>
+    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="isInterim" type="boolean" column="is_interim" nullable="true"/>
+    <field name="publicationAppropriate" type="boolean" column="publication_appropriate" nullable="true"/>
+    <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
+    <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="version" type="integer" column="version" nullable="false"/>
+    <many-to-one field="s4" target-entity="Olcs\Db\Entity\S4">
+      <join-columns>
+        <join-column name="s4_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="operatingCentre" target-entity="Olcs\Db\Entity\OperatingCentre">
+      <join-columns>
+        <join-column name="operating_centre_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="licence" target-entity="Olcs\Db\Entity\Licence">
+      <join-columns>
+        <join-column name="licence_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
