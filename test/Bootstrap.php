@@ -18,7 +18,9 @@ class Bootstrap
     public static function init()
     {
         // Setup the autloader
-        static::initAutoloader();
+        $loader = static::initAutoloader();
+
+        $loader->addPsr4('OlcsTest\\Db\\', __DIR__ . '/module/Olcs/Db/src/');
 
         // Grab the application config
         $config = include dirname(__DIR__) . '/config/application.config.php';
@@ -37,6 +39,8 @@ class Bootstrap
     protected static function initAutoloader()
     {
         require('init_autoloader.php');
+
+        return $loader;
     }
 }
 
