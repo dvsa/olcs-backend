@@ -70,13 +70,13 @@ class Address implements Interfaces\EntityInterface
     protected $paonEnd;
 
     /**
-     * Paon desc
+     * Address line2
      *
      * @var string
      *
      * @ORM\Column(type="string", name="paon_desc", length=90, nullable=true)
      */
-    protected $paonDesc;
+    protected $addressLine2;
 
     /**
      * Saon start
@@ -97,31 +97,31 @@ class Address implements Interfaces\EntityInterface
     protected $saonEnd;
 
     /**
-     * Saon desc
+     * Address line1
      *
      * @var string
      *
      * @ORM\Column(type="string", name="saon_desc", length=90, nullable=true)
      */
-    protected $saonDesc;
+    protected $addressLine1;
 
     /**
-     * Street
+     * Address line3
      *
      * @var string
      *
      * @ORM\Column(type="string", name="street", length=100, nullable=true)
      */
-    protected $street;
+    protected $addressLine3;
 
     /**
-     * Locality
+     * Address line4
      *
      * @var string
      *
      * @ORM\Column(type="string", name="locality", length=35, nullable=true)
      */
-    protected $locality;
+    protected $addressLine4;
 
     /**
      * Town
@@ -234,26 +234,26 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the paon desc
+     * Set the address line2
      *
-     * @param string $paonDesc
+     * @param string $addressLine2
      * @return \Olcs\Db\Entity\Address
      */
-    public function setPaonDesc($paonDesc)
+    public function setAddressLine2($addressLine2)
     {
-        $this->paonDesc = $paonDesc;
+        $this->addressLine2 = $addressLine2;
 
         return $this;
     }
 
     /**
-     * Get the paon desc
+     * Get the address line2
      *
      * @return string
      */
-    public function getPaonDesc()
+    public function getAddressLine2()
     {
-        return $this->paonDesc;
+        return $this->addressLine2;
     }
 
     /**
@@ -303,72 +303,72 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the saon desc
+     * Set the address line1
      *
-     * @param string $saonDesc
+     * @param string $addressLine1
      * @return \Olcs\Db\Entity\Address
      */
-    public function setSaonDesc($saonDesc)
+    public function setAddressLine1($addressLine1)
     {
-        $this->saonDesc = $saonDesc;
+        $this->addressLine1 = $addressLine1;
 
         return $this;
     }
 
     /**
-     * Get the saon desc
+     * Get the address line1
      *
      * @return string
      */
-    public function getSaonDesc()
+    public function getAddressLine1()
     {
-        return $this->saonDesc;
+        return $this->addressLine1;
     }
 
     /**
-     * Set the street
+     * Set the address line3
      *
-     * @param string $street
+     * @param string $addressLine3
      * @return \Olcs\Db\Entity\Address
      */
-    public function setStreet($street)
+    public function setAddressLine3($addressLine3)
     {
-        $this->street = $street;
+        $this->addressLine3 = $addressLine3;
 
         return $this;
     }
 
     /**
-     * Get the street
+     * Get the address line3
      *
      * @return string
      */
-    public function getStreet()
+    public function getAddressLine3()
     {
-        return $this->street;
+        return $this->addressLine3;
     }
 
     /**
-     * Set the locality
+     * Set the address line4
      *
-     * @param string $locality
+     * @param string $addressLine4
      * @return \Olcs\Db\Entity\Address
      */
-    public function setLocality($locality)
+    public function setAddressLine4($addressLine4)
     {
-        $this->locality = $locality;
+        $this->addressLine4 = $addressLine4;
 
         return $this;
     }
 
     /**
-     * Get the locality
+     * Get the address line4
      *
      * @return string
      */
-    public function getLocality()
+    public function getAddressLine4()
     {
-        return $this->locality;
+        return $this->addressLine4;
     }
 
     /**
