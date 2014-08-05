@@ -1,5 +1,5 @@
     /**
-     * <?php if ($item['isId']): ?>Identifier - <?php endif; ?><?php echo $this->getReadableStringFromName($field['@attributes'][$item['ref']]); ?>
+     * <?php if ($item['isId']): ?>Identifier - <?php endif; ?><?php echo $this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?>
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
@@ -50,4 +50,4 @@ foreach ($columns as $key => $joinColumn): ?>
      * @ORM\GeneratedValue(strategy="<?php echo $field['generator']['@attributes']['strategy']; ?>")
 <?php endif; ?>
      */
-    protected $<?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;
+    protected $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;

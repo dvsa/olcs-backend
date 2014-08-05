@@ -1,57 +1,57 @@
     /**
-     * Set the <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
+     * Set the <?php echo strtolower($this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]))); ?>
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $field['@attributes'][$item['ref']]; ?>s
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>s
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes']['field']; ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $field['@attributes'][$item['ref']]; ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>
 <?php endif; ?>
 
      * @return <?php echo $fluidReturn; ?>
 
      */
-    public function set<?php echo ucfirst($field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>($<?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>)
+    public function set<?php echo ucfirst((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>)
     {
-        $this-><?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?> = $<?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>;
+        $this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?> = $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>;
 
         return $this;
     }
 
 <?php /* if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
     /**
-     * Add a <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
+     * Add a <?php echo strtolower($this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]))); ?>
 
      *
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes'][$item['ref']]; ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>
 
      * @return <?php echo $fluidReturn; ?>
 
 
-    public function add<?php echo ucfirst($field['@attributes'][$item['ref']]); ?>($<?php echo $field['@attributes'][$item['ref']]; ?>)
+    public function add<?php echo ucfirst((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?>($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>)
     {
-        if (!$this-><?php echo $field['@attributes'][$item['ref']]; ?>s->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
-            $this-><?php echo $field['@attributes'][$item['ref']]; ?>s->add($<?php echo $field['@attributes'][$item['ref']]; ?>);
+        if (!$this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>s->contains($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>)) {
+            $this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>s->add($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>);
         }
 
         return $this;
     }
 
     /**
-     * Remove a <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
+     * Remove a <?php echo strtolower($this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]))); ?>
 
      *
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $field['@attributes'][$item['ref']]; ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>
 
      * @return <?php echo $fluidReturn; ?>
 
 
-    public function remove<?php echo ucfirst($field['@attributes'][$item['ref']]); ?>($<?php echo $field['@attributes'][$item['ref']]; ?>)
+    public function remove<?php echo ucfirst((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?>($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>)
     {
-        if ($this-><?php echo $field['@attributes'][$item['ref']]; ?>s->contains($<?php echo $field['@attributes'][$item['ref']]; ?>)) {
-            $this-><?php echo $field['@attributes'][$item['ref']]; ?>s->remove($<?php echo $field['@attributes'][$item['ref']]; ?>);
+        if ($this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>s->contains($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>)) {
+            $this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>s->remove($<?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?>);
         }
 
         return $this;
@@ -59,7 +59,7 @@
 
 <?php endif; */ ?>
     /**
-     * Get the <?php echo strtolower($this->getReadableStringFromName($field['@attributes'][$item['ref']])); ?>
+     * Get the <?php echo strtolower($this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]))); ?>
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
@@ -71,7 +71,7 @@
 <?php endif; ?>
 
      */
-    public function get<?php echo ucfirst($field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>()
+    public function get<?php echo ucfirst((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>()
     {
-        return $this-><?php echo $field['@attributes'][$item['ref']]; ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>;
+        return $this-><?php echo (isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]); ?><?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>s<?php endif; ?>;
     }

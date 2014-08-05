@@ -7,8 +7,8 @@
 SET foreign_key_checks = 0;
 ALTER TABLE document DISABLE KEYS;
 TRUNCATE TABLE document;
-ALTER TABLE document_category DISABLE KEYS;
-TRUNCATE TABLE document_category;
+ALTER TABLE category DISABLE KEYS;
+TRUNCATE TABLE category;
 ALTER TABLE document_sub_category DISABLE KEYS;
 TRUNCATE TABLE document_sub_category;
 
@@ -19,8 +19,8 @@ ALTER TABLE person DISABLE KEYS;
 TRUNCATE TABLE person;
 ALTER TABLE organisation DISABLE KEYS;
 TRUNCATE TABLE organisation;
-ALTER TABLE organisation_owner DISABLE KEYS;
-TRUNCATE TABLE organisation_owner;
+ALTER TABLE organisation_person DISABLE KEYS;
+TRUNCATE TABLE organisation_person;
 ALTER TABLE address DISABLE KEYS;
 TRUNCATE TABLE address;
 ALTER TABLE contact_details DISABLE KEYS;
@@ -33,16 +33,16 @@ ALTER TABLE trading_name DISABLE KEYS;
 TRUNCATE TABLE trading_name;
 ALTER TABLE fee DISABLE KEYS;
 TRUNCATE TABLE fee;
-ALTER TABLE tms_qualification DISABLE KEYS;
-TRUNCATE TABLE tms_qualification;
-ALTER TABLE tms_licence_link DISABLE KEYS;
-TRUNCATE TABLE tms_licence_link;
-ALTER TABLE person_disqualification DISABLE KEYS;
-TRUNCATE TABLE person_disqualification;
+ALTER TABLE tm_qualification DISABLE KEYS;
+TRUNCATE TABLE tm_qualification;
+ALTER TABLE transport_manager_licence DISABLE KEYS;
+TRUNCATE TABLE transport_manager_licence;
+ALTER TABLE disqualification DISABLE KEYS;
+TRUNCATE TABLE disqualification;
 ALTER TABLE operating_centre DISABLE KEYS;
 TRUNCATE TABLE operating_centre;
-ALTER TABLE vosa_case DISABLE KEYS;
-TRUNCATE TABLE vosa_case;
+ALTER TABLE cases DISABLE KEYS;
+TRUNCATE TABLE cases;
 ALTER TABLE conviction DISABLE KEYS;
 TRUNCATE TABLE conviction;
 ALTER TABLE traffic_area DISABLE KEYS;
@@ -55,8 +55,6 @@ ALTER TABLE note DISABLE KEYS;
 TRUNCATE TABLE note;
 ALTER TABLE vehicle DISABLE KEYS;
 TRUNCATE TABLE vehicle;
-ALTER TABLE licence_vehicle_usage DISABLE KEYS;
-TRUNCATE TABLE licence_vehicle_usage;
 ALTER TABLE licence_vehicle DISABLE KEYS;
 TRUNCATE TABLE licence_vehicle;
 ALTER TABLE prohibition DISABLE KEYS;
@@ -89,8 +87,8 @@ COMMIT;
 
 ALTER TABLE transport_manager_licence DISABLE KEYS;
 TRUNCATE TABLE transport_manager_licence;
-ALTER TABLE qualification DISABLE KEYS;
-TRUNCATE TABLE qualification;
+ALTER TABLE tm_qualification DISABLE KEYS;
+TRUNCATE TABLE tm_qualification;
 
 ALTER TABLE pi_reason DISABLE KEYS;
 TRUNCATE TABLE pi_reason;
@@ -117,8 +115,8 @@ INSERT INTO `transport_manager` VALUES (2,NULL,NULL,'active','External',NULL,NUL
 INSERT INTO `transport_manager_licence` VALUES (1,7,1,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `transport_manager_licence` VALUES (2,7,2,NULL,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO `qualification` VALUES (1,1,NULL,NULL,'UK','CPCSI',NULL,NULL,1);
-INSERT INTO `qualification` VALUES (2,2,NULL,NULL,'UK','CPCSN',NULL,NULL,1);
+INSERT INTO `tm_qualification` VALUES (1,1,NULL,NULL,'UK','CPCSI',NULL,NULL,1);
+INSERT INTO `tm_qualification` VALUES (2,2,NULL,NULL,'UK','CPCSN',NULL,NULL,1);
 
 INSERT INTO organisation
 SET id                      = 1,
@@ -254,7 +252,7 @@ SET id          = 10,
   first_name    = 'Peter',
   surname       = 'Smith',
   date_of_birth = '1965-07-12';
-INSERT INTO person_disqualification
+INSERT INTO disqualification
 SET id         = 10,
   Created_On   = NOW(),
   version      = 1,
@@ -276,7 +274,7 @@ SET id          = 12,
   first_name    = 'Tom',
   surname       = 'Cooper',
   date_of_birth = '1975-04-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 12,
   person_id          = 12,
   version            = 1,
@@ -285,8 +283,8 @@ SET id               = 12,
   last_modified_on    = NOW(),
   last_modified_by    = 3,
   qualification_type = 'CPCSI',
-  qualification_date = '2010-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '12',
   licence_id        = 7,
   internal_external = 'Internal';
@@ -297,7 +295,7 @@ SET id          = 13,
   first_name    = 'Mark',
   surname       = 'Anthony',
   date_of_birth = '1973-03-03';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 13,
   person_id          = 13,
   version            = 1,
@@ -306,12 +304,12 @@ SET id               = 13,
   last_modified_on    = NOW(),
   last_modified_by    = 3,
   qualification_type = 'CPCSN',
-  qualification_date = '2011-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2011-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '13',
   licence_id        = 7,
   internal_external = 'Internal';
-INSERT INTO person_disqualification
+INSERT INTO disqualification
 SET id         = 13,
   Created_On   = NOW(),
   version      = 1,
@@ -326,7 +324,7 @@ SET id          = 14,
   first_name    = 'Mark',
   surname       = 'Cooper',
   date_of_birth = '1975-02-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 14,
   person_id          = 14,
   version            = 1,
@@ -335,8 +333,8 @@ SET id               = 14,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSI',
-  qualification_date = '2012-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2012-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '14',
   licence_id        = 7,
   internal_external = 'Both';
@@ -347,7 +345,7 @@ SET id          = 15,
   first_name    = 'Tom',
   surname       = 'Anthony',
   date_of_birth = '1973-12-09';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 15,
   person_id          = 15,
   version            = 1,
@@ -356,12 +354,12 @@ SET id               = 15,
   last_modified_on    = NOW(),
   last_modified_by    = 3,
   qualification_type = 'CPCSN',
-  qualification_date = '2010-09-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-09-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '15',
   licence_id        = 7,
   internal_external = 'External';
-INSERT INTO person_disqualification
+INSERT INTO disqualification
 SET id         = 15,
   Created_On   = NOW(),
   version      = 1,
@@ -417,7 +415,7 @@ SET id            = 21,
   trailer_auth    = '8',
   F_Address_UID   = 21;
 
-INSERT INTO vosa_case
+INSERT INTO cases
 SET id        = 24,
   created_on  = '2013-11-12 12:27:33',
   licence     = 7,
@@ -471,7 +469,7 @@ SET id               = 25,
   operator_name      = 'John Smith Haulage Ltd.',
   def_type           = 'defendant_type.operator',
   f_person_uid       = 4,
-  vosa_case_id       = 28,
+  case_id       = 28,
   F_category_id      = 397;
 
 INSERT INTO address
@@ -562,10 +560,10 @@ SET id               = 27,
   operator_name      = '',
   def_type           = 'defendant_type.owner',
   f_person_uid       = 4,
-  vosa_case_id       = 28,
+  case_id       = 28,
   F_category_id      = 399;
 
-INSERT INTO vosa_case
+INSERT INTO cases
 SET id        = 28,
   created_on  = '2014-05-25 12:27:33',
   licence     = 7,
@@ -621,7 +619,7 @@ SET id               = 29,
   operator_name      = 'John Smith Haulage Ltd.',
   def_type           = 'defendant_type.operator',
   f_person_uid       = 4,
-  vosa_case_id       = 28,
+  case_id       = 28,
   F_category_id      = 399;
 
 INSERT INTO organisation
@@ -730,7 +728,7 @@ SET id          = 32,
   first_name    = 'Peter',
   surname       = 'Smith',
   date_of_birth = '1960-04-15';
-INSERT INTO person_disqualification
+INSERT INTO disqualification
 SET id         = 32,
   Created_On   = NOW(),
   version      = 1,
@@ -759,7 +757,7 @@ SET id          = 35,
   first_name    = 'Joe',
   surname       = 'Cooper',
   date_of_birth = '1975-04-18';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 35,
   person_id          = 35,
   version            = 1,
@@ -768,13 +766,13 @@ SET id               = 35,
   last_modified_on    = NOW(),
   last_modified_by    = 2,
   qualification_type = 'CPCSI',
-  qualification_date = '2010-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '35',
   licence_id        = 30,
   internal_external = 'Internal';
 
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 36,
   person_id          = 15,
   version            = 1,
@@ -783,12 +781,12 @@ SET id               = 36,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSN',
-  qualification_date = '2010-09-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-09-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '15',
   licence_id        = 30,
   internal_external = 'External';
-INSERT INTO person_disqualification
+INSERT INTO disqualification
 SET id         = 36,
   Created_On   = NOW(),
   version      = 1,
@@ -987,7 +985,7 @@ SET id          = 45,
   first_name    = 'Mark',
   surname       = 'Cooper',
   date_of_birth = '1975-04-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 45,
   person_id          = 45,
   version            = 1,
@@ -996,8 +994,8 @@ SET id               = 45,
   last_modified_on    = NOW(),
   last_modified_by    = 2,
   qualification_type = 'CPCSI',
-  qualification_date = '2010-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '45',
   licence_id        = 41,
   internal_external = 'Internal';
@@ -1008,7 +1006,7 @@ SET id          = 46,
   first_name    = 'David',
   surname       = 'Anthony',
   date_of_birth = '1973-03-03';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 46,
   person_id          = 46,
   version            = 1,
@@ -1017,8 +1015,8 @@ SET id               = 46,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSN',
-  qualification_date = '2011-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2011-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '46',
   licence_id        = 41,
   internal_external = 'Internal';
@@ -1029,7 +1027,7 @@ SET id          = 47,
   first_name    = 'Lewis',
   surname       = 'Howarth',
   date_of_birth = '1975-02-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 47,
   person_id          = 47,
   version            = 1,
@@ -1038,8 +1036,8 @@ SET id               = 47,
   last_modified_on    = NOW(),
   last_modified_by    = 3,
   qualification_type = 'CPCSI',
-  qualification_date = '2012-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2012-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '47',
   licence_id        = 41,
   internal_external = 'Both';
@@ -1156,7 +1154,7 @@ SET id                 = 55,
   version              = 1,
   is_deleted           = 0;
 
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 58,
   person_id          = 45,
   version            = 1,
@@ -1165,8 +1163,8 @@ SET id               = 58,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSI',
-  qualification_date = '2010-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2010-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '45',
   licence_id        = 54,
   internal_external = 'Internal';
@@ -1177,7 +1175,7 @@ SET id          = 59,
   first_name    = 'Peter',
   surname       = 'Smith',
   date_of_birth = '1973-03-03';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 59,
   person_id          = 59,
   version            = 1,
@@ -1186,8 +1184,8 @@ SET id               = 59,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSN',
-  qualification_date = '2011-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2011-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '59',
   licence_id        = 54,
   internal_external = 'Internal';
@@ -1198,7 +1196,7 @@ SET id          = 60,
   first_name    = 'Lewis',
   surname       = 'Hamilton',
   date_of_birth = '1975-02-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 60,
   person_id          = 60,
   version            = 1,
@@ -1207,8 +1205,8 @@ SET id               = 60,
   last_modified_on    = NOW(),
   last_modified_by    = 2,
   qualification_type = 'CPCSI',
-  qualification_date = '2012-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2012-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '60',
   licence_id        = 54,
   internal_external = 'Both';
@@ -1326,7 +1324,7 @@ SET id          = 66,
   first_name    = 'Tim',
   surname       = 'Cooper',
   date_of_birth = '1975-03-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 66,
   person_id          = 66,
   version            = 1,
@@ -1335,8 +1333,8 @@ SET id               = 66,
   last_modified_on    = NOW(),
   last_modified_by    = 1,
   qualification_type = 'CPCSI',
-  qualification_date = '2002-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2002-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '66',
   licence_id        = 63,
   internal_external = 'Internal';
@@ -1526,7 +1524,7 @@ SET id          = 78,
   first_name    = 'Keith',
   surname       = 'Winnard',
   date_of_birth = '1975-03-15';
-INSERT INTO tms_qualification
+INSERT INTO tm_qualification
 SET id               = 78,
   person_id          = 78,
   version            = 1,
@@ -1535,8 +1533,8 @@ SET id               = 78,
   last_modified_on    = NOW(),
   last_modified_by    = 0,
   qualification_type = 'CPCSI',
-  qualification_date = '2002-12-12';
-INSERT INTO tms_licence_link
+  issued_date = '2002-12-12';
+INSERT INTO transport_manager_licence
 SET person_id       = '78',
   licence_id        = 75,
   internal_external = 'Internal';
@@ -1599,13 +1597,13 @@ SET id                         = 110,
 
 
 -- test data for a full organisation entity with owners and subsidiary companies (used for operator search olcs-758 test)
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 78, F_Organisation_UID = 7;
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 77, F_Organisation_UID = 7;
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 77, F_Organisation_UID = 1;
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 78, F_Organisation_UID = 1;
 -- add partnership
 INSERT INTO organisation
@@ -1613,9 +1611,9 @@ SET id       = 100, created_by = 1, last_modified_by = 3, registered_company_num
   name       = 'Test partnership', trading_as = 'TP LPP', organisation_type = 'Partnership',
   created_on = '2014-01-28 16:25:35', last_modified_on = '2014-01-28 16:25:35', version = 2, sic_code = 91020;
 
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 78, F_Organisation_UID = 100;
-INSERT INTO organisation_owner
+INSERT INTO organisation_person
 SET F_Person_UID = 77, F_Organisation_UID = 100;
 INSERT INTO address
 SET id            = 100,
@@ -1667,7 +1665,7 @@ SET id                         = 100,
   tot_auth_trailers = 0,
   tot_auth_vehicles = 4;
 
-INSERT INTO tms_licence_link
+INSERT INTO transport_manager_licence
 SET person_id       = '78',
   licence_id        = 110,
   internal_external = 'Internal';
@@ -1741,160 +1739,160 @@ INSERT INTO `licence_vehicle` (`id`, `version`, `created_on`, `last_modified_on`
 VALUES (4, 1, '2010-01-12', '2014-02-20', 4, 7, 4, '2014-02-20', 'removal reason 4', '2014-02-20', '2014-02-20',
         '2014-02-20');
 
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (29, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100029, 'open', '1213213', '', '2014-02-11 12:27:33', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (30, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100030, 'open', 'werwrew', '', '2014-02-11 12:27:47', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (31, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100031, 'open', '345345345', '', '2014-02-11 12:28:07', '7',
    'licence', '2014-05-25 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (32, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100032, 'open', 'weewrerwerw', '', '2014-02-11 12:28:25', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (33, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100033, 'open', '345345345', '', '2014-02-11 12:28:38', '7',
    'licence', '2014-03-29 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (34, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100034, 'open', '7656567567', '', '2014-02-11 12:29:01', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (35, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100035, 'open', '45645645645', '', '2014-02-11 12:29:17', '7',
    'licence', '2014-04-15 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (36, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100036, 'open', '56756757', '', '2014-02-11 12:29:40', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (37, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100037, 'open', '3453g345', '', '2014-02-11 12:29:59', '7',
         'licence', '2014-04-23 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (38, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100038, 'open', 'MWC test case 1', '2345678',
         '2014-02-13 23:43:58', '7', 'licence', '2014-05-25 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (39, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100039, 'open', 'new test case 2', 'coops12345',
         '2014-02-14 02:37:39', '7', 'licence', '2014-05-25 12:27:33', 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (40, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100040, 'open', 'MWC test case 3', 'coops4321',
         '2014-02-14 02:39:38', '7', 'licence', NULL, 2);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (41, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100041, 'open', 'MWC test case 4', 'E647654',
         '2014-02-14 16:29:03', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (42, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345679, 'Open',
         'Case for convictions against company directors', 'E123456', '2013-06-01 00:00:00', 'TBC', 'Compliance', NULL,
         1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (43, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345680, 'Open', 'Convictions against operator Fred',
         'E123444', '2013-06-02 00:00:00', 'TBC', 'Compliance', NULL, 14);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (44, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100029, 'open', '1213213', '', '2014-02-11 12:27:33', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (45, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100030, 'open', 'werwrew', '', '2014-02-11 12:27:47', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (46, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100031, 'open', '345345345', '', '2014-02-11 12:28:07', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (47, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100032, 'open', 'weewrerwerw', '', '2014-02-11 12:28:25', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (48, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100033, 'open', '345345345', '', '2014-02-11 12:28:38', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (49, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100034, 'open', '7656567567', '', '2014-02-11 12:29:01', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (50, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100035, 'open', '45645645645', '', '2014-02-11 12:29:17', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (51, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100036, 'open', '56756757', '', '2014-02-11 12:29:40', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (52, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100037, 'open', '3453g345', '', '2014-02-11 12:29:59', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (53, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100038, 'open', 'MWC test case 1', '2345678',
         '2014-02-13 23:43:58', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (54, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100039, 'open', 'new test case 2', 'coops12345',
         '2014-02-14 02:37:39', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (55, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100040, 'open', 'MWC test case 3', 'coops4321',
         '2014-02-14 02:39:38', '7', 'licence', NULL, 2);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (56, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100041, 'open', 'MWC test case 4', 'E647654',
         '2014-02-14 16:29:03', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (57, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345681, 'Open',
         'Case for convictions against company directors', 'E123456', '2013-11-01 00:00:00', 'TBC', 'Compliance', NULL,
         1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (58, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345682, 'Open', 'Convictions against operator Fred',
         'E123444', '2013-11-02 00:00:00', 'TBC', 'Compliance', NULL, 14);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (59, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100029, 'open', '1213213', '', '2014-02-11 12:27:33', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (60, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100030, 'open', 'werwrew', '', '2014-02-11 12:27:47', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (61, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100031, 'open', '345345345', '', '2014-02-11 12:28:07', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (62, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100032, 'open', 'weewrerwerw', '', '2014-02-11 12:28:25', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (63, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100033, 'open', '345345345', '', '2014-02-11 12:28:38', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (64, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100034, 'open', '7656567567', '', '2014-02-11 12:29:01', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES
   (65, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100035, 'open', '45645645645', '', '2014-02-11 12:29:17', '7',
    'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (66, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100036, 'open', '56756757', '', '2014-02-11 12:29:40', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (67, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100037, 'open', '3453g345', '', '2014-02-11 12:29:59', '7',
         'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (68, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100038, 'open', 'MWC test case 1', '2345678',
         '2014-02-13 23:43:58', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (69, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100039, 'open', 'new test case 2', 'coops12345',
         '2014-02-14 02:37:39', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (70, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100040, 'open', 'MWC test case 3', 'coops4321',
         '2014-02-14 02:39:38', '7', 'licence', NULL, 2);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (71, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100041, 'open', 'MWC test case 4', 'E647654',
         '2014-02-14 16:29:03', '7', 'licence', NULL, 1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (72, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345683, 'Open',
         'Case for convictions against company directors', 'E123456', '2013-11-02 00:00:00', 'TBC', 'Compliance', NULL,
         1);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (73, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 12345684, 'Open', 'Convictions against operator Fred',
         'E123444', '2013-11-03 00:00:00', 'TBC', 'Compliance', NULL, 14);
-INSERT INTO `vosa_case` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
+INSERT INTO `cases` (`id`, `created_on`, `last_modified_on`, `licence`, `caseNumber`, `status`, `description`, `ecms`, `openTime`, `owner`, `caseType`, `closedTime`, `version`)
 VALUES (74, '2014-01-11 11:11:11', '2014-02-22 12:22:22', 7, 100029, 'open', '1213213', '', '2014-02-11 12:27:33', '7',
         'licence', NULL, 1);
 
@@ -1989,9 +1987,9 @@ SET @decision_submission_action_status_id = LAST_INSERT_ID();
 
 -- submissions
 
-INSERT INTO submission SET text = 'Submission (recom)', vosa_case_id = 28, created_on = NOW(), created_by = 2, last_modified_on = NOW(), last_modified_by = 2;
+INSERT INTO submission SET text = 'Submission (recom)', case_id = 28, created_on = NOW(), created_by = 2, last_modified_on = NOW(), last_modified_by = 2;
 SET @recommendation_submission_id = LAST_INSERT_ID();
-INSERT INTO submission SET text = 'Submission (descision)', vosa_case_id = 28, created_on = NOW(), created_by = 2, last_modified_on = NOW(), last_modified_by = 2;
+INSERT INTO submission SET text = 'Submission (descision)', case_id = 28, created_on = NOW(), created_by = 2, last_modified_on = NOW(), last_modified_by = 2;
 SET @decision_submission_id = LAST_INSERT_ID();
 
 -- submission actions
@@ -3274,9 +3272,9 @@ INSERT INTO `pi_reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`descr
 INSERT INTO `pi_reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`description`,`is_read_only`,`is_ni`,`propose_to_revoke`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES (283,'GV',1,'x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,0,NULL,NULL,NULL,NULL,1);
 INSERT INTO `pi_reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`description`,`is_read_only`,`is_ni`,`propose_to_revoke`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES (284,'GV',1,'x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO document_category (id, description) VALUES (1, 'Licensing');
-INSERT INTO document_sub_category (id, document_category_id, description) VALUES (1, 1, 'Insolvency History');
-INSERT INTO document_sub_category (id, document_category_id, description) VALUES (2, 1, 'Advertisement');
+INSERT INTO category (id, description) VALUES (1, 'Licensing');
+INSERT INTO document_sub_category (id, category_id, description) VALUES (1, 1, 'Insolvency History');
+INSERT INTO document_sub_category (id, category_id, description) VALUES (2, 1, 'Advertisement');
 
 -- Start: PIs
 
@@ -3307,30 +3305,29 @@ SET foreign_key_checks = 1;
 
 ALTER TABLE user ENABLE KEYS;
 ALTER TABLE document ENABLE KEYS;
-ALTER TABLE document_category ENABLE KEYS;
+ALTER TABLE category ENABLE KEYS;
 ALTER TABLE document_sub_category ENABLE KEYS;
 ALTER TABLE traffic_area ENABLE KEYS;
 ALTER TABLE application ENABLE KEYS;
 ALTER TABLE fee ENABLE KEYS;
 ALTER TABLE person ENABLE KEYS;
 ALTER TABLE organisation ENABLE KEYS;
-ALTER TABLE organisation_owner ENABLE KEYS;
+ALTER TABLE organisation_person ENABLE KEYS;
 ALTER TABLE address ENABLE KEYS;
 ALTER TABLE contact_details ENABLE KEYS;
 ALTER TABLE licence ENABLE KEYS;
 ALTER TABLE condition_undertaking ENABLE KEYS;
 ALTER TABLE trading_name ENABLE KEYS;
 ALTER TABLE fee ENABLE KEYS;
-ALTER TABLE tms_qualification ENABLE KEYS;
-ALTER TABLE tms_licence_link ENABLE KEYS;
-ALTER TABLE person_disqualification ENABLE KEYS;
+ALTER TABLE tm_qualification ENABLE KEYS;
+ALTER TABLE transport_manager_licence ENABLE KEYS;
+ALTER TABLE disqualification ENABLE KEYS;
 ALTER TABLE operating_centre ENABLE KEYS;
-ALTER TABLE vosa_case ENABLE KEYS;
+ALTER TABLE cases ENABLE KEYS;
 ALTER TABLE conviction ENABLE KEYS;
-ALTER TABLE organisation_owner ENABLE KEYS;
+ALTER TABLE organisation_person ENABLE KEYS;
 ALTER TABLE note ENABLE KEYS;
 ALTER TABLE vehicle ENABLE KEYS;
-ALTER TABLE licence_vehicle_usage ENABLE KEYS;
 ALTER TABLE licence_vehicle ENABLE KEYS;
 ALTER TABLE prohibition ENABLE KEYS;
 ALTER TABLE penalty ENABLE KEYS;
@@ -3344,7 +3341,7 @@ ALTER TABLE presiding_tc ENABLE KEYS;
 ALTER TABLE conviction_category ENABLE KEYS;
 ALTER TABLE transport_manager  ENABLE KEYS;
 ALTER TABLE transport_manager_licence  ENABLE KEYS;
-ALTER TABLE qualification  ENABLE KEYS;
+ALTER TABLE tm_qualification  ENABLE KEYS;
 ALTER TABLE pi_reason ENABLE KEYS;
 ALTER TABLE pi_venue ENABLE KEYS;
 ALTER TABLE traffic_area ENABLE KEYS;

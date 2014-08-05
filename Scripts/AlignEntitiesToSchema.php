@@ -398,7 +398,9 @@ class AlignEntitiesToSchema
 
             $defaults = $this->getDefaultsFromTable($config['entity']['@attributes']['table']);
 
-            $fields = $this->getFieldsFromConfig($config, $defaults);
+            $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
+
+            $fields = $this->getFieldsFromConfig($config, $defaults, $comments);
 
             $this->cacheFields($fields);
 
@@ -468,7 +470,7 @@ class AlignEntitiesToSchema
                 $description = $field['@attributes']['length'] . $description;
             }
 
-            $trait = ucwords($field['@attributes'][$ref]) . $description;
+            $trait = ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
 
             $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
             $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
@@ -785,9 +787,10 @@ class AlignEntitiesToSchema
      *
      * @param array $config
      * @param array $defaults
+     * @param array $comments
      * @return array
      */
-    private function getFieldsFromConfig($config, $defaults)
+    private function getFieldsFromConfig($config, $defaults, $comments)
     {
         $fields = array();
 
@@ -813,19 +816,21 @@ class AlignEntitiesToSchema
                 $associationKeys[$item['@attributes']['name']] = true;
             } else {
 
-                if (!isset($defaults[$this->formatColumnFromName($item['@attributes']['name'])])) {
-                    $default = null;
-                } else {
-                    $default = $defaults[$this->formatColumnFromName($item['@attributes']['name'])];
-                }
+                $columnName = $this->formatColumnFromName($item['@attributes']['name']);
 
-                $fields[] = array(
+                $default = isset($defaults[$columnName]) ? $defaults[$columnName] : null;
+
+                $extraConfig = $this->getConfigFromComments($comments, $columnName);
+
+                $fieldConfig = array(
                     'isId' => true,
                     'type' => 'id',
                     'ref' => 'name',
                     'default' => $default,
                     'config' => $item,
                 );
+
+                $fields[] = array_merge($fieldConfig, $extraConfig);
             }
         }
 
@@ -850,23 +855,50 @@ class AlignEntitiesToSchema
 
                 $key = ($which == 'field' ? 'name' : 'field');
 
-                if (!isset($defaults[$this->formatColumnFromName($item['@attributes'][$key])])) {
-                    $default = null;
-                } else {
-                    $default = $defaults[$this->formatColumnFromName($item['@attributes'][$key])];
-                }
+                $columnName = $this->formatColumnFromName($item['@attributes'][$key]);
 
-                $fields[] = array(
+                $default = isset($defaults[$columnName]) ? $defaults[$columnName] : null;
+
+                $extraConfig = $this->getConfigFromComments($comments, $columnName);
+
+                $fieldConfig = array(
                     'isId' => isset($associationKeys[$item['@attributes'][$key]]),
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
                     'default' => $default,
                     'config' => $item
                 );
+
+                $fields[] = array_merge($fieldConfig, $extraConfig);
             }
         }
 
         return $fields;
+    }
+
+    /**
+     * Get config from comments
+     *
+     * @param array $comments
+     * @param string $key
+     * @return array
+     */
+    private function getConfigFromComments($comments, $key)
+    {
+        $config = array();
+
+        if (isset($comments[$key])
+            && !empty($comments[$key])
+            && preg_match('/\{CONFIG\}(.+)\{\/CONFIG\}/', $comments[$key], $matches)) {
+
+            $config = json_decode($matches[1], true);
+
+            if (json_last_error() != JSON_ERROR_NONE) {
+                $config = array();
+            }
+        }
+
+        return $config;
     }
 
     /**
@@ -978,6 +1010,29 @@ class AlignEntitiesToSchema
         $query->execute();
 
         return $query->fetchAll(Pdo::FETCH_ASSOC);
+    }
+
+    /**
+     * Get Table Comments
+     *
+     * @param string $table
+     * @return array
+     */
+    private function getCommentsFromTable($table)
+    {
+        $query = $this->pdo->prepare('SHOW FULL COLUMNS FROM ' . $table);
+
+        $query->execute();
+
+        $results = $query->fetchAll(Pdo::FETCH_ASSOC);
+
+        $comments = array();
+
+        foreach ($results as $row) {
+            $comments[$row['Field']] = $row['Comment'];
+        }
+
+        return $comments;
     }
 
     /**
