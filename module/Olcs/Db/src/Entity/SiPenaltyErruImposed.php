@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * SiPenaltyErruImposed Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty_erru_imposed",
  *    indexes={
  *        @ORM\Index(name="fk_si_penalty_erru_mposed_user1_idx", columns={"created_by"}),
@@ -30,7 +32,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\EndDateField,
-        Traits\DeletedDateFieldAlt1,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

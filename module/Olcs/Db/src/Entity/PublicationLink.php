@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PublicationLink Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="publication_link",
  *    indexes={
  *        @ORM\Index(name="fk_publication_has_licence_licence1_idx", columns={"licence_id"}),
@@ -40,7 +42,7 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

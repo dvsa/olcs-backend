@@ -14,7 +14,7 @@
     <field name="startDate" type="date" column="start_date" nullable="true"/>
     <field name="endDate" type="date" column="end_date" nullable="true"/>
     <field name="reasonNotImposed" type="string" column="reason_not_imposed" length="500" nullable="true"/>
-    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>

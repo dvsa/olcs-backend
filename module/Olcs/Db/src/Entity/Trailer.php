@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Trailer Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trailer",
  *    indexes={
  *        @ORM\Index(name="fk_trailer_licence1_idx", columns={"licence_id"}),
@@ -28,7 +30,7 @@ class Trailer implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

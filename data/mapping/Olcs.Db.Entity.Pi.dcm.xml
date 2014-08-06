@@ -15,7 +15,7 @@
     <field name="agreedDate" type="date" column="agreed_date" nullable="true"/>
     <field name="typeAppNew" type="boolean" column="type_app_new" nullable="false"/>
     <field name="typeAppVar" type="boolean" column="type_app_var" nullable="false"/>
-    <field name="typeDiscipliniary" type="boolean" column="type_discipliniary" nullable="false"/>
+    <field name="typeDisciplinary" type="boolean" column="type_disciplinary" nullable="false"/>
     <field name="typeEnvNew" type="boolean" column="type_env_new" nullable="false"/>
     <field name="typeEnvVar" type="boolean" column="type_env_var" nullable="false"/>
     <field name="typeOcReview" type="boolean" column="type_oc_review" nullable="false"/>
@@ -35,6 +35,7 @@
     <field name="decisionNotes" type="text" column="decision_notes" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>

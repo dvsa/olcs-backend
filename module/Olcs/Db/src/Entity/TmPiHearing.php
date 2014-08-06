@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TmPiHearing Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_pi_hearing",
  *    indexes={
  *        @ORM\Index(name="fk_tm_pi_hearing_cases1_idx", columns={"case_id"}),
@@ -36,7 +38,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\PresidedByManyToOne,
         Traits\CaseManyToOne,
         Traits\AgreedDateField,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

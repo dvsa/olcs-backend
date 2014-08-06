@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TradingName Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trading_name",
  *    indexes={
  *        @ORM\Index(name="fk_trading_name_licence1_idx", columns={"licence_id"}),
@@ -29,7 +31,7 @@ class TradingName implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\OrganisationManyToOne,
         Traits\LicenceManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

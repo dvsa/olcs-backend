@@ -17,6 +17,7 @@
     <field name="titleOther" type="string" column="title_other" length="20" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
     <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>

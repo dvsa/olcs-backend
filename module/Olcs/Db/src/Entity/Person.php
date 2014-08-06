@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Person Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="person",
  *    indexes={
  *        @ORM\Index(name="fk_person_user1_idx", columns={"created_by"}),
@@ -28,6 +30,7 @@ class Person implements Interfaces\EntityInterface
         Traits\BirthDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\CustomDeletedDateField,
         Traits\CustomVersionField;
 
     /**

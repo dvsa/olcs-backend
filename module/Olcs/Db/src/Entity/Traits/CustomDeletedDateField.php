@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Auto-Generated (Shared between 27 entities)
  */
-trait DeletedDateField
+trait CustomDeletedDateField
 {
     /**
      * Deleted date
@@ -41,5 +41,13 @@ trait DeletedDateField
     public function getDeletedDate()
     {
         return $this->deletedDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return !is_null($this->deletedDate);
     }
 }

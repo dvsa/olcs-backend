@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CommunityLicWithdrawalReasonType Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal_reason_type",
  *    indexes={
  *        @ORM\Index(name="fk_community_lic_withdrawal_reason_type_user1_idx", columns={"created_by"}),
@@ -26,39 +28,8 @@ class CommunityLicWithdrawalReasonType implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\Description255FieldAlt1,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Deleted date
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="deleted_date", length=45, nullable=true)
-     */
-    protected $deletedDate;
-
-    /**
-     * Set the deleted date
-     *
-     * @param string $deletedDate
-     * @return \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @return string
-     */
-    public function getDeletedDate()
-    {
-        return $this->deletedDate;
-    }
 }

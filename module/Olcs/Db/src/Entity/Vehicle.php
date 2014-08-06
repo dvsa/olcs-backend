@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Vehicle Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="vehicle",
  *    indexes={
  *        @ORM\Index(name="fk_vehicle_user1_idx", columns={"created_by"}),
@@ -28,7 +30,7 @@ class Vehicle implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\Vrm20Field,
         Traits\ViAction1Field,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\SpecifiedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
