@@ -3738,9 +3738,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `pi_reason`
+-- Table `reason`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pi_reason` (
+CREATE TABLE IF NOT EXISTS `reason` (
   `id` INT NOT NULL,
   `goods_or_psv` VARCHAR(3) NOT NULL COMMENT 'GV or PSV',
   `is_decision` TINYINT(1) NOT NULL COMMENT 'true if reason.  false if decision',
@@ -3755,14 +3755,14 @@ CREATE TABLE IF NOT EXISTS `pi_reason` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_pi_reason_user1_idx` (`created_by` ASC),
-  INDEX `fk_pi_reason_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_pi_reason_user1`
+  INDEX `fk_reason_user1_idx` (`created_by` ASC),
+  INDEX `fk_reason_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_reason_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_reason_user2`
+  CONSTRAINT `fk_reason_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
@@ -3771,9 +3771,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `pi_detail`
+-- Table `pi`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pi_detail` (
+CREATE TABLE IF NOT EXISTS `pi` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
   `agreed_date` DATE NULL,
@@ -3806,38 +3806,38 @@ CREATE TABLE IF NOT EXISTS `pi_detail` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_pi_detail_cases1_idx` (`case_id` ASC),
-  INDEX `fk_pi_detail_presiding_tc1_idx` (`presiding_tc_id` ASC),
-  INDEX `fk_pi_detail_ref_data1_idx` (`presided_by` ASC),
-  INDEX `fk_pi_detail_ref_data2_idx` (`pi_status` ASC),
-  INDEX `fk_pi_detail_user1_idx` (`created_by` ASC),
-  INDEX `fk_pi_detail_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_pi_detail_cases1`
+  INDEX `fk_pi_cases1_idx` (`case_id` ASC),
+  INDEX `fk_pi_presiding_tc1_idx` (`presiding_tc_id` ASC),
+  INDEX `fk_pi_ref_data1_idx` (`presided_by` ASC),
+  INDEX `fk_pi_ref_data2_idx` (`pi_status` ASC),
+  INDEX `fk_pi_user1_idx` (`created_by` ASC),
+  INDEX `fk_pi_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_pi_cases1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_detail_presiding_tc1`
+  CONSTRAINT `fk_pi_presiding_tc1`
     FOREIGN KEY (`presiding_tc_id`)
     REFERENCES `presiding_tc` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_detail_ref_data1`
+  CONSTRAINT `fk_pi_ref_data1`
     FOREIGN KEY (`presided_by`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_detail_ref_data2`
+  CONSTRAINT `fk_pi_ref_data2`
     FOREIGN KEY (`pi_status`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_detail_user1`
+  CONSTRAINT `fk_pi_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_detail_user2`
+  CONSTRAINT `fk_pi_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
@@ -3846,22 +3846,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ptr_pi_reason`
+-- Table `ptr_reason`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ptr_pi_reason` (
+CREATE TABLE IF NOT EXISTS `ptr_reason` (
   `propose_to_revoke_id` INT NOT NULL,
-  `pi_reason_id` INT NOT NULL,
-  INDEX `fk_propose_to_revoke_has_pi_reason_pi_reason1_idx` (`pi_reason_id` ASC),
-  INDEX `fk_propose_to_revoke_has_pi_reason_propose_to_revoke1_idx` (`propose_to_revoke_id` ASC),
-  PRIMARY KEY (`propose_to_revoke_id`, `pi_reason_id`),
-  CONSTRAINT `fk_propose_to_revoke_has_pi_reason_propose_to_revoke1`
+  `reason_id` INT NOT NULL,
+  INDEX `fk_propose_to_revoke_has_reason_reason1_idx` (`reason_id` ASC),
+  INDEX `fk_propose_to_revoke_has_reason_propose_to_revoke1_idx` (`propose_to_revoke_id` ASC),
+  PRIMARY KEY (`propose_to_revoke_id`, `reason_id`),
+  CONSTRAINT `fk_propose_to_revoke_has_reason_propose_to_revoke1`
     FOREIGN KEY (`propose_to_revoke_id`)
     REFERENCES `propose_to_revoke` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_propose_to_revoke_has_pi_reason_pi_reason1`
-    FOREIGN KEY (`pi_reason_id`)
-    REFERENCES `pi_reason` (`id`)
+  CONSTRAINT `fk_propose_to_revoke_has_reason_reason1`
+    FOREIGN KEY (`reason_id`)
+    REFERENCES `reason` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -3943,38 +3943,38 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `case_pi_reason`
+-- Table `pi_reason`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `case_pi_reason` (
+CREATE TABLE IF NOT EXISTS `pi_reason` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `pi_reason_id` INT NOT NULL,
-  `pi_detail_id` INT NOT NULL,
+  `reason_id` INT NOT NULL,
+  `pi_id` INT NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_case_rec_pi_reason_pi_reason1_idx` (`pi_reason_id` ASC),
-  INDEX `fk_case_pi_reason_pi_detail1_idx` (`pi_detail_id` ASC),
-  INDEX `fk_case_pi_reason_user1_idx` (`created_by` ASC),
-  INDEX `fk_case_pi_reason_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_case_rec_pi_reason_pi_reason1`
-    FOREIGN KEY (`pi_reason_id`)
-    REFERENCES `pi_reason` (`id`)
+  INDEX `fk_case_rec_reason_reason1_idx` (`reason_id` ASC),
+  INDEX `fk_case_reason_pi1_idx` (`pi_id` ASC),
+  INDEX `fk_case_reason_user1_idx` (`created_by` ASC),
+  INDEX `fk_case_reason_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_case_rec_reason_reason1`
+    FOREIGN KEY (`reason_id`)
+    REFERENCES `reason` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_case_pi_reason_pi_detail1`
-    FOREIGN KEY (`pi_detail_id`)
-    REFERENCES `pi_detail` (`id`)
+  CONSTRAINT `fk_case_reason_pi1`
+    FOREIGN KEY (`pi_id`)
+    REFERENCES `pi` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_case_pi_reason_user1`
+  CONSTRAINT `fk_case_reason_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_case_pi_reason_user2`
+  CONSTRAINT `fk_case_reason_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
@@ -4019,7 +4019,7 @@ CREATE TABLE IF NOT EXISTS `pi_reschedule_date` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `reschedule_datetime` DATETIME NULL,
   `adjournment_datetime` DATETIME NULL,
-  `pi_detail_id` INT NOT NULL,
+  `pi_id` INT NOT NULL,
   `presiding_tc_id` INT NULL,
   `presiding_tc_other` VARCHAR(45) NULL,
   `presided_by` VARCHAR(32) NULL,
@@ -4029,14 +4029,14 @@ CREATE TABLE IF NOT EXISTS `pi_reschedule_date` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_pi_reschedule_dates_pi_detail1_idx` (`pi_detail_id` ASC),
+  INDEX `fk_pi_reschedule_dates_pi1_idx` (`pi_id` ASC),
   INDEX `fk_pi_reschedule_dates_presiding_tc1_idx` (`presiding_tc_id` ASC),
   INDEX `fk_pi_reschedule_dates_ref_data1_idx` (`presided_by` ASC),
   INDEX `fk_pi_reschedule_date_user1_idx` (`created_by` ASC),
   INDEX `fk_pi_reschedule_date_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_pi_reschedule_dates_pi_detail1`
-    FOREIGN KEY (`pi_detail_id`)
-    REFERENCES `pi_detail` (`id`)
+  CONSTRAINT `fk_pi_reschedule_dates_pi1`
+    FOREIGN KEY (`pi_id`)
+    REFERENCES `pi` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_reschedule_dates_presiding_tc1`
@@ -4219,7 +4219,7 @@ CREATE TABLE IF NOT EXISTS `publication_link` (
   `pub_type` VARCHAR(3) NOT NULL COMMENT 'Either A&D or N&P',
   `licence_id` INT NULL,
   `application_id` INT NULL,
-  `pi_detail_id` INT NULL,
+  `pi_id` INT NULL,
   `tm_pi_hearing_id` INT NULL,
   `section_id` INT NULL,
   `bus_reg_id` INT NULL,
@@ -4236,7 +4236,7 @@ CREATE TABLE IF NOT EXISTS `publication_link` (
   `version` INT NOT NULL DEFAULT 1,
   INDEX `fk_publication_has_licence_licence1_idx` (`licence_id` ASC),
   INDEX `fk_publication_has_licence_publication1_idx` (`publication_id` ASC),
-  INDEX `fk_licence_publication_pi_detail1_idx` (`pi_detail_id` ASC),
+  INDEX `fk_licence_publication_pi1_idx` (`pi_id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_licence_publication_traffic_area1_idx` (`traffic_area_id` ASC),
   INDEX `fk_licence_publication_application1_idx` (`application_id` ASC),
@@ -4255,9 +4255,9 @@ CREATE TABLE IF NOT EXISTS `publication_link` (
     REFERENCES `licence` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_publication_pi_detail1`
-    FOREIGN KEY (`pi_detail_id`)
-    REFERENCES `pi_detail` (`id`)
+  CONSTRAINT `fk_licence_publication_pi1`
+    FOREIGN KEY (`pi_id`)
+    REFERENCES `pi` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_traffic_area1`
@@ -7207,6 +7207,92 @@ CREATE TABLE IF NOT EXISTS `change_of_entity` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `card_payment_token_usage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payment_uid` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `IDX_FD3FFE7A64F8C732` (`payment_uid`),
+  KEY `IDX_FD3FFE7ADE12AB56` (`created_by`),
+  KEY `IDX_FD3FFE7A65CF370E` (`last_modified_by`),
+  CONSTRAINT `FK_FD3FFE7A65CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_FD3FFE7A64F8C732` FOREIGN KEY (`payment_uid`) REFERENCES `payment` (`id`),
+  CONSTRAINT `FK_FD3FFE7ADE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `companies_house_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `requested_on` datetime DEFAULT NULL,
+  `request_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `request_error` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `driver` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contact_details_id` int(11) NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQ_11667CD97CA35EB5` (`contact_details_id`),
+  KEY `IDX_11667CD9DE12AB56` (`created_by`),
+  KEY `IDX_11667CD965CF370E` (`last_modified_by`),
+  CONSTRAINT `FK_11667CD965CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_11667CD97CA35EB5` FOREIGN KEY (`contact_details_id`) REFERENCES `contact_details` (`id`),
+  CONSTRAINT `FK_11667CD9DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `penalty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `notes` longtext COLLATE utf8_unicode_ci,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `IDX_AFE28FD8915C14AD` (`case_id`),
+  KEY `IDX_AFE28FD8DE12AB56` (`created_by`),
+  KEY `IDX_AFE28FD865CF370E` (`last_modified_by`),
+  CONSTRAINT `FK_AFE28FD865CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_AFE28FD8915C14AD` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`),
+  CONSTRAINT `FK_AFE28FD8DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `pi_hearing` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pi_id` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `presiding_tc_id` int(11) DEFAULT NULL,
+  `is_adjourned` tinyint(1) NOT NULL,
+  `date_of_hearing` datetime DEFAULT NULL,
+  `venue` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `IDX_83AFD387E0DEB379` (`pi_id`),
+  KEY `IDX_83AFD387DE12AB56` (`created_by`),
+  KEY `IDX_83AFD38765CF370E` (`last_modified_by`),
+  KEY `IDX_83AFD38753BAD7A2` (`presiding_tc_id`),
+  CONSTRAINT `FK_83AFD38753BAD7A2` FOREIGN KEY (`presiding_tc_id`) REFERENCES `presiding_tc` (`id`),
+  CONSTRAINT `FK_83AFD38765CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_83AFD387DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_83AFD387E0DEB379` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`)
+) ENGINE=InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

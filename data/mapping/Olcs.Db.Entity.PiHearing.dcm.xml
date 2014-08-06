@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Olcs\Db\Entity\PiRescheduleDate" table="pi_reschedule_date">
+  <entity name="Olcs\Db\Entity\PiHearing" table="pi_hearing">
     <indexes>
-      <index name="fk_pi_reschedule_dates_pi1_idx" columns="pi_id"/>
-      <index name="fk_pi_reschedule_dates_presiding_tc1_idx" columns="presiding_tc_id"/>
-      <index name="fk_pi_reschedule_dates_ref_data1_idx" columns="presided_by"/>
-      <index name="fk_pi_reschedule_date_user1_idx" columns="created_by"/>
-      <index name="fk_pi_reschedule_date_user2_idx" columns="last_modified_by"/>
+      <index name="IDX_83AFD387E0DEB379" columns="pi_id"/>
+      <index name="IDX_83AFD387DE12AB56" columns="created_by"/>
+      <index name="IDX_83AFD38765CF370E" columns="last_modified_by"/>
+      <index name="IDX_83AFD38753BAD7A2" columns="presiding_tc_id"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="rescheduleDatetime" type="datetime" column="reschedule_datetime" nullable="true"/>
-    <field name="adjournmentDatetime" type="datetime" column="adjournment_datetime" nullable="true"/>
-    <field name="presidingTcOther" type="string" column="presiding_tc_other" length="45" nullable="true"/>
+    <field name="isAdjourned" type="boolean" column="is_adjourned" nullable="false"/>
+    <field name="dateOfHearing" type="datetime" column="date_of_hearing" nullable="true"/>
+    <field name="venue" type="string" column="venue" length="100" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+    <many-to-one field="pi" target-entity="Olcs\Db\Entity\Pi">
       <join-columns>
-        <join-column name="last_modified_by" referenced-column-name="id"/>
+        <join-column name="pi_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
@@ -27,19 +26,14 @@
         <join-column name="created_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="presidedBy" target-entity="Olcs\Db\Entity\RefData">
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
-        <join-column name="presided_by" referenced-column-name="id"/>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="presidingTc" target-entity="Olcs\Db\Entity\PresidingTc">
       <join-columns>
         <join-column name="presiding_tc_id" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="pi" target-entity="Olcs\Db\Entity\Pi">
-      <join-columns>
-        <join-column name="pi_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

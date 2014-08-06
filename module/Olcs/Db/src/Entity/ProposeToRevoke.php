@@ -37,21 +37,21 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Pi reason
+     * Reason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\PiReason", inversedBy="proposeToRevokes")
-     * @ORM\JoinTable(name="ptr_pi_reason",
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="proposeToRevokes")
+     * @ORM\JoinTable(name="ptr_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="pi_reason_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
      *     }
      * )
      */
-    protected $piReasons;
+    protected $reasons;
 
     /**
      * Ptr agreed date
@@ -67,32 +67,32 @@ class ProposeToRevoke implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->piReasons = new ArrayCollection();
+        $this->reasons = new ArrayCollection();
     }
 
     /**
-     * Set the pi reason
+     * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
 
      * @return \Olcs\Db\Entity\ProposeToRevoke
      */
-    public function setPiReasons($piReasons)
+    public function setReasons($reasons)
     {
-        $this->piReasons = $piReasons;
+        $this->reasons = $reasons;
 
         return $this;
     }
 
     /**
-     * Get the pi reason
+     * Get the reason
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
      */
-    public function getPiReasons()
+    public function getReasons()
     {
-        return $this->piReasons;
+        return $this->reasons;
     }
 
     /**

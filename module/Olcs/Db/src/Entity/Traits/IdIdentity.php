@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Id identity trait
  *
- * Auto-Generated (Shared between 142 entities)
+ * Auto-Generated (Shared between 147 entities)
  */
 trait IdIdentity
 {

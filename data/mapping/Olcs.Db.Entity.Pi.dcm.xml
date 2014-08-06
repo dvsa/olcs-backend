@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Olcs\Db\Entity\PiDetail" table="pi_detail">
+  <entity name="Olcs\Db\Entity\Pi" table="pi">
     <indexes>
-      <index name="fk_pi_detail_cases1_idx" columns="case_id"/>
-      <index name="fk_pi_detail_presiding_tc1_idx" columns="presiding_tc_id"/>
-      <index name="fk_pi_detail_ref_data1_idx" columns="presided_by"/>
-      <index name="fk_pi_detail_ref_data2_idx" columns="pi_status"/>
-      <index name="fk_pi_detail_user1_idx" columns="created_by"/>
-      <index name="fk_pi_detail_user2_idx" columns="last_modified_by"/>
+      <index name="fk_pi_cases1_idx" columns="case_id"/>
+      <index name="fk_pi_presiding_tc1_idx" columns="presiding_tc_id"/>
+      <index name="fk_pi_ref_data1_idx" columns="presided_by"/>
+      <index name="fk_pi_ref_data2_idx" columns="pi_status"/>
+      <index name="fk_pi_user1_idx" columns="created_by"/>
+      <index name="fk_pi_user2_idx" columns="last_modified_by"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>

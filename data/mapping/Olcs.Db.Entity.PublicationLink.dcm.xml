@@ -4,7 +4,7 @@
     <indexes>
       <index name="fk_publication_has_licence_licence1_idx" columns="licence_id"/>
       <index name="fk_publication_has_licence_publication1_idx" columns="publication_id"/>
-      <index name="fk_licence_publication_pi_detail1_idx" columns="pi_detail_id"/>
+      <index name="fk_licence_publication_pi1_idx" columns="pi_id"/>
       <index name="fk_licence_publication_traffic_area1_idx" columns="traffic_area_id"/>
       <index name="fk_licence_publication_application1_idx" columns="application_id"/>
       <index name="fk_licence_publication_bus_reg1_idx" columns="bus_reg_id"/>
@@ -62,9 +62,9 @@
         <join-column name="licence_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="piDetail" target-entity="Olcs\Db\Entity\PiDetail">
+    <many-to-one field="pi" target-entity="Olcs\Db\Entity\Pi">
       <join-columns>
-        <join-column name="pi_detail_id" referenced-column-name="id"/>
+        <join-column name="pi_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="trafficArea" target-entity="Olcs\Db\Entity\TrafficArea">

@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_reschedule_date",
  *    indexes={
- *        @ORM\Index(name="fk_pi_reschedule_dates_pi_detail1_idx", columns={"pi_detail_id"}),
+ *        @ORM\Index(name="fk_pi_reschedule_dates_pi1_idx", columns={"pi_id"}),
  *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="fk_pi_reschedule_dates_ref_data1_idx", columns={"presided_by"}),
  *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
@@ -30,7 +30,7 @@ class PiRescheduleDate implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\PresidedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\PiDetailManyToOne,
+        Traits\PiManyToOne,
         Traits\RescheduleDatetimeField,
         Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,

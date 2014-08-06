@@ -6,24 +6,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * PiDetail Entity
+ * Pi Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="pi_detail",
+ * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_pi_detail_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_pi_detail_ref_data1_idx", columns={"presided_by"}),
- *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
- *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"presided_by"}),
+ *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"pi_status"}),
+ *        @ORM\Index(name="fk_pi_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
-class PiDetail implements Interfaces\EntityInterface
+class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
@@ -207,7 +207,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the pi status
      *
      * @param \Olcs\Db\Entity\RefData $piStatus
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setPiStatus($piStatus)
     {
@@ -230,7 +230,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type app new
      *
      * @param boolean $typeAppNew
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeAppNew($typeAppNew)
     {
@@ -253,7 +253,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type app var
      *
      * @param boolean $typeAppVar
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeAppVar($typeAppVar)
     {
@@ -276,7 +276,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type discipliniary
      *
      * @param boolean $typeDiscipliniary
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeDiscipliniary($typeDiscipliniary)
     {
@@ -299,7 +299,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type env new
      *
      * @param boolean $typeEnvNew
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeEnvNew($typeEnvNew)
     {
@@ -322,7 +322,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type env var
      *
      * @param boolean $typeEnvVar
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeEnvVar($typeEnvVar)
     {
@@ -345,7 +345,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type oc review
      *
      * @param boolean $typeOcReview
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeOcReview($typeOcReview)
     {
@@ -368,7 +368,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type impounding
      *
      * @param boolean $typeImpounding
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeImpounding($typeImpounding)
     {
@@ -391,7 +391,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the type other
      *
      * @param boolean $typeOther
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setTypeOther($typeOther)
     {
@@ -414,7 +414,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the pi datetime
      *
      * @param \DateTime $piDatetime
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setPiDatetime($piDatetime)
     {
@@ -437,7 +437,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the venue
      *
      * @param string $venue
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setVenue($venue)
     {
@@ -460,7 +460,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the witnesses
      *
      * @param int $witnesses
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setWitnesses($witnesses)
     {
@@ -483,7 +483,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the is cancelled
      *
      * @param boolean $isCancelled
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setIsCancelled($isCancelled)
     {
@@ -506,7 +506,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the is adjourned
      *
      * @param boolean $isAdjourned
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setIsAdjourned($isAdjourned)
     {
@@ -529,7 +529,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the section code text
      *
      * @param string $sectionCodeText
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setSectionCodeText($sectionCodeText)
     {
@@ -552,7 +552,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the licence revoked at pi
      *
      * @param boolean $licenceRevokedAtPi
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setLicenceRevokedAtPi($licenceRevokedAtPi)
     {
@@ -575,7 +575,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the notification date
      *
      * @param \DateTime $notificationDate
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setNotificationDate($notificationDate)
     {
@@ -598,7 +598,7 @@ class PiDetail implements Interfaces\EntityInterface
      * Set the decision notes
      *
      * @param string $decisionNotes
-     * @return \Olcs\Db\Entity\PiDetail
+     * @return \Olcs\Db\Entity\Pi
      */
     public function setDecisionNotes($decisionNotes)
     {

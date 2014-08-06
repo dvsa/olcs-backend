@@ -32,6 +32,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         Traits\CaseManyToOne,
         Traits\Comment4000Field,
         Traits\EffectiveDateField,
+        Traits\NotesField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -83,15 +84,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="pi_reason", length=255, nullable=true)
      */
     protected $piReason;
-
-    /**
-     * Notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="notes", nullable=true)
-     */
-    protected $notes;
 
     /**
      * Pi decision
@@ -251,29 +243,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     public function getPiReason()
     {
         return $this->piReason;
-    }
-
-    /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return \Olcs\Db\Entity\LegacyRecommendation
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
     }
 
     /**

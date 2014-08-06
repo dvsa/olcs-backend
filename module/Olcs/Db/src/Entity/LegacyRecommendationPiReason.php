@@ -27,10 +27,19 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiReasonManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Pi reason
+     *
+     * @var \Olcs\Db\Entity\PiReason
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiReason")
+     * @ORM\JoinColumn(name="pi_reason_id", referencedColumnName="id")
+     */
+    protected $piReason;
 
     /**
      * Legacy recommendation
@@ -50,6 +59,29 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="comment", length=30, nullable=true)
      */
     protected $comment;
+
+    /**
+     * Set the pi reason
+     *
+     * @param \Olcs\Db\Entity\PiReason $piReason
+     * @return \Olcs\Db\Entity\LegacyRecommendationPiReason
+     */
+    public function setPiReason($piReason)
+    {
+        $this->piReason = $piReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi reason
+     *
+     * @return \Olcs\Db\Entity\PiReason
+     */
+    public function getPiReason()
+    {
+        return $this->piReason;
+    }
 
     /**
      * Set the legacy recommendation
