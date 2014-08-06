@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * SiPenalty Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty",
  *    indexes={
  *        @ORM\Index(name="fk_si_penalty_serious_infringement1_idx", columns={"serious_infringement_id"}),
@@ -30,7 +32,7 @@ class SiPenalty implements Interfaces\EntityInterface
         Traits\SeriousInfringementManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\EndDateField,
-        Traits\DeletedDateFieldAlt1,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

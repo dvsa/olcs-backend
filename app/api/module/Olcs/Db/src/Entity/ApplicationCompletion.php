@@ -274,6 +274,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionPaySummaryStatus;
 
     /**
+     * Section tp status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="yesnonull", name="section_tp_status", nullable=true)
+     */
+    protected $sectionTpStatus;
+
+    /**
      * Section tp lic status
      *
      * @var boolean
@@ -910,6 +919,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionPaySummaryStatus()
     {
         return $this->sectionPaySummaryStatus;
+    }
+
+    /**
+     * Set the section tp status
+     *
+     * @param boolean $sectionTpStatus
+     * @return \Olcs\Db\Entity\ApplicationCompletion
+     */
+    public function setSectionTpStatus($sectionTpStatus)
+    {
+        $this->sectionTpStatus = $sectionTpStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section tp status
+     *
+     * @return boolean
+     */
+    public function getSectionTpStatus()
+    {
+        return $this->sectionTpStatus;
     }
 
     /**

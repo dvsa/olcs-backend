@@ -11,7 +11,7 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="duration" type="integer" column="duration" nullable="true"/>
-    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>

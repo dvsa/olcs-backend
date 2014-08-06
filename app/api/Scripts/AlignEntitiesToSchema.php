@@ -407,6 +407,7 @@ class AlignEntitiesToSchema
 
             $this->entities[$className] = array(
                 'name' => str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']),
+                'softDeletable' => $this->hasSoftDeleteField($fields),
                 'className' => $config['entity']['@attributes']['name'],
                 'table' => $config['entity']['@attributes']['table'],
                 'indexes' => $this->getIndexesFromConfig($config),
@@ -424,6 +425,22 @@ class AlignEntitiesToSchema
         }
 
         $this->respond('Entity configurations compiled', 'success');
+    }
+
+    /**
+     * Check if there is a soft delete field
+     *
+     * @param array $fields
+     */
+    private function hasSoftDeleteField($fields)
+    {
+        foreach ($fields as $field) {
+            if ($field['config']['@attributes'][$field['ref']] == 'deletedDate') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

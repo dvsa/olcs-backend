@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TmCaseDecisionRehab Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_case_decision_rehab",
  *    indexes={
  *        @ORM\Index(name="fk_tm_case_decision_rehab_tm_case_decision1_idx", columns={"tm_case_decision_id"}),
@@ -28,7 +30,7 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TmCaseDecisionManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

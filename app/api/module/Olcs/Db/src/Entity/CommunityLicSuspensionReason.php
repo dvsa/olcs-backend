@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CommunityLicSuspensionReason Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_suspension_reason",
  *    indexes={
  *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx", columns={"community_lic_suspension_id"}),
@@ -27,7 +29,7 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

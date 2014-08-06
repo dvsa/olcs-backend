@@ -5,6 +5,7 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Recipient Entity
@@ -13,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="recipient",
  *    indexes={
  *        @ORM\Index(name="fk_recipient_contact_details1_idx", columns={"contact_details_id"}),
@@ -28,7 +30,7 @@ class Recipient implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

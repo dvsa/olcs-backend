@@ -22,7 +22,7 @@
     <field name="noOfTrailersPossessed" type="integer" column="no_of_trailers_possessed" nullable="true"/>
     <field name="viAction" type="string" column="vi_action" length="1" nullable="true"/>
     <field name="addedDate" type="date" column="added_date" nullable="true"/>
-    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="isInterim" type="boolean" column="is_interim" nullable="true"/>
     <field name="publicationAppropriate" type="boolean" column="publication_appropriate" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>

@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Pi Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
  *        @ORM\Index(name="fk_pi_cases1_idx", columns={"case_id"}),
@@ -38,6 +40,7 @@ class Pi implements Interfaces\EntityInterface
         Traits\DecisionDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\CustomDeletedDateField,
         Traits\CustomVersionField;
 
     /**
@@ -69,13 +72,13 @@ class Pi implements Interfaces\EntityInterface
     protected $typeAppVar = 0;
 
     /**
-     * Type discipliniary
+     * Type disciplinary
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="type_discipliniary", nullable=false)
+     * @ORM\Column(type="yesnonull", name="type_disciplinary", nullable=false)
      */
-    protected $typeDiscipliniary = 0;
+    protected $typeDisciplinary = 0;
 
     /**
      * Type env new
@@ -273,26 +276,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the type discipliniary
+     * Set the type disciplinary
      *
-     * @param boolean $typeDiscipliniary
+     * @param boolean $typeDisciplinary
      * @return \Olcs\Db\Entity\Pi
      */
-    public function setTypeDiscipliniary($typeDiscipliniary)
+    public function setTypeDisciplinary($typeDisciplinary)
     {
-        $this->typeDiscipliniary = $typeDiscipliniary;
+        $this->typeDisciplinary = $typeDisciplinary;
 
         return $this;
     }
 
     /**
-     * Get the type discipliniary
+     * Get the type disciplinary
      *
      * @return boolean
      */
-    public function getTypeDiscipliniary()
+    public function getTypeDisciplinary()
     {
-        return $this->typeDiscipliniary;
+        return $this->typeDisciplinary;
     }
 
     /**

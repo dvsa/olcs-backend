@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TransportManagerLicence Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_licence",
  *    indexes={
  *        @ORM\Index(name="fk_transport_manager_licence_transport_manager1_idx", columns={"transport_manager_id"}),
@@ -29,7 +31,7 @@ class TransportManagerLicence implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\TransportManagerManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

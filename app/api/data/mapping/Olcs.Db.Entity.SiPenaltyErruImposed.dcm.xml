@@ -13,7 +13,7 @@
     <field name="finalDecisionDate" type="date" column="final_decision_date" nullable="true"/>
     <field name="startDate" type="date" column="start_date" nullable="true"/>
     <field name="endDate" type="date" column="end_date" nullable="true"/>
-    <field name="deletedDate" type="date" column="deleted_date" nullable="true"/>
+    <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="executed" type="integer" column="executed" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>

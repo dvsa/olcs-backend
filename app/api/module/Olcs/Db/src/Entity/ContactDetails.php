@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ContactDetails Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
  *        @ORM\Index(name="fk_contact_details_licence1_idx", columns={"licence_id"}),
@@ -37,7 +39,7 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\LicenceManyToOne,
         Traits\EmailAddress60Field,
         Traits\Description255FieldAlt1,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

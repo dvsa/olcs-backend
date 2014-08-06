@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Opposition Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="opposition",
  *    indexes={
  *        @ORM\Index(name="fk_opposition_application1_idx", columns={"application_id"}),
@@ -29,7 +31,7 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\ApplicationManyToOne,
         Traits\Notes4000Field,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

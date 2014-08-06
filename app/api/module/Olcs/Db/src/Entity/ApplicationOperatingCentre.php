@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ApplicationOperatingCentre Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application_operating_centre",
  *    indexes={
  *        @ORM\Index(name="fk_ApplicationOperatingCentre_Application1_idx", columns={"application_id"}),
@@ -41,7 +43,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\NoOfTrailersPossessedField,
         Traits\ViAction1Field,
         Traits\AddedDateField,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\IsInterimField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

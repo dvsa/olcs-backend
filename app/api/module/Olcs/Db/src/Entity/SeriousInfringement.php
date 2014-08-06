@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * SeriousInfringement Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
  *        @ORM\Index(name="fk_serious_infringement_cases1_idx", columns={"case_id"}),
@@ -32,7 +34,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\SiCategoryManyToOne,
         Traits\CaseManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TmQualification Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_qualification",
  *    indexes={
  *        @ORM\Index(name="fk_qualification_transport_manager1_idx", columns={"transport_manager_id"}),
@@ -31,7 +33,7 @@ class TmQualification implements Interfaces\EntityInterface
         Traits\CountryCodeManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\IssuedDateField,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

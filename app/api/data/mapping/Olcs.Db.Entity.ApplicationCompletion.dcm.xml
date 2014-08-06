@@ -32,6 +32,7 @@
     <field name="sectionSubStatus" type="boolean" column="section_sub_status" nullable="true"/>
     <field name="sectionPayPayStatus" type="boolean" column="section_pay_pay_status" nullable="true"/>
     <field name="sectionPaySummaryStatus" type="boolean" column="section_pay_summary_status" nullable="true"/>
+    <field name="sectionTpStatus" type="boolean" column="section_tp_status" nullable="true"/>
     <field name="sectionTpLicStatus" type="boolean" column="section_tp_lic_status" nullable="true"/>
     <field name="lastSection" type="string" column="last_section" length="255" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>

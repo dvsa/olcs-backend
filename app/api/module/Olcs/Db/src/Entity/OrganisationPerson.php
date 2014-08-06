@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * OrganisationPerson Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="organisation_person",
  *    indexes={
  *        @ORM\Index(name="fk_owner_person1_idx", columns={"person_id"}),
@@ -29,7 +31,7 @@ class OrganisationPerson implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
-        Traits\DeletedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

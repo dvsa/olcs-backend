@@ -9,6 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 <?php if (!empty($details['traits'])): ?>
 use Olcs\Db\Entity\Traits;
 <?php endif; ?>
+<?php if ($details['softDeletable']): ?>
+use Gedmo\Mapping\Annotation as Gedmo;
+<?php endif; ?>
 
 /**
  * <?php echo $details['name']; ?> Entity
@@ -17,6 +20,9 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+<?php if ($details['softDeletable']): ?>
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
+<?php endif; ?>
  * @ORM\Table(name="<?php echo $details['table']; ?>"<?php
 if (!empty($details['indexes'])) {
 ?>
