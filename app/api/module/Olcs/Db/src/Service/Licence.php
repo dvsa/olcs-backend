@@ -42,7 +42,7 @@ class Licence extends ServiceAbstract
             'a.address_line2',
             'a.address_line3',
             'a.address_line4',
-            'a.city',
+            'a.town',
             'a.postcode'
         );
 
@@ -68,7 +68,7 @@ class Licence extends ServiceAbstract
                 'type' => 'LIKE'
             ),
             'town' => array(
-                'condition' => 'a.city LIKE ? OR l.addressTown LIKE ?',
+                'condition' => 'a.town LIKE ? OR l.addressTown LIKE ?',
                 'type' => 'LIKE'
             ),
             'operatorId' => array(
@@ -79,7 +79,7 @@ class Licence extends ServiceAbstract
 
         $lookupColumn = array(
             'licenceNumber' => 'l.lic_no',
-            'appId' => 'app.application_number',
+            'appId' => 'app.id',
             'operatorName' => 'o.name',
             'companyNumber' => 'o.registered_company_number',
             'lastActionDate' => 'l.startDate',
@@ -102,7 +102,7 @@ class Licence extends ServiceAbstract
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.*, o.*, a.*, app.application_number as appNumber, app.status as appStatus,
+        $dataSql = 'SELECT l.*, o.*, a.*, app.id as appNumber, app.status as appStatus,
             l.lic_no AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
@@ -114,7 +114,7 @@ LEFT JOIN application app ON app.licence_uid = l.id
 LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_details_type = \'correspondence\')
 LEFT JOIN address a ON cd.address_id = a.id
 LEFT JOIN trading_name tm ON l.id = tm.F_Licence_UID
-LEFT OUTER JOIN vosa_case c ON c.licence=l.id
+LEFT OUTER JOIN cases c ON c.licence=l.id
 ' . $where;
 
         $dataSql .= $sql . ' GROUP BY l.id ' . $orderByClause . $limitClause;
