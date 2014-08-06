@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Presiding tc many to one trait
  *
- * Auto-Generated (Shared between 6 entities)
+ * Auto-Generated (Shared between 7 entities)
  */
 trait PresidingTcManyToOne
 {

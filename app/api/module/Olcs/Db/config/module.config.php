@@ -139,14 +139,6 @@ return [
                 ]
             ]
         ],
-        'configuration' => [
-            'orm_default' => [
-                'types' => [
-                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
-                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
-                ]
-            ]
-        ],
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
@@ -158,6 +150,10 @@ return [
             'orm_default' => [
                 'filters' => [
                     'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
+                ],
+                'types' => [
+                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
+                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
                 ]
             ],
         ]

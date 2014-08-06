@@ -36,13 +36,13 @@
         <join-column name="presiding_tc_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-many field="piReason" target-entity="Olcs\Db\Entity\PiReason" inversed-by="proposeToRevoke">
-      <join-table name="ptr_pi_reason">
+    <many-to-many field="reason" target-entity="Olcs\Db\Entity\Reason" inversed-by="proposeToRevoke">
+      <join-table name="ptr_reason">
         <join-columns>
           <join-column name="propose_to_revoke_id" referenced-column-name="id"/>
         </join-columns>
         <inverse-join-columns>
-          <join-column name="pi_reason_id" referenced-column-name="id"/>
+          <join-column name="reason_id" referenced-column-name="id"/>
         </inverse-join-columns>
       </join-table>
     </many-to-many>

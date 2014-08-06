@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Olcs\Db\Entity\CasePiReason" table="case_pi_reason">
+  <entity name="Olcs\Db\Entity\Penalty" table="penalty">
     <indexes>
-      <index name="fk_case_rec_pi_reason_pi_reason1_idx" columns="pi_reason_id"/>
-      <index name="fk_case_pi_reason_pi_detail1_idx" columns="pi_detail_id"/>
-      <index name="fk_case_pi_reason_user1_idx" columns="created_by"/>
-      <index name="fk_case_pi_reason_user2_idx" columns="last_modified_by"/>
+      <index name="IDX_AFE28FD8915C14AD" columns="case_id"/>
+      <index name="IDX_AFE28FD8DE12AB56" columns="created_by"/>
+      <index name="IDX_AFE28FD865CF370E" columns="last_modified_by"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="notes" type="text" column="notes" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
-      <join-columns>
-        <join-column name="last_modified_by" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="created_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="piDetail" target-entity="Olcs\Db\Entity\PiDetail">
+    <many-to-one field="case" target-entity="Olcs\Db\Entity\Cases">
       <join-columns>
-        <join-column name="pi_detail_id" referenced-column-name="id"/>
+        <join-column name="case_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="piReason" target-entity="Olcs\Db\Entity\PiReason">
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
-        <join-column name="pi_reason_id" referenced-column-name="id"/>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

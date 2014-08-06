@@ -3,16 +3,16 @@
 namespace OlcsTest\Db\Entity;
 
 /**
- * PiDetail Entity Unit Tests
+ * PiHearing Entity Unit Tests
  *
  * Auto-Generated
  */
-class PiDetailTest extends Abstracts\EntityTester
+class PiHearingTest extends Abstracts\EntityTester
 {
     /**
      * Define the entity to test
      *
      * @var string
      */
-    protected $entityClass = 'Olcs\Db\Entity\PiDetail';
+    protected $entityClass = 'Olcs\Db\Entity\PiHearing';
 }

@@ -18,7 +18,7 @@ use Zend\Filter\Word\CamelCaseToSeparator;
  */
 class AlignEntitiesToSchema
 {
-    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs_schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ -uroot -ppassword -dolcs\'';
+    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ -uroot -ppassword -dolcs\'';
 
     const PATH_TO_DOCTRINE = '/workspace/OLCS/olcs-backend/vendor/bin/doctrine-module';
 
@@ -213,7 +213,7 @@ class AlignEntitiesToSchema
 
             $this->respond('Importing schema: ' . $schema, 'info');
 
-            $importSchemaCommand = 'mysql -u%s -p%s < %s';
+            $importSchemaCommand = 'mysql -u%s -p%s %s < %s';
 
             $this->recreateDatabase();
 
@@ -222,6 +222,7 @@ class AlignEntitiesToSchema
                     $importSchemaCommand,
                     $this->options['u'],
                     $this->options['p'],
+                    $this->options['d'],
                     $schema
                 )
             );

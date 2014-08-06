@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Olcs\Db\Entity\PiReason" table="pi_reason">
+  <entity name="Olcs\Db\Entity\CardPaymentTokenUsage" table="card_payment_token_usage">
     <indexes>
-      <index name="fk_case_rec_reason_reason1_idx" columns="reason_id"/>
-      <index name="fk_case_reason_pi1_idx" columns="pi_id"/>
-      <index name="fk_case_reason_user1_idx" columns="created_by"/>
-      <index name="fk_case_reason_user2_idx" columns="last_modified_by"/>
+      <index name="IDX_FD3FFE7A64F8C732" columns="payment_uid"/>
+      <index name="IDX_FD3FFE7ADE12AB56" columns="created_by"/>
+      <index name="IDX_FD3FFE7A65CF370E" columns="last_modified_by"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="token" type="string" column="token" length="255" nullable="false"/>
+    <field name="status" type="string" column="status" length="255" nullable="false"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
-      <join-columns>
-        <join-column name="last_modified_by" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="created_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="pi" target-entity="Olcs\Db\Entity\Pi">
+    <many-to-one field="paymentUid" target-entity="Olcs\Db\Entity\Payment">
       <join-columns>
-        <join-column name="pi_id" referenced-column-name="id"/>
+        <join-column name="payment_uid" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="reason" target-entity="Olcs\Db\Entity\Reason">
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
-        <join-column name="reason_id" referenced-column-name="id"/>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>
