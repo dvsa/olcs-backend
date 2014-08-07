@@ -83,6 +83,7 @@ class Person extends ServiceAbstract
      * Get the sort order from the options
      *
      * @param array $options
+     * @param string $default
      * @return string
      */
     private function getSortOrder($options, $default = 'ASC')
@@ -140,6 +141,8 @@ class Person extends ServiceAbstract
      *
      * @param string|array $orderBy
      * @param string $sortOrder
+     *
+     * @return string
      */
     private function formatOrderByClause($orderBy, $sortOrder)
     {
@@ -168,6 +171,7 @@ class Person extends ServiceAbstract
     /**
      * Format where clause
      *
+     * @param bool $prependWhere
      * @param array $conditions
      * @return string
      */
@@ -215,7 +219,7 @@ class Person extends ServiceAbstract
     /**
      * Generate individual where clauses from the data passed in
      *
-     * @param array $optionsToFields
+     * @param array $optionConditions
      * @param array $options
      * @return array
      */
