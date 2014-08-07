@@ -3,15 +3,13 @@
 /**
  * Tests DefendantSearchController
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
 
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Controller\DefendantSearchController;
 use Zend\Http\Response;
-use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Tests PersonSearchController
