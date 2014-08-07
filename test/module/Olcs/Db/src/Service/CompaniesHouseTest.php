@@ -770,4 +770,104 @@ XML;
 
         $this->assertEquals($expected, $response);
     }
+
+    /**
+     * Test getList with Current Company Officers with Response Body
+     */
+    public function testGetListWithCurrentCompanyOfficers()
+    {
+        $expected = array(
+            'Count' => 1,
+            'Results' => array(
+                array(
+                    'title'       => 'Title',
+                    'firstName'   => 'Forename',
+                    'surname'     => 'Surname',
+                    'dateOfBirth' => 'DOB'
+                )
+            )
+        );
+
+        $data = array(
+            'type' => 'currentCompanyOfficers',
+            'value' => 12345678
+        );
+
+        $config = array(
+            'companies_house_credentials' => array(
+                'password' => 'foo',
+                'userId' => 'bar'
+            )
+        );
+
+        $transactionId = 3;
+
+        $mockResponse = <<< XML
+<?xml version="1.0"?>
+<result>
+    <Body>
+        <CompanyAppointments>
+                <CoAppt>
+                    <AppointmentType>DIR</AppointmentType>
+                    <AppointmentStatus>CURRENT</AppointmentStatus>
+                    <Person>
+                        <Title>Title</Title>
+                        <Forename>Forename</Forename>
+                        <Surname>Surname</Surname>
+                        <DOB>DOB</DOB>
+                    </Person>
+                </CoAppt>
+        </CompanyAppointments>
+    </Body>
+</result>
+XML;
+
+        $mockRequest = $this->getMock('\stdClass');
+
+        $mockGateway = $this->getMock('\stdClass', array('getCompanyAppointments', 'getResponse'));
+
+        $mockGateway->expects($this->once())
+            ->method('getCompanyAppointments')
+            ->with($data['value'])
+            ->will($this->returnValue($mockRequest));
+
+        $mockGateway->expects($this->once())
+            ->method('getResponse')
+            ->will($this->returnValue($mockResponse));
+
+        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
+
+        $mockServiceLocator->expects($this->once())
+            ->method('get')
+            ->with('Config')
+            ->will($this->returnValue($config));
+
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+
+        $mockService->expects($this->once())
+            ->method('initiateRequest')
+            ->will($this->returnValue($mockService));
+
+        $mockService->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($transactionId));
+
+        $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
+
+        $service->expects($this->once())
+            ->method('getNewGateway')
+            ->will($this->returnValue($mockGateway));
+
+        $service->expects($this->any())
+            ->method('getServiceLocator')
+            ->will($this->returnValue($mockServiceLocator));
+
+        $service->expects($this->any())
+            ->method('getService')
+            ->with('CompaniesHouseRequest')
+            ->will($this->returnValue($mockService));
+
+        $response = $service->getList($data);
+        $this->assertEquals($expected, $response);
+    }
 }
