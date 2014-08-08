@@ -15,7 +15,7 @@ class Task extends ServiceAbstract
                 'category' => 'Application',
                 'subCategory' => 'Address change assisted digital',
                 'description' => 'Address change',
-                'date' => '2014-04-5 09:00:00',
+                'date' => '2014-04-05 09:00:00',
                 'owner' => 'Gillian Fox',
                 'name' => 'Don Tarmacadam'
             )
