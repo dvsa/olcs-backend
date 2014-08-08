@@ -71,7 +71,7 @@ return [
                     ]
                 ]
             ],
-            'operator-search' => [
+            'organisation-search' => [
                 'type' => 'segment',
                 'options' => [
                     'route' => '/organisation-search[/:id]',
