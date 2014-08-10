@@ -43,4 +43,5 @@ trait IrfoGvPermitManyToOne
     {
         return $this->irfoGvPermit;
     }
+
 }

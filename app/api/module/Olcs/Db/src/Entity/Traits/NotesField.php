@@ -42,4 +42,5 @@ trait NotesField
     {
         return $this->notes;
     }
+
 }

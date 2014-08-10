@@ -83,9 +83,17 @@ abstract class ServiceAbstract
         $this->dbPersist($entity);
         $this->dbFlush();
 
-        $id = $entity->getId();
+        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
 
-        return $id;
+        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
+
+        $flatIds = $this->getEntityManager()->getUnitOfWork()->flattenIdentifier($class, $id);
+
+        if (count($flatIds) == 1) {
+            return array_values($flatIds)[0];
+        }
+
+        return $flatIds;
     }
 
     /**
@@ -223,48 +231,6 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Method to allow easier testing
-     *
-     * @param \Doctrine\ORM\Query $query
-     * @param Bool $fetchJoinCollection
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function getPaginator($query, $fetchJoinColumns = false)
-    {
-        return new Paginator($query, $fetchJoinColumns);
-    }
-
-    /**
-     * Returns valid order by values where they exist in the array given.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function getOrderByValues(array $data)
-    {
-        return array_intersect_key($data, array_flip(['sort', 'order']));
-    }
-
-    /**
-     * Sets the sort by columns.
-     *
-     * @param unknown_type $qb
-     * @param unknown_type $data
-     */
-    public function setOrderBy($qb, $data)
-    {
-        $orderByValues = $this->getOrderByValues($data);
-        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
-        if ($sort) {
-            $sortString = 'a.' . $sort;
-            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
-
-            $qb->orderBy($sortString, $orderString);
-        }
-    }
-
-    /**
      * Update an entity
      *
      * @param mixed $id
@@ -352,6 +318,48 @@ abstract class ServiceAbstract
         $this->dbFlush();
 
         return true;
+    }
+
+    /**
+     * Method to allow easier testing
+     *
+     * @param \Doctrine\ORM\Query $query
+     * @param boolean $fetchJoinColumns
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getPaginator($query, $fetchJoinColumns = false)
+    {
+        return new Paginator($query, $fetchJoinColumns);
+    }
+
+    /**
+     * Returns valid order by values where they exist in the array given.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function getOrderByValues(array $data)
+    {
+        return array_intersect_key($data, array_flip(['sort', 'order']));
+    }
+
+    /**
+     * Sets the sort by columns.
+     *
+     * @param unknown_type $qb
+     * @param unknown_type $data
+     */
+    public function setOrderBy($qb, $data)
+    {
+        $orderByValues = $this->getOrderByValues($data);
+        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
+        if ($sort) {
+            $sortString = 'a.' . $sort;
+            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
+
+            $qb->orderBy($sortString, $orderString);
+        }
     }
 
     /**

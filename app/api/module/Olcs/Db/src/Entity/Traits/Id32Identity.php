@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Id32 identity trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait Id32Identity
 {
@@ -43,4 +43,5 @@ trait Id32Identity
     {
         return $this->id;
     }
+
 }

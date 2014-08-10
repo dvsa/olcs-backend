@@ -48,10 +48,20 @@ class DocParagraph implements Interfaces\EntityInterface
     protected $paraText;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the para title
      *
      * @param string $paraTitle
-     * @return \Olcs\Db\Entity\DocParagraph
+     * @return DocParagraph
      */
     public function setParaTitle($paraTitle)
     {
@@ -70,11 +80,12 @@ class DocParagraph implements Interfaces\EntityInterface
         return $this->paraTitle;
     }
 
+
     /**
      * Set the para text
      *
      * @param string $paraText
-     * @return \Olcs\Db\Entity\DocParagraph
+     * @return DocParagraph
      */
     public function setParaText($paraText)
     {
@@ -92,4 +103,5 @@ class DocParagraph implements Interfaces\EntityInterface
     {
         return $this->paraText;
     }
+
 }

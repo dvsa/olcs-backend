@@ -36,9 +36,9 @@ class Stay implements Interfaces\EntityInterface
     /**
      * Is tc
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_tc", nullable=false)
+     * @ORM\Column(type="yesno", name="is_tc", nullable=false)
      */
     protected $isTc;
 
@@ -61,10 +61,20 @@ class Stay implements Interfaces\EntityInterface
     protected $notes;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is tc
      *
-     * @param boolean $isTc
-     * @return \Olcs\Db\Entity\Stay
+     * @param unknown $isTc
+     * @return Stay
      */
     public function setIsTc($isTc)
     {
@@ -76,18 +86,19 @@ class Stay implements Interfaces\EntityInterface
     /**
      * Get the is tc
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsTc()
     {
         return $this->isTc;
     }
 
+
     /**
      * Set the request date
      *
      * @param \DateTime $requestDate
-     * @return \Olcs\Db\Entity\Stay
+     * @return Stay
      */
     public function setRequestDate($requestDate)
     {
@@ -106,11 +117,12 @@ class Stay implements Interfaces\EntityInterface
         return $this->requestDate;
     }
 
+
     /**
      * Set the notes
      *
      * @param string $notes
-     * @return \Olcs\Db\Entity\Stay
+     * @return Stay
      */
     public function setNotes($notes)
     {
@@ -128,4 +140,5 @@ class Stay implements Interfaces\EntityInterface
     {
         return $this->notes;
     }
+
 }

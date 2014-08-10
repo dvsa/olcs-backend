@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -22,15 +21,6 @@ class ApplicationActionRef implements Interfaces\EntityInterface
         Traits\Description45Field;
 
     /**
-     * Application
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Application", mappedBy="applicationActionRefs")
-     */
-    protected $applications;
-
-    /**
      * Display order
      *
      * @var int
@@ -42,7 +32,7 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Default received
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="default_received", nullable=true)
      */
@@ -51,7 +41,7 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Default approved
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="default_approved", nullable=true)
      */
@@ -67,43 +57,20 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     protected $defaultApplicable;
 
     /**
-     * Initialise the collections
-     */
-    public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-    }
-
-    /**
-     * Set the application
+     * Get identifier(s)
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
-
-     * @return \Olcs\Db\Entity\ApplicationActionRef
+     * @return mixed
      */
-    public function setApplications($applications)
+    public function getIdentifier()
     {
-        $this->applications = $applications;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-
-     */
-    public function getApplications()
-    {
-        return $this->applications;
+        return $this->getId();
     }
 
     /**
      * Set the display order
      *
      * @param int $displayOrder
-     * @return \Olcs\Db\Entity\ApplicationActionRef
+     * @return ApplicationActionRef
      */
     public function setDisplayOrder($displayOrder)
     {
@@ -122,11 +89,12 @@ class ApplicationActionRef implements Interfaces\EntityInterface
         return $this->displayOrder;
     }
 
+
     /**
      * Set the default received
      *
-     * @param boolean $defaultReceived
-     * @return \Olcs\Db\Entity\ApplicationActionRef
+     * @param unknown $defaultReceived
+     * @return ApplicationActionRef
      */
     public function setDefaultReceived($defaultReceived)
     {
@@ -138,18 +106,19 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Get the default received
      *
-     * @return boolean
+     * @return unknown
      */
     public function getDefaultReceived()
     {
         return $this->defaultReceived;
     }
 
+
     /**
      * Set the default approved
      *
-     * @param boolean $defaultApproved
-     * @return \Olcs\Db\Entity\ApplicationActionRef
+     * @param unknown $defaultApproved
+     * @return ApplicationActionRef
      */
     public function setDefaultApproved($defaultApproved)
     {
@@ -161,18 +130,19 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Get the default approved
      *
-     * @return boolean
+     * @return unknown
      */
     public function getDefaultApproved()
     {
         return $this->defaultApproved;
     }
 
+
     /**
      * Set the default applicable
      *
      * @param string $defaultApplicable
-     * @return \Olcs\Db\Entity\ApplicationActionRef
+     * @return ApplicationActionRef
      */
     public function setDefaultApplicable($defaultApplicable)
     {
@@ -190,4 +160,5 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     {
         return $this->defaultApplicable;
     }
+
 }

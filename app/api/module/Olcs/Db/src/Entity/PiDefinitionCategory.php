@@ -29,10 +29,20 @@ class PiDefinitionCategory implements Interfaces\EntityInterface
     protected $category;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the category
      *
      * @param string $category
-     * @return \Olcs\Db\Entity\PiDefinitionCategory
+     * @return PiDefinitionCategory
      */
     public function setCategory($category)
     {
@@ -50,4 +60,5 @@ class PiDefinitionCategory implements Interfaces\EntityInterface
     {
         return $this->category;
     }
+
 }

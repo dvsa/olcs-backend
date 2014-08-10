@@ -87,10 +87,20 @@ class CommunityLic implements Interfaces\EntityInterface
     protected $status;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the expired date
      *
      * @param \DateTime $expiredDate
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setExpiredDate($expiredDate)
     {
@@ -109,11 +119,12 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->expiredDate;
     }
 
+
     /**
      * Set the licence expired date
      *
      * @param \DateTime $licenceExpiredDate
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setLicenceExpiredDate($licenceExpiredDate)
     {
@@ -132,11 +143,12 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->licenceExpiredDate;
     }
 
+
     /**
      * Set the issue no
      *
      * @param int $issueNo
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setIssueNo($issueNo)
     {
@@ -155,11 +167,12 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->issueNo;
     }
 
+
     /**
      * Set the serial no
      *
      * @param int $serialNo
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setSerialNo($serialNo)
     {
@@ -178,11 +191,12 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->serialNo;
     }
 
+
     /**
      * Set the serial no prefix
      *
      * @param string $serialNoPrefix
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setSerialNoPrefix($serialNoPrefix)
     {
@@ -201,11 +215,12 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->serialNoPrefix;
     }
 
+
     /**
      * Set the status
      *
      * @param string $status
-     * @return \Olcs\Db\Entity\CommunityLic
+     * @return CommunityLic
      */
     public function setStatus($status)
     {
@@ -223,4 +238,5 @@ class CommunityLic implements Interfaces\EntityInterface
     {
         return $this->status;
     }
+
 }

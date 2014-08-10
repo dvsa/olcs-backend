@@ -55,7 +55,7 @@ class Licence extends ServiceAbstract
                 'condition' => 'o.organisation_type = ?',
                 'type' => 'EQUALS'
             ),
-            'licenceNumber' => array(
+            'licNo' => array(
                 'condition' => 'l.lic_no LIKE ?',
                 'type' => 'LIKE'
             ),
@@ -78,7 +78,7 @@ class Licence extends ServiceAbstract
         );
 
         $lookupColumn = array(
-            'licenceNumber' => 'l.lic_no',
+            'licNo' => 'l.lic_no',
             'appId' => 'app.id',
             'operatorName' => 'o.name',
             'companyNumber' => 'o.registered_company_number',
@@ -95,7 +95,7 @@ class Licence extends ServiceAbstract
         $offset = $this->getOffset($page, $limit);
         $limitClause = $this->formatLimitClause($limit, $offset);
         $orderByClause = $this->formatOrderByClause(
-            $this->getOrderBy($options, $lookupColumn, $lookupColumn['licenceNumber']), $sortOrder
+            $this->getOrderBy($options, $lookupColumn, $lookupColumn['licNo']), $sortOrder
         );
 
         list($conditions, $params) = $this->formatConditionsFromOptions($optionConditions, $options);
@@ -103,7 +103,7 @@ class Licence extends ServiceAbstract
         $where = $this->formatWhereClause($conditions);
 
         $dataSql = 'SELECT l.*, o.*, a.*, app.id as appNumber, app.status as appStatus,
-            l.lic_no AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
+            l.lic_no AS licNo, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
 
@@ -223,7 +223,7 @@ LEFT OUTER JOIN cases c ON c.licence=l.id
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.id AS licenceId, l.lic_no AS licenceNumber, l.status AS licenceStatus,
+        $dataSql = 'SELECT l.id AS licenceId, l.lic_no AS licNo, l.status AS licenceStatus,
 MAX(IF(pd.status = \'Y\', 0, 1)) AS disqualificationStatus ';
 
         $countSql = 'SELECT COUNT(DISTINCT p.id, IFNULL(l.id, 0)) AS rowCount ';

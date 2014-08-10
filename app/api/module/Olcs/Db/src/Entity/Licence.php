@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -35,8 +36,8 @@ class Licence implements Interfaces\EntityInterface
         Traits\GoodsOrPsvManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOne,
-        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\EnforcementAreaManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\TotAuthTrailersField,
@@ -62,14 +63,14 @@ class Licence implements Interfaces\EntityInterface
     protected $tachographIns;
 
     /**
-     * Enforcement area
+     * Organisation
      *
-     * @var \Olcs\Db\Entity\EnforcementArea
+     * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="licences")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
      */
-    protected $enforcementArea;
+    protected $organisation;
 
     /**
      * Trailers in possession
@@ -146,27 +147,27 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Safety ins
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="safety_ins", nullable=false)
+     * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
      */
     protected $safetyIns = 0;
 
     /**
      * Safety ins varies
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=false)
+     * @ORM\Column(type="yesno", name="safety_ins_varies", nullable=false)
      */
     protected $safetyInsVaries = 0;
 
     /**
      * Ni flag
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="ni_flag", nullable=false)
+     * @ORM\Column(type="yesno", name="ni_flag", nullable=false)
      */
     protected $niFlag = 0;
 
@@ -191,17 +192,54 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Translate to welsh
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="translate_to_welsh", nullable=false)
+     * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
     protected $translateToWelsh = 0;
+
+    /**
+     * Application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Application", mappedBy="licence")
+     */
+    protected $applications;
+
+    /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
+     */
+    protected $contactDetails;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+        $this->contactDetails = new ArrayCollection();
+    }
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setTachographIns($tachographIns)
     {
@@ -220,34 +258,36 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographIns;
     }
 
+
     /**
-     * Set the enforcement area
+     * Set the organisation
      *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return \Olcs\Db\Entity\Licence
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return Licence
      */
-    public function setEnforcementArea($enforcementArea)
+    public function setOrganisation($organisation)
     {
-        $this->enforcementArea = $enforcementArea;
+        $this->organisation = $organisation;
 
         return $this;
     }
 
     /**
-     * Get the enforcement area
+     * Get the organisation
      *
-     * @return \Olcs\Db\Entity\EnforcementArea
+     * @return \Olcs\Db\Entity\Organisation
      */
-    public function getEnforcementArea()
+    public function getOrganisation()
     {
-        return $this->enforcementArea;
+        return $this->organisation;
     }
+
 
     /**
      * Set the trailers in possession
      *
      * @param int $trailersInPossession
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setTrailersInPossession($trailersInPossession)
     {
@@ -266,11 +306,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->trailersInPossession;
     }
 
+
     /**
      * Set the fabs reference
      *
      * @param string $fabsReference
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setFabsReference($fabsReference)
     {
@@ -289,11 +330,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->fabsReference;
     }
 
+
     /**
      * Set the granted date
      *
      * @param \DateTime $grantedDate
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setGrantedDate($grantedDate)
     {
@@ -312,11 +354,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->grantedDate;
     }
 
+
     /**
      * Set the review date
      *
      * @param \DateTime $reviewDate
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setReviewDate($reviewDate)
     {
@@ -335,11 +378,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->reviewDate;
     }
 
+
     /**
      * Set the fee date
      *
      * @param \DateTime $feeDate
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setFeeDate($feeDate)
     {
@@ -358,11 +402,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->feeDate;
     }
 
+
     /**
      * Set the surrendered date
      *
      * @param \DateTime $surrenderedDate
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setSurrenderedDate($surrenderedDate)
     {
@@ -381,11 +426,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->surrenderedDate;
     }
 
+
     /**
      * Set the safety ins trailers
      *
      * @param int $safetyInsTrailers
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setSafetyInsTrailers($safetyInsTrailers)
     {
@@ -404,11 +450,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsTrailers;
     }
 
+
     /**
      * Set the safety ins vehicles
      *
      * @param int $safetyInsVehicles
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setSafetyInsVehicles($safetyInsVehicles)
     {
@@ -427,11 +474,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVehicles;
     }
 
+
     /**
      * Set the safety ins
      *
-     * @param boolean $safetyIns
-     * @return \Olcs\Db\Entity\Licence
+     * @param unknown $safetyIns
+     * @return Licence
      */
     public function setSafetyIns($safetyIns)
     {
@@ -443,18 +491,19 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the safety ins
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSafetyIns()
     {
         return $this->safetyIns;
     }
 
+
     /**
      * Set the safety ins varies
      *
-     * @param boolean $safetyInsVaries
-     * @return \Olcs\Db\Entity\Licence
+     * @param unknown $safetyInsVaries
+     * @return Licence
      */
     public function setSafetyInsVaries($safetyInsVaries)
     {
@@ -466,18 +515,19 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the safety ins varies
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSafetyInsVaries()
     {
         return $this->safetyInsVaries;
     }
 
+
     /**
      * Set the ni flag
      *
-     * @param boolean $niFlag
-     * @return \Olcs\Db\Entity\Licence
+     * @param unknown $niFlag
+     * @return Licence
      */
     public function setNiFlag($niFlag)
     {
@@ -489,18 +539,19 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the ni flag
      *
-     * @return boolean
+     * @return unknown
      */
     public function getNiFlag()
     {
         return $this->niFlag;
     }
 
+
     /**
      * Set the tachograph ins name
      *
      * @param string $tachographInsName
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setTachographInsName($tachographInsName)
     {
@@ -519,11 +570,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographInsName;
     }
 
+
     /**
      * Set the psv discs to be printed no
      *
      * @param int $psvDiscsToBePrintedNo
-     * @return \Olcs\Db\Entity\Licence
+     * @return Licence
      */
     public function setPsvDiscsToBePrintedNo($psvDiscsToBePrintedNo)
     {
@@ -542,11 +594,12 @@ class Licence implements Interfaces\EntityInterface
         return $this->psvDiscsToBePrintedNo;
     }
 
+
     /**
      * Set the translate to welsh
      *
-     * @param boolean $translateToWelsh
-     * @return \Olcs\Db\Entity\Licence
+     * @param unknown $translateToWelsh
+     * @return Licence
      */
     public function setTranslateToWelsh($translateToWelsh)
     {
@@ -558,10 +611,135 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the translate to welsh
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTranslateToWelsh()
     {
         return $this->translateToWelsh;
     }
+
+
+    /**
+     * Set the application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return Licence
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+    /**
+     * Get the applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Add a applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return Licence
+     */
+    public function addApplications($applications)
+    {
+        if ($applications instanceof ArrayCollection) {
+            $this->applications = new ArrayCollection(
+                array_merge(
+                    $this->applications->toArray(),
+                    $applications->toArray()
+                )
+            );
+        } elseif (!$this->applications->contains($applications)) {
+            $this->applications->add($applications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return Licence
+     */
+    public function removeApplications($applications)
+    {
+        if ($this->applications->contains($applications)) {
+            $this->applications->remove($applications);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
+
+    /**
+     * Add a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
 }

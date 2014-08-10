@@ -47,10 +47,20 @@ class S4Condition implements Interfaces\EntityInterface
     protected $sourceCondition;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the target condition
      *
      * @param \Olcs\Db\Entity\ConditionUndertaking $targetCondition
-     * @return \Olcs\Db\Entity\S4Condition
+     * @return S4Condition
      */
     public function setTargetCondition($targetCondition)
     {
@@ -69,11 +79,12 @@ class S4Condition implements Interfaces\EntityInterface
         return $this->targetCondition;
     }
 
+
     /**
      * Set the source condition
      *
      * @param \Olcs\Db\Entity\ConditionUndertaking $sourceCondition
-     * @return \Olcs\Db\Entity\S4Condition
+     * @return S4Condition
      */
     public function setSourceCondition($sourceCondition)
     {
@@ -91,4 +102,5 @@ class S4Condition implements Interfaces\EntityInterface
     {
         return $this->sourceCondition;
     }
+
 }

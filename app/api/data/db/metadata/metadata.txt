@@ -56,6 +56,7 @@ deadline_date
 decision_date
 hearing_date
 id
+is_withdrawn
 last_modified_by
 last_modified_on
 outcome
@@ -65,6 +66,7 @@ papers_sent_date
 reason
 tm_case_id
 version
+withdrawn_date
 
 application
 -------------------------
@@ -75,6 +77,7 @@ created_by
 created_on
 disqualified
 granted_date
+has_entered_reg
 id
 insolvency_confirmation
 insolvency_details
@@ -376,6 +379,12 @@ licence_id
 open_date
 transport_manager_id
 version
+
+submission_section
+-------------------------
+description
+group
+id
 
 case_submission_section
 -------------------------
@@ -2178,12 +2187,6 @@ submission_action_type
 submission_id
 urgent
 version
-
-submission_section
--------------------------
-description
-group
-id
 
 system_info_message
 -------------------------

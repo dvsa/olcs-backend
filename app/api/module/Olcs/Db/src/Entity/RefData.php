@@ -44,10 +44,20 @@ class RefData implements Interfaces\EntityInterface
     protected $olbsKey;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the ref data category
      *
      * @param \Olcs\Db\Entity\RefDataCategory $refDataCategory
-     * @return \Olcs\Db\Entity\RefData
+     * @return RefData
      */
     public function setRefDataCategory($refDataCategory)
     {
@@ -66,11 +76,12 @@ class RefData implements Interfaces\EntityInterface
         return $this->refDataCategory;
     }
 
+
     /**
      * Set the olbs key
      *
      * @param string $olbsKey
-     * @return \Olcs\Db\Entity\RefData
+     * @return RefData
      */
     public function setOlbsKey($olbsKey)
     {
@@ -88,4 +99,5 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->olbsKey;
     }
+
 }

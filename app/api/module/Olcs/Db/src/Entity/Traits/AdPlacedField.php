@@ -14,16 +14,16 @@ trait AdPlacedField
     /**
      * Ad placed
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="ad_placed", nullable=false)
+     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
      */
     protected $adPlaced;
 
     /**
      * Set the ad placed
      *
-     * @param boolean $adPlaced
+     * @param unknown $adPlaced
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setAdPlaced($adPlaced)
@@ -36,10 +36,11 @@ trait AdPlacedField
     /**
      * Get the ad placed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getAdPlaced()
     {
         return $this->adPlaced;
     }
+
 }

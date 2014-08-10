@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -88,10 +89,37 @@ class Person implements Interfaces\EntityInterface
     protected $titleOther;
 
     /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="person")
+     */
+    protected $contactDetails;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->contactDetails = new ArrayCollection();
+    }
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the forename
      *
      * @param string $forename
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setForename($forename)
     {
@@ -110,11 +138,12 @@ class Person implements Interfaces\EntityInterface
         return $this->forename;
     }
 
+
     /**
      * Set the family name
      *
      * @param string $familyName
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setFamilyName($familyName)
     {
@@ -133,11 +162,12 @@ class Person implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
+
     /**
      * Set the birth place
      *
      * @param string $birthPlace
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setBirthPlace($birthPlace)
     {
@@ -156,11 +186,12 @@ class Person implements Interfaces\EntityInterface
         return $this->birthPlace;
     }
 
+
     /**
      * Set the other name
      *
      * @param string $otherName
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setOtherName($otherName)
     {
@@ -179,11 +210,12 @@ class Person implements Interfaces\EntityInterface
         return $this->otherName;
     }
 
+
     /**
      * Set the title
      *
      * @param string $title
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setTitle($title)
     {
@@ -202,11 +234,12 @@ class Person implements Interfaces\EntityInterface
         return $this->title;
     }
 
+
     /**
      * Set the title other
      *
      * @param string $titleOther
-     * @return \Olcs\Db\Entity\Person
+     * @return Person
      */
     public function setTitleOther($titleOther)
     {
@@ -224,4 +257,67 @@ class Person implements Interfaces\EntityInterface
     {
         return $this->titleOther;
     }
+
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Person
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
+
+    /**
+     * Add a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Person
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Person
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
 }

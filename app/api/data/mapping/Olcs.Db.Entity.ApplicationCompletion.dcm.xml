@@ -5,7 +5,7 @@
       <index name="fk_application_completion_user1_idx" columns="created_by"/>
       <index name="fk_application_completion_user2_idx" columns="last_modified_by"/>
     </indexes>
-    <id name="application" association-key="true"/>
+    <id name="id" association-key="true"/>
     <field name="sectionYbStatus" type="boolean" column="section_yb_status" nullable="true"/>
     <field name="sectionYbBtStatus" type="boolean" column="section_yb_bt_status" nullable="true"/>
     <field name="sectionYbBdStatus" type="boolean" column="section_yb_bd_status" nullable="true"/>
@@ -29,7 +29,6 @@
     <field name="sectionPhCpStatus" type="boolean" column="section_ph_cp_status" nullable="true"/>
     <field name="sectionRdStatus" type="boolean" column="section_rd_status" nullable="true"/>
     <field name="sectionPayStatus" type="boolean" column="section_pay_status" nullable="true"/>
-    <field name="sectionSubStatus" type="boolean" column="section_sub_status" nullable="true"/>
     <field name="sectionPayPayStatus" type="boolean" column="section_pay_pay_status" nullable="true"/>
     <field name="sectionPaySummaryStatus" type="boolean" column="section_pay_summary_status" nullable="true"/>
     <field name="sectionTpStatus" type="boolean" column="section_tp_status" nullable="true"/>
@@ -38,9 +37,9 @@
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <one-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+    <one-to-one field="id" target-entity="Olcs\Db\Entity\Application">
       <join-columns>
-        <join-column name="application_id" referenced-column-name="id"/>
+        <join-column name="id" referenced-column-name="id"/>
       </join-columns>
     </one-to-one>
     <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">

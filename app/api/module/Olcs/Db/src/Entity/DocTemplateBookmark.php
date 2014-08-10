@@ -18,35 +18,48 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_doc_template_bookmark_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_doc_template_bookmark_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_851FEE735653D501", columns={"doc_template_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="doc_template_id", columns={"doc_template_id","doc_bookmark_id"})
  *    }
  * )
  */
 class DocTemplateBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DocBookmarkOneToOne,
+        Traits\DocBookmarkManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Doc template
+     * Doc template
      *
      * @var \Olcs\Db\Entity\DocTemplate
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\DocTemplate")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate")
      * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id")
      */
     protected $docTemplate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the doc template
      *
      * @param \Olcs\Db\Entity\DocTemplate $docTemplate
-     * @return \Olcs\Db\Entity\DocTemplateBookmark
+     * @return DocTemplateBookmark
      */
     public function setDocTemplate($docTemplate)
     {
@@ -64,4 +77,5 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
     {
         return $this->docTemplate;
     }
+
 }

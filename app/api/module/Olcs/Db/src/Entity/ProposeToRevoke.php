@@ -71,11 +71,20 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the reason
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $reasons
-
-     * @return \Olcs\Db\Entity\ProposeToRevoke
+     * @return ProposeToRevoke
      */
     public function setReasons($reasons)
     {
@@ -85,7 +94,7 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the reason
+     * Get the reasons
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -96,10 +105,48 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return ProposeToRevoke
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return ProposeToRevoke
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->remove($reasons);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the ptr agreed date
      *
      * @param \DateTime $ptrAgreedDate
-     * @return \Olcs\Db\Entity\ProposeToRevoke
+     * @return ProposeToRevoke
      */
     public function setPtrAgreedDate($ptrAgreedDate)
     {
@@ -117,4 +164,5 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     {
         return $this->ptrAgreedDate;
     }
+
 }

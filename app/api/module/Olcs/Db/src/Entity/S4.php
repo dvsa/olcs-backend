@@ -55,26 +55,36 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Surrender licence
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="surrender_licence", nullable=false)
+     * @ORM\Column(type="yesno", name="surrender_licence", nullable=false)
      */
     protected $surrenderLicence = 0;
 
     /**
      * Is true s4
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_true_s4", nullable=false)
+     * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
      */
     protected $isTrueS4 = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the agreed date
      *
      * @param \DateTime $agreedDate
-     * @return \Olcs\Db\Entity\S4
+     * @return S4
      */
     public function setAgreedDate($agreedDate)
     {
@@ -93,11 +103,12 @@ class S4 implements Interfaces\EntityInterface
         return $this->agreedDate;
     }
 
+
     /**
      * Set the outcome
      *
      * @param string $outcome
-     * @return \Olcs\Db\Entity\S4
+     * @return S4
      */
     public function setOutcome($outcome)
     {
@@ -116,11 +127,12 @@ class S4 implements Interfaces\EntityInterface
         return $this->outcome;
     }
 
+
     /**
      * Set the surrender licence
      *
-     * @param boolean $surrenderLicence
-     * @return \Olcs\Db\Entity\S4
+     * @param unknown $surrenderLicence
+     * @return S4
      */
     public function setSurrenderLicence($surrenderLicence)
     {
@@ -132,18 +144,19 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Get the surrender licence
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSurrenderLicence()
     {
         return $this->surrenderLicence;
     }
 
+
     /**
      * Set the is true s4
      *
-     * @param boolean $isTrueS4
-     * @return \Olcs\Db\Entity\S4
+     * @param unknown $isTrueS4
+     * @return S4
      */
     public function setIsTrueS4($isTrueS4)
     {
@@ -155,10 +168,11 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Get the is true s4
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsTrueS4()
     {
         return $this->isTrueS4;
     }
+
 }

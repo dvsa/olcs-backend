@@ -58,7 +58,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is articulated
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_articulated", nullable=true)
      */
@@ -76,7 +76,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is refrigerated
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_refrigerated", nullable=true)
      */
@@ -85,7 +85,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is tipper
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_tipper", nullable=true)
      */
@@ -96,7 +96,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_26", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26", nullable=false)
      */
     protected $section26;
 
@@ -105,7 +105,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_26_curtail", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_curtail", nullable=false)
      */
     protected $section26Curtail;
 
@@ -114,7 +114,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_26_revoked", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_revoked", nullable=false)
      */
     protected $section26Revoked;
 
@@ -123,7 +123,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_26_suspend", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_suspend", nullable=false)
      */
     protected $section26Suspend;
 
@@ -137,10 +137,20 @@ class Vehicle implements Interfaces\EntityInterface
     protected $makeModel;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the psv type
      *
      * @param \Olcs\Db\Entity\RefData $psvType
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setPsvType($psvType)
     {
@@ -159,11 +169,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->psvType;
     }
 
+
     /**
      * Set the plated weight
      *
      * @param int $platedWeight
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setPlatedWeight($platedWeight)
     {
@@ -182,11 +193,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->platedWeight;
     }
 
+
     /**
      * Set the is articulated
      *
-     * @param boolean $isArticulated
-     * @return \Olcs\Db\Entity\Vehicle
+     * @param unknown $isArticulated
+     * @return Vehicle
      */
     public function setIsArticulated($isArticulated)
     {
@@ -198,18 +210,19 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is articulated
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsArticulated()
     {
         return $this->isArticulated;
     }
 
+
     /**
      * Set the certificate no
      *
      * @param string $certificateNo
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setCertificateNo($certificateNo)
     {
@@ -228,11 +241,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->certificateNo;
     }
 
+
     /**
      * Set the is refrigerated
      *
-     * @param boolean $isRefrigerated
-     * @return \Olcs\Db\Entity\Vehicle
+     * @param unknown $isRefrigerated
+     * @return Vehicle
      */
     public function setIsRefrigerated($isRefrigerated)
     {
@@ -244,18 +258,19 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is refrigerated
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsRefrigerated()
     {
         return $this->isRefrigerated;
     }
 
+
     /**
      * Set the is tipper
      *
-     * @param boolean $isTipper
-     * @return \Olcs\Db\Entity\Vehicle
+     * @param unknown $isTipper
+     * @return Vehicle
      */
     public function setIsTipper($isTipper)
     {
@@ -267,18 +282,19 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is tipper
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsTipper()
     {
         return $this->isTipper;
     }
 
+
     /**
      * Set the section26
      *
      * @param boolean $section26
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setSection26($section26)
     {
@@ -297,11 +313,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26;
     }
 
+
     /**
      * Set the section26 curtail
      *
      * @param boolean $section26Curtail
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setSection26Curtail($section26Curtail)
     {
@@ -320,11 +337,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26Curtail;
     }
 
+
     /**
      * Set the section26 revoked
      *
      * @param boolean $section26Revoked
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setSection26Revoked($section26Revoked)
     {
@@ -343,11 +361,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26Revoked;
     }
 
+
     /**
      * Set the section26 suspend
      *
      * @param boolean $section26Suspend
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setSection26Suspend($section26Suspend)
     {
@@ -366,11 +385,12 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26Suspend;
     }
 
+
     /**
      * Set the make model
      *
      * @param string $makeModel
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return Vehicle
      */
     public function setMakeModel($makeModel)
     {
@@ -388,4 +408,5 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->makeModel;
     }
+
 }

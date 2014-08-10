@@ -43,10 +43,20 @@ class EntityType implements Interfaces\EntityInterface
     protected $name;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the current template
      *
      * @param \Olcs\Db\Entity\Template $currentTemplate
-     * @return \Olcs\Db\Entity\EntityType
+     * @return EntityType
      */
     public function setCurrentTemplate($currentTemplate)
     {
@@ -65,11 +75,12 @@ class EntityType implements Interfaces\EntityInterface
         return $this->currentTemplate;
     }
 
+
     /**
      * Set the name
      *
      * @param string $name
-     * @return \Olcs\Db\Entity\EntityType
+     * @return EntityType
      */
     public function setName($name)
     {
@@ -87,4 +98,5 @@ class EntityType implements Interfaces\EntityInterface
     {
         return $this->name;
     }
+
 }

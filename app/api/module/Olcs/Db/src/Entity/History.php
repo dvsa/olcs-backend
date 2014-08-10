@@ -87,10 +87,20 @@ class History implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the entity type
      *
      * @param \Olcs\Db\Entity\EntityType $entityType
-     * @return \Olcs\Db\Entity\History
+     * @return History
      */
     public function setEntityType($entityType)
     {
@@ -109,12 +119,12 @@ class History implements Interfaces\EntityInterface
         return $this->entityType;
     }
 
+
     /**
      * Set the template
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $templates
-
-     * @return \Olcs\Db\Entity\History
+     * @return History
      */
     public function setTemplates($templates)
     {
@@ -124,7 +134,7 @@ class History implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the template
+     * Get the templates
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -135,10 +145,48 @@ class History implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a templates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $templates
+     * @return History
+     */
+    public function addTemplates($templates)
+    {
+        if ($templates instanceof ArrayCollection) {
+            $this->templates = new ArrayCollection(
+                array_merge(
+                    $this->templates->toArray(),
+                    $templates->toArray()
+                )
+            );
+        } elseif (!$this->templates->contains($templates)) {
+            $this->templates->add($templates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a templates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $templates
+     * @return History
+     */
+    public function removeTemplates($templates)
+    {
+        if ($this->templates->contains($templates)) {
+            $this->templates->remove($templates);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the data
      *
      * @param string $data
-     * @return \Olcs\Db\Entity\History
+     * @return History
      */
     public function setData($data)
     {
@@ -157,11 +205,12 @@ class History implements Interfaces\EntityInterface
         return $this->data;
     }
 
+
     /**
      * Set the entity id
      *
      * @param int $entityId
-     * @return \Olcs\Db\Entity\History
+     * @return History
      */
     public function setEntityId($entityId)
     {
@@ -180,11 +229,12 @@ class History implements Interfaces\EntityInterface
         return $this->entityId;
     }
 
+
     /**
      * Set the entity version
      *
      * @param int $entityVersion
-     * @return \Olcs\Db\Entity\History
+     * @return History
      */
     public function setEntityVersion($entityVersion)
     {
@@ -202,4 +252,5 @@ class History implements Interfaces\EntityInterface
     {
         return $this->entityVersion;
     }
+
 }

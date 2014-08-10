@@ -43,4 +43,5 @@ trait VenueManyToOne
     {
         return $this->venue;
     }
+
 }

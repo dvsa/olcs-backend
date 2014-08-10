@@ -42,35 +42,45 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Is copy
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false)
+     * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
     protected $isCopy = 0;
 
     /**
      * Requested by self service user
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="requested_by_self_service_user", nullable=false)
+     * @ORM\Column(type="yesno", name="requested_by_self_service_user", nullable=false)
      */
     protected $requestedBySelfServiceUser = 0;
 
     /**
      * Reprint required
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false)
+     * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is copy
      *
-     * @param boolean $isCopy
-     * @return \Olcs\Db\Entity\GoodsDisc
+     * @param unknown $isCopy
+     * @return GoodsDisc
      */
     public function setIsCopy($isCopy)
     {
@@ -82,18 +92,19 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the is copy
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsCopy()
     {
         return $this->isCopy;
     }
 
+
     /**
      * Set the requested by self service user
      *
-     * @param boolean $requestedBySelfServiceUser
-     * @return \Olcs\Db\Entity\GoodsDisc
+     * @param unknown $requestedBySelfServiceUser
+     * @return GoodsDisc
      */
     public function setRequestedBySelfServiceUser($requestedBySelfServiceUser)
     {
@@ -105,18 +116,19 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the requested by self service user
      *
-     * @return boolean
+     * @return unknown
      */
     public function getRequestedBySelfServiceUser()
     {
         return $this->requestedBySelfServiceUser;
     }
 
+
     /**
      * Set the reprint required
      *
-     * @param boolean $reprintRequired
-     * @return \Olcs\Db\Entity\GoodsDisc
+     * @param unknown $reprintRequired
+     * @return GoodsDisc
      */
     public function setReprintRequired($reprintRequired)
     {
@@ -128,10 +140,11 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the reprint required
      *
-     * @return boolean
+     * @return unknown
      */
     public function getReprintRequired()
     {
         return $this->reprintRequired;
     }
+
 }

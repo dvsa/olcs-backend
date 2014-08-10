@@ -43,4 +43,5 @@ trait SiCategoryManyToOne
     {
         return $this->siCategory;
     }
+
 }

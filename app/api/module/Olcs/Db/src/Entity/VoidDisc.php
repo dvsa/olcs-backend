@@ -54,10 +54,20 @@ class VoidDisc implements Interfaces\EntityInterface
     protected $serialEnd;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the serial start
      *
      * @param int $serialStart
-     * @return \Olcs\Db\Entity\VoidDisc
+     * @return VoidDisc
      */
     public function setSerialStart($serialStart)
     {
@@ -76,11 +86,12 @@ class VoidDisc implements Interfaces\EntityInterface
         return $this->serialStart;
     }
 
+
     /**
      * Set the serial end
      *
      * @param int $serialEnd
-     * @return \Olcs\Db\Entity\VoidDisc
+     * @return VoidDisc
      */
     public function setSerialEnd($serialEnd)
     {
@@ -98,4 +109,5 @@ class VoidDisc implements Interfaces\EntityInterface
     {
         return $this->serialEnd;
     }
+
 }

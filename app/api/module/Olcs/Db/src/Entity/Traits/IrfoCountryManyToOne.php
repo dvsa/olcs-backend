@@ -43,4 +43,5 @@ trait IrfoCountryManyToOne
     {
         return $this->irfoCountry;
     }
+
 }

@@ -31,35 +31,46 @@ class AdminAreaTrafficArea implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Admin area
+     * Identifier - Id
      *
      * @var string
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="admin_area", length=40)
+     * @ORM\Column(type="string", name="id", length=40)
      */
-    protected $adminArea;
+    protected $id;
 
     /**
-     * Set the admin area
+     * Get identifier(s)
      *
-     * @param string $adminArea
-     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
+     * @return mixed
      */
-    public function setAdminArea($adminArea)
+    public function getIdentifier()
     {
-        $this->adminArea = $adminArea;
+        return $this->getId();
+    }
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return AdminAreaTrafficArea
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get the admin area
+     * Get the id
      *
      * @return string
      */
-    public function getAdminArea()
+    public function getId()
     {
-        return $this->adminArea;
+        return $this->id;
     }
+
 }

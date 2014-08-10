@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Olcs\Db\Entity\ApplicationAction" table="application_action">
+    <indexes>
+      <index name="fk_application_action_application1_idx" columns="application_id"/>
+      <index name="fk_application_action_application_action_ref1_idx" columns="application_action_ref_id"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="application_id" columns="application_id,application_action_ref_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="isReceived" type="boolean" column="is_received" nullable="true"/>
+    <field name="isApproved" type="boolean" column="is_approved" nullable="true"/>
+    <field name="isApplicable" type="boolean" column="is_applicable" nullable="true"/>
+    <many-to-one field="applicationActionRef" target-entity="Olcs\Db\Entity\ApplicationActionRef">
+      <join-columns>
+        <join-column name="application_action_ref_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+      <join-columns>
+        <join-column name="application_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -39,10 +39,20 @@ class Printer implements Interfaces\EntityInterface
     protected $printerName;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the printer tray
      *
      * @param string $printerTray
-     * @return \Olcs\Db\Entity\Printer
+     * @return Printer
      */
     public function setPrinterTray($printerTray)
     {
@@ -61,11 +71,12 @@ class Printer implements Interfaces\EntityInterface
         return $this->printerTray;
     }
 
+
     /**
      * Set the printer name
      *
      * @param string $printerName
-     * @return \Olcs\Db\Entity\Printer
+     * @return Printer
      */
     public function setPrinterName($printerName)
     {
@@ -83,4 +94,5 @@ class Printer implements Interfaces\EntityInterface
     {
         return $this->printerName;
     }
+
 }

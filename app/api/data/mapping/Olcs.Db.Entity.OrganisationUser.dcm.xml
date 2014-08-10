@@ -7,8 +7,12 @@
       <index name="fk_organisation_user_user1_idx" columns="created_by"/>
       <index name="fk_organisation_user_user2_idx" columns="last_modified_by"/>
     </indexes>
-    <id name="organisation" association-key="true"/>
-    <id name="user" association-key="true"/>
+    <unique-constraints>
+      <unique-constraint name="organisation_id" columns="organisation_id,user_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
     <field name="isAdministrator" type="boolean" column="is_administrator" nullable="false"/>
     <field name="addedDate" type="datetime" column="added_date" nullable="true"/>
     <field name="removedDate" type="datetime" column="removed_date" nullable="true"/>
@@ -16,16 +20,6 @@
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <one-to-one field="organisation" target-entity="Olcs\Db\Entity\Organisation">
-      <join-columns>
-        <join-column name="organisation_id" referenced-column-name="id"/>
-      </join-columns>
-    </one-to-one>
-    <one-to-one field="user" target-entity="Olcs\Db\Entity\User">
-      <join-columns>
-        <join-column name="user_id" referenced-column-name="id"/>
-      </join-columns>
-    </one-to-one>
     <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="last_modified_by" referenced-column-name="id"/>
@@ -34,6 +28,16 @@
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="user" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="user_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="organisation" target-entity="Olcs\Db\Entity\Organisation">
+      <join-columns>
+        <join-column name="organisation_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

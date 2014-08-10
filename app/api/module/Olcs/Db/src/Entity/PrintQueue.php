@@ -45,10 +45,20 @@ class PrintQueue implements Interfaces\EntityInterface
     protected $addedDatetime;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the team printer
      *
      * @param \Olcs\Db\Entity\TeamPrinter $teamPrinter
-     * @return \Olcs\Db\Entity\PrintQueue
+     * @return PrintQueue
      */
     public function setTeamPrinter($teamPrinter)
     {
@@ -67,11 +77,12 @@ class PrintQueue implements Interfaces\EntityInterface
         return $this->teamPrinter;
     }
 
+
     /**
      * Set the added datetime
      *
      * @param \DateTime $addedDatetime
-     * @return \Olcs\Db\Entity\PrintQueue
+     * @return PrintQueue
      */
     public function setAddedDatetime($addedDatetime)
     {
@@ -89,4 +100,5 @@ class PrintQueue implements Interfaces\EntityInterface
     {
         return $this->addedDatetime;
     }
+
 }

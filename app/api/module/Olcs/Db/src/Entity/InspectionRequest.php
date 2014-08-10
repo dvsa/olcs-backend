@@ -192,10 +192,20 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the result type
      *
      * @param \Olcs\Db\Entity\RefData $resultType
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setResultType($resultType)
     {
@@ -214,11 +224,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->resultType;
     }
 
+
     /**
      * Set the requestor user
      *
      * @param \Olcs\Db\Entity\User $requestorUser
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setRequestorUser($requestorUser)
     {
@@ -237,11 +248,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestorUser;
     }
 
+
     /**
      * Set the request type
      *
      * @param \Olcs\Db\Entity\RefData $requestType
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setRequestType($requestType)
     {
@@ -260,11 +272,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestType;
     }
 
+
     /**
      * Set the report type
      *
      * @param \Olcs\Db\Entity\RefData $reportType
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setReportType($reportType)
     {
@@ -283,11 +296,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->reportType;
     }
 
+
     /**
      * Set the requestor notes
      *
      * @param string $requestorNotes
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setRequestorNotes($requestorNotes)
     {
@@ -306,11 +320,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestorNotes;
     }
 
+
     /**
      * Set the inspector notes
      *
      * @param string $inspectorNotes
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setInspectorNotes($inspectorNotes)
     {
@@ -329,11 +344,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->inspectorNotes;
     }
 
+
     /**
      * Set the due date
      *
      * @param \DateTime $dueDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setDueDate($dueDate)
     {
@@ -352,11 +368,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->dueDate;
     }
 
+
     /**
      * Set the from date
      *
      * @param \DateTime $fromDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setFromDate($fromDate)
     {
@@ -375,11 +392,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->fromDate;
     }
 
+
     /**
      * Set the to date
      *
      * @param \DateTime $toDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setToDate($toDate)
     {
@@ -398,11 +416,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->toDate;
     }
 
+
     /**
      * Set the request date
      *
      * @param \DateTime $requestDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setRequestDate($requestDate)
     {
@@ -421,11 +440,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestDate;
     }
 
+
     /**
      * Set the return date
      *
      * @param \DateTime $returnDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setReturnDate($returnDate)
     {
@@ -444,11 +464,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->returnDate;
     }
 
+
     /**
      * Set the deferred date
      *
      * @param \DateTime $deferredDate
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setDeferredDate($deferredDate)
     {
@@ -467,11 +488,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->deferredDate;
     }
 
+
     /**
      * Set the inspector name
      *
      * @param string $inspectorName
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setInspectorName($inspectorName)
     {
@@ -490,11 +512,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->inspectorName;
     }
 
+
     /**
      * Set the local services no
      *
      * @param int $localServicesNo
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setLocalServicesNo($localServicesNo)
     {
@@ -513,11 +536,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->localServicesNo;
     }
 
+
     /**
      * Set the trailors examined no
      *
      * @param int $trailorsExaminedNo
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setTrailorsExaminedNo($trailorsExaminedNo)
     {
@@ -536,11 +560,12 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->trailorsExaminedNo;
     }
 
+
     /**
      * Set the vehicles examined no
      *
      * @param int $vehiclesExaminedNo
-     * @return \Olcs\Db\Entity\InspectionRequest
+     * @return InspectionRequest
      */
     public function setVehiclesExaminedNo($vehiclesExaminedNo)
     {
@@ -558,4 +583,5 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->vehiclesExaminedNo;
     }
+
 }

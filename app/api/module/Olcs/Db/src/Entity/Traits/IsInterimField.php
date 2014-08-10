@@ -14,16 +14,16 @@ trait IsInterimField
     /**
      * Is interim
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_interim", nullable=false)
+     * @ORM\Column(type="yesno", name="is_interim", nullable=false)
      */
     protected $isInterim = 0;
 
     /**
      * Set the is interim
      *
-     * @param boolean $isInterim
+     * @param unknown $isInterim
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsInterim($isInterim)
@@ -36,10 +36,11 @@ trait IsInterimField
     /**
      * Get the is interim
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsInterim()
     {
         return $this->isInterim;
     }
+
 }

@@ -85,10 +85,20 @@ class TransportManager implements Interfaces\EntityInterface
     protected $nysiisForename;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the tm type
      *
      * @param \Olcs\Db\Entity\RefData $tmType
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return TransportManager
      */
     public function setTmType($tmType)
     {
@@ -107,11 +117,12 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->tmType;
     }
 
+
     /**
      * Set the tm status
      *
      * @param \Olcs\Db\Entity\RefData $tmStatus
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return TransportManager
      */
     public function setTmStatus($tmStatus)
     {
@@ -130,11 +141,12 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->tmStatus;
     }
 
+
     /**
      * Set the disqualification tm case id
      *
      * @param int $disqualificationTmCaseId
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return TransportManager
      */
     public function setDisqualificationTmCaseId($disqualificationTmCaseId)
     {
@@ -153,11 +165,12 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->disqualificationTmCaseId;
     }
 
+
     /**
      * Set the nysiis family name
      *
      * @param string $nysiisFamilyName
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return TransportManager
      */
     public function setNysiisFamilyName($nysiisFamilyName)
     {
@@ -176,11 +189,12 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->nysiisFamilyName;
     }
 
+
     /**
      * Set the nysiis forename
      *
      * @param string $nysiisForename
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return TransportManager
      */
     public function setNysiisForename($nysiisForename)
     {
@@ -198,4 +212,5 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->nysiisForename;
     }
+
 }

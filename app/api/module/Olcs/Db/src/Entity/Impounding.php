@@ -96,10 +96,20 @@ class Impounding implements Interfaces\EntityInterface
     protected $piVenueOther;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pi venue
      *
      * @param \Olcs\Db\Entity\PiVenue $piVenue
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setPiVenue($piVenue)
     {
@@ -118,11 +128,12 @@ class Impounding implements Interfaces\EntityInterface
         return $this->piVenue;
     }
 
+
     /**
      * Set the impounding type
      *
      * @param \Olcs\Db\Entity\RefData $impoundingType
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setImpoundingType($impoundingType)
     {
@@ -141,11 +152,12 @@ class Impounding implements Interfaces\EntityInterface
         return $this->impoundingType;
     }
 
+
     /**
      * Set the application receipt date
      *
      * @param \DateTime $applicationReceiptDate
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setApplicationReceiptDate($applicationReceiptDate)
     {
@@ -164,11 +176,12 @@ class Impounding implements Interfaces\EntityInterface
         return $this->applicationReceiptDate;
     }
 
+
     /**
      * Set the outcome sent date
      *
      * @param \DateTime $outcomeSentDate
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setOutcomeSentDate($outcomeSentDate)
     {
@@ -187,11 +200,12 @@ class Impounding implements Interfaces\EntityInterface
         return $this->outcomeSentDate;
     }
 
+
     /**
      * Set the close date
      *
      * @param \DateTime $closeDate
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setCloseDate($closeDate)
     {
@@ -210,11 +224,12 @@ class Impounding implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
+
     /**
      * Set the pi venue other
      *
      * @param string $piVenueOther
-     * @return \Olcs\Db\Entity\Impounding
+     * @return Impounding
      */
     public function setPiVenueOther($piVenueOther)
     {
@@ -232,4 +247,5 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->piVenueOther;
     }
+
 }

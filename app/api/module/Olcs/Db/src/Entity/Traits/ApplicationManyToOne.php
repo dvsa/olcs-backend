@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Application many to one trait
  *
- * Auto-Generated (Shared between 17 entities)
+ * Auto-Generated (Shared between 18 entities)
  */
 trait ApplicationManyToOne
 {
@@ -43,4 +43,5 @@ trait ApplicationManyToOne
     {
         return $this->application;
     }
+
 }

@@ -13,6 +13,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="hasEnteredReg" type="boolean" column="has_entered_reg" nullable="true"/>
     <field name="totAuthTrailers" type="integer" column="tot_auth_trailers" nullable="true"/>
     <field name="totAuthVehicles" type="integer" column="tot_auth_vehicles" nullable="true"/>
     <field name="totAuthSmallVehicles" type="integer" column="tot_auth_small_vehicles" nullable="true"/>
@@ -91,15 +92,5 @@
         <join-column name="licence_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
-    <many-to-many field="applicationActionRef" target-entity="Olcs\Db\Entity\ApplicationActionRef" inversed-by="application">
-      <join-table name="application_action">
-        <join-columns>
-          <join-column name="application_id" referenced-column-name="id"/>
-        </join-columns>
-        <inverse-join-columns>
-          <join-column name="application_action_ref_id" referenced-column-name="id"/>
-        </inverse-join-columns>
-      </join-table>
-    </many-to-many>
   </entity>
 </doctrine-mapping>

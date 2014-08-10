@@ -27,41 +27,19 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\FeeManyToOne,
         Traits\LicenceVehicleManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Fee
+     * Get identifier(s)
      *
-     * @var \Olcs\Db\Entity\Fee
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee")
-     * @ORM\JoinColumn(name="fee_id", referencedColumnName="id")
+     * @return mixed
      */
-    protected $fee;
-
-    /**
-     * Set the fee
-     *
-     * @param \Olcs\Db\Entity\Fee $fee
-     * @return \Olcs\Db\Entity\LicenceVehicleFee
-     */
-    public function setFee($fee)
+    public function getIdentifier()
     {
-        $this->fee = $fee;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee
-     *
-     * @return \Olcs\Db\Entity\Fee
-     */
-    public function getFee()
-    {
-        return $this->fee;
+        return $this->getId();
     }
 }

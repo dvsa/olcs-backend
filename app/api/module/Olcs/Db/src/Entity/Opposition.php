@@ -49,18 +49,18 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is representation
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_representation", nullable=false)
+     * @ORM\Column(type="yesno", name="is_representation", nullable=false)
      */
     protected $isRepresentation;
 
     /**
      * Is copied
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_copied", nullable=false)
+     * @ORM\Column(type="yesno", name="is_copied", nullable=false)
      */
     protected $isCopied = 0;
 
@@ -76,27 +76,27 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is in time
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_in_time", nullable=false)
+     * @ORM\Column(type="yesno", name="is_in_time", nullable=false)
      */
     protected $isInTime = 0;
 
     /**
      * Is public inquiry
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_public_inquiry", nullable=false)
+     * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false)
      */
     protected $isPublicInquiry = 0;
 
     /**
      * Is valid
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_valid", nullable=false)
+     * @ORM\Column(type="yesno", name="is_valid", nullable=false)
      */
     protected $isValid;
 
@@ -110,10 +110,20 @@ class Opposition implements Interfaces\EntityInterface
     protected $validNotes;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the opposer
      *
      * @param \Olcs\Db\Entity\Opposer $opposer
-     * @return \Olcs\Db\Entity\Opposition
+     * @return Opposition
      */
     public function setOpposer($opposer)
     {
@@ -132,11 +142,12 @@ class Opposition implements Interfaces\EntityInterface
         return $this->opposer;
     }
 
+
     /**
      * Set the is representation
      *
-     * @param boolean $isRepresentation
-     * @return \Olcs\Db\Entity\Opposition
+     * @param unknown $isRepresentation
+     * @return Opposition
      */
     public function setIsRepresentation($isRepresentation)
     {
@@ -148,18 +159,19 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is representation
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsRepresentation()
     {
         return $this->isRepresentation;
     }
 
+
     /**
      * Set the is copied
      *
-     * @param boolean $isCopied
-     * @return \Olcs\Db\Entity\Opposition
+     * @param unknown $isCopied
+     * @return Opposition
      */
     public function setIsCopied($isCopied)
     {
@@ -171,18 +183,19 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is copied
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsCopied()
     {
         return $this->isCopied;
     }
 
+
     /**
      * Set the raised date
      *
      * @param \DateTime $raisedDate
-     * @return \Olcs\Db\Entity\Opposition
+     * @return Opposition
      */
     public function setRaisedDate($raisedDate)
     {
@@ -201,11 +214,12 @@ class Opposition implements Interfaces\EntityInterface
         return $this->raisedDate;
     }
 
+
     /**
      * Set the is in time
      *
-     * @param boolean $isInTime
-     * @return \Olcs\Db\Entity\Opposition
+     * @param unknown $isInTime
+     * @return Opposition
      */
     public function setIsInTime($isInTime)
     {
@@ -217,18 +231,19 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is in time
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsInTime()
     {
         return $this->isInTime;
     }
 
+
     /**
      * Set the is public inquiry
      *
-     * @param boolean $isPublicInquiry
-     * @return \Olcs\Db\Entity\Opposition
+     * @param unknown $isPublicInquiry
+     * @return Opposition
      */
     public function setIsPublicInquiry($isPublicInquiry)
     {
@@ -240,18 +255,19 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is public inquiry
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsPublicInquiry()
     {
         return $this->isPublicInquiry;
     }
 
+
     /**
      * Set the is valid
      *
-     * @param boolean $isValid
-     * @return \Olcs\Db\Entity\Opposition
+     * @param unknown $isValid
+     * @return Opposition
      */
     public function setIsValid($isValid)
     {
@@ -263,18 +279,19 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is valid
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsValid()
     {
         return $this->isValid;
     }
 
+
     /**
      * Set the valid notes
      *
      * @param string $validNotes
-     * @return \Olcs\Db\Entity\Opposition
+     * @return Opposition
      */
     public function setValidNotes($validNotes)
     {
@@ -292,4 +309,5 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->validNotes;
     }
+
 }

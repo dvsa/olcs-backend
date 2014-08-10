@@ -206,9 +206,9 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Is from ftp
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_from_ftp", nullable=false)
+     * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false)
      */
     protected $isFromFtp = 0;
 
@@ -222,10 +222,20 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $organisationId;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the ebsr submission result
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setEbsrSubmissionResult($ebsrSubmissionResult)
     {
@@ -244,11 +254,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionResult;
     }
 
+
     /**
      * Set the ebsr submission type
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setEbsrSubmissionType($ebsrSubmissionType)
     {
@@ -267,11 +278,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionType;
     }
 
+
     /**
      * Set the ebsr submission status
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionStatus $ebsrSubmissionStatus
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
     {
@@ -290,11 +302,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionStatus;
     }
 
+
     /**
      * Set the submitted date
      *
      * @param \DateTime $submittedDate
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setSubmittedDate($submittedDate)
     {
@@ -313,11 +326,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->submittedDate;
     }
 
+
     /**
      * Set the licence no
      *
      * @param string $licenceNo
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setLicenceNo($licenceNo)
     {
@@ -336,11 +350,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->licenceNo;
     }
 
+
     /**
      * Set the organisation email address
      *
      * @param string $organisationEmailAddress
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setOrganisationEmailAddress($organisationEmailAddress)
     {
@@ -359,11 +374,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->organisationEmailAddress;
     }
 
+
     /**
      * Set the application classification
      *
      * @param string $applicationClassification
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setApplicationClassification($applicationClassification)
     {
@@ -382,11 +398,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->applicationClassification;
     }
 
+
     /**
      * Set the variation no
      *
      * @param int $variationNo
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setVariationNo($variationNo)
     {
@@ -405,11 +422,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->variationNo;
     }
 
+
     /**
      * Set the tan code
      *
      * @param string $tanCode
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setTanCode($tanCode)
     {
@@ -428,11 +446,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->tanCode;
     }
 
+
     /**
      * Set the registration no
      *
      * @param string $registrationNo
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setRegistrationNo($registrationNo)
     {
@@ -451,11 +470,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->registrationNo;
     }
 
+
     /**
      * Set the validation start
      *
      * @param \DateTime $validationStart
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setValidationStart($validationStart)
     {
@@ -474,11 +494,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->validationStart;
     }
 
+
     /**
      * Set the validation end
      *
      * @param \DateTime $validationEnd
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setValidationEnd($validationEnd)
     {
@@ -497,11 +518,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->validationEnd;
     }
 
+
     /**
      * Set the publish start
      *
      * @param \DateTime $publishStart
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setPublishStart($publishStart)
     {
@@ -520,11 +542,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->publishStart;
     }
 
+
     /**
      * Set the publish end
      *
      * @param \DateTime $publishEnd
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setPublishEnd($publishEnd)
     {
@@ -543,11 +566,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->publishEnd;
     }
 
+
     /**
      * Set the process start
      *
      * @param \DateTime $processStart
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setProcessStart($processStart)
     {
@@ -566,11 +590,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->processStart;
     }
 
+
     /**
      * Set the process end
      *
      * @param \DateTime $processEnd
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setProcessEnd($processEnd)
     {
@@ -589,11 +614,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->processEnd;
     }
 
+
     /**
      * Set the distribute start
      *
      * @param \DateTime $distributeStart
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setDistributeStart($distributeStart)
     {
@@ -612,11 +638,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeStart;
     }
 
+
     /**
      * Set the distribute end
      *
      * @param \DateTime $distributeEnd
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setDistributeEnd($distributeEnd)
     {
@@ -635,11 +662,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeEnd;
     }
 
+
     /**
      * Set the distribute expire
      *
      * @param \DateTime $distributeExpire
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setDistributeExpire($distributeExpire)
     {
@@ -658,11 +686,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeExpire;
     }
 
+
     /**
      * Set the is from ftp
      *
-     * @param boolean $isFromFtp
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @param unknown $isFromFtp
+     * @return EbsrSubmission
      */
     public function setIsFromFtp($isFromFtp)
     {
@@ -674,18 +703,19 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Get the is from ftp
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsFromFtp()
     {
         return $this->isFromFtp;
     }
 
+
     /**
      * Set the organisation id
      *
      * @param int $organisationId
-     * @return \Olcs\Db\Entity\EbsrSubmission
+     * @return EbsrSubmission
      */
     public function setOrganisationId($organisationId)
     {
@@ -703,4 +733,5 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->organisationId;
     }
+
 }

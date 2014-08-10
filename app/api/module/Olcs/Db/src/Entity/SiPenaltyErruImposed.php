@@ -66,10 +66,20 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     protected $executed;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the si penalty imposed type
      *
      * @param \Olcs\Db\Entity\SiPenaltyImposedType $siPenaltyImposedType
-     * @return \Olcs\Db\Entity\SiPenaltyErruImposed
+     * @return SiPenaltyErruImposed
      */
     public function setSiPenaltyImposedType($siPenaltyImposedType)
     {
@@ -88,11 +98,12 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->siPenaltyImposedType;
     }
 
+
     /**
      * Set the final decision date
      *
      * @param \DateTime $finalDecisionDate
-     * @return \Olcs\Db\Entity\SiPenaltyErruImposed
+     * @return SiPenaltyErruImposed
      */
     public function setFinalDecisionDate($finalDecisionDate)
     {
@@ -111,11 +122,12 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->finalDecisionDate;
     }
 
+
     /**
      * Set the executed
      *
      * @param int $executed
-     * @return \Olcs\Db\Entity\SiPenaltyErruImposed
+     * @return SiPenaltyErruImposed
      */
     public function setExecuted($executed)
     {
@@ -133,4 +145,5 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     {
         return $this->executed;
     }
+
 }

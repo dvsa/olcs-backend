@@ -72,26 +72,36 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Is self serve
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_self_serve", nullable=false)
+     * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
      */
     protected $isSelfServe = 0;
 
     /**
      * Is ni self serve
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_ni_self_serve", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
      */
     protected $isNiSelfServe = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the restricted
      *
      * @param int $restricted
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @return DiscSequence
      */
     public function setRestricted($restricted)
     {
@@ -110,11 +120,12 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->restricted;
     }
 
+
     /**
      * Set the special restricted
      *
      * @param int $specialRestricted
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @return DiscSequence
      */
     public function setSpecialRestricted($specialRestricted)
     {
@@ -133,11 +144,12 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->specialRestricted;
     }
 
+
     /**
      * Set the standard national
      *
      * @param int $standardNational
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @return DiscSequence
      */
     public function setStandardNational($standardNational)
     {
@@ -156,11 +168,12 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->standardNational;
     }
 
+
     /**
      * Set the standard international
      *
      * @param int $standardInternational
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @return DiscSequence
      */
     public function setStandardInternational($standardInternational)
     {
@@ -179,11 +192,12 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->standardInternational;
     }
 
+
     /**
      * Set the is self serve
      *
-     * @param boolean $isSelfServe
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @param unknown $isSelfServe
+     * @return DiscSequence
      */
     public function setIsSelfServe($isSelfServe)
     {
@@ -195,18 +209,19 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Get the is self serve
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsSelfServe()
     {
         return $this->isSelfServe;
     }
 
+
     /**
      * Set the is ni self serve
      *
-     * @param boolean $isNiSelfServe
-     * @return \Olcs\Db\Entity\DiscSequence
+     * @param unknown $isNiSelfServe
+     * @return DiscSequence
      */
     public function setIsNiSelfServe($isNiSelfServe)
     {
@@ -218,10 +233,11 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Get the is ni self serve
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsNiSelfServe()
     {
         return $this->isNiSelfServe;
     }
+
 }

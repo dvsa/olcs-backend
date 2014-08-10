@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Bus reg many to one trait
  *
- * Auto-Generated (Shared between 8 entities)
+ * Auto-Generated (Shared between 11 entities)
  */
 trait BusRegManyToOne
 {
@@ -43,4 +43,5 @@ trait BusRegManyToOne
     {
         return $this->busReg;
     }
+
 }

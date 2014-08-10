@@ -50,7 +50,7 @@
     </many-to-one>
     <many-to-one field="memberStateCode" target-entity="Olcs\Db\Entity\Country">
       <join-columns>
-        <join-column name="member_state_code" referenced-column-name="country_code"/>
+        <join-column name="member_state_code" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="case" target-entity="Olcs\Db\Entity\Cases">

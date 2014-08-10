@@ -29,13 +29,22 @@ class TradingName implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="tradingNames")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     */
+    protected $organisation;
 
     /**
      * Name
@@ -47,10 +56,44 @@ class TradingName implements Interfaces\EntityInterface
     protected $name;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return TradingName
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+
+    /**
      * Set the name
      *
      * @param string $name
-     * @return \Olcs\Db\Entity\TradingName
+     * @return TradingName
      */
     public function setName($name)
     {
@@ -68,4 +111,5 @@ class TradingName implements Interfaces\EntityInterface
     {
         return $this->name;
     }
+
 }

@@ -55,10 +55,20 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     protected $duration;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the si penalty requested type
      *
      * @param \Olcs\Db\Entity\SiPenaltyRequestedType $siPenaltyRequestedType
-     * @return \Olcs\Db\Entity\SiPenaltyErruRequested
+     * @return SiPenaltyErruRequested
      */
     public function setSiPenaltyRequestedType($siPenaltyRequestedType)
     {
@@ -77,11 +87,12 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
         return $this->siPenaltyRequestedType;
     }
 
+
     /**
      * Set the duration
      *
      * @param int $duration
-     * @return \Olcs\Db\Entity\SiPenaltyErruRequested
+     * @return SiPenaltyErruRequested
      */
     public function setDuration($duration)
     {
@@ -99,4 +110,5 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     {
         return $this->duration;
     }
+
 }

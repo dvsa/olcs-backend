@@ -62,17 +62,27 @@ class Note implements Interfaces\EntityInterface
     /**
      * Priority
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="priority", nullable=false)
+     * @ORM\Column(type="yesno", name="priority", nullable=false)
      */
     protected $priority = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the note type
      *
      * @param \Olcs\Db\Entity\RefData $noteType
-     * @return \Olcs\Db\Entity\Note
+     * @return Note
      */
     public function setNoteType($noteType)
     {
@@ -91,11 +101,12 @@ class Note implements Interfaces\EntityInterface
         return $this->noteType;
     }
 
+
     /**
      * Set the comment
      *
      * @param string $comment
-     * @return \Olcs\Db\Entity\Note
+     * @return Note
      */
     public function setComment($comment)
     {
@@ -114,11 +125,12 @@ class Note implements Interfaces\EntityInterface
         return $this->comment;
     }
 
+
     /**
      * Set the priority
      *
-     * @param boolean $priority
-     * @return \Olcs\Db\Entity\Note
+     * @param unknown $priority
+     * @return Note
      */
     public function setPriority($priority)
     {
@@ -130,10 +142,11 @@ class Note implements Interfaces\EntityInterface
     /**
      * Get the priority
      *
-     * @return boolean
+     * @return unknown
      */
     public function getPriority()
     {
         return $this->priority;
     }
+
 }

@@ -153,27 +153,27 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Is short notice
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_short_notice", nullable=false)
+     * @ORM\Column(type="yesno", name="is_short_notice", nullable=false)
      */
     protected $isShortNotice = 0;
 
     /**
      * Use all stops
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="use_all_stops", nullable=false)
+     * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
      */
     protected $useAllStops = 0;
 
     /**
      * Has manoeuvre
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="has_manoeuvre", nullable=false)
+     * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
      */
     protected $hasManoeuvre = 0;
 
@@ -189,9 +189,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Need new stop
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="need_new_stop", nullable=false)
+     * @ORM\Column(type="yesno", name="need_new_stop", nullable=false)
      */
     protected $needNewStop = 0;
 
@@ -207,9 +207,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Has not fixed stop
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="has_not_fixed_stop", nullable=false)
+     * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
      */
     protected $hasNotFixedStop = 0;
 
@@ -234,18 +234,18 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Timetable acceptable
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="timetable_acceptable", nullable=false)
+     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
      */
     protected $timetableAcceptable = 0;
 
     /**
      * Map supplied
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="map_supplied", nullable=false)
+     * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
      */
     protected $mapSupplied = 0;
 
@@ -261,27 +261,27 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Copied to la pte
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="copied_to_la_pte", nullable=false)
+     * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
      */
     protected $copiedToLaPte = 0;
 
     /**
      * La short note
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="la_short_note", nullable=false)
+     * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
      */
     protected $laShortNote = 0;
 
     /**
      * Application signed
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="application_signed", nullable=false)
+     * @ORM\Column(type="yesno", name="application_signed", nullable=false)
      */
     protected $applicationSigned = 0;
 
@@ -306,9 +306,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Op notified la pte
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="op_notified_la_pte", nullable=false)
+     * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false)
      */
     protected $opNotifiedLaPte = 0;
 
@@ -324,9 +324,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Trc condition checked
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="trc_condition_checked", nullable=false)
+     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
      */
     protected $trcConditionChecked = 0;
 
@@ -369,9 +369,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Is txc app
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_txc_app", nullable=false)
+     * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
      */
     protected $isTxcApp = 0;
 
@@ -414,9 +414,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Short notice refused
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="short_notice_refused", nullable=false)
+     * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false)
      */
     protected $shortNoticeRefused = 0;
 
@@ -430,10 +430,20 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the bus notice period
      *
      * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setBusNoticePeriod($busNoticePeriod)
     {
@@ -452,11 +462,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->busNoticePeriod;
     }
 
+
     /**
      * Set the subsidised
      *
      * @param \Olcs\Db\Entity\RefData $subsidised
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setSubsidised($subsidised)
     {
@@ -475,12 +486,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidised;
     }
 
+
     /**
      * Set the variation reason
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setVariationReasons($variationReasons)
     {
@@ -490,7 +501,7 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the variation reason
+     * Get the variation reasons
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -501,11 +512,48 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a variation reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function addVariationReasons($variationReasons)
+    {
+        if ($variationReasons instanceof ArrayCollection) {
+            $this->variationReasons = new ArrayCollection(
+                array_merge(
+                    $this->variationReasons->toArray(),
+                    $variationReasons->toArray()
+                )
+            );
+        } elseif (!$this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->add($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function removeVariationReasons($variationReasons)
+    {
+        if ($this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->remove($variationReasons);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the bus service type
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setBusServiceTypes($busServiceTypes)
     {
@@ -515,7 +563,7 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the bus service type
+     * Get the bus service types
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -526,10 +574,48 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a bus service types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function addBusServiceTypes($busServiceTypes)
+    {
+        if ($busServiceTypes instanceof ArrayCollection) {
+            $this->busServiceTypes = new ArrayCollection(
+                array_merge(
+                    $this->busServiceTypes->toArray(),
+                    $busServiceTypes->toArray()
+                )
+            );
+        } elseif (!$this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->add($busServiceTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus service types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function removeBusServiceTypes($busServiceTypes)
+    {
+        if ($this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->remove($busServiceTypes);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the route no
      *
      * @param int $routeNo
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setRouteNo($routeNo)
     {
@@ -548,11 +634,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeNo;
     }
 
+
     /**
      * Set the reg no
      *
      * @param string $regNo
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setRegNo($regNo)
     {
@@ -571,11 +658,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->regNo;
     }
 
+
     /**
      * Set the start point
      *
      * @param string $startPoint
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setStartPoint($startPoint)
     {
@@ -594,11 +682,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->startPoint;
     }
 
+
     /**
      * Set the finish point
      *
      * @param string $finishPoint
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setFinishPoint($finishPoint)
     {
@@ -617,11 +706,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->finishPoint;
     }
 
+
     /**
      * Set the via
      *
      * @param string $via
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setVia($via)
     {
@@ -640,11 +730,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->via;
     }
 
+
     /**
      * Set the other details
      *
      * @param string $otherDetails
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setOtherDetails($otherDetails)
     {
@@ -663,11 +754,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->otherDetails;
     }
 
+
     /**
      * Set the received date
      *
      * @param \DateTime $receivedDate
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setReceivedDate($receivedDate)
     {
@@ -686,11 +778,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->receivedDate;
     }
 
+
     /**
      * Set the is short notice
      *
-     * @param boolean $isShortNotice
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $isShortNotice
+     * @return BusReg
      */
     public function setIsShortNotice($isShortNotice)
     {
@@ -702,18 +795,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the is short notice
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsShortNotice()
     {
         return $this->isShortNotice;
     }
 
+
     /**
      * Set the use all stops
      *
-     * @param boolean $useAllStops
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $useAllStops
+     * @return BusReg
      */
     public function setUseAllStops($useAllStops)
     {
@@ -725,18 +819,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the use all stops
      *
-     * @return boolean
+     * @return unknown
      */
     public function getUseAllStops()
     {
         return $this->useAllStops;
     }
 
+
     /**
      * Set the has manoeuvre
      *
-     * @param boolean $hasManoeuvre
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $hasManoeuvre
+     * @return BusReg
      */
     public function setHasManoeuvre($hasManoeuvre)
     {
@@ -748,18 +843,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the has manoeuvre
      *
-     * @return boolean
+     * @return unknown
      */
     public function getHasManoeuvre()
     {
         return $this->hasManoeuvre;
     }
 
+
     /**
      * Set the manoeuvre detail
      *
      * @param string $manoeuvreDetail
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setManoeuvreDetail($manoeuvreDetail)
     {
@@ -778,11 +874,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->manoeuvreDetail;
     }
 
+
     /**
      * Set the need new stop
      *
-     * @param boolean $needNewStop
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $needNewStop
+     * @return BusReg
      */
     public function setNeedNewStop($needNewStop)
     {
@@ -794,18 +891,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the need new stop
      *
-     * @return boolean
+     * @return unknown
      */
     public function getNeedNewStop()
     {
         return $this->needNewStop;
     }
 
+
     /**
      * Set the new stop detail
      *
      * @param string $newStopDetail
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setNewStopDetail($newStopDetail)
     {
@@ -824,11 +922,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->newStopDetail;
     }
 
+
     /**
      * Set the has not fixed stop
      *
-     * @param boolean $hasNotFixedStop
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $hasNotFixedStop
+     * @return BusReg
      */
     public function setHasNotFixedStop($hasNotFixedStop)
     {
@@ -840,18 +939,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the has not fixed stop
      *
-     * @return boolean
+     * @return unknown
      */
     public function getHasNotFixedStop()
     {
         return $this->hasNotFixedStop;
     }
 
+
     /**
      * Set the not fixed stop detail
      *
      * @param string $notFixedStopDetail
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setNotFixedStopDetail($notFixedStopDetail)
     {
@@ -870,11 +970,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->notFixedStopDetail;
     }
 
+
     /**
      * Set the subsidy detail
      *
      * @param string $subsidyDetail
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setSubsidyDetail($subsidyDetail)
     {
@@ -893,11 +994,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidyDetail;
     }
 
+
     /**
      * Set the timetable acceptable
      *
-     * @param boolean $timetableAcceptable
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $timetableAcceptable
+     * @return BusReg
      */
     public function setTimetableAcceptable($timetableAcceptable)
     {
@@ -909,18 +1011,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the timetable acceptable
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTimetableAcceptable()
     {
         return $this->timetableAcceptable;
     }
 
+
     /**
      * Set the map supplied
      *
-     * @param boolean $mapSupplied
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $mapSupplied
+     * @return BusReg
      */
     public function setMapSupplied($mapSupplied)
     {
@@ -932,18 +1035,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the map supplied
      *
-     * @return boolean
+     * @return unknown
      */
     public function getMapSupplied()
     {
         return $this->mapSupplied;
     }
 
+
     /**
      * Set the route description
      *
      * @param string $routeDescription
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setRouteDescription($routeDescription)
     {
@@ -962,11 +1066,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeDescription;
     }
 
+
     /**
      * Set the copied to la pte
      *
-     * @param boolean $copiedToLaPte
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $copiedToLaPte
+     * @return BusReg
      */
     public function setCopiedToLaPte($copiedToLaPte)
     {
@@ -978,18 +1083,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the copied to la pte
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCopiedToLaPte()
     {
         return $this->copiedToLaPte;
     }
 
+
     /**
      * Set the la short note
      *
-     * @param boolean $laShortNote
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $laShortNote
+     * @return BusReg
      */
     public function setLaShortNote($laShortNote)
     {
@@ -1001,18 +1107,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the la short note
      *
-     * @return boolean
+     * @return unknown
      */
     public function getLaShortNote()
     {
         return $this->laShortNote;
     }
 
+
     /**
      * Set the application signed
      *
-     * @param boolean $applicationSigned
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $applicationSigned
+     * @return BusReg
      */
     public function setApplicationSigned($applicationSigned)
     {
@@ -1024,18 +1131,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the application signed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getApplicationSigned()
     {
         return $this->applicationSigned;
     }
 
+
     /**
      * Set the completed date
      *
      * @param \DateTime $completedDate
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setCompletedDate($completedDate)
     {
@@ -1054,11 +1162,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->completedDate;
     }
 
+
     /**
      * Set the route seq
      *
      * @param int $routeSeq
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setRouteSeq($routeSeq)
     {
@@ -1077,11 +1186,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeSeq;
     }
 
+
     /**
      * Set the op notified la pte
      *
-     * @param boolean $opNotifiedLaPte
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $opNotifiedLaPte
+     * @return BusReg
      */
     public function setOpNotifiedLaPte($opNotifiedLaPte)
     {
@@ -1093,18 +1203,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the op notified la pte
      *
-     * @return boolean
+     * @return unknown
      */
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
     }
 
+
     /**
      * Set the stopping arrangements
      *
      * @param string $stoppingArrangements
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setStoppingArrangements($stoppingArrangements)
     {
@@ -1123,11 +1234,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->stoppingArrangements;
     }
 
+
     /**
      * Set the trc condition checked
      *
-     * @param boolean $trcConditionChecked
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $trcConditionChecked
+     * @return BusReg
      */
     public function setTrcConditionChecked($trcConditionChecked)
     {
@@ -1139,18 +1251,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the trc condition checked
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTrcConditionChecked()
     {
         return $this->trcConditionChecked;
     }
 
+
     /**
      * Set the trc notes
      *
      * @param string $trcNotes
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setTrcNotes($trcNotes)
     {
@@ -1169,11 +1282,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->trcNotes;
     }
 
+
     /**
      * Set the status
      *
      * @param string $status
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setStatus($status)
     {
@@ -1192,11 +1306,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->status;
     }
 
+
     /**
      * Set the revert status
      *
      * @param string $revertStatus
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setRevertStatus($revertStatus)
     {
@@ -1215,11 +1330,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->revertStatus;
     }
 
+
     /**
      * Set the organisation email
      *
      * @param string $organisationEmail
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setOrganisationEmail($organisationEmail)
     {
@@ -1238,11 +1354,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->organisationEmail;
     }
 
+
     /**
      * Set the is txc app
      *
-     * @param boolean $isTxcApp
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $isTxcApp
+     * @return BusReg
      */
     public function setIsTxcApp($isTxcApp)
     {
@@ -1254,18 +1371,19 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the is txc app
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsTxcApp()
     {
         return $this->isTxcApp;
     }
 
+
     /**
      * Set the txc app type
      *
      * @param string $txcAppType
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setTxcAppType($txcAppType)
     {
@@ -1284,11 +1402,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->txcAppType;
     }
 
+
     /**
      * Set the reason cancelled
      *
      * @param string $reasonCancelled
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setReasonCancelled($reasonCancelled)
     {
@@ -1307,11 +1426,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonCancelled;
     }
 
+
     /**
      * Set the reason refused
      *
      * @param string $reasonRefused
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setReasonRefused($reasonRefused)
     {
@@ -1330,11 +1450,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonRefused;
     }
 
+
     /**
      * Set the reason sn refused
      *
      * @param string $reasonSnRefused
-     * @return \Olcs\Db\Entity\BusReg
+     * @return BusReg
      */
     public function setReasonSnRefused($reasonSnRefused)
     {
@@ -1353,11 +1474,12 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonSnRefused;
     }
 
+
     /**
      * Set the short notice refused
      *
-     * @param boolean $shortNoticeRefused
-     * @return \Olcs\Db\Entity\BusReg
+     * @param unknown $shortNoticeRefused
+     * @return BusReg
      */
     public function setShortNoticeRefused($shortNoticeRefused)
     {
@@ -1369,10 +1491,11 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the short notice refused
      *
-     * @return boolean
+     * @return unknown
      */
     public function getShortNoticeRefused()
     {
         return $this->shortNoticeRefused;
     }
+
 }

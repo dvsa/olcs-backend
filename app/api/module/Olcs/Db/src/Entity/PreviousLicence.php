@@ -64,7 +64,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Will surrender
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="will_surrender", nullable=true)
      */
@@ -89,10 +89,20 @@ class PreviousLicence implements Interfaces\EntityInterface
     protected $disqualificationLength;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the previous licence type
      *
      * @param \Olcs\Db\Entity\RefData $previousLicenceType
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @return PreviousLicence
      */
     public function setPreviousLicenceType($previousLicenceType)
     {
@@ -111,11 +121,12 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->previousLicenceType;
     }
 
+
     /**
      * Set the holder name
      *
      * @param string $holderName
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @return PreviousLicence
      */
     public function setHolderName($holderName)
     {
@@ -134,11 +145,12 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->holderName;
     }
 
+
     /**
      * Set the purchase date
      *
      * @param \DateTime $purchaseDate
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @return PreviousLicence
      */
     public function setPurchaseDate($purchaseDate)
     {
@@ -157,11 +169,12 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->purchaseDate;
     }
 
+
     /**
      * Set the will surrender
      *
-     * @param boolean $willSurrender
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @param unknown $willSurrender
+     * @return PreviousLicence
      */
     public function setWillSurrender($willSurrender)
     {
@@ -173,18 +186,19 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Get the will surrender
      *
-     * @return boolean
+     * @return unknown
      */
     public function getWillSurrender()
     {
         return $this->willSurrender;
     }
 
+
     /**
      * Set the disqualification date
      *
      * @param \DateTime $disqualificationDate
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @return PreviousLicence
      */
     public function setDisqualificationDate($disqualificationDate)
     {
@@ -203,11 +217,12 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->disqualificationDate;
     }
 
+
     /**
      * Set the disqualification length
      *
      * @param int $disqualificationLength
-     * @return \Olcs\Db\Entity\PreviousLicence
+     * @return PreviousLicence
      */
     public function setDisqualificationLength($disqualificationLength)
     {
@@ -225,4 +240,5 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->disqualificationLength;
     }
+
 }

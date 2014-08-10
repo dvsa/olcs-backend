@@ -46,10 +46,20 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
     protected $rehabMeasure;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the rehab measure
      *
      * @param \Olcs\Db\Entity\RefData $rehabMeasure
-     * @return \Olcs\Db\Entity\TmCaseDecisionRehab
+     * @return TmCaseDecisionRehab
      */
     public function setRehabMeasure($rehabMeasure)
     {
@@ -67,4 +77,5 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
     {
         return $this->rehabMeasure;
     }
+
 }

@@ -42,4 +42,5 @@ trait Description100FieldAlt1
     {
         return $this->description;
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -38,7 +39,7 @@ class Address implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\AdminAreaTrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="admin_area")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id")
      */
     protected $adminArea;
 
@@ -142,10 +143,37 @@ class Address implements Interfaces\EntityInterface
     protected $postcode;
 
     /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="address")
+     */
+    protected $contactDetails;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->contactDetails = new ArrayCollection();
+    }
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the admin area
      *
      * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setAdminArea($adminArea)
     {
@@ -164,11 +192,12 @@ class Address implements Interfaces\EntityInterface
         return $this->adminArea;
     }
 
+
     /**
      * Set the uprn
      *
      * @param int $uprn
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setUprn($uprn)
     {
@@ -187,11 +216,12 @@ class Address implements Interfaces\EntityInterface
         return $this->uprn;
     }
 
+
     /**
      * Set the paon start
      *
      * @param string $paonStart
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setPaonStart($paonStart)
     {
@@ -210,11 +240,12 @@ class Address implements Interfaces\EntityInterface
         return $this->paonStart;
     }
 
+
     /**
      * Set the paon end
      *
      * @param string $paonEnd
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setPaonEnd($paonEnd)
     {
@@ -233,11 +264,12 @@ class Address implements Interfaces\EntityInterface
         return $this->paonEnd;
     }
 
+
     /**
      * Set the address line2
      *
      * @param string $addressLine2
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setAddressLine2($addressLine2)
     {
@@ -256,11 +288,12 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine2;
     }
 
+
     /**
      * Set the saon start
      *
      * @param string $saonStart
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setSaonStart($saonStart)
     {
@@ -279,11 +312,12 @@ class Address implements Interfaces\EntityInterface
         return $this->saonStart;
     }
 
+
     /**
      * Set the saon end
      *
      * @param string $saonEnd
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setSaonEnd($saonEnd)
     {
@@ -302,11 +336,12 @@ class Address implements Interfaces\EntityInterface
         return $this->saonEnd;
     }
 
+
     /**
      * Set the address line1
      *
      * @param string $addressLine1
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setAddressLine1($addressLine1)
     {
@@ -325,11 +360,12 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine1;
     }
 
+
     /**
      * Set the address line3
      *
      * @param string $addressLine3
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setAddressLine3($addressLine3)
     {
@@ -348,11 +384,12 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine3;
     }
 
+
     /**
      * Set the address line4
      *
      * @param string $addressLine4
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setAddressLine4($addressLine4)
     {
@@ -371,11 +408,12 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine4;
     }
 
+
     /**
      * Set the town
      *
      * @param string $town
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setTown($town)
     {
@@ -394,11 +432,12 @@ class Address implements Interfaces\EntityInterface
         return $this->town;
     }
 
+
     /**
      * Set the postcode
      *
      * @param string $postcode
-     * @return \Olcs\Db\Entity\Address
+     * @return Address
      */
     public function setPostcode($postcode)
     {
@@ -416,4 +455,67 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->postcode;
     }
+
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
+
+    /**
+     * Add a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
 }

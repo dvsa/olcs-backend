@@ -17,7 +17,7 @@ trait CountryCodeManyToOne
      * @var \Olcs\Db\Entity\Country
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
-     * @ORM\JoinColumn(name="country_code", referencedColumnName="country_code")
+     * @ORM\JoinColumn(name="country_code", referencedColumnName="id")
      */
     protected $countryCode;
 
@@ -43,4 +43,5 @@ trait CountryCodeManyToOne
     {
         return $this->countryCode;
     }
+
 }

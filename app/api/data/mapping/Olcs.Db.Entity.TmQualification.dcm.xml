@@ -34,7 +34,7 @@
     </many-to-one>
     <many-to-one field="countryCode" target-entity="Olcs\Db\Entity\Country">
       <join-columns>
-        <join-column name="country_code" referenced-column-name="country_code"/>
+        <join-column name="country_code" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="transportManager" target-entity="Olcs\Db\Entity\TransportManager">

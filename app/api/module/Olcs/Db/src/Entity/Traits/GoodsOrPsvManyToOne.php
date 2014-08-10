@@ -43,4 +43,5 @@ trait GoodsOrPsvManyToOne
     {
         return $this->goodsOrPsv;
     }
+
 }

@@ -14,16 +14,16 @@ trait IsDeletedField
     /**
      * Is deleted
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_deleted", nullable=false)
+     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
      */
     protected $isDeleted = 0;
 
     /**
      * Set the is deleted
      *
-     * @param boolean $isDeleted
+     * @param unknown $isDeleted
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsDeleted($isDeleted)
@@ -36,10 +36,11 @@ trait IsDeletedField
     /**
      * Get the is deleted
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsDeleted()
     {
         return $this->isDeleted;
     }
+
 }

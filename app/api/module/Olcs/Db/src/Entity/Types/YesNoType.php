@@ -24,7 +24,7 @@ class YesNoType extends Type
         unset($fieldDeclaration);
         unset($platform);
 
-        return 'tinyint(1) NULL';
+        return 'tinyint(1) NOT NULL COMMENT \'(DC2Type:yesno)\'';
     }
 
     /**

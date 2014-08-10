@@ -47,10 +47,20 @@ class PiRescheduleDate implements Interfaces\EntityInterface
     protected $adjournmentDatetime;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the adjournment datetime
      *
      * @param \DateTime $adjournmentDatetime
-     * @return \Olcs\Db\Entity\PiRescheduleDate
+     * @return PiRescheduleDate
      */
     public function setAdjournmentDatetime($adjournmentDatetime)
     {
@@ -68,4 +78,5 @@ class PiRescheduleDate implements Interfaces\EntityInterface
     {
         return $this->adjournmentDatetime;
     }
+
 }

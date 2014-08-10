@@ -21,17 +21,8 @@ use Olcs\Db\Entity\Traits;
 class EmailRecipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity;
-
-    /**
-     * Email
-     *
-     * @var \Olcs\Db\Entity\Email
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Email")
-     * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
-     */
-    protected $email;
+        Traits\IdIdentity,
+        Traits\EmailManyToOne;
 
     /**
      * Type
@@ -52,33 +43,20 @@ class EmailRecipient implements Interfaces\EntityInterface
     protected $emailAddress;
 
     /**
-     * Set the email
+     * Get identifier(s)
      *
-     * @param \Olcs\Db\Entity\Email $email
-     * @return \Olcs\Db\Entity\EmailRecipient
+     * @return mixed
      */
-    public function setEmail($email)
+    public function getIdentifier()
     {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get the email
-     *
-     * @return \Olcs\Db\Entity\Email
-     */
-    public function getEmail()
-    {
-        return $this->email;
+        return $this->getId();
     }
 
     /**
      * Set the type
      *
      * @param int $type
-     * @return \Olcs\Db\Entity\EmailRecipient
+     * @return EmailRecipient
      */
     public function setType($type)
     {
@@ -97,11 +75,12 @@ class EmailRecipient implements Interfaces\EntityInterface
         return $this->type;
     }
 
+
     /**
      * Set the email address
      *
      * @param string $emailAddress
-     * @return \Olcs\Db\Entity\EmailRecipient
+     * @return EmailRecipient
      */
     public function setEmailAddress($emailAddress)
     {
@@ -119,4 +98,5 @@ class EmailRecipient implements Interfaces\EntityInterface
     {
         return $this->emailAddress;
     }
+
 }

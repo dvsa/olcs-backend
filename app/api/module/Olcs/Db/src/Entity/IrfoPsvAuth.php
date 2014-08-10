@@ -63,18 +63,18 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     /**
      * Is fee exempt application
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_fee_exempt_application", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false)
      */
     protected $isFeeExemptApplication = 0;
 
     /**
      * Is fee exempt annual
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_fee_exempt_annual", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false)
      */
     protected $isFeeExemptAnnual = 0;
 
@@ -178,10 +178,20 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the irfo psv auth type
      *
      * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setIrfoPsvAuthType($irfoPsvAuthType)
     {
@@ -200,11 +210,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->irfoPsvAuthType;
     }
 
+
     /**
      * Set the journey frequency
      *
      * @param \Olcs\Db\Entity\RefData $journeyFrequency
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setJourneyFrequency($journeyFrequency)
     {
@@ -223,11 +234,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->journeyFrequency;
     }
 
+
     /**
      * Set the is fee exempt application
      *
-     * @param boolean $isFeeExemptApplication
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @param unknown $isFeeExemptApplication
+     * @return IrfoPsvAuth
      */
     public function setIsFeeExemptApplication($isFeeExemptApplication)
     {
@@ -239,18 +251,19 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     /**
      * Get the is fee exempt application
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsFeeExemptApplication()
     {
         return $this->isFeeExemptApplication;
     }
 
+
     /**
      * Set the is fee exempt annual
      *
-     * @param boolean $isFeeExemptAnnual
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @param unknown $isFeeExemptAnnual
+     * @return IrfoPsvAuth
      */
     public function setIsFeeExemptAnnual($isFeeExemptAnnual)
     {
@@ -262,18 +275,19 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     /**
      * Get the is fee exempt annual
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsFeeExemptAnnual()
     {
         return $this->isFeeExemptAnnual;
     }
 
+
     /**
      * Set the irfo fee id
      *
      * @param string $irfoFeeId
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setIrfoFeeId($irfoFeeId)
     {
@@ -292,11 +306,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->irfoFeeId;
     }
 
+
     /**
      * Set the irfo file no
      *
      * @param string $irfoFileNo
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setIrfoFileNo($irfoFileNo)
     {
@@ -315,11 +330,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->irfoFileNo;
     }
 
+
     /**
      * Set the copies issued
      *
      * @param int $copiesIssued
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setCopiesIssued($copiesIssued)
     {
@@ -338,11 +354,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesIssued;
     }
 
+
     /**
      * Set the copies required
      *
      * @param int $copiesRequired
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setCopiesRequired($copiesRequired)
     {
@@ -361,11 +378,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesRequired;
     }
 
+
     /**
      * Set the copies required total
      *
      * @param int $copiesRequiredTotal
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setCopiesRequiredTotal($copiesRequiredTotal)
     {
@@ -384,11 +402,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesRequiredTotal;
     }
 
+
     /**
      * Set the copies issued total
      *
      * @param int $copiesIssuedTotal
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setCopiesIssuedTotal($copiesIssuedTotal)
     {
@@ -407,11 +426,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesIssuedTotal;
     }
 
+
     /**
      * Set the last date copies req
      *
      * @param \DateTime $lastDateCopiesReq
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setLastDateCopiesReq($lastDateCopiesReq)
     {
@@ -430,11 +450,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->lastDateCopiesReq;
     }
 
+
     /**
      * Set the renewal date
      *
      * @param \DateTime $renewalDate
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setRenewalDate($renewalDate)
     {
@@ -453,11 +474,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->renewalDate;
     }
 
+
     /**
      * Set the service route from
      *
      * @param string $serviceRouteFrom
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setServiceRouteFrom($serviceRouteFrom)
     {
@@ -476,11 +498,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->serviceRouteFrom;
     }
 
+
     /**
      * Set the service route to
      *
      * @param string $serviceRouteTo
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setServiceRouteTo($serviceRouteTo)
     {
@@ -499,11 +522,12 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->serviceRouteTo;
     }
 
+
     /**
      * Set the validity period
      *
      * @param int $validityPeriod
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @return IrfoPsvAuth
      */
     public function setValidityPeriod($validityPeriod)
     {
@@ -521,4 +545,5 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->validityPeriod;
     }
+
 }

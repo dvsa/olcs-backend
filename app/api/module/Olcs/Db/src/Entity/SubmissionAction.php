@@ -67,7 +67,7 @@ class SubmissionAction implements Interfaces\EntityInterface
     /**
      * Urgent
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="urgent", nullable=true)
      */
@@ -92,10 +92,20 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $submissionActionType;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the submission
      *
      * @param \Olcs\Db\Entity\Submission $submission
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @return SubmissionAction
      */
     public function setSubmission($submission)
     {
@@ -114,11 +124,12 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submission;
     }
 
+
     /**
      * Set the recipient user
      *
      * @param \Olcs\Db\Entity\User $recipientUser
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @return SubmissionAction
      */
     public function setRecipientUser($recipientUser)
     {
@@ -137,11 +148,12 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->recipientUser;
     }
 
+
     /**
      * Set the sender user
      *
      * @param \Olcs\Db\Entity\User $senderUser
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @return SubmissionAction
      */
     public function setSenderUser($senderUser)
     {
@@ -160,11 +172,12 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->senderUser;
     }
 
+
     /**
      * Set the urgent
      *
-     * @param boolean $urgent
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @param unknown $urgent
+     * @return SubmissionAction
      */
     public function setUrgent($urgent)
     {
@@ -176,18 +189,19 @@ class SubmissionAction implements Interfaces\EntityInterface
     /**
      * Get the urgent
      *
-     * @return boolean
+     * @return unknown
      */
     public function getUrgent()
     {
         return $this->urgent;
     }
 
+
     /**
      * Set the submission action status
      *
      * @param string $submissionActionStatus
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @return SubmissionAction
      */
     public function setSubmissionActionStatus($submissionActionStatus)
     {
@@ -206,11 +220,12 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submissionActionStatus;
     }
 
+
     /**
      * Set the submission action type
      *
      * @param string $submissionActionType
-     * @return \Olcs\Db\Entity\SubmissionAction
+     * @return SubmissionAction
      */
     public function setSubmissionActionType($submissionActionType)
     {
@@ -228,4 +243,5 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->submissionActionType;
     }
+
 }

@@ -42,7 +42,7 @@ class PsvDisc implements Interfaces\EntityInterface
     /**
      * Is copy
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_copy", nullable=true)
      */
@@ -51,17 +51,27 @@ class PsvDisc implements Interfaces\EntityInterface
     /**
      * Reprint required
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=true)
      */
     protected $reprintRequired;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is copy
      *
-     * @param boolean $isCopy
-     * @return \Olcs\Db\Entity\PsvDisc
+     * @param unknown $isCopy
+     * @return PsvDisc
      */
     public function setIsCopy($isCopy)
     {
@@ -73,18 +83,19 @@ class PsvDisc implements Interfaces\EntityInterface
     /**
      * Get the is copy
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsCopy()
     {
         return $this->isCopy;
     }
 
+
     /**
      * Set the reprint required
      *
-     * @param boolean $reprintRequired
-     * @return \Olcs\Db\Entity\PsvDisc
+     * @param unknown $reprintRequired
+     * @return PsvDisc
      */
     public function setReprintRequired($reprintRequired)
     {
@@ -96,10 +107,11 @@ class PsvDisc implements Interfaces\EntityInterface
     /**
      * Get the reprint required
      *
-     * @return boolean
+     * @return unknown
      */
     public function getReprintRequired()
     {
         return $this->reprintRequired;
     }
+
 }

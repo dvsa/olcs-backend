@@ -14,16 +14,16 @@ trait IsNiField
     /**
      * Is ni
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_ni", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
     protected $isNi;
 
     /**
      * Set the is ni
      *
-     * @param boolean $isNi
+     * @param unknown $isNi
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsNi($isNi)
@@ -36,10 +36,11 @@ trait IsNiField
     /**
      * Get the is ni
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsNi()
     {
         return $this->isNi;
     }
+
 }

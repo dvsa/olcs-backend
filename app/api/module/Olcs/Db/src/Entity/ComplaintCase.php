@@ -18,83 +18,31 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_complaint_case_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_complaint_case_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_A7094FAFCF10D4F5", columns={"case_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="case_id", columns={"case_id","complaint_id"})
  *    }
  * )
  */
 class ComplaintCase implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ComplaintManyToOne,
+        Traits\CaseManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Case
+     * Get identifier(s)
      *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Cases")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     * @return mixed
      */
-    protected $case;
-
-    /**
-     * Identifier - Complaint
-     *
-     * @var \Olcs\Db\Entity\Complaint
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Complaint")
-     * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id")
-     */
-    protected $complaint;
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return \Olcs\Db\Entity\ComplaintCase
-     */
-    public function setCase($case)
+    public function getIdentifier()
     {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-    /**
-     * Set the complaint
-     *
-     * @param \Olcs\Db\Entity\Complaint $complaint
-     * @return \Olcs\Db\Entity\ComplaintCase
-     */
-    public function setComplaint($complaint)
-    {
-        $this->complaint = $complaint;
-
-        return $this;
-    }
-
-    /**
-     * Get the complaint
-     *
-     * @return \Olcs\Db\Entity\Complaint
-     */
-    public function getComplaint()
-    {
-        return $this->complaint;
+        return $this->getId();
     }
 }

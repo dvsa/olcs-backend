@@ -50,10 +50,20 @@ class ChangeOfEntity implements Interfaces\EntityInterface
     protected $oldOrganisationName;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the old licence no
      *
      * @param string $oldLicenceNo
-     * @return \Olcs\Db\Entity\ChangeOfEntity
+     * @return ChangeOfEntity
      */
     public function setOldLicenceNo($oldLicenceNo)
     {
@@ -72,11 +82,12 @@ class ChangeOfEntity implements Interfaces\EntityInterface
         return $this->oldLicenceNo;
     }
 
+
     /**
      * Set the old organisation name
      *
      * @param string $oldOrganisationName
-     * @return \Olcs\Db\Entity\ChangeOfEntity
+     * @return ChangeOfEntity
      */
     public function setOldOrganisationName($oldOrganisationName)
     {
@@ -94,4 +105,5 @@ class ChangeOfEntity implements Interfaces\EntityInterface
     {
         return $this->oldOrganisationName;
     }
+
 }

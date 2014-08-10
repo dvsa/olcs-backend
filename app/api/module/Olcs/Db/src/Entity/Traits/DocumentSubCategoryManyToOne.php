@@ -43,4 +43,5 @@ trait DocumentSubCategoryManyToOne
     {
         return $this->documentSubCategory;
     }
+
 }

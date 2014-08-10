@@ -50,17 +50,27 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     /**
      * Email authority
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="email_authority", nullable=false)
+     * @ORM\Column(type="yesno", name="email_authority", nullable=false)
      */
     protected $emailAuthority = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the id
      *
      * @param string $id
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     * @return EbsrSubmissionResult
      */
     public function setId($id)
     {
@@ -79,11 +89,12 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->id;
     }
 
+
     /**
      * Set the email subject
      *
      * @param string $emailSubject
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     * @return EbsrSubmissionResult
      */
     public function setEmailSubject($emailSubject)
     {
@@ -102,11 +113,12 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->emailSubject;
     }
 
+
     /**
      * Set the email body template
      *
      * @param string $emailBodyTemplate
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     * @return EbsrSubmissionResult
      */
     public function setEmailBodyTemplate($emailBodyTemplate)
     {
@@ -125,11 +137,12 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->emailBodyTemplate;
     }
 
+
     /**
      * Set the email authority
      *
-     * @param boolean $emailAuthority
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     * @param unknown $emailAuthority
+     * @return EbsrSubmissionResult
      */
     public function setEmailAuthority($emailAuthority)
     {
@@ -141,10 +154,11 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     /**
      * Get the email authority
      *
-     * @return boolean
+     * @return unknown
      */
     public function getEmailAuthority()
     {
         return $this->emailAuthority;
     }
+
 }

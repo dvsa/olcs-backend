@@ -20,35 +20,46 @@ class Language implements Interfaces\EntityInterface
         Traits\Name100Field;
 
     /**
-     * Identifier - Iso2
+     * Identifier - Id
      *
      * @var string
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="iso2", length=2)
+     * @ORM\Column(type="string", name="id", length=2)
      */
-    protected $iso2;
+    protected $id;
 
     /**
-     * Set the iso2
+     * Get identifier(s)
      *
-     * @param string $iso2
-     * @return \Olcs\Db\Entity\Language
+     * @return mixed
      */
-    public function setIso2($iso2)
+    public function getIdentifier()
     {
-        $this->iso2 = $iso2;
+        return $this->getId();
+    }
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return Language
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get the iso2
+     * Get the id
      *
      * @return string
      */
-    public function getIso2()
+    public function getId()
     {
-        return $this->iso2;
+        return $this->id;
     }
+
 }

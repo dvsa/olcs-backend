@@ -55,10 +55,20 @@ class OrganisationPerson implements Interfaces\EntityInterface
     protected $position;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the added date
      *
      * @param string $addedDate
-     * @return \Olcs\Db\Entity\OrganisationPerson
+     * @return OrganisationPerson
      */
     public function setAddedDate($addedDate)
     {
@@ -77,11 +87,12 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
+
     /**
      * Set the position
      *
      * @param string $position
-     * @return \Olcs\Db\Entity\OrganisationPerson
+     * @return OrganisationPerson
      */
     public function setPosition($position)
     {
@@ -99,4 +110,5 @@ class OrganisationPerson implements Interfaces\EntityInterface
     {
         return $this->position;
     }
+
 }

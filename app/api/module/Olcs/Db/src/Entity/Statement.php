@@ -137,10 +137,20 @@ class Statement implements Interfaces\EntityInterface
     protected $requestersForename;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the requesters address
      *
      * @param \Olcs\Db\Entity\Address $requestersAddress
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setRequestersAddress($requestersAddress)
     {
@@ -159,11 +169,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersAddress;
     }
 
+
     /**
      * Set the statement type
      *
      * @param int $statementType
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setStatementType($statementType)
     {
@@ -182,11 +193,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->statementType;
     }
 
+
     /**
      * Set the date stopped
      *
      * @param \DateTime $dateStopped
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setDateStopped($dateStopped)
     {
@@ -205,11 +217,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->dateStopped;
     }
 
+
     /**
      * Set the date requested
      *
      * @param \DateTime $dateRequested
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setDateRequested($dateRequested)
     {
@@ -228,11 +241,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->dateRequested;
     }
 
+
     /**
      * Set the authorisers title
      *
      * @param string $authorisersTitle
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setAuthorisersTitle($authorisersTitle)
     {
@@ -251,11 +265,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->authorisersTitle;
     }
 
+
     /**
      * Set the authorisers decision
      *
      * @param string $authorisersDecision
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setAuthorisersDecision($authorisersDecision)
     {
@@ -274,11 +289,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->authorisersDecision;
     }
 
+
     /**
      * Set the licence no
      *
      * @param string $licenceNo
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setLicenceNo($licenceNo)
     {
@@ -297,11 +313,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->licenceNo;
     }
 
+
     /**
      * Set the licence type
      *
      * @param string $licenceType
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setLicenceType($licenceType)
     {
@@ -320,11 +337,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->licenceType;
     }
 
+
     /**
      * Set the requesters body
      *
      * @param string $requestersBody
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setRequestersBody($requestersBody)
     {
@@ -343,11 +361,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersBody;
     }
 
+
     /**
      * Set the requesters family name
      *
      * @param string $requestersFamilyName
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setRequestersFamilyName($requestersFamilyName)
     {
@@ -366,11 +385,12 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersFamilyName;
     }
 
+
     /**
      * Set the requesters forename
      *
      * @param string $requestersForename
-     * @return \Olcs\Db\Entity\Statement
+     * @return Statement
      */
     public function setRequestersForename($requestersForename)
     {
@@ -388,4 +408,5 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->requestersForename;
     }
+
 }

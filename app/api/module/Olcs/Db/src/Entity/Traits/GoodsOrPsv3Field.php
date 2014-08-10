@@ -42,4 +42,5 @@ trait GoodsOrPsv3Field
     {
         return $this->goodsOrPsv;
     }
+
 }

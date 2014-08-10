@@ -56,72 +56,72 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type app new
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_app_new", nullable=false)
+     * @ORM\Column(type="yesno", name="type_app_new", nullable=false)
      */
     protected $typeAppNew = 0;
 
     /**
      * Type app var
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_app_var", nullable=false)
+     * @ORM\Column(type="yesno", name="type_app_var", nullable=false)
      */
     protected $typeAppVar = 0;
 
     /**
      * Type disciplinary
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_disciplinary", nullable=false)
+     * @ORM\Column(type="yesno", name="type_disciplinary", nullable=false)
      */
     protected $typeDisciplinary = 0;
 
     /**
      * Type env new
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_env_new", nullable=false)
+     * @ORM\Column(type="yesno", name="type_env_new", nullable=false)
      */
     protected $typeEnvNew = 0;
 
     /**
      * Type env var
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_env_var", nullable=false)
+     * @ORM\Column(type="yesno", name="type_env_var", nullable=false)
      */
     protected $typeEnvVar = 0;
 
     /**
      * Type oc review
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_oc_review", nullable=false)
+     * @ORM\Column(type="yesno", name="type_oc_review", nullable=false)
      */
     protected $typeOcReview = 0;
 
     /**
      * Type impounding
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_impounding", nullable=false)
+     * @ORM\Column(type="yesno", name="type_impounding", nullable=false)
      */
     protected $typeImpounding = 0;
 
     /**
      * Type other
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="type_other", nullable=false)
+     * @ORM\Column(type="yesno", name="type_other", nullable=false)
      */
     protected $typeOther = 0;
 
@@ -155,18 +155,18 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Is cancelled
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_cancelled", nullable=false)
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
      */
     protected $isCancelled = 0;
 
     /**
      * Is adjourned
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_adjourned", nullable=false)
+     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
     protected $isAdjourned = 0;
 
@@ -182,9 +182,9 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Licence revoked at pi
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="licence_revoked_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
      */
     protected $licenceRevokedAtPi = 0;
 
@@ -207,10 +207,20 @@ class Pi implements Interfaces\EntityInterface
     protected $decisionNotes;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pi status
      *
      * @param \Olcs\Db\Entity\RefData $piStatus
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setPiStatus($piStatus)
     {
@@ -229,11 +239,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->piStatus;
     }
 
+
     /**
      * Set the type app new
      *
-     * @param boolean $typeAppNew
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeAppNew
+     * @return Pi
      */
     public function setTypeAppNew($typeAppNew)
     {
@@ -245,18 +256,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type app new
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeAppNew()
     {
         return $this->typeAppNew;
     }
 
+
     /**
      * Set the type app var
      *
-     * @param boolean $typeAppVar
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeAppVar
+     * @return Pi
      */
     public function setTypeAppVar($typeAppVar)
     {
@@ -268,18 +280,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type app var
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeAppVar()
     {
         return $this->typeAppVar;
     }
 
+
     /**
      * Set the type disciplinary
      *
-     * @param boolean $typeDisciplinary
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeDisciplinary
+     * @return Pi
      */
     public function setTypeDisciplinary($typeDisciplinary)
     {
@@ -291,18 +304,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type disciplinary
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeDisciplinary()
     {
         return $this->typeDisciplinary;
     }
 
+
     /**
      * Set the type env new
      *
-     * @param boolean $typeEnvNew
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeEnvNew
+     * @return Pi
      */
     public function setTypeEnvNew($typeEnvNew)
     {
@@ -314,18 +328,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type env new
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeEnvNew()
     {
         return $this->typeEnvNew;
     }
 
+
     /**
      * Set the type env var
      *
-     * @param boolean $typeEnvVar
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeEnvVar
+     * @return Pi
      */
     public function setTypeEnvVar($typeEnvVar)
     {
@@ -337,18 +352,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type env var
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeEnvVar()
     {
         return $this->typeEnvVar;
     }
 
+
     /**
      * Set the type oc review
      *
-     * @param boolean $typeOcReview
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeOcReview
+     * @return Pi
      */
     public function setTypeOcReview($typeOcReview)
     {
@@ -360,18 +376,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type oc review
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeOcReview()
     {
         return $this->typeOcReview;
     }
 
+
     /**
      * Set the type impounding
      *
-     * @param boolean $typeImpounding
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeImpounding
+     * @return Pi
      */
     public function setTypeImpounding($typeImpounding)
     {
@@ -383,18 +400,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type impounding
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeImpounding()
     {
         return $this->typeImpounding;
     }
 
+
     /**
      * Set the type other
      *
-     * @param boolean $typeOther
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $typeOther
+     * @return Pi
      */
     public function setTypeOther($typeOther)
     {
@@ -406,18 +424,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type other
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTypeOther()
     {
         return $this->typeOther;
     }
 
+
     /**
      * Set the pi datetime
      *
      * @param \DateTime $piDatetime
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setPiDatetime($piDatetime)
     {
@@ -436,11 +455,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->piDatetime;
     }
 
+
     /**
      * Set the venue
      *
      * @param string $venue
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setVenue($venue)
     {
@@ -459,11 +479,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->venue;
     }
 
+
     /**
      * Set the witnesses
      *
      * @param int $witnesses
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setWitnesses($witnesses)
     {
@@ -482,11 +503,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
+
     /**
      * Set the is cancelled
      *
-     * @param boolean $isCancelled
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $isCancelled
+     * @return Pi
      */
     public function setIsCancelled($isCancelled)
     {
@@ -498,18 +520,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the is cancelled
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsCancelled()
     {
         return $this->isCancelled;
     }
 
+
     /**
      * Set the is adjourned
      *
-     * @param boolean $isAdjourned
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $isAdjourned
+     * @return Pi
      */
     public function setIsAdjourned($isAdjourned)
     {
@@ -521,18 +544,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the is adjourned
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsAdjourned()
     {
         return $this->isAdjourned;
     }
 
+
     /**
      * Set the section code text
      *
      * @param string $sectionCodeText
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setSectionCodeText($sectionCodeText)
     {
@@ -551,11 +575,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->sectionCodeText;
     }
 
+
     /**
      * Set the licence revoked at pi
      *
-     * @param boolean $licenceRevokedAtPi
-     * @return \Olcs\Db\Entity\Pi
+     * @param unknown $licenceRevokedAtPi
+     * @return Pi
      */
     public function setLicenceRevokedAtPi($licenceRevokedAtPi)
     {
@@ -567,18 +592,19 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the licence revoked at pi
      *
-     * @return boolean
+     * @return unknown
      */
     public function getLicenceRevokedAtPi()
     {
         return $this->licenceRevokedAtPi;
     }
 
+
     /**
      * Set the notification date
      *
      * @param \DateTime $notificationDate
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setNotificationDate($notificationDate)
     {
@@ -597,11 +623,12 @@ class Pi implements Interfaces\EntityInterface
         return $this->notificationDate;
     }
 
+
     /**
      * Set the decision notes
      *
      * @param string $decisionNotes
-     * @return \Olcs\Db\Entity\Pi
+     * @return Pi
      */
     public function setDecisionNotes($decisionNotes)
     {
@@ -619,4 +646,5 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->decisionNotes;
     }
+
 }

@@ -28,7 +28,6 @@ class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\VenueManyToOne,
@@ -38,6 +37,16 @@ class Hearing implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Presiding tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
+     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id")
+     */
+    protected $presidingTc = 0;
 
     /**
      * Agreed by tc date
@@ -58,10 +67,44 @@ class Hearing implements Interfaces\EntityInterface
     protected $witnessCount = 0;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * Set the presiding tc
+     *
+     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
+     * @return Hearing
+     */
+    public function setPresidingTc($presidingTc)
+    {
+        $this->presidingTc = $presidingTc;
+
+        return $this;
+    }
+
+    /**
+     * Get the presiding tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getPresidingTc()
+    {
+        return $this->presidingTc;
+    }
+
+
+    /**
      * Set the agreed by tc date
      *
      * @param \DateTime $agreedByTcDate
-     * @return \Olcs\Db\Entity\Hearing
+     * @return Hearing
      */
     public function setAgreedByTcDate($agreedByTcDate)
     {
@@ -80,11 +123,12 @@ class Hearing implements Interfaces\EntityInterface
         return $this->agreedByTcDate;
     }
 
+
     /**
      * Set the witness count
      *
      * @param int $witnessCount
-     * @return \Olcs\Db\Entity\Hearing
+     * @return Hearing
      */
     public function setWitnessCount($witnessCount)
     {
@@ -102,4 +146,5 @@ class Hearing implements Interfaces\EntityInterface
     {
         return $this->witnessCount;
     }
+
 }

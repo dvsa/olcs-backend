@@ -57,10 +57,20 @@ class BusNoticePeriod implements Interfaces\EntityInterface
     protected $cancellationPeriod;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the notice area
      *
      * @param string $noticeArea
-     * @return \Olcs\Db\Entity\BusNoticePeriod
+     * @return BusNoticePeriod
      */
     public function setNoticeArea($noticeArea)
     {
@@ -79,11 +89,12 @@ class BusNoticePeriod implements Interfaces\EntityInterface
         return $this->noticeArea;
     }
 
+
     /**
      * Set the standard period
      *
      * @param int $standardPeriod
-     * @return \Olcs\Db\Entity\BusNoticePeriod
+     * @return BusNoticePeriod
      */
     public function setStandardPeriod($standardPeriod)
     {
@@ -102,11 +113,12 @@ class BusNoticePeriod implements Interfaces\EntityInterface
         return $this->standardPeriod;
     }
 
+
     /**
      * Set the cancellation period
      *
      * @param int $cancellationPeriod
-     * @return \Olcs\Db\Entity\BusNoticePeriod
+     * @return BusNoticePeriod
      */
     public function setCancellationPeriod($cancellationPeriod)
     {
@@ -124,4 +136,5 @@ class BusNoticePeriod implements Interfaces\EntityInterface
     {
         return $this->cancellationPeriod;
     }
+
 }

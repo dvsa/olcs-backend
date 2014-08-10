@@ -14,16 +14,16 @@ trait IsIrfoField
     /**
      * Is irfo
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_irfo", nullable=false)
+     * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
      */
     protected $isIrfo = 0;
 
     /**
      * Set the is irfo
      *
-     * @param boolean $isIrfo
+     * @param unknown $isIrfo
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsIrfo($isIrfo)
@@ -36,10 +36,11 @@ trait IsIrfoField
     /**
      * Get the is irfo
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsIrfo()
     {
         return $this->isIrfo;
     }
+
 }

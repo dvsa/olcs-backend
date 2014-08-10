@@ -50,26 +50,36 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Is ni
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_ni", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
     protected $isNi = 0;
 
     /**
      * Suppress from op
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="suppress_from_op", nullable=false)
+     * @ORM\Column(type="yesno", name="suppress_from_op", nullable=false)
      */
     protected $suppressFromOp;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the doc process
      *
      * @param \Olcs\Db\Entity\DocProcess $docProcess
-     * @return \Olcs\Db\Entity\DocTemplate
+     * @return DocTemplate
      */
     public function setDocProcess($docProcess)
     {
@@ -88,11 +98,12 @@ class DocTemplate implements Interfaces\EntityInterface
         return $this->docProcess;
     }
 
+
     /**
      * Set the is ni
      *
-     * @param boolean $isNi
-     * @return \Olcs\Db\Entity\DocTemplate
+     * @param unknown $isNi
+     * @return DocTemplate
      */
     public function setIsNi($isNi)
     {
@@ -104,18 +115,19 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Get the is ni
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsNi()
     {
         return $this->isNi;
     }
 
+
     /**
      * Set the suppress from op
      *
-     * @param boolean $suppressFromOp
-     * @return \Olcs\Db\Entity\DocTemplate
+     * @param unknown $suppressFromOp
+     * @return DocTemplate
      */
     public function setSuppressFromOp($suppressFromOp)
     {
@@ -127,10 +139,11 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Get the suppress from op
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSuppressFromOp()
     {
         return $this->suppressFromOp;
     }
+
 }

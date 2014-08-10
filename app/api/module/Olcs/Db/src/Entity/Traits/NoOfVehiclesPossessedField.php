@@ -42,4 +42,5 @@ trait NoOfVehiclesPossessedField
     {
         return $this->noOfVehiclesPossessed;
     }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="Olcs\Db\Entity\SystemParameter" table="system_parameter">
-    <id name="paramKey" type="string" column="param_key" length="32">
+    <id name="id" type="string" column="id" length="32">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="paramValue" type="string" column="param_value" length="32" nullable="true"/>

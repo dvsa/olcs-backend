@@ -39,11 +39,20 @@ class VariationReason implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the bus reg
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
-
-     * @return \Olcs\Db\Entity\VariationReason
+     * @return VariationReason
      */
     public function setBusRegs($busRegs)
     {
@@ -53,7 +62,7 @@ class VariationReason implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the bus reg
+     * Get the bus regs
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -62,4 +71,42 @@ class VariationReason implements Interfaces\EntityInterface
     {
         return $this->busRegs;
     }
+
+    /**
+     * Add a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return VariationReason
+     */
+    public function addBusRegs($busRegs)
+    {
+        if ($busRegs instanceof ArrayCollection) {
+            $this->busRegs = new ArrayCollection(
+                array_merge(
+                    $this->busRegs->toArray(),
+                    $busRegs->toArray()
+                )
+            );
+        } elseif (!$this->busRegs->contains($busRegs)) {
+            $this->busRegs->add($busRegs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return VariationReason
+     */
+    public function removeBusRegs($busRegs)
+    {
+        if ($this->busRegs->contains($busRegs)) {
+            $this->busRegs->remove($busRegs);
+        }
+
+        return $this;
+    }
+
 }

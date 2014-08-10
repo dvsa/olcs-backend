@@ -55,10 +55,20 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     protected $communityLicWithdrawal;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\CommunityLicWithdrawalReasonType $reason
-     * @return \Olcs\Db\Entity\CommunityLicWithdrawalReason
+     * @return CommunityLicWithdrawalReason
      */
     public function setReason($reason)
     {
@@ -77,11 +87,12 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the community lic withdrawal
      *
      * @param \Olcs\Db\Entity\CommunityLicWithdrawal $communityLicWithdrawal
-     * @return \Olcs\Db\Entity\CommunityLicWithdrawalReason
+     * @return CommunityLicWithdrawalReason
      */
     public function setCommunityLicWithdrawal($communityLicWithdrawal)
     {
@@ -99,4 +110,5 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     {
         return $this->communityLicWithdrawal;
     }
+
 }

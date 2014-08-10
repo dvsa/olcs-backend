@@ -106,7 +106,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Revoke lic
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="revoke_lic", nullable=true)
      */
@@ -115,7 +115,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Status
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="status", nullable=true)
      */
@@ -131,10 +131,20 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     protected $totalPoints;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the action
      *
      * @param \Olcs\Db\Entity\LegacyCaseAction $action
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setAction($action)
     {
@@ -153,11 +163,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->action;
     }
 
+
     /**
      * Set the to user
      *
      * @param \Olcs\Db\Entity\User $toUser
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setToUser($toUser)
     {
@@ -176,11 +187,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->toUser;
     }
 
+
     /**
      * Set the from user
      *
      * @param \Olcs\Db\Entity\User $fromUser
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setFromUser($fromUser)
     {
@@ -199,11 +211,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->fromUser;
     }
 
+
     /**
      * Set the rec date
      *
      * @param \DateTime $recDate
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setRecDate($recDate)
     {
@@ -222,11 +235,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->recDate;
     }
 
+
     /**
      * Set the pi reason
      *
      * @param string $piReason
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setPiReason($piReason)
     {
@@ -245,11 +259,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piReason;
     }
 
+
     /**
      * Set the pi decision
      *
      * @param string $piDecision
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setPiDecision($piDecision)
     {
@@ -268,11 +283,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piDecision;
     }
 
+
     /**
      * Set the request
      *
      * @param string $request
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setRequest($request)
     {
@@ -291,11 +307,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->request;
     }
 
+
     /**
      * Set the revoke lic
      *
-     * @param boolean $revokeLic
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @param unknown $revokeLic
+     * @return LegacyRecommendation
      */
     public function setRevokeLic($revokeLic)
     {
@@ -307,18 +324,19 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Get the revoke lic
      *
-     * @return boolean
+     * @return unknown
      */
     public function getRevokeLic()
     {
         return $this->revokeLic;
     }
 
+
     /**
      * Set the status
      *
-     * @param boolean $status
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @param unknown $status
+     * @return LegacyRecommendation
      */
     public function setStatus($status)
     {
@@ -330,18 +348,19 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Get the status
      *
-     * @return boolean
+     * @return unknown
      */
     public function getStatus()
     {
         return $this->status;
     }
 
+
     /**
      * Set the total points
      *
      * @param int $totalPoints
-     * @return \Olcs\Db\Entity\LegacyRecommendation
+     * @return LegacyRecommendation
      */
     public function setTotalPoints($totalPoints)
     {
@@ -359,4 +378,5 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->totalPoints;
     }
+
 }

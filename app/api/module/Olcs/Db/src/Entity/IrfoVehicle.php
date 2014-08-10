@@ -35,45 +35,45 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc a
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="coc_a", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_a", nullable=false)
      */
     protected $cocA = 0;
 
     /**
      * Coc b
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="coc_b", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_b", nullable=false)
      */
     protected $cocB = 0;
 
     /**
      * Coc c
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="coc_c", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_c", nullable=false)
      */
     protected $cocC = 0;
 
     /**
      * Coc d
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="coc_d", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_d", nullable=false)
      */
     protected $cocD = 0;
 
     /**
      * Coc t
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="coc_t", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_t", nullable=false)
      */
     protected $cocT = 0;
 
@@ -96,10 +96,20 @@ class IrfoVehicle implements Interfaces\EntityInterface
     protected $version = 1;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the coc a
      *
-     * @param boolean $cocA
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @param unknown $cocA
+     * @return IrfoVehicle
      */
     public function setCocA($cocA)
     {
@@ -111,18 +121,19 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc a
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCocA()
     {
         return $this->cocA;
     }
 
+
     /**
      * Set the coc b
      *
-     * @param boolean $cocB
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @param unknown $cocB
+     * @return IrfoVehicle
      */
     public function setCocB($cocB)
     {
@@ -134,18 +145,19 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc b
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCocB()
     {
         return $this->cocB;
     }
 
+
     /**
      * Set the coc c
      *
-     * @param boolean $cocC
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @param unknown $cocC
+     * @return IrfoVehicle
      */
     public function setCocC($cocC)
     {
@@ -157,18 +169,19 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc c
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCocC()
     {
         return $this->cocC;
     }
 
+
     /**
      * Set the coc d
      *
-     * @param boolean $cocD
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @param unknown $cocD
+     * @return IrfoVehicle
      */
     public function setCocD($cocD)
     {
@@ -180,18 +193,19 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc d
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCocD()
     {
         return $this->cocD;
     }
 
+
     /**
      * Set the coc t
      *
-     * @param boolean $cocT
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @param unknown $cocT
+     * @return IrfoVehicle
      */
     public function setCocT($cocT)
     {
@@ -203,18 +217,19 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc t
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCocT()
     {
         return $this->cocT;
     }
 
+
     /**
      * Set the vrm
      *
      * @param string $vrm
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @return IrfoVehicle
      */
     public function setVrm($vrm)
     {
@@ -233,11 +248,12 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->vrm;
     }
 
+
     /**
      * Set the version
      *
      * @param int $version
-     * @return \Olcs\Db\Entity\IrfoVehicle
+     * @return IrfoVehicle
      */
     public function setVersion($version)
     {
@@ -255,4 +271,5 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->version;
     }
+
 }

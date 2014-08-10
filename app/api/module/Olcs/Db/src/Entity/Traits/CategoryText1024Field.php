@@ -42,4 +42,5 @@ trait CategoryText1024Field
     {
         return $this->categoryText;
     }
+
 }

@@ -53,10 +53,20 @@ class AlphaSplit implements Interfaces\EntityInterface
     protected $toInclusive;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the from inclusive
      *
      * @param string $fromInclusive
-     * @return \Olcs\Db\Entity\AlphaSplit
+     * @return AlphaSplit
      */
     public function setFromInclusive($fromInclusive)
     {
@@ -75,11 +85,12 @@ class AlphaSplit implements Interfaces\EntityInterface
         return $this->fromInclusive;
     }
 
+
     /**
      * Set the to inclusive
      *
      * @param string $toInclusive
-     * @return \Olcs\Db\Entity\AlphaSplit
+     * @return AlphaSplit
      */
     public function setToInclusive($toInclusive)
     {
@@ -97,4 +108,5 @@ class AlphaSplit implements Interfaces\EntityInterface
     {
         return $this->toInclusive;
     }
+
 }

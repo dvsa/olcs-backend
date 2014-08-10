@@ -109,10 +109,20 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $rescheduledOn;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the type
      *
      * @param \Olcs\Db\Entity\RefData $type
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setType($type)
     {
@@ -131,11 +141,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->type;
     }
 
+
     /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\RefData $reason
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setReason($reason)
     {
@@ -154,11 +165,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the witnesses
      *
      * @param int $witnesses
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setWitnesses($witnesses)
     {
@@ -177,11 +189,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
+
     /**
      * Set the adjourned date
      *
      * @param \DateTime $adjournedDate
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setAdjournedDate($adjournedDate)
     {
@@ -200,11 +213,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->adjournedDate;
     }
 
+
     /**
      * Set the cancelled date
      *
      * @param \DateTime $cancelledDate
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setCancelledDate($cancelledDate)
     {
@@ -223,11 +237,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->cancelledDate;
     }
 
+
     /**
      * Set the scheduled on
      *
      * @param \DateTime $scheduledOn
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setScheduledOn($scheduledOn)
     {
@@ -246,11 +261,12 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->scheduledOn;
     }
 
+
     /**
      * Set the rescheduled on
      *
      * @param \DateTime $rescheduledOn
-     * @return \Olcs\Db\Entity\TmPiHearing
+     * @return TmPiHearing
      */
     public function setRescheduledOn($rescheduledOn)
     {
@@ -268,4 +284,5 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->rescheduledOn;
     }
+
 }

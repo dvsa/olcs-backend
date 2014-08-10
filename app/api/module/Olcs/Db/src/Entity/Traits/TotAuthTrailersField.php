@@ -42,4 +42,5 @@ trait TotAuthTrailersField
     {
         return $this->totAuthTrailers;
     }
+
 }

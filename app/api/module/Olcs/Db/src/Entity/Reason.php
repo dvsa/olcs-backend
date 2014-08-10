@@ -55,18 +55,18 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Is read only
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_read_only", nullable=false)
+     * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
      */
     protected $isReadOnly;
 
     /**
      * Is propose to revoke
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_propose_to_revoke", nullable=false)
+     * @ORM\Column(type="yesno", name="is_propose_to_revoke", nullable=false)
      */
     protected $isProposeToRevoke;
 
@@ -79,11 +79,20 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the propose to revoke
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
-
-     * @return \Olcs\Db\Entity\Reason
+     * @return Reason
      */
     public function setProposeToRevokes($proposeToRevokes)
     {
@@ -93,7 +102,7 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the propose to revoke
+     * Get the propose to revokes
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -104,10 +113,48 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a propose to revokes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @return Reason
+     */
+    public function addProposeToRevokes($proposeToRevokes)
+    {
+        if ($proposeToRevokes instanceof ArrayCollection) {
+            $this->proposeToRevokes = new ArrayCollection(
+                array_merge(
+                    $this->proposeToRevokes->toArray(),
+                    $proposeToRevokes->toArray()
+                )
+            );
+        } elseif (!$this->proposeToRevokes->contains($proposeToRevokes)) {
+            $this->proposeToRevokes->add($proposeToRevokes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a propose to revokes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @return Reason
+     */
+    public function removeProposeToRevokes($proposeToRevokes)
+    {
+        if ($this->proposeToRevokes->contains($proposeToRevokes)) {
+            $this->proposeToRevokes->remove($proposeToRevokes);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the section code
      *
      * @param string $sectionCode
-     * @return \Olcs\Db\Entity\Reason
+     * @return Reason
      */
     public function setSectionCode($sectionCode)
     {
@@ -126,11 +173,12 @@ class Reason implements Interfaces\EntityInterface
         return $this->sectionCode;
     }
 
+
     /**
      * Set the is read only
      *
-     * @param boolean $isReadOnly
-     * @return \Olcs\Db\Entity\Reason
+     * @param unknown $isReadOnly
+     * @return Reason
      */
     public function setIsReadOnly($isReadOnly)
     {
@@ -142,18 +190,19 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Get the is read only
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
     }
 
+
     /**
      * Set the is propose to revoke
      *
-     * @param boolean $isProposeToRevoke
-     * @return \Olcs\Db\Entity\Reason
+     * @param unknown $isProposeToRevoke
+     * @return Reason
      */
     public function setIsProposeToRevoke($isProposeToRevoke)
     {
@@ -165,10 +214,11 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Get the is propose to revoke
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsProposeToRevoke()
     {
         return $this->isProposeToRevoke;
     }
+
 }

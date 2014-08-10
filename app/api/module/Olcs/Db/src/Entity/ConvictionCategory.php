@@ -42,10 +42,20 @@ class ConvictionCategory implements Interfaces\EntityInterface
     protected $parent;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the parent
      *
      * @param \Olcs\Db\Entity\ConvictionCategory $parent
-     * @return \Olcs\Db\Entity\ConvictionCategory
+     * @return ConvictionCategory
      */
     public function setParent($parent)
     {
@@ -63,4 +73,5 @@ class ConvictionCategory implements Interfaces\EntityInterface
     {
         return $this->parent;
     }
+
 }

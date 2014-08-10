@@ -61,10 +61,20 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     protected $comment;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pi reason
      *
      * @param \Olcs\Db\Entity\PiReason $piReason
-     * @return \Olcs\Db\Entity\LegacyRecommendationPiReason
+     * @return LegacyRecommendationPiReason
      */
     public function setPiReason($piReason)
     {
@@ -83,11 +93,12 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->piReason;
     }
 
+
     /**
      * Set the legacy recommendation
      *
      * @param \Olcs\Db\Entity\LegacyRecommendation $legacyRecommendation
-     * @return \Olcs\Db\Entity\LegacyRecommendationPiReason
+     * @return LegacyRecommendationPiReason
      */
     public function setLegacyRecommendation($legacyRecommendation)
     {
@@ -106,11 +117,12 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->legacyRecommendation;
     }
 
+
     /**
      * Set the comment
      *
      * @param string $comment
-     * @return \Olcs\Db\Entity\LegacyRecommendationPiReason
+     * @return LegacyRecommendationPiReason
      */
     public function setComment($comment)
     {
@@ -128,4 +140,5 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     {
         return $this->comment;
     }
+
 }

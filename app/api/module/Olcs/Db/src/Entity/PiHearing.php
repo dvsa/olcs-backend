@@ -36,9 +36,9 @@ class PiHearing implements Interfaces\EntityInterface
     /**
      * Is adjourned
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_adjourned", nullable=false)
+     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
     protected $isAdjourned;
 
@@ -61,10 +61,20 @@ class PiHearing implements Interfaces\EntityInterface
     protected $venue;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is adjourned
      *
-     * @param boolean $isAdjourned
-     * @return \Olcs\Db\Entity\PiHearing
+     * @param unknown $isAdjourned
+     * @return PiHearing
      */
     public function setIsAdjourned($isAdjourned)
     {
@@ -76,18 +86,19 @@ class PiHearing implements Interfaces\EntityInterface
     /**
      * Get the is adjourned
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsAdjourned()
     {
         return $this->isAdjourned;
     }
 
+
     /**
      * Set the date of hearing
      *
      * @param \DateTime $dateOfHearing
-     * @return \Olcs\Db\Entity\PiHearing
+     * @return PiHearing
      */
     public function setDateOfHearing($dateOfHearing)
     {
@@ -106,11 +117,12 @@ class PiHearing implements Interfaces\EntityInterface
         return $this->dateOfHearing;
     }
 
+
     /**
      * Set the venue
      *
      * @param string $venue
-     * @return \Olcs\Db\Entity\PiHearing
+     * @return PiHearing
      */
     public function setVenue($venue)
     {
@@ -128,4 +140,5 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
+
 }

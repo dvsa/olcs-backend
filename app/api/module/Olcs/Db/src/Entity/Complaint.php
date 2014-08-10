@@ -85,10 +85,20 @@ class Complaint implements Interfaces\EntityInterface
     protected $driverId;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the complaint type
      *
      * @param \Olcs\Db\Entity\RefData $complaintType
-     * @return \Olcs\Db\Entity\Complaint
+     * @return Complaint
      */
     public function setComplaintType($complaintType)
     {
@@ -107,11 +117,12 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintType;
     }
 
+
     /**
      * Set the complainant contact details
      *
      * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
-     * @return \Olcs\Db\Entity\Complaint
+     * @return Complaint
      */
     public function setComplainantContactDetails($complainantContactDetails)
     {
@@ -130,11 +141,12 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complainantContactDetails;
     }
 
+
     /**
      * Set the complaint date
      *
      * @param \DateTime $complaintDate
-     * @return \Olcs\Db\Entity\Complaint
+     * @return Complaint
      */
     public function setComplaintDate($complaintDate)
     {
@@ -153,11 +165,12 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintDate;
     }
 
+
     /**
      * Set the value
      *
      * @param string $value
-     * @return \Olcs\Db\Entity\Complaint
+     * @return Complaint
      */
     public function setValue($value)
     {
@@ -176,11 +189,12 @@ class Complaint implements Interfaces\EntityInterface
         return $this->value;
     }
 
+
     /**
      * Set the driver id
      *
      * @param int $driverId
-     * @return \Olcs\Db\Entity\Complaint
+     * @return Complaint
      */
     public function setDriverId($driverId)
     {
@@ -198,4 +212,5 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->driverId;
     }
+
 }

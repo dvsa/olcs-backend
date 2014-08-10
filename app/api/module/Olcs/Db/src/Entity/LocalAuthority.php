@@ -52,10 +52,20 @@ class LocalAuthority implements Interfaces\EntityInterface
     protected $naptanCode;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the txc name
      *
      * @param string $txcName
-     * @return \Olcs\Db\Entity\LocalAuthority
+     * @return LocalAuthority
      */
     public function setTxcName($txcName)
     {
@@ -74,11 +84,12 @@ class LocalAuthority implements Interfaces\EntityInterface
         return $this->txcName;
     }
 
+
     /**
      * Set the naptan code
      *
      * @param string $naptanCode
-     * @return \Olcs\Db\Entity\LocalAuthority
+     * @return LocalAuthority
      */
     public function setNaptanCode($naptanCode)
     {
@@ -96,4 +107,5 @@ class LocalAuthority implements Interfaces\EntityInterface
     {
         return $this->naptanCode;
     }
+
 }

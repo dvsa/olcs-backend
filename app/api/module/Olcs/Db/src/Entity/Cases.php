@@ -123,9 +123,9 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Is impounding
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_impounding", nullable=false)
+     * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
      */
     protected $isImpounding = 0;
 
@@ -175,10 +175,20 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the case type
      *
      * @param \Olcs\Db\Entity\RefData $caseType
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setCaseType($caseType)
     {
@@ -197,12 +207,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->caseType;
     }
 
+
     /**
      * Set the legacy offence
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setLegacyOffences($legacyOffences)
     {
@@ -212,7 +222,7 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the legacy offence
+     * Get the legacy offences
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -223,11 +233,48 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function addLegacyOffences($legacyOffences)
+    {
+        if ($legacyOffences instanceof ArrayCollection) {
+            $this->legacyOffences = new ArrayCollection(
+                array_merge(
+                    $this->legacyOffences->toArray(),
+                    $legacyOffences->toArray()
+                )
+            );
+        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->add($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function removeLegacyOffences($legacyOffences)
+    {
+        if ($this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->remove($legacyOffences);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the submission section
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setSubmissionSections($submissionSections)
     {
@@ -237,7 +284,7 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the submission section
+     * Get the submission sections
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -248,10 +295,48 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a submission sections
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
+     * @return Cases
+     */
+    public function addSubmissionSections($submissionSections)
+    {
+        if ($submissionSections instanceof ArrayCollection) {
+            $this->submissionSections = new ArrayCollection(
+                array_merge(
+                    $this->submissionSections->toArray(),
+                    $submissionSections->toArray()
+                )
+            );
+        } elseif (!$this->submissionSections->contains($submissionSections)) {
+            $this->submissionSections->add($submissionSections);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a submission sections
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
+     * @return Cases
+     */
+    public function removeSubmissionSections($submissionSections)
+    {
+        if ($this->submissionSections->contains($submissionSections)) {
+            $this->submissionSections->remove($submissionSections);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the ecms no
      *
      * @param string $ecmsNo
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setEcmsNo($ecmsNo)
     {
@@ -270,11 +355,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->ecmsNo;
     }
 
+
     /**
      * Set the open date
      *
      * @param \DateTime $openDate
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setOpenDate($openDate)
     {
@@ -293,11 +379,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->openDate;
     }
 
+
     /**
      * Set the close date
      *
      * @param \DateTime $closeDate
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setCloseDate($closeDate)
     {
@@ -316,11 +403,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
+
     /**
      * Set the description
      *
      * @param string $description
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setDescription($description)
     {
@@ -339,11 +427,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->description;
     }
 
+
     /**
      * Set the is impounding
      *
-     * @param boolean $isImpounding
-     * @return \Olcs\Db\Entity\Cases
+     * @param unknown $isImpounding
+     * @return Cases
      */
     public function setIsImpounding($isImpounding)
     {
@@ -355,18 +444,19 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Get the is impounding
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsImpounding()
     {
         return $this->isImpounding;
     }
 
+
     /**
      * Set the erru originating authority
      *
      * @param string $erruOriginatingAuthority
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setErruOriginatingAuthority($erruOriginatingAuthority)
     {
@@ -385,11 +475,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruOriginatingAuthority;
     }
 
+
     /**
      * Set the erru transport undertaking name
      *
      * @param string $erruTransportUndertakingName
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setErruTransportUndertakingName($erruTransportUndertakingName)
     {
@@ -408,11 +499,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruTransportUndertakingName;
     }
 
+
     /**
      * Set the erru vrm
      *
      * @param string $erruVrm
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setErruVrm($erruVrm)
     {
@@ -431,11 +523,12 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruVrm;
     }
 
+
     /**
      * Set the annual test history
      *
      * @param string $annualTestHistory
-     * @return \Olcs\Db\Entity\Cases
+     * @return Cases
      */
     public function setAnnualTestHistory($annualTestHistory)
     {
@@ -453,4 +546,5 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->annualTestHistory;
     }
+
 }

@@ -63,10 +63,20 @@ class Publication implements Interfaces\EntityInterface
     protected $docName;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pub status
      *
      * @param \Olcs\Db\Entity\RefData $pubStatus
-     * @return \Olcs\Db\Entity\Publication
+     * @return Publication
      */
     public function setPubStatus($pubStatus)
     {
@@ -85,11 +95,12 @@ class Publication implements Interfaces\EntityInterface
         return $this->pubStatus;
     }
 
+
     /**
      * Set the pub date
      *
      * @param \DateTime $pubDate
-     * @return \Olcs\Db\Entity\Publication
+     * @return Publication
      */
     public function setPubDate($pubDate)
     {
@@ -108,11 +119,12 @@ class Publication implements Interfaces\EntityInterface
         return $this->pubDate;
     }
 
+
     /**
      * Set the doc name
      *
      * @param string $docName
-     * @return \Olcs\Db\Entity\Publication
+     * @return Publication
      */
     public function setDocName($docName)
     {
@@ -130,4 +142,5 @@ class Publication implements Interfaces\EntityInterface
     {
         return $this->docName;
     }
+
 }

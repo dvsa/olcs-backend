@@ -40,10 +40,20 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
     protected $removedDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the removed date
      *
      * @param \DateTime $removedDate
-     * @return \Olcs\Db\Entity\SiPenaltyImposedType
+     * @return SiPenaltyImposedType
      */
     public function setRemovedDate($removedDate)
     {
@@ -61,4 +71,5 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
     {
         return $this->removedDate;
     }
+
 }

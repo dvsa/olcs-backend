@@ -72,10 +72,20 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     protected $requestedTimestamp;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the requested user
      *
      * @param \Olcs\Db\Entity\User $requestedUser
-     * @return \Olcs\Db\Entity\EbsrRouteReprint
+     * @return EbsrRouteReprint
      */
     public function setRequestedUser($requestedUser)
     {
@@ -94,11 +104,12 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->requestedUser;
     }
 
+
     /**
      * Set the exception name
      *
      * @param string $exceptionName
-     * @return \Olcs\Db\Entity\EbsrRouteReprint
+     * @return EbsrRouteReprint
      */
     public function setExceptionName($exceptionName)
     {
@@ -117,11 +128,12 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->exceptionName;
     }
 
+
     /**
      * Set the scale
      *
      * @param int $scale
-     * @return \Olcs\Db\Entity\EbsrRouteReprint
+     * @return EbsrRouteReprint
      */
     public function setScale($scale)
     {
@@ -140,11 +152,12 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->scale;
     }
 
+
     /**
      * Set the published timestamp
      *
      * @param \DateTime $publishedTimestamp
-     * @return \Olcs\Db\Entity\EbsrRouteReprint
+     * @return EbsrRouteReprint
      */
     public function setPublishedTimestamp($publishedTimestamp)
     {
@@ -163,11 +176,12 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->publishedTimestamp;
     }
 
+
     /**
      * Set the requested timestamp
      *
      * @param \DateTime $requestedTimestamp
-     * @return \Olcs\Db\Entity\EbsrRouteReprint
+     * @return EbsrRouteReprint
      */
     public function setRequestedTimestamp($requestedTimestamp)
     {
@@ -185,4 +199,5 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     {
         return $this->requestedTimestamp;
     }
+
 }

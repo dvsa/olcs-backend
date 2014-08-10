@@ -22,21 +22,12 @@ use Olcs\Db\Entity\Traits;
 class Country implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Identifier - Country code
-     *
-     * @var string
-     *
-     * @ORM\Id
-     * @ORM\Column(type="string", name="country_code", length=8)
-     */
-    protected $countryCode;
 
     /**
      * Country desc
@@ -50,40 +41,27 @@ class Country implements Interfaces\EntityInterface
     /**
      * Is member state
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_member_state", nullable=false)
+     * @ORM\Column(type="yesno", name="is_member_state", nullable=false)
      */
     protected $isMemberState = 0;
 
     /**
-     * Set the country code
+     * Get identifier(s)
      *
-     * @param string $countryCode
-     * @return \Olcs\Db\Entity\Country
+     * @return mixed
      */
-    public function setCountryCode($countryCode)
+    public function getIdentifier()
     {
-        $this->countryCode = $countryCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the country code
-     *
-     * @return string
-     */
-    public function getCountryCode()
-    {
-        return $this->countryCode;
+        return $this->getId();
     }
 
     /**
      * Set the country desc
      *
      * @param string $countryDesc
-     * @return \Olcs\Db\Entity\Country
+     * @return Country
      */
     public function setCountryDesc($countryDesc)
     {
@@ -102,11 +80,12 @@ class Country implements Interfaces\EntityInterface
         return $this->countryDesc;
     }
 
+
     /**
      * Set the is member state
      *
-     * @param boolean $isMemberState
-     * @return \Olcs\Db\Entity\Country
+     * @param unknown $isMemberState
+     * @return Country
      */
     public function setIsMemberState($isMemberState)
     {
@@ -118,10 +97,11 @@ class Country implements Interfaces\EntityInterface
     /**
      * Get the is member state
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsMemberState()
     {
         return $this->isMemberState;
     }
+
 }

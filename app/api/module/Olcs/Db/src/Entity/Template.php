@@ -47,11 +47,20 @@ class Template implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the history
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $historys
-
-     * @return \Olcs\Db\Entity\Template
+     * @return Template
      */
     public function setHistorys($historys)
     {
@@ -61,7 +70,7 @@ class Template implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the history
+     * Get the historys
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -72,10 +81,48 @@ class Template implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a historys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $historys
+     * @return Template
+     */
+    public function addHistorys($historys)
+    {
+        if ($historys instanceof ArrayCollection) {
+            $this->historys = new ArrayCollection(
+                array_merge(
+                    $this->historys->toArray(),
+                    $historys->toArray()
+                )
+            );
+        } elseif (!$this->historys->contains($historys)) {
+            $this->historys->add($historys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a historys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $historys
+     * @return Template
+     */
+    public function removeHistorys($historys)
+    {
+        if ($this->historys->contains($historys)) {
+            $this->historys->remove($historys);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the data
      *
      * @param string $data
-     * @return \Olcs\Db\Entity\Template
+     * @return Template
      */
     public function setData($data)
     {
@@ -93,4 +140,5 @@ class Template implements Interfaces\EntityInterface
     {
         return $this->data;
     }
+
 }

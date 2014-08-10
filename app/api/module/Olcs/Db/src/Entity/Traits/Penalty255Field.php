@@ -42,4 +42,5 @@ trait Penalty255Field
     {
         return $this->penalty;
     }
+
 }

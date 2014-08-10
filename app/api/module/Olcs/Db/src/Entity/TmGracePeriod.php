@@ -36,9 +36,9 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Is active
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_active", nullable=false)
+     * @ORM\Column(type="yesno", name="is_active", nullable=false)
      */
     protected $isActive = 0;
 
@@ -79,10 +79,20 @@ class TmGracePeriod implements Interfaces\EntityInterface
     protected $gracePeriodNo = 1;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is active
      *
-     * @param boolean $isActive
-     * @return \Olcs\Db\Entity\TmGracePeriod
+     * @param unknown $isActive
+     * @return TmGracePeriod
      */
     public function setIsActive($isActive)
     {
@@ -94,18 +104,19 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Get the is active
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsActive()
     {
         return $this->isActive;
     }
 
+
     /**
      * Set the start date
      *
      * @param \DateTime $startDate
-     * @return \Olcs\Db\Entity\TmGracePeriod
+     * @return TmGracePeriod
      */
     public function setStartDate($startDate)
     {
@@ -124,11 +135,12 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->startDate;
     }
 
+
     /**
      * Set the end date
      *
      * @param \DateTime $endDate
-     * @return \Olcs\Db\Entity\TmGracePeriod
+     * @return TmGracePeriod
      */
     public function setEndDate($endDate)
     {
@@ -147,11 +159,12 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->endDate;
     }
 
+
     /**
      * Set the action date
      *
      * @param \DateTime $actionDate
-     * @return \Olcs\Db\Entity\TmGracePeriod
+     * @return TmGracePeriod
      */
     public function setActionDate($actionDate)
     {
@@ -170,11 +183,12 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->actionDate;
     }
 
+
     /**
      * Set the grace period no
      *
      * @param int $gracePeriodNo
-     * @return \Olcs\Db\Entity\TmGracePeriod
+     * @return TmGracePeriod
      */
     public function setGracePeriodNo($gracePeriodNo)
     {
@@ -192,4 +206,5 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->gracePeriodNo;
     }
+
 }
