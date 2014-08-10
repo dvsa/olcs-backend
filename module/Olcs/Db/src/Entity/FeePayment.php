@@ -18,68 +18,48 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_has_payment_fee1_idx", columns={"fee_id"}),
  *        @ORM\Index(name="fk_fee_payment_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_fee_payment_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="fee_id", columns={"fee_id","payment_id"})
  *    }
  * )
  */
 class FeePayment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\FeeManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Fee
-     *
-     * @var \Olcs\Db\Entity\Fee
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Fee")
-     * @ORM\JoinColumn(name="fee_id", referencedColumnName="id")
-     */
-    protected $fee;
-
-    /**
-     * Identifier - Payment
+     * Payment
      *
      * @var \Olcs\Db\Entity\Payment
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Payment")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
      * @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
      */
     protected $payment;
 
     /**
-     * Set the fee
+     * Get identifier(s)
      *
-     * @param \Olcs\Db\Entity\Fee $fee
-     * @return \Olcs\Db\Entity\FeePayment
+     * @return mixed
      */
-    public function setFee($fee)
+    public function getIdentifier()
     {
-        $this->fee = $fee;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee
-     *
-     * @return \Olcs\Db\Entity\Fee
-     */
-    public function getFee()
-    {
-        return $this->fee;
+        return $this->getId();
     }
 
     /**
      * Set the payment
      *
      * @param \Olcs\Db\Entity\Payment $payment
-     * @return \Olcs\Db\Entity\FeePayment
+     * @return FeePayment
      */
     public function setPayment($payment)
     {
@@ -97,4 +77,5 @@ class FeePayment implements Interfaces\EntityInterface
     {
         return $this->payment;
     }
+
 }

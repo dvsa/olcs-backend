@@ -63,7 +63,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     /**
      * Removal
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="removal", nullable=true)
      */
@@ -106,10 +106,20 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $warningLetterSentDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the vehicle
      *
      * @param \Olcs\Db\Entity\Vehicle $vehicle
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setVehicle($vehicle)
     {
@@ -128,11 +138,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->vehicle;
     }
 
+
     /**
      * Set the application received date
      *
      * @param \DateTime $applicationReceivedDate
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setApplicationReceivedDate($applicationReceivedDate)
     {
@@ -151,11 +162,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->applicationReceivedDate;
     }
 
+
     /**
      * Set the removal
      *
-     * @param boolean $removal
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @param unknown $removal
+     * @return LicenceVehicle
      */
     public function setRemoval($removal)
     {
@@ -167,18 +179,19 @@ class LicenceVehicle implements Interfaces\EntityInterface
     /**
      * Get the removal
      *
-     * @return boolean
+     * @return unknown
      */
     public function getRemoval()
     {
         return $this->removal;
     }
 
+
     /**
      * Set the removal letter seed date
      *
      * @param \DateTime $removalLetterSeedDate
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setRemovalLetterSeedDate($removalLetterSeedDate)
     {
@@ -197,11 +210,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->removalLetterSeedDate;
     }
 
+
     /**
      * Set the is interim
      *
      * @param int $isInterim
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setIsInterim($isInterim)
     {
@@ -220,11 +234,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->isInterim;
     }
 
+
     /**
      * Set the warning letter seed date
      *
      * @param \DateTime $warningLetterSeedDate
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setWarningLetterSeedDate($warningLetterSeedDate)
     {
@@ -243,11 +258,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->warningLetterSeedDate;
     }
 
+
     /**
      * Set the warning letter sent date
      *
      * @param \DateTime $warningLetterSentDate
-     * @return \Olcs\Db\Entity\LicenceVehicle
+     * @return LicenceVehicle
      */
     public function setWarningLetterSentDate($warningLetterSentDate)
     {
@@ -265,4 +281,5 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->warningLetterSentDate;
     }
+
 }

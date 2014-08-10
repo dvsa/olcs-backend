@@ -45,10 +45,20 @@ class Trailer implements Interfaces\EntityInterface
     protected $trailerNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the trailer no
      *
      * @param string $trailerNo
-     * @return \Olcs\Db\Entity\Trailer
+     * @return Trailer
      */
     public function setTrailerNo($trailerNo)
     {
@@ -66,4 +76,5 @@ class Trailer implements Interfaces\EntityInterface
     {
         return $this->trailerNo;
     }
+
 }

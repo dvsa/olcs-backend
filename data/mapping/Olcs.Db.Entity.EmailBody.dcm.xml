@@ -4,13 +4,18 @@
     <indexes>
       <index name="fk_email_body_email1_idx" columns="email_id"/>
     </indexes>
-    <id name="seq" type="integer" column="seq"/>
-    <id name="email" association-key="true"/>
+    <unique-constraints>
+      <unique-constraint name="seq" columns="seq,email_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="seq" type="integer" column="seq" nullable="false"/>
     <field name="text" type="string" column="text" length="8000" nullable="true"/>
-    <one-to-one field="email" target-entity="Olcs\Db\Entity\Email">
+    <many-to-one field="email" target-entity="Olcs\Db\Entity\Email">
       <join-columns>
         <join-column name="email_id" referenced-column-name="id"/>
       </join-columns>
-    </one-to-one>
+    </many-to-one>
   </entity>
 </doctrine-mapping>

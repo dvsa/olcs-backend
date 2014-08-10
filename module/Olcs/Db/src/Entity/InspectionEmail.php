@@ -64,9 +64,9 @@ class InspectionEmail implements Interfaces\EntityInterface
     /**
      * Processed
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="processed", nullable=false)
+     * @ORM\Column(type="yesno", name="processed", nullable=false)
      */
     protected $processed = 0;
 
@@ -80,10 +80,20 @@ class InspectionEmail implements Interfaces\EntityInterface
     protected $senderEmailAddress;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the inspection request
      *
      * @param \Olcs\Db\Entity\InspectionRequest $inspectionRequest
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @return InspectionEmail
      */
     public function setInspectionRequest($inspectionRequest)
     {
@@ -102,11 +112,12 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->inspectionRequest;
     }
 
+
     /**
      * Set the subject
      *
      * @param string $subject
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @return InspectionEmail
      */
     public function setSubject($subject)
     {
@@ -125,11 +136,12 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->subject;
     }
 
+
     /**
      * Set the message body
      *
      * @param string $messageBody
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @return InspectionEmail
      */
     public function setMessageBody($messageBody)
     {
@@ -148,11 +160,12 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->messageBody;
     }
 
+
     /**
      * Set the email status
      *
      * @param string $emailStatus
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @return InspectionEmail
      */
     public function setEmailStatus($emailStatus)
     {
@@ -171,11 +184,12 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->emailStatus;
     }
 
+
     /**
      * Set the processed
      *
-     * @param boolean $processed
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @param unknown $processed
+     * @return InspectionEmail
      */
     public function setProcessed($processed)
     {
@@ -187,18 +201,19 @@ class InspectionEmail implements Interfaces\EntityInterface
     /**
      * Get the processed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getProcessed()
     {
         return $this->processed;
     }
 
+
     /**
      * Set the sender email address
      *
      * @param string $senderEmailAddress
-     * @return \Olcs\Db\Entity\InspectionEmail
+     * @return InspectionEmail
      */
     public function setSenderEmailAddress($senderEmailAddress)
     {
@@ -216,4 +231,5 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->senderEmailAddress;
     }
+
 }

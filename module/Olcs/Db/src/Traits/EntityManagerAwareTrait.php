@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * EntityManagerAwareTrait
  *
- * @author Someone <someone@valtech.co.uk>
+ * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
 trait EntityManagerAwareTrait
 {
@@ -25,8 +25,6 @@ trait EntityManagerAwareTrait
     /**
      * Returns and instance of the Doctrine 2.x entity manager.
      *
-     * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
-     * @since  2014-01-13
      * @return \Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()

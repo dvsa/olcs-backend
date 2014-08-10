@@ -36,7 +36,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Archived
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="archived", nullable=true)
      */
@@ -45,7 +45,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Accessed
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="accessed", nullable=true)
      */
@@ -54,7 +54,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Email reminder sent
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="email_reminder_sent", nullable=true)
      */
@@ -63,17 +63,27 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Printed
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="printed", nullable=true)
      */
     protected $printed;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the archived
      *
-     * @param boolean $archived
-     * @return \Olcs\Db\Entity\CorrespondenceInbox
+     * @param unknown $archived
+     * @return CorrespondenceInbox
      */
     public function setArchived($archived)
     {
@@ -85,18 +95,19 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the archived
      *
-     * @return boolean
+     * @return unknown
      */
     public function getArchived()
     {
         return $this->archived;
     }
 
+
     /**
      * Set the accessed
      *
-     * @param boolean $accessed
-     * @return \Olcs\Db\Entity\CorrespondenceInbox
+     * @param unknown $accessed
+     * @return CorrespondenceInbox
      */
     public function setAccessed($accessed)
     {
@@ -108,18 +119,19 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the accessed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getAccessed()
     {
         return $this->accessed;
     }
 
+
     /**
      * Set the email reminder sent
      *
-     * @param boolean $emailReminderSent
-     * @return \Olcs\Db\Entity\CorrespondenceInbox
+     * @param unknown $emailReminderSent
+     * @return CorrespondenceInbox
      */
     public function setEmailReminderSent($emailReminderSent)
     {
@@ -131,18 +143,19 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the email reminder sent
      *
-     * @return boolean
+     * @return unknown
      */
     public function getEmailReminderSent()
     {
         return $this->emailReminderSent;
     }
 
+
     /**
      * Set the printed
      *
-     * @param boolean $printed
-     * @return \Olcs\Db\Entity\CorrespondenceInbox
+     * @param unknown $printed
+     * @return CorrespondenceInbox
      */
     public function setPrinted($printed)
     {
@@ -154,10 +167,11 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the printed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getPrinted()
     {
         return $this->printed;
     }
+
 }

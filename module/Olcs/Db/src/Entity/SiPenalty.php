@@ -50,7 +50,7 @@ class SiPenalty implements Interfaces\EntityInterface
     /**
      * Imposed
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="imposed", nullable=true)
      */
@@ -66,10 +66,20 @@ class SiPenalty implements Interfaces\EntityInterface
     protected $reasonNotImposed;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the si penalty type
      *
      * @param \Olcs\Db\Entity\SiPenaltyType $siPenaltyType
-     * @return \Olcs\Db\Entity\SiPenalty
+     * @return SiPenalty
      */
     public function setSiPenaltyType($siPenaltyType)
     {
@@ -88,11 +98,12 @@ class SiPenalty implements Interfaces\EntityInterface
         return $this->siPenaltyType;
     }
 
+
     /**
      * Set the imposed
      *
-     * @param boolean $imposed
-     * @return \Olcs\Db\Entity\SiPenalty
+     * @param unknown $imposed
+     * @return SiPenalty
      */
     public function setImposed($imposed)
     {
@@ -104,18 +115,19 @@ class SiPenalty implements Interfaces\EntityInterface
     /**
      * Get the imposed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getImposed()
     {
         return $this->imposed;
     }
 
+
     /**
      * Set the reason not imposed
      *
      * @param string $reasonNotImposed
-     * @return \Olcs\Db\Entity\SiPenalty
+     * @return SiPenalty
      */
     public function setReasonNotImposed($reasonNotImposed)
     {
@@ -133,4 +145,5 @@ class SiPenalty implements Interfaces\EntityInterface
     {
         return $this->reasonNotImposed;
     }
+
 }

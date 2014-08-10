@@ -18,45 +18,48 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_company_subsidiary_has_licence_company_subsidiary1_idx", columns={"company_subsidiary_id"}),
  *        @ORM\Index(name="fk_company_subsidiary_licence_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_company_subsidiary_licence_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="company_subsidiary_id", columns={"company_subsidiary_id","licence_id"})
  *    }
  * )
  */
 class CompanySubsidiaryLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Company subsidiary
+     * Company subsidiary
      *
      * @var \Olcs\Db\Entity\CompanySubsidiary
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary")
      * @ORM\JoinColumn(name="company_subsidiary_id", referencedColumnName="id")
      */
     protected $companySubsidiary;
 
     /**
-     * Identifier - Licence
+     * Get identifier(s)
      *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Licence")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     * @return mixed
      */
-    protected $licence;
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the company subsidiary
      *
      * @param \Olcs\Db\Entity\CompanySubsidiary $companySubsidiary
-     * @return \Olcs\Db\Entity\CompanySubsidiaryLicence
+     * @return CompanySubsidiaryLicence
      */
     public function setCompanySubsidiary($companySubsidiary)
     {
@@ -75,26 +78,4 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
         return $this->companySubsidiary;
     }
 
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return \Olcs\Db\Entity\CompanySubsidiaryLicence
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
 }

@@ -53,7 +53,7 @@ class LegacyOffence implements Interfaces\EntityInterface
     /**
      * Is trailer
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_trailer", nullable=true)
      */
@@ -140,11 +140,20 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the case
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
-
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setCases($cases)
     {
@@ -154,7 +163,7 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the case
+     * Get the cases
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -165,10 +174,48 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return LegacyOffence
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return LegacyOffence
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->remove($cases);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the definition
      *
      * @param string $definition
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setDefinition($definition)
     {
@@ -187,11 +234,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->definition;
     }
 
+
     /**
      * Set the is trailer
      *
-     * @param boolean $isTrailer
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @param unknown $isTrailer
+     * @return LegacyOffence
      */
     public function setIsTrailer($isTrailer)
     {
@@ -203,18 +251,19 @@ class LegacyOffence implements Interfaces\EntityInterface
     /**
      * Get the is trailer
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsTrailer()
     {
         return $this->isTrailer;
     }
 
+
     /**
      * Set the num of offences
      *
      * @param int $numOfOffences
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setNumOfOffences($numOfOffences)
     {
@@ -233,11 +282,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->numOfOffences;
     }
 
+
     /**
      * Set the offence authority
      *
      * @param string $offenceAuthority
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setOffenceAuthority($offenceAuthority)
     {
@@ -256,11 +306,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenceAuthority;
     }
 
+
     /**
      * Set the offence date
      *
      * @param \DateTime $offenceDate
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setOffenceDate($offenceDate)
     {
@@ -279,11 +330,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenceDate;
     }
 
+
     /**
      * Set the offence to date
      *
      * @param \DateTime $offenceToDate
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setOffenceToDate($offenceToDate)
     {
@@ -302,11 +354,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenceToDate;
     }
 
+
     /**
      * Set the offender name
      *
      * @param string $offenderName
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setOffenderName($offenderName)
     {
@@ -325,11 +378,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenderName;
     }
 
+
     /**
      * Set the points
      *
      * @param int $points
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setPoints($points)
     {
@@ -348,11 +402,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->points;
     }
 
+
     /**
      * Set the position
      *
      * @param string $position
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setPosition($position)
     {
@@ -371,11 +426,12 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->position;
     }
 
+
     /**
      * Set the offence type
      *
      * @param string $offenceType
-     * @return \Olcs\Db\Entity\LegacyOffence
+     * @return LegacyOffence
      */
     public function setOffenceType($offenceType)
     {
@@ -393,4 +449,5 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceType;
     }
+
 }

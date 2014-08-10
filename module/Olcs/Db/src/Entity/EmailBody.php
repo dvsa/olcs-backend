@@ -15,33 +15,26 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="email_body",
  *    indexes={
  *        @ORM\Index(name="fk_email_body_email1_idx", columns={"email_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="seq", columns={"seq","email_id"})
  *    }
  * )
  */
 class EmailBody implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity;
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\EmailManyToOne;
 
     /**
-     * Identifier - Seq
+     * Seq
      *
      * @var int
      *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="seq")
+     * @ORM\Column(type="integer", name="seq", nullable=false)
      */
     protected $seq;
-
-    /**
-     * Identifier - Email
-     *
-     * @var \Olcs\Db\Entity\Email
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Email")
-     * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
-     */
-    protected $email;
 
     /**
      * Text
@@ -53,10 +46,20 @@ class EmailBody implements Interfaces\EntityInterface
     protected $text;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the seq
      *
      * @param int $seq
-     * @return \Olcs\Db\Entity\EmailBody
+     * @return EmailBody
      */
     public function setSeq($seq)
     {
@@ -75,34 +78,12 @@ class EmailBody implements Interfaces\EntityInterface
         return $this->seq;
     }
 
-    /**
-     * Set the email
-     *
-     * @param \Olcs\Db\Entity\Email $email
-     * @return \Olcs\Db\Entity\EmailBody
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get the email
-     *
-     * @return \Olcs\Db\Entity\Email
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
 
     /**
      * Set the text
      *
      * @param string $text
-     * @return \Olcs\Db\Entity\EmailBody
+     * @return EmailBody
      */
     public function setText($text)
     {
@@ -120,4 +101,5 @@ class EmailBody implements Interfaces\EntityInterface
     {
         return $this->text;
     }
+
 }

@@ -48,11 +48,20 @@ class SubmissionSection implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the case
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
-
-     * @return \Olcs\Db\Entity\SubmissionSection
+     * @return SubmissionSection
      */
     public function setCases($cases)
     {
@@ -62,7 +71,7 @@ class SubmissionSection implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the case
+     * Get the cases
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -73,10 +82,48 @@ class SubmissionSection implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return SubmissionSection
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return SubmissionSection
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->remove($cases);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the group
      *
      * @param string $group
-     * @return \Olcs\Db\Entity\SubmissionSection
+     * @return SubmissionSection
      */
     public function setGroup($group)
     {
@@ -94,4 +141,5 @@ class SubmissionSection implements Interfaces\EntityInterface
     {
         return $this->group;
     }
+
 }

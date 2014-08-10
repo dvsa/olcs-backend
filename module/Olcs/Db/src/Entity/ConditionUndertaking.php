@@ -107,18 +107,18 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Is draft
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_draft", nullable=false)
+     * @ORM\Column(type="yesno", name="is_draft", nullable=false)
      */
     protected $isDraft = 0;
 
     /**
      * Is fulfilled
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_fulfilled", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false)
      */
     protected $isFulfilled = 0;
 
@@ -134,17 +134,27 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Is approved
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_approved", nullable=false)
+     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
      */
     protected $isApproved = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the lic condition variation
      *
      * @param \Olcs\Db\Entity\ConditionUndertaking $licConditionVariation
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setLicConditionVariation($licConditionVariation)
     {
@@ -163,11 +173,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->licConditionVariation;
     }
 
+
     /**
      * Set the approval user
      *
      * @param \Olcs\Db\Entity\User $approvalUser
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setApprovalUser($approvalUser)
     {
@@ -186,11 +197,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->approvalUser;
     }
 
+
     /**
      * Set the attached to
      *
      * @param \Olcs\Db\Entity\RefData $attachedTo
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setAttachedTo($attachedTo)
     {
@@ -209,11 +221,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->attachedTo;
     }
 
+
     /**
      * Set the condition type
      *
      * @param \Olcs\Db\Entity\RefData $conditionType
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setConditionType($conditionType)
     {
@@ -232,11 +245,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->conditionType;
     }
 
+
     /**
      * Set the added via
      *
      * @param \Olcs\Db\Entity\RefData $addedVia
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setAddedVia($addedVia)
     {
@@ -255,11 +269,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->addedVia;
     }
 
+
     /**
      * Set the condition date
      *
      * @param \DateTime $conditionDate
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setConditionDate($conditionDate)
     {
@@ -278,11 +293,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->conditionDate;
     }
 
+
     /**
      * Set the is draft
      *
-     * @param boolean $isDraft
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @param unknown $isDraft
+     * @return ConditionUndertaking
      */
     public function setIsDraft($isDraft)
     {
@@ -294,18 +310,19 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is draft
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsDraft()
     {
         return $this->isDraft;
     }
 
+
     /**
      * Set the is fulfilled
      *
-     * @param boolean $isFulfilled
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @param unknown $isFulfilled
+     * @return ConditionUndertaking
      */
     public function setIsFulfilled($isFulfilled)
     {
@@ -317,18 +334,19 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is fulfilled
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsFulfilled()
     {
         return $this->isFulfilled;
     }
 
+
     /**
      * Set the notes
      *
      * @param string $notes
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return ConditionUndertaking
      */
     public function setNotes($notes)
     {
@@ -347,11 +365,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->notes;
     }
 
+
     /**
      * Set the is approved
      *
-     * @param boolean $isApproved
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @param unknown $isApproved
+     * @return ConditionUndertaking
      */
     public function setIsApproved($isApproved)
     {
@@ -363,10 +382,11 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is approved
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsApproved()
     {
         return $this->isApproved;
     }
+
 }

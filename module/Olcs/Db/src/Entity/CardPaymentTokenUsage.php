@@ -59,10 +59,20 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
     protected $status;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the payment uid
      *
      * @param \Olcs\Db\Entity\Payment $paymentUid
-     * @return \Olcs\Db\Entity\CardPaymentTokenUsage
+     * @return CardPaymentTokenUsage
      */
     public function setPaymentUid($paymentUid)
     {
@@ -81,11 +91,12 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
         return $this->paymentUid;
     }
 
+
     /**
      * Set the token
      *
      * @param string $token
-     * @return \Olcs\Db\Entity\CardPaymentTokenUsage
+     * @return CardPaymentTokenUsage
      */
     public function setToken($token)
     {
@@ -104,11 +115,12 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
         return $this->token;
     }
 
+
     /**
      * Set the status
      *
      * @param string $status
-     * @return \Olcs\Db\Entity\CardPaymentTokenUsage
+     * @return CardPaymentTokenUsage
      */
     public function setStatus($status)
     {
@@ -126,4 +138,5 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
     {
         return $this->status;
     }
+
 }

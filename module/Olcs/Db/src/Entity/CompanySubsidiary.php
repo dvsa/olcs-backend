@@ -48,10 +48,20 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     protected $companyNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the name
      *
      * @param string $name
-     * @return \Olcs\Db\Entity\CompanySubsidiary
+     * @return CompanySubsidiary
      */
     public function setName($name)
     {
@@ -70,11 +80,12 @@ class CompanySubsidiary implements Interfaces\EntityInterface
         return $this->name;
     }
 
+
     /**
      * Set the company no
      *
      * @param string $companyNo
-     * @return \Olcs\Db\Entity\CompanySubsidiary
+     * @return CompanySubsidiary
      */
     public function setCompanyNo($companyNo)
     {
@@ -92,4 +103,5 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     {
         return $this->companyNo;
     }
+
 }

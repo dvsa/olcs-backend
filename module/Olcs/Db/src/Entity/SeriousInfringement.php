@@ -65,7 +65,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Country
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
-     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="country_code")
+     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id")
      */
     protected $memberStateCode;
 
@@ -81,9 +81,9 @@ class SeriousInfringement implements Interfaces\EntityInterface
     /**
      * Erru response sent
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="erru_response_sent", nullable=false)
+     * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false)
      */
     protected $erruResponseSent = 0;
 
@@ -124,10 +124,20 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $reason;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the si category type
      *
      * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setSiCategoryType($siCategoryType)
     {
@@ -146,11 +156,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->siCategoryType;
     }
 
+
     /**
      * Set the erru response user
      *
      * @param \Olcs\Db\Entity\User $erruResponseUser
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setErruResponseUser($erruResponseUser)
     {
@@ -169,11 +180,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->erruResponseUser;
     }
 
+
     /**
      * Set the member state code
      *
      * @param \Olcs\Db\Entity\Country $memberStateCode
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setMemberStateCode($memberStateCode)
     {
@@ -192,11 +204,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->memberStateCode;
     }
 
+
     /**
      * Set the check date
      *
      * @param \DateTime $checkDate
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setCheckDate($checkDate)
     {
@@ -215,11 +228,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->checkDate;
     }
 
+
     /**
      * Set the erru response sent
      *
-     * @param boolean $erruResponseSent
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @param unknown $erruResponseSent
+     * @return SeriousInfringement
      */
     public function setErruResponseSent($erruResponseSent)
     {
@@ -231,18 +245,19 @@ class SeriousInfringement implements Interfaces\EntityInterface
     /**
      * Get the erru response sent
      *
-     * @return boolean
+     * @return unknown
      */
     public function getErruResponseSent()
     {
         return $this->erruResponseSent;
     }
 
+
     /**
      * Set the erru response time
      *
      * @param \DateTime $erruResponseTime
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setErruResponseTime($erruResponseTime)
     {
@@ -261,11 +276,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->erruResponseTime;
     }
 
+
     /**
      * Set the infringement date
      *
      * @param \DateTime $infringementDate
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setInfringementDate($infringementDate)
     {
@@ -284,11 +300,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->infringementDate;
     }
 
+
     /**
      * Set the notification number
      *
      * @param string $notificationNumber
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setNotificationNumber($notificationNumber)
     {
@@ -307,11 +324,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->notificationNumber;
     }
 
+
     /**
      * Set the reason
      *
      * @param string $reason
-     * @return \Olcs\Db\Entity\SeriousInfringement
+     * @return SeriousInfringement
      */
     public function setReason($reason)
     {
@@ -329,4 +347,5 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
+
 }

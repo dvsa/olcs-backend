@@ -18,14 +18,19 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_has_user_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_organisation_user_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_organisation_user_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="organisation_id", columns={"organisation_id","user_id"})
  *    }
  * )
  */
 class OrganisationUser implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\AddedDateField,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
@@ -33,23 +38,11 @@ class OrganisationUser implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Organisation")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
-     */
-    protected $organisation;
-
-    /**
-     * Identifier - User
+     * User
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", inversedBy="organisationUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -57,49 +50,36 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Is administrator
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_administrator", nullable=false)
+     * @ORM\Column(type="yesno", name="is_administrator", nullable=false)
      */
     protected $isAdministrator = 0;
 
     /**
      * Sftp access
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="sftp_access", nullable=false)
+     * @ORM\Column(type="yesno", name="sftp_access", nullable=false)
      */
     protected $sftpAccess = 0;
 
     /**
-     * Set the organisation
+     * Get identifier(s)
      *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return \Olcs\Db\Entity\OrganisationUser
+     * @return mixed
      */
-    public function setOrganisation($organisation)
+    public function getIdentifier()
     {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
+        return $this->getId();
     }
 
     /**
      * Set the user
      *
      * @param \Olcs\Db\Entity\User $user
-     * @return \Olcs\Db\Entity\OrganisationUser
+     * @return OrganisationUser
      */
     public function setUser($user)
     {
@@ -118,11 +98,12 @@ class OrganisationUser implements Interfaces\EntityInterface
         return $this->user;
     }
 
+
     /**
      * Set the is administrator
      *
-     * @param boolean $isAdministrator
-     * @return \Olcs\Db\Entity\OrganisationUser
+     * @param unknown $isAdministrator
+     * @return OrganisationUser
      */
     public function setIsAdministrator($isAdministrator)
     {
@@ -134,18 +115,19 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Get the is administrator
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsAdministrator()
     {
         return $this->isAdministrator;
     }
 
+
     /**
      * Set the sftp access
      *
-     * @param boolean $sftpAccess
-     * @return \Olcs\Db\Entity\OrganisationUser
+     * @param unknown $sftpAccess
+     * @return OrganisationUser
      */
     public function setSftpAccess($sftpAccess)
     {
@@ -157,10 +139,11 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Get the sftp access
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSftpAccess()
     {
         return $this->sftpAccess;
     }
+
 }

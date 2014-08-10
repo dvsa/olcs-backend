@@ -56,7 +56,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         try {
             $id = $this->getService()->create($data);
 
-            if (is_numeric($id) && $id > 0) {
+            if ((is_numeric($id) && $id > 0) || is_array($id)) {
 
                 return $this->respond(Response::STATUS_CODE_201, 'Entity Created', array('id' => $id));
             }
@@ -220,7 +220,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      */
     protected function unknownError($ex)
     {
-        return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage());
+        return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage(), (array)$ex);
     }
 
     /**

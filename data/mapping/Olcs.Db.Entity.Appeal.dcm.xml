@@ -16,6 +16,8 @@
     </id>
     <field name="appealNo" type="string" column="appeal_no" length="20" nullable="false"/>
     <field name="tmCaseId" type="integer" column="tm_case_id" nullable="true"/>
+    <field name="isWithdrawn" type="boolean" column="is_withdrawn" nullable="true"/>
+    <field name="withdrawnDate" type="datetime" column="withdrawn_date" nullable="true"/>
     <field name="deadlineDate" type="datetime" column="deadline_date" nullable="true"/>
     <field name="appealDate" type="datetime" column="appeal_date" nullable="true"/>
     <field name="outlineGround" type="string" column="outline_ground" length="1024" nullable="true"/>

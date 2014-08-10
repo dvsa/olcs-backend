@@ -35,26 +35,36 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Is scanned
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_scanned", nullable=false)
+     * @ORM\Column(type="yesno", name="is_scanned", nullable=false)
      */
     protected $isScanned = 0;
 
     /**
      * Display free text
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="display_free_text", nullable=false)
+     * @ORM\Column(type="yesno", name="display_free_text", nullable=false)
      */
     protected $displayFreeText = 0;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the is scanned
      *
-     * @param boolean $isScanned
-     * @return \Olcs\Db\Entity\DocumentSubCategory
+     * @param unknown $isScanned
+     * @return DocumentSubCategory
      */
     public function setIsScanned($isScanned)
     {
@@ -66,18 +76,19 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Get the is scanned
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsScanned()
     {
         return $this->isScanned;
     }
 
+
     /**
      * Set the display free text
      *
-     * @param boolean $displayFreeText
-     * @return \Olcs\Db\Entity\DocumentSubCategory
+     * @param unknown $displayFreeText
+     * @return DocumentSubCategory
      */
     public function setDisplayFreeText($displayFreeText)
     {
@@ -89,10 +100,11 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Get the display free text
      *
-     * @return boolean
+     * @return unknown
      */
     public function getDisplayFreeText()
     {
         return $this->displayFreeText;
     }
+
 }

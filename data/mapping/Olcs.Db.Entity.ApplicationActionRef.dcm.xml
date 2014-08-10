@@ -9,6 +9,5 @@
     <field name="defaultReceived" type="boolean" column="default_received" nullable="true"/>
     <field name="defaultApproved" type="boolean" column="default_approved" nullable="true"/>
     <field name="defaultApplicable" type="string" column="default_applicable" length="45" nullable="true"/>
-    <many-to-many field="application" target-entity="Olcs\Db\Entity\Application" mapped-by="applicationActionRef"/>
   </entity>
 </doctrine-mapping>

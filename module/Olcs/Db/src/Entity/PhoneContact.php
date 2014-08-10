@@ -61,10 +61,20 @@ class PhoneContact implements Interfaces\EntityInterface
     protected $details;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the phone contact type
      *
      * @param \Olcs\Db\Entity\RefData $phoneContactType
-     * @return \Olcs\Db\Entity\PhoneContact
+     * @return PhoneContact
      */
     public function setPhoneContactType($phoneContactType)
     {
@@ -83,11 +93,12 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneContactType;
     }
 
+
     /**
      * Set the phone number
      *
      * @param string $phoneNumber
-     * @return \Olcs\Db\Entity\PhoneContact
+     * @return PhoneContact
      */
     public function setPhoneNumber($phoneNumber)
     {
@@ -106,11 +117,12 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneNumber;
     }
 
+
     /**
      * Set the details
      *
      * @param string $details
-     * @return \Olcs\Db\Entity\PhoneContact
+     * @return PhoneContact
      */
     public function setDetails($details)
     {
@@ -128,4 +140,5 @@ class PhoneContact implements Interfaces\EntityInterface
     {
         return $this->details;
     }
+
 }

@@ -123,10 +123,20 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $origPubDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the publication section
      *
      * @param \Olcs\Db\Entity\PublicationSection $publicationSection
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setPublicationSection($publicationSection)
     {
@@ -145,11 +155,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->publicationSection;
     }
 
+
     /**
      * Set the tm pi hearing
      *
      * @param \Olcs\Db\Entity\TmPiHearing $tmPiHearing
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setTmPiHearing($tmPiHearing)
     {
@@ -168,11 +179,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->tmPiHearing;
     }
 
+
     /**
      * Set the publication
      *
      * @param \Olcs\Db\Entity\Publication $publication
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setPublication($publication)
     {
@@ -191,11 +203,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->publication;
     }
 
+
     /**
      * Set the section id
      *
      * @param int $sectionId
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setSectionId($sectionId)
     {
@@ -214,11 +227,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->sectionId;
     }
 
+
     /**
      * Set the text1
      *
      * @param string $text1
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setText1($text1)
     {
@@ -237,11 +251,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text1;
     }
 
+
     /**
      * Set the text2
      *
      * @param string $text2
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setText2($text2)
     {
@@ -260,11 +275,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text2;
     }
 
+
     /**
      * Set the text3
      *
      * @param string $text3
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setText3($text3)
     {
@@ -283,11 +299,12 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text3;
     }
 
+
     /**
      * Set the orig pub date
      *
      * @param \DateTime $origPubDate
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @return PublicationLink
      */
     public function setOrigPubDate($origPubDate)
     {
@@ -305,4 +322,5 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->origPubDate;
     }
+
 }

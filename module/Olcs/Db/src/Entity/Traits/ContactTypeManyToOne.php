@@ -43,4 +43,5 @@ trait ContactTypeManyToOne
     {
         return $this->contactType;
     }
+
 }

@@ -18,16 +18,20 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_traffic_area_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_traffic_area_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B7B2BC1018E0B1DB", columns={"traffic_area_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="traffic_area_id", columns={"traffic_area_id","bus_reg_id"})
  *    }
  * )
  */
 class BusRegTrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaOneToOne,
-        Traits\BusRegOneToOne,
+        Traits\BusRegManyToOne,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -35,7 +39,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Txc missing
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="txc_missing", nullable=true)
      */
@@ -44,17 +48,27 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Txc not required
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="txc_not_required", nullable=true)
      */
     protected $txcNotRequired;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the txc missing
      *
-     * @param boolean $txcMissing
-     * @return \Olcs\Db\Entity\BusRegTrafficArea
+     * @param unknown $txcMissing
+     * @return BusRegTrafficArea
      */
     public function setTxcMissing($txcMissing)
     {
@@ -66,18 +80,19 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Get the txc missing
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTxcMissing()
     {
         return $this->txcMissing;
     }
 
+
     /**
      * Set the txc not required
      *
-     * @param boolean $txcNotRequired
-     * @return \Olcs\Db\Entity\BusRegTrafficArea
+     * @param unknown $txcNotRequired
+     * @return BusRegTrafficArea
      */
     public function setTxcNotRequired($txcNotRequired)
     {
@@ -89,10 +104,11 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Get the txc not required
      *
-     * @return boolean
+     * @return unknown
      */
     public function getTxcNotRequired()
     {
         return $this->txcNotRequired;
     }
+
 }

@@ -41,10 +41,20 @@ class EnforcementArea implements Interfaces\EntityInterface
     protected $id;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the id
      *
      * @param string $id
-     * @return \Olcs\Db\Entity\EnforcementArea
+     * @return EnforcementArea
      */
     public function setId($id)
     {
@@ -62,4 +72,5 @@ class EnforcementArea implements Interfaces\EntityInterface
     {
         return $this->id;
     }
+
 }

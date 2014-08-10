@@ -6,16 +6,16 @@
       <index name="fk_postcode_enforcement_area_user1_idx" columns="created_by"/>
       <index name="fk_postcode_enforcement_area_user2_idx" columns="last_modified_by"/>
     </indexes>
-    <id name="postcodeId" type="string" column="postcode_id" length="8"/>
-    <id name="enforcementArea" association-key="true"/>
+    <unique-constraints>
+      <unique-constraint name="postcode_id" columns="postcode_id,enforcement_area_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="postcodeId" type="string" column="postcode_id" length="8" nullable="false"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <one-to-one field="enforcementArea" target-entity="Olcs\Db\Entity\EnforcementArea">
-      <join-columns>
-        <join-column name="enforcement_area_id" referenced-column-name="id"/>
-      </join-columns>
-    </one-to-one>
     <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="last_modified_by" referenced-column-name="id"/>
@@ -24,6 +24,11 @@
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="created_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="enforcementArea" target-entity="Olcs\Db\Entity\EnforcementArea">
+      <join-columns>
+        <join-column name="enforcement_area_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

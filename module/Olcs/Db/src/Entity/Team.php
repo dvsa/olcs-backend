@@ -45,10 +45,20 @@ class Team implements Interfaces\EntityInterface
     protected $overrideTaContact;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the override ta contact
      *
      * @param \Olcs\Db\Entity\ContactDetails $overrideTaContact
-     * @return \Olcs\Db\Entity\Team
+     * @return Team
      */
     public function setOverrideTaContact($overrideTaContact)
     {
@@ -66,4 +76,5 @@ class Team implements Interfaces\EntityInterface
     {
         return $this->overrideTaContact;
     }
+
 }

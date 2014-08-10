@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Address many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait AddressManyToOne
 {
@@ -43,4 +43,5 @@ trait AddressManyToOne
     {
         return $this->address;
     }
+
 }

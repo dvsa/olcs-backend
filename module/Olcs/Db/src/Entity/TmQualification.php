@@ -58,10 +58,20 @@ class TmQualification implements Interfaces\EntityInterface
     protected $serialNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the qualification type
      *
      * @param \Olcs\Db\Entity\RefData $qualificationType
-     * @return \Olcs\Db\Entity\TmQualification
+     * @return TmQualification
      */
     public function setQualificationType($qualificationType)
     {
@@ -80,11 +90,12 @@ class TmQualification implements Interfaces\EntityInterface
         return $this->qualificationType;
     }
 
+
     /**
      * Set the serial no
      *
      * @param string $serialNo
-     * @return \Olcs\Db\Entity\TmQualification
+     * @return TmQualification
      */
     public function setSerialNo($serialNo)
     {
@@ -102,4 +113,5 @@ class TmQualification implements Interfaces\EntityInterface
     {
         return $this->serialNo;
     }
+
 }

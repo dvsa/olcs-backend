@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Local authority many to one trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait LocalAuthorityManyToOne
 {
@@ -43,4 +43,5 @@ trait LocalAuthorityManyToOne
     {
         return $this->localAuthority;
     }
+
 }

@@ -29,267 +29,258 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Application
+     * Identifier - Id
      *
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
-    protected $application;
+    protected $id;
 
     /**
-     * Section yb status
+     * Section your business status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_yb_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_status", nullable=true)
      */
-    protected $sectionYbStatus;
+    protected $sectionYourBusinessStatus;
 
     /**
-     * Section yb bt status
+     * Section your business business type status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_yb_bt_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_bt_status", nullable=true)
      */
-    protected $sectionYbBtStatus;
+    protected $sectionYourBusinessBusinessTypeStatus;
 
     /**
-     * Section yb bd status
+     * Section your business business details status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_yb_bd_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_bd_status", nullable=true)
      */
-    protected $sectionYbBdStatus;
+    protected $sectionYourBusinessBusinessDetailsStatus;
 
     /**
-     * Section yb add status
+     * Section your business addresses status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_yb_add_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_add_status", nullable=true)
      */
-    protected $sectionYbAddStatus;
+    protected $sectionYourBusinessAddressesStatus;
 
     /**
-     * Section yb peo status
+     * Section your business people status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_yb_peo_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_peo_status", nullable=true)
      */
-    protected $sectionYbPeoStatus;
+    protected $sectionYourBusinessPeopleStatus;
 
     /**
-     * Section tol status
+     * Section type of licence status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tol_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_status", nullable=true)
      */
-    protected $sectionTolStatus;
+    protected $sectionTypeOfLicenceStatus;
 
     /**
-     * Section tol ol status
+     * Section type of licence operator location status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tol_ol_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_ol_status", nullable=true)
      */
-    protected $sectionTolOlStatus;
+    protected $sectionTypeOfLicenceOperatorLocationStatus;
 
     /**
-     * Section tol ot status
+     * Section type of licence operator type status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tol_ot_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_ot_status", nullable=true)
      */
-    protected $sectionTolOtStatus;
+    protected $sectionTypeOfLicenceOperatorTypeStatus;
 
     /**
-     * Section tol lt status
+     * Section type of licence licence type status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tol_lt_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_lt_status", nullable=true)
      */
-    protected $sectionTolLtStatus;
+    protected $sectionTypeOfLicenceLicenceTypeStatus;
 
     /**
-     * Section ocs status
+     * Section operating centres status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ocs_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_status", nullable=true)
      */
-    protected $sectionOcsStatus;
+    protected $sectionOperatingCentresStatus;
 
     /**
-     * Section ocs auth status
+     * Section operating centres authorisation status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ocs_auth_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_auth_status", nullable=true)
      */
-    protected $sectionOcsAuthStatus;
+    protected $sectionOperatingCentresAuthorisationStatus;
 
     /**
-     * Section ocs fe status
+     * Section operating centres financial evidence status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ocs_fe_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_fe_status", nullable=true)
      */
-    protected $sectionOcsFeStatus;
+    protected $sectionOperatingCentresFinancialEvidenceStatus;
 
     /**
-     * Section tms status
+     * Section transport managers status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tms_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tms_status", nullable=true)
      */
-    protected $sectionTmsStatus;
+    protected $sectionTransportManagersStatus;
 
     /**
-     * Section veh status
+     * Section vehicle safety status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_veh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_status", nullable=true)
      */
-    protected $sectionVehStatus;
+    protected $sectionVehicleSafetyStatus;
 
     /**
-     * Section veh v status
+     * Section vehicle safety vehicle status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_veh_v_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_v_status", nullable=true)
      */
-    protected $sectionVehVStatus;
+    protected $sectionVehicleSafetyVehicleStatus;
 
     /**
-     * Section veh vpsv status
+     * Section vehicle safety vehicle psv status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_veh_vpsv_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_vpsv_status", nullable=true)
      */
-    protected $sectionVehVpsvStatus;
+    protected $sectionVehicleSafetyVehiclePsvStatus;
 
     /**
-     * Section veh s status
+     * Section vehicle safety safety status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_veh_s_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_s_status", nullable=true)
      */
-    protected $sectionVehSStatus;
+    protected $sectionVehicleSafetySafetyStatus;
 
     /**
-     * Section ph status
+     * Section previous history status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ph_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_status", nullable=true)
      */
-    protected $sectionPhStatus;
+    protected $sectionPreviousHistoryStatus;
 
     /**
-     * Section ph fh status
+     * Section previous history financial history status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ph_fh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_fh_status", nullable=true)
      */
-    protected $sectionPhFhStatus;
+    protected $sectionPreviousHistoryFinancialHistoryStatus;
 
     /**
-     * Section ph lh status
+     * Section previous history licence history status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ph_lh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_lh_status", nullable=true)
      */
-    protected $sectionPhLhStatus;
+    protected $sectionPreviousHistoryLicenceHistoryStatus;
 
     /**
-     * Section ph cp status
+     * Section previous history convictions penalties status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_ph_cp_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_cp_status", nullable=true)
      */
-    protected $sectionPhCpStatus;
+    protected $sectionPreviousHistoryConvictionsPenaltiesStatus;
 
     /**
-     * Section rd status
+     * Section review declarations status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_rd_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_rd_status", nullable=true)
      */
-    protected $sectionRdStatus;
+    protected $sectionReviewDeclarationsStatus;
 
     /**
-     * Section pay status
+     * Section payment submission status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_pay_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_status", nullable=true)
      */
-    protected $sectionPayStatus;
+    protected $sectionPaymentSubmissionStatus;
 
     /**
-     * Section sub status
+     * Section payment submission payment status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_sub_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_pay_status", nullable=true)
      */
-    protected $sectionSubStatus;
+    protected $sectionPaymentSubmissionPaymentStatus;
 
     /**
-     * Section pay pay status
+     * Section payment submission summary status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_pay_pay_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_summary_status", nullable=true)
      */
-    protected $sectionPayPayStatus;
+    protected $sectionPaymentSubmissionSummaryStatus;
 
     /**
-     * Section pay summary status
+     * Section taxi phv status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_pay_summary_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tp_status", nullable=true)
      */
-    protected $sectionPaySummaryStatus;
+    protected $sectionTaxiPhvStatus;
 
     /**
-     * Section tp status
+     * Section taxi phv licence status
      *
      * @var boolean
      *
-     * @ORM\Column(type="yesnonull", name="section_tp_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tp_lic_status", nullable=true)
      */
-    protected $sectionTpStatus;
-
-    /**
-     * Section tp lic status
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="yesnonull", name="section_tp_lic_status", nullable=true)
-     */
-    protected $sectionTpLicStatus;
+    protected $sectionTaxiPhvLicenceStatus;
 
     /**
      * Last section
@@ -301,677 +292,692 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $lastSection;
 
     /**
-     * Set the application
+     * Get identifier(s)
      *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @return mixed
      */
-    public function setApplication($application)
+    public function getIdentifier()
     {
-        $this->application = $application;
+        return $this->getId();
+    }
+
+    /**
+     * Set the id
+     *
+     * @param \Olcs\Db\Entity\Application $id
+     * @return ApplicationCompletion
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get the application
+     * Get the id
      *
      * @return \Olcs\Db\Entity\Application
      */
-    public function getApplication()
+    public function getId()
     {
-        return $this->application;
+        return $this->id;
     }
 
+
     /**
-     * Set the section yb status
+     * Set the section your business status
      *
-     * @param boolean $sectionYbStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionYourBusinessStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionYbStatus($sectionYbStatus)
+    public function setSectionYourBusinessStatus($sectionYourBusinessStatus)
     {
-        $this->sectionYbStatus = $sectionYbStatus;
+        $this->sectionYourBusinessStatus = $sectionYourBusinessStatus;
 
         return $this;
     }
 
     /**
-     * Get the section yb status
+     * Get the section your business status
      *
      * @return boolean
      */
-    public function getSectionYbStatus()
+    public function getSectionYourBusinessStatus()
     {
-        return $this->sectionYbStatus;
+        return $this->sectionYourBusinessStatus;
     }
 
+
     /**
-     * Set the section yb bt status
+     * Set the section your business business type status
      *
-     * @param boolean $sectionYbBtStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionYourBusinessBusinessTypeStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionYbBtStatus($sectionYbBtStatus)
+    public function setSectionYourBusinessBusinessTypeStatus($sectionYourBusinessBusinessTypeStatus)
     {
-        $this->sectionYbBtStatus = $sectionYbBtStatus;
+        $this->sectionYourBusinessBusinessTypeStatus = $sectionYourBusinessBusinessTypeStatus;
 
         return $this;
     }
 
     /**
-     * Get the section yb bt status
+     * Get the section your business business type status
      *
      * @return boolean
      */
-    public function getSectionYbBtStatus()
+    public function getSectionYourBusinessBusinessTypeStatus()
     {
-        return $this->sectionYbBtStatus;
+        return $this->sectionYourBusinessBusinessTypeStatus;
     }
 
+
     /**
-     * Set the section yb bd status
+     * Set the section your business business details status
      *
-     * @param boolean $sectionYbBdStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionYourBusinessBusinessDetailsStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionYbBdStatus($sectionYbBdStatus)
+    public function setSectionYourBusinessBusinessDetailsStatus($sectionYourBusinessBusinessDetailsStatus)
     {
-        $this->sectionYbBdStatus = $sectionYbBdStatus;
+        $this->sectionYourBusinessBusinessDetailsStatus = $sectionYourBusinessBusinessDetailsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section yb bd status
+     * Get the section your business business details status
      *
      * @return boolean
      */
-    public function getSectionYbBdStatus()
+    public function getSectionYourBusinessBusinessDetailsStatus()
     {
-        return $this->sectionYbBdStatus;
+        return $this->sectionYourBusinessBusinessDetailsStatus;
     }
 
+
     /**
-     * Set the section yb add status
+     * Set the section your business addresses status
      *
-     * @param boolean $sectionYbAddStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionYourBusinessAddressesStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionYbAddStatus($sectionYbAddStatus)
+    public function setSectionYourBusinessAddressesStatus($sectionYourBusinessAddressesStatus)
     {
-        $this->sectionYbAddStatus = $sectionYbAddStatus;
+        $this->sectionYourBusinessAddressesStatus = $sectionYourBusinessAddressesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section yb add status
+     * Get the section your business addresses status
      *
      * @return boolean
      */
-    public function getSectionYbAddStatus()
+    public function getSectionYourBusinessAddressesStatus()
     {
-        return $this->sectionYbAddStatus;
+        return $this->sectionYourBusinessAddressesStatus;
     }
 
+
     /**
-     * Set the section yb peo status
+     * Set the section your business people status
      *
-     * @param boolean $sectionYbPeoStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionYourBusinessPeopleStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionYbPeoStatus($sectionYbPeoStatus)
+    public function setSectionYourBusinessPeopleStatus($sectionYourBusinessPeopleStatus)
     {
-        $this->sectionYbPeoStatus = $sectionYbPeoStatus;
+        $this->sectionYourBusinessPeopleStatus = $sectionYourBusinessPeopleStatus;
 
         return $this;
     }
 
     /**
-     * Get the section yb peo status
+     * Get the section your business people status
      *
      * @return boolean
      */
-    public function getSectionYbPeoStatus()
+    public function getSectionYourBusinessPeopleStatus()
     {
-        return $this->sectionYbPeoStatus;
+        return $this->sectionYourBusinessPeopleStatus;
     }
 
+
     /**
-     * Set the section tol status
+     * Set the section type of licence status
      *
-     * @param boolean $sectionTolStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTypeOfLicenceStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTolStatus($sectionTolStatus)
+    public function setSectionTypeOfLicenceStatus($sectionTypeOfLicenceStatus)
     {
-        $this->sectionTolStatus = $sectionTolStatus;
+        $this->sectionTypeOfLicenceStatus = $sectionTypeOfLicenceStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tol status
+     * Get the section type of licence status
      *
      * @return boolean
      */
-    public function getSectionTolStatus()
+    public function getSectionTypeOfLicenceStatus()
     {
-        return $this->sectionTolStatus;
+        return $this->sectionTypeOfLicenceStatus;
     }
 
+
     /**
-     * Set the section tol ol status
+     * Set the section type of licence operator location status
      *
-     * @param boolean $sectionTolOlStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTypeOfLicenceOperatorLocationStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTolOlStatus($sectionTolOlStatus)
+    public function setSectionTypeOfLicenceOperatorLocationStatus($sectionTypeOfLicenceOperatorLocationStatus)
     {
-        $this->sectionTolOlStatus = $sectionTolOlStatus;
+        $this->sectionTypeOfLicenceOperatorLocationStatus = $sectionTypeOfLicenceOperatorLocationStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tol ol status
+     * Get the section type of licence operator location status
      *
      * @return boolean
      */
-    public function getSectionTolOlStatus()
+    public function getSectionTypeOfLicenceOperatorLocationStatus()
     {
-        return $this->sectionTolOlStatus;
+        return $this->sectionTypeOfLicenceOperatorLocationStatus;
     }
 
+
     /**
-     * Set the section tol ot status
+     * Set the section type of licence operator type status
      *
-     * @param boolean $sectionTolOtStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTypeOfLicenceOperatorTypeStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTolOtStatus($sectionTolOtStatus)
+    public function setSectionTypeOfLicenceOperatorTypeStatus($sectionTypeOfLicenceOperatorTypeStatus)
     {
-        $this->sectionTolOtStatus = $sectionTolOtStatus;
+        $this->sectionTypeOfLicenceOperatorTypeStatus = $sectionTypeOfLicenceOperatorTypeStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tol ot status
+     * Get the section type of licence operator type status
      *
      * @return boolean
      */
-    public function getSectionTolOtStatus()
+    public function getSectionTypeOfLicenceOperatorTypeStatus()
     {
-        return $this->sectionTolOtStatus;
+        return $this->sectionTypeOfLicenceOperatorTypeStatus;
     }
 
+
     /**
-     * Set the section tol lt status
+     * Set the section type of licence licence type status
      *
-     * @param boolean $sectionTolLtStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTypeOfLicenceLicenceTypeStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTolLtStatus($sectionTolLtStatus)
+    public function setSectionTypeOfLicenceLicenceTypeStatus($sectionTypeOfLicenceLicenceTypeStatus)
     {
-        $this->sectionTolLtStatus = $sectionTolLtStatus;
+        $this->sectionTypeOfLicenceLicenceTypeStatus = $sectionTypeOfLicenceLicenceTypeStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tol lt status
+     * Get the section type of licence licence type status
      *
      * @return boolean
      */
-    public function getSectionTolLtStatus()
+    public function getSectionTypeOfLicenceLicenceTypeStatus()
     {
-        return $this->sectionTolLtStatus;
+        return $this->sectionTypeOfLicenceLicenceTypeStatus;
     }
 
+
     /**
-     * Set the section ocs status
+     * Set the section operating centres status
      *
-     * @param boolean $sectionOcsStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionOperatingCentresStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionOcsStatus($sectionOcsStatus)
+    public function setSectionOperatingCentresStatus($sectionOperatingCentresStatus)
     {
-        $this->sectionOcsStatus = $sectionOcsStatus;
+        $this->sectionOperatingCentresStatus = $sectionOperatingCentresStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ocs status
+     * Get the section operating centres status
      *
      * @return boolean
      */
-    public function getSectionOcsStatus()
+    public function getSectionOperatingCentresStatus()
     {
-        return $this->sectionOcsStatus;
+        return $this->sectionOperatingCentresStatus;
     }
 
+
     /**
-     * Set the section ocs auth status
+     * Set the section operating centres authorisation status
      *
-     * @param boolean $sectionOcsAuthStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionOperatingCentresAuthorisationStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionOcsAuthStatus($sectionOcsAuthStatus)
+    public function setSectionOperatingCentresAuthorisationStatus($sectionOperatingCentresAuthorisationStatus)
     {
-        $this->sectionOcsAuthStatus = $sectionOcsAuthStatus;
+        $this->sectionOperatingCentresAuthorisationStatus = $sectionOperatingCentresAuthorisationStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ocs auth status
+     * Get the section operating centres authorisation status
      *
      * @return boolean
      */
-    public function getSectionOcsAuthStatus()
+    public function getSectionOperatingCentresAuthorisationStatus()
     {
-        return $this->sectionOcsAuthStatus;
+        return $this->sectionOperatingCentresAuthorisationStatus;
     }
 
+
     /**
-     * Set the section ocs fe status
+     * Set the section operating centres financial evidence status
      *
-     * @param boolean $sectionOcsFeStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionOperatingCentresFinancialEvidenceStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionOcsFeStatus($sectionOcsFeStatus)
+    public function setSectionOperatingCentresFinancialEvidenceStatus($sectionOperatingCentresFinancialEvidenceStatus)
     {
-        $this->sectionOcsFeStatus = $sectionOcsFeStatus;
+        $this->sectionOperatingCentresFinancialEvidenceStatus = $sectionOperatingCentresFinancialEvidenceStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ocs fe status
+     * Get the section operating centres financial evidence status
      *
      * @return boolean
      */
-    public function getSectionOcsFeStatus()
+    public function getSectionOperatingCentresFinancialEvidenceStatus()
     {
-        return $this->sectionOcsFeStatus;
+        return $this->sectionOperatingCentresFinancialEvidenceStatus;
     }
 
+
     /**
-     * Set the section tms status
+     * Set the section transport managers status
      *
-     * @param boolean $sectionTmsStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTransportManagersStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTmsStatus($sectionTmsStatus)
+    public function setSectionTransportManagersStatus($sectionTransportManagersStatus)
     {
-        $this->sectionTmsStatus = $sectionTmsStatus;
+        $this->sectionTransportManagersStatus = $sectionTransportManagersStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tms status
+     * Get the section transport managers status
      *
      * @return boolean
      */
-    public function getSectionTmsStatus()
+    public function getSectionTransportManagersStatus()
     {
-        return $this->sectionTmsStatus;
+        return $this->sectionTransportManagersStatus;
     }
 
+
     /**
-     * Set the section veh status
+     * Set the section vehicle safety status
      *
-     * @param boolean $sectionVehStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionVehicleSafetyStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionVehStatus($sectionVehStatus)
+    public function setSectionVehicleSafetyStatus($sectionVehicleSafetyStatus)
     {
-        $this->sectionVehStatus = $sectionVehStatus;
+        $this->sectionVehicleSafetyStatus = $sectionVehicleSafetyStatus;
 
         return $this;
     }
 
     /**
-     * Get the section veh status
+     * Get the section vehicle safety status
      *
      * @return boolean
      */
-    public function getSectionVehStatus()
+    public function getSectionVehicleSafetyStatus()
     {
-        return $this->sectionVehStatus;
+        return $this->sectionVehicleSafetyStatus;
     }
 
+
     /**
-     * Set the section veh v status
+     * Set the section vehicle safety vehicle status
      *
-     * @param boolean $sectionVehVStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionVehicleSafetyVehicleStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionVehVStatus($sectionVehVStatus)
+    public function setSectionVehicleSafetyVehicleStatus($sectionVehicleSafetyVehicleStatus)
     {
-        $this->sectionVehVStatus = $sectionVehVStatus;
+        $this->sectionVehicleSafetyVehicleStatus = $sectionVehicleSafetyVehicleStatus;
 
         return $this;
     }
 
     /**
-     * Get the section veh v status
+     * Get the section vehicle safety vehicle status
      *
      * @return boolean
      */
-    public function getSectionVehVStatus()
+    public function getSectionVehicleSafetyVehicleStatus()
     {
-        return $this->sectionVehVStatus;
+        return $this->sectionVehicleSafetyVehicleStatus;
     }
 
+
     /**
-     * Set the section veh vpsv status
+     * Set the section vehicle safety vehicle psv status
      *
-     * @param boolean $sectionVehVpsvStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionVehicleSafetyVehiclePsvStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionVehVpsvStatus($sectionVehVpsvStatus)
+    public function setSectionVehicleSafetyVehiclePsvStatus($sectionVehicleSafetyVehiclePsvStatus)
     {
-        $this->sectionVehVpsvStatus = $sectionVehVpsvStatus;
+        $this->sectionVehicleSafetyVehiclePsvStatus = $sectionVehicleSafetyVehiclePsvStatus;
 
         return $this;
     }
 
     /**
-     * Get the section veh vpsv status
+     * Get the section vehicle safety vehicle psv status
      *
      * @return boolean
      */
-    public function getSectionVehVpsvStatus()
+    public function getSectionVehicleSafetyVehiclePsvStatus()
     {
-        return $this->sectionVehVpsvStatus;
+        return $this->sectionVehicleSafetyVehiclePsvStatus;
     }
 
+
     /**
-     * Set the section veh s status
+     * Set the section vehicle safety safety status
      *
-     * @param boolean $sectionVehSStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionVehicleSafetySafetyStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionVehSStatus($sectionVehSStatus)
+    public function setSectionVehicleSafetySafetyStatus($sectionVehicleSafetySafetyStatus)
     {
-        $this->sectionVehSStatus = $sectionVehSStatus;
+        $this->sectionVehicleSafetySafetyStatus = $sectionVehicleSafetySafetyStatus;
 
         return $this;
     }
 
     /**
-     * Get the section veh s status
+     * Get the section vehicle safety safety status
      *
      * @return boolean
      */
-    public function getSectionVehSStatus()
+    public function getSectionVehicleSafetySafetyStatus()
     {
-        return $this->sectionVehSStatus;
+        return $this->sectionVehicleSafetySafetyStatus;
     }
 
+
     /**
-     * Set the section ph status
+     * Set the section previous history status
      *
-     * @param boolean $sectionPhStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPreviousHistoryStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPhStatus($sectionPhStatus)
+    public function setSectionPreviousHistoryStatus($sectionPreviousHistoryStatus)
     {
-        $this->sectionPhStatus = $sectionPhStatus;
+        $this->sectionPreviousHistoryStatus = $sectionPreviousHistoryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ph status
+     * Get the section previous history status
      *
      * @return boolean
      */
-    public function getSectionPhStatus()
+    public function getSectionPreviousHistoryStatus()
     {
-        return $this->sectionPhStatus;
+        return $this->sectionPreviousHistoryStatus;
     }
 
+
     /**
-     * Set the section ph fh status
+     * Set the section previous history financial history status
      *
-     * @param boolean $sectionPhFhStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPreviousHistoryFinancialHistoryStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPhFhStatus($sectionPhFhStatus)
+    public function setSectionPreviousHistoryFinancialHistoryStatus($sectionPreviousHistoryFinancialHistoryStatus)
     {
-        $this->sectionPhFhStatus = $sectionPhFhStatus;
+        $this->sectionPreviousHistoryFinancialHistoryStatus = $sectionPreviousHistoryFinancialHistoryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ph fh status
+     * Get the section previous history financial history status
      *
      * @return boolean
      */
-    public function getSectionPhFhStatus()
+    public function getSectionPreviousHistoryFinancialHistoryStatus()
     {
-        return $this->sectionPhFhStatus;
+        return $this->sectionPreviousHistoryFinancialHistoryStatus;
     }
 
+
     /**
-     * Set the section ph lh status
+     * Set the section previous history licence history status
      *
-     * @param boolean $sectionPhLhStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPreviousHistoryLicenceHistoryStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPhLhStatus($sectionPhLhStatus)
+    public function setSectionPreviousHistoryLicenceHistoryStatus($sectionPreviousHistoryLicenceHistoryStatus)
     {
-        $this->sectionPhLhStatus = $sectionPhLhStatus;
+        $this->sectionPreviousHistoryLicenceHistoryStatus = $sectionPreviousHistoryLicenceHistoryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ph lh status
+     * Get the section previous history licence history status
      *
      * @return boolean
      */
-    public function getSectionPhLhStatus()
+    public function getSectionPreviousHistoryLicenceHistoryStatus()
     {
-        return $this->sectionPhLhStatus;
+        return $this->sectionPreviousHistoryLicenceHistoryStatus;
     }
 
+
     /**
-     * Set the section ph cp status
+     * Set the section previous history convictions penalties status
      *
-     * @param boolean $sectionPhCpStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPreviousHistoryConvictionsPenaltiesStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPhCpStatus($sectionPhCpStatus)
+    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($sectionPreviousHistoryConvictionsPenaltiesStatus)
     {
-        $this->sectionPhCpStatus = $sectionPhCpStatus;
+        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $sectionPreviousHistoryConvictionsPenaltiesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section ph cp status
+     * Get the section previous history convictions penalties status
      *
      * @return boolean
      */
-    public function getSectionPhCpStatus()
+    public function getSectionPreviousHistoryConvictionsPenaltiesStatus()
     {
-        return $this->sectionPhCpStatus;
+        return $this->sectionPreviousHistoryConvictionsPenaltiesStatus;
     }
 
+
     /**
-     * Set the section rd status
+     * Set the section review declarations status
      *
-     * @param boolean $sectionRdStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionReviewDeclarationsStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionRdStatus($sectionRdStatus)
+    public function setSectionReviewDeclarationsStatus($sectionReviewDeclarationsStatus)
     {
-        $this->sectionRdStatus = $sectionRdStatus;
+        $this->sectionReviewDeclarationsStatus = $sectionReviewDeclarationsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section rd status
+     * Get the section review declarations status
      *
      * @return boolean
      */
-    public function getSectionRdStatus()
+    public function getSectionReviewDeclarationsStatus()
     {
-        return $this->sectionRdStatus;
+        return $this->sectionReviewDeclarationsStatus;
     }
 
+
     /**
-     * Set the section pay status
+     * Set the section payment submission status
      *
-     * @param boolean $sectionPayStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPaymentSubmissionStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPayStatus($sectionPayStatus)
+    public function setSectionPaymentSubmissionStatus($sectionPaymentSubmissionStatus)
     {
-        $this->sectionPayStatus = $sectionPayStatus;
+        $this->sectionPaymentSubmissionStatus = $sectionPaymentSubmissionStatus;
 
         return $this;
     }
 
     /**
-     * Get the section pay status
+     * Get the section payment submission status
      *
      * @return boolean
      */
-    public function getSectionPayStatus()
+    public function getSectionPaymentSubmissionStatus()
     {
-        return $this->sectionPayStatus;
+        return $this->sectionPaymentSubmissionStatus;
     }
 
+
     /**
-     * Set the section sub status
+     * Set the section payment submission payment status
      *
-     * @param boolean $sectionSubStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPaymentSubmissionPaymentStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionSubStatus($sectionSubStatus)
+    public function setSectionPaymentSubmissionPaymentStatus($sectionPaymentSubmissionPaymentStatus)
     {
-        $this->sectionSubStatus = $sectionSubStatus;
+        $this->sectionPaymentSubmissionPaymentStatus = $sectionPaymentSubmissionPaymentStatus;
 
         return $this;
     }
 
     /**
-     * Get the section sub status
+     * Get the section payment submission payment status
      *
      * @return boolean
      */
-    public function getSectionSubStatus()
+    public function getSectionPaymentSubmissionPaymentStatus()
     {
-        return $this->sectionSubStatus;
+        return $this->sectionPaymentSubmissionPaymentStatus;
     }
 
+
     /**
-     * Set the section pay pay status
+     * Set the section payment submission summary status
      *
-     * @param boolean $sectionPayPayStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionPaymentSubmissionSummaryStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPayPayStatus($sectionPayPayStatus)
+    public function setSectionPaymentSubmissionSummaryStatus($sectionPaymentSubmissionSummaryStatus)
     {
-        $this->sectionPayPayStatus = $sectionPayPayStatus;
+        $this->sectionPaymentSubmissionSummaryStatus = $sectionPaymentSubmissionSummaryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section pay pay status
+     * Get the section payment submission summary status
      *
      * @return boolean
      */
-    public function getSectionPayPayStatus()
+    public function getSectionPaymentSubmissionSummaryStatus()
     {
-        return $this->sectionPayPayStatus;
+        return $this->sectionPaymentSubmissionSummaryStatus;
     }
 
+
     /**
-     * Set the section pay summary status
+     * Set the section taxi phv status
      *
-     * @param boolean $sectionPaySummaryStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTaxiPhvStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionPaySummaryStatus($sectionPaySummaryStatus)
+    public function setSectionTaxiPhvStatus($sectionTaxiPhvStatus)
     {
-        $this->sectionPaySummaryStatus = $sectionPaySummaryStatus;
+        $this->sectionTaxiPhvStatus = $sectionTaxiPhvStatus;
 
         return $this;
     }
 
     /**
-     * Get the section pay summary status
+     * Get the section taxi phv status
      *
      * @return boolean
      */
-    public function getSectionPaySummaryStatus()
+    public function getSectionTaxiPhvStatus()
     {
-        return $this->sectionPaySummaryStatus;
+        return $this->sectionTaxiPhvStatus;
     }
 
+
     /**
-     * Set the section tp status
+     * Set the section taxi phv licence status
      *
-     * @param boolean $sectionTpStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @param boolean $sectionTaxiPhvLicenceStatus
+     * @return ApplicationCompletion
      */
-    public function setSectionTpStatus($sectionTpStatus)
+    public function setSectionTaxiPhvLicenceStatus($sectionTaxiPhvLicenceStatus)
     {
-        $this->sectionTpStatus = $sectionTpStatus;
+        $this->sectionTaxiPhvLicenceStatus = $sectionTaxiPhvLicenceStatus;
 
         return $this;
     }
 
     /**
-     * Get the section tp status
+     * Get the section taxi phv licence status
      *
      * @return boolean
      */
-    public function getSectionTpStatus()
+    public function getSectionTaxiPhvLicenceStatus()
     {
-        return $this->sectionTpStatus;
+        return $this->sectionTaxiPhvLicenceStatus;
     }
 
-    /**
-     * Set the section tp lic status
-     *
-     * @param boolean $sectionTpLicStatus
-     * @return \Olcs\Db\Entity\ApplicationCompletion
-     */
-    public function setSectionTpLicStatus($sectionTpLicStatus)
-    {
-        $this->sectionTpLicStatus = $sectionTpLicStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section tp lic status
-     *
-     * @return boolean
-     */
-    public function getSectionTpLicStatus()
-    {
-        return $this->sectionTpLicStatus;
-    }
 
     /**
      * Set the last section
      *
      * @param string $lastSection
-     * @return \Olcs\Db\Entity\ApplicationCompletion
+     * @return ApplicationCompletion
      */
     public function setLastSection($lastSection)
     {
@@ -989,4 +995,5 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->lastSection;
     }
+
 }

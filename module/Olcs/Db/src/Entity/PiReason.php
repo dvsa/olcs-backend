@@ -43,10 +43,20 @@ class PiReason implements Interfaces\EntityInterface
     protected $reason;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\Reason $reason
-     * @return \Olcs\Db\Entity\PiReason
+     * @return PiReason
      */
     public function setReason($reason)
     {
@@ -64,4 +74,5 @@ class PiReason implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
+
 }

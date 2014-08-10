@@ -76,7 +76,7 @@ class Document implements Interfaces\EntityInterface
     /**
      * Is read only
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_read_only", nullable=true)
      */
@@ -100,11 +100,20 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the email
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $emails
-
-     * @return \Olcs\Db\Entity\Document
+     * @return Document
      */
     public function setEmails($emails)
     {
@@ -114,7 +123,7 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the email
+     * Get the emails
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -125,10 +134,48 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a emails
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function addEmails($emails)
+    {
+        if ($emails instanceof ArrayCollection) {
+            $this->emails = new ArrayCollection(
+                array_merge(
+                    $this->emails->toArray(),
+                    $emails->toArray()
+                )
+            );
+        } elseif (!$this->emails->contains($emails)) {
+            $this->emails->add($emails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a emails
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function removeEmails($emails)
+    {
+        if ($this->emails->contains($emails)) {
+            $this->emails->remove($emails);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the document store id
      *
      * @param string $documentStoreId
-     * @return \Olcs\Db\Entity\Document
+     * @return Document
      */
     public function setDocumentStoreId($documentStoreId)
     {
@@ -147,11 +194,12 @@ class Document implements Interfaces\EntityInterface
         return $this->documentStoreId;
     }
 
+
     /**
      * Set the is read only
      *
-     * @param boolean $isReadOnly
-     * @return \Olcs\Db\Entity\Document
+     * @param unknown $isReadOnly
+     * @return Document
      */
     public function setIsReadOnly($isReadOnly)
     {
@@ -163,18 +211,19 @@ class Document implements Interfaces\EntityInterface
     /**
      * Get the is read only
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
     }
 
+
     /**
      * Set the filename
      *
      * @param string $filename
-     * @return \Olcs\Db\Entity\Document
+     * @return Document
      */
     public function setFilename($filename)
     {
@@ -192,4 +241,5 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->filename;
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -85,18 +86,18 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Is mlh
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_mlh", nullable=false)
+     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
      */
     protected $isMlh = 0;
 
     /**
      * Company cert seen
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="company_cert_seen", nullable=false)
+     * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
      */
     protected $companyCertSeen = 0;
 
@@ -112,17 +113,64 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Allow email
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="allow_email", nullable=false)
+     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
      */
     protected $allowEmail = 0;
+
+    /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
+     */
+    protected $contactDetails;
+
+    /**
+     * Licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Licence", mappedBy="organisation")
+     */
+    protected $licences;
+
+    /**
+     * Trading name
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
+     */
+    protected $tradingNames;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->contactDetails = new ArrayCollection();
+        $this->licences = new ArrayCollection();
+        $this->tradingNames = new ArrayCollection();
+    }
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the lead tc area
      *
      * @param \Olcs\Db\Entity\TrafficArea $leadTcArea
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setLeadTcArea($leadTcArea)
     {
@@ -141,11 +189,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->leadTcArea;
     }
 
+
     /**
      * Set the sic code
      *
      * @param \Olcs\Db\Entity\RefData $sicCode
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setSicCode($sicCode)
     {
@@ -164,11 +213,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->sicCode;
     }
 
+
     /**
      * Set the type
      *
      * @param \Olcs\Db\Entity\RefData $type
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setType($type)
     {
@@ -187,11 +237,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->type;
     }
 
+
     /**
      * Set the company or llp no
      *
      * @param string $companyOrLlpNo
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setCompanyOrLlpNo($companyOrLlpNo)
     {
@@ -210,11 +261,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->companyOrLlpNo;
     }
 
+
     /**
      * Set the name
      *
      * @param string $name
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setName($name)
     {
@@ -233,11 +285,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->name;
     }
 
+
     /**
      * Set the is mlh
      *
-     * @param boolean $isMlh
-     * @return \Olcs\Db\Entity\Organisation
+     * @param unknown $isMlh
+     * @return Organisation
      */
     public function setIsMlh($isMlh)
     {
@@ -249,18 +302,19 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the is mlh
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsMlh()
     {
         return $this->isMlh;
     }
 
+
     /**
      * Set the company cert seen
      *
-     * @param boolean $companyCertSeen
-     * @return \Olcs\Db\Entity\Organisation
+     * @param unknown $companyCertSeen
+     * @return Organisation
      */
     public function setCompanyCertSeen($companyCertSeen)
     {
@@ -272,18 +326,19 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the company cert seen
      *
-     * @return boolean
+     * @return unknown
      */
     public function getCompanyCertSeen()
     {
         return $this->companyCertSeen;
     }
 
+
     /**
      * Set the irfo nationality
      *
      * @param string $irfoNationality
-     * @return \Olcs\Db\Entity\Organisation
+     * @return Organisation
      */
     public function setIrfoNationality($irfoNationality)
     {
@@ -302,11 +357,12 @@ class Organisation implements Interfaces\EntityInterface
         return $this->irfoNationality;
     }
 
+
     /**
      * Set the allow email
      *
-     * @param boolean $allowEmail
-     * @return \Olcs\Db\Entity\Organisation
+     * @param unknown $allowEmail
+     * @return Organisation
      */
     public function setAllowEmail($allowEmail)
     {
@@ -318,10 +374,197 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the allow email
      *
-     * @return boolean
+     * @return unknown
      */
     public function getAllowEmail()
     {
         return $this->allowEmail;
     }
+
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
+
+    /**
+     * Add a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Organisation
+     */
+    public function setLicences($licences)
+    {
+        $this->licences = $licences;
+
+        return $this;
+    }
+
+    /**
+     * Get the licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getLicences()
+    {
+        return $this->licences;
+    }
+
+    /**
+     * Add a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Organisation
+     */
+    public function addLicences($licences)
+    {
+        if ($licences instanceof ArrayCollection) {
+            $this->licences = new ArrayCollection(
+                array_merge(
+                    $this->licences->toArray(),
+                    $licences->toArray()
+                )
+            );
+        } elseif (!$this->licences->contains($licences)) {
+            $this->licences->add($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Organisation
+     */
+    public function removeLicences($licences)
+    {
+        if ($this->licences->contains($licences)) {
+            $this->licences->remove($licences);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the trading name
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function setTradingNames($tradingNames)
+    {
+        $this->tradingNames = $tradingNames;
+
+        return $this;
+    }
+
+    /**
+     * Get the trading names
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getTradingNames()
+    {
+        return $this->tradingNames;
+    }
+
+    /**
+     * Add a trading names
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function addTradingNames($tradingNames)
+    {
+        if ($tradingNames instanceof ArrayCollection) {
+            $this->tradingNames = new ArrayCollection(
+                array_merge(
+                    $this->tradingNames->toArray(),
+                    $tradingNames->toArray()
+                )
+            );
+        } elseif (!$this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->add($tradingNames);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a trading names
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function removeTradingNames($tradingNames)
+    {
+        if ($this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->remove($tradingNames);
+        }
+
+        return $this;
+    }
+
 }

@@ -45,17 +45,27 @@ class OppositionGrounds implements Interfaces\EntityInterface
     /**
      * Is representation
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_representation", nullable=false)
+     * @ORM\Column(type="yesno", name="is_representation", nullable=false)
      */
     protected $isRepresentation = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the grounds
      *
      * @param \Olcs\Db\Entity\RefData $grounds
-     * @return \Olcs\Db\Entity\OppositionGrounds
+     * @return OppositionGrounds
      */
     public function setGrounds($grounds)
     {
@@ -74,11 +84,12 @@ class OppositionGrounds implements Interfaces\EntityInterface
         return $this->grounds;
     }
 
+
     /**
      * Set the is representation
      *
-     * @param boolean $isRepresentation
-     * @return \Olcs\Db\Entity\OppositionGrounds
+     * @param unknown $isRepresentation
+     * @return OppositionGrounds
      */
     public function setIsRepresentation($isRepresentation)
     {
@@ -90,10 +101,11 @@ class OppositionGrounds implements Interfaces\EntityInterface
     /**
      * Get the is representation
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsRepresentation()
     {
         return $this->isRepresentation;
     }
+
 }

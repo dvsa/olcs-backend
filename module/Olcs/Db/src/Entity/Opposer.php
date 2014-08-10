@@ -43,10 +43,20 @@ class Opposer implements Interfaces\EntityInterface
     protected $opposerType;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the opposer type
      *
      * @param \Olcs\Db\Entity\RefData $opposerType
-     * @return \Olcs\Db\Entity\Opposer
+     * @return Opposer
      */
     public function setOpposerType($opposerType)
     {
@@ -64,4 +74,5 @@ class Opposer implements Interfaces\EntityInterface
     {
         return $this->opposerType;
     }
+
 }

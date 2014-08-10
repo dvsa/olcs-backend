@@ -89,9 +89,9 @@ class Task implements Interfaces\EntityInterface
     /**
      * Is closed
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_closed", nullable=false)
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false)
      */
     protected $isClosed = 0;
 
@@ -114,10 +114,20 @@ class Task implements Interfaces\EntityInterface
     protected $actionDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the irfo organisation
      *
      * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setIrfoOrganisation($irfoOrganisation)
     {
@@ -136,11 +146,12 @@ class Task implements Interfaces\EntityInterface
         return $this->irfoOrganisation;
     }
 
+
     /**
      * Set the task sub category
      *
      * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setTaskSubCategory($taskSubCategory)
     {
@@ -159,11 +170,12 @@ class Task implements Interfaces\EntityInterface
         return $this->taskSubCategory;
     }
 
+
     /**
      * Set the assigned to team
      *
      * @param \Olcs\Db\Entity\Team $assignedToTeam
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setAssignedToTeam($assignedToTeam)
     {
@@ -182,11 +194,12 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedToTeam;
     }
 
+
     /**
      * Set the assigned by user
      *
      * @param \Olcs\Db\Entity\User $assignedByUser
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setAssignedByUser($assignedByUser)
     {
@@ -205,11 +218,12 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedByUser;
     }
 
+
     /**
      * Set the is closed
      *
-     * @param boolean $isClosed
-     * @return \Olcs\Db\Entity\Task
+     * @param unknown $isClosed
+     * @return Task
      */
     public function setIsClosed($isClosed)
     {
@@ -221,18 +235,19 @@ class Task implements Interfaces\EntityInterface
     /**
      * Get the is closed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsClosed()
     {
         return $this->isClosed;
     }
 
+
     /**
      * Set the transport manager case id
      *
      * @param int $transportManagerCaseId
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setTransportManagerCaseId($transportManagerCaseId)
     {
@@ -251,11 +266,12 @@ class Task implements Interfaces\EntityInterface
         return $this->transportManagerCaseId;
     }
 
+
     /**
      * Set the action date
      *
      * @param \DateTime $actionDate
-     * @return \Olcs\Db\Entity\Task
+     * @return Task
      */
     public function setActionDate($actionDate)
     {
@@ -273,4 +289,5 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->actionDate;
     }
+
 }

@@ -45,10 +45,20 @@ class TeamPrinter implements Interfaces\EntityInterface
     protected $documentType;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the printer
      *
      * @param \Olcs\Db\Entity\Printer $printer
-     * @return \Olcs\Db\Entity\TeamPrinter
+     * @return TeamPrinter
      */
     public function setPrinter($printer)
     {
@@ -67,11 +77,12 @@ class TeamPrinter implements Interfaces\EntityInterface
         return $this->printer;
     }
 
+
     /**
      * Set the document type
      *
      * @param string $documentType
-     * @return \Olcs\Db\Entity\TeamPrinter
+     * @return TeamPrinter
      */
     public function setDocumentType($documentType)
     {
@@ -89,4 +100,5 @@ class TeamPrinter implements Interfaces\EntityInterface
     {
         return $this->documentType;
     }
+
 }

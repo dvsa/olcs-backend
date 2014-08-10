@@ -38,10 +38,20 @@ class EventHistoryType implements Interfaces\EntityInterface
     protected $eventType;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the description
      *
      * @param string $description
-     * @return \Olcs\Db\Entity\EventHistoryType
+     * @return EventHistoryType
      */
     public function setDescription($description)
     {
@@ -60,11 +70,12 @@ class EventHistoryType implements Interfaces\EntityInterface
         return $this->description;
     }
 
+
     /**
      * Set the event type
      *
      * @param string $eventType
-     * @return \Olcs\Db\Entity\EventHistoryType
+     * @return EventHistoryType
      */
     public function setEventType($eventType)
     {
@@ -82,4 +93,5 @@ class EventHistoryType implements Interfaces\EntityInterface
     {
         return $this->eventType;
     }
+
 }

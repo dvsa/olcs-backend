@@ -46,10 +46,20 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
     protected $unfitnessReason;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the unfitness reason
      *
      * @param \Olcs\Db\Entity\RefData $unfitnessReason
-     * @return \Olcs\Db\Entity\TmCaseDecisionUnfitness
+     * @return TmCaseDecisionUnfitness
      */
     public function setUnfitnessReason($unfitnessReason)
     {
@@ -67,4 +77,5 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
     {
         return $this->unfitnessReason;
     }
+
 }

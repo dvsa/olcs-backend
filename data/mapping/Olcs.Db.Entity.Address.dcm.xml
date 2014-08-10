@@ -26,7 +26,7 @@
     <field name="version" type="integer" column="version" nullable="false"/>
     <many-to-one field="adminArea" target-entity="Olcs\Db\Entity\AdminAreaTrafficArea">
       <join-columns>
-        <join-column name="admin_area" referenced-column-name="admin_area"/>
+        <join-column name="admin_area" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
@@ -41,7 +41,7 @@
     </many-to-one>
     <many-to-one field="countryCode" target-entity="Olcs\Db\Entity\Country">
       <join-columns>
-        <join-column name="country_code" referenced-column-name="country_code"/>
+        <join-column name="country_code" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

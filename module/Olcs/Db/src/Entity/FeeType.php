@@ -84,17 +84,27 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Expire fee with licence
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="expire_fee_with_licence", nullable=false)
+     * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false)
      */
     protected $expireFeeWithLicence = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the fee type
      *
      * @param string $feeType
-     * @return \Olcs\Db\Entity\FeeType
+     * @return FeeType
      */
     public function setFeeType($feeType)
     {
@@ -113,11 +123,12 @@ class FeeType implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
+
     /**
      * Set the effective from
      *
      * @param \DateTime $effectiveFrom
-     * @return \Olcs\Db\Entity\FeeType
+     * @return FeeType
      */
     public function setEffectiveFrom($effectiveFrom)
     {
@@ -136,11 +147,12 @@ class FeeType implements Interfaces\EntityInterface
         return $this->effectiveFrom;
     }
 
+
     /**
      * Set the fixed value
      *
      * @param float $fixedValue
-     * @return \Olcs\Db\Entity\FeeType
+     * @return FeeType
      */
     public function setFixedValue($fixedValue)
     {
@@ -159,11 +171,12 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fixedValue;
     }
 
+
     /**
      * Set the annual value
      *
      * @param float $annualValue
-     * @return \Olcs\Db\Entity\FeeType
+     * @return FeeType
      */
     public function setAnnualValue($annualValue)
     {
@@ -182,11 +195,12 @@ class FeeType implements Interfaces\EntityInterface
         return $this->annualValue;
     }
 
+
     /**
      * Set the five year value
      *
      * @param float $fiveYearValue
-     * @return \Olcs\Db\Entity\FeeType
+     * @return FeeType
      */
     public function setFiveYearValue($fiveYearValue)
     {
@@ -205,11 +219,12 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fiveYearValue;
     }
 
+
     /**
      * Set the expire fee with licence
      *
-     * @param boolean $expireFeeWithLicence
-     * @return \Olcs\Db\Entity\FeeType
+     * @param unknown $expireFeeWithLicence
+     * @return FeeType
      */
     public function setExpireFeeWithLicence($expireFeeWithLicence)
     {
@@ -221,10 +236,11 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Get the expire fee with licence
      *
-     * @return boolean
+     * @return unknown
      */
     public function getExpireFeeWithLicence()
     {
         return $this->expireFeeWithLicence;
     }
+
 }

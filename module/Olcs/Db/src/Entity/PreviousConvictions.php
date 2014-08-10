@@ -74,10 +74,20 @@ class PreviousConvictions implements Interfaces\EntityInterface
     protected $courtFpn;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the previous convictionscol
      *
      * @param string $previousConvictionscol
-     * @return \Olcs\Db\Entity\PreviousConvictions
+     * @return PreviousConvictions
      */
     public function setPreviousConvictionscol($previousConvictionscol)
     {
@@ -96,11 +106,12 @@ class PreviousConvictions implements Interfaces\EntityInterface
         return $this->previousConvictionscol;
     }
 
+
     /**
      * Set the person title id
      *
      * @param int $personTitleId
-     * @return \Olcs\Db\Entity\PreviousConvictions
+     * @return PreviousConvictions
      */
     public function setPersonTitleId($personTitleId)
     {
@@ -119,11 +130,12 @@ class PreviousConvictions implements Interfaces\EntityInterface
         return $this->personTitleId;
     }
 
+
     /**
      * Set the forename
      *
      * @param string $forename
-     * @return \Olcs\Db\Entity\PreviousConvictions
+     * @return PreviousConvictions
      */
     public function setForename($forename)
     {
@@ -142,11 +154,12 @@ class PreviousConvictions implements Interfaces\EntityInterface
         return $this->forename;
     }
 
+
     /**
      * Set the family name
      *
      * @param string $familyName
-     * @return \Olcs\Db\Entity\PreviousConvictions
+     * @return PreviousConvictions
      */
     public function setFamilyName($familyName)
     {
@@ -165,11 +178,12 @@ class PreviousConvictions implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
+
     /**
      * Set the court fpn
      *
      * @param string $courtFpn
-     * @return \Olcs\Db\Entity\PreviousConvictions
+     * @return PreviousConvictions
      */
     public function setCourtFpn($courtFpn)
     {
@@ -187,4 +201,5 @@ class PreviousConvictions implements Interfaces\EntityInterface
     {
         return $this->courtFpn;
     }
+
 }

@@ -61,26 +61,36 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Publication appropriate
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=false)
+     * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false)
      */
     protected $publicationAppropriate = 0;
 
     /**
      * Sufficient parking
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="sufficient_parking", nullable=false)
+     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the action
      *
      * @param string $action
-     * @return \Olcs\Db\Entity\ApplicationOperatingCentre
+     * @return ApplicationOperatingCentre
      */
     public function setAction($action)
     {
@@ -99,11 +109,12 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         return $this->action;
     }
 
+
     /**
      * Set the publication appropriate
      *
-     * @param boolean $publicationAppropriate
-     * @return \Olcs\Db\Entity\ApplicationOperatingCentre
+     * @param unknown $publicationAppropriate
+     * @return ApplicationOperatingCentre
      */
     public function setPublicationAppropriate($publicationAppropriate)
     {
@@ -115,18 +126,19 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the publication appropriate
      *
-     * @return boolean
+     * @return unknown
      */
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
     }
 
+
     /**
      * Set the sufficient parking
      *
-     * @param boolean $sufficientParking
-     * @return \Olcs\Db\Entity\ApplicationOperatingCentre
+     * @param unknown $sufficientParking
+     * @return ApplicationOperatingCentre
      */
     public function setSufficientParking($sufficientParking)
     {
@@ -138,10 +150,11 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the sufficient parking
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSufficientParking()
     {
         return $this->sufficientParking;
     }
+
 }

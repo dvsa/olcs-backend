@@ -6,7 +6,7 @@
       <index name="fk_admin_area_traffic_area_user1_idx" columns="created_by"/>
       <index name="fk_admin_area_traffic_area_user2_idx" columns="last_modified_by"/>
     </indexes>
-    <id name="adminArea" type="string" column="admin_area" length="40">
+    <id name="id" type="string" column="id" length="40">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>

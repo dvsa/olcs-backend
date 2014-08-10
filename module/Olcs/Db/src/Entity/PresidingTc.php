@@ -23,17 +23,27 @@ class PresidingTc implements Interfaces\EntityInterface
     /**
      * Deleted
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="deleted", nullable=true)
      */
     protected $deleted = 0;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the deleted
      *
-     * @param boolean $deleted
-     * @return \Olcs\Db\Entity\PresidingTc
+     * @param unknown $deleted
+     * @return PresidingTc
      */
     public function setDeleted($deleted)
     {
@@ -45,10 +55,11 @@ class PresidingTc implements Interfaces\EntityInterface
     /**
      * Get the deleted
      *
-     * @return boolean
+     * @return unknown
      */
     public function getDeleted()
     {
         return $this->deleted;
     }
+
 }

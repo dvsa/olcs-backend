@@ -17,34 +17,47 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_PostcodeVehicleInspectorate_VehicleInspectorate1_idx", columns={"enforcement_area_id"}),
  *        @ORM\Index(name="fk_postcode_enforcement_area_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_postcode_enforcement_area_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="postcode_id", columns={"postcode_id","enforcement_area_id"})
  *    }
  * )
  */
 class PostcodeEnforcementArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\EnforcementAreaOneToOne,
+        Traits\EnforcementAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Postcode id
+     * Postcode id
      *
      * @var string
      *
-     * @ORM\Id
-     * @ORM\Column(type="string", name="postcode_id", length=8)
+     * @ORM\Column(type="string", name="postcode_id", length=8, nullable=false)
      */
     protected $postcodeId;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the postcode id
      *
      * @param string $postcodeId
-     * @return \Olcs\Db\Entity\PostcodeEnforcementArea
+     * @return PostcodeEnforcementArea
      */
     public function setPostcodeId($postcodeId)
     {
@@ -62,4 +75,5 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
     {
         return $this->postcodeId;
     }
+
 }

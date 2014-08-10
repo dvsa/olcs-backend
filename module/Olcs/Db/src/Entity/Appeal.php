@@ -33,6 +33,7 @@ class Appeal implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
+        Traits\WithdrawnDateField,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\CustomCreatedOnField,
@@ -66,6 +67,15 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="tm_case_id", nullable=true)
      */
     protected $tmCaseId;
+
+    /**
+     * Is withdrawn
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_withdrawn", nullable=true)
+     */
+    protected $isWithdrawn = 0;
 
     /**
      * Deadline date
@@ -122,10 +132,20 @@ class Appeal implements Interfaces\EntityInterface
     protected $papersSentDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\RefData $reason
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setReason($reason)
     {
@@ -144,11 +164,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the appeal no
      *
      * @param string $appealNo
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setAppealNo($appealNo)
     {
@@ -167,11 +188,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->appealNo;
     }
 
+
     /**
      * Set the tm case id
      *
      * @param int $tmCaseId
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setTmCaseId($tmCaseId)
     {
@@ -190,11 +212,36 @@ class Appeal implements Interfaces\EntityInterface
         return $this->tmCaseId;
     }
 
+
+    /**
+     * Set the is withdrawn
+     *
+     * @param boolean $isWithdrawn
+     * @return Appeal
+     */
+    public function setIsWithdrawn($isWithdrawn)
+    {
+        $this->isWithdrawn = $isWithdrawn;
+
+        return $this;
+    }
+
+    /**
+     * Get the is withdrawn
+     *
+     * @return boolean
+     */
+    public function getIsWithdrawn()
+    {
+        return $this->isWithdrawn;
+    }
+
+
     /**
      * Set the deadline date
      *
      * @param \DateTime $deadlineDate
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setDeadlineDate($deadlineDate)
     {
@@ -213,11 +260,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->deadlineDate;
     }
 
+
     /**
      * Set the appeal date
      *
      * @param \DateTime $appealDate
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setAppealDate($appealDate)
     {
@@ -236,11 +284,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->appealDate;
     }
 
+
     /**
      * Set the outline ground
      *
      * @param string $outlineGround
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setOutlineGround($outlineGround)
     {
@@ -259,11 +308,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->outlineGround;
     }
 
+
     /**
      * Set the papers due date
      *
      * @param \DateTime $papersDueDate
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setPapersDueDate($papersDueDate)
     {
@@ -282,11 +332,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->papersDueDate;
     }
 
+
     /**
      * Set the comment
      *
      * @param string $comment
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setComment($comment)
     {
@@ -305,11 +356,12 @@ class Appeal implements Interfaces\EntityInterface
         return $this->comment;
     }
 
+
     /**
      * Set the papers sent date
      *
      * @param \DateTime $papersSentDate
-     * @return \Olcs\Db\Entity\Appeal
+     * @return Appeal
      */
     public function setPapersSentDate($papersSentDate)
     {
@@ -327,4 +379,5 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->papersSentDate;
     }
+
 }

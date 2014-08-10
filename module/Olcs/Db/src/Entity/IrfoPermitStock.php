@@ -63,10 +63,20 @@ class IrfoPermitStock implements Interfaces\EntityInterface
     protected $voidReturnDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the serial no
      *
      * @param int $serialNo
-     * @return \Olcs\Db\Entity\IrfoPermitStock
+     * @return IrfoPermitStock
      */
     public function setSerialNo($serialNo)
     {
@@ -85,11 +95,12 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         return $this->serialNo;
     }
 
+
     /**
      * Set the valid for year
      *
      * @param int $validForYear
-     * @return \Olcs\Db\Entity\IrfoPermitStock
+     * @return IrfoPermitStock
      */
     public function setValidForYear($validForYear)
     {
@@ -108,11 +119,12 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         return $this->validForYear;
     }
 
+
     /**
      * Set the void return date
      *
      * @param \DateTime $voidReturnDate
-     * @return \Olcs\Db\Entity\IrfoPermitStock
+     * @return IrfoPermitStock
      */
     public function setVoidReturnDate($voidReturnDate)
     {
@@ -130,4 +142,5 @@ class IrfoPermitStock implements Interfaces\EntityInterface
     {
         return $this->voidReturnDate;
     }
+
 }

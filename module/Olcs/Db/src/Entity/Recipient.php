@@ -55,36 +55,36 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Send app decision
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="send_app_decision", nullable=false)
+     * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
      */
     protected $sendAppDecision = 0;
 
     /**
      * Send notices procs
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="send_notices_procs", nullable=false)
+     * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
      */
     protected $sendNoticesProcs = 0;
 
     /**
      * Is police
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_police", nullable=false)
+     * @ORM\Column(type="yesno", name="is_police", nullable=false)
      */
     protected $isPolice = 0;
 
     /**
      * Is objector
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_objector", nullable=false)
+     * @ORM\Column(type="yesno", name="is_objector", nullable=false)
      */
     protected $isObjector = 0;
 
@@ -97,11 +97,20 @@ class Recipient implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the traffic area
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
-
-     * @return \Olcs\Db\Entity\Recipient
+     * @return Recipient
      */
     public function setTrafficAreas($trafficAreas)
     {
@@ -111,7 +120,7 @@ class Recipient implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the traffic area
+     * Get the traffic areas
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -122,10 +131,48 @@ class Recipient implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a traffic areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return Recipient
+     */
+    public function addTrafficAreas($trafficAreas)
+    {
+        if ($trafficAreas instanceof ArrayCollection) {
+            $this->trafficAreas = new ArrayCollection(
+                array_merge(
+                    $this->trafficAreas->toArray(),
+                    $trafficAreas->toArray()
+                )
+            );
+        } elseif (!$this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->add($trafficAreas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a traffic areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return Recipient
+     */
+    public function removeTrafficAreas($trafficAreas)
+    {
+        if ($this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->remove($trafficAreas);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the send app decision
      *
-     * @param boolean $sendAppDecision
-     * @return \Olcs\Db\Entity\Recipient
+     * @param unknown $sendAppDecision
+     * @return Recipient
      */
     public function setSendAppDecision($sendAppDecision)
     {
@@ -137,18 +184,19 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the send app decision
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSendAppDecision()
     {
         return $this->sendAppDecision;
     }
 
+
     /**
      * Set the send notices procs
      *
-     * @param boolean $sendNoticesProcs
-     * @return \Olcs\Db\Entity\Recipient
+     * @param unknown $sendNoticesProcs
+     * @return Recipient
      */
     public function setSendNoticesProcs($sendNoticesProcs)
     {
@@ -160,18 +208,19 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the send notices procs
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSendNoticesProcs()
     {
         return $this->sendNoticesProcs;
     }
 
+
     /**
      * Set the is police
      *
-     * @param boolean $isPolice
-     * @return \Olcs\Db\Entity\Recipient
+     * @param unknown $isPolice
+     * @return Recipient
      */
     public function setIsPolice($isPolice)
     {
@@ -183,18 +232,19 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the is police
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsPolice()
     {
         return $this->isPolice;
     }
 
+
     /**
      * Set the is objector
      *
-     * @param boolean $isObjector
-     * @return \Olcs\Db\Entity\Recipient
+     * @param unknown $isObjector
+     * @return Recipient
      */
     public function setIsObjector($isObjector)
     {
@@ -206,10 +256,11 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the is objector
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsObjector()
     {
         return $this->isObjector;
     }
+
 }

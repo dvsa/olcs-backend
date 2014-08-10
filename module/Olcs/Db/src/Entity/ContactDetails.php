@@ -33,16 +33,52 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\ContactTypeManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\AddressManyToOne,
-        Traits\OrganisationManyToOne,
-        Traits\PersonManyToOne,
-        Traits\LicenceManyToOne,
         Traits\EmailAddress60Field,
         Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
+     */
+    protected $address;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     */
+    protected $organisation;
+
+    /**
+     * Person
+     *
+     * @var \Olcs\Db\Entity\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     */
+    protected $person;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     */
+    protected $licence;
 
     /**
      * Fao
@@ -74,17 +110,123 @@ class ContactDetails implements Interfaces\EntityInterface
     /**
      * Written permission to engage
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="written_permission_to_engage", nullable=false)
+     * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
     protected $writtenPermissionToEngage = 0;
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * Set the address
+     *
+     * @param \Olcs\Db\Entity\Address $address
+     * @return ContactDetails
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get the address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return ContactDetails
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+
+    /**
+     * Set the person
+     *
+     * @param \Olcs\Db\Entity\Person $person
+     * @return ContactDetails
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Olcs\Db\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return ContactDetails
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
 
     /**
      * Set the fao
      *
      * @param string $fao
-     * @return \Olcs\Db\Entity\ContactDetails
+     * @return ContactDetails
      */
     public function setFao($fao)
     {
@@ -103,11 +245,12 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->fao;
     }
 
+
     /**
      * Set the forename
      *
      * @param string $forename
-     * @return \Olcs\Db\Entity\ContactDetails
+     * @return ContactDetails
      */
     public function setForename($forename)
     {
@@ -126,11 +269,12 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->forename;
     }
 
+
     /**
      * Set the family name
      *
      * @param string $familyName
-     * @return \Olcs\Db\Entity\ContactDetails
+     * @return ContactDetails
      */
     public function setFamilyName($familyName)
     {
@@ -149,11 +293,12 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
+
     /**
      * Set the written permission to engage
      *
-     * @param boolean $writtenPermissionToEngage
-     * @return \Olcs\Db\Entity\ContactDetails
+     * @param unknown $writtenPermissionToEngage
+     * @return ContactDetails
      */
     public function setWrittenPermissionToEngage($writtenPermissionToEngage)
     {
@@ -165,10 +310,11 @@ class ContactDetails implements Interfaces\EntityInterface
     /**
      * Get the written permission to engage
      *
-     * @return boolean
+     * @return unknown
      */
     public function getWrittenPermissionToEngage()
     {
         return $this->writtenPermissionToEngage;
     }
+
 }

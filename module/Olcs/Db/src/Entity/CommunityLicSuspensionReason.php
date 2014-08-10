@@ -55,10 +55,20 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
     protected $communityLicSuspension;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\CommunityLicSuspensionReasonType $reason
-     * @return \Olcs\Db\Entity\CommunityLicSuspensionReason
+     * @return CommunityLicSuspensionReason
      */
     public function setReason($reason)
     {
@@ -77,11 +87,12 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the community lic suspension
      *
      * @param \Olcs\Db\Entity\CommunityLicSuspension $communityLicSuspension
-     * @return \Olcs\Db\Entity\CommunityLicSuspensionReason
+     * @return CommunityLicSuspensionReason
      */
     public function setCommunityLicSuspension($communityLicSuspension)
     {
@@ -99,4 +110,5 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
     {
         return $this->communityLicSuspension;
     }
+
 }

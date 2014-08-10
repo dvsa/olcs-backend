@@ -101,7 +101,7 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Msi
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="msi", nullable=true)
      */
@@ -110,9 +110,9 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Is declared
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_declared", nullable=false)
+     * @ORM\Column(type="yesno", name="is_declared", nullable=false)
      */
     protected $isDeclared;
 
@@ -153,10 +153,20 @@ class Conviction implements Interfaces\EntityInterface
     protected $convictedName;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the defendant type
      *
      * @param \Olcs\Db\Entity\RefData $defendantType
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setDefendantType($defendantType)
     {
@@ -175,11 +185,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->defendantType;
     }
 
+
     /**
      * Set the conviction category
      *
      * @param \Olcs\Db\Entity\ConvictionCategory $convictionCategory
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setConvictionCategory($convictionCategory)
     {
@@ -198,11 +209,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->convictionCategory;
     }
 
+
     /**
      * Set the offence date
      *
      * @param \DateTime $offenceDate
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setOffenceDate($offenceDate)
     {
@@ -221,11 +233,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->offenceDate;
     }
 
+
     /**
      * Set the conviction date
      *
      * @param \DateTime $convictionDate
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setConvictionDate($convictionDate)
     {
@@ -244,11 +257,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->convictionDate;
     }
 
+
     /**
      * Set the court
      *
      * @param string $court
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setCourt($court)
     {
@@ -267,11 +281,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->court;
     }
 
+
     /**
      * Set the costs
      *
      * @param string $costs
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setCosts($costs)
     {
@@ -290,11 +305,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->costs;
     }
 
+
     /**
      * Set the msi
      *
-     * @param boolean $msi
-     * @return \Olcs\Db\Entity\Conviction
+     * @param unknown $msi
+     * @return Conviction
      */
     public function setMsi($msi)
     {
@@ -306,18 +322,19 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Get the msi
      *
-     * @return boolean
+     * @return unknown
      */
     public function getMsi()
     {
         return $this->msi;
     }
 
+
     /**
      * Set the is declared
      *
-     * @param boolean $isDeclared
-     * @return \Olcs\Db\Entity\Conviction
+     * @param unknown $isDeclared
+     * @return Conviction
      */
     public function setIsDeclared($isDeclared)
     {
@@ -329,18 +346,19 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Get the is declared
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsDeclared()
     {
         return $this->isDeclared;
     }
 
+
     /**
      * Set the operator name
      *
      * @param string $operatorName
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setOperatorName($operatorName)
     {
@@ -359,11 +377,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->operatorName;
     }
 
+
     /**
      * Set the date of birth
      *
      * @param \DateTime $dateOfBirth
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setDateOfBirth($dateOfBirth)
     {
@@ -382,11 +401,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->dateOfBirth;
     }
 
+
     /**
      * Set the taken into consideration
      *
      * @param string $takenIntoConsideration
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setTakenIntoConsideration($takenIntoConsideration)
     {
@@ -405,11 +425,12 @@ class Conviction implements Interfaces\EntityInterface
         return $this->takenIntoConsideration;
     }
 
+
     /**
      * Set the convicted name
      *
      * @param string $convictedName
-     * @return \Olcs\Db\Entity\Conviction
+     * @return Conviction
      */
     public function setConvictedName($convictedName)
     {
@@ -427,4 +448,5 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->convictedName;
     }
+
 }

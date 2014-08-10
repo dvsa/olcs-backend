@@ -43,4 +43,5 @@ trait TaskManyToOne
     {
         return $this->task;
     }
+
 }

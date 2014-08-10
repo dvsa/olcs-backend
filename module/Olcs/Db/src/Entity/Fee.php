@@ -181,7 +181,7 @@ class Fee implements Interfaces\EntityInterface
     /**
      * Irfo fee exempt
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="irfo_fee_exempt", nullable=true)
      */
@@ -197,10 +197,20 @@ class Fee implements Interfaces\EntityInterface
     protected $irfoFileNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the waive reason2
      *
      * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveReason2($waiveReason2)
     {
@@ -219,11 +229,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason2;
     }
 
+
     /**
      * Set the waive approver user
      *
      * @param \Olcs\Db\Entity\User $waiveApproverUser
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveApproverUser($waiveApproverUser)
     {
@@ -242,11 +253,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveApproverUser;
     }
 
+
     /**
      * Set the waive recommender user
      *
      * @param \Olcs\Db\Entity\User $waiveRecommenderUser
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveRecommenderUser($waiveRecommenderUser)
     {
@@ -265,11 +277,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveRecommenderUser;
     }
 
+
     /**
      * Set the parent fee
      *
      * @param \Olcs\Db\Entity\Fee $parentFee
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setParentFee($parentFee)
     {
@@ -288,11 +301,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->parentFee;
     }
 
+
     /**
      * Set the fee type
      *
      * @param \Olcs\Db\Entity\FeeType $feeType
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setFeeType($feeType)
     {
@@ -311,11 +325,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
+
     /**
      * Set the amount
      *
      * @param float $amount
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setAmount($amount)
     {
@@ -334,11 +349,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->amount;
     }
 
+
     /**
      * Set the received amount
      *
      * @param float $receivedAmount
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setReceivedAmount($receivedAmount)
     {
@@ -357,11 +373,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->receivedAmount;
     }
 
+
     /**
      * Set the invoice no
      *
      * @param int $invoiceNo
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setInvoiceNo($invoiceNo)
     {
@@ -380,11 +397,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->invoiceNo;
     }
 
+
     /**
      * Set the invoice line no
      *
      * @param int $invoiceLineNo
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setInvoiceLineNo($invoiceLineNo)
     {
@@ -403,11 +421,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->invoiceLineNo;
     }
 
+
     /**
      * Set the invoiced date
      *
      * @param \DateTime $invoicedDate
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setInvoicedDate($invoicedDate)
     {
@@ -426,11 +445,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->invoicedDate;
     }
 
+
     /**
      * Set the fee status
      *
      * @param string $feeStatus
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setFeeStatus($feeStatus)
     {
@@ -449,11 +469,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeStatus;
     }
 
+
     /**
      * Set the waive approval date
      *
      * @param \DateTime $waiveApprovalDate
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveApprovalDate($waiveApprovalDate)
     {
@@ -472,11 +493,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveApprovalDate;
     }
 
+
     /**
      * Set the waive reason
      *
      * @param string $waiveReason
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveReason($waiveReason)
     {
@@ -495,11 +517,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason;
     }
 
+
     /**
      * Set the waive recommendation date
      *
      * @param \DateTime $waiveRecommendationDate
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setWaiveRecommendationDate($waiveRecommendationDate)
     {
@@ -518,11 +541,12 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveRecommendationDate;
     }
 
+
     /**
      * Set the irfo fee exempt
      *
-     * @param boolean $irfoFeeExempt
-     * @return \Olcs\Db\Entity\Fee
+     * @param unknown $irfoFeeExempt
+     * @return Fee
      */
     public function setIrfoFeeExempt($irfoFeeExempt)
     {
@@ -534,18 +558,19 @@ class Fee implements Interfaces\EntityInterface
     /**
      * Get the irfo fee exempt
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIrfoFeeExempt()
     {
         return $this->irfoFeeExempt;
     }
 
+
     /**
      * Set the irfo file no
      *
      * @param string $irfoFileNo
-     * @return \Olcs\Db\Entity\Fee
+     * @return Fee
      */
     public function setIrfoFileNo($irfoFileNo)
     {
@@ -563,4 +588,5 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->irfoFileNo;
     }
+
 }

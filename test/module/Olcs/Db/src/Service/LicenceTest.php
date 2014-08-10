@@ -46,7 +46,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
         $options = array(
             'operatorName' => 'Bob',
             'entityType' => 'SomeType',
-            'licenceNumber' => 'ABC',
+            'licNo' => 'ABC',
             'postcode' => 'AB1 ',
             'address' => '123 Street ',
             'town' => 'DEF',
@@ -56,7 +56,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
         $expected = array(
             ':operatorName' => '%Bob%',
             ':entityType' => 'SomeType',
-            ':licenceNumber' => '%ABC%',
+            ':licNo' => '%ABC%',
             ':postcode' => '%AB1 %',
             ':address' => '%123 Street %',
             ':town' => '%DEF%',
@@ -106,7 +106,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
         $options = array(
             'operatorName' => 'Bob',
             'entityType' => 'SomeType',
-            'licenceNumber' => 'ABC',
+            'licNo' => 'ABC',
             'postcode' => 'AB1 ',
             'address' => '123 Street ',
             'town' => 'DEF',
@@ -119,7 +119,7 @@ class LicenceTest extends PHPUnit_Framework_TestCase
         $expected = array(
             ':operatorName' => '%Bob%',
             ':entityType' => 'SomeType',
-            ':licenceNumber' => '%ABC%',
+            ':licNo' => '%ABC%',
             ':postcode' => '%AB1 %',
             ':address' => '%123 Street %',
             ':town' => '%DEF%',

@@ -69,10 +69,20 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the id
      *
      * @param string $id
-     * @return \Olcs\Db\Entity\TrafficArea
+     * @return TrafficArea
      */
     public function setId($id)
     {
@@ -91,12 +101,12 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->id;
     }
 
+
     /**
      * Set the recipient
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-
-     * @return \Olcs\Db\Entity\TrafficArea
+     * @return TrafficArea
      */
     public function setRecipients($recipients)
     {
@@ -106,7 +116,7 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the recipient
+     * Get the recipients
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -117,10 +127,48 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a recipients
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @return TrafficArea
+     */
+    public function addRecipients($recipients)
+    {
+        if ($recipients instanceof ArrayCollection) {
+            $this->recipients = new ArrayCollection(
+                array_merge(
+                    $this->recipients->toArray(),
+                    $recipients->toArray()
+                )
+            );
+        } elseif (!$this->recipients->contains($recipients)) {
+            $this->recipients->add($recipients);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a recipients
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @return TrafficArea
+     */
+    public function removeRecipients($recipients)
+    {
+        if ($this->recipients->contains($recipients)) {
+            $this->recipients->remove($recipients);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the txc name
      *
      * @param string $txcName
-     * @return \Olcs\Db\Entity\TrafficArea
+     * @return TrafficArea
      */
     public function setTxcName($txcName)
     {
@@ -138,4 +186,5 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->txcName;
     }
+
 }

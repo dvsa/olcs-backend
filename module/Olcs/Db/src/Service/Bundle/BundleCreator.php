@@ -86,7 +86,11 @@ class BundleCreator
      */
     private function formatBundleForEntity($entity, $config)
     {
-        $entityArray = $this->extract($entity);
+        try {
+            $entityArray = $this->extract($entity);
+        } catch (\Exception $ex) {
+            return null;
+        }
 
         $config = array_merge(array('properties' => 'ALL'), $config);
 

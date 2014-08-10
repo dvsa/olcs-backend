@@ -87,7 +87,7 @@ class Email implements Interfaces\EntityInterface
     /**
      * Is sensitive
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_sensitive", nullable=true)
      */
@@ -111,10 +111,20 @@ class Email implements Interfaces\EntityInterface
     }
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the last updated by
      *
      * @param \Olcs\Db\Entity\User $lastUpdatedBy
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setLastUpdatedBy($lastUpdatedBy)
     {
@@ -133,12 +143,12 @@ class Email implements Interfaces\EntityInterface
         return $this->lastUpdatedBy;
     }
 
+
     /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
-
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setDocuments($documents)
     {
@@ -148,7 +158,7 @@ class Email implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the document
+     * Get the documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
 
@@ -159,10 +169,48 @@ class Email implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Email
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Email
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Set the deferred date
      *
      * @param \DateTime $deferredDate
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setDeferredDate($deferredDate)
     {
@@ -181,11 +229,12 @@ class Email implements Interfaces\EntityInterface
         return $this->deferredDate;
     }
 
+
     /**
      * Set the sent date
      *
      * @param \DateTime $sentDate
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setSentDate($sentDate)
     {
@@ -204,11 +253,12 @@ class Email implements Interfaces\EntityInterface
         return $this->sentDate;
     }
 
+
     /**
      * Set the importance
      *
      * @param int $importance
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setImportance($importance)
     {
@@ -227,11 +277,12 @@ class Email implements Interfaces\EntityInterface
         return $this->importance;
     }
 
+
     /**
      * Set the is sensitive
      *
-     * @param boolean $isSensitive
-     * @return \Olcs\Db\Entity\Email
+     * @param unknown $isSensitive
+     * @return Email
      */
     public function setIsSensitive($isSensitive)
     {
@@ -243,18 +294,19 @@ class Email implements Interfaces\EntityInterface
     /**
      * Get the is sensitive
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsSensitive()
     {
         return $this->isSensitive;
     }
 
+
     /**
      * Set the subject
      *
      * @param string $subject
-     * @return \Olcs\Db\Entity\Email
+     * @return Email
      */
     public function setSubject($subject)
     {
@@ -272,4 +324,5 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->subject;
     }
+
 }

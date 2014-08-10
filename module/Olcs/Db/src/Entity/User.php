@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -65,17 +66,44 @@ class User implements Interfaces\EntityInterface
     /**
      * Account disabled
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="account_disabled", nullable=false)
+     * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
      */
     protected $accountDisabled = 0;
+
+    /**
+     * Organisation user
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationUser", mappedBy="user")
+     */
+    protected $organisationUsers;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->organisationUsers = new ArrayCollection();
+    }
+
+    /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
 
     /**
      * Set the partner contact details
      *
      * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
-     * @return \Olcs\Db\Entity\User
+     * @return User
      */
     public function setPartnerContactDetails($partnerContactDetails)
     {
@@ -94,11 +122,12 @@ class User implements Interfaces\EntityInterface
         return $this->partnerContactDetails;
     }
 
+
     /**
      * Set the pid
      *
      * @param int $pid
-     * @return \Olcs\Db\Entity\User
+     * @return User
      */
     public function setPid($pid)
     {
@@ -117,11 +146,12 @@ class User implements Interfaces\EntityInterface
         return $this->pid;
     }
 
+
     /**
      * Set the account disabled
      *
-     * @param boolean $accountDisabled
-     * @return \Olcs\Db\Entity\User
+     * @param unknown $accountDisabled
+     * @return User
      */
     public function setAccountDisabled($accountDisabled)
     {
@@ -133,10 +163,73 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the account disabled
      *
-     * @return boolean
+     * @return unknown
      */
     public function getAccountDisabled()
     {
         return $this->accountDisabled;
     }
+
+
+    /**
+     * Set the organisation user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function setOrganisationUsers($organisationUsers)
+    {
+        $this->organisationUsers = $organisationUsers;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getOrganisationUsers()
+    {
+        return $this->organisationUsers;
+    }
+
+    /**
+     * Add a organisation users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function addOrganisationUsers($organisationUsers)
+    {
+        if ($organisationUsers instanceof ArrayCollection) {
+            $this->organisationUsers = new ArrayCollection(
+                array_merge(
+                    $this->organisationUsers->toArray(),
+                    $organisationUsers->toArray()
+                )
+            );
+        } elseif (!$this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->add($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function removeOrganisationUsers($organisationUsers)
+    {
+        if ($this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->remove($organisationUsers);
+        }
+
+        return $this;
+    }
+
 }

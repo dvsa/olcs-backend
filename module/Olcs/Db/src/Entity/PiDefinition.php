@@ -54,10 +54,20 @@ class PiDefinition implements Interfaces\EntityInterface
     protected $definition;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pi definition category
      *
      * @param \Olcs\Db\Entity\PiDefinitionCategory $piDefinitionCategory
-     * @return \Olcs\Db\Entity\PiDefinition
+     * @return PiDefinition
      */
     public function setPiDefinitionCategory($piDefinitionCategory)
     {
@@ -76,11 +86,12 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->piDefinitionCategory;
     }
 
+
     /**
      * Set the section code
      *
      * @param string $sectionCode
-     * @return \Olcs\Db\Entity\PiDefinition
+     * @return PiDefinition
      */
     public function setSectionCode($sectionCode)
     {
@@ -99,11 +110,12 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->sectionCode;
     }
 
+
     /**
      * Set the definition
      *
      * @param string $definition
-     * @return \Olcs\Db\Entity\PiDefinition
+     * @return PiDefinition
      */
     public function setDefinition($definition)
     {
@@ -121,4 +133,5 @@ class PiDefinition implements Interfaces\EntityInterface
     {
         return $this->definition;
     }
+
 }

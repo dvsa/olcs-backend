@@ -71,7 +71,7 @@ class TxcInbox implements Interfaces\EntityInterface
     /**
      * File read
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
      */
@@ -87,10 +87,20 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $routeSeq;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the pdf document
      *
      * @param \Olcs\Db\Entity\Document $pdfDocument
-     * @return \Olcs\Db\Entity\TxcInbox
+     * @return TxcInbox
      */
     public function setPdfDocument($pdfDocument)
     {
@@ -109,11 +119,12 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->pdfDocument;
     }
 
+
     /**
      * Set the route document
      *
      * @param \Olcs\Db\Entity\Document $routeDocument
-     * @return \Olcs\Db\Entity\TxcInbox
+     * @return TxcInbox
      */
     public function setRouteDocument($routeDocument)
     {
@@ -132,11 +143,12 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->routeDocument;
     }
 
+
     /**
      * Set the zip document
      *
      * @param \Olcs\Db\Entity\Document $zipDocument
-     * @return \Olcs\Db\Entity\TxcInbox
+     * @return TxcInbox
      */
     public function setZipDocument($zipDocument)
     {
@@ -155,11 +167,12 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->zipDocument;
     }
 
+
     /**
      * Set the file read
      *
-     * @param boolean $fileRead
-     * @return \Olcs\Db\Entity\TxcInbox
+     * @param unknown $fileRead
+     * @return TxcInbox
      */
     public function setFileRead($fileRead)
     {
@@ -171,18 +184,19 @@ class TxcInbox implements Interfaces\EntityInterface
     /**
      * Get the file read
      *
-     * @return boolean
+     * @return unknown
      */
     public function getFileRead()
     {
         return $this->fileRead;
     }
 
+
     /**
      * Set the route seq
      *
      * @param int $routeSeq
-     * @return \Olcs\Db\Entity\TxcInbox
+     * @return TxcInbox
      */
     public function setRouteSeq($routeSeq)
     {
@@ -200,4 +214,5 @@ class TxcInbox implements Interfaces\EntityInterface
     {
         return $this->routeSeq;
     }
+
 }

@@ -62,9 +62,9 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     /**
      * Is fee exempt
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_fee_exempt", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt", nullable=false)
      */
     protected $isFeeExempt = 0;
 
@@ -89,9 +89,9 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     /**
      * Permit printed
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="permit_printed", nullable=false)
+     * @ORM\Column(type="yesno", name="permit_printed", nullable=false)
      */
     protected $permitPrinted = 0;
 
@@ -105,10 +105,20 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     protected $yearRequired;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the irfo permit status
      *
      * @param \Olcs\Db\Entity\RefData $irfoPermitStatus
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @return IrfoGvPermit
      */
     public function setIrfoPermitStatus($irfoPermitStatus)
     {
@@ -127,11 +137,12 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->irfoPermitStatus;
     }
 
+
     /**
      * Set the irfo gv permit type
      *
      * @param \Olcs\Db\Entity\IrfoGvPermitType $irfoGvPermitType
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @return IrfoGvPermit
      */
     public function setIrfoGvPermitType($irfoGvPermitType)
     {
@@ -150,11 +161,12 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->irfoGvPermitType;
     }
 
+
     /**
      * Set the is fee exempt
      *
-     * @param boolean $isFeeExempt
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @param unknown $isFeeExempt
+     * @return IrfoGvPermit
      */
     public function setIsFeeExempt($isFeeExempt)
     {
@@ -166,18 +178,19 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     /**
      * Get the is fee exempt
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsFeeExempt()
     {
         return $this->isFeeExempt;
     }
 
+
     /**
      * Set the no of copies
      *
      * @param int $noOfCopies
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @return IrfoGvPermit
      */
     public function setNoOfCopies($noOfCopies)
     {
@@ -196,11 +209,12 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->noOfCopies;
     }
 
+
     /**
      * Set the note
      *
      * @param string $note
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @return IrfoGvPermit
      */
     public function setNote($note)
     {
@@ -219,11 +233,12 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->note;
     }
 
+
     /**
      * Set the permit printed
      *
-     * @param boolean $permitPrinted
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @param unknown $permitPrinted
+     * @return IrfoGvPermit
      */
     public function setPermitPrinted($permitPrinted)
     {
@@ -235,18 +250,19 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     /**
      * Get the permit printed
      *
-     * @return boolean
+     * @return unknown
      */
     public function getPermitPrinted()
     {
         return $this->permitPrinted;
     }
 
+
     /**
      * Set the year required
      *
      * @param int $yearRequired
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @return IrfoGvPermit
      */
     public function setYearRequired($yearRequired)
     {
@@ -264,4 +280,5 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     {
         return $this->yearRequired;
     }
+
 }

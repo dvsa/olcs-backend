@@ -43,10 +43,20 @@ class PrivateHireLicence implements Interfaces\EntityInterface
     protected $privateHireLicenceNo;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the private hire licence no
      *
      * @param string $privateHireLicenceNo
-     * @return \Olcs\Db\Entity\PrivateHireLicence
+     * @return PrivateHireLicence
      */
     public function setPrivateHireLicenceNo($privateHireLicenceNo)
     {
@@ -64,4 +74,5 @@ class PrivateHireLicence implements Interfaces\EntityInterface
     {
         return $this->privateHireLicenceNo;
     }
+
 }

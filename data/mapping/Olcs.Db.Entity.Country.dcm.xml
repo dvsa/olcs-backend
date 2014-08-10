@@ -5,7 +5,7 @@
       <index name="fk_country_user1_idx" columns="created_by"/>
       <index name="fk_country_user2_idx" columns="last_modified_by"/>
     </indexes>
-    <id name="countryCode" type="string" column="country_code" length="8">
+    <id name="id" type="string" column="id" length="8">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="countryDesc" type="string" column="country_desc" length="200" nullable="true"/>

@@ -43,4 +43,5 @@ trait CommunityLicManyToOne
     {
         return $this->communityLic;
     }
+
 }

@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ref_data_value",
  *    indexes={
- *        @ORM\Index(name="fk_ref_data_values_ref_data_language1_idx", columns={"language_iso2"}),
+ *        @ORM\Index(name="fk_ref_data_values_ref_data_language1_idx", columns={"language_id"}),
  *        @ORM\Index(name="fk_ref_data_values_ref_data1_idx", columns={"ref_data_id"})
  *    }
  * )
@@ -35,14 +35,14 @@ class RefDataValue implements Interfaces\EntityInterface
     protected $refData;
 
     /**
-     * Language iso2
+     * Language
      *
      * @var \Olcs\Db\Entity\Language
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Language")
-     * @ORM\JoinColumn(name="language_iso2", referencedColumnName="iso2")
+     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      */
-    protected $languageIso2;
+    protected $language;
 
     /**
      * Value
@@ -54,10 +54,20 @@ class RefDataValue implements Interfaces\EntityInterface
     protected $value;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the ref data
      *
      * @param \Olcs\Db\Entity\RefData $refData
-     * @return \Olcs\Db\Entity\RefDataValue
+     * @return RefDataValue
      */
     public function setRefData($refData)
     {
@@ -76,34 +86,36 @@ class RefDataValue implements Interfaces\EntityInterface
         return $this->refData;
     }
 
+
     /**
-     * Set the language iso2
+     * Set the language
      *
-     * @param \Olcs\Db\Entity\Language $languageIso2
-     * @return \Olcs\Db\Entity\RefDataValue
+     * @param \Olcs\Db\Entity\Language $language
+     * @return RefDataValue
      */
-    public function setLanguageIso2($languageIso2)
+    public function setLanguage($language)
     {
-        $this->languageIso2 = $languageIso2;
+        $this->language = $language;
 
         return $this;
     }
 
     /**
-     * Get the language iso2
+     * Get the language
      *
      * @return \Olcs\Db\Entity\Language
      */
-    public function getLanguageIso2()
+    public function getLanguage()
     {
-        return $this->languageIso2;
+        return $this->language;
     }
+
 
     /**
      * Set the value
      *
      * @param string $value
-     * @return \Olcs\Db\Entity\RefDataValue
+     * @return RefDataValue
      */
     public function setValue($value)
     {
@@ -121,4 +133,5 @@ class RefDataValue implements Interfaces\EntityInterface
     {
         return $this->value;
     }
+
 }

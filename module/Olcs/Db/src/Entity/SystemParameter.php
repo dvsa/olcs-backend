@@ -17,17 +17,8 @@ use Olcs\Db\Entity\Traits;
 class SystemParameter implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Id32Identity,
         Traits\Description255FieldAlt1;
-
-    /**
-     * Identifier - Param key
-     *
-     * @var string
-     *
-     * @ORM\Id
-     * @ORM\Column(type="string", name="param_key", length=32)
-     */
-    protected $paramKey;
 
     /**
      * Param value
@@ -39,33 +30,20 @@ class SystemParameter implements Interfaces\EntityInterface
     protected $paramValue;
 
     /**
-     * Set the param key
+     * Get identifier(s)
      *
-     * @param string $paramKey
-     * @return \Olcs\Db\Entity\SystemParameter
+     * @return mixed
      */
-    public function setParamKey($paramKey)
+    public function getIdentifier()
     {
-        $this->paramKey = $paramKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the param key
-     *
-     * @return string
-     */
-    public function getParamKey()
-    {
-        return $this->paramKey;
+        return $this->getId();
     }
 
     /**
      * Set the param value
      *
      * @param string $paramValue
-     * @return \Olcs\Db\Entity\SystemParameter
+     * @return SystemParameter
      */
     public function setParamValue($paramValue)
     {
@@ -83,4 +61,5 @@ class SystemParameter implements Interfaces\EntityInterface
     {
         return $this->paramValue;
     }
+
 }

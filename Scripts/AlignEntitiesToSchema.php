@@ -128,6 +128,13 @@ class AlignEntitiesToSchema
     private $fieldDetails = array();
 
     /**
+     * Holds any additional inverse fields;
+     *
+     * @var array
+     */
+    private $inverseFields = array();
+
+    /**
      * Initialise the variables
      */
     public function __construct()
@@ -401,15 +408,18 @@ class AlignEntitiesToSchema
 
             $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
 
-            $fields = $this->getFieldsFromConfig($config, $defaults, $comments);
+            $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
+
+            $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName);
 
             $this->cacheFields($fields);
 
-            $this->entities[$className] = array(
-                'name' => str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']),
+            $this->entities[$camelCaseName] = array(
+                'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
                 'className' => $config['entity']['@attributes']['name'],
                 'table' => $config['entity']['@attributes']['table'],
+                'ids' => $this->getIdsFromFields($fields),
                 'indexes' => $this->getIndexesFromConfig($config),
                 'unique-constraints' => $this->getUniqueConstraintsFromConfig($config),
                 'traits' => array(
@@ -424,7 +434,86 @@ class AlignEntitiesToSchema
             );
         }
 
+        foreach ($this->entities as $className => &$details) {
+            if (!isset($this->inverseFields[$className])) {
+                continue;
+            }
+
+            foreach ($this->inverseFields[$className] as $fieldDetails) {
+
+                $property = $fieldDetails['relationship'] == 'oneToMany' ? 'mapped-by' : 'inversed-by';
+
+                $item = array(
+                    '@attributes' => array(
+                        'field' => $fieldDetails['property'],
+                        'target-entity' => $fieldDetails['targetEntity'],
+                        $property => $fieldDetails['inversedBy']
+                    )
+                );
+
+                $details['fields'][] = array(
+                    'isId' => false,
+                    'isInverse' => true,
+                    'type' => $fieldDetails['relationship'],
+                    'ref' => 'field',
+                    'default' => null,
+                    'config' => $item,
+                );
+
+                if ($fieldDetails['relationship'] == 'manyToMany' || $fieldDetails['relationship'] == 'oneToMany') {
+                    $details['hasCollections'] = true;
+
+                    $details['collections'][] = $item;
+                }
+            }
+        }
+
         $this->respond('Entity configurations compiled', 'success');
+    }
+
+    /**
+     * Get a list of id proeprties from the fields
+     *
+     * @param array $fields
+     * @return array
+     */
+    private function getIdsFromFields($fields)
+    {
+        $ids = array();
+
+        foreach ($fields as $field) {
+
+            if ($field['isId']) {
+                $ids[] = $this->formatPropertyName($field);
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Format a property name
+     *
+     * @param array $item
+     * @return string
+     */
+    private function formatPropertyName($item)
+    {
+        $field = $item['config'];
+
+        $propertyName = '';
+
+        if (isset($item['property'])) {
+            $propertyName = $item['property'];
+        } else {
+            $propertyName = $field['@attributes'][$item['ref']];
+        }
+
+        if (in_array($item['type'], array('oneToMany', 'manyToMany'))) {
+            $propertyName .= 's';
+        }
+
+        return $propertyName;
     }
 
     /**
@@ -742,7 +831,7 @@ class AlignEntitiesToSchema
         $collections = array();
 
         if (isset($config['entity']['many-to-many'])) {
-            $collections = array_merge($collections, $this->standardiseArray($config['entity']['many-to-many']));
+            $collections = $this->standardiseArray($config['entity']['many-to-many']);
         }
 
         if (isset($config['entity']['one-to-many'])) {
@@ -808,7 +897,7 @@ class AlignEntitiesToSchema
      * @param array $comments
      * @return array
      */
-    private function getFieldsFromConfig($config, $defaults, $comments)
+    private function getFieldsFromConfig($config, $defaults, $comments, $className)
     {
         $fields = array();
 
@@ -834,7 +923,7 @@ class AlignEntitiesToSchema
                 $associationKeys[$item['@attributes']['name']] = true;
             } else {
 
-                $columnName = $this->formatColumnFromName($item['@attributes']['name']);
+                $columnName = $this->formatColumnFromItem($item, 'id');
 
                 $default = isset($defaults[$columnName]) ? $defaults[$columnName] : null;
 
@@ -842,11 +931,17 @@ class AlignEntitiesToSchema
 
                 $fieldConfig = array(
                     'isId' => true,
+                    'isInverse' => false,
                     'type' => 'id',
                     'ref' => 'name',
                     'default' => $default,
                     'config' => $item,
                 );
+
+                if (isset($extraConfig['type'])) {
+                    $fieldConfig['config']['@attributes']['type'] = $extraConfig['type'];
+                    unset($extraConfig['type']);
+                }
 
                 $fields[] = array_merge($fieldConfig, $extraConfig);
             }
@@ -873,7 +968,7 @@ class AlignEntitiesToSchema
 
                 $key = ($which == 'field' ? 'name' : 'field');
 
-                $columnName = $this->formatColumnFromName($item['@attributes'][$key]);
+                $columnName = $this->formatColumnFromItem($item, $which);
 
                 $default = isset($defaults[$columnName]) ? $defaults[$columnName] : null;
 
@@ -881,13 +976,52 @@ class AlignEntitiesToSchema
 
                 $fieldConfig = array(
                     'isId' => isset($associationKeys[$item['@attributes'][$key]]),
+                    'isInverse' => false,
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
                     'default' => $default,
                     'config' => $item
                 );
 
-                $fields[] = array_merge($fieldConfig, $extraConfig);
+                if (isset($extraConfig['type'])) {
+                    $fieldConfig['config']['@attributes']['type'] = $extraConfig['type'];
+                    unset($extraConfig['type']);
+                }
+
+                $fieldConfig = array_merge($fieldConfig, $extraConfig);
+
+                if (isset($fieldConfig['inversedBy'])) {
+                    if (isset($fieldConfig['config']['@attributes']['inversed-by'])) {
+                        unset($fieldConfig['config']['@attributes']['inversed-by']);
+                    }
+
+                    if (!isset($this->inverseFields[$fieldConfig['inversedBy']['entity']])) {
+                        $this->inverseFields[$fieldConfig['inversedBy']['entity']] = array();
+                    }
+
+                    switch ($fieldConfig['type']) {
+                        case 'manyToOne':
+                            $relationship = 'oneToMany';
+                            break;
+                        case 'oneToMany':
+                            $relationship = 'manyToOne';
+                            break;
+                        default:
+                            $relationship = $fieldConfig['type'];
+                            break;
+                    }
+
+                    $this->inverseFields[$fieldConfig['inversedBy']['entity']][] = array(
+                        'inversedBy' => $this->formatPropertyName($fieldConfig),
+                        'targetEntity' => self::ENTITY_NAMESPACE . ucfirst($className),
+                        'property' => $fieldConfig['inversedBy']['property'],
+                        'relationship' => $relationship
+                    );
+
+                    $fieldConfig['config']['@attributes']['inversed-by'] = $fieldConfig['inversedBy']['property'];
+                }
+
+                $fields[] = $fieldConfig;
             }
         }
 
@@ -925,11 +1059,18 @@ class AlignEntitiesToSchema
      * @param string $name
      * @return string
      */
-    private function formatColumnFromName($name)
+    private function formatColumnFromItem($item, $which)
     {
-        $filter = new CamelCaseToSeparator('_');
+        if (isset($item['join-columns']['join-column']['@attributes']['name'])) {
+            $name = $item['join-columns']['join-column']['@attributes']['name'];
+        } else {
+            $key = ($which == 'field' || $which == 'id' ? 'name' : 'field');
+            $name = $item['@attributes'][$key];
+            $filter = new CamelCaseToSeparator('_');
+            $name = strtolower($filter->filter($name));
+        }
 
-        return strtolower($filter->filter($name));
+        return $name;
     }
 
     /**
@@ -1128,8 +1269,8 @@ class AlignEntitiesToSchema
 
         foreach ($attributes as $key => $value) {
 
-            if ($key == 'type') {
-                $value = $this->getDoctrineTypeFromType($value, $attributes);
+            if ($which == 'unique-constraints' && $key == 'columns') {
+                $value = explode(',', $value);
             }
 
             if (is_array($value)) {
@@ -1138,8 +1279,10 @@ class AlignEntitiesToSchema
 
             if (isset($this->optionFormat[$key][$which])) {
                 $format = $this->optionFormat[$key][$which];
-            } elseif (isset($this->optionFormat[$key])) {
+            } elseif (isset($this->optionFormat[$key]) && !is_array($this->optionFormat[$key])) {
                 $format = $this->optionFormat[$key];
+            } elseif (isset($this->optionFormat[$key]['column'])) {
+                $format = $this->optionFormat[$key]['column'];
             } else {
                 $format = $key . '=%s';
             }
@@ -1152,28 +1295,6 @@ class AlignEntitiesToSchema
         }
 
         return implode(', ', $options);
-    }
-
-    /**
-     * Map custom doctrine type from types
-     *
-     * @param string $type
-     * @param array $context
-     * @return string
-     */
-    private function getDoctrineTypeFromType($type, $context = array())
-    {
-        switch ($type) {
-            case 'boolean':
-
-                if (!isset($context['nullable']) || $context['nullable'] == false) {
-                    return 'yesno';
-                }
-
-                return 'yesnonull';
-            default:
-                return $type;
-        }
     }
 
     /**

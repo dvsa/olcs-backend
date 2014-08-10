@@ -50,9 +50,9 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Sufficient parking
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="sufficient_parking", nullable=false)
+     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking;
 
@@ -68,7 +68,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Is interim
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="is_interim", nullable=true)
      */
@@ -77,17 +77,27 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Publication appropriate
      *
-     * @var boolean
+     * @var unknown
      *
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
     protected $publicationAppropriate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the sufficient parking
      *
-     * @param boolean $sufficientParking
-     * @return \Olcs\Db\Entity\LicenceOperatingCentre
+     * @param unknown $sufficientParking
+     * @return LicenceOperatingCentre
      */
     public function setSufficientParking($sufficientParking)
     {
@@ -99,18 +109,19 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the sufficient parking
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSufficientParking()
     {
         return $this->sufficientParking;
     }
 
+
     /**
      * Set the added date
      *
      * @param \DateTime $addedDate
-     * @return \Olcs\Db\Entity\LicenceOperatingCentre
+     * @return LicenceOperatingCentre
      */
     public function setAddedDate($addedDate)
     {
@@ -129,11 +140,12 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
+
     /**
      * Set the is interim
      *
-     * @param boolean $isInterim
-     * @return \Olcs\Db\Entity\LicenceOperatingCentre
+     * @param unknown $isInterim
+     * @return LicenceOperatingCentre
      */
     public function setIsInterim($isInterim)
     {
@@ -145,18 +157,19 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the is interim
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsInterim()
     {
         return $this->isInterim;
     }
 
+
     /**
      * Set the publication appropriate
      *
-     * @param boolean $publicationAppropriate
-     * @return \Olcs\Db\Entity\LicenceOperatingCentre
+     * @param unknown $publicationAppropriate
+     * @return LicenceOperatingCentre
      */
     public function setPublicationAppropriate($publicationAppropriate)
     {
@@ -168,10 +181,11 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the publication appropriate
      *
-     * @return boolean
+     * @return unknown
      */
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
     }
+
 }

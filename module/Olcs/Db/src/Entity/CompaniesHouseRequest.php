@@ -56,10 +56,20 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     protected $ipAddress;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the requested on
      *
      * @param \DateTime $requestedOn
-     * @return \Olcs\Db\Entity\CompaniesHouseRequest
+     * @return CompaniesHouseRequest
      */
     public function setRequestedOn($requestedOn)
     {
@@ -78,11 +88,12 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         return $this->requestedOn;
     }
 
+
     /**
      * Set the request type
      *
      * @param string $requestType
-     * @return \Olcs\Db\Entity\CompaniesHouseRequest
+     * @return CompaniesHouseRequest
      */
     public function setRequestType($requestType)
     {
@@ -101,11 +112,12 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         return $this->requestType;
     }
 
+
     /**
      * Set the request error
      *
      * @param string $requestError
-     * @return \Olcs\Db\Entity\CompaniesHouseRequest
+     * @return CompaniesHouseRequest
      */
     public function setRequestError($requestError)
     {
@@ -124,11 +136,12 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         return $this->requestError;
     }
 
+
     /**
      * Set the ip address
      *
      * @param string $ipAddress
-     * @return \Olcs\Db\Entity\CompaniesHouseRequest
+     * @return CompaniesHouseRequest
      */
     public function setIpAddress($ipAddress)
     {
@@ -146,4 +159,5 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     {
         return $this->ipAddress;
     }
+
 }

@@ -58,9 +58,9 @@ class TmCaseDecision implements Interfaces\EntityInterface
     /**
      * Is msi
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="yesnonull", name="is_msi", nullable=false)
+     * @ORM\Column(type="yesno", name="is_msi", nullable=false)
      */
     protected $isMsi = 0;
 
@@ -92,10 +92,20 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $unfitnessEndDate;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the decision
      *
      * @param \Olcs\Db\Entity\RefData $decision
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @return TmCaseDecision
      */
     public function setDecision($decision)
     {
@@ -114,11 +124,12 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->decision;
     }
 
+
     /**
      * Set the notified date
      *
      * @param \DateTime $notifiedDate
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @return TmCaseDecision
      */
     public function setNotifiedDate($notifiedDate)
     {
@@ -137,11 +148,12 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->notifiedDate;
     }
 
+
     /**
      * Set the is msi
      *
-     * @param boolean $isMsi
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @param unknown $isMsi
+     * @return TmCaseDecision
      */
     public function setIsMsi($isMsi)
     {
@@ -153,18 +165,19 @@ class TmCaseDecision implements Interfaces\EntityInterface
     /**
      * Get the is msi
      *
-     * @return boolean
+     * @return unknown
      */
     public function getIsMsi()
     {
         return $this->isMsi;
     }
 
+
     /**
      * Set the repute not lost reason
      *
      * @param string $reputeNotLostReason
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @return TmCaseDecision
      */
     public function setReputeNotLostReason($reputeNotLostReason)
     {
@@ -183,11 +196,12 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->reputeNotLostReason;
     }
 
+
     /**
      * Set the unfitness start date
      *
      * @param \DateTime $unfitnessStartDate
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @return TmCaseDecision
      */
     public function setUnfitnessStartDate($unfitnessStartDate)
     {
@@ -206,11 +220,12 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->unfitnessStartDate;
     }
 
+
     /**
      * Set the unfitness end date
      *
      * @param \DateTime $unfitnessEndDate
-     * @return \Olcs\Db\Entity\TmCaseDecision
+     * @return TmCaseDecision
      */
     public function setUnfitnessEndDate($unfitnessEndDate)
     {
@@ -228,4 +243,5 @@ class TmCaseDecision implements Interfaces\EntityInterface
     {
         return $this->unfitnessEndDate;
     }
+
 }

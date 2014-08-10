@@ -40,10 +40,20 @@ class DocBookmark implements Interfaces\EntityInterface
     protected $name;
 
     /**
+     * Get identifier(s)
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Set the name
      *
      * @param string $name
-     * @return \Olcs\Db\Entity\DocBookmark
+     * @return DocBookmark
      */
     public function setName($name)
     {
@@ -61,4 +71,5 @@ class DocBookmark implements Interfaces\EntityInterface
     {
         return $this->name;
     }
+
 }
