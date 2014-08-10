@@ -47,7 +47,7 @@ class CompaniesHouse extends ServiceAbstract
      * Allowed appointment types
      * @see http://xmlgw.companieshouse.gov.uk/data_usage_guide_apr_2014.pdf
      */
-    private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR'];
+    private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR', 'LLPDMEM'];
 
     /**
      * Returns a list of records after Companies House API's call
