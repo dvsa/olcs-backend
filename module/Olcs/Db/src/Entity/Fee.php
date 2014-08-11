@@ -196,15 +196,6 @@ class Fee implements Interfaces\EntityInterface
      */
     protected $irfoFileNo;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the waive reason2

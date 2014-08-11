@@ -74,15 +74,6 @@ class PublicHoliday implements Interfaces\EntityInterface
      */
     protected $isNi;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the public holiday date

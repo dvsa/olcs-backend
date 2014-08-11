@@ -42,15 +42,6 @@ class EntityType implements Interfaces\EntityInterface
      */
     protected $name;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the current template

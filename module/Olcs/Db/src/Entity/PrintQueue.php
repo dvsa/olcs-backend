@@ -44,15 +44,6 @@ class PrintQueue implements Interfaces\EntityInterface
      */
     protected $addedDatetime;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the team printer

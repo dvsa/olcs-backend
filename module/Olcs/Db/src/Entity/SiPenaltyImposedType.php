@@ -39,15 +39,6 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
      */
     protected $removedDate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the removed date

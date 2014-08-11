@@ -58,15 +58,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
      */
     protected $importance;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is internal

@@ -62,15 +62,6 @@ class Publication implements Interfaces\EntityInterface
      */
     protected $docName;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pub status

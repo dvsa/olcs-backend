@@ -38,15 +38,6 @@ class VariationReason implements Interfaces\EntityInterface
         $this->busRegs = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the bus reg

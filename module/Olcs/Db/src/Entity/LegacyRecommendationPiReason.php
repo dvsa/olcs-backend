@@ -60,15 +60,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      */
     protected $comment;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pi reason

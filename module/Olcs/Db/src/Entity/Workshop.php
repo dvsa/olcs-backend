@@ -28,11 +28,20 @@ class Workshop implements Interfaces\EntityInterface
         Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="workshops")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     */
+    protected $licence;
 
     /**
      * Is external
@@ -61,15 +70,30 @@ class Workshop implements Interfaces\EntityInterface
      */
     protected $safetyInspection;
 
+
     /**
-     * Get identifier(s)
+     * Set the licence
      *
-     * @return mixed
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Workshop
      */
-    public function getIdentifier()
+    public function setLicence($licence)
     {
-        return $this->getId();
+        $this->licence = $licence;
+
+        return $this;
     }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
 
     /**
      * Set the is external

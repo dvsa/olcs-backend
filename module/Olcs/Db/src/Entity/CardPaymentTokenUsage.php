@@ -58,15 +58,6 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
      */
     protected $status;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the payment uid

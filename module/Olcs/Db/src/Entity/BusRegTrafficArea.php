@@ -54,15 +54,6 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
      */
     protected $txcNotRequired;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the txc missing

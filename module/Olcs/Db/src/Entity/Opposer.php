@@ -42,15 +42,6 @@ class Opposer implements Interfaces\EntityInterface
      */
     protected $opposerType;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the opposer type

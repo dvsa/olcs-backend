@@ -57,15 +57,6 @@ class PsvDisc implements Interfaces\EntityInterface
      */
     protected $reprintRequired;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is copy

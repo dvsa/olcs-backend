@@ -113,15 +113,6 @@ class Task implements Interfaces\EntityInterface
      */
     protected $actionDate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the irfo organisation

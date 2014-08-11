@@ -108,15 +108,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      */
     protected $rescheduledOn;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the type

@@ -49,15 +49,6 @@ class ChangeOfEntity implements Interfaces\EntityInterface
      */
     protected $oldOrganisationName;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the old licence no

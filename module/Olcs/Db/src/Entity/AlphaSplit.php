@@ -52,15 +52,6 @@ class AlphaSplit implements Interfaces\EntityInterface
      */
     protected $toInclusive;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the from inclusive

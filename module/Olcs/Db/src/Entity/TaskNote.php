@@ -40,15 +40,6 @@ class TaskNote implements Interfaces\EntityInterface
      */
     protected $noteText;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the note text

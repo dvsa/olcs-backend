@@ -65,15 +65,6 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
      */
     protected $executed;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the si penalty imposed type

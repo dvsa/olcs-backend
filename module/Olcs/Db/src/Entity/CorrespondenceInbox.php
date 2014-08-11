@@ -69,15 +69,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
      */
     protected $printed;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the archived

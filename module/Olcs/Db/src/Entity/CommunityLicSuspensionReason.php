@@ -54,15 +54,6 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
      */
     protected $communityLicSuspension;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the reason

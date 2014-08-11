@@ -78,15 +78,6 @@ class Reason implements Interfaces\EntityInterface
         $this->proposeToRevokes = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the propose to revoke

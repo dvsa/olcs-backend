@@ -46,15 +46,6 @@ class Template implements Interfaces\EntityInterface
         $this->historys = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the history

@@ -84,15 +84,6 @@ class Complaint implements Interfaces\EntityInterface
      */
     protected $driverId;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the complaint type

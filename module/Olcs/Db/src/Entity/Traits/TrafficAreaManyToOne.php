@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Traffic area many to one trait
  *
- * Auto-Generated (Shared between 14 entities)
+ * Auto-Generated (Shared between 13 entities)
  */
 trait TrafficAreaManyToOne
 {

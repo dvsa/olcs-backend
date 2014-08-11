@@ -79,15 +79,6 @@ class InspectionEmail implements Interfaces\EntityInterface
      */
     protected $senderEmailAddress;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the inspection request

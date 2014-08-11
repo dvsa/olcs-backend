@@ -53,15 +53,6 @@ class VoidDisc implements Interfaces\EntityInterface
      */
     protected $serialEnd;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the serial start

@@ -91,15 +91,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
      */
     protected $unfitnessEndDate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the decision

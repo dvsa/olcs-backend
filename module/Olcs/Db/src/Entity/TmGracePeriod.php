@@ -78,15 +78,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
      */
     protected $gracePeriodNo = 1;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is active

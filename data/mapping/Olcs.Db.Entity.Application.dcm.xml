@@ -20,11 +20,11 @@
     <field name="totAuthMediumVehicles" type="integer" column="tot_auth_medium_vehicles" nullable="true"/>
     <field name="totAuthLargeVehicles" type="integer" column="tot_auth_large_vehicles" nullable="true"/>
     <field name="totCommunityLicences" type="integer" column="tot_community_licences" nullable="true"/>
-    <field name="bankrupt" type="boolean" column="bankrupt" nullable="false"/>
-    <field name="administration" type="boolean" column="administration" nullable="false"/>
-    <field name="disqualified" type="boolean" column="disqualified" nullable="false"/>
-    <field name="liquidation" type="boolean" column="liquidation" nullable="false"/>
-    <field name="receivership" type="boolean" column="receivership" nullable="false"/>
+    <field name="bankrupt" type="boolean" column="bankrupt" nullable="true"/>
+    <field name="administration" type="boolean" column="administration" nullable="true"/>
+    <field name="disqualified" type="boolean" column="disqualified" nullable="true"/>
+    <field name="liquidation" type="boolean" column="liquidation" nullable="true"/>
+    <field name="receivership" type="boolean" column="receivership" nullable="true"/>
     <field name="insolvencyConfirmation" type="boolean" column="insolvency_confirmation" nullable="false"/>
     <field name="insolvencyDetails" type="string" column="insolvency_details" length="4000" nullable="true"/>
     <field name="safetyConfirmation" type="boolean" column="safety_confirmation" nullable="false"/>

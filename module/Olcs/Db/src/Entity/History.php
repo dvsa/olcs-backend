@@ -86,15 +86,6 @@ class History implements Interfaces\EntityInterface
         $this->templates = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the entity type

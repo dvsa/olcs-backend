@@ -29,15 +29,6 @@ class PresidingTc implements Interfaces\EntityInterface
      */
     protected $deleted = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the deleted

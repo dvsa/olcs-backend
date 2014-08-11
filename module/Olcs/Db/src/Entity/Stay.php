@@ -60,15 +60,6 @@ class Stay implements Interfaces\EntityInterface
      */
     protected $notes;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is tc

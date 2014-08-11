@@ -65,15 +65,6 @@ class OrganisationUser implements Interfaces\EntityInterface
      */
     protected $sftpAccess = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the user

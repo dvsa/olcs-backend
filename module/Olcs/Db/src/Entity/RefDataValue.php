@@ -53,15 +53,6 @@ class RefDataValue implements Interfaces\EntityInterface
      */
     protected $value;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the ref data

@@ -50,15 +50,6 @@ class DocumentSubCategory implements Interfaces\EntityInterface
      */
     protected $displayFreeText = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is scanned

@@ -60,15 +60,6 @@ class PhoneContact implements Interfaces\EntityInterface
      */
     protected $details;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the phone contact type

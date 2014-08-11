@@ -43,15 +43,6 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
      */
     protected $postcodeId;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the postcode id

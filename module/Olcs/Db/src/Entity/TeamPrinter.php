@@ -44,15 +44,6 @@ class TeamPrinter implements Interfaces\EntityInterface
      */
     protected $documentType;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the printer

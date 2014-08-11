@@ -91,15 +91,6 @@ class SubmissionAction implements Interfaces\EntityInterface
      */
     protected $submissionActionType;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the submission

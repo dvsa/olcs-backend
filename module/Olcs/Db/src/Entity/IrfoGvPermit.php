@@ -104,15 +104,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      */
     protected $yearRequired;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the irfo permit status

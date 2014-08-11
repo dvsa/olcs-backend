@@ -45,15 +45,6 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      */
     protected $docParagraph;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the doc paragraph
