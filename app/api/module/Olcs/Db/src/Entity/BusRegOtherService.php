@@ -32,13 +32,4 @@ class BusRegOtherService implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 }

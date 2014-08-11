@@ -45,15 +45,6 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
      */
     protected $unfitnessReason;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the unfitness reason

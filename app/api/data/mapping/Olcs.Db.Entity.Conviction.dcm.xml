@@ -9,6 +9,7 @@
       <index name="fk_conviction_user1_idx" columns="created_by"/>
       <index name="fk_conviction_user2_idx" columns="last_modified_by"/>
       <index name="fk_conviction_operator_case1_idx" columns="case_id"/>
+      <index name="fk_conviction_application1_idx" columns="application_id"/>
       <index name="fk_conviction_ref_data1_idx" columns="defendant_type"/>
     </indexes>
     <id name="id" type="integer" column="id">
@@ -30,14 +31,14 @@
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>
     <field name="version" type="integer" column="version" nullable="false"/>
-    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
-      <join-columns>
-        <join-column name="last_modified_by" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="case" target-entity="Olcs\Db\Entity\Cases">
       <join-columns>
         <join-column name="case_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="application" target-entity="Olcs\Db\Entity\Application">
+      <join-columns>
+        <join-column name="application_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="defendantType" target-entity="Olcs\Db\Entity\RefData">
@@ -45,14 +46,14 @@
         <join-column name="defendant_type" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
+    <many-to-one field="lastModifiedBy" target-entity="Olcs\Db\Entity\User">
+      <join-columns>
+        <join-column name="last_modified_by" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
     <many-to-one field="createdBy" target-entity="Olcs\Db\Entity\User">
       <join-columns>
         <join-column name="created_by" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="transportManager" target-entity="Olcs\Db\Entity\TransportManager">
-      <join-columns>
-        <join-column name="transport_manager_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="person" target-entity="Olcs\Db\Entity\Person">
@@ -63,6 +64,11 @@
     <many-to-one field="organisation" target-entity="Olcs\Db\Entity\Organisation">
       <join-columns>
         <join-column name="organisation_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="transportManager" target-entity="Olcs\Db\Entity\TransportManager">
+      <join-columns>
+        <join-column name="transport_manager_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="convictionCategory" target-entity="Olcs\Db\Entity\ConvictionCategory">

@@ -61,22 +61,23 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $txcName;
 
     /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="trafficArea")
+     */
+    protected $documents;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->recipients = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the id
@@ -185,6 +186,68 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getTxcName()
     {
         return $this->txcName;
+    }
+
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return TrafficArea
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return TrafficArea
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return TrafficArea
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 
 }

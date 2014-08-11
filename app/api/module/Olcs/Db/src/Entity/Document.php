@@ -37,23 +37,95 @@ class Document implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\OppositionManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\CategoryManyToOne,
         Traits\DocumentSubCategoryManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CaseManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IssuedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     */
+    protected $operatingCentre;
+
+    /**
+     * Opposition
+     *
+     * @var \Olcs\Db\Entity\Opposition
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="documents")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     */
+    protected $opposition;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="documents")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     */
+    protected $busReg;
+
+    /**
+     * Traffic area
+     *
+     * @var \Olcs\Db\Entity\TrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="documents")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
+     */
+    protected $trafficArea;
+
+    /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id")
+     */
+    protected $transportManager;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="documents")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     */
+    protected $licence;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     */
+    protected $case;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
+     */
+    protected $application;
 
     /**
      * Email
@@ -65,13 +137,13 @@ class Document implements Interfaces\EntityInterface
     protected $emails;
 
     /**
-     * Document store id
+     * Identifier
      *
      * @var string
      *
      * @ORM\Column(type="string", name="document_store_id", length=255, nullable=false)
      */
-    protected $documentStoreId;
+    protected $identifier;
 
     /**
      * Is read only
@@ -92,6 +164,15 @@ class Document implements Interfaces\EntityInterface
     protected $filename;
 
     /**
+     * Size
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="size", nullable=true)
+     */
+    protected $size;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -99,15 +180,198 @@ class Document implements Interfaces\EntityInterface
         $this->emails = new ArrayCollection();
     }
 
+
     /**
-     * Get identifier(s)
+     * Set the operating centre
      *
-     * @return mixed
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return Document
      */
-    public function getIdentifier()
+    public function setOperatingCentre($operatingCentre)
     {
-        return $this->getId();
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
     }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
+    }
+
+
+    /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return Document
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
+    }
+
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return Document
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+
+    /**
+     * Set the traffic area
+     *
+     * @param \Olcs\Db\Entity\TrafficArea $trafficArea
+     * @return Document
+     */
+    public function setTrafficArea($trafficArea)
+    {
+        $this->trafficArea = $trafficArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the traffic area
+     *
+     * @return \Olcs\Db\Entity\TrafficArea
+     */
+    public function getTrafficArea()
+    {
+        return $this->trafficArea;
+    }
+
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return Document
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
+    }
+
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Document
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return Document
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
 
     /**
      * Set the email
@@ -172,26 +436,26 @@ class Document implements Interfaces\EntityInterface
 
 
     /**
-     * Set the document store id
+     * Set the identifier
      *
-     * @param string $documentStoreId
+     * @param string $identifier
      * @return Document
      */
-    public function setDocumentStoreId($documentStoreId)
+    public function setIdentifier($identifier)
     {
-        $this->documentStoreId = $documentStoreId;
+        $this->identifier = $identifier;
 
         return $this;
     }
 
     /**
-     * Get the document store id
+     * Get the identifier
      *
      * @return string
      */
-    public function getDocumentStoreId()
+    public function getIdentifier()
     {
-        return $this->documentStoreId;
+        return $this->identifier;
     }
 
 
@@ -240,6 +504,30 @@ class Document implements Interfaces\EntityInterface
     public function getFilename()
     {
         return $this->filename;
+    }
+
+
+    /**
+     * Set the size
+     *
+     * @param int $size
+     * @return Document
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * Get the size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 
 }

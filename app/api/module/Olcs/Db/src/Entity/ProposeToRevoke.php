@@ -70,15 +70,6 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         $this->reasons = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the reason

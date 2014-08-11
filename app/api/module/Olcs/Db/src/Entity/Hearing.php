@@ -66,15 +66,6 @@ class Hearing implements Interfaces\EntityInterface
      */
     protected $witnessCount = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the presiding tc

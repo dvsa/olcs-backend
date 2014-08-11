@@ -15,11 +15,12 @@
     <field name="certificateNo" type="string" column="certificate_no" length="50" nullable="true"/>
     <field name="isRefrigerated" type="boolean" column="is_refrigerated" nullable="true"/>
     <field name="isTipper" type="boolean" column="is_tipper" nullable="true"/>
+    <field name="isNovelty" type="boolean" column="is_novelty" nullable="true"/>
     <field name="viAction" type="string" column="vi_action" length="1" nullable="true"/>
-    <field name="section26" type="boolean" column="section_26" nullable="false"/>
-    <field name="section26Curtail" type="boolean" column="section_26_curtail" nullable="false"/>
-    <field name="section26Revoked" type="boolean" column="section_26_revoked" nullable="false"/>
-    <field name="section26Suspend" type="boolean" column="section_26_suspend" nullable="false"/>
+    <field name="section26" type="boolean" column="section26" nullable="false"/>
+    <field name="section26Curtail" type="boolean" column="section26_curtail" nullable="false"/>
+    <field name="section26Revoked" type="boolean" column="section26_revoked" nullable="false"/>
+    <field name="section26Suspend" type="boolean" column="section26_suspend" nullable="false"/>
     <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="specifiedDate" type="datetime" column="specified_date" nullable="true"/>
     <field name="makeModel" type="string" column="make_model" length="100" nullable="true"/>

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -110,14 +111,22 @@ class Opposition implements Interfaces\EntityInterface
     protected $validNotes;
 
     /**
-     * Get identifier(s)
+     * Document
      *
-     * @return mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="opposition")
      */
-    public function getIdentifier()
+    protected $documents;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
     {
-        return $this->getId();
+        $this->documents = new ArrayCollection();
     }
+
 
     /**
      * Set the opposer
@@ -308,6 +317,68 @@ class Opposition implements Interfaces\EntityInterface
     public function getValidNotes()
     {
         return $this->validNotes;
+    }
+
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Opposition
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Opposition
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Opposition
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 
 }

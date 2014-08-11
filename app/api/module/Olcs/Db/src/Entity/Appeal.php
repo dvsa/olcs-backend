@@ -131,15 +131,6 @@ class Appeal implements Interfaces\EntityInterface
      */
     protected $papersSentDate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the reason

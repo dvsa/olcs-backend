@@ -90,15 +90,6 @@ class FeeType implements Interfaces\EntityInterface
      */
     protected $expireFeeWithLicence = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the fee type

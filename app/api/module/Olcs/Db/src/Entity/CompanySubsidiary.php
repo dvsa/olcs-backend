@@ -47,15 +47,6 @@ class CompanySubsidiary implements Interfaces\EntityInterface
      */
     protected $companyNo;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the name

@@ -221,15 +221,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      */
     protected $organisationId;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the ebsr submission result

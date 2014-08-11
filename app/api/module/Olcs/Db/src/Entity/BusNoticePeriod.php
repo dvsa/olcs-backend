@@ -56,15 +56,6 @@ class BusNoticePeriod implements Interfaces\EntityInterface
      */
     protected $cancellationPeriod;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the notice area

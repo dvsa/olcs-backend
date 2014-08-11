@@ -140,15 +140,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      */
     protected $isApproved = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the lic condition variation

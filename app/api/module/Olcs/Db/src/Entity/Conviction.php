@@ -21,6 +21,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_conviction_operator_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_conviction_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"})
  *    }
  * )
@@ -29,12 +30,13 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOne,
+        Traits\ApplicationManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\Penalty255Field,
         Traits\Notes4000Field,
         Traits\CategoryText1024Field,
@@ -152,15 +154,6 @@ class Conviction implements Interfaces\EntityInterface
      */
     protected $convictedName;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the defendant type

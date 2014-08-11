@@ -177,15 +177,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      */
     protected $validityPeriod;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the irfo psv auth type

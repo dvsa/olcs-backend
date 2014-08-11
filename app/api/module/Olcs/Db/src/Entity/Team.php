@@ -44,15 +44,6 @@ class Team implements Interfaces\EntityInterface
      */
     protected $overrideTaContact;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the override ta contact

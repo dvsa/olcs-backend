@@ -86,15 +86,6 @@ class TxcInbox implements Interfaces\EntityInterface
      */
     protected $routeSeq;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pdf document

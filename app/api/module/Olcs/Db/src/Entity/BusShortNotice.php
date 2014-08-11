@@ -204,15 +204,6 @@ class BusShortNotice implements Interfaces\EntityInterface
      */
     protected $notAvailableDetail;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the bank holiday change

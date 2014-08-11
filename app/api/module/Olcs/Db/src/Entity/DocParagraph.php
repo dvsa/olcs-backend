@@ -47,15 +47,6 @@ class DocParagraph implements Interfaces\EntityInterface
      */
     protected $paraText;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the para title

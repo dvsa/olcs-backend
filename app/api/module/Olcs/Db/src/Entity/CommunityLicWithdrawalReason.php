@@ -54,15 +54,6 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
      */
     protected $communityLicWithdrawal;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the reason

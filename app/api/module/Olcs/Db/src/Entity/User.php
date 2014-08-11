@@ -89,15 +89,6 @@ class User implements Interfaces\EntityInterface
         $this->organisationUsers = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the partner contact details

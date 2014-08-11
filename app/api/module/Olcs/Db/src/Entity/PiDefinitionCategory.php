@@ -28,15 +28,6 @@ class PiDefinitionCategory implements Interfaces\EntityInterface
      */
     protected $category;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the category

@@ -54,15 +54,6 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      */
     protected $duration;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the si penalty requested type

@@ -45,15 +45,6 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
      */
     protected $companySubsidiary;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the company subsidiary

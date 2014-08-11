@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -92,40 +93,49 @@ class Vehicle implements Interfaces\EntityInterface
     protected $isTipper;
 
     /**
+     * Is novelty
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
+     */
+    protected $isNovelty;
+
+    /**
      * Section26
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="boolean", name="section_26", nullable=false)
+     * @ORM\Column(type="yesno", name="section26", nullable=false)
      */
-    protected $section26;
+    protected $section26 = 0;
 
     /**
      * Section26 curtail
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="boolean", name="section_26_curtail", nullable=false)
+     * @ORM\Column(type="yesno", name="section26_curtail", nullable=false)
      */
-    protected $section26Curtail;
+    protected $section26Curtail = 0;
 
     /**
      * Section26 revoked
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="boolean", name="section_26_revoked", nullable=false)
+     * @ORM\Column(type="yesno", name="section26_revoked", nullable=false)
      */
-    protected $section26Revoked;
+    protected $section26Revoked = 0;
 
     /**
      * Section26 suspend
      *
-     * @var boolean
+     * @var unknown
      *
-     * @ORM\Column(type="boolean", name="section_26_suspend", nullable=false)
+     * @ORM\Column(type="yesno", name="section26_suspend", nullable=false)
      */
-    protected $section26Suspend;
+    protected $section26Suspend = 0;
 
     /**
      * Make model
@@ -137,14 +147,22 @@ class Vehicle implements Interfaces\EntityInterface
     protected $makeModel;
 
     /**
-     * Get identifier(s)
+     * Licence vehicle
      *
-     * @return mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceVehicle", mappedBy="vehicle")
      */
-    public function getIdentifier()
+    protected $licenceVehicles;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
     {
-        return $this->getId();
+        $this->licenceVehicles = new ArrayCollection();
     }
+
 
     /**
      * Set the psv type
@@ -291,9 +309,33 @@ class Vehicle implements Interfaces\EntityInterface
 
 
     /**
+     * Set the is novelty
+     *
+     * @param unknown $isNovelty
+     * @return Vehicle
+     */
+    public function setIsNovelty($isNovelty)
+    {
+        $this->isNovelty = $isNovelty;
+
+        return $this;
+    }
+
+    /**
+     * Get the is novelty
+     *
+     * @return unknown
+     */
+    public function getIsNovelty()
+    {
+        return $this->isNovelty;
+    }
+
+
+    /**
      * Set the section26
      *
-     * @param boolean $section26
+     * @param unknown $section26
      * @return Vehicle
      */
     public function setSection26($section26)
@@ -306,7 +348,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSection26()
     {
@@ -317,7 +359,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 curtail
      *
-     * @param boolean $section26Curtail
+     * @param unknown $section26Curtail
      * @return Vehicle
      */
     public function setSection26Curtail($section26Curtail)
@@ -330,7 +372,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 curtail
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSection26Curtail()
     {
@@ -341,7 +383,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 revoked
      *
-     * @param boolean $section26Revoked
+     * @param unknown $section26Revoked
      * @return Vehicle
      */
     public function setSection26Revoked($section26Revoked)
@@ -354,7 +396,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 revoked
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSection26Revoked()
     {
@@ -365,7 +407,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 suspend
      *
-     * @param boolean $section26Suspend
+     * @param unknown $section26Suspend
      * @return Vehicle
      */
     public function setSection26Suspend($section26Suspend)
@@ -378,7 +420,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 suspend
      *
-     * @return boolean
+     * @return unknown
      */
     public function getSection26Suspend()
     {
@@ -407,6 +449,68 @@ class Vehicle implements Interfaces\EntityInterface
     public function getMakeModel()
     {
         return $this->makeModel;
+    }
+
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Vehicle
+     */
+    public function setLicenceVehicles($licenceVehicles)
+    {
+        $this->licenceVehicles = $licenceVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getLicenceVehicles()
+    {
+        return $this->licenceVehicles;
+    }
+
+    /**
+     * Add a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Vehicle
+     */
+    public function addLicenceVehicles($licenceVehicles)
+    {
+        if ($licenceVehicles instanceof ArrayCollection) {
+            $this->licenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->licenceVehicles->toArray(),
+                    $licenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->add($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Vehicle
+     */
+    public function removeLicenceVehicles($licenceVehicles)
+    {
+        if ($this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->remove($licenceVehicles);
+        }
+
+        return $this;
     }
 
 }

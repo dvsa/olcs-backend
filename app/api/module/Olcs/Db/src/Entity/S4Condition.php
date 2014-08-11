@@ -46,15 +46,6 @@ class S4Condition implements Interfaces\EntityInterface
      */
     protected $sourceCondition;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the target condition

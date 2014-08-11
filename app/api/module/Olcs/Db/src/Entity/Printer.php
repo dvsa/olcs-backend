@@ -38,15 +38,6 @@ class Printer implements Interfaces\EntityInterface
      */
     protected $printerName;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the printer tray

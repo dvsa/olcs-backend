@@ -42,15 +42,6 @@ class EmailRecipient implements Interfaces\EntityInterface
      */
     protected $emailAddress;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the type

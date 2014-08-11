@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -79,45 +80,45 @@ class Application implements Interfaces\EntityInterface
      *
      * @var unknown
      *
-     * @ORM\Column(type="yesno", name="bankrupt", nullable=false)
+     * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
      */
-    protected $bankrupt = 0;
+    protected $bankrupt;
 
     /**
      * Administration
      *
      * @var unknown
      *
-     * @ORM\Column(type="yesno", name="administration", nullable=false)
+     * @ORM\Column(type="yesnonull", name="administration", nullable=true)
      */
-    protected $administration = 0;
+    protected $administration;
 
     /**
      * Disqualified
      *
      * @var unknown
      *
-     * @ORM\Column(type="yesno", name="disqualified", nullable=false)
+     * @ORM\Column(type="yesnonull", name="disqualified", nullable=true)
      */
-    protected $disqualified = 0;
+    protected $disqualified;
 
     /**
      * Liquidation
      *
      * @var unknown
      *
-     * @ORM\Column(type="yesno", name="liquidation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
      */
-    protected $liquidation = 0;
+    protected $liquidation;
 
     /**
      * Receivership
      *
      * @var unknown
      *
-     * @ORM\Column(type="yesno", name="receivership", nullable=false)
+     * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
      */
-    protected $receivership = 0;
+    protected $receivership;
 
     /**
      * Insolvency confirmation
@@ -363,14 +364,22 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
-     * Get identifier(s)
+     * Document
      *
-     * @return mixed
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="application")
      */
-    public function getIdentifier()
+    protected $documents;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
     {
-        return $this->getId();
+        $this->documents = new ArrayCollection();
     }
+
 
     /**
      * Set the interim status
@@ -1209,6 +1218,68 @@ class Application implements Interfaces\EntityInterface
     public function getInterimAuthTrailers()
     {
         return $this->interimAuthTrailers;
+    }
+
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Application
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Application
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Application
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 
 }

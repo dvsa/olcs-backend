@@ -33,7 +33,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
         Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\SpecifiedDateField,
@@ -46,10 +45,20 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Vehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
      */
     protected $vehicle;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     */
+    protected $licence;
 
     /**
      * Application received date
@@ -105,15 +114,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      */
     protected $warningLetterSentDate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the vehicle
@@ -136,6 +136,30 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getVehicle()
     {
         return $this->vehicle;
+    }
+
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return LicenceVehicle
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
 

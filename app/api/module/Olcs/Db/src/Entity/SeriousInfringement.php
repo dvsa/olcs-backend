@@ -123,15 +123,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
      */
     protected $reason;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the si category type

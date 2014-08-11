@@ -65,15 +65,6 @@ class SiPenalty implements Interfaces\EntityInterface
      */
     protected $reasonNotImposed;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the si penalty type

@@ -56,15 +56,6 @@ class ApplicationActionRef implements Interfaces\EntityInterface
      */
     protected $defaultApplicable;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the display order

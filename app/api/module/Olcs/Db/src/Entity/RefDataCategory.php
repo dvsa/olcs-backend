@@ -19,13 +19,4 @@ class RefDataCategory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\Id32Identity;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 }

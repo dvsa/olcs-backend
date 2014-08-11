@@ -24,13 +24,4 @@ class LicenceNoGen implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\ApplicationManyToOne;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 }

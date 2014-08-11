@@ -65,15 +65,6 @@ class DocTemplate implements Interfaces\EntityInterface
      */
     protected $suppressFromOp;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the doc process

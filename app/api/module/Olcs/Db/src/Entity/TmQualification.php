@@ -57,15 +57,6 @@ class TmQualification implements Interfaces\EntityInterface
      */
     protected $serialNo;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the qualification type

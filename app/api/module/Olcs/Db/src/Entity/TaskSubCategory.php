@@ -25,13 +25,4 @@ class TaskSubCategory implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\Description45FieldAlt1;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 }

@@ -206,15 +206,6 @@ class Pi implements Interfaces\EntityInterface
      */
     protected $decisionNotes;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pi status

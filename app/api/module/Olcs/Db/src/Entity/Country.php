@@ -47,15 +47,6 @@ class Country implements Interfaces\EntityInterface
      */
     protected $isMemberState = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the country desc

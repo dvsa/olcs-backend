@@ -56,7 +56,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="action", length=1, nullable=false)
      */
-    protected $action;
+    protected $action = 'A';
 
     /**
      * Publication appropriate
@@ -76,15 +76,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      */
     protected $sufficientParking = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the action

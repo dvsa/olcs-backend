@@ -45,15 +45,6 @@ class EmailBody implements Interfaces\EntityInterface
      */
     protected $text;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the seq

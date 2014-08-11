@@ -42,15 +42,6 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
      */
     protected $isActioned = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the is actioned

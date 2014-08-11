@@ -156,15 +156,6 @@ class Organisation implements Interfaces\EntityInterface
         $this->tradingNames = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the lead tc area

@@ -191,15 +191,6 @@ class InspectionRequest implements Interfaces\EntityInterface
      */
     protected $vehiclesExaminedNo;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the result type

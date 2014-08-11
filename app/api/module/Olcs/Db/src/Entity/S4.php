@@ -70,15 +70,6 @@ class S4 implements Interfaces\EntityInterface
      */
     protected $isTrueS4 = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the agreed date

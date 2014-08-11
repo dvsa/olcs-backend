@@ -217,23 +217,44 @@ class Licence implements Interfaces\EntityInterface
     protected $contactDetails;
 
     /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="licence")
+     */
+    protected $documents;
+
+    /**
+     * Licence vehicle
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceVehicle", mappedBy="licence")
+     */
+    protected $licenceVehicles;
+
+    /**
+     * Workshop
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Workshop", mappedBy="licence")
+     */
+    protected $workshops;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->applications = new ArrayCollection();
         $this->contactDetails = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->licenceVehicles = new ArrayCollection();
+        $this->workshops = new ArrayCollection();
     }
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the tachograph ins
@@ -737,6 +758,192 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->contactDetails->contains($contactDetails)) {
             $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Licence
+     */
+    public function setLicenceVehicles($licenceVehicles)
+    {
+        $this->licenceVehicles = $licenceVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getLicenceVehicles()
+    {
+        return $this->licenceVehicles;
+    }
+
+    /**
+     * Add a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Licence
+     */
+    public function addLicenceVehicles($licenceVehicles)
+    {
+        if ($licenceVehicles instanceof ArrayCollection) {
+            $this->licenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->licenceVehicles->toArray(),
+                    $licenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->add($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Licence
+     */
+    public function removeLicenceVehicles($licenceVehicles)
+    {
+        if ($this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->remove($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Set the workshop
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function setWorkshops($workshops)
+    {
+        $this->workshops = $workshops;
+
+        return $this;
+    }
+
+    /**
+     * Get the workshops
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+
+     */
+    public function getWorkshops()
+    {
+        return $this->workshops;
+    }
+
+    /**
+     * Add a workshops
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function addWorkshops($workshops)
+    {
+        if ($workshops instanceof ArrayCollection) {
+            $this->workshops = new ArrayCollection(
+                array_merge(
+                    $this->workshops->toArray(),
+                    $workshops->toArray()
+                )
+            );
+        } elseif (!$this->workshops->contains($workshops)) {
+            $this->workshops->add($workshops);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a workshops
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function removeWorkshops($workshops)
+    {
+        if ($this->workshops->contains($workshops)) {
+            $this->workshops->remove($workshops);
         }
 
         return $this;

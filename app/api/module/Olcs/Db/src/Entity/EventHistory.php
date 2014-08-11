@@ -52,15 +52,6 @@ class EventHistory implements Interfaces\EntityInterface
      */
     protected $eventDatetime;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the event history type

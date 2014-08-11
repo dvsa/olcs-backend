@@ -65,15 +65,6 @@ class ApplicationAction implements Interfaces\EntityInterface
      */
     protected $isApplicable;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the application action ref

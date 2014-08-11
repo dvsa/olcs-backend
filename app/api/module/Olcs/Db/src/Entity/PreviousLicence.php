@@ -88,15 +88,6 @@ class PreviousLicence implements Interfaces\EntityInterface
      */
     protected $disqualificationLength;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the previous licence type

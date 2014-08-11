@@ -73,15 +73,6 @@ class PreviousConvictions implements Interfaces\EntityInterface
      */
     protected $courtFpn;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the previous convictionscol

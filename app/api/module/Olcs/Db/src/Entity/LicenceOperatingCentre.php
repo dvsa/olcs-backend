@@ -83,15 +83,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      */
     protected $publicationAppropriate;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the sufficient parking

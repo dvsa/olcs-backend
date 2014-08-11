@@ -23,6 +23,7 @@
     <field name="isReadOnly" type="boolean" column="is_read_only" nullable="true"/>
     <field name="issuedDate" type="date" column="issued_date" nullable="true"/>
     <field name="filename" type="string" column="filename" length="255" nullable="true"/>
+    <field name="size" type="integer" column="size" nullable="true"/>
     <field name="deletedDate" type="datetime" column="deleted_date" nullable="true"/>
     <field name="createdOn" type="datetime" column="created_on" nullable="true"/>
     <field name="lastModifiedOn" type="datetime" column="last_modified_on" nullable="true"/>

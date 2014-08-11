@@ -74,25 +74,6 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
     }
 <?php endif; ?>
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-<?php if (empty($details['ids'])):?>
-        return null;
-<?php elseif (count($details['ids']) == 1): ?>
-        return $this->get<?php echo ucfirst($details['ids'][0]); ?>();
-<?php else: ?>
-        return array(
-<?php foreach ($details['ids'] as $id): ?>
-            '<?php echo $id; ?>' => $this->get<?php echo ucfirst($id); ?>(),
-<?php endforeach; ?>
-        );
-<?php endif; ?>
-    }
 <?php foreach ($details['fields'] as $item): $field = $item['config']; $fluidReturn = $className; ?>
 
 <?php include('methods.phtml'); ?>

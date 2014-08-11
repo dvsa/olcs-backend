@@ -55,15 +55,6 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
      */
     protected $ipAddress;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the requested on

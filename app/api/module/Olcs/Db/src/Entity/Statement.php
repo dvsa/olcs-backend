@@ -136,15 +136,6 @@ class Statement implements Interfaces\EntityInterface
      */
     protected $requestersForename;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the requesters address

@@ -87,15 +87,6 @@ class DiscSequence implements Interfaces\EntityInterface
      */
     protected $isNiSelfServe = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the restricted

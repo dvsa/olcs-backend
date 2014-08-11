@@ -51,15 +51,6 @@ class OppositionGrounds implements Interfaces\EntityInterface
      */
     protected $isRepresentation = 0;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the grounds

@@ -95,15 +95,6 @@ class Impounding implements Interfaces\EntityInterface
      */
     protected $piVenueOther;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pi venue

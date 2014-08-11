@@ -53,15 +53,6 @@ class PiDefinition implements Interfaces\EntityInterface
      */
     protected $definition;
 
-    /**
-     * Get identifier(s)
-     *
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->getId();
-    }
 
     /**
      * Set the pi definition category
