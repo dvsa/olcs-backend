@@ -133,7 +133,8 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
                 'getDoctrineHydrator',
                 'dbPersist',
                 'dbFlush',
-                'getEntityPropertyNames'
+                'getEntityPropertyNames',
+                'getId'
             )
         );
 
@@ -141,11 +142,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $firstEntity = $this->getMock('\stdClass', array('getId'));
-
-        $firstEntity->expects($this->once())
+        $this->service->expects($this->once())
             ->method('getId')
             ->will($this->returnValue($id));
+
+        $firstEntity = $this->getMock('\stdClass');
 
         $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
@@ -189,8 +190,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getNewEntity', 'getDoctrineHydrator',
-                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+                'log',
+                'getNewEntity',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getService',
+                'getEntityPropertyNames',
+                'getId'
             )
         );
 
@@ -207,11 +214,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $firstEntity = $this->getMock('\stdClass', array('getId'));
-
-        $firstEntity->expects($this->once())
+        $this->service->expects($this->once())
             ->method('getId')
             ->will($this->returnValue($id));
+
+        $firstEntity = $this->getMock('\stdClass');
 
         $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
@@ -266,8 +273,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getNewEntity', 'getDoctrineHydrator',
-                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+                'log',
+                'getNewEntity',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getService',
+                'getEntityPropertyNames',
+                'getId'
             )
         );
 
@@ -285,11 +298,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $firstEntity = $this->getMock('\stdClass', array('getId'));
-
-        $firstEntity->expects($this->once())
+        $this->service->expects($this->once())
             ->method('getId')
             ->will($this->returnValue($id));
+
+        $firstEntity = $this->getMock('\stdClass');
 
         $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
@@ -343,8 +356,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getNewEntity', 'getDoctrineHydrator',
-                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+                'log',
+                'getNewEntity',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getService',
+                'getEntityPropertyNames',
+                'getId'
             )
         );
 
@@ -362,11 +381,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $firstEntity = $this->getMock('\stdClass', array('getId'));
-
-        $firstEntity->expects($this->once())
+        $this->service->expects($this->once())
             ->method('getId')
             ->will($this->returnValue($id));
+
+        $firstEntity = $this->getMock('\stdClass');
 
         $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
@@ -414,8 +433,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getNewEntity', 'getDoctrineHydrator',
-                'dbPersist', 'dbFlush', 'getService', 'getEntityPropertyNames'
+                'log',
+                'getNewEntity',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getService',
+                'getEntityPropertyNames',
+                'getId'
             )
         );
 
@@ -434,11 +459,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $id = 7;
 
-        $firstEntity = $this->getMock('\stdClass', array('getId'));
-
-        $firstEntity->expects($this->once())
+        $this->service->expects($this->once())
             ->method('getId')
             ->will($this->returnValue($id));
+
+        $firstEntity = $this->getMock('\stdClass');
 
         $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
 
