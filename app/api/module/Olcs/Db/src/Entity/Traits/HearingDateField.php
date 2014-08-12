@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hearing date field trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 4 entities)
  */
 trait HearingDateField
 {

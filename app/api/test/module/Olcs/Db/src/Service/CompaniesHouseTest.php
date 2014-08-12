@@ -781,9 +781,9 @@ XML;
             'Results' => array(
                 array(
                     'title'       => 'Title',
-                    'firstName'   => 'Forename',
-                    'surname'     => 'Surname',
-                    'dateOfBirth' => 'DOB'
+                    'forename'   => 'Forename',
+                    'familyName'     => 'Surname',
+                    'birthDate' => 'DOB'
                 )
             )
         );

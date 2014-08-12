@@ -757,7 +757,7 @@ INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id
     (76,46,75,NULL,76,1,4,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
     (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL);
 
-INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`, `date_of_birth`,
+INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`, `birth_date`,
     `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `is_declared`, `operator_name`,
     `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
     `conviction_category_id`) VALUES
@@ -1816,7 +1816,7 @@ INSERT INTO `pi` (
     (1,1,1,73,2,1,0,0,0,0,0,1,20,NOW(),NOW(), NULL,NULL,1,NULL);
 
 INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`, `is_adjourned`,
-    `date_of_hearing`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
+    `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,1,1,NOW(),'Some Venue',NULL,NULL,1),
     (2,1,NULL,NULL,2,0,NOW(),'Some Alt. Venue',NULL,NULL,1);
 

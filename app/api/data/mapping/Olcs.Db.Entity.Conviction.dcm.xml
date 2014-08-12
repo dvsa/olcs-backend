@@ -23,7 +23,7 @@
     <field name="msi" type="boolean" column="msi" nullable="true"/>
     <field name="isDeclared" type="boolean" column="is_declared" nullable="false"/>
     <field name="operatorName" type="string" column="operator_name" length="70" nullable="true"/>
-    <field name="dateOfBirth" type="date" column="date_of_birth" nullable="true"/>
+    <field name="birthDate" type="date" column="birth_date" nullable="true"/>
     <field name="notes" type="string" column="notes" length="4000" nullable="true"/>
     <field name="takenIntoConsideration" type="string" column="taken_into_consideration" length="4000" nullable="true"/>
     <field name="categoryText" type="string" column="category_text" length="1024" nullable="true"/>

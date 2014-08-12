@@ -142,25 +142,25 @@ LEFT OUTER JOIN cases c ON c.licence=l.id
     public function findAllPersons($options)
     {
         $optionConditions = array(
-            'firstName' => array(
-                'condition' => 'p.first_name LIKE ?',
+            'forename' => array(
+                'condition' => 'p.forename LIKE ?',
                 'type' => 'LIKE'
             ),
-            'lastName' => array(
-                'condition' => 'p.surname LIKE ?',
+            'familyName' => array(
+                'condition' => 'p.familyName LIKE ?',
                 'type' => 'LIKE'
             ),
-            'dateOfBirth' => array(
+            'birthDate' => array(
                 'condition' => 'p.date_of_birth = ?',
                 'type' => 'EQUALS'
             )
         );
 
         $lookupColumn = array(
-            'name' => array('p.first_name', 'p.surname'),
-            'firstName' => 'p.first_name',
-            'lastName' => 'p.surname',
-            'dob' => 'p.date_of_birth',
+            'name' => array('p.forename', 'p.familyName'),
+            'forename' => 'p.forename',
+            'familyName' => 'p.familyName',
+            'birthDate' => 'p.birth_date',
         );
 
         $sortOrder = $this->getSortOrder($options);
@@ -191,16 +191,16 @@ LEFT OUTER JOIN cases c ON c.licence=l.id
     public function findPersonsAndLicences($options)
     {
         $optionConditions = array(
-            'firstName' => array(
-                'condition' => 'p.first_name LIKE ?',
+            'forename' => array(
+                'condition' => 'p.forename LIKE ?',
                 'type' => 'LIKE'
             ),
-            'lastName' => array(
-                'condition' => 'p.surname = ?',
+            'familyName' => array(
+                'condition' => 'p.familyName = ?',
                 'type' => 'LIKE'
             ),
-            'dateOfBirth' => array(
-                'condition' => 'p.date_of_birth LIKE ?',
+            'birthDate' => array(
+                'condition' => 'p.birth_date LIKE ?',
                 'type' => 'DATE'
             )
         );
