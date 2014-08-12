@@ -38,6 +38,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\OrganisationManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\Penalty255Field,
+        Traits\BirthDateField,
         Traits\Notes4000Field,
         Traits\CategoryText1024Field,
         Traits\CustomCreatedOnField,
@@ -126,15 +127,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="operator_name", length=70, nullable=true)
      */
     protected $operatorName;
-
-    /**
-     * Date of birth
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="date_of_birth", nullable=true)
-     */
-    protected $dateOfBirth;
 
     /**
      * Taken into consideration
@@ -368,30 +360,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getOperatorName()
     {
         return $this->operatorName;
-    }
-
-
-    /**
-     * Set the date of birth
-     *
-     * @param \DateTime $dateOfBirth
-     * @return Conviction
-     */
-    public function setDateOfBirth($dateOfBirth)
-    {
-        $this->dateOfBirth = $dateOfBirth;
-
-        return $this;
-    }
-
-    /**
-     * Get the date of birth
-     *
-     * @return \DateTime
-     */
-    public function getDateOfBirth()
-    {
-        return $this->dateOfBirth;
     }
 
 

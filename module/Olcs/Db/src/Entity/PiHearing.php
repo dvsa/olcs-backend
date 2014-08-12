@@ -29,6 +29,7 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
+        Traits\HearingDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,15 +42,6 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
     protected $isAdjourned;
-
-    /**
-     * Date of hearing
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="date_of_hearing", nullable=true)
-     */
-    protected $dateOfHearing;
 
     /**
      * Venue
@@ -82,30 +74,6 @@ class PiHearing implements Interfaces\EntityInterface
     public function getIsAdjourned()
     {
         return $this->isAdjourned;
-    }
-
-
-    /**
-     * Set the date of hearing
-     *
-     * @param \DateTime $dateOfHearing
-     * @return PiHearing
-     */
-    public function setDateOfHearing($dateOfHearing)
-    {
-        $this->dateOfHearing = $dateOfHearing;
-
-        return $this;
-    }
-
-    /**
-     * Get the date of hearing
-     *
-     * @return \DateTime
-     */
-    public function getDateOfHearing()
-    {
-        return $this->dateOfHearing;
     }
 
 

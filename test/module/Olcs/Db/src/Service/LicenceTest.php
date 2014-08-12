@@ -261,15 +261,15 @@ class LicenceTest extends PHPUnit_Framework_TestCase
     public function testFindPersonsAndLicencesWithoutPagination()
     {
         $options = array(
-            'firstName' => 'Bob',
-            'lastName' => 'John',
-            'dateOfBirth' => '01-01-',
+            'forename' => 'Bob',
+            'familyName' => 'John',
+            'birthDate' => '01-01-',
         );
 
         $expected = array(
-            ':firstName' => '%Bob%',
-            ':lastName' => '%John%',
-            ':dateOfBirth' => '01-01-%',
+            ':forename' => '%Bob%',
+            ':familyName' => '%John%',
+            ':birthDate' => '01-01-%',
         );
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
@@ -313,18 +313,18 @@ class LicenceTest extends PHPUnit_Framework_TestCase
     public function testFindPersonsAndLicencesWithPagination()
     {
         $options = array(
-            'firstName' => 'Bob',
-            'lastName' => 'John',
-            'dateOfBirth' => '01-01-',
+            'forename' => 'Bob',
+            'familyName' => 'John',
+            'birthDate' => '01-01-',
             'limit' => 20,
             'page' => 2,
-            'sort' => 'firstName'
+            'sort' => 'forename'
         );
 
         $expected = array(
-            ':firstName' => '%Bob%',
-            ':lastName' => '%John%',
-            ':dateOfBirth' => '01-01-%',
+            ':forename' => '%Bob%',
+            ':familyName' => '%John%',
+            ':birthDate' => '01-01-%',
         );
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
@@ -462,15 +462,15 @@ class LicenceTest extends PHPUnit_Framework_TestCase
     public function testFindAllPersonsWithoutPagination()
     {
         $options = array(
-            'firstName' => 'Bob',
-            'lastName' => 'John',
-            'dateOfBirth' => '01-01-1960',
+            'forename' => 'Bob',
+            'familyName' => 'John',
+            'birthDate' => '01-01-1960',
         );
 
         $expected = array(
-            ':firstName' => '%Bob%',
-            ':lastName' => '%John%',
-            ':dateOfBirth' => '01-01-1960',
+            ':forename' => '%Bob%',
+            ':familyName' => '%John%',
+            ':birthDate' => '01-01-1960',
         );
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
@@ -510,18 +510,18 @@ class LicenceTest extends PHPUnit_Framework_TestCase
     public function testFindAllPersonsWithPagination()
     {
         $options = array(
-            'firstName' => 'Bob',
-            'lastName' => 'John',
-            'dateOfBirth' => '01-01-1960',
+            'forename' => 'Bob',
+            'familyName' => 'John',
+            'birthDate' => '01-01-1960',
             'limit' => 20,
             'page' => 2,
             'sort' => 'name'
         );
 
         $expected = array(
-            ':firstName' => '%Bob%',
-            ':lastName' => '%John%',
-            ':dateOfBirth' => '01-01-1960',
+            ':forename' => '%Bob%',
+            ':familyName' => '%John%',
+            ':birthDate' => '01-01-1960',
         );
 
         $mockQuery = $this->getMock('\stdClass', array('fetchAll', 'execute'));
