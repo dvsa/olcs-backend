@@ -128,8 +128,12 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getNewEntity', 'getDoctrineHydrator',
-                'dbPersist', 'dbFlush', 'getEntityPropertyNames'
+                'log',
+                'getNewEntity',
+                'getDoctrineHydrator',
+                'dbPersist',
+                'dbFlush',
+                'getEntityPropertyNames'
             )
         );
 
