@@ -83,6 +83,20 @@ abstract class ServiceAbstract
         $this->dbPersist($entity);
         $this->dbFlush();
 
+        return $this->getId($entity);
+    }
+
+    /**
+     * Get entity id(s)
+     *
+     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
+     * difference
+     *
+     * @param EntityInterface $entity
+     * @return mixed
+     */
+    public function getId($entity)
+    {
         $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
 
         $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
