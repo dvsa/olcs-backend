@@ -64,7 +64,6 @@ class Template implements Interfaces\EntityInterface
      * Get the historys
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getHistorys()
     {

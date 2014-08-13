@@ -1,9 +1,15 @@
 {
     "name": "olcs/back-end",
     "description": "Back End Application for OLCS Project",
+    "repositories": [{
+        "type": "git",
+        "url": "https://github.com/MajorCaiger/doctrine2.git"
+    }],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
+        "doctrine/orm": "dev-master",
         "doctrine/doctrine-orm-module": "0.*",
         "phpunit/phpunit": "4.0.*",
         "gedmo/doctrine-extensions": "~2.3.9"

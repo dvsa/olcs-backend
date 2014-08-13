@@ -25,8 +25,7 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @return \Doctrine\Common\Collections\ArrayCollection
-<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @return \Doctrine\Common\Collections\ArrayCollection<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @return \<?php echo $field['@attributes']['target-entity']; ?>
 <?php else: ?>
      * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>

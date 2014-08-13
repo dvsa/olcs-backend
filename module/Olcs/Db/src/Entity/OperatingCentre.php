@@ -68,7 +68,6 @@ class OperatingCentre implements Interfaces\EntityInterface
      * Get the ad documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getAdDocuments()
     {

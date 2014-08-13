@@ -6,45 +6,37 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * PreviousConvictions Entity
+ * PreviousConviction Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="previous_convictions",
+ * @ORM\Table(name="previous_conviction",
  *    indexes={
  *        @ORM\Index(name="fk_previous_convictions_application1_idx", columns={"application_id"})
  *    }
  * )
  */
-class PreviousConvictions implements Interfaces\EntityInterface
+class PreviousConviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\ApplicationManyToOne,
+        Traits\Title32Field,
         Traits\BirthDateField,
         Traits\CategoryText1024Field,
         Traits\Notes4000Field,
         Traits\Penalty255Field;
 
     /**
-     * Previous convictionscol
+     * Conviction date
      *
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(type="string", name="previous_convictionscol", length=45, nullable=true)
+     * @ORM\Column(type="date", name="conviction_date", nullable=true)
      */
-    protected $previousConvictionscol;
-
-    /**
-     * Person title id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="person_title_id", nullable=true)
-     */
-    protected $personTitleId;
+    protected $convictionDate;
 
     /**
      * Forename
@@ -75,50 +67,26 @@ class PreviousConvictions implements Interfaces\EntityInterface
 
 
     /**
-     * Set the previous convictionscol
+     * Set the conviction date
      *
-     * @param string $previousConvictionscol
-     * @return PreviousConvictions
+     * @param \DateTime $convictionDate
+     * @return PreviousConviction
      */
-    public function setPreviousConvictionscol($previousConvictionscol)
+    public function setConvictionDate($convictionDate)
     {
-        $this->previousConvictionscol = $previousConvictionscol;
+        $this->convictionDate = $convictionDate;
 
         return $this;
     }
 
     /**
-     * Get the previous convictionscol
+     * Get the conviction date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getPreviousConvictionscol()
+    public function getConvictionDate()
     {
-        return $this->previousConvictionscol;
-    }
-
-
-    /**
-     * Set the person title id
-     *
-     * @param int $personTitleId
-     * @return PreviousConvictions
-     */
-    public function setPersonTitleId($personTitleId)
-    {
-        $this->personTitleId = $personTitleId;
-
-        return $this;
-    }
-
-    /**
-     * Get the person title id
-     *
-     * @return int
-     */
-    public function getPersonTitleId()
-    {
-        return $this->personTitleId;
+        return $this->convictionDate;
     }
 
 
@@ -126,7 +94,7 @@ class PreviousConvictions implements Interfaces\EntityInterface
      * Set the forename
      *
      * @param string $forename
-     * @return PreviousConvictions
+     * @return PreviousConviction
      */
     public function setForename($forename)
     {
@@ -150,7 +118,7 @@ class PreviousConvictions implements Interfaces\EntityInterface
      * Set the family name
      *
      * @param string $familyName
-     * @return PreviousConvictions
+     * @return PreviousConviction
      */
     public function setFamilyName($familyName)
     {
@@ -174,7 +142,7 @@ class PreviousConvictions implements Interfaces\EntityInterface
      * Set the court fpn
      *
      * @param string $courtFpn
-     * @return PreviousConvictions
+     * @return PreviousConviction
      */
     public function setCourtFpn($courtFpn)
     {

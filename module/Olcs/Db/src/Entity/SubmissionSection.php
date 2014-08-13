@@ -65,7 +65,6 @@ class SubmissionSection implements Interfaces\EntityInterface
      * Get the cases
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getCases()
     {
