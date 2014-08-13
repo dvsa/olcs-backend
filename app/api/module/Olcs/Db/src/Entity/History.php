@@ -128,7 +128,6 @@ class History implements Interfaces\EntityInterface
      * Get the templates
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getTemplates()
     {

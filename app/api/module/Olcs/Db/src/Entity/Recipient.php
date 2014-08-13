@@ -114,7 +114,6 @@ class Recipient implements Interfaces\EntityInterface
      * Get the traffic areas
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getTrafficAreas()
     {

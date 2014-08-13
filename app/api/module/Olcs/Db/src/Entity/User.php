@@ -179,7 +179,6 @@ class User implements Interfaces\EntityInterface
      * Get the organisation users
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getOrganisationUsers()
     {

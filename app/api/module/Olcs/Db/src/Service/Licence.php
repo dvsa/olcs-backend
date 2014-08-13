@@ -102,7 +102,8 @@ class Licence extends ServiceAbstract
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.*, o.*, a.*, app.id as appNumber, app.status as appStatus,
+        // @todo Need to know how to get trading_as now, maybe the first one from trading names?
+        $dataSql = 'SELECT l.*, o.*, o.type as organisation_type, a.*, app.id as appNumber, app.status as appStatus,
             l.lic_no AS licNo, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
@@ -110,11 +111,11 @@ class Licence extends ServiceAbstract
         // Common part of the query
         $sql = 'FROM organisation o
 INNER JOIN licence l ON l.organisation_id = o.id
-LEFT JOIN application app ON app.licence_uid = l.id
-LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_details_type = \'correspondence\')
+LEFT JOIN application app ON app.licence_id = l.id
+LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_type = \'ct_corr\')
 LEFT JOIN address a ON cd.address_id = a.id
-LEFT JOIN trading_name tm ON l.id = tm.F_Licence_UID
-LEFT OUTER JOIN cases c ON c.licence=l.id
+LEFT JOIN trading_name tm ON l.id = tm.licence_id
+LEFT OUTER JOIN cases c ON c.licence_id = l.id
 ' . $where;
 
         $dataSql .= $sql . ' GROUP BY l.id ' . $orderByClause . $limitClause;

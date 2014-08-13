@@ -505,7 +505,6 @@ class BusReg implements Interfaces\EntityInterface
      * Get the variation reasons
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getVariationReasons()
     {
@@ -567,7 +566,6 @@ class BusReg implements Interfaces\EntityInterface
      * Get the bus service types
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getBusServiceTypes()
     {
@@ -1517,7 +1515,6 @@ class BusReg implements Interfaces\EntityInterface
      * Get the documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getDocuments()
     {

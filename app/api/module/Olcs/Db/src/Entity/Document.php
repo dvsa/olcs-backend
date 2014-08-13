@@ -390,7 +390,6 @@ class Document implements Interfaces\EntityInterface
      * Get the emails
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getEmails()
     {

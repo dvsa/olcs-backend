@@ -73,7 +73,6 @@ class BusServiceType implements Interfaces\EntityInterface
      * Get the bus regs
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getBusRegs()
     {

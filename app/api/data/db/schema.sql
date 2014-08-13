@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `birth_date` DATE NULL,
   `birth_place` VARCHAR(35) NULL,
   `other_name` VARCHAR(35) NULL,
+  `application_id` INT NULL,
   `title` VARCHAR(32) NULL,
   `title_other` VARCHAR(20) NULL COMMENT 'Populated it title is other in dropdown',
   `created_by` INT NULL,
@@ -106,9 +107,15 @@ CREATE TABLE IF NOT EXISTS `person` (
   `deleted_date` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
+  INDEX `fk_person_application_idx` (`application_id` ASC),
   INDEX `fk_person_user1_idx` (`created_by` ASC),
   INDEX `fk_person_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_person_user1`
+   CONSTRAINT `fk_person_application`
+    FOREIGN KEY (`application_id`)
+    REFERENCES `application` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+   CONSTRAINT `fk_person_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
@@ -4585,12 +4592,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `previous_convictions`
+-- Table `previous_conviction`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `previous_convictions` (
+CREATE TABLE IF NOT EXISTS `previous_conviction` (
   `id` INT NOT NULL,
-  `previous_convictionscol` VARCHAR(45) NULL,
-  `person_title_id` INT NULL,
+  `conviction_date` DATE NULL,
+  `title` VARCHAR(32) NULL,
   `forename` VARCHAR(35) NOT NULL,
   `family_name` VARCHAR(35) NOT NULL,
   `birth_date` DATE NULL,

@@ -469,7 +469,6 @@ class Vehicle implements Interfaces\EntityInterface
      * Get the licence vehicles
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getLicenceVehicles()
     {

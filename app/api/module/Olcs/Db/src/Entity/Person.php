@@ -17,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="person",
  *    indexes={
+ *        @ORM\Index(name="fk_person_application_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_person_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_person_user2_idx", columns={"last_modified_by"})
  *    }
@@ -28,7 +29,9 @@ class Person implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\BirthDateField,
+        Traits\Title32Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomDeletedDateField,
@@ -69,15 +72,6 @@ class Person implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_name", length=35, nullable=true)
      */
     protected $otherName;
-
-    /**
-     * Title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="title", length=32, nullable=true)
-     */
-    protected $title;
 
     /**
      * Title other
@@ -203,30 +197,6 @@ class Person implements Interfaces\EntityInterface
 
 
     /**
-     * Set the title
-     *
-     * @param string $title
-     * @return Person
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-
-    /**
      * Set the title other
      *
      * @param string $titleOther
@@ -267,7 +237,6 @@ class Person implements Interfaces\EntityInterface
      * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getContactDetails()
     {

@@ -390,7 +390,6 @@ class Organisation implements Interfaces\EntityInterface
      * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getContactDetails()
     {
@@ -452,7 +451,6 @@ class Organisation implements Interfaces\EntityInterface
      * Get the licences
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getLicences()
     {
@@ -514,7 +512,6 @@ class Organisation implements Interfaces\EntityInterface
      * Get the trading names
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getTradingNames()
     {

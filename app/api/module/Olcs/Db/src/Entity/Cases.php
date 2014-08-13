@@ -226,7 +226,6 @@ class Cases implements Interfaces\EntityInterface
      * Get the legacy offences
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getLegacyOffences()
     {
@@ -288,7 +287,6 @@ class Cases implements Interfaces\EntityInterface
      * Get the submission sections
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getSubmissionSections()
     {
@@ -566,7 +564,6 @@ class Cases implements Interfaces\EntityInterface
      * Get the documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getDocuments()
     {

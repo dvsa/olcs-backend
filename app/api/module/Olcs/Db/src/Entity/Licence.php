@@ -657,7 +657,6 @@ class Licence implements Interfaces\EntityInterface
      * Get the applications
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getApplications()
     {
@@ -719,7 +718,6 @@ class Licence implements Interfaces\EntityInterface
      * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getContactDetails()
     {
@@ -781,7 +779,6 @@ class Licence implements Interfaces\EntityInterface
      * Get the documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getDocuments()
     {
@@ -843,7 +840,6 @@ class Licence implements Interfaces\EntityInterface
      * Get the licence vehicles
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getLicenceVehicles()
     {
@@ -905,7 +901,6 @@ class Licence implements Interfaces\EntityInterface
      * Get the workshops
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getWorkshops()
     {

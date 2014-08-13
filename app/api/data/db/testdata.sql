@@ -1777,7 +1777,7 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `title`, `birth_date`, `forename`, `family_name`,
     `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
-    (4,NULL,NULL,NULL,'1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL),    
+    (4,NULL,NULL,NULL,'1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL),
     (9,NULL,NULL,NULL,'1960-02-15 00:00:00','John','Smith',NULL,NULL,NULL,1,NULL),
     (10,NULL,NULL,NULL,'1965-07-12 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL),
     (11,NULL,NULL,NULL,'1970-04-14 00:00:00','Joe','Lambert',NULL,NULL,NULL,1,NULL),

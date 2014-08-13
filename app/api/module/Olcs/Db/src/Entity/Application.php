@@ -1238,7 +1238,6 @@ class Application implements Interfaces\EntityInterface
      * Get the documents
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getDocuments()
     {

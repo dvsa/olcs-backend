@@ -465,7 +465,6 @@ class Address implements Interfaces\EntityInterface
      * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getContactDetails()
     {

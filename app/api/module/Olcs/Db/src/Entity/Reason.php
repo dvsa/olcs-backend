@@ -96,7 +96,6 @@ class Reason implements Interfaces\EntityInterface
      * Get the propose to revokes
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getProposeToRevokes()
     {

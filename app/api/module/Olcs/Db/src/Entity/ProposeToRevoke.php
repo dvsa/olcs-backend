@@ -88,7 +88,6 @@ class ProposeToRevoke implements Interfaces\EntityInterface
      * Get the reasons
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
-
      */
     public function getReasons()
     {
