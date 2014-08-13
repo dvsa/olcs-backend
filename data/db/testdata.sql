@@ -328,6 +328,7 @@ INSERT INTO `ref_data_category` (`id`) VALUES
     ('person_title'),
     ('pi_status'),
     ('phone_contact_type'),
+    ('prev_lic_type'),
     ('prohibition_type'),
     ('publication_status'),
     ('stay_status'),
@@ -545,6 +546,15 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_status', 'pi_s_reg', 'PI Registered', 'RegisterPI'),
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
+
+    ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
+    ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
+    ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
+    ('prev_licence_type', 'prev_been_revoked', 'Named person on licence has had a previous licence revoked, curtailed or suspended', null),
+    ('prev_licence_type', 'prev_been_at_pi', 'Named person on licence has been to a PI', null),
+    ('prev_licence_type', 'prev_been_disqualified_tc', 'Named person on licence has been disqualified by a TC', null),
+    ('prev_licence_type', 'prev_has_purchased_assets', 'Named person or company has purchased a company with a licence in the last 12 months', null),
+
     ('prohibition_type', 'pro_t_si', 'Immediate (S)', 'SI'),
     ('prohibition_type', 'pro_t_sd', 'Delayed (S)', 'SD'),
     ('prohibition_type', 'pro_t_sv', 'Variation (S)', 'SV'),

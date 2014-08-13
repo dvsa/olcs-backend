@@ -14,7 +14,7 @@ trait IsDeletedField
     /**
      * Is deleted
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
      */
@@ -23,7 +23,7 @@ trait IsDeletedField
     /**
      * Set the is deleted
      *
-     * @param unknown $isDeleted
+     * @param string $isDeleted
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsDeleted($isDeleted)
@@ -36,7 +36,7 @@ trait IsDeletedField
     /**
      * Get the is deleted
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDeleted()
     {

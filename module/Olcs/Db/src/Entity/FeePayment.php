@@ -40,7 +40,7 @@ class FeePayment implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Payment
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment", fetch="LAZY")
      * @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
      */
     protected $payment;
@@ -68,5 +68,4 @@ class FeePayment implements Interfaces\EntityInterface
     {
         return $this->payment;
     }
-
 }

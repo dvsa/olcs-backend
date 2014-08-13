@@ -37,7 +37,7 @@ class PiReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Reason
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Reason")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Reason", fetch="LAZY")
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
      */
     protected $reason;
@@ -65,5 +65,4 @@ class PiReason implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
-
 }

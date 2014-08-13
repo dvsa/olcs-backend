@@ -47,7 +47,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas", fetch="LAZY")
      */
     protected $recipients;
 
@@ -101,7 +101,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->id;
     }
-
 
     /**
      * Set the recipient
@@ -163,7 +162,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the txc name
      *
@@ -186,7 +184,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->txcName;
     }
-
 
     /**
      * Set the document
@@ -247,5 +244,4 @@ class TrafficArea implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

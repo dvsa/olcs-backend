@@ -27,7 +27,8 @@ class PreviousConviction implements Interfaces\EntityInterface
         Traits\BirthDateField,
         Traits\CategoryText1024Field,
         Traits\Notes4000Field,
-        Traits\Penalty255Field;
+        Traits\Penalty255Field,
+        Traits\CustomVersionField;
 
     /**
      * Conviction date
@@ -89,7 +90,6 @@ class PreviousConviction implements Interfaces\EntityInterface
         return $this->convictionDate;
     }
 
-
     /**
      * Set the forename
      *
@@ -112,7 +112,6 @@ class PreviousConviction implements Interfaces\EntityInterface
     {
         return $this->forename;
     }
-
 
     /**
      * Set the family name
@@ -137,7 +136,6 @@ class PreviousConviction implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
-
     /**
      * Set the court fpn
      *
@@ -160,5 +158,4 @@ class PreviousConviction implements Interfaces\EntityInterface
     {
         return $this->courtFpn;
     }
-
 }

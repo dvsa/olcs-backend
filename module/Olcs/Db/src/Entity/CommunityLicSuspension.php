@@ -36,7 +36,7 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
     /**
      * Is actioned
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_actioned", nullable=true)
      */
@@ -46,7 +46,7 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
     /**
      * Set the is actioned
      *
-     * @param unknown $isActioned
+     * @param string $isActioned
      * @return CommunityLicSuspension
      */
     public function setIsActioned($isActioned)
@@ -59,11 +59,10 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
     /**
      * Get the is actioned
      *
-     * @return unknown
+     * @return string
      */
     public function getIsActioned()
     {
         return $this->isActioned;
     }
-
 }

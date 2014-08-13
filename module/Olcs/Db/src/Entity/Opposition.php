@@ -42,7 +42,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer", fetch="LAZY")
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id")
      */
     protected $opposer;
@@ -50,7 +50,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is representation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_representation", nullable=false)
      */
@@ -59,7 +59,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is copied
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_copied", nullable=false)
      */
@@ -77,7 +77,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is in time
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_in_time", nullable=false)
      */
@@ -86,7 +86,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is public inquiry
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false)
      */
@@ -95,7 +95,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is valid
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_valid", nullable=false)
      */
@@ -151,11 +151,10 @@ class Opposition implements Interfaces\EntityInterface
         return $this->opposer;
     }
 
-
     /**
      * Set the is representation
      *
-     * @param unknown $isRepresentation
+     * @param string $isRepresentation
      * @return Opposition
      */
     public function setIsRepresentation($isRepresentation)
@@ -168,18 +167,17 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is representation
      *
-     * @return unknown
+     * @return string
      */
     public function getIsRepresentation()
     {
         return $this->isRepresentation;
     }
 
-
     /**
      * Set the is copied
      *
-     * @param unknown $isCopied
+     * @param string $isCopied
      * @return Opposition
      */
     public function setIsCopied($isCopied)
@@ -192,13 +190,12 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is copied
      *
-     * @return unknown
+     * @return string
      */
     public function getIsCopied()
     {
         return $this->isCopied;
     }
-
 
     /**
      * Set the raised date
@@ -223,11 +220,10 @@ class Opposition implements Interfaces\EntityInterface
         return $this->raisedDate;
     }
 
-
     /**
      * Set the is in time
      *
-     * @param unknown $isInTime
+     * @param string $isInTime
      * @return Opposition
      */
     public function setIsInTime($isInTime)
@@ -240,18 +236,17 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is in time
      *
-     * @return unknown
+     * @return string
      */
     public function getIsInTime()
     {
         return $this->isInTime;
     }
 
-
     /**
      * Set the is public inquiry
      *
-     * @param unknown $isPublicInquiry
+     * @param string $isPublicInquiry
      * @return Opposition
      */
     public function setIsPublicInquiry($isPublicInquiry)
@@ -264,18 +259,17 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is public inquiry
      *
-     * @return unknown
+     * @return string
      */
     public function getIsPublicInquiry()
     {
         return $this->isPublicInquiry;
     }
 
-
     /**
      * Set the is valid
      *
-     * @param unknown $isValid
+     * @param string $isValid
      * @return Opposition
      */
     public function setIsValid($isValid)
@@ -288,13 +282,12 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is valid
      *
-     * @return unknown
+     * @return string
      */
     public function getIsValid()
     {
         return $this->isValid;
     }
-
 
     /**
      * Set the valid notes
@@ -318,7 +311,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->validNotes;
     }
-
 
     /**
      * Set the document
@@ -379,5 +371,4 @@ class Opposition implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

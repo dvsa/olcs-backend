@@ -45,7 +45,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="case_type", referencedColumnName="id")
      */
     protected $caseType;
@@ -55,7 +55,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases", fetch="LAZY")
      * @ORM\JoinTable(name="legacy_case_offence",
      *     joinColumns={
      *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
@@ -72,7 +72,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionSection", inversedBy="cases")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionSection", inversedBy="cases", fetch="LAZY")
      * @ORM\JoinTable(name="case_submission_section",
      *     joinColumns={
      *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
@@ -123,7 +123,7 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Is impounding
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
      */
@@ -208,7 +208,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->caseType;
     }
 
-
     /**
      * Set the legacy offence
      *
@@ -268,7 +267,6 @@ class Cases implements Interfaces\EntityInterface
 
         return $this;
     }
-
 
     /**
      * Set the submission section
@@ -330,7 +328,6 @@ class Cases implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the ecms no
      *
@@ -353,7 +350,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->ecmsNo;
     }
-
 
     /**
      * Set the open date
@@ -378,7 +374,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->openDate;
     }
 
-
     /**
      * Set the close date
      *
@@ -401,7 +396,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->closeDate;
     }
-
 
     /**
      * Set the description
@@ -426,11 +420,10 @@ class Cases implements Interfaces\EntityInterface
         return $this->description;
     }
 
-
     /**
      * Set the is impounding
      *
-     * @param unknown $isImpounding
+     * @param string $isImpounding
      * @return Cases
      */
     public function setIsImpounding($isImpounding)
@@ -443,13 +436,12 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Get the is impounding
      *
-     * @return unknown
+     * @return string
      */
     public function getIsImpounding()
     {
         return $this->isImpounding;
     }
-
 
     /**
      * Set the erru originating authority
@@ -474,7 +466,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruOriginatingAuthority;
     }
 
-
     /**
      * Set the erru transport undertaking name
      *
@@ -497,7 +488,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruTransportUndertakingName;
     }
-
 
     /**
      * Set the erru vrm
@@ -522,7 +512,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruVrm;
     }
 
-
     /**
      * Set the annual test history
      *
@@ -545,7 +534,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->annualTestHistory;
     }
-
 
     /**
      * Set the document
@@ -606,5 +594,4 @@ class Cases implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

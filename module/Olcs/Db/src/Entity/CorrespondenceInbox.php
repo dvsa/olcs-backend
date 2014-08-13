@@ -36,7 +36,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Archived
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="archived", nullable=true)
      */
@@ -45,7 +45,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Accessed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="accessed", nullable=true)
      */
@@ -54,7 +54,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Email reminder sent
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="email_reminder_sent", nullable=true)
      */
@@ -63,7 +63,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Printed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="printed", nullable=true)
      */
@@ -73,7 +73,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Set the archived
      *
-     * @param unknown $archived
+     * @param string $archived
      * @return CorrespondenceInbox
      */
     public function setArchived($archived)
@@ -86,18 +86,17 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the archived
      *
-     * @return unknown
+     * @return string
      */
     public function getArchived()
     {
         return $this->archived;
     }
 
-
     /**
      * Set the accessed
      *
-     * @param unknown $accessed
+     * @param string $accessed
      * @return CorrespondenceInbox
      */
     public function setAccessed($accessed)
@@ -110,18 +109,17 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the accessed
      *
-     * @return unknown
+     * @return string
      */
     public function getAccessed()
     {
         return $this->accessed;
     }
 
-
     /**
      * Set the email reminder sent
      *
-     * @param unknown $emailReminderSent
+     * @param string $emailReminderSent
      * @return CorrespondenceInbox
      */
     public function setEmailReminderSent($emailReminderSent)
@@ -134,18 +132,17 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the email reminder sent
      *
-     * @return unknown
+     * @return string
      */
     public function getEmailReminderSent()
     {
         return $this->emailReminderSent;
     }
 
-
     /**
      * Set the printed
      *
-     * @param unknown $printed
+     * @param string $printed
      * @return CorrespondenceInbox
      */
     public function setPrinted($printed)
@@ -158,11 +155,10 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     /**
      * Get the printed
      *
-     * @return unknown
+     * @return string
      */
     public function getPrinted()
     {
         return $this->printed;
     }
-
 }

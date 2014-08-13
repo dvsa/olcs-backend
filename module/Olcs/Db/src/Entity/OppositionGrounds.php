@@ -37,7 +37,7 @@ class OppositionGrounds implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="grounds", referencedColumnName="id")
      */
     protected $grounds;
@@ -45,7 +45,7 @@ class OppositionGrounds implements Interfaces\EntityInterface
     /**
      * Is representation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_representation", nullable=false)
      */
@@ -75,11 +75,10 @@ class OppositionGrounds implements Interfaces\EntityInterface
         return $this->grounds;
     }
 
-
     /**
      * Set the is representation
      *
-     * @param unknown $isRepresentation
+     * @param string $isRepresentation
      * @return OppositionGrounds
      */
     public function setIsRepresentation($isRepresentation)
@@ -92,11 +91,10 @@ class OppositionGrounds implements Interfaces\EntityInterface
     /**
      * Get the is representation
      *
-     * @return unknown
+     * @return string
      */
     public function getIsRepresentation()
     {
         return $this->isRepresentation;
     }
-
 }

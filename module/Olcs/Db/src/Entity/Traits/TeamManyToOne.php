@@ -16,7 +16,7 @@ trait TeamManyToOne
      *
      * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
     protected $team;

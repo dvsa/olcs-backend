@@ -75,7 +75,6 @@ class LocalAuthority implements Interfaces\EntityInterface
         return $this->txcName;
     }
 
-
     /**
      * Set the naptan code
      *
@@ -98,5 +97,4 @@ class LocalAuthority implements Interfaces\EntityInterface
     {
         return $this->naptanCode;
     }
-
 }

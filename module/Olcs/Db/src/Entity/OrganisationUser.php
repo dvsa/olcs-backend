@@ -42,7 +42,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", inversedBy="organisationUsers")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY", inversedBy="organisationUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -50,7 +50,7 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Is administrator
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_administrator", nullable=false)
      */
@@ -59,7 +59,7 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Sftp access
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="sftp_access", nullable=false)
      */
@@ -89,11 +89,10 @@ class OrganisationUser implements Interfaces\EntityInterface
         return $this->user;
     }
 
-
     /**
      * Set the is administrator
      *
-     * @param unknown $isAdministrator
+     * @param string $isAdministrator
      * @return OrganisationUser
      */
     public function setIsAdministrator($isAdministrator)
@@ -106,18 +105,17 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Get the is administrator
      *
-     * @return unknown
+     * @return string
      */
     public function getIsAdministrator()
     {
         return $this->isAdministrator;
     }
 
-
     /**
      * Set the sftp access
      *
-     * @param unknown $sftpAccess
+     * @param string $sftpAccess
      * @return OrganisationUser
      */
     public function setSftpAccess($sftpAccess)
@@ -130,11 +128,10 @@ class OrganisationUser implements Interfaces\EntityInterface
     /**
      * Get the sftp access
      *
-     * @return unknown
+     * @return string
      */
     public function getSftpAccess()
     {
         return $this->sftpAccess;
     }
-
 }

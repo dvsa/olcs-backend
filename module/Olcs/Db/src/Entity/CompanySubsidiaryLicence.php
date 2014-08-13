@@ -40,7 +40,7 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CompanySubsidiary
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary", fetch="LAZY")
      * @ORM\JoinColumn(name="company_subsidiary_id", referencedColumnName="id")
      */
     protected $companySubsidiary;
@@ -68,5 +68,4 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
     {
         return $this->companySubsidiary;
     }
-
 }

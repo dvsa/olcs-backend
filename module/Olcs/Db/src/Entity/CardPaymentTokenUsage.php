@@ -35,7 +35,7 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Payment
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment", fetch="LAZY")
      * @ORM\JoinColumn(name="payment_uid", referencedColumnName="id")
      */
     protected $paymentUid;
@@ -82,7 +82,6 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
         return $this->paymentUid;
     }
 
-
     /**
      * Set the token
      *
@@ -106,7 +105,6 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
         return $this->token;
     }
 
-
     /**
      * Set the status
      *
@@ -129,5 +127,4 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
     {
         return $this->status;
     }
-
 }

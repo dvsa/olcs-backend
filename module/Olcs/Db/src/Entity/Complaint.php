@@ -42,7 +42,7 @@ class Complaint implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id")
      */
     protected $complaintType;
@@ -52,7 +52,7 @@ class Complaint implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
      * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id")
      */
     protected $complainantContactDetails;
@@ -108,7 +108,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintType;
     }
 
-
     /**
      * Set the complainant contact details
      *
@@ -131,7 +130,6 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->complainantContactDetails;
     }
-
 
     /**
      * Set the complaint date
@@ -156,7 +154,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintDate;
     }
 
-
     /**
      * Set the value
      *
@@ -180,7 +177,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->value;
     }
 
-
     /**
      * Set the driver id
      *
@@ -203,5 +199,4 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->driverId;
     }
-
 }

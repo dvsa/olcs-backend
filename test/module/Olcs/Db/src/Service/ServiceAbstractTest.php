@@ -662,7 +662,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with($this->equalTo($resultLimit));
         // End: Pagination
 
-        $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder'));
+        $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder', 'getClassMetadata'));
+
+        $mockEntityManager->expects($this->any())
+            ->method('getClassMetadata')
+            ->will($this->returnValue(array()));
 
         $mockEntityManager->expects($this->once())
             ->method('createQueryBuilder')
@@ -675,7 +679,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getValidSearchFields')
             ->will($this->returnValue($searchableFields));
 
-        $this->service->expects($this->once())
+        $this->service->expects($this->any())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
 
@@ -806,7 +810,11 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with($this->equalTo($resultLimit));
         // End: Pagination
 
-        $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder'));
+        $mockEntityManager = $this->getMock('\stdClass', array('createQueryBuilder', 'getClassMetadata'));
+
+        $mockEntityManager->expects($this->any())
+            ->method('getClassMetadata')
+            ->will($this->returnValue(array()));
 
         $mockEntityManager->expects($this->once())
             ->method('createQueryBuilder')
@@ -819,7 +827,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getValidSearchFields')
             ->will($this->returnValue($searchableFields));
 
-        $this->service->expects($this->once())
+        $this->service->expects($this->any())
             ->method('getEntityManager')
             ->will($this->returnValue($mockEntityManager));
 

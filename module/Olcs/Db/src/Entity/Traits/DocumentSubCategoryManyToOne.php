@@ -16,7 +16,7 @@ trait DocumentSubCategoryManyToOne
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id")
      */
     protected $documentSubCategory;

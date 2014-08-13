@@ -36,7 +36,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Bank holiday change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="bank_holiday_change", nullable=false)
      */
@@ -45,7 +45,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Unforseen change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="unforseen_change", nullable=false)
      */
@@ -63,7 +63,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Timetable change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="timetable_change", nullable=false)
      */
@@ -81,7 +81,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Replacement change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="replacement_change", nullable=false)
      */
@@ -99,7 +99,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Holiday change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="holiday_change", nullable=false)
      */
@@ -117,7 +117,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Trc change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="trc_change", nullable=false)
      */
@@ -135,7 +135,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Police change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="police_change", nullable=false)
      */
@@ -153,7 +153,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Special occasion change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="special_occasion_change", nullable=false)
      */
@@ -171,7 +171,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Connection change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="connection_change", nullable=false)
      */
@@ -189,7 +189,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Not available change
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="not_available_change", nullable=false)
      */
@@ -208,7 +208,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Set the bank holiday change
      *
-     * @param unknown $bankHolidayChange
+     * @param string $bankHolidayChange
      * @return BusShortNotice
      */
     public function setBankHolidayChange($bankHolidayChange)
@@ -221,18 +221,17 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the bank holiday change
      *
-     * @return unknown
+     * @return string
      */
     public function getBankHolidayChange()
     {
         return $this->bankHolidayChange;
     }
 
-
     /**
      * Set the unforseen change
      *
-     * @param unknown $unforseenChange
+     * @param string $unforseenChange
      * @return BusShortNotice
      */
     public function setUnforseenChange($unforseenChange)
@@ -245,13 +244,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the unforseen change
      *
-     * @return unknown
+     * @return string
      */
     public function getUnforseenChange()
     {
         return $this->unforseenChange;
     }
-
 
     /**
      * Set the unforseen detail
@@ -276,11 +274,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->unforseenDetail;
     }
 
-
     /**
      * Set the timetable change
      *
-     * @param unknown $timetableChange
+     * @param string $timetableChange
      * @return BusShortNotice
      */
     public function setTimetableChange($timetableChange)
@@ -293,13 +290,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the timetable change
      *
-     * @return unknown
+     * @return string
      */
     public function getTimetableChange()
     {
         return $this->timetableChange;
     }
-
 
     /**
      * Set the timetable detail
@@ -324,11 +320,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->timetableDetail;
     }
 
-
     /**
      * Set the replacement change
      *
-     * @param unknown $replacementChange
+     * @param string $replacementChange
      * @return BusShortNotice
      */
     public function setReplacementChange($replacementChange)
@@ -341,13 +336,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the replacement change
      *
-     * @return unknown
+     * @return string
      */
     public function getReplacementChange()
     {
         return $this->replacementChange;
     }
-
 
     /**
      * Set the replacement detail
@@ -372,11 +366,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->replacementDetail;
     }
 
-
     /**
      * Set the holiday change
      *
-     * @param unknown $holidayChange
+     * @param string $holidayChange
      * @return BusShortNotice
      */
     public function setHolidayChange($holidayChange)
@@ -389,13 +382,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the holiday change
      *
-     * @return unknown
+     * @return string
      */
     public function getHolidayChange()
     {
         return $this->holidayChange;
     }
-
 
     /**
      * Set the holiday detail
@@ -420,11 +412,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->holidayDetail;
     }
 
-
     /**
      * Set the trc change
      *
-     * @param unknown $trcChange
+     * @param string $trcChange
      * @return BusShortNotice
      */
     public function setTrcChange($trcChange)
@@ -437,13 +428,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the trc change
      *
-     * @return unknown
+     * @return string
      */
     public function getTrcChange()
     {
         return $this->trcChange;
     }
-
 
     /**
      * Set the trc detail
@@ -468,11 +458,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->trcDetail;
     }
 
-
     /**
      * Set the police change
      *
-     * @param unknown $policeChange
+     * @param string $policeChange
      * @return BusShortNotice
      */
     public function setPoliceChange($policeChange)
@@ -485,13 +474,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the police change
      *
-     * @return unknown
+     * @return string
      */
     public function getPoliceChange()
     {
         return $this->policeChange;
     }
-
 
     /**
      * Set the police detail
@@ -516,11 +504,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->policeDetail;
     }
 
-
     /**
      * Set the special occasion change
      *
-     * @param unknown $specialOccasionChange
+     * @param string $specialOccasionChange
      * @return BusShortNotice
      */
     public function setSpecialOccasionChange($specialOccasionChange)
@@ -533,13 +520,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the special occasion change
      *
-     * @return unknown
+     * @return string
      */
     public function getSpecialOccasionChange()
     {
         return $this->specialOccasionChange;
     }
-
 
     /**
      * Set the special occasion detail
@@ -564,11 +550,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->specialOccasionDetail;
     }
 
-
     /**
      * Set the connection change
      *
-     * @param unknown $connectionChange
+     * @param string $connectionChange
      * @return BusShortNotice
      */
     public function setConnectionChange($connectionChange)
@@ -581,13 +566,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the connection change
      *
-     * @return unknown
+     * @return string
      */
     public function getConnectionChange()
     {
         return $this->connectionChange;
     }
-
 
     /**
      * Set the connection detail
@@ -612,11 +596,10 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->connectionDetail;
     }
 
-
     /**
      * Set the not available change
      *
-     * @param unknown $notAvailableChange
+     * @param string $notAvailableChange
      * @return BusShortNotice
      */
     public function setNotAvailableChange($notAvailableChange)
@@ -629,13 +612,12 @@ class BusShortNotice implements Interfaces\EntityInterface
     /**
      * Get the not available change
      *
-     * @return unknown
+     * @return string
      */
     public function getNotAvailableChange()
     {
         return $this->notAvailableChange;
     }
-
 
     /**
      * Set the not available detail
@@ -659,5 +641,4 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->notAvailableDetail;
     }
-
 }

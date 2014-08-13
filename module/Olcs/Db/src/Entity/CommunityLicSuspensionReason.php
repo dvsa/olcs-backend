@@ -39,7 +39,7 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CommunityLicSuspensionReasonType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicSuspensionReasonType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicSuspensionReasonType", fetch="LAZY")
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
      */
     protected $reason;
@@ -49,7 +49,7 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CommunityLicSuspension
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicSuspension")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicSuspension", fetch="LAZY")
      * @ORM\JoinColumn(name="community_lic_suspension_id", referencedColumnName="id")
      */
     protected $communityLicSuspension;
@@ -78,7 +78,6 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
-
     /**
      * Set the community lic suspension
      *
@@ -101,5 +100,4 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
     {
         return $this->communityLicSuspension;
     }
-
 }

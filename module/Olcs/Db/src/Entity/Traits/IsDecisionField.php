@@ -14,7 +14,7 @@ trait IsDecisionField
     /**
      * Is decision
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_decision", nullable=false)
      */
@@ -23,7 +23,7 @@ trait IsDecisionField
     /**
      * Set the is decision
      *
-     * @param unknown $isDecision
+     * @param string $isDecision
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsDecision($isDecision)
@@ -36,7 +36,7 @@ trait IsDecisionField
     /**
      * Get the is decision
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDecision()
     {

@@ -44,7 +44,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiCategoryType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id")
      */
     protected $siCategoryType;
@@ -54,7 +54,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id")
      */
     protected $erruResponseUser;
@@ -64,7 +64,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
      * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id")
      */
     protected $memberStateCode;
@@ -81,7 +81,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
     /**
      * Erru response sent
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false)
      */
@@ -147,7 +147,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->siCategoryType;
     }
 
-
     /**
      * Set the erru response user
      *
@@ -170,7 +169,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->erruResponseUser;
     }
-
 
     /**
      * Set the member state code
@@ -195,7 +193,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->memberStateCode;
     }
 
-
     /**
      * Set the check date
      *
@@ -219,11 +216,10 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->checkDate;
     }
 
-
     /**
      * Set the erru response sent
      *
-     * @param unknown $erruResponseSent
+     * @param string $erruResponseSent
      * @return SeriousInfringement
      */
     public function setErruResponseSent($erruResponseSent)
@@ -236,13 +232,12 @@ class SeriousInfringement implements Interfaces\EntityInterface
     /**
      * Get the erru response sent
      *
-     * @return unknown
+     * @return string
      */
     public function getErruResponseSent()
     {
         return $this->erruResponseSent;
     }
-
 
     /**
      * Set the erru response time
@@ -267,7 +262,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->erruResponseTime;
     }
 
-
     /**
      * Set the infringement date
      *
@@ -290,7 +284,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->infringementDate;
     }
-
 
     /**
      * Set the notification number
@@ -315,7 +308,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->notificationNumber;
     }
 
-
     /**
      * Set the reason
      *
@@ -338,5 +330,4 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
-
 }

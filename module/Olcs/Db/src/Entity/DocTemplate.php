@@ -42,7 +42,7 @@ class DocTemplate implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocProcess
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocProcess")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocProcess", fetch="LAZY")
      * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id")
      */
     protected $docProcess;
@@ -50,7 +50,7 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Is ni
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
@@ -59,7 +59,7 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Suppress from op
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="suppress_from_op", nullable=false)
      */
@@ -89,11 +89,10 @@ class DocTemplate implements Interfaces\EntityInterface
         return $this->docProcess;
     }
 
-
     /**
      * Set the is ni
      *
-     * @param unknown $isNi
+     * @param string $isNi
      * @return DocTemplate
      */
     public function setIsNi($isNi)
@@ -106,18 +105,17 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Get the is ni
      *
-     * @return unknown
+     * @return string
      */
     public function getIsNi()
     {
         return $this->isNi;
     }
 
-
     /**
      * Set the suppress from op
      *
-     * @param unknown $suppressFromOp
+     * @param string $suppressFromOp
      * @return DocTemplate
      */
     public function setSuppressFromOp($suppressFromOp)
@@ -130,11 +128,10 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Get the suppress from op
      *
-     * @return unknown
+     * @return string
      */
     public function getSuppressFromOp()
     {
         return $this->suppressFromOp;
     }
-
 }

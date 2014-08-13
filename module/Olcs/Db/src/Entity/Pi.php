@@ -48,7 +48,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_status", referencedColumnName="id")
      */
     protected $piStatus;
@@ -56,7 +56,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type app new
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_app_new", nullable=false)
      */
@@ -65,7 +65,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type app var
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_app_var", nullable=false)
      */
@@ -74,7 +74,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type disciplinary
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_disciplinary", nullable=false)
      */
@@ -83,7 +83,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type env new
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_env_new", nullable=false)
      */
@@ -92,7 +92,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type env var
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_env_var", nullable=false)
      */
@@ -101,7 +101,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type oc review
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_oc_review", nullable=false)
      */
@@ -110,7 +110,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type impounding
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_impounding", nullable=false)
      */
@@ -119,7 +119,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Type other
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="type_other", nullable=false)
      */
@@ -155,7 +155,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Is cancelled
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
      */
@@ -164,7 +164,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Is adjourned
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
@@ -182,7 +182,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Licence revoked at pi
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
      */
@@ -202,7 +202,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="decision_notes", nullable=true)
+     * @ORM\Column(type="text", name="decision_notes", length=65535, nullable=true)
      */
     protected $decisionNotes;
 
@@ -230,11 +230,10 @@ class Pi implements Interfaces\EntityInterface
         return $this->piStatus;
     }
 
-
     /**
      * Set the type app new
      *
-     * @param unknown $typeAppNew
+     * @param string $typeAppNew
      * @return Pi
      */
     public function setTypeAppNew($typeAppNew)
@@ -247,18 +246,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type app new
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeAppNew()
     {
         return $this->typeAppNew;
     }
 
-
     /**
      * Set the type app var
      *
-     * @param unknown $typeAppVar
+     * @param string $typeAppVar
      * @return Pi
      */
     public function setTypeAppVar($typeAppVar)
@@ -271,18 +269,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type app var
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeAppVar()
     {
         return $this->typeAppVar;
     }
 
-
     /**
      * Set the type disciplinary
      *
-     * @param unknown $typeDisciplinary
+     * @param string $typeDisciplinary
      * @return Pi
      */
     public function setTypeDisciplinary($typeDisciplinary)
@@ -295,18 +292,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type disciplinary
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeDisciplinary()
     {
         return $this->typeDisciplinary;
     }
 
-
     /**
      * Set the type env new
      *
-     * @param unknown $typeEnvNew
+     * @param string $typeEnvNew
      * @return Pi
      */
     public function setTypeEnvNew($typeEnvNew)
@@ -319,18 +315,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type env new
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeEnvNew()
     {
         return $this->typeEnvNew;
     }
 
-
     /**
      * Set the type env var
      *
-     * @param unknown $typeEnvVar
+     * @param string $typeEnvVar
      * @return Pi
      */
     public function setTypeEnvVar($typeEnvVar)
@@ -343,18 +338,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type env var
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeEnvVar()
     {
         return $this->typeEnvVar;
     }
 
-
     /**
      * Set the type oc review
      *
-     * @param unknown $typeOcReview
+     * @param string $typeOcReview
      * @return Pi
      */
     public function setTypeOcReview($typeOcReview)
@@ -367,18 +361,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type oc review
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeOcReview()
     {
         return $this->typeOcReview;
     }
 
-
     /**
      * Set the type impounding
      *
-     * @param unknown $typeImpounding
+     * @param string $typeImpounding
      * @return Pi
      */
     public function setTypeImpounding($typeImpounding)
@@ -391,18 +384,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type impounding
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeImpounding()
     {
         return $this->typeImpounding;
     }
 
-
     /**
      * Set the type other
      *
-     * @param unknown $typeOther
+     * @param string $typeOther
      * @return Pi
      */
     public function setTypeOther($typeOther)
@@ -415,13 +407,12 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the type other
      *
-     * @return unknown
+     * @return string
      */
     public function getTypeOther()
     {
         return $this->typeOther;
     }
-
 
     /**
      * Set the pi datetime
@@ -446,7 +437,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->piDatetime;
     }
 
-
     /**
      * Set the venue
      *
@@ -469,7 +459,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
-
 
     /**
      * Set the witnesses
@@ -494,11 +483,10 @@ class Pi implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
-
     /**
      * Set the is cancelled
      *
-     * @param unknown $isCancelled
+     * @param string $isCancelled
      * @return Pi
      */
     public function setIsCancelled($isCancelled)
@@ -511,18 +499,17 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the is cancelled
      *
-     * @return unknown
+     * @return string
      */
     public function getIsCancelled()
     {
         return $this->isCancelled;
     }
 
-
     /**
      * Set the is adjourned
      *
-     * @param unknown $isAdjourned
+     * @param string $isAdjourned
      * @return Pi
      */
     public function setIsAdjourned($isAdjourned)
@@ -535,13 +522,12 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the is adjourned
      *
-     * @return unknown
+     * @return string
      */
     public function getIsAdjourned()
     {
         return $this->isAdjourned;
     }
-
 
     /**
      * Set the section code text
@@ -566,11 +552,10 @@ class Pi implements Interfaces\EntityInterface
         return $this->sectionCodeText;
     }
 
-
     /**
      * Set the licence revoked at pi
      *
-     * @param unknown $licenceRevokedAtPi
+     * @param string $licenceRevokedAtPi
      * @return Pi
      */
     public function setLicenceRevokedAtPi($licenceRevokedAtPi)
@@ -583,13 +568,12 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the licence revoked at pi
      *
-     * @return unknown
+     * @return string
      */
     public function getLicenceRevokedAtPi()
     {
         return $this->licenceRevokedAtPi;
     }
-
 
     /**
      * Set the notification date
@@ -614,7 +598,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->notificationDate;
     }
 
-
     /**
      * Set the decision notes
      *
@@ -637,5 +620,4 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->decisionNotes;
     }
-
 }

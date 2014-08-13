@@ -50,7 +50,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id")
      */
     protected $defendantType;
@@ -60,7 +60,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConvictionCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="conviction_category_id", referencedColumnName="id")
      */
     protected $convictionCategory;
@@ -104,7 +104,7 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Msi
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="msi", nullable=true)
      */
@@ -113,7 +113,7 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Is declared
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_declared", nullable=false)
      */
@@ -170,7 +170,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->defendantType;
     }
 
-
     /**
      * Set the conviction category
      *
@@ -193,7 +192,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->convictionCategory;
     }
-
 
     /**
      * Set the offence date
@@ -218,7 +216,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->offenceDate;
     }
 
-
     /**
      * Set the conviction date
      *
@@ -241,7 +238,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->convictionDate;
     }
-
 
     /**
      * Set the court
@@ -266,7 +262,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->court;
     }
 
-
     /**
      * Set the costs
      *
@@ -290,11 +285,10 @@ class Conviction implements Interfaces\EntityInterface
         return $this->costs;
     }
 
-
     /**
      * Set the msi
      *
-     * @param unknown $msi
+     * @param string $msi
      * @return Conviction
      */
     public function setMsi($msi)
@@ -307,18 +301,17 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Get the msi
      *
-     * @return unknown
+     * @return string
      */
     public function getMsi()
     {
         return $this->msi;
     }
 
-
     /**
      * Set the is declared
      *
-     * @param unknown $isDeclared
+     * @param string $isDeclared
      * @return Conviction
      */
     public function setIsDeclared($isDeclared)
@@ -331,13 +324,12 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Get the is declared
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDeclared()
     {
         return $this->isDeclared;
     }
-
 
     /**
      * Set the operator name
@@ -362,7 +354,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->operatorName;
     }
 
-
     /**
      * Set the taken into consideration
      *
@@ -386,7 +377,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->takenIntoConsideration;
     }
 
-
     /**
      * Set the convicted name
      *
@@ -409,5 +399,4 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->convictedName;
     }
-
 }

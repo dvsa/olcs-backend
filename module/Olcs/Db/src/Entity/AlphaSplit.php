@@ -76,7 +76,6 @@ class AlphaSplit implements Interfaces\EntityInterface
         return $this->fromInclusive;
     }
 
-
     /**
      * Set the to inclusive
      *
@@ -99,5 +98,4 @@ class AlphaSplit implements Interfaces\EntityInterface
     {
         return $this->toInclusive;
     }
-
 }

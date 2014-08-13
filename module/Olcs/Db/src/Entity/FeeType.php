@@ -84,7 +84,7 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Expire fee with licence
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false)
      */
@@ -114,7 +114,6 @@ class FeeType implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
-
     /**
      * Set the effective from
      *
@@ -137,7 +136,6 @@ class FeeType implements Interfaces\EntityInterface
     {
         return $this->effectiveFrom;
     }
-
 
     /**
      * Set the fixed value
@@ -162,7 +160,6 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fixedValue;
     }
 
-
     /**
      * Set the annual value
      *
@@ -185,7 +182,6 @@ class FeeType implements Interfaces\EntityInterface
     {
         return $this->annualValue;
     }
-
 
     /**
      * Set the five year value
@@ -210,11 +206,10 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fiveYearValue;
     }
 
-
     /**
      * Set the expire fee with licence
      *
-     * @param unknown $expireFeeWithLicence
+     * @param string $expireFeeWithLicence
      * @return FeeType
      */
     public function setExpireFeeWithLicence($expireFeeWithLicence)
@@ -227,11 +222,10 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Get the expire fee with licence
      *
-     * @return unknown
+     * @return string
      */
     public function getExpireFeeWithLicence()
     {
         return $this->expireFeeWithLicence;
     }
-
 }

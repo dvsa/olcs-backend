@@ -50,7 +50,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Sufficient parking
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
@@ -68,7 +68,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Is interim
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_interim", nullable=true)
      */
@@ -77,7 +77,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Publication appropriate
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
@@ -87,7 +87,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Set the sufficient parking
      *
-     * @param unknown $sufficientParking
+     * @param string $sufficientParking
      * @return LicenceOperatingCentre
      */
     public function setSufficientParking($sufficientParking)
@@ -100,13 +100,12 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the sufficient parking
      *
-     * @return unknown
+     * @return string
      */
     public function getSufficientParking()
     {
         return $this->sufficientParking;
     }
-
 
     /**
      * Set the added date
@@ -131,11 +130,10 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
-
     /**
      * Set the is interim
      *
-     * @param unknown $isInterim
+     * @param string $isInterim
      * @return LicenceOperatingCentre
      */
     public function setIsInterim($isInterim)
@@ -148,18 +146,17 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the is interim
      *
-     * @return unknown
+     * @return string
      */
     public function getIsInterim()
     {
         return $this->isInterim;
     }
 
-
     /**
      * Set the publication appropriate
      *
-     * @param unknown $publicationAppropriate
+     * @param string $publicationAppropriate
      * @return LicenceOperatingCentre
      */
     public function setPublicationAppropriate($publicationAppropriate)
@@ -172,11 +169,10 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the publication appropriate
      *
-     * @return unknown
+     * @return string
      */
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
     }
-
 }

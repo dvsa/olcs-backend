@@ -42,7 +42,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="psv_type", referencedColumnName="id")
      */
     protected $psvType;
@@ -59,7 +59,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is articulated
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_articulated", nullable=true)
      */
@@ -77,7 +77,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is refrigerated
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_refrigerated", nullable=true)
      */
@@ -86,7 +86,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is tipper
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_tipper", nullable=true)
      */
@@ -95,7 +95,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Is novelty
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
      */
@@ -104,7 +104,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Section26
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="section26", nullable=false)
      */
@@ -113,7 +113,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Section26 curtail
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="section26_curtail", nullable=false)
      */
@@ -122,7 +122,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Section26 revoked
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="section26_revoked", nullable=false)
      */
@@ -131,7 +131,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Section26 suspend
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="section26_suspend", nullable=false)
      */
@@ -187,7 +187,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->psvType;
     }
 
-
     /**
      * Set the plated weight
      *
@@ -211,11 +210,10 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->platedWeight;
     }
 
-
     /**
      * Set the is articulated
      *
-     * @param unknown $isArticulated
+     * @param string $isArticulated
      * @return Vehicle
      */
     public function setIsArticulated($isArticulated)
@@ -228,13 +226,12 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is articulated
      *
-     * @return unknown
+     * @return string
      */
     public function getIsArticulated()
     {
         return $this->isArticulated;
     }
-
 
     /**
      * Set the certificate no
@@ -259,11 +256,10 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->certificateNo;
     }
 
-
     /**
      * Set the is refrigerated
      *
-     * @param unknown $isRefrigerated
+     * @param string $isRefrigerated
      * @return Vehicle
      */
     public function setIsRefrigerated($isRefrigerated)
@@ -276,18 +272,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is refrigerated
      *
-     * @return unknown
+     * @return string
      */
     public function getIsRefrigerated()
     {
         return $this->isRefrigerated;
     }
 
-
     /**
      * Set the is tipper
      *
-     * @param unknown $isTipper
+     * @param string $isTipper
      * @return Vehicle
      */
     public function setIsTipper($isTipper)
@@ -300,18 +295,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is tipper
      *
-     * @return unknown
+     * @return string
      */
     public function getIsTipper()
     {
         return $this->isTipper;
     }
 
-
     /**
      * Set the is novelty
      *
-     * @param unknown $isNovelty
+     * @param string $isNovelty
      * @return Vehicle
      */
     public function setIsNovelty($isNovelty)
@@ -324,18 +318,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the is novelty
      *
-     * @return unknown
+     * @return string
      */
     public function getIsNovelty()
     {
         return $this->isNovelty;
     }
 
-
     /**
      * Set the section26
      *
-     * @param unknown $section26
+     * @param string $section26
      * @return Vehicle
      */
     public function setSection26($section26)
@@ -348,18 +341,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26
      *
-     * @return unknown
+     * @return string
      */
     public function getSection26()
     {
         return $this->section26;
     }
 
-
     /**
      * Set the section26 curtail
      *
-     * @param unknown $section26Curtail
+     * @param string $section26Curtail
      * @return Vehicle
      */
     public function setSection26Curtail($section26Curtail)
@@ -372,18 +364,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 curtail
      *
-     * @return unknown
+     * @return string
      */
     public function getSection26Curtail()
     {
         return $this->section26Curtail;
     }
 
-
     /**
      * Set the section26 revoked
      *
-     * @param unknown $section26Revoked
+     * @param string $section26Revoked
      * @return Vehicle
      */
     public function setSection26Revoked($section26Revoked)
@@ -396,18 +387,17 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 revoked
      *
-     * @return unknown
+     * @return string
      */
     public function getSection26Revoked()
     {
         return $this->section26Revoked;
     }
 
-
     /**
      * Set the section26 suspend
      *
-     * @param unknown $section26Suspend
+     * @param string $section26Suspend
      * @return Vehicle
      */
     public function setSection26Suspend($section26Suspend)
@@ -420,13 +410,12 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 suspend
      *
-     * @return unknown
+     * @return string
      */
     public function getSection26Suspend()
     {
         return $this->section26Suspend;
     }
-
 
     /**
      * Set the make model
@@ -450,7 +439,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->makeModel;
     }
-
 
     /**
      * Set the licence vehicle
@@ -511,5 +499,4 @@ class Vehicle implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

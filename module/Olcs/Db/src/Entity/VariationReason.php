@@ -26,7 +26,7 @@ class VariationReason implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="variationReasons")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="variationReasons", fetch="LAZY")
      */
     protected $busRegs;
 
@@ -98,5 +98,4 @@ class VariationReason implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

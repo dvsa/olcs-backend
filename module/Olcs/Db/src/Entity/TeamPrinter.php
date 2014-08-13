@@ -30,7 +30,7 @@ class TeamPrinter implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Printer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer", fetch="LAZY")
      * @ORM\JoinColumn(name="printer_id", referencedColumnName="id")
      */
     protected $printer;
@@ -68,7 +68,6 @@ class TeamPrinter implements Interfaces\EntityInterface
         return $this->printer;
     }
 
-
     /**
      * Set the document type
      *
@@ -91,5 +90,4 @@ class TeamPrinter implements Interfaces\EntityInterface
     {
         return $this->documentType;
     }
-
 }

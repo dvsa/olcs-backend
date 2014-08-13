@@ -41,7 +41,7 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Is england
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_england", nullable=true)
      */
@@ -50,7 +50,7 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Is wales
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_wales", nullable=true)
      */
@@ -59,7 +59,7 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Is scotland
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_scotland", nullable=true)
      */
@@ -68,7 +68,7 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Is ni
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_ni", nullable=true)
      */
@@ -98,11 +98,10 @@ class PublicHoliday implements Interfaces\EntityInterface
         return $this->publicHolidayDate;
     }
 
-
     /**
      * Set the is england
      *
-     * @param unknown $isEngland
+     * @param string $isEngland
      * @return PublicHoliday
      */
     public function setIsEngland($isEngland)
@@ -115,18 +114,17 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Get the is england
      *
-     * @return unknown
+     * @return string
      */
     public function getIsEngland()
     {
         return $this->isEngland;
     }
 
-
     /**
      * Set the is wales
      *
-     * @param unknown $isWales
+     * @param string $isWales
      * @return PublicHoliday
      */
     public function setIsWales($isWales)
@@ -139,18 +137,17 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Get the is wales
      *
-     * @return unknown
+     * @return string
      */
     public function getIsWales()
     {
         return $this->isWales;
     }
 
-
     /**
      * Set the is scotland
      *
-     * @param unknown $isScotland
+     * @param string $isScotland
      * @return PublicHoliday
      */
     public function setIsScotland($isScotland)
@@ -163,18 +160,17 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Get the is scotland
      *
-     * @return unknown
+     * @return string
      */
     public function getIsScotland()
     {
         return $this->isScotland;
     }
 
-
     /**
      * Set the is ni
      *
-     * @param unknown $isNi
+     * @param string $isNi
      * @return PublicHoliday
      */
     public function setIsNi($isNi)
@@ -187,11 +183,10 @@ class PublicHoliday implements Interfaces\EntityInterface
     /**
      * Get the is ni
      *
-     * @return unknown
+     * @return string
      */
     public function getIsNi()
     {
         return $this->isNi;
     }
-
 }

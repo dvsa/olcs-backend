@@ -65,5 +65,4 @@ class PrivateHireLicence implements Interfaces\EntityInterface
     {
         return $this->privateHireLicenceNo;
     }
-
 }

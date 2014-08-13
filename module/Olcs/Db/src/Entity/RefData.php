@@ -29,7 +29,7 @@ class RefData implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefDataCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefDataCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefDataCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="ref_data_category_id", referencedColumnName="id")
      */
     protected $refDataCategory;
@@ -67,7 +67,6 @@ class RefData implements Interfaces\EntityInterface
         return $this->refDataCategory;
     }
 
-
     /**
      * Set the olbs key
      *
@@ -90,5 +89,4 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->olbsKey;
     }
-
 }

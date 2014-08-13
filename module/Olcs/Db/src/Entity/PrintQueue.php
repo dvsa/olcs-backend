@@ -30,7 +30,7 @@ class PrintQueue implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TeamPrinter
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TeamPrinter")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TeamPrinter", fetch="LAZY")
      * @ORM\JoinColumn(name="team_printer_id", referencedColumnName="id")
      */
     protected $teamPrinter;
@@ -68,7 +68,6 @@ class PrintQueue implements Interfaces\EntityInterface
         return $this->teamPrinter;
     }
 
-
     /**
      * Set the added datetime
      *
@@ -91,5 +90,4 @@ class PrintQueue implements Interfaces\EntityInterface
     {
         return $this->addedDatetime;
     }
-
 }

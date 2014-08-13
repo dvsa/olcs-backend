@@ -52,7 +52,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\WaiveReason
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
      * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id")
      */
     protected $waiveReason2;
@@ -62,7 +62,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="waive_approver_user_id", referencedColumnName="id")
      */
     protected $waiveApproverUser;
@@ -72,7 +72,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id")
      */
     protected $waiveRecommenderUser;
@@ -82,7 +82,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY")
      * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id")
      */
     protected $parentFee;
@@ -92,7 +92,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\FeeType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\FeeType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\FeeType", fetch="LAZY")
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id")
      */
     protected $feeType;
@@ -181,7 +181,7 @@ class Fee implements Interfaces\EntityInterface
     /**
      * Irfo fee exempt
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="irfo_fee_exempt", nullable=true)
      */
@@ -220,7 +220,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason2;
     }
 
-
     /**
      * Set the waive approver user
      *
@@ -243,7 +242,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->waiveApproverUser;
     }
-
 
     /**
      * Set the waive recommender user
@@ -268,7 +266,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveRecommenderUser;
     }
 
-
     /**
      * Set the parent fee
      *
@@ -291,7 +288,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->parentFee;
     }
-
 
     /**
      * Set the fee type
@@ -316,7 +312,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
-
     /**
      * Set the amount
      *
@@ -339,7 +334,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->amount;
     }
-
 
     /**
      * Set the received amount
@@ -364,7 +358,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->receivedAmount;
     }
 
-
     /**
      * Set the invoice no
      *
@@ -387,7 +380,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->invoiceNo;
     }
-
 
     /**
      * Set the invoice line no
@@ -412,7 +404,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->invoiceLineNo;
     }
 
-
     /**
      * Set the invoiced date
      *
@@ -435,7 +426,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->invoicedDate;
     }
-
 
     /**
      * Set the fee status
@@ -460,7 +450,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeStatus;
     }
 
-
     /**
      * Set the waive approval date
      *
@@ -483,7 +472,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->waiveApprovalDate;
     }
-
 
     /**
      * Set the waive reason
@@ -508,7 +496,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason;
     }
 
-
     /**
      * Set the waive recommendation date
      *
@@ -532,11 +519,10 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveRecommendationDate;
     }
 
-
     /**
      * Set the irfo fee exempt
      *
-     * @param unknown $irfoFeeExempt
+     * @param string $irfoFeeExempt
      * @return Fee
      */
     public function setIrfoFeeExempt($irfoFeeExempt)
@@ -549,13 +535,12 @@ class Fee implements Interfaces\EntityInterface
     /**
      * Get the irfo fee exempt
      *
-     * @return unknown
+     * @return string
      */
     public function getIrfoFeeExempt()
     {
         return $this->irfoFeeExempt;
     }
-
 
     /**
      * Set the irfo file no
@@ -579,5 +564,4 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->irfoFileNo;
     }
-
 }

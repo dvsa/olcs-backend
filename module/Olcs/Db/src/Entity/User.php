@@ -49,7 +49,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
      * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id")
      */
     protected $partnerContactDetails;
@@ -66,7 +66,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Account disabled
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
      */
@@ -113,7 +113,6 @@ class User implements Interfaces\EntityInterface
         return $this->partnerContactDetails;
     }
 
-
     /**
      * Set the pid
      *
@@ -137,11 +136,10 @@ class User implements Interfaces\EntityInterface
         return $this->pid;
     }
 
-
     /**
      * Set the account disabled
      *
-     * @param unknown $accountDisabled
+     * @param string $accountDisabled
      * @return User
      */
     public function setAccountDisabled($accountDisabled)
@@ -154,13 +152,12 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the account disabled
      *
-     * @return unknown
+     * @return string
      */
     public function getAccountDisabled()
     {
         return $this->accountDisabled;
     }
-
 
     /**
      * Set the organisation user
@@ -221,5 +218,4 @@ class User implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

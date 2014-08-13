@@ -33,7 +33,7 @@ class ApplicationAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ApplicationActionRef
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ApplicationActionRef")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ApplicationActionRef", fetch="LAZY")
      * @ORM\JoinColumn(name="application_action_ref_id", referencedColumnName="id")
      */
     protected $applicationActionRef;
@@ -41,7 +41,7 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Is received
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_received", nullable=true)
      */
@@ -50,7 +50,7 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Is approved
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_approved", nullable=true)
      */
@@ -59,7 +59,7 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Is applicable
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_applicable", nullable=true)
      */
@@ -89,11 +89,10 @@ class ApplicationAction implements Interfaces\EntityInterface
         return $this->applicationActionRef;
     }
 
-
     /**
      * Set the is received
      *
-     * @param unknown $isReceived
+     * @param string $isReceived
      * @return ApplicationAction
      */
     public function setIsReceived($isReceived)
@@ -106,18 +105,17 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Get the is received
      *
-     * @return unknown
+     * @return string
      */
     public function getIsReceived()
     {
         return $this->isReceived;
     }
 
-
     /**
      * Set the is approved
      *
-     * @param unknown $isApproved
+     * @param string $isApproved
      * @return ApplicationAction
      */
     public function setIsApproved($isApproved)
@@ -130,18 +128,17 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Get the is approved
      *
-     * @return unknown
+     * @return string
      */
     public function getIsApproved()
     {
         return $this->isApproved;
     }
 
-
     /**
      * Set the is applicable
      *
-     * @param unknown $isApplicable
+     * @param string $isApplicable
      * @return ApplicationAction
      */
     public function setIsApplicable($isApplicable)
@@ -154,11 +151,10 @@ class ApplicationAction implements Interfaces\EntityInterface
     /**
      * Get the is applicable
      *
-     * @return unknown
+     * @return string
      */
     public function getIsApplicable()
     {
         return $this->isApplicable;
     }
-
 }

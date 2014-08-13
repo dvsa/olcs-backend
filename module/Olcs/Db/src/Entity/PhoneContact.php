@@ -37,7 +37,7 @@ class PhoneContact implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="phone_contact_type", referencedColumnName="id")
      */
     protected $phoneContactType;
@@ -84,7 +84,6 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneContactType;
     }
 
-
     /**
      * Set the phone number
      *
@@ -108,7 +107,6 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneNumber;
     }
 
-
     /**
      * Set the details
      *
@@ -131,5 +129,4 @@ class PhoneContact implements Interfaces\EntityInterface
     {
         return $this->details;
     }
-
 }

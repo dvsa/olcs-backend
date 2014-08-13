@@ -26,7 +26,7 @@ class BusServiceType implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="busServiceTypes")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="busServiceTypes", fetch="LAZY")
      * @ORM\JoinTable(name="bus_reg_bus_service_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_service_type_id", referencedColumnName="id")
@@ -116,7 +116,6 @@ class BusServiceType implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the txc service type name
      *
@@ -139,5 +138,4 @@ class BusServiceType implements Interfaces\EntityInterface
     {
         return $this->txcServiceTypeName;
     }
-
 }

@@ -50,7 +50,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id")
      */
     protected $licConditionVariation;
@@ -60,7 +60,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id")
      */
     protected $approvalUser;
@@ -70,7 +70,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="attached_to", referencedColumnName="id")
      */
     protected $attachedTo;
@@ -80,7 +80,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id")
      */
     protected $conditionType;
@@ -90,7 +90,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="added_via", referencedColumnName="id")
      */
     protected $addedVia;
@@ -107,7 +107,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Is draft
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_draft", nullable=false)
      */
@@ -116,7 +116,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Is fulfilled
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false)
      */
@@ -134,7 +134,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Is approved
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_approved", nullable=false)
      */
@@ -164,7 +164,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->licConditionVariation;
     }
 
-
     /**
      * Set the approval user
      *
@@ -187,7 +186,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->approvalUser;
     }
-
 
     /**
      * Set the attached to
@@ -212,7 +210,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->attachedTo;
     }
 
-
     /**
      * Set the condition type
      *
@@ -235,7 +232,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->conditionType;
     }
-
 
     /**
      * Set the added via
@@ -260,7 +256,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->addedVia;
     }
 
-
     /**
      * Set the condition date
      *
@@ -284,11 +279,10 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->conditionDate;
     }
 
-
     /**
      * Set the is draft
      *
-     * @param unknown $isDraft
+     * @param string $isDraft
      * @return ConditionUndertaking
      */
     public function setIsDraft($isDraft)
@@ -301,18 +295,17 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is draft
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDraft()
     {
         return $this->isDraft;
     }
 
-
     /**
      * Set the is fulfilled
      *
-     * @param unknown $isFulfilled
+     * @param string $isFulfilled
      * @return ConditionUndertaking
      */
     public function setIsFulfilled($isFulfilled)
@@ -325,13 +318,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is fulfilled
      *
-     * @return unknown
+     * @return string
      */
     public function getIsFulfilled()
     {
         return $this->isFulfilled;
     }
-
 
     /**
      * Set the notes
@@ -356,11 +348,10 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->notes;
     }
 
-
     /**
      * Set the is approved
      *
-     * @param unknown $isApproved
+     * @param string $isApproved
      * @return ConditionUndertaking
      */
     public function setIsApproved($isApproved)
@@ -373,11 +364,10 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     /**
      * Get the is approved
      *
-     * @return unknown
+     * @return string
      */
     public function getIsApproved()
     {
         return $this->isApproved;
     }
-
 }

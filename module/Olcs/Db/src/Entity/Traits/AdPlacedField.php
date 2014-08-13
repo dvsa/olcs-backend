@@ -14,7 +14,7 @@ trait AdPlacedField
     /**
      * Ad placed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
      */
@@ -23,7 +23,7 @@ trait AdPlacedField
     /**
      * Set the ad placed
      *
-     * @param unknown $adPlaced
+     * @param string $adPlaced
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setAdPlaced($adPlaced)
@@ -36,7 +36,7 @@ trait AdPlacedField
     /**
      * Get the ad placed
      *
-     * @return unknown
+     * @return string
      */
     public function getAdPlaced()
     {

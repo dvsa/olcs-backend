@@ -35,7 +35,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Is scanned
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_scanned", nullable=false)
      */
@@ -44,7 +44,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Display free text
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="display_free_text", nullable=false)
      */
@@ -54,7 +54,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Set the is scanned
      *
-     * @param unknown $isScanned
+     * @param string $isScanned
      * @return DocumentSubCategory
      */
     public function setIsScanned($isScanned)
@@ -67,18 +67,17 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Get the is scanned
      *
-     * @return unknown
+     * @return string
      */
     public function getIsScanned()
     {
         return $this->isScanned;
     }
 
-
     /**
      * Set the display free text
      *
-     * @param unknown $displayFreeText
+     * @param string $displayFreeText
      * @return DocumentSubCategory
      */
     public function setDisplayFreeText($displayFreeText)
@@ -91,11 +90,10 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     /**
      * Get the display free text
      *
-     * @return unknown
+     * @return string
      */
     public function getDisplayFreeText()
     {
         return $this->displayFreeText;
     }
-
 }

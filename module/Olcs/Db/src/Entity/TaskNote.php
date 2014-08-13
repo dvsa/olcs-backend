@@ -63,5 +63,4 @@ class TaskNote implements Interfaces\EntityInterface
     {
         return $this->noteText;
     }
-
 }

@@ -123,7 +123,6 @@ class Person implements Interfaces\EntityInterface
         return $this->forename;
     }
 
-
     /**
      * Set the family name
      *
@@ -146,7 +145,6 @@ class Person implements Interfaces\EntityInterface
     {
         return $this->familyName;
     }
-
 
     /**
      * Set the birth place
@@ -171,7 +169,6 @@ class Person implements Interfaces\EntityInterface
         return $this->birthPlace;
     }
 
-
     /**
      * Set the other name
      *
@@ -195,7 +192,6 @@ class Person implements Interfaces\EntityInterface
         return $this->otherName;
     }
 
-
     /**
      * Set the title other
      *
@@ -218,7 +214,6 @@ class Person implements Interfaces\EntityInterface
     {
         return $this->titleOther;
     }
-
 
     /**
      * Set the contact detail
@@ -279,5 +274,4 @@ class Person implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

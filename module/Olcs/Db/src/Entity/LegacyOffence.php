@@ -37,7 +37,7 @@ class LegacyOffence implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="legacyOffences")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="legacyOffences", fetch="LAZY")
      */
     protected $cases;
 
@@ -53,7 +53,7 @@ class LegacyOffence implements Interfaces\EntityInterface
     /**
      * Is trailer
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_trailer", nullable=true)
      */
@@ -200,7 +200,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the definition
      *
@@ -224,11 +223,10 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->definition;
     }
 
-
     /**
      * Set the is trailer
      *
-     * @param unknown $isTrailer
+     * @param string $isTrailer
      * @return LegacyOffence
      */
     public function setIsTrailer($isTrailer)
@@ -241,13 +239,12 @@ class LegacyOffence implements Interfaces\EntityInterface
     /**
      * Get the is trailer
      *
-     * @return unknown
+     * @return string
      */
     public function getIsTrailer()
     {
         return $this->isTrailer;
     }
-
 
     /**
      * Set the num of offences
@@ -272,7 +269,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->numOfOffences;
     }
 
-
     /**
      * Set the offence authority
      *
@@ -295,7 +291,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceAuthority;
     }
-
 
     /**
      * Set the offence date
@@ -320,7 +315,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenceDate;
     }
 
-
     /**
      * Set the offence to date
      *
@@ -343,7 +337,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceToDate;
     }
-
 
     /**
      * Set the offender name
@@ -368,7 +361,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenderName;
     }
 
-
     /**
      * Set the points
      *
@@ -391,7 +383,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->points;
     }
-
 
     /**
      * Set the position
@@ -416,7 +407,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->position;
     }
 
-
     /**
      * Set the offence type
      *
@@ -439,5 +429,4 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceType;
     }
-
 }

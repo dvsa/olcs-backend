@@ -34,7 +34,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionResult
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id")
      */
     protected $ebsrSubmissionResult;
@@ -44,7 +44,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id")
      */
     protected $ebsrSubmissionType;
@@ -54,7 +54,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionStatus
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id")
      */
     protected $ebsrSubmissionStatus;
@@ -206,7 +206,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Is from ftp
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false)
      */
@@ -245,7 +245,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionResult;
     }
 
-
     /**
      * Set the ebsr submission type
      *
@@ -268,7 +267,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->ebsrSubmissionType;
     }
-
 
     /**
      * Set the ebsr submission status
@@ -293,7 +291,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionStatus;
     }
 
-
     /**
      * Set the submitted date
      *
@@ -316,7 +313,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->submittedDate;
     }
-
 
     /**
      * Set the licence no
@@ -341,7 +337,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->licenceNo;
     }
 
-
     /**
      * Set the organisation email address
      *
@@ -364,7 +359,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->organisationEmailAddress;
     }
-
 
     /**
      * Set the application classification
@@ -389,7 +383,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->applicationClassification;
     }
 
-
     /**
      * Set the variation no
      *
@@ -412,7 +405,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->variationNo;
     }
-
 
     /**
      * Set the tan code
@@ -437,7 +429,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->tanCode;
     }
 
-
     /**
      * Set the registration no
      *
@@ -460,7 +451,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->registrationNo;
     }
-
 
     /**
      * Set the validation start
@@ -485,7 +475,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->validationStart;
     }
 
-
     /**
      * Set the validation end
      *
@@ -508,7 +497,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->validationEnd;
     }
-
 
     /**
      * Set the publish start
@@ -533,7 +521,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->publishStart;
     }
 
-
     /**
      * Set the publish end
      *
@@ -556,7 +543,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->publishEnd;
     }
-
 
     /**
      * Set the process start
@@ -581,7 +567,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->processStart;
     }
 
-
     /**
      * Set the process end
      *
@@ -604,7 +589,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->processEnd;
     }
-
 
     /**
      * Set the distribute start
@@ -629,7 +613,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeStart;
     }
 
-
     /**
      * Set the distribute end
      *
@@ -652,7 +635,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->distributeEnd;
     }
-
 
     /**
      * Set the distribute expire
@@ -677,11 +659,10 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeExpire;
     }
 
-
     /**
      * Set the is from ftp
      *
-     * @param unknown $isFromFtp
+     * @param string $isFromFtp
      * @return EbsrSubmission
      */
     public function setIsFromFtp($isFromFtp)
@@ -694,13 +675,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Get the is from ftp
      *
-     * @return unknown
+     * @return string
      */
     public function getIsFromFtp()
     {
         return $this->isFromFtp;
     }
-
 
     /**
      * Set the organisation id
@@ -724,5 +704,4 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->organisationId;
     }
-
 }

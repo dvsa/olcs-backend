@@ -30,7 +30,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="requested_user_id", referencedColumnName="id")
      */
     protected $requestedUser;
@@ -95,7 +95,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->requestedUser;
     }
 
-
     /**
      * Set the exception name
      *
@@ -118,7 +117,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     {
         return $this->exceptionName;
     }
-
 
     /**
      * Set the scale
@@ -143,7 +141,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->scale;
     }
 
-
     /**
      * Set the published timestamp
      *
@@ -167,7 +164,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->publishedTimestamp;
     }
 
-
     /**
      * Set the requested timestamp
      *
@@ -190,5 +186,4 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     {
         return $this->requestedTimestamp;
     }
-
 }

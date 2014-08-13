@@ -40,7 +40,7 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiPenaltyRequestedType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyRequestedType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyRequestedType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id")
      */
     protected $siPenaltyRequestedType;
@@ -78,7 +78,6 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
         return $this->siPenaltyRequestedType;
     }
 
-
     /**
      * Set the duration
      *
@@ -101,5 +100,4 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     {
         return $this->duration;
     }
-
 }

@@ -52,5 +52,4 @@ class SystemParameter implements Interfaces\EntityInterface
     {
         return $this->paramValue;
     }
-
 }

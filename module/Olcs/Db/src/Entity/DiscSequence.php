@@ -72,7 +72,7 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Is self serve
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
      */
@@ -81,7 +81,7 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Is ni self serve
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
      */
@@ -111,7 +111,6 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->restricted;
     }
 
-
     /**
      * Set the special restricted
      *
@@ -134,7 +133,6 @@ class DiscSequence implements Interfaces\EntityInterface
     {
         return $this->specialRestricted;
     }
-
 
     /**
      * Set the standard national
@@ -159,7 +157,6 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->standardNational;
     }
 
-
     /**
      * Set the standard international
      *
@@ -183,11 +180,10 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->standardInternational;
     }
 
-
     /**
      * Set the is self serve
      *
-     * @param unknown $isSelfServe
+     * @param string $isSelfServe
      * @return DiscSequence
      */
     public function setIsSelfServe($isSelfServe)
@@ -200,18 +196,17 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Get the is self serve
      *
-     * @return unknown
+     * @return string
      */
     public function getIsSelfServe()
     {
         return $this->isSelfServe;
     }
 
-
     /**
      * Set the is ni self serve
      *
-     * @param unknown $isNiSelfServe
+     * @param string $isNiSelfServe
      * @return DiscSequence
      */
     public function setIsNiSelfServe($isNiSelfServe)
@@ -224,11 +219,10 @@ class DiscSequence implements Interfaces\EntityInterface
     /**
      * Get the is ni self serve
      *
-     * @return unknown
+     * @return string
      */
     public function getIsNiSelfServe()
     {
         return $this->isNiSelfServe;
     }
-
 }

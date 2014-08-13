@@ -32,7 +32,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         Traits\CaseManyToOne,
         Traits\Comment4000Field,
         Traits\EffectiveDateField,
-        Traits\NotesField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -42,7 +41,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LegacyCaseAction
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction", fetch="LAZY")
      * @ORM\JoinColumn(name="action_id", referencedColumnName="id")
      */
     protected $action;
@@ -52,7 +51,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="to_user_id", referencedColumnName="id")
      */
     protected $toUser;
@@ -62,7 +61,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id")
      */
     protected $fromUser;
@@ -86,6 +85,15 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     protected $piReason;
 
     /**
+     * Notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="notes", length=65535, nullable=true)
+     */
+    protected $notes;
+
+    /**
      * Pi decision
      *
      * @var string
@@ -106,7 +114,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Revoke lic
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="revoke_lic", nullable=true)
      */
@@ -115,7 +123,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Status
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="status", nullable=true)
      */
@@ -154,7 +162,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->action;
     }
 
-
     /**
      * Set the to user
      *
@@ -177,7 +184,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->toUser;
     }
-
 
     /**
      * Set the from user
@@ -202,7 +208,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->fromUser;
     }
 
-
     /**
      * Set the rec date
      *
@@ -225,7 +230,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->recDate;
     }
-
 
     /**
      * Set the pi reason
@@ -250,6 +254,28 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piReason;
     }
 
+    /**
+     * Set the notes
+     *
+     * @param string $notes
+     * @return LegacyRecommendation
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
 
     /**
      * Set the pi decision
@@ -274,7 +300,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piDecision;
     }
 
-
     /**
      * Set the request
      *
@@ -298,11 +323,10 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->request;
     }
 
-
     /**
      * Set the revoke lic
      *
-     * @param unknown $revokeLic
+     * @param string $revokeLic
      * @return LegacyRecommendation
      */
     public function setRevokeLic($revokeLic)
@@ -315,18 +339,17 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Get the revoke lic
      *
-     * @return unknown
+     * @return string
      */
     public function getRevokeLic()
     {
         return $this->revokeLic;
     }
 
-
     /**
      * Set the status
      *
-     * @param unknown $status
+     * @param string $status
      * @return LegacyRecommendation
      */
     public function setStatus($status)
@@ -339,13 +362,12 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     /**
      * Get the status
      *
-     * @return unknown
+     * @return string
      */
     public function getStatus()
     {
         return $this->status;
     }
-
 
     /**
      * Set the total points
@@ -369,5 +391,4 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->totalPoints;
     }
-
 }

@@ -39,7 +39,7 @@ class Publication implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pub_status", referencedColumnName="id")
      */
     protected $pubStatus;
@@ -86,7 +86,6 @@ class Publication implements Interfaces\EntityInterface
         return $this->pubStatus;
     }
 
-
     /**
      * Set the pub date
      *
@@ -110,7 +109,6 @@ class Publication implements Interfaces\EntityInterface
         return $this->pubDate;
     }
 
-
     /**
      * Set the doc name
      *
@@ -133,5 +131,4 @@ class Publication implements Interfaces\EntityInterface
     {
         return $this->docName;
     }
-
 }

@@ -43,7 +43,7 @@ class Hearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id")
      */
     protected $presidingTc = 0;
@@ -90,7 +90,6 @@ class Hearing implements Interfaces\EntityInterface
         return $this->presidingTc;
     }
 
-
     /**
      * Set the agreed by tc date
      *
@@ -114,7 +113,6 @@ class Hearing implements Interfaces\EntityInterface
         return $this->agreedByTcDate;
     }
 
-
     /**
      * Set the witness count
      *
@@ -137,5 +135,4 @@ class Hearing implements Interfaces\EntityInterface
     {
         return $this->witnessCount;
     }
-
 }

@@ -41,7 +41,7 @@ class TradingName implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="tradingNames")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="tradingNames")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
      */
     protected $organisation;
@@ -79,7 +79,6 @@ class TradingName implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-
     /**
      * Set the name
      *
@@ -102,5 +101,4 @@ class TradingName implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 }

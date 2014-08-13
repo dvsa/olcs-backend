@@ -78,6 +78,7 @@ class AlignEntitiesToSchema
             'indexes' => 'name="%s"',
             'unique-constraints' => 'name="%s"'
         ),
+        'fetch' => 'fetch="%s"',
         'columns' => 'columns={"%s"}',
         'field' => '',
         'type' => 'type="%s"',
@@ -1310,6 +1311,8 @@ class AlignEntitiesToSchema
             case 'boolean':
                 return $type;
             case 'text':
+            case 'yesno':
+            case 'yesnonull':
                 return 'string';
             case 'bigint':
             case 'integer':

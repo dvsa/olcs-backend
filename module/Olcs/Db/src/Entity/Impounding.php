@@ -44,7 +44,7 @@ class Impounding implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PiVenue
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id")
      */
     protected $piVenue;
@@ -54,7 +54,7 @@ class Impounding implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id")
      */
     protected $impoundingType;
@@ -119,7 +119,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->piVenue;
     }
 
-
     /**
      * Set the impounding type
      *
@@ -142,7 +141,6 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->impoundingType;
     }
-
 
     /**
      * Set the application receipt date
@@ -167,7 +165,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->applicationReceiptDate;
     }
 
-
     /**
      * Set the outcome sent date
      *
@@ -190,7 +187,6 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->outcomeSentDate;
     }
-
 
     /**
      * Set the close date
@@ -215,7 +211,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
-
     /**
      * Set the pi venue other
      *
@@ -238,5 +233,4 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->piVenueOther;
     }
-
 }

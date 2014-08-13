@@ -45,7 +45,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Vehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", fetch="LAZY", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
      */
     protected $vehicle;
@@ -55,7 +55,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
      */
     protected $licence;
@@ -72,7 +72,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     /**
      * Removal
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="removal", nullable=true)
      */
@@ -138,7 +138,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->vehicle;
     }
 
-
     /**
      * Set the licence
      *
@@ -161,7 +160,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->licence;
     }
-
 
     /**
      * Set the application received date
@@ -186,11 +184,10 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->applicationReceivedDate;
     }
 
-
     /**
      * Set the removal
      *
-     * @param unknown $removal
+     * @param string $removal
      * @return LicenceVehicle
      */
     public function setRemoval($removal)
@@ -203,13 +200,12 @@ class LicenceVehicle implements Interfaces\EntityInterface
     /**
      * Get the removal
      *
-     * @return unknown
+     * @return string
      */
     public function getRemoval()
     {
         return $this->removal;
     }
-
 
     /**
      * Set the removal letter seed date
@@ -234,7 +230,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->removalLetterSeedDate;
     }
 
-
     /**
      * Set the is interim
      *
@@ -257,7 +252,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->isInterim;
     }
-
 
     /**
      * Set the warning letter seed date
@@ -282,7 +276,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->warningLetterSeedDate;
     }
 
-
     /**
      * Set the warning letter sent date
      *
@@ -305,5 +298,4 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->warningLetterSentDate;
     }
-
 }

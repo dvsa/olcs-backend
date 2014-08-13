@@ -23,7 +23,7 @@ class PresidingTc implements Interfaces\EntityInterface
     /**
      * Deleted
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="deleted", nullable=true)
      */
@@ -33,7 +33,7 @@ class PresidingTc implements Interfaces\EntityInterface
     /**
      * Set the deleted
      *
-     * @param unknown $deleted
+     * @param string $deleted
      * @return PresidingTc
      */
     public function setDeleted($deleted)
@@ -46,11 +46,10 @@ class PresidingTc implements Interfaces\EntityInterface
     /**
      * Get the deleted
      *
-     * @return unknown
+     * @return string
      */
     public function getDeleted()
     {
         return $this->deleted;
     }
-
 }
