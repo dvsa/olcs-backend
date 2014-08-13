@@ -16,7 +16,7 @@ trait DocBookmarkManyToOne
      *
      * @var \Olcs\Db\Entity\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", fetch="LAZY")
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id")
      */
     protected $docBookmark;

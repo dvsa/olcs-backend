@@ -40,7 +40,7 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")
      */
     protected $unfitnessReason;
@@ -68,5 +68,4 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
     {
         return $this->unfitnessReason;
     }
-
 }

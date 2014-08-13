@@ -14,7 +14,7 @@ trait IsNiField
     /**
      * Is ni
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
@@ -23,7 +23,7 @@ trait IsNiField
     /**
      * Set the is ni
      *
-     * @param unknown $isNi
+     * @param string $isNi
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsNi($isNi)
@@ -36,7 +36,7 @@ trait IsNiField
     /**
      * Get the is ni
      *
-     * @return unknown
+     * @return string
      */
     public function getIsNi()
     {

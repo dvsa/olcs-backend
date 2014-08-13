@@ -38,7 +38,7 @@ class PreviousLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id")
      */
     protected $previousLicenceType;
@@ -64,7 +64,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Will surrender
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="will_surrender", nullable=true)
      */
@@ -112,7 +112,6 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->previousLicenceType;
     }
 
-
     /**
      * Set the holder name
      *
@@ -135,7 +134,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->holderName;
     }
-
 
     /**
      * Set the purchase date
@@ -160,11 +158,10 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->purchaseDate;
     }
 
-
     /**
      * Set the will surrender
      *
-     * @param unknown $willSurrender
+     * @param string $willSurrender
      * @return PreviousLicence
      */
     public function setWillSurrender($willSurrender)
@@ -177,13 +174,12 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Get the will surrender
      *
-     * @return unknown
+     * @return string
      */
     public function getWillSurrender()
     {
         return $this->willSurrender;
     }
-
 
     /**
      * Set the disqualification date
@@ -208,7 +204,6 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->disqualificationDate;
     }
 
-
     /**
      * Set the disqualification length
      *
@@ -231,5 +226,4 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->disqualificationLength;
     }
-
 }

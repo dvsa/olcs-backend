@@ -25,7 +25,7 @@ class Template implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\History", mappedBy="templates")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\History", mappedBy="templates", fetch="LAZY")
      */
     protected $historys;
 
@@ -34,7 +34,7 @@ class Template implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="data", nullable=true)
+     * @ORM\Column(type="text", name="data", length=65535, nullable=true)
      */
     protected $data;
 
@@ -107,7 +107,6 @@ class Template implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the data
      *
@@ -130,5 +129,4 @@ class Template implements Interfaces\EntityInterface
     {
         return $this->data;
     }
-
 }

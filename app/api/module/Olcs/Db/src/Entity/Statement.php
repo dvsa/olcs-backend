@@ -41,7 +41,7 @@ class Statement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
      * @ORM\JoinColumn(name="requesters_address_id", referencedColumnName="id")
      */
     protected $requestersAddress;
@@ -160,7 +160,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersAddress;
     }
 
-
     /**
      * Set the statement type
      *
@@ -183,7 +182,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->statementType;
     }
-
 
     /**
      * Set the date stopped
@@ -208,7 +206,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->dateStopped;
     }
 
-
     /**
      * Set the date requested
      *
@@ -231,7 +228,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->dateRequested;
     }
-
 
     /**
      * Set the authorisers title
@@ -256,7 +252,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->authorisersTitle;
     }
 
-
     /**
      * Set the authorisers decision
      *
@@ -279,7 +274,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->authorisersDecision;
     }
-
 
     /**
      * Set the licence no
@@ -304,7 +298,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->licenceNo;
     }
 
-
     /**
      * Set the licence type
      *
@@ -327,7 +320,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->licenceType;
     }
-
 
     /**
      * Set the requesters body
@@ -352,7 +344,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersBody;
     }
 
-
     /**
      * Set the requesters family name
      *
@@ -376,7 +367,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestersFamilyName;
     }
 
-
     /**
      * Set the requesters forename
      *
@@ -399,5 +389,4 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->requestersForename;
     }
-
 }

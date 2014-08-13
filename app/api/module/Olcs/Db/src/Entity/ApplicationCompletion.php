@@ -34,7 +34,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application")
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
     protected $id;
@@ -315,7 +315,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->id;
     }
 
-
     /**
      * Set the section your business status
      *
@@ -338,7 +337,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionYourBusinessStatus;
     }
-
 
     /**
      * Set the section your business business type status
@@ -363,7 +361,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionYourBusinessBusinessTypeStatus;
     }
 
-
     /**
      * Set the section your business business details status
      *
@@ -386,7 +383,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionYourBusinessBusinessDetailsStatus;
     }
-
 
     /**
      * Set the section your business addresses status
@@ -411,7 +407,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionYourBusinessAddressesStatus;
     }
 
-
     /**
      * Set the section your business people status
      *
@@ -434,7 +429,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionYourBusinessPeopleStatus;
     }
-
 
     /**
      * Set the section type of licence status
@@ -459,7 +453,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionTypeOfLicenceStatus;
     }
 
-
     /**
      * Set the section type of licence operator location status
      *
@@ -482,7 +475,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionTypeOfLicenceOperatorLocationStatus;
     }
-
 
     /**
      * Set the section type of licence operator type status
@@ -507,7 +499,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionTypeOfLicenceOperatorTypeStatus;
     }
 
-
     /**
      * Set the section type of licence licence type status
      *
@@ -530,7 +521,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionTypeOfLicenceLicenceTypeStatus;
     }
-
 
     /**
      * Set the section operating centres status
@@ -555,7 +545,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionOperatingCentresStatus;
     }
 
-
     /**
      * Set the section operating centres authorisation status
      *
@@ -578,7 +567,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionOperatingCentresAuthorisationStatus;
     }
-
 
     /**
      * Set the section operating centres financial evidence status
@@ -603,7 +591,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionOperatingCentresFinancialEvidenceStatus;
     }
 
-
     /**
      * Set the section transport managers status
      *
@@ -626,7 +613,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionTransportManagersStatus;
     }
-
 
     /**
      * Set the section vehicle safety status
@@ -651,7 +637,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionVehicleSafetyStatus;
     }
 
-
     /**
      * Set the section vehicle safety vehicle status
      *
@@ -674,7 +659,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionVehicleSafetyVehicleStatus;
     }
-
 
     /**
      * Set the section vehicle safety vehicle psv status
@@ -699,7 +683,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionVehicleSafetyVehiclePsvStatus;
     }
 
-
     /**
      * Set the section vehicle safety safety status
      *
@@ -722,7 +705,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionVehicleSafetySafetyStatus;
     }
-
 
     /**
      * Set the section previous history status
@@ -747,7 +729,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionPreviousHistoryStatus;
     }
 
-
     /**
      * Set the section previous history financial history status
      *
@@ -770,7 +751,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionPreviousHistoryFinancialHistoryStatus;
     }
-
 
     /**
      * Set the section previous history licence history status
@@ -795,7 +775,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionPreviousHistoryLicenceHistoryStatus;
     }
 
-
     /**
      * Set the section previous history convictions penalties status
      *
@@ -818,7 +797,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionPreviousHistoryConvictionsPenaltiesStatus;
     }
-
 
     /**
      * Set the section review declarations status
@@ -843,7 +821,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionReviewDeclarationsStatus;
     }
 
-
     /**
      * Set the section payment submission status
      *
@@ -866,7 +843,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionPaymentSubmissionStatus;
     }
-
 
     /**
      * Set the section payment submission payment status
@@ -891,7 +867,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionPaymentSubmissionPaymentStatus;
     }
 
-
     /**
      * Set the section payment submission summary status
      *
@@ -914,7 +889,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->sectionPaymentSubmissionSummaryStatus;
     }
-
 
     /**
      * Set the section taxi phv status
@@ -939,7 +913,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionTaxiPhvStatus;
     }
 
-
     /**
      * Set the section taxi phv licence status
      *
@@ -963,7 +936,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         return $this->sectionTaxiPhvLicenceStatus;
     }
 
-
     /**
      * Set the last section
      *
@@ -986,5 +958,4 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     {
         return $this->lastSection;
     }
-
 }

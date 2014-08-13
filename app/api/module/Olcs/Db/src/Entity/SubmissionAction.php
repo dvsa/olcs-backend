@@ -39,7 +39,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id")
      */
     protected $submission;
@@ -49,7 +49,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id")
      */
     protected $recipientUser;
@@ -59,7 +59,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id")
      */
     protected $senderUser;
@@ -67,7 +67,7 @@ class SubmissionAction implements Interfaces\EntityInterface
     /**
      * Urgent
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="urgent", nullable=true)
      */
@@ -115,7 +115,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submission;
     }
 
-
     /**
      * Set the recipient user
      *
@@ -138,7 +137,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->recipientUser;
     }
-
 
     /**
      * Set the sender user
@@ -163,11 +161,10 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->senderUser;
     }
 
-
     /**
      * Set the urgent
      *
-     * @param unknown $urgent
+     * @param string $urgent
      * @return SubmissionAction
      */
     public function setUrgent($urgent)
@@ -180,13 +177,12 @@ class SubmissionAction implements Interfaces\EntityInterface
     /**
      * Get the urgent
      *
-     * @return unknown
+     * @return string
      */
     public function getUrgent()
     {
         return $this->urgent;
     }
-
 
     /**
      * Set the submission action status
@@ -211,7 +207,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submissionActionStatus;
     }
 
-
     /**
      * Set the submission action type
      *
@@ -234,5 +229,4 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->submissionActionType;
     }
-
 }

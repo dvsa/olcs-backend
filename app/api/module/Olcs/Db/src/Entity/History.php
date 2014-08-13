@@ -29,7 +29,7 @@ class History implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EntityType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EntityType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EntityType", fetch="LAZY")
      * @ORM\JoinColumn(name="entity_type_id", referencedColumnName="id")
      */
     protected $entityType;
@@ -39,7 +39,7 @@ class History implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Template", inversedBy="historys")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Template", inversedBy="historys", fetch="LAZY")
      * @ORM\JoinTable(name="history_template",
      *     joinColumns={
      *         @ORM\JoinColumn(name="history_id", referencedColumnName="id")
@@ -56,7 +56,7 @@ class History implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="data", nullable=false)
+     * @ORM\Column(type="text", name="data", length=65535, nullable=false)
      */
     protected $data;
 
@@ -109,7 +109,6 @@ class History implements Interfaces\EntityInterface
     {
         return $this->entityType;
     }
-
 
     /**
      * Set the template
@@ -171,7 +170,6 @@ class History implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the data
      *
@@ -194,7 +192,6 @@ class History implements Interfaces\EntityInterface
     {
         return $this->data;
     }
-
 
     /**
      * Set the entity id
@@ -219,7 +216,6 @@ class History implements Interfaces\EntityInterface
         return $this->entityId;
     }
 
-
     /**
      * Set the entity version
      *
@@ -242,5 +238,4 @@ class History implements Interfaces\EntityInterface
     {
         return $this->entityVersion;
     }
-
 }

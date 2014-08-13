@@ -43,7 +43,7 @@ class TransportManager implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_type", referencedColumnName="id")
      */
     protected $tmType;
@@ -53,7 +53,7 @@ class TransportManager implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_status", referencedColumnName="id")
      */
     protected $tmStatus;
@@ -126,7 +126,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->tmType;
     }
 
-
     /**
      * Set the tm status
      *
@@ -149,7 +148,6 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->tmStatus;
     }
-
 
     /**
      * Set the disqualification tm case id
@@ -174,7 +172,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->disqualificationTmCaseId;
     }
 
-
     /**
      * Set the nysiis family name
      *
@@ -198,7 +195,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->nysiisFamilyName;
     }
 
-
     /**
      * Set the nysiis forename
      *
@@ -221,7 +217,6 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->nysiisForename;
     }
-
 
     /**
      * Set the document
@@ -282,5 +277,4 @@ class TransportManager implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

@@ -16,7 +16,7 @@ trait AddressManyToOne
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      */
     protected $address;

@@ -40,7 +40,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
      * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id")
      */
     protected $leadTcArea;
@@ -50,7 +50,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="sic_code", referencedColumnName="id")
      */
     protected $sicCode;
@@ -60,7 +60,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     protected $type;
@@ -86,7 +86,7 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Is mlh
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
      */
@@ -95,7 +95,7 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Company cert seen
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
      */
@@ -113,7 +113,7 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Allow email
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="allow_email", nullable=false)
      */
@@ -180,7 +180,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->leadTcArea;
     }
 
-
     /**
      * Set the sic code
      *
@@ -203,7 +202,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->sicCode;
     }
-
 
     /**
      * Set the type
@@ -228,7 +226,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->type;
     }
 
-
     /**
      * Set the company or llp no
      *
@@ -251,7 +248,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->companyOrLlpNo;
     }
-
 
     /**
      * Set the name
@@ -276,11 +272,10 @@ class Organisation implements Interfaces\EntityInterface
         return $this->name;
     }
 
-
     /**
      * Set the is mlh
      *
-     * @param unknown $isMlh
+     * @param string $isMlh
      * @return Organisation
      */
     public function setIsMlh($isMlh)
@@ -293,18 +288,17 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the is mlh
      *
-     * @return unknown
+     * @return string
      */
     public function getIsMlh()
     {
         return $this->isMlh;
     }
 
-
     /**
      * Set the company cert seen
      *
-     * @param unknown $companyCertSeen
+     * @param string $companyCertSeen
      * @return Organisation
      */
     public function setCompanyCertSeen($companyCertSeen)
@@ -317,13 +311,12 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the company cert seen
      *
-     * @return unknown
+     * @return string
      */
     public function getCompanyCertSeen()
     {
         return $this->companyCertSeen;
     }
-
 
     /**
      * Set the irfo nationality
@@ -348,11 +341,10 @@ class Organisation implements Interfaces\EntityInterface
         return $this->irfoNationality;
     }
 
-
     /**
      * Set the allow email
      *
-     * @param unknown $allowEmail
+     * @param string $allowEmail
      * @return Organisation
      */
     public function setAllowEmail($allowEmail)
@@ -365,13 +357,12 @@ class Organisation implements Interfaces\EntityInterface
     /**
      * Get the allow email
      *
-     * @return unknown
+     * @return string
      */
     public function getAllowEmail()
     {
         return $this->allowEmail;
     }
-
 
     /**
      * Set the contact detail
@@ -433,7 +424,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the licence
      *
@@ -494,7 +484,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the trading name
      *
@@ -554,5 +543,4 @@ class Organisation implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

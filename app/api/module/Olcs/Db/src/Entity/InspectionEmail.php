@@ -29,7 +29,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\InspectionRequest
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\InspectionRequest")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\InspectionRequest", fetch="LAZY")
      * @ORM\JoinColumn(name="inspection_request_id", referencedColumnName="id")
      */
     protected $inspectionRequest;
@@ -48,7 +48,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="message_body", nullable=true)
+     * @ORM\Column(type="text", name="message_body", length=16777215, nullable=true)
      */
     protected $messageBody;
 
@@ -64,7 +64,7 @@ class InspectionEmail implements Interfaces\EntityInterface
     /**
      * Processed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="processed", nullable=false)
      */
@@ -103,7 +103,6 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->inspectionRequest;
     }
 
-
     /**
      * Set the subject
      *
@@ -126,7 +125,6 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->subject;
     }
-
 
     /**
      * Set the message body
@@ -151,7 +149,6 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->messageBody;
     }
 
-
     /**
      * Set the email status
      *
@@ -175,11 +172,10 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->emailStatus;
     }
 
-
     /**
      * Set the processed
      *
-     * @param unknown $processed
+     * @param string $processed
      * @return InspectionEmail
      */
     public function setProcessed($processed)
@@ -192,13 +188,12 @@ class InspectionEmail implements Interfaces\EntityInterface
     /**
      * Get the processed
      *
-     * @return unknown
+     * @return string
      */
     public function getProcessed()
     {
         return $this->processed;
     }
-
 
     /**
      * Set the sender email address
@@ -222,5 +217,4 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->senderEmailAddress;
     }
-
 }

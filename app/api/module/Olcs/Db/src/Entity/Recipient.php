@@ -40,7 +40,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients", fetch="LAZY")
      * @ORM\JoinTable(name="recipient_traffic_area",
      *     joinColumns={
      *         @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
@@ -55,7 +55,7 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Send app decision
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
      */
@@ -64,7 +64,7 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Send notices procs
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
      */
@@ -73,7 +73,7 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Is police
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_police", nullable=false)
      */
@@ -82,7 +82,7 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Is objector
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_objector", nullable=false)
      */
@@ -157,11 +157,10 @@ class Recipient implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the send app decision
      *
-     * @param unknown $sendAppDecision
+     * @param string $sendAppDecision
      * @return Recipient
      */
     public function setSendAppDecision($sendAppDecision)
@@ -174,18 +173,17 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the send app decision
      *
-     * @return unknown
+     * @return string
      */
     public function getSendAppDecision()
     {
         return $this->sendAppDecision;
     }
 
-
     /**
      * Set the send notices procs
      *
-     * @param unknown $sendNoticesProcs
+     * @param string $sendNoticesProcs
      * @return Recipient
      */
     public function setSendNoticesProcs($sendNoticesProcs)
@@ -198,18 +196,17 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the send notices procs
      *
-     * @return unknown
+     * @return string
      */
     public function getSendNoticesProcs()
     {
         return $this->sendNoticesProcs;
     }
 
-
     /**
      * Set the is police
      *
-     * @param unknown $isPolice
+     * @param string $isPolice
      * @return Recipient
      */
     public function setIsPolice($isPolice)
@@ -222,18 +219,17 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the is police
      *
-     * @return unknown
+     * @return string
      */
     public function getIsPolice()
     {
         return $this->isPolice;
     }
 
-
     /**
      * Set the is objector
      *
-     * @param unknown $isObjector
+     * @param string $isObjector
      * @return Recipient
      */
     public function setIsObjector($isObjector)
@@ -246,11 +242,10 @@ class Recipient implements Interfaces\EntityInterface
     /**
      * Get the is objector
      *
-     * @return unknown
+     * @return string
      */
     public function getIsObjector()
     {
         return $this->isObjector;
     }
-
 }

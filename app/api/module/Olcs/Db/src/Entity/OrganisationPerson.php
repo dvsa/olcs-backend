@@ -78,7 +78,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
-
     /**
      * Set the position
      *
@@ -101,5 +100,4 @@ class OrganisationPerson implements Interfaces\EntityInterface
     {
         return $this->position;
     }
-
 }

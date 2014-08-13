@@ -27,9 +27,40 @@ class Penalty implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\NotesField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="notes", nullable=true)
+     */
+    protected $notes;
+
+
+    /**
+     * Set the notes
+     *
+     * @param string $notes
+     * @return Penalty
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
 }

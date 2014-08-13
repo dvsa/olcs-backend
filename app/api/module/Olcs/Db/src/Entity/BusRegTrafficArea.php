@@ -39,7 +39,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Txc missing
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="txc_missing", nullable=true)
      */
@@ -48,7 +48,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Txc not required
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="txc_not_required", nullable=true)
      */
@@ -58,7 +58,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Set the txc missing
      *
-     * @param unknown $txcMissing
+     * @param string $txcMissing
      * @return BusRegTrafficArea
      */
     public function setTxcMissing($txcMissing)
@@ -71,18 +71,17 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Get the txc missing
      *
-     * @return unknown
+     * @return string
      */
     public function getTxcMissing()
     {
         return $this->txcMissing;
     }
 
-
     /**
      * Set the txc not required
      *
-     * @param unknown $txcNotRequired
+     * @param string $txcNotRequired
      * @return BusRegTrafficArea
      */
     public function setTxcNotRequired($txcNotRequired)
@@ -95,11 +94,10 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     /**
      * Get the txc not required
      *
-     * @return unknown
+     * @return string
      */
     public function getTxcNotRequired()
     {
         return $this->txcNotRequired;
     }
-
 }

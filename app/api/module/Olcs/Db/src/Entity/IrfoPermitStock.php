@@ -86,7 +86,6 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         return $this->serialNo;
     }
 
-
     /**
      * Set the valid for year
      *
@@ -110,7 +109,6 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         return $this->validForYear;
     }
 
-
     /**
      * Set the void return date
      *
@@ -133,5 +131,4 @@ class IrfoPermitStock implements Interfaces\EntityInterface
     {
         return $this->voidReturnDate;
     }
-
 }

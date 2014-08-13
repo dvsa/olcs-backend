@@ -39,7 +39,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Is disqualified
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_disqualified", nullable=true)
      */
@@ -67,7 +67,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Set the is disqualified
      *
-     * @param unknown $isDisqualified
+     * @param string $isDisqualified
      * @return Disqualification
      */
     public function setIsDisqualified($isDisqualified)
@@ -80,13 +80,12 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Get the is disqualified
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDisqualified()
     {
         return $this->isDisqualified;
     }
-
 
     /**
      * Set the notes
@@ -111,7 +110,6 @@ class Disqualification implements Interfaces\EntityInterface
         return $this->notes;
     }
 
-
     /**
      * Set the period
      *
@@ -134,5 +132,4 @@ class Disqualification implements Interfaces\EntityInterface
     {
         return $this->period;
     }
-
 }

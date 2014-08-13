@@ -35,7 +35,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc a
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="coc_a", nullable=false)
      */
@@ -44,7 +44,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc b
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="coc_b", nullable=false)
      */
@@ -53,7 +53,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc c
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="coc_c", nullable=false)
      */
@@ -62,7 +62,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc d
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="coc_d", nullable=false)
      */
@@ -71,7 +71,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Coc t
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="coc_t", nullable=false)
      */
@@ -99,7 +99,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Set the coc a
      *
-     * @param unknown $cocA
+     * @param string $cocA
      * @return IrfoVehicle
      */
     public function setCocA($cocA)
@@ -112,18 +112,17 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc a
      *
-     * @return unknown
+     * @return string
      */
     public function getCocA()
     {
         return $this->cocA;
     }
 
-
     /**
      * Set the coc b
      *
-     * @param unknown $cocB
+     * @param string $cocB
      * @return IrfoVehicle
      */
     public function setCocB($cocB)
@@ -136,18 +135,17 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc b
      *
-     * @return unknown
+     * @return string
      */
     public function getCocB()
     {
         return $this->cocB;
     }
 
-
     /**
      * Set the coc c
      *
-     * @param unknown $cocC
+     * @param string $cocC
      * @return IrfoVehicle
      */
     public function setCocC($cocC)
@@ -160,18 +158,17 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc c
      *
-     * @return unknown
+     * @return string
      */
     public function getCocC()
     {
         return $this->cocC;
     }
 
-
     /**
      * Set the coc d
      *
-     * @param unknown $cocD
+     * @param string $cocD
      * @return IrfoVehicle
      */
     public function setCocD($cocD)
@@ -184,18 +181,17 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc d
      *
-     * @return unknown
+     * @return string
      */
     public function getCocD()
     {
         return $this->cocD;
     }
 
-
     /**
      * Set the coc t
      *
-     * @param unknown $cocT
+     * @param string $cocT
      * @return IrfoVehicle
      */
     public function setCocT($cocT)
@@ -208,13 +204,12 @@ class IrfoVehicle implements Interfaces\EntityInterface
     /**
      * Get the coc t
      *
-     * @return unknown
+     * @return string
      */
     public function getCocT()
     {
         return $this->cocT;
     }
-
 
     /**
      * Set the vrm
@@ -239,7 +234,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->vrm;
     }
 
-
     /**
      * Set the version
      *
@@ -262,5 +256,4 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->version;
     }
-
 }

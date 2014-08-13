@@ -16,7 +16,7 @@ trait ContactTypeManyToOne
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="contact_type", referencedColumnName="id")
      */
     protected $contactType;

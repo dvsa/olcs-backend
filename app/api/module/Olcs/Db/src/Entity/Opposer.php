@@ -37,7 +37,7 @@ class Opposer implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="opposer_type", referencedColumnName="id")
      */
     protected $opposerType;
@@ -65,5 +65,4 @@ class Opposer implements Interfaces\EntityInterface
     {
         return $this->opposerType;
     }
-
 }

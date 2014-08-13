@@ -41,7 +41,7 @@ class ProposeToRevoke implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="proposeToRevokes")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="proposeToRevokes", fetch="LAZY")
      * @ORM\JoinTable(name="ptr_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id")
@@ -131,7 +131,6 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the ptr agreed date
      *
@@ -154,5 +153,4 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     {
         return $this->ptrAgreedDate;
     }
-
 }

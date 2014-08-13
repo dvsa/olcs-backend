@@ -51,7 +51,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="interim_status", referencedColumnName="id")
      */
     protected $interimStatus;
@@ -61,7 +61,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="applications")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="applications")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
      */
     protected $licence;
@@ -69,7 +69,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Has entered reg
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="has_entered_reg", nullable=true)
      */
@@ -78,7 +78,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Bankrupt
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
      */
@@ -87,7 +87,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Administration
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="administration", nullable=true)
      */
@@ -96,7 +96,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Disqualified
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="disqualified", nullable=true)
      */
@@ -105,7 +105,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Liquidation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
      */
@@ -114,7 +114,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Receivership
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
      */
@@ -123,7 +123,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Insolvency confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false)
      */
@@ -141,7 +141,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Safety confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
      */
@@ -177,7 +177,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev has licence
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_has_licence", nullable=true)
      */
@@ -186,25 +186,25 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev had licence
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_had_licence", nullable=true)
      */
     protected $prevHadLicence;
 
     /**
-     * Prev been disqualified eu
+     * Prev been refused
      *
-     * @var unknown
+     * @var string
      *
-     * @ORM\Column(type="yesnonull", name="prev_been_disqualified_eu", nullable=true)
+     * @ORM\Column(type="yesnonull", name="prev_been_refused", nullable=true)
      */
-    protected $prevBeenDisqualifiedEu;
+    protected $prevBeenRefused;
 
     /**
      * Prev been revoked
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_been_revoked", nullable=true)
      */
@@ -213,7 +213,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev been at pi
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_been_at_pi", nullable=true)
      */
@@ -222,7 +222,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev been disqualified tc
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_been_disqualified_tc", nullable=true)
      */
@@ -231,7 +231,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev purchased assets
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="prev_purchased_assets", nullable=true)
      */
@@ -240,7 +240,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Override ooo
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="override_ooo", nullable=false)
      */
@@ -249,7 +249,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Prev conviction
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="prev_conviction", nullable=false)
      */
@@ -258,7 +258,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Convictions confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false)
      */
@@ -267,7 +267,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv operate small vhl
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="psv_operate_small_vhl", nullable=true)
      */
@@ -285,7 +285,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv small vhl confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="psv_small_vhl_confirmation", nullable=false)
      */
@@ -294,7 +294,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv no small vhl confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="psv_no_small_vhl_confirmation", nullable=false)
      */
@@ -303,7 +303,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv limosines
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="psv_limosines", nullable=false)
      */
@@ -312,7 +312,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv no limosine confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="psv_no_limosine_confirmation", nullable=false)
      */
@@ -321,7 +321,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv only limosines confirmation
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="psv_only_limosines_confirmation", nullable=false)
      */
@@ -404,7 +404,6 @@ class Application implements Interfaces\EntityInterface
         return $this->interimStatus;
     }
 
-
     /**
      * Set the licence
      *
@@ -428,11 +427,10 @@ class Application implements Interfaces\EntityInterface
         return $this->licence;
     }
 
-
     /**
      * Set the has entered reg
      *
-     * @param unknown $hasEnteredReg
+     * @param string $hasEnteredReg
      * @return Application
      */
     public function setHasEnteredReg($hasEnteredReg)
@@ -445,18 +443,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the has entered reg
      *
-     * @return unknown
+     * @return string
      */
     public function getHasEnteredReg()
     {
         return $this->hasEnteredReg;
     }
 
-
     /**
      * Set the bankrupt
      *
-     * @param unknown $bankrupt
+     * @param string $bankrupt
      * @return Application
      */
     public function setBankrupt($bankrupt)
@@ -469,18 +466,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the bankrupt
      *
-     * @return unknown
+     * @return string
      */
     public function getBankrupt()
     {
         return $this->bankrupt;
     }
 
-
     /**
      * Set the administration
      *
-     * @param unknown $administration
+     * @param string $administration
      * @return Application
      */
     public function setAdministration($administration)
@@ -493,18 +489,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the administration
      *
-     * @return unknown
+     * @return string
      */
     public function getAdministration()
     {
         return $this->administration;
     }
 
-
     /**
      * Set the disqualified
      *
-     * @param unknown $disqualified
+     * @param string $disqualified
      * @return Application
      */
     public function setDisqualified($disqualified)
@@ -517,18 +512,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the disqualified
      *
-     * @return unknown
+     * @return string
      */
     public function getDisqualified()
     {
         return $this->disqualified;
     }
 
-
     /**
      * Set the liquidation
      *
-     * @param unknown $liquidation
+     * @param string $liquidation
      * @return Application
      */
     public function setLiquidation($liquidation)
@@ -541,18 +535,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the liquidation
      *
-     * @return unknown
+     * @return string
      */
     public function getLiquidation()
     {
         return $this->liquidation;
     }
 
-
     /**
      * Set the receivership
      *
-     * @param unknown $receivership
+     * @param string $receivership
      * @return Application
      */
     public function setReceivership($receivership)
@@ -565,18 +558,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the receivership
      *
-     * @return unknown
+     * @return string
      */
     public function getReceivership()
     {
         return $this->receivership;
     }
 
-
     /**
      * Set the insolvency confirmation
      *
-     * @param unknown $insolvencyConfirmation
+     * @param string $insolvencyConfirmation
      * @return Application
      */
     public function setInsolvencyConfirmation($insolvencyConfirmation)
@@ -589,13 +581,12 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the insolvency confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getInsolvencyConfirmation()
     {
         return $this->insolvencyConfirmation;
     }
-
 
     /**
      * Set the insolvency details
@@ -620,11 +611,10 @@ class Application implements Interfaces\EntityInterface
         return $this->insolvencyDetails;
     }
 
-
     /**
      * Set the safety confirmation
      *
-     * @param unknown $safetyConfirmation
+     * @param string $safetyConfirmation
      * @return Application
      */
     public function setSafetyConfirmation($safetyConfirmation)
@@ -637,13 +627,12 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the safety confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getSafetyConfirmation()
     {
         return $this->safetyConfirmation;
     }
-
 
     /**
      * Set the target completion date
@@ -668,7 +657,6 @@ class Application implements Interfaces\EntityInterface
         return $this->targetCompletionDate;
     }
 
-
     /**
      * Set the granted date
      *
@@ -691,7 +679,6 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->grantedDate;
     }
-
 
     /**
      * Set the refused date
@@ -716,11 +703,10 @@ class Application implements Interfaces\EntityInterface
         return $this->refusedDate;
     }
 
-
     /**
      * Set the prev has licence
      *
-     * @param unknown $prevHasLicence
+     * @param string $prevHasLicence
      * @return Application
      */
     public function setPrevHasLicence($prevHasLicence)
@@ -733,18 +719,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev has licence
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevHasLicence()
     {
         return $this->prevHasLicence;
     }
 
-
     /**
      * Set the prev had licence
      *
-     * @param unknown $prevHadLicence
+     * @param string $prevHadLicence
      * @return Application
      */
     public function setPrevHadLicence($prevHadLicence)
@@ -757,42 +742,40 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev had licence
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevHadLicence()
     {
         return $this->prevHadLicence;
     }
 
-
     /**
-     * Set the prev been disqualified eu
+     * Set the prev been refused
      *
-     * @param unknown $prevBeenDisqualifiedEu
+     * @param string $prevBeenRefused
      * @return Application
      */
-    public function setPrevBeenDisqualifiedEu($prevBeenDisqualifiedEu)
+    public function setPrevBeenRefused($prevBeenRefused)
     {
-        $this->prevBeenDisqualifiedEu = $prevBeenDisqualifiedEu;
+        $this->prevBeenRefused = $prevBeenRefused;
 
         return $this;
     }
 
     /**
-     * Get the prev been disqualified eu
+     * Get the prev been refused
      *
-     * @return unknown
+     * @return string
      */
-    public function getPrevBeenDisqualifiedEu()
+    public function getPrevBeenRefused()
     {
-        return $this->prevBeenDisqualifiedEu;
+        return $this->prevBeenRefused;
     }
-
 
     /**
      * Set the prev been revoked
      *
-     * @param unknown $prevBeenRevoked
+     * @param string $prevBeenRevoked
      * @return Application
      */
     public function setPrevBeenRevoked($prevBeenRevoked)
@@ -805,18 +788,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev been revoked
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevBeenRevoked()
     {
         return $this->prevBeenRevoked;
     }
 
-
     /**
      * Set the prev been at pi
      *
-     * @param unknown $prevBeenAtPi
+     * @param string $prevBeenAtPi
      * @return Application
      */
     public function setPrevBeenAtPi($prevBeenAtPi)
@@ -829,18 +811,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev been at pi
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevBeenAtPi()
     {
         return $this->prevBeenAtPi;
     }
 
-
     /**
      * Set the prev been disqualified tc
      *
-     * @param unknown $prevBeenDisqualifiedTc
+     * @param string $prevBeenDisqualifiedTc
      * @return Application
      */
     public function setPrevBeenDisqualifiedTc($prevBeenDisqualifiedTc)
@@ -853,18 +834,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev been disqualified tc
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevBeenDisqualifiedTc()
     {
         return $this->prevBeenDisqualifiedTc;
     }
 
-
     /**
      * Set the prev purchased assets
      *
-     * @param unknown $prevPurchasedAssets
+     * @param string $prevPurchasedAssets
      * @return Application
      */
     public function setPrevPurchasedAssets($prevPurchasedAssets)
@@ -877,18 +857,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev purchased assets
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevPurchasedAssets()
     {
         return $this->prevPurchasedAssets;
     }
 
-
     /**
      * Set the override ooo
      *
-     * @param unknown $overrideOoo
+     * @param string $overrideOoo
      * @return Application
      */
     public function setOverrideOoo($overrideOoo)
@@ -901,18 +880,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the override ooo
      *
-     * @return unknown
+     * @return string
      */
     public function getOverrideOoo()
     {
         return $this->overrideOoo;
     }
 
-
     /**
      * Set the prev conviction
      *
-     * @param unknown $prevConviction
+     * @param string $prevConviction
      * @return Application
      */
     public function setPrevConviction($prevConviction)
@@ -925,18 +903,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the prev conviction
      *
-     * @return unknown
+     * @return string
      */
     public function getPrevConviction()
     {
         return $this->prevConviction;
     }
 
-
     /**
      * Set the convictions confirmation
      *
-     * @param unknown $convictionsConfirmation
+     * @param string $convictionsConfirmation
      * @return Application
      */
     public function setConvictionsConfirmation($convictionsConfirmation)
@@ -949,18 +926,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the convictions confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getConvictionsConfirmation()
     {
         return $this->convictionsConfirmation;
     }
 
-
     /**
      * Set the psv operate small vhl
      *
-     * @param unknown $psvOperateSmallVhl
+     * @param string $psvOperateSmallVhl
      * @return Application
      */
     public function setPsvOperateSmallVhl($psvOperateSmallVhl)
@@ -973,13 +949,12 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv operate small vhl
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvOperateSmallVhl()
     {
         return $this->psvOperateSmallVhl;
     }
-
 
     /**
      * Set the psv small vhl notes
@@ -1004,11 +979,10 @@ class Application implements Interfaces\EntityInterface
         return $this->psvSmallVhlNotes;
     }
 
-
     /**
      * Set the psv small vhl confirmation
      *
-     * @param unknown $psvSmallVhlConfirmation
+     * @param string $psvSmallVhlConfirmation
      * @return Application
      */
     public function setPsvSmallVhlConfirmation($psvSmallVhlConfirmation)
@@ -1021,18 +995,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv small vhl confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvSmallVhlConfirmation()
     {
         return $this->psvSmallVhlConfirmation;
     }
 
-
     /**
      * Set the psv no small vhl confirmation
      *
-     * @param unknown $psvNoSmallVhlConfirmation
+     * @param string $psvNoSmallVhlConfirmation
      * @return Application
      */
     public function setPsvNoSmallVhlConfirmation($psvNoSmallVhlConfirmation)
@@ -1045,18 +1018,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv no small vhl confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvNoSmallVhlConfirmation()
     {
         return $this->psvNoSmallVhlConfirmation;
     }
 
-
     /**
      * Set the psv limosines
      *
-     * @param unknown $psvLimosines
+     * @param string $psvLimosines
      * @return Application
      */
     public function setPsvLimosines($psvLimosines)
@@ -1069,18 +1041,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv limosines
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvLimosines()
     {
         return $this->psvLimosines;
     }
 
-
     /**
      * Set the psv no limosine confirmation
      *
-     * @param unknown $psvNoLimosineConfirmation
+     * @param string $psvNoLimosineConfirmation
      * @return Application
      */
     public function setPsvNoLimosineConfirmation($psvNoLimosineConfirmation)
@@ -1093,18 +1064,17 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv no limosine confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvNoLimosineConfirmation()
     {
         return $this->psvNoLimosineConfirmation;
     }
 
-
     /**
      * Set the psv only limosines confirmation
      *
-     * @param unknown $psvOnlyLimosinesConfirmation
+     * @param string $psvOnlyLimosinesConfirmation
      * @return Application
      */
     public function setPsvOnlyLimosinesConfirmation($psvOnlyLimosinesConfirmation)
@@ -1117,13 +1087,12 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv only limosines confirmation
      *
-     * @return unknown
+     * @return string
      */
     public function getPsvOnlyLimosinesConfirmation()
     {
         return $this->psvOnlyLimosinesConfirmation;
     }
-
 
     /**
      * Set the interim start
@@ -1148,7 +1117,6 @@ class Application implements Interfaces\EntityInterface
         return $this->interimStart;
     }
 
-
     /**
      * Set the interim end
      *
@@ -1171,7 +1139,6 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->interimEnd;
     }
-
 
     /**
      * Set the interim auth vehicles
@@ -1196,7 +1163,6 @@ class Application implements Interfaces\EntityInterface
         return $this->interimAuthVehicles;
     }
 
-
     /**
      * Set the interim auth trailers
      *
@@ -1219,7 +1185,6 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->interimAuthTrailers;
     }
-
 
     /**
      * Set the document
@@ -1280,5 +1245,4 @@ class Application implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

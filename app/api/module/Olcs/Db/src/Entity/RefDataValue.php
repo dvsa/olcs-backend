@@ -29,7 +29,7 @@ class RefDataValue implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id")
      */
     protected $refData;
@@ -39,7 +39,7 @@ class RefDataValue implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Language
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Language")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Language", fetch="LAZY")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      */
     protected $language;
@@ -77,7 +77,6 @@ class RefDataValue implements Interfaces\EntityInterface
         return $this->refData;
     }
 
-
     /**
      * Set the language
      *
@@ -101,7 +100,6 @@ class RefDataValue implements Interfaces\EntityInterface
         return $this->language;
     }
 
-
     /**
      * Set the value
      *
@@ -124,5 +122,4 @@ class RefDataValue implements Interfaces\EntityInterface
     {
         return $this->value;
     }
-
 }

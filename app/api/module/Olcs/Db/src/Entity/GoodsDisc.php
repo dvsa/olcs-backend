@@ -42,7 +42,7 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Is copy
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
@@ -51,7 +51,7 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Requested by self service user
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="requested_by_self_service_user", nullable=false)
      */
@@ -60,7 +60,7 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Reprint required
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
@@ -70,7 +70,7 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Set the is copy
      *
-     * @param unknown $isCopy
+     * @param string $isCopy
      * @return GoodsDisc
      */
     public function setIsCopy($isCopy)
@@ -83,18 +83,17 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the is copy
      *
-     * @return unknown
+     * @return string
      */
     public function getIsCopy()
     {
         return $this->isCopy;
     }
 
-
     /**
      * Set the requested by self service user
      *
-     * @param unknown $requestedBySelfServiceUser
+     * @param string $requestedBySelfServiceUser
      * @return GoodsDisc
      */
     public function setRequestedBySelfServiceUser($requestedBySelfServiceUser)
@@ -107,18 +106,17 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the requested by self service user
      *
-     * @return unknown
+     * @return string
      */
     public function getRequestedBySelfServiceUser()
     {
         return $this->requestedBySelfServiceUser;
     }
 
-
     /**
      * Set the reprint required
      *
-     * @param unknown $reprintRequired
+     * @param string $reprintRequired
      * @return GoodsDisc
      */
     public function setReprintRequired($reprintRequired)
@@ -131,11 +129,10 @@ class GoodsDisc implements Interfaces\EntityInterface
     /**
      * Get the reprint required
      *
-     * @return unknown
+     * @return string
      */
     public function getReprintRequired()
     {
         return $this->reprintRequired;
     }
-
 }

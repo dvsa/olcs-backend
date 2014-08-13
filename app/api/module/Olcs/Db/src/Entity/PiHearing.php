@@ -37,7 +37,7 @@ class PiHearing implements Interfaces\EntityInterface
     /**
      * Is adjourned
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
@@ -56,7 +56,7 @@ class PiHearing implements Interfaces\EntityInterface
     /**
      * Set the is adjourned
      *
-     * @param unknown $isAdjourned
+     * @param string $isAdjourned
      * @return PiHearing
      */
     public function setIsAdjourned($isAdjourned)
@@ -69,13 +69,12 @@ class PiHearing implements Interfaces\EntityInterface
     /**
      * Get the is adjourned
      *
-     * @return unknown
+     * @return string
      */
     public function getIsAdjourned()
     {
         return $this->isAdjourned;
     }
-
 
     /**
      * Set the venue
@@ -99,5 +98,4 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
-
 }

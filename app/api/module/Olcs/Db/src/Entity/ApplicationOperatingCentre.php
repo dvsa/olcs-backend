@@ -61,7 +61,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Publication appropriate
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false)
      */
@@ -70,7 +70,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Sufficient parking
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
@@ -100,11 +100,10 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         return $this->action;
     }
 
-
     /**
      * Set the publication appropriate
      *
-     * @param unknown $publicationAppropriate
+     * @param string $publicationAppropriate
      * @return ApplicationOperatingCentre
      */
     public function setPublicationAppropriate($publicationAppropriate)
@@ -117,18 +116,17 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the publication appropriate
      *
-     * @return unknown
+     * @return string
      */
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
     }
 
-
     /**
      * Set the sufficient parking
      *
-     * @param unknown $sufficientParking
+     * @param string $sufficientParking
      * @return ApplicationOperatingCentre
      */
     public function setSufficientParking($sufficientParking)
@@ -141,11 +139,10 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     /**
      * Get the sufficient parking
      *
-     * @return unknown
+     * @return string
      */
     public function getSufficientParking()
     {
         return $this->sufficientParking;
     }
-
 }

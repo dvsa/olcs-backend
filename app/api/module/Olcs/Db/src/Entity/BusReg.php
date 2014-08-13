@@ -46,7 +46,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\BusNoticePeriod
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod", fetch="LAZY")
      * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id")
      */
     protected $busNoticePeriod;
@@ -56,7 +56,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="subsidised", referencedColumnName="id")
      */
     protected $subsidised;
@@ -66,7 +66,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs", fetch="LAZY")
      * @ORM\JoinTable(name="bus_reg_variation_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -83,7 +83,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", mappedBy="busRegs")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", mappedBy="busRegs", fetch="LAZY")
      */
     protected $busServiceTypes;
 
@@ -153,7 +153,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Is short notice
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_short_notice", nullable=false)
      */
@@ -162,7 +162,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Use all stops
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
      */
@@ -171,7 +171,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Has manoeuvre
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
      */
@@ -189,7 +189,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Need new stop
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="need_new_stop", nullable=false)
      */
@@ -207,7 +207,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Has not fixed stop
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
      */
@@ -234,7 +234,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Timetable acceptable
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
      */
@@ -243,7 +243,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Map supplied
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
      */
@@ -261,7 +261,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Copied to la pte
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
      */
@@ -270,7 +270,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * La short note
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
      */
@@ -279,7 +279,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Application signed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="application_signed", nullable=false)
      */
@@ -306,7 +306,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Op notified la pte
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false)
      */
@@ -324,7 +324,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Trc condition checked
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
      */
@@ -369,7 +369,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Is txc app
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
      */
@@ -414,7 +414,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Short notice refused
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false)
      */
@@ -463,7 +463,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->busNoticePeriod;
     }
 
-
     /**
      * Set the subsidised
      *
@@ -486,7 +485,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->subsidised;
     }
-
 
     /**
      * Set the variation reason
@@ -548,7 +546,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the bus service type
      *
@@ -609,7 +606,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the route no
      *
@@ -632,7 +628,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->routeNo;
     }
-
 
     /**
      * Set the reg no
@@ -657,7 +652,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->regNo;
     }
 
-
     /**
      * Set the start point
      *
@@ -680,7 +674,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->startPoint;
     }
-
 
     /**
      * Set the finish point
@@ -705,7 +698,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->finishPoint;
     }
 
-
     /**
      * Set the via
      *
@@ -728,7 +720,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->via;
     }
-
 
     /**
      * Set the other details
@@ -753,7 +744,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->otherDetails;
     }
 
-
     /**
      * Set the received date
      *
@@ -777,11 +767,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->receivedDate;
     }
 
-
     /**
      * Set the is short notice
      *
-     * @param unknown $isShortNotice
+     * @param string $isShortNotice
      * @return BusReg
      */
     public function setIsShortNotice($isShortNotice)
@@ -794,18 +783,17 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the is short notice
      *
-     * @return unknown
+     * @return string
      */
     public function getIsShortNotice()
     {
         return $this->isShortNotice;
     }
 
-
     /**
      * Set the use all stops
      *
-     * @param unknown $useAllStops
+     * @param string $useAllStops
      * @return BusReg
      */
     public function setUseAllStops($useAllStops)
@@ -818,18 +806,17 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the use all stops
      *
-     * @return unknown
+     * @return string
      */
     public function getUseAllStops()
     {
         return $this->useAllStops;
     }
 
-
     /**
      * Set the has manoeuvre
      *
-     * @param unknown $hasManoeuvre
+     * @param string $hasManoeuvre
      * @return BusReg
      */
     public function setHasManoeuvre($hasManoeuvre)
@@ -842,13 +829,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the has manoeuvre
      *
-     * @return unknown
+     * @return string
      */
     public function getHasManoeuvre()
     {
         return $this->hasManoeuvre;
     }
-
 
     /**
      * Set the manoeuvre detail
@@ -873,11 +859,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->manoeuvreDetail;
     }
 
-
     /**
      * Set the need new stop
      *
-     * @param unknown $needNewStop
+     * @param string $needNewStop
      * @return BusReg
      */
     public function setNeedNewStop($needNewStop)
@@ -890,13 +875,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the need new stop
      *
-     * @return unknown
+     * @return string
      */
     public function getNeedNewStop()
     {
         return $this->needNewStop;
     }
-
 
     /**
      * Set the new stop detail
@@ -921,11 +905,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->newStopDetail;
     }
 
-
     /**
      * Set the has not fixed stop
      *
-     * @param unknown $hasNotFixedStop
+     * @param string $hasNotFixedStop
      * @return BusReg
      */
     public function setHasNotFixedStop($hasNotFixedStop)
@@ -938,13 +921,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the has not fixed stop
      *
-     * @return unknown
+     * @return string
      */
     public function getHasNotFixedStop()
     {
         return $this->hasNotFixedStop;
     }
-
 
     /**
      * Set the not fixed stop detail
@@ -969,7 +951,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->notFixedStopDetail;
     }
 
-
     /**
      * Set the subsidy detail
      *
@@ -993,11 +974,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidyDetail;
     }
 
-
     /**
      * Set the timetable acceptable
      *
-     * @param unknown $timetableAcceptable
+     * @param string $timetableAcceptable
      * @return BusReg
      */
     public function setTimetableAcceptable($timetableAcceptable)
@@ -1010,18 +990,17 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the timetable acceptable
      *
-     * @return unknown
+     * @return string
      */
     public function getTimetableAcceptable()
     {
         return $this->timetableAcceptable;
     }
 
-
     /**
      * Set the map supplied
      *
-     * @param unknown $mapSupplied
+     * @param string $mapSupplied
      * @return BusReg
      */
     public function setMapSupplied($mapSupplied)
@@ -1034,13 +1013,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the map supplied
      *
-     * @return unknown
+     * @return string
      */
     public function getMapSupplied()
     {
         return $this->mapSupplied;
     }
-
 
     /**
      * Set the route description
@@ -1065,11 +1043,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeDescription;
     }
 
-
     /**
      * Set the copied to la pte
      *
-     * @param unknown $copiedToLaPte
+     * @param string $copiedToLaPte
      * @return BusReg
      */
     public function setCopiedToLaPte($copiedToLaPte)
@@ -1082,18 +1059,17 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the copied to la pte
      *
-     * @return unknown
+     * @return string
      */
     public function getCopiedToLaPte()
     {
         return $this->copiedToLaPte;
     }
 
-
     /**
      * Set the la short note
      *
-     * @param unknown $laShortNote
+     * @param string $laShortNote
      * @return BusReg
      */
     public function setLaShortNote($laShortNote)
@@ -1106,18 +1082,17 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the la short note
      *
-     * @return unknown
+     * @return string
      */
     public function getLaShortNote()
     {
         return $this->laShortNote;
     }
 
-
     /**
      * Set the application signed
      *
-     * @param unknown $applicationSigned
+     * @param string $applicationSigned
      * @return BusReg
      */
     public function setApplicationSigned($applicationSigned)
@@ -1130,13 +1105,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the application signed
      *
-     * @return unknown
+     * @return string
      */
     public function getApplicationSigned()
     {
         return $this->applicationSigned;
     }
-
 
     /**
      * Set the completed date
@@ -1161,7 +1135,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->completedDate;
     }
 
-
     /**
      * Set the route seq
      *
@@ -1185,11 +1158,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeSeq;
     }
 
-
     /**
      * Set the op notified la pte
      *
-     * @param unknown $opNotifiedLaPte
+     * @param string $opNotifiedLaPte
      * @return BusReg
      */
     public function setOpNotifiedLaPte($opNotifiedLaPte)
@@ -1202,13 +1174,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the op notified la pte
      *
-     * @return unknown
+     * @return string
      */
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
     }
-
 
     /**
      * Set the stopping arrangements
@@ -1233,11 +1204,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->stoppingArrangements;
     }
 
-
     /**
      * Set the trc condition checked
      *
-     * @param unknown $trcConditionChecked
+     * @param string $trcConditionChecked
      * @return BusReg
      */
     public function setTrcConditionChecked($trcConditionChecked)
@@ -1250,13 +1220,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the trc condition checked
      *
-     * @return unknown
+     * @return string
      */
     public function getTrcConditionChecked()
     {
         return $this->trcConditionChecked;
     }
-
 
     /**
      * Set the trc notes
@@ -1281,7 +1250,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->trcNotes;
     }
 
-
     /**
      * Set the status
      *
@@ -1304,7 +1272,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->status;
     }
-
 
     /**
      * Set the revert status
@@ -1329,7 +1296,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->revertStatus;
     }
 
-
     /**
      * Set the organisation email
      *
@@ -1353,11 +1319,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->organisationEmail;
     }
 
-
     /**
      * Set the is txc app
      *
-     * @param unknown $isTxcApp
+     * @param string $isTxcApp
      * @return BusReg
      */
     public function setIsTxcApp($isTxcApp)
@@ -1370,13 +1335,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the is txc app
      *
-     * @return unknown
+     * @return string
      */
     public function getIsTxcApp()
     {
         return $this->isTxcApp;
     }
-
 
     /**
      * Set the txc app type
@@ -1401,7 +1365,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->txcAppType;
     }
 
-
     /**
      * Set the reason cancelled
      *
@@ -1424,7 +1387,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->reasonCancelled;
     }
-
 
     /**
      * Set the reason refused
@@ -1449,7 +1411,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonRefused;
     }
 
-
     /**
      * Set the reason sn refused
      *
@@ -1473,11 +1434,10 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonSnRefused;
     }
 
-
     /**
      * Set the short notice refused
      *
-     * @param unknown $shortNoticeRefused
+     * @param string $shortNoticeRefused
      * @return BusReg
      */
     public function setShortNoticeRefused($shortNoticeRefused)
@@ -1490,13 +1450,12 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the short notice refused
      *
-     * @return unknown
+     * @return string
      */
     public function getShortNoticeRefused()
     {
         return $this->shortNoticeRefused;
     }
-
 
     /**
      * Set the document
@@ -1557,5 +1516,4 @@ class BusReg implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

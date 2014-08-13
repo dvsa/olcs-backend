@@ -39,7 +39,7 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawalReasonType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawalReasonType", fetch="LAZY")
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
      */
     protected $reason;
@@ -49,7 +49,7 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CommunityLicWithdrawal
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawal")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawal", fetch="LAZY")
      * @ORM\JoinColumn(name="community_lic_withdrawal_id", referencedColumnName="id")
      */
     protected $communityLicWithdrawal;
@@ -78,7 +78,6 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
-
     /**
      * Set the community lic withdrawal
      *
@@ -101,5 +100,4 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     {
         return $this->communityLicWithdrawal;
     }
-
 }

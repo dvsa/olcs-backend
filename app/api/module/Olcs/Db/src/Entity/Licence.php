@@ -57,7 +57,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id")
      */
     protected $tachographIns;
@@ -67,7 +67,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="licences")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
      */
     protected $organisation;
@@ -147,7 +147,7 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Safety ins
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
      */
@@ -156,7 +156,7 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Safety ins varies
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="safety_ins_varies", nullable=false)
      */
@@ -165,7 +165,7 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Ni flag
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="ni_flag", nullable=false)
      */
@@ -192,7 +192,7 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Translate to welsh
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
@@ -279,7 +279,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographIns;
     }
 
-
     /**
      * Set the organisation
      *
@@ -302,7 +301,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->organisation;
     }
-
 
     /**
      * Set the trailers in possession
@@ -327,7 +325,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->trailersInPossession;
     }
 
-
     /**
      * Set the fabs reference
      *
@@ -350,7 +347,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->fabsReference;
     }
-
 
     /**
      * Set the granted date
@@ -375,7 +371,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->grantedDate;
     }
 
-
     /**
      * Set the review date
      *
@@ -398,7 +393,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->reviewDate;
     }
-
 
     /**
      * Set the fee date
@@ -423,7 +417,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->feeDate;
     }
 
-
     /**
      * Set the surrendered date
      *
@@ -446,7 +439,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->surrenderedDate;
     }
-
 
     /**
      * Set the safety ins trailers
@@ -471,7 +463,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsTrailers;
     }
 
-
     /**
      * Set the safety ins vehicles
      *
@@ -495,11 +486,10 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVehicles;
     }
 
-
     /**
      * Set the safety ins
      *
-     * @param unknown $safetyIns
+     * @param string $safetyIns
      * @return Licence
      */
     public function setSafetyIns($safetyIns)
@@ -512,18 +502,17 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the safety ins
      *
-     * @return unknown
+     * @return string
      */
     public function getSafetyIns()
     {
         return $this->safetyIns;
     }
 
-
     /**
      * Set the safety ins varies
      *
-     * @param unknown $safetyInsVaries
+     * @param string $safetyInsVaries
      * @return Licence
      */
     public function setSafetyInsVaries($safetyInsVaries)
@@ -536,18 +525,17 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the safety ins varies
      *
-     * @return unknown
+     * @return string
      */
     public function getSafetyInsVaries()
     {
         return $this->safetyInsVaries;
     }
 
-
     /**
      * Set the ni flag
      *
-     * @param unknown $niFlag
+     * @param string $niFlag
      * @return Licence
      */
     public function setNiFlag($niFlag)
@@ -560,13 +548,12 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the ni flag
      *
-     * @return unknown
+     * @return string
      */
     public function getNiFlag()
     {
         return $this->niFlag;
     }
-
 
     /**
      * Set the tachograph ins name
@@ -591,7 +578,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographInsName;
     }
 
-
     /**
      * Set the psv discs to be printed no
      *
@@ -615,11 +601,10 @@ class Licence implements Interfaces\EntityInterface
         return $this->psvDiscsToBePrintedNo;
     }
 
-
     /**
      * Set the translate to welsh
      *
-     * @param unknown $translateToWelsh
+     * @param string $translateToWelsh
      * @return Licence
      */
     public function setTranslateToWelsh($translateToWelsh)
@@ -632,13 +617,12 @@ class Licence implements Interfaces\EntityInterface
     /**
      * Get the translate to welsh
      *
-     * @return unknown
+     * @return string
      */
     public function getTranslateToWelsh()
     {
         return $this->translateToWelsh;
     }
-
 
     /**
      * Set the application
@@ -700,7 +684,6 @@ class Licence implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the contact detail
      *
@@ -760,7 +743,6 @@ class Licence implements Interfaces\EntityInterface
 
         return $this;
     }
-
 
     /**
      * Set the document
@@ -822,7 +804,6 @@ class Licence implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the licence vehicle
      *
@@ -883,7 +864,6 @@ class Licence implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the workshop
      *
@@ -943,5 +923,4 @@ class Licence implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

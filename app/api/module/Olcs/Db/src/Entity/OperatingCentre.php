@@ -110,5 +110,4 @@ class OperatingCentre implements Interfaces\EntityInterface
 
         return $this;
     }
-
 }

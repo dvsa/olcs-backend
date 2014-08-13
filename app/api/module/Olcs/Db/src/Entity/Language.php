@@ -52,5 +52,4 @@ class Language implements Interfaces\EntityInterface
     {
         return $this->id;
     }
-
 }

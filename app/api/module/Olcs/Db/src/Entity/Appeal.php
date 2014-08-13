@@ -45,7 +45,7 @@ class Appeal implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="reason", referencedColumnName="id")
      */
     protected $reason;
@@ -155,7 +155,6 @@ class Appeal implements Interfaces\EntityInterface
         return $this->reason;
     }
 
-
     /**
      * Set the appeal no
      *
@@ -178,7 +177,6 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->appealNo;
     }
-
 
     /**
      * Set the tm case id
@@ -203,7 +201,6 @@ class Appeal implements Interfaces\EntityInterface
         return $this->tmCaseId;
     }
 
-
     /**
      * Set the is withdrawn
      *
@@ -226,7 +223,6 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->isWithdrawn;
     }
-
 
     /**
      * Set the deadline date
@@ -251,7 +247,6 @@ class Appeal implements Interfaces\EntityInterface
         return $this->deadlineDate;
     }
 
-
     /**
      * Set the appeal date
      *
@@ -274,7 +269,6 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->appealDate;
     }
-
 
     /**
      * Set the outline ground
@@ -299,7 +293,6 @@ class Appeal implements Interfaces\EntityInterface
         return $this->outlineGround;
     }
 
-
     /**
      * Set the papers due date
      *
@@ -322,7 +315,6 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->papersDueDate;
     }
-
 
     /**
      * Set the comment
@@ -347,7 +339,6 @@ class Appeal implements Interfaces\EntityInterface
         return $this->comment;
     }
 
-
     /**
      * Set the papers sent date
      *
@@ -370,5 +361,4 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->papersSentDate;
     }
-
 }

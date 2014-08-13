@@ -41,7 +41,7 @@ class Country implements Interfaces\EntityInterface
     /**
      * Is member state
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_member_state", nullable=false)
      */
@@ -71,11 +71,10 @@ class Country implements Interfaces\EntityInterface
         return $this->countryDesc;
     }
 
-
     /**
      * Set the is member state
      *
-     * @param unknown $isMemberState
+     * @param string $isMemberState
      * @return Country
      */
     public function setIsMemberState($isMemberState)
@@ -88,11 +87,10 @@ class Country implements Interfaces\EntityInterface
     /**
      * Get the is member state
      *
-     * @return unknown
+     * @return string
      */
     public function getIsMemberState()
     {
         return $this->isMemberState;
     }
-
 }

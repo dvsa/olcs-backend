@@ -37,7 +37,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text", nullable=true)
+     * @ORM\Column(type="text", name="text", length=65535, nullable=true)
      */
     protected $text;
 
@@ -64,5 +64,4 @@ class Submission implements Interfaces\EntityInterface
     {
         return $this->text;
     }
-
 }

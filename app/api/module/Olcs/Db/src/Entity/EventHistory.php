@@ -38,7 +38,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EventHistoryType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EventHistoryType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EventHistoryType", fetch="LAZY")
      * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id")
      */
     protected $eventHistoryType;
@@ -76,7 +76,6 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->eventHistoryType;
     }
 
-
     /**
      * Set the event datetime
      *
@@ -99,5 +98,4 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->eventDatetime;
     }
-
 }

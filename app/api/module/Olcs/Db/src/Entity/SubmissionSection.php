@@ -26,7 +26,7 @@ class SubmissionSection implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="submissionSections")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="submissionSections", fetch="LAZY")
      */
     protected $cases;
 
@@ -108,7 +108,6 @@ class SubmissionSection implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the group
      *
@@ -131,5 +130,4 @@ class SubmissionSection implements Interfaces\EntityInterface
     {
         return $this->group;
     }
-
 }

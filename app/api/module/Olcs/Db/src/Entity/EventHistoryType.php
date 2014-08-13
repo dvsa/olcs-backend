@@ -61,7 +61,6 @@ class EventHistoryType implements Interfaces\EntityInterface
         return $this->description;
     }
 
-
     /**
      * Set the event type
      *
@@ -84,5 +83,4 @@ class EventHistoryType implements Interfaces\EntityInterface
     {
         return $this->eventType;
     }
-
 }

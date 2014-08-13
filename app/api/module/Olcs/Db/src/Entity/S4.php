@@ -55,7 +55,7 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Surrender licence
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="surrender_licence", nullable=false)
      */
@@ -64,7 +64,7 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Is true s4
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
      */
@@ -94,7 +94,6 @@ class S4 implements Interfaces\EntityInterface
         return $this->agreedDate;
     }
 
-
     /**
      * Set the outcome
      *
@@ -118,11 +117,10 @@ class S4 implements Interfaces\EntityInterface
         return $this->outcome;
     }
 
-
     /**
      * Set the surrender licence
      *
-     * @param unknown $surrenderLicence
+     * @param string $surrenderLicence
      * @return S4
      */
     public function setSurrenderLicence($surrenderLicence)
@@ -135,18 +133,17 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Get the surrender licence
      *
-     * @return unknown
+     * @return string
      */
     public function getSurrenderLicence()
     {
         return $this->surrenderLicence;
     }
 
-
     /**
      * Set the is true s4
      *
-     * @param unknown $isTrueS4
+     * @param string $isTrueS4
      * @return S4
      */
     public function setIsTrueS4($isTrueS4)
@@ -159,11 +156,10 @@ class S4 implements Interfaces\EntityInterface
     /**
      * Get the is true s4
      *
-     * @return unknown
+     * @return string
      */
     public function getIsTrueS4()
     {
         return $this->isTrueS4;
     }
-
 }

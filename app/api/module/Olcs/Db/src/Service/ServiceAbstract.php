@@ -62,6 +62,13 @@ abstract class ServiceAbstract
     protected $entityProperties = array();
 
     /**
+     * Cache metadata
+     *
+     * @var array
+     */
+    protected $classMetadata = array();
+
+    /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
      *
@@ -198,6 +205,10 @@ abstract class ServiceAbstract
             } elseif ($value === 'NULL') {
                 $qb->$whereMethod("a.{$field} IS NULL");
                 $whereMethod = 'andWhere';
+            } elseif ($this->isFieldForeignKey($entityName, $field)) {
+                $qb->$whereMethod("a.{$field} = :{$key}");
+                $whereMethod = 'andWhere';
+                $params[$key] = $value;
             } else {
                 $qb->$whereMethod("a.{$field} LIKE :{$key}");
                 $whereMethod = 'andWhere';
@@ -242,6 +253,37 @@ abstract class ServiceAbstract
             'Count' => count($paginator),
             'Results' => $results
         );
+    }
+
+    /**
+     * Check if a field is a foreign key
+     *
+     * @param string $entity
+     * @param string $field
+     */
+    private function isFieldForeignKey($entity, $field)
+    {
+        $metaData = (array)$this->getClassMetadata($entity);
+
+        return isset($metaData['associationMappings'][$field]);
+    }
+
+    /**
+     * Get class metadata from entity
+     *
+     * @param string $entity
+     */
+    private function getClassMetadata($entity)
+    {
+        if (is_object($entity)) {
+            $entity = get_class($entity);
+        }
+
+        if (!isset($this->classMetadata[$entity])) {
+            $this->classMetadata[$entity] = $this->getEntityManager()->getClassMetadata($entity);
+        }
+
+        return $this->classMetadata[$entity];
     }
 
     /**

@@ -42,7 +42,7 @@ class SiPenalty implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiPenaltyType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_penalty_type_id", referencedColumnName="id")
      */
     protected $siPenaltyType;
@@ -50,7 +50,7 @@ class SiPenalty implements Interfaces\EntityInterface
     /**
      * Imposed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="imposed", nullable=true)
      */
@@ -89,11 +89,10 @@ class SiPenalty implements Interfaces\EntityInterface
         return $this->siPenaltyType;
     }
 
-
     /**
      * Set the imposed
      *
-     * @param unknown $imposed
+     * @param string $imposed
      * @return SiPenalty
      */
     public function setImposed($imposed)
@@ -106,13 +105,12 @@ class SiPenalty implements Interfaces\EntityInterface
     /**
      * Get the imposed
      *
-     * @return unknown
+     * @return string
      */
     public function getImposed()
     {
         return $this->imposed;
     }
-
 
     /**
      * Set the reason not imposed
@@ -136,5 +134,4 @@ class SiPenalty implements Interfaces\EntityInterface
     {
         return $this->reasonNotImposed;
     }
-
 }

@@ -35,7 +35,7 @@ class Email implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id")
      */
     protected $lastUpdatedBy;
@@ -45,7 +45,7 @@ class Email implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Document", inversedBy="emails")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Document", inversedBy="emails", fetch="LAZY")
      * @ORM\JoinTable(name="email_attachment",
      *     joinColumns={
      *         @ORM\JoinColumn(name="email_id", referencedColumnName="id")
@@ -87,7 +87,7 @@ class Email implements Interfaces\EntityInterface
     /**
      * Is sensitive
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_sensitive", nullable=true)
      */
@@ -133,7 +133,6 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->lastUpdatedBy;
     }
-
 
     /**
      * Set the document
@@ -195,7 +194,6 @@ class Email implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the deferred date
      *
@@ -218,7 +216,6 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->deferredDate;
     }
-
 
     /**
      * Set the sent date
@@ -243,7 +240,6 @@ class Email implements Interfaces\EntityInterface
         return $this->sentDate;
     }
 
-
     /**
      * Set the importance
      *
@@ -267,11 +263,10 @@ class Email implements Interfaces\EntityInterface
         return $this->importance;
     }
 
-
     /**
      * Set the is sensitive
      *
-     * @param unknown $isSensitive
+     * @param string $isSensitive
      * @return Email
      */
     public function setIsSensitive($isSensitive)
@@ -284,13 +279,12 @@ class Email implements Interfaces\EntityInterface
     /**
      * Get the is sensitive
      *
-     * @return unknown
+     * @return string
      */
     public function getIsSensitive()
     {
         return $this->isSensitive;
     }
-
 
     /**
      * Set the subject
@@ -314,5 +308,4 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->subject;
     }
-
 }

@@ -40,7 +40,7 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="rehab_measure_id", referencedColumnName="id")
      */
     protected $rehabMeasure;
@@ -68,5 +68,4 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
     {
         return $this->rehabMeasure;
     }
-
 }

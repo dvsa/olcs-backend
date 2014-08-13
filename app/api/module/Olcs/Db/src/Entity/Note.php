@@ -45,7 +45,7 @@ class Note implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="note_type", referencedColumnName="id")
      */
     protected $noteType;
@@ -62,7 +62,7 @@ class Note implements Interfaces\EntityInterface
     /**
      * Priority
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="priority", nullable=false)
      */
@@ -92,7 +92,6 @@ class Note implements Interfaces\EntityInterface
         return $this->noteType;
     }
 
-
     /**
      * Set the comment
      *
@@ -116,11 +115,10 @@ class Note implements Interfaces\EntityInterface
         return $this->comment;
     }
 
-
     /**
      * Set the priority
      *
-     * @param unknown $priority
+     * @param string $priority
      * @return Note
      */
     public function setPriority($priority)
@@ -133,11 +131,10 @@ class Note implements Interfaces\EntityInterface
     /**
      * Get the priority
      *
-     * @return unknown
+     * @return string
      */
     public function getPriority()
     {
         return $this->priority;
     }
-
 }

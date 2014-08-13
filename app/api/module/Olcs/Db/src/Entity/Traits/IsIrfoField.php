@@ -14,7 +14,7 @@ trait IsIrfoField
     /**
      * Is irfo
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
      */
@@ -23,7 +23,7 @@ trait IsIrfoField
     /**
      * Set the is irfo
      *
-     * @param unknown $isIrfo
+     * @param string $isIrfo
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsIrfo($isIrfo)
@@ -36,7 +36,7 @@ trait IsIrfoField
     /**
      * Get the is irfo
      *
-     * @return unknown
+     * @return string
      */
     public function getIsIrfo()
     {

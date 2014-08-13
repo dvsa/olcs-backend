@@ -43,7 +43,7 @@ class TmQualification implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id")
      */
     protected $qualificationType;
@@ -81,7 +81,6 @@ class TmQualification implements Interfaces\EntityInterface
         return $this->qualificationType;
     }
 
-
     /**
      * Set the serial no
      *
@@ -104,5 +103,4 @@ class TmQualification implements Interfaces\EntityInterface
     {
         return $this->serialNo;
     }
-
 }

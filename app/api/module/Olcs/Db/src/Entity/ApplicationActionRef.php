@@ -32,7 +32,7 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Default received
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="default_received", nullable=true)
      */
@@ -41,7 +41,7 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Default approved
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="default_approved", nullable=true)
      */
@@ -80,11 +80,10 @@ class ApplicationActionRef implements Interfaces\EntityInterface
         return $this->displayOrder;
     }
 
-
     /**
      * Set the default received
      *
-     * @param unknown $defaultReceived
+     * @param string $defaultReceived
      * @return ApplicationActionRef
      */
     public function setDefaultReceived($defaultReceived)
@@ -97,18 +96,17 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Get the default received
      *
-     * @return unknown
+     * @return string
      */
     public function getDefaultReceived()
     {
         return $this->defaultReceived;
     }
 
-
     /**
      * Set the default approved
      *
-     * @param unknown $defaultApproved
+     * @param string $defaultApproved
      * @return ApplicationActionRef
      */
     public function setDefaultApproved($defaultApproved)
@@ -121,13 +119,12 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     /**
      * Get the default approved
      *
-     * @return unknown
+     * @return string
      */
     public function getDefaultApproved()
     {
         return $this->defaultApproved;
     }
-
 
     /**
      * Set the default applicable
@@ -151,5 +148,4 @@ class ApplicationActionRef implements Interfaces\EntityInterface
     {
         return $this->defaultApplicable;
     }
-
 }

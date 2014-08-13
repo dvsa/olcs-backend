@@ -23,7 +23,7 @@ class LegacyCaseAction implements Interfaces\EntityInterface
     /**
      * Is driver
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_driver", nullable=false)
      */
@@ -33,7 +33,7 @@ class LegacyCaseAction implements Interfaces\EntityInterface
     /**
      * Set the is driver
      *
-     * @param unknown $isDriver
+     * @param string $isDriver
      * @return LegacyCaseAction
      */
     public function setIsDriver($isDriver)
@@ -46,11 +46,10 @@ class LegacyCaseAction implements Interfaces\EntityInterface
     /**
      * Get the is driver
      *
-     * @return unknown
+     * @return string
      */
     public function getIsDriver()
     {
         return $this->isDriver;
     }
-
 }

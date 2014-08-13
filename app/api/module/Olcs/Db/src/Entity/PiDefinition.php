@@ -30,7 +30,7 @@ class PiDefinition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PiDefinitionCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiDefinitionCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiDefinitionCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_definition_category_id", referencedColumnName="id")
      */
     protected $piDefinitionCategory;
@@ -77,7 +77,6 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->piDefinitionCategory;
     }
 
-
     /**
      * Set the section code
      *
@@ -101,7 +100,6 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->sectionCode;
     }
 
-
     /**
      * Set the definition
      *
@@ -124,5 +122,4 @@ class PiDefinition implements Interfaces\EntityInterface
     {
         return $this->definition;
     }
-
 }

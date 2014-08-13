@@ -16,7 +16,7 @@ trait PiManyToOne
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
      */
     protected $pi;

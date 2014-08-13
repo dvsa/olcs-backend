@@ -42,7 +42,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiPenaltyImposedType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_penalty_imposed_type_id", referencedColumnName="id")
      */
     protected $siPenaltyImposedType;
@@ -89,7 +89,6 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->siPenaltyImposedType;
     }
 
-
     /**
      * Set the final decision date
      *
@@ -113,7 +112,6 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->finalDecisionDate;
     }
 
-
     /**
      * Set the executed
      *
@@ -136,5 +134,4 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     {
         return $this->executed;
     }
-
 }

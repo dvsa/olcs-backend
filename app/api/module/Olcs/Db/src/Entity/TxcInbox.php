@@ -43,7 +43,7 @@ class TxcInbox implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Document
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id")
      */
     protected $pdfDocument;
@@ -53,7 +53,7 @@ class TxcInbox implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Document
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id")
      */
     protected $routeDocument;
@@ -63,7 +63,7 @@ class TxcInbox implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Document
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id")
      */
     protected $zipDocument;
@@ -71,7 +71,7 @@ class TxcInbox implements Interfaces\EntityInterface
     /**
      * File read
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
      */
@@ -110,7 +110,6 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->pdfDocument;
     }
 
-
     /**
      * Set the route document
      *
@@ -133,7 +132,6 @@ class TxcInbox implements Interfaces\EntityInterface
     {
         return $this->routeDocument;
     }
-
 
     /**
      * Set the zip document
@@ -158,11 +156,10 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->zipDocument;
     }
 
-
     /**
      * Set the file read
      *
-     * @param unknown $fileRead
+     * @param string $fileRead
      * @return TxcInbox
      */
     public function setFileRead($fileRead)
@@ -175,13 +172,12 @@ class TxcInbox implements Interfaces\EntityInterface
     /**
      * Get the file read
      *
-     * @return unknown
+     * @return string
      */
     public function getFileRead()
     {
         return $this->fileRead;
     }
-
 
     /**
      * Set the route seq
@@ -205,5 +201,4 @@ class TxcInbox implements Interfaces\EntityInterface
     {
         return $this->routeSeq;
     }
-
 }

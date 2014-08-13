@@ -69,5 +69,4 @@ class PiRescheduleDate implements Interfaces\EntityInterface
     {
         return $this->adjournmentDatetime;
     }
-
 }

@@ -50,7 +50,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     /**
      * Email authority
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="email_authority", nullable=false)
      */
@@ -80,7 +80,6 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->id;
     }
 
-
     /**
      * Set the email subject
      *
@@ -103,7 +102,6 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     {
         return $this->emailSubject;
     }
-
 
     /**
      * Set the email body template
@@ -128,11 +126,10 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->emailBodyTemplate;
     }
 
-
     /**
      * Set the email authority
      *
-     * @param unknown $emailAuthority
+     * @param string $emailAuthority
      * @return EbsrSubmissionResult
      */
     public function setEmailAuthority($emailAuthority)
@@ -145,11 +142,10 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     /**
      * Get the email authority
      *
-     * @return unknown
+     * @return string
      */
     public function getEmailAuthority()
     {
         return $this->emailAuthority;
     }
-
 }

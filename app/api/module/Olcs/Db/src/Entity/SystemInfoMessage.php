@@ -34,7 +34,7 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Is internal
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_internal", nullable=false)
      */
@@ -62,7 +62,7 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Set the is internal
      *
-     * @param unknown $isInternal
+     * @param string $isInternal
      * @return SystemInfoMessage
      */
     public function setIsInternal($isInternal)
@@ -75,13 +75,12 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Get the is internal
      *
-     * @return unknown
+     * @return string
      */
     public function getIsInternal()
     {
         return $this->isInternal;
     }
-
 
     /**
      * Set the activate date
@@ -106,7 +105,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
         return $this->activateDate;
     }
 
-
     /**
      * Set the importance
      *
@@ -129,5 +127,4 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     {
         return $this->importance;
     }
-
 }

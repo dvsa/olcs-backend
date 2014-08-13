@@ -36,7 +36,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Is active
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_active", nullable=false)
      */
@@ -82,7 +82,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Set the is active
      *
-     * @param unknown $isActive
+     * @param string $isActive
      * @return TmGracePeriod
      */
     public function setIsActive($isActive)
@@ -95,13 +95,12 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Get the is active
      *
-     * @return unknown
+     * @return string
      */
     public function getIsActive()
     {
         return $this->isActive;
     }
-
 
     /**
      * Set the start date
@@ -126,7 +125,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->startDate;
     }
 
-
     /**
      * Set the end date
      *
@@ -149,7 +147,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->endDate;
     }
-
 
     /**
      * Set the action date
@@ -174,7 +171,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->actionDate;
     }
 
-
     /**
      * Set the grace period no
      *
@@ -197,5 +193,4 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->gracePeriodNo;
     }
-
 }

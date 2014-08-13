@@ -39,7 +39,7 @@ class Reason implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
      */
     protected $proposeToRevokes;
 
@@ -55,7 +55,7 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Is read only
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
      */
@@ -64,7 +64,7 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Is propose to revoke
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_propose_to_revoke", nullable=false)
      */
@@ -139,7 +139,6 @@ class Reason implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the section code
      *
@@ -163,11 +162,10 @@ class Reason implements Interfaces\EntityInterface
         return $this->sectionCode;
     }
 
-
     /**
      * Set the is read only
      *
-     * @param unknown $isReadOnly
+     * @param string $isReadOnly
      * @return Reason
      */
     public function setIsReadOnly($isReadOnly)
@@ -180,18 +178,17 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Get the is read only
      *
-     * @return unknown
+     * @return string
      */
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
     }
 
-
     /**
      * Set the is propose to revoke
      *
-     * @param unknown $isProposeToRevoke
+     * @param string $isProposeToRevoke
      * @return Reason
      */
     public function setIsProposeToRevoke($isProposeToRevoke)
@@ -204,11 +201,10 @@ class Reason implements Interfaces\EntityInterface
     /**
      * Get the is propose to revoke
      *
-     * @return unknown
+     * @return string
      */
     public function getIsProposeToRevoke()
     {
         return $this->isProposeToRevoke;
     }
-
 }

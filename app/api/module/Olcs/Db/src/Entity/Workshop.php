@@ -38,7 +38,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="workshops")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="workshops")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
      */
     protected $licence;
@@ -46,7 +46,7 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Is external
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_external", nullable=false)
      */
@@ -55,7 +55,7 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Maintenance
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="maintenance", nullable=false)
      */
@@ -64,7 +64,7 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Safety inspection
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="safety_inspection", nullable=false)
      */
@@ -94,11 +94,10 @@ class Workshop implements Interfaces\EntityInterface
         return $this->licence;
     }
 
-
     /**
      * Set the is external
      *
-     * @param unknown $isExternal
+     * @param string $isExternal
      * @return Workshop
      */
     public function setIsExternal($isExternal)
@@ -111,18 +110,17 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Get the is external
      *
-     * @return unknown
+     * @return string
      */
     public function getIsExternal()
     {
         return $this->isExternal;
     }
 
-
     /**
      * Set the maintenance
      *
-     * @param unknown $maintenance
+     * @param string $maintenance
      * @return Workshop
      */
     public function setMaintenance($maintenance)
@@ -135,18 +133,17 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Get the maintenance
      *
-     * @return unknown
+     * @return string
      */
     public function getMaintenance()
     {
         return $this->maintenance;
     }
 
-
     /**
      * Set the safety inspection
      *
-     * @param unknown $safetyInspection
+     * @param string $safetyInspection
      * @return Workshop
      */
     public function setSafetyInspection($safetyInspection)
@@ -159,11 +156,10 @@ class Workshop implements Interfaces\EntityInterface
     /**
      * Get the safety inspection
      *
-     * @return unknown
+     * @return string
      */
     public function getSafetyInspection()
     {
         return $this->safetyInspection;
     }
-
 }

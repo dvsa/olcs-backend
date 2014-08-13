@@ -14,7 +14,7 @@ trait PermissionField
     /**
      * Permission
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="permission", nullable=false)
      */
@@ -23,7 +23,7 @@ trait PermissionField
     /**
      * Set the permission
      *
-     * @param unknown $permission
+     * @param string $permission
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setPermission($permission)
@@ -36,7 +36,7 @@ trait PermissionField
     /**
      * Get the permission
      *
-     * @return unknown
+     * @return string
      */
     public function getPermission()
     {

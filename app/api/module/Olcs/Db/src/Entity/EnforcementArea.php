@@ -63,5 +63,4 @@ class EnforcementArea implements Interfaces\EntityInterface
     {
         return $this->id;
     }
-
 }

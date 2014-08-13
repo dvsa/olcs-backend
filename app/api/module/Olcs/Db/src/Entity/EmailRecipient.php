@@ -66,7 +66,6 @@ class EmailRecipient implements Interfaces\EntityInterface
         return $this->type;
     }
 
-
     /**
      * Set the email address
      *
@@ -89,5 +88,4 @@ class EmailRecipient implements Interfaces\EntityInterface
     {
         return $this->emailAddress;
     }
-
 }

@@ -45,7 +45,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      */
     protected $address;
@@ -55,7 +55,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
      */
     protected $organisation;
@@ -65,7 +65,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
      */
     protected $person;
@@ -75,7 +75,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
      */
     protected $licence;
@@ -110,7 +110,7 @@ class ContactDetails implements Interfaces\EntityInterface
     /**
      * Written permission to engage
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
@@ -140,7 +140,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->address;
     }
 
-
     /**
      * Set the organisation
      *
@@ -163,7 +162,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->organisation;
     }
-
 
     /**
      * Set the person
@@ -188,7 +186,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->person;
     }
 
-
     /**
      * Set the licence
      *
@@ -211,7 +208,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->licence;
     }
-
 
     /**
      * Set the fao
@@ -236,7 +232,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->fao;
     }
 
-
     /**
      * Set the forename
      *
@@ -259,7 +254,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->forename;
     }
-
 
     /**
      * Set the family name
@@ -284,11 +278,10 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
-
     /**
      * Set the written permission to engage
      *
-     * @param unknown $writtenPermissionToEngage
+     * @param string $writtenPermissionToEngage
      * @return ContactDetails
      */
     public function setWrittenPermissionToEngage($writtenPermissionToEngage)
@@ -301,11 +294,10 @@ class ContactDetails implements Interfaces\EntityInterface
     /**
      * Get the written permission to engage
      *
-     * @return unknown
+     * @return string
      */
     public function getWrittenPermissionToEngage()
     {
         return $this->writtenPermissionToEngage;
     }
-
 }

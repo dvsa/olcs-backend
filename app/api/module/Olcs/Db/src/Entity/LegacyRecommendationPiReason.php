@@ -36,7 +36,7 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PiReason
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiReason")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiReason", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_reason_id", referencedColumnName="id")
      */
     protected $piReason;
@@ -46,7 +46,7 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LegacyRecommendation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation", fetch="LAZY")
      * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id")
      */
     protected $legacyRecommendation;
@@ -84,7 +84,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->piReason;
     }
 
-
     /**
      * Set the legacy recommendation
      *
@@ -108,7 +107,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->legacyRecommendation;
     }
 
-
     /**
      * Set the comment
      *
@@ -131,5 +129,4 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     {
         return $this->comment;
     }
-
 }

@@ -52,7 +52,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
      * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id")
      */
     protected $publicationSection;
@@ -62,7 +62,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TmPiHearing
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id")
      */
     protected $tmPiHearing;
@@ -72,7 +72,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
      * @ORM\JoinColumn(name="publication_id", referencedColumnName="id")
      */
     protected $publication;
@@ -91,7 +91,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text1", nullable=true)
+     * @ORM\Column(type="text", name="text1", length=65535, nullable=true)
      */
     protected $text1;
 
@@ -100,7 +100,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text2", nullable=true)
+     * @ORM\Column(type="text", name="text2", length=65535, nullable=true)
      */
     protected $text2;
 
@@ -109,7 +109,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text3", nullable=true)
+     * @ORM\Column(type="text", name="text3", length=65535, nullable=true)
      */
     protected $text3;
 
@@ -146,7 +146,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->publicationSection;
     }
 
-
     /**
      * Set the tm pi hearing
      *
@@ -169,7 +168,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->tmPiHearing;
     }
-
 
     /**
      * Set the publication
@@ -194,7 +192,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->publication;
     }
 
-
     /**
      * Set the section id
      *
@@ -217,7 +214,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->sectionId;
     }
-
 
     /**
      * Set the text1
@@ -242,7 +238,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text1;
     }
 
-
     /**
      * Set the text2
      *
@@ -265,7 +260,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->text2;
     }
-
 
     /**
      * Set the text3
@@ -290,7 +284,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text3;
     }
 
-
     /**
      * Set the orig pub date
      *
@@ -313,5 +306,4 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->origPubDate;
     }
-
 }

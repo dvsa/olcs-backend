@@ -52,7 +52,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="adDocuments")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
      */
     protected $operatingCentre;
@@ -62,7 +62,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
      */
     protected $opposition;
@@ -72,7 +72,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
      */
     protected $busReg;
@@ -82,7 +82,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
      */
     protected $trafficArea;
@@ -92,7 +92,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id")
      */
     protected $transportManager;
@@ -102,7 +102,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
      */
     protected $licence;
@@ -112,7 +112,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id")
      */
     protected $case;
@@ -122,7 +122,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
      */
     protected $application;
@@ -132,7 +132,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Email", mappedBy="documents")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Email", mappedBy="documents", fetch="LAZY")
      */
     protected $emails;
 
@@ -148,7 +148,7 @@ class Document implements Interfaces\EntityInterface
     /**
      * Is read only
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesnonull", name="is_read_only", nullable=true)
      */
@@ -204,7 +204,6 @@ class Document implements Interfaces\EntityInterface
         return $this->operatingCentre;
     }
 
-
     /**
      * Set the opposition
      *
@@ -227,7 +226,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->opposition;
     }
-
 
     /**
      * Set the bus reg
@@ -252,7 +250,6 @@ class Document implements Interfaces\EntityInterface
         return $this->busReg;
     }
 
-
     /**
      * Set the traffic area
      *
@@ -275,7 +272,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->trafficArea;
     }
-
 
     /**
      * Set the transport manager
@@ -300,7 +296,6 @@ class Document implements Interfaces\EntityInterface
         return $this->transportManager;
     }
 
-
     /**
      * Set the licence
      *
@@ -323,7 +318,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->licence;
     }
-
 
     /**
      * Set the case
@@ -348,7 +342,6 @@ class Document implements Interfaces\EntityInterface
         return $this->case;
     }
 
-
     /**
      * Set the application
      *
@@ -371,7 +364,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->application;
     }
-
 
     /**
      * Set the email
@@ -433,7 +425,6 @@ class Document implements Interfaces\EntityInterface
         return $this;
     }
 
-
     /**
      * Set the identifier
      *
@@ -457,11 +448,10 @@ class Document implements Interfaces\EntityInterface
         return $this->identifier;
     }
 
-
     /**
      * Set the is read only
      *
-     * @param unknown $isReadOnly
+     * @param string $isReadOnly
      * @return Document
      */
     public function setIsReadOnly($isReadOnly)
@@ -474,13 +464,12 @@ class Document implements Interfaces\EntityInterface
     /**
      * Get the is read only
      *
-     * @return unknown
+     * @return string
      */
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
     }
-
 
     /**
      * Set the filename
@@ -505,7 +494,6 @@ class Document implements Interfaces\EntityInterface
         return $this->filename;
     }
 
-
     /**
      * Set the size
      *
@@ -528,5 +516,4 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->size;
     }
-
 }

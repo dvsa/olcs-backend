@@ -28,7 +28,7 @@ class EntityType implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Template
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Template")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Template", fetch="LAZY")
      * @ORM\JoinColumn(name="current_template_id", referencedColumnName="id")
      */
     protected $currentTemplate;
@@ -66,7 +66,6 @@ class EntityType implements Interfaces\EntityInterface
         return $this->currentTemplate;
     }
 
-
     /**
      * Set the name
      *
@@ -89,5 +88,4 @@ class EntityType implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 }

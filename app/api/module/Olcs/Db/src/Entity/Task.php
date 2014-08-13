@@ -51,7 +51,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
      * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id")
      */
     protected $irfoOrganisation;
@@ -61,7 +61,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TaskSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id")
      */
     protected $taskSubCategory;
@@ -71,7 +71,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
      * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id")
      */
     protected $assignedToTeam;
@@ -81,7 +81,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id")
      */
     protected $assignedByUser;
@@ -89,11 +89,20 @@ class Task implements Interfaces\EntityInterface
     /**
      * Is closed
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_closed", nullable=false)
      */
     protected $isClosed = 0;
+
+    /**
+     * Urgent
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="urgent", nullable=false)
+     */
+    protected $urgent = 0;
 
     /**
      * Transport manager case id
@@ -137,7 +146,6 @@ class Task implements Interfaces\EntityInterface
         return $this->irfoOrganisation;
     }
 
-
     /**
      * Set the task sub category
      *
@@ -160,7 +168,6 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->taskSubCategory;
     }
-
 
     /**
      * Set the assigned to team
@@ -185,7 +192,6 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedToTeam;
     }
 
-
     /**
      * Set the assigned by user
      *
@@ -209,11 +215,10 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedByUser;
     }
 
-
     /**
      * Set the is closed
      *
-     * @param unknown $isClosed
+     * @param string $isClosed
      * @return Task
      */
     public function setIsClosed($isClosed)
@@ -226,13 +231,35 @@ class Task implements Interfaces\EntityInterface
     /**
      * Get the is closed
      *
-     * @return unknown
+     * @return string
      */
     public function getIsClosed()
     {
         return $this->isClosed;
     }
 
+    /**
+     * Set the urgent
+     *
+     * @param string $urgent
+     * @return Task
+     */
+    public function setUrgent($urgent)
+    {
+        $this->urgent = $urgent;
+
+        return $this;
+    }
+
+    /**
+     * Get the urgent
+     *
+     * @return string
+     */
+    public function getUrgent()
+    {
+        return $this->urgent;
+    }
 
     /**
      * Set the transport manager case id
@@ -257,7 +284,6 @@ class Task implements Interfaces\EntityInterface
         return $this->transportManagerCaseId;
     }
 
-
     /**
      * Set the action date
      *
@@ -280,5 +306,4 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->actionDate;
     }
-
 }

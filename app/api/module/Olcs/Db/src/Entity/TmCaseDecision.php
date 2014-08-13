@@ -41,7 +41,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="decision", referencedColumnName="id")
      */
     protected $decision;
@@ -58,7 +58,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
     /**
      * Is msi
      *
-     * @var unknown
+     * @var string
      *
      * @ORM\Column(type="yesno", name="is_msi", nullable=false)
      */
@@ -115,7 +115,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->decision;
     }
 
-
     /**
      * Set the notified date
      *
@@ -139,11 +138,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->notifiedDate;
     }
 
-
     /**
      * Set the is msi
      *
-     * @param unknown $isMsi
+     * @param string $isMsi
      * @return TmCaseDecision
      */
     public function setIsMsi($isMsi)
@@ -156,13 +154,12 @@ class TmCaseDecision implements Interfaces\EntityInterface
     /**
      * Get the is msi
      *
-     * @return unknown
+     * @return string
      */
     public function getIsMsi()
     {
         return $this->isMsi;
     }
-
 
     /**
      * Set the repute not lost reason
@@ -187,7 +184,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->reputeNotLostReason;
     }
 
-
     /**
      * Set the unfitness start date
      *
@@ -211,7 +207,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->unfitnessStartDate;
     }
 
-
     /**
      * Set the unfitness end date
      *
@@ -234,5 +229,4 @@ class TmCaseDecision implements Interfaces\EntityInterface
     {
         return $this->unfitnessEndDate;
     }
-
 }

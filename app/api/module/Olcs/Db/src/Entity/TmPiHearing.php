@@ -48,7 +48,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
     protected $type;
@@ -58,7 +58,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
      */
     protected $reason;
@@ -132,7 +132,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->type;
     }
 
-
     /**
      * Set the reason
      *
@@ -155,7 +154,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
-
 
     /**
      * Set the witnesses
@@ -180,7 +178,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
-
     /**
      * Set the adjourned date
      *
@@ -203,7 +200,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->adjournedDate;
     }
-
 
     /**
      * Set the cancelled date
@@ -228,7 +224,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->cancelledDate;
     }
 
-
     /**
      * Set the scheduled on
      *
@@ -252,7 +247,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->scheduledOn;
     }
 
-
     /**
      * Set the rescheduled on
      *
@@ -275,5 +269,4 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->rescheduledOn;
     }
-
 }
