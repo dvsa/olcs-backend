@@ -2725,7 +2725,7 @@ CREATE TABLE IF NOT EXISTS `prohibition` (
 
   `prohibition_date` DATE NOT NULL,
   `vrm` VARCHAR(20) NOT NULL,
-  `is_trailer` TINYINT(1) NULL COMMENT '{CONFIG}{"type":"yesnonull"}{/CONFIG}'
+  `is_trailer` TINYINT(1) NULL COMMENT '{CONFIG}{"type":"yesnonull"}{/CONFIG}',
   `prohibition_type` VARCHAR(32) NULL,
   `cleared_date` DATE NOT NULL,
   `imposed_at` VARCHAR(255) NULL,
