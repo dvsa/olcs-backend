@@ -33,7 +33,7 @@ class Pi implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\PresidedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\PresidingTcOther45Field,
         Traits\RescheduleDatetimeField,
@@ -49,7 +49,7 @@ class Pi implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
      */
     protected $piStatus;
 

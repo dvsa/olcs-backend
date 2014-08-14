@@ -26,10 +26,19 @@ class TaskNote implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TaskManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Task
+     *
+     * @var \Olcs\Db\Entity\Task
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task", fetch="LAZY")
+     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=false)
+     */
+    protected $task;
 
     /**
      * Note text
@@ -40,6 +49,29 @@ class TaskNote implements Interfaces\EntityInterface
      */
     protected $noteText;
 
+
+    /**
+     * Set the task
+     *
+     * @param \Olcs\Db\Entity\Task $task
+     * @return TaskNote
+     */
+    public function setTask($task)
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    /**
+     * Get the task
+     *
+     * @return \Olcs\Db\Entity\Task
+     */
+    public function getTask()
+    {
+        return $this->task;
+    }
 
     /**
      * Set the note text

@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="person",
  *    indexes={
- *        @ORM\Index(name="fk_person_application_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_person_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_person_user2_idx", columns={"last_modified_by"})
  *    }
@@ -29,7 +28,6 @@ class Person implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\BirthDateField,
         Traits\Title32Field,
         Traits\CustomCreatedOnField,

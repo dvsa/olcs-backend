@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Task many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait TaskManyToOne
 {
@@ -17,7 +17,7 @@ trait TaskManyToOne
      * @var \Olcs\Db\Entity\Task
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task", fetch="LAZY")
-     * @ORM\JoinColumn(name="task_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=true)
      */
     protected $task;
 

@@ -27,11 +27,20 @@ class OperatingCentre implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\AddressManyToOne,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
+     */
+    protected $address;
 
     /**
      * Ad document
@@ -50,6 +59,29 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->adDocuments = new ArrayCollection();
     }
 
+
+    /**
+     * Set the address
+     *
+     * @param \Olcs\Db\Entity\Address $address
+     * @return OperatingCentre
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get the address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
 
     /**
      * Set the ad document

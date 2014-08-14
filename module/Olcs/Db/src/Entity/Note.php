@@ -33,9 +33,9 @@ class Note implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\IrfoPsvAuthManyToOne,
         Traits\IrfoGvPermitManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CaseManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -46,7 +46,7 @@ class Note implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="note_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="note_type", referencedColumnName="id", nullable=false)
      */
     protected $noteType;
 

@@ -27,7 +27,6 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\StatusManyToOne,
         Traits\OrganisationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
@@ -38,12 +37,22 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
+
+    /**
      * Complaint type
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id", nullable=true)
      */
     protected $complaintType;
 
@@ -53,7 +62,7 @@ class Complaint implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ContactDetails
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
-     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $complainantContactDetails;
 
@@ -84,6 +93,29 @@ class Complaint implements Interfaces\EntityInterface
      */
     protected $driverId;
 
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return Complaint
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * Set the complaint type

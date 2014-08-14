@@ -40,7 +40,7 @@ class Publication implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="pub_status", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pub_status", referencedColumnName="id", nullable=false)
      */
     protected $pubStatus;
 

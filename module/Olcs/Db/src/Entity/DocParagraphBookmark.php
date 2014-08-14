@@ -41,7 +41,7 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\DocParagraph
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
     protected $docParagraph;
 

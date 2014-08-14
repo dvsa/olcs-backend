@@ -34,9 +34,9 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\VenueManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\PresidingTcManyToOneAlt1,
         Traits\PresidedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -49,7 +49,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     protected $type;
 
@@ -59,7 +59,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
     protected $reason;
 

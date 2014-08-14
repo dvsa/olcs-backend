@@ -28,7 +28,6 @@ class Address implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CountryCodeManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -39,9 +38,19 @@ class Address implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\AdminAreaTrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
      */
     protected $adminArea;
+
+    /**
+     * Country code
+     *
+     * @var \Olcs\Db\Entity\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
+     */
+    protected $countryCode;
 
     /**
      * Uprn
@@ -181,6 +190,29 @@ class Address implements Interfaces\EntityInterface
     public function getAdminArea()
     {
         return $this->adminArea;
+    }
+
+    /**
+     * Set the country code
+     *
+     * @param \Olcs\Db\Entity\Country $countryCode
+     * @return Address
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the country code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
     }
 
     /**

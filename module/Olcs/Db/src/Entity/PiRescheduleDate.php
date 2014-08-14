@@ -30,7 +30,7 @@ class PiRescheduleDate implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\PresidedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\PiManyToOne,
+        Traits\PiManyToOneAlt1,
         Traits\RescheduleDatetimeField,
         Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,

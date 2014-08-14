@@ -36,7 +36,7 @@ class CardPaymentTokenUsage implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Payment
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_uid", referencedColumnName="id")
+     * @ORM\JoinColumn(name="payment_uid", referencedColumnName="id", nullable=true)
      */
     protected $paymentUid;
 

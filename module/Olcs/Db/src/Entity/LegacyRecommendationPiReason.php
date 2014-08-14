@@ -37,7 +37,7 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\PiReason
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_reason_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pi_reason_id", referencedColumnName="id", nullable=false)
      */
     protected $piReason;
 
@@ -47,7 +47,7 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\LegacyRecommendation
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation", fetch="LAZY")
-     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
      */
     protected $legacyRecommendation;
 

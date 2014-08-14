@@ -17,7 +17,7 @@ trait OppositionManyToOne
      * @var \Olcs\Db\Entity\Opposition
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY")
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
      */
     protected $opposition;
 

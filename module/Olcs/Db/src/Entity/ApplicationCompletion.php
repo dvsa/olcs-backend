@@ -35,7 +35,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=false)
      */
     protected $id;
 

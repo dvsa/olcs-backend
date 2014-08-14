@@ -97,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `person` (
   `birth_date` DATE NULL,
   `birth_place` VARCHAR(35) NULL,
   `other_name` VARCHAR(35) NULL,
-  `application_id` INT NULL,
   `title` VARCHAR(32) NULL,
   `title_other` VARCHAR(20) NULL COMMENT 'Populated it title is other in dropdown',
   `created_by` INT NULL,
@@ -107,14 +106,8 @@ CREATE TABLE IF NOT EXISTS `person` (
   `deleted_date` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_person_application_idx` (`application_id` ASC),
   INDEX `fk_person_user1_idx` (`created_by` ASC),
   INDEX `fk_person_user2_idx` (`last_modified_by` ASC),
-   CONSTRAINT `fk_person_application`
-    FOREIGN KEY (`application_id`)
-    REFERENCES `application` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
    CONSTRAINT `fk_person_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
@@ -1120,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `cases` (
   `transport_manager_id` INT NULL,
   `licence_id` INT NULL,
   `ecms_no` VARCHAR(45) NULL,
-  `open_date` DATE NULL,
+  `open_date` DATE NOT NULL,
   `close_date` DATE NULL,
   `deleted_date` DATETIME NULL,
   `description` VARCHAR(1024) NULL COMMENT 'Short summary note in old system',
@@ -2073,7 +2066,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `organisation_person` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `person_id` INT NOT NULL,
-  `organisation_id` INT NOT NULL,
+  `organisation_id` INT NOT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Organisation","property":"organisationPerson"}}{/CONFIG}',
   `deleted_date` DATETIME NULL,
   `added_date` VARCHAR(45) NULL,
   `position` VARCHAR(45) NULL,
@@ -2807,7 +2800,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `person_id` INT NULL,
   `organisation_id` INT NULL,
   `transport_manager_id` INT NULL,
-  `case_id` INT NULL,
+  `case_id` INT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Cases","property":"conviction"}}{/CONFIG}',
   `application_id` INT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Application":"property":"conviction"}}{/CONFIG}',
   `convicted_name` VARCHAR(70) NULL,
   `created_by` INT NULL,
@@ -3247,7 +3240,7 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
   `is_decision` TINYINT(1) NOT NULL COMMENT '{CONFIG}{"type":"yesno"}{/CONFIG}',
   `comment` VARCHAR(4000) NULL,
   `urgent` TINYINT(1) NULL COMMENT '{CONFIG}{"type":"yesnonull"}{/CONFIG}',
-  `submission_id` INT NOT NULL,
+  `submission_id` INT NOT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Submission","property":"submissionAction"}}{/CONFIG}',
   `sender_user_id` INT NOT NULL,
   `recipient_user_id` INT NOT NULL,
   `submission_action_status` VARCHAR(100) NOT NULL,
