@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Licence type many to one trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait LicenceTypeManyToOne
 {
@@ -17,7 +17,7 @@ trait LicenceTypeManyToOne
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
      */
     protected $licenceType;
 

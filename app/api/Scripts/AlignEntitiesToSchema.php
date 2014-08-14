@@ -136,6 +136,13 @@ class AlignEntitiesToSchema
     private $inverseFields = array();
 
     /**
+     * Cache table descriptions
+     *
+     * @var array
+     */
+    private $tableDescription = array();
+
+    /**
      * Initialise the variables
      */
     public function __construct()
@@ -407,11 +414,13 @@ class AlignEntitiesToSchema
 
             $defaults = $this->getDefaultsFromTable($config['entity']['@attributes']['table']);
 
+            $nullables = $this->getNullablesFromTable($config['entity']['@attributes']['table']);
+
             $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
 
             $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
 
-            $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName);
+            $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName, $nullables);
 
             $this->cacheFields($fields);
 
@@ -863,6 +872,26 @@ class AlignEntitiesToSchema
     }
 
     /**
+     * Get nullables form table
+     *
+     * @param string $table
+     * @return array
+     */
+    private function getNullablesFromTable($table)
+    {
+        $description = $this->describeTable($table);
+
+        $nullables = array();
+
+        foreach ($description as $row) {
+
+            $nullables[$row['Field']] = $row['Null'];
+        }
+
+        return $nullables;
+    }
+
+    /**
      * Get indexes from config
      *
      * @param array $config
@@ -896,9 +925,10 @@ class AlignEntitiesToSchema
      * @param array $config
      * @param array $defaults
      * @param array $comments
+     * @param array $nullables
      * @return array
      */
-    private function getFieldsFromConfig($config, $defaults, $comments, $className)
+    private function getFieldsFromConfig($config, $defaults, $comments, $className, $nullables)
     {
         $fields = array();
 
@@ -984,6 +1014,10 @@ class AlignEntitiesToSchema
                     'config' => $item
                 );
 
+                if (isset($fieldConfig['config']['join-columns']['join-column'])) {
+                    $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] = $this->isNullable($columnName, $nullables);
+                }
+
                 if (isset($extraConfig['type'])) {
                     $fieldConfig['config']['@attributes']['type'] = $extraConfig['type'];
                     unset($extraConfig['type']);
@@ -1027,6 +1061,17 @@ class AlignEntitiesToSchema
         }
 
         return $fields;
+    }
+
+    /**
+     * Check if field is nullable
+     *
+     * @param string $field
+     * @param array $nullables
+     */
+    private function isNullable($field, $nullables)
+    {
+        return $nullables[$field] == 'NO' ? 'false' : 'true';
     }
 
     /**
@@ -1165,11 +1210,15 @@ class AlignEntitiesToSchema
      */
     private function describeTable($table)
     {
-        $query = $this->pdo->prepare('DESC ' . $table);
+        if (!isset($this->tableDescription[$table])) {
+            $query = $this->pdo->prepare('DESC ' . $table);
 
-        $query->execute();
+            $query->execute();
 
-        return $query->fetchAll(Pdo::FETCH_ASSOC);
+            $this->tableDescription[$table] = $query->fetchAll(Pdo::FETCH_ASSOC);
+        }
+
+        return $this->tableDescription[$table];
     }
 
     /**

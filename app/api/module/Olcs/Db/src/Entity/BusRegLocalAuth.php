@@ -30,10 +30,42 @@ class BusRegLocalAuth implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LocalAuthorityManyToOne,
         Traits\BusRegManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Local authority
+     *
+     * @var \Olcs\Db\Entity\LocalAuthority
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LocalAuthority", fetch="LAZY")
+     * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=false)
+     */
+    protected $localAuthority;
+
+
+    /**
+     * Set the local authority
+     *
+     * @param \Olcs\Db\Entity\LocalAuthority $localAuthority
+     * @return BusRegLocalAuth
+     */
+    public function setLocalAuthority($localAuthority)
+    {
+        $this->localAuthority = $localAuthority;
+
+        return $this;
+    }
+
+    /**
+     * Get the local authority
+     *
+     * @return \Olcs\Db\Entity\LocalAuthority
+     */
+    public function getLocalAuthority()
+    {
+        return $this->localAuthority;
+    }
 }

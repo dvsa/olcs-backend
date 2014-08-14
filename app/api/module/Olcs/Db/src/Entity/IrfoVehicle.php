@@ -25,12 +25,21 @@ class IrfoVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\IrfoGvPermitManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\IrfoPsvAuthManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField;
+
+    /**
+     * Irfo gv permit
+     *
+     * @var \Olcs\Db\Entity\IrfoGvPermit
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoGvPermit;
 
     /**
      * Coc a
@@ -95,6 +104,29 @@ class IrfoVehicle implements Interfaces\EntityInterface
      */
     protected $version = 1;
 
+
+    /**
+     * Set the irfo gv permit
+     *
+     * @param \Olcs\Db\Entity\IrfoGvPermit $irfoGvPermit
+     * @return IrfoVehicle
+     */
+    public function setIrfoGvPermit($irfoGvPermit)
+    {
+        $this->irfoGvPermit = $irfoGvPermit;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo gv permit
+     *
+     * @return \Olcs\Db\Entity\IrfoGvPermit
+     */
+    public function getIrfoGvPermit()
+    {
+        return $this->irfoGvPermit;
+    }
 
     /**
      * Set the coc a

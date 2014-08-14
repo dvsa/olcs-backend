@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Enforcement area many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait EnforcementAreaManyToOne
 {
@@ -17,7 +17,7 @@ trait EnforcementAreaManyToOne
      * @var \Olcs\Db\Entity\EnforcementArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=false)
      */
     protected $enforcementArea;
 

@@ -30,7 +30,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\InspectionRequest
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\InspectionRequest", fetch="LAZY")
-     * @ORM\JoinColumn(name="inspection_request_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="inspection_request_id", referencedColumnName="id", nullable=false)
      */
     protected $inspectionRequest;
 

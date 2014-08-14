@@ -31,7 +31,6 @@ class ContactDetails implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\ContactTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\EmailAddress60Field,
         Traits\Description255FieldAlt1,
@@ -41,12 +40,22 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Contact type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
+     */
+    protected $contactType;
+
+    /**
      * Address
      *
      * @var \Olcs\Db\Entity\Address
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
 
@@ -56,7 +65,7 @@ class ContactDetails implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Organisation
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
 
@@ -66,7 +75,7 @@ class ContactDetails implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Person
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
      */
     protected $person;
 
@@ -76,7 +85,7 @@ class ContactDetails implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Licence
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
 
@@ -116,6 +125,29 @@ class ContactDetails implements Interfaces\EntityInterface
      */
     protected $writtenPermissionToEngage = 0;
 
+
+    /**
+     * Set the contact type
+     *
+     * @param \Olcs\Db\Entity\RefData $contactType
+     * @return ContactDetails
+     */
+    public function setContactType($contactType)
+    {
+        $this->contactType = $contactType;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getContactType()
+    {
+        return $this->contactType;
+    }
 
     /**
      * Set the address

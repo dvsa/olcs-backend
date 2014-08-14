@@ -30,7 +30,7 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\TransportManagerManyToOne,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

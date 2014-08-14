@@ -40,7 +40,7 @@ class Team implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ContactDetails
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
-     * @ORM\JoinColumn(name="override_ta_contact_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="override_ta_contact_id", referencedColumnName="id", nullable=true)
      */
     protected $overrideTaContact;
 

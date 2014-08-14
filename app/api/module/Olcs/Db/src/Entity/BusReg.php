@@ -33,7 +33,7 @@ class BusReg implements Interfaces\EntityInterface
         Traits\WithdrawnReasonManyToOne,
         Traits\LicenceManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
         Traits\EffectiveDateField,
         Traits\EndDateField,
@@ -47,7 +47,7 @@ class BusReg implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\BusNoticePeriod
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod", fetch="LAZY")
-     * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
      */
     protected $busNoticePeriod;
 
@@ -57,7 +57,7 @@ class BusReg implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id")
+     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
      */
     protected $subsidised;
 

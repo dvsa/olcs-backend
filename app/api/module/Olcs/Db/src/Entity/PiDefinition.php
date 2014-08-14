@@ -31,7 +31,7 @@ class PiDefinition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\PiDefinitionCategory
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiDefinitionCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_definition_category_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pi_definition_category_id", referencedColumnName="id", nullable=false)
      */
     protected $piDefinitionCategory;
 

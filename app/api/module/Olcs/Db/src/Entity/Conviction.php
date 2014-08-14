@@ -30,8 +30,7 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PersonManyToOne,
@@ -46,12 +45,22 @@ class Conviction implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
      * Defendant type
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=true)
      */
     protected $defendantType;
 
@@ -61,7 +70,7 @@ class Conviction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ConvictionCategory
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="conviction_category_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="conviction_category_id", referencedColumnName="id", nullable=false)
      */
     protected $convictionCategory;
 
@@ -146,6 +155,29 @@ class Conviction implements Interfaces\EntityInterface
      */
     protected $convictedName;
 
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Conviction
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
 
     /**
      * Set the defendant type

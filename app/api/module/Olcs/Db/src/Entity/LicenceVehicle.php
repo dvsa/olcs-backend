@@ -30,7 +30,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\RemovalReasonManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomDeletedDateField,
@@ -46,7 +46,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Vehicle
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", fetch="LAZY", inversedBy="licenceVehicles")
-     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $vehicle;
 
@@ -56,7 +56,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Licence
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="licenceVehicles")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
 

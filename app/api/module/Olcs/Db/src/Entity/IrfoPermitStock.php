@@ -29,11 +29,20 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\StatusManyToOne,
-        Traits\IrfoCountryManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Irfo country
+     *
+     * @var \Olcs\Db\Entity\IrfoCountry
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoCountry", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_country_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoCountry;
 
     /**
      * Serial no
@@ -62,6 +71,29 @@ class IrfoPermitStock implements Interfaces\EntityInterface
      */
     protected $voidReturnDate;
 
+
+    /**
+     * Set the irfo country
+     *
+     * @param \Olcs\Db\Entity\IrfoCountry $irfoCountry
+     * @return IrfoPermitStock
+     */
+    public function setIrfoCountry($irfoCountry)
+    {
+        $this->irfoCountry = $irfoCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo country
+     *
+     * @return \Olcs\Db\Entity\IrfoCountry
+     */
+    public function getIrfoCountry()
+    {
+        return $this->irfoCountry;
+    }
 
     /**
      * Set the serial no

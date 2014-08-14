@@ -30,7 +30,7 @@ class History implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\EntityType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EntityType", fetch="LAZY")
-     * @ORM\JoinColumn(name="entity_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="entity_type_id", referencedColumnName="id", nullable=false)
      */
     protected $entityType;
 

@@ -29,12 +29,30 @@ class OrganisationPerson implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
-        Traits\PersonManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationPersons")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
+
+    /**
+     * Person
+     *
+     * @var \Olcs\Db\Entity\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     */
+    protected $person;
 
     /**
      * Added date
@@ -54,6 +72,52 @@ class OrganisationPerson implements Interfaces\EntityInterface
      */
     protected $position;
 
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return OrganisationPerson
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Set the person
+     *
+     * @param \Olcs\Db\Entity\Person $person
+     * @return OrganisationPerson
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Olcs\Db\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
 
     /**
      * Set the added date

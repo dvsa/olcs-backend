@@ -40,7 +40,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Submission
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
 
@@ -50,7 +50,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
      */
     protected $recipientUser;
 
@@ -60,7 +60,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
      */
     protected $senderUser;
 

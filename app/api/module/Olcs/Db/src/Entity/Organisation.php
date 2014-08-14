@@ -41,7 +41,7 @@ class Organisation implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\TrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
      */
     protected $leadTcArea;
 
@@ -51,7 +51,7 @@ class Organisation implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="sic_code", referencedColumnName="id")
+     * @ORM\JoinColumn(name="sic_code", referencedColumnName="id", nullable=true)
      */
     protected $sicCode;
 
@@ -61,7 +61,7 @@ class Organisation implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
      */
     protected $type;
 
@@ -138,6 +138,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
+     * Organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationPerson", mappedBy="organisation")
+     */
+    protected $organisationPersons;
+
+    /**
      * Trading name
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -153,6 +162,7 @@ class Organisation implements Interfaces\EntityInterface
     {
         $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
+        $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
 
@@ -479,6 +489,66 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->licences->contains($licences)) {
             $this->licences->remove($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the organisation person
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Organisation
+     */
+    public function setOrganisationPersons($organisationPersons)
+    {
+        $this->organisationPersons = $organisationPersons;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation persons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisationPersons()
+    {
+        return $this->organisationPersons;
+    }
+
+    /**
+     * Add a organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Organisation
+     */
+    public function addOrganisationPersons($organisationPersons)
+    {
+        if ($organisationPersons instanceof ArrayCollection) {
+            $this->organisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->organisationPersons->toArray(),
+                    $organisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->add($organisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Organisation
+     */
+    public function removeOrganisationPersons($organisationPersons)
+    {
+        if ($this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->remove($organisationPersons);
         }
 
         return $this;

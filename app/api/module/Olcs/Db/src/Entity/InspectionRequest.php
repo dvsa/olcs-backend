@@ -34,7 +34,7 @@ class InspectionRequest implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\OperatingCentreManyToOne,
         Traits\TaskManyToOne,
         Traits\CaseManyToOne,
@@ -49,7 +49,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
      */
     protected $resultType;
 
@@ -59,7 +59,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestorUser;
 
@@ -69,7 +69,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="request_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="request_type", referencedColumnName="id", nullable=false)
      */
     protected $requestType;
 
@@ -79,7 +79,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="report_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
      */
     protected $reportType;
 

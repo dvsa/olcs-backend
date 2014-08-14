@@ -26,8 +26,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\BusRegManyToOne,
-        Traits\DocumentManyToOne;
+        Traits\BusRegManyToOneAlt1;
 
     /**
      * Ebsr submission result
@@ -35,9 +34,19 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\EbsrSubmissionResult
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
      */
     protected $ebsrSubmissionResult;
+
+    /**
+     * Document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $document;
 
     /**
      * Ebsr submission type
@@ -45,7 +54,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\EbsrSubmissionType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionType;
 
@@ -55,7 +64,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\EbsrSubmissionStatus
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionStatus;
 
@@ -243,6 +252,29 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getEbsrSubmissionResult()
     {
         return $this->ebsrSubmissionResult;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Olcs\Db\Entity\Document $document
+     * @return EbsrSubmission
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 
     /**

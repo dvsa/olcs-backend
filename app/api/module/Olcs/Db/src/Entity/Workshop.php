@@ -39,7 +39,7 @@ class Workshop implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Licence
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="workshops")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
 

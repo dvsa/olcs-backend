@@ -35,9 +35,8 @@ class Licence implements Interfaces\EntityInterface
         Traits\StatusManyToOne,
         Traits\GoodsOrPsvManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
-        Traits\EnforcementAreaManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\TotAuthTrailersField,
@@ -58,7 +57,7 @@ class Licence implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
      */
     protected $tachographIns;
 
@@ -68,9 +67,19 @@ class Licence implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Organisation
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Trailers in possession
@@ -300,6 +309,29 @@ class Licence implements Interfaces\EntityInterface
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
     }
 
     /**

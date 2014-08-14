@@ -38,7 +38,7 @@ class OppositionGrounds implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="grounds", referencedColumnName="id")
+     * @ORM\JoinColumn(name="grounds", referencedColumnName="id", nullable=false)
      */
     protected $grounds;
 
