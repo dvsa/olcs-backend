@@ -98,7 +98,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="open_date", nullable=true)
+     * @ORM\Column(type="date", name="open_date", nullable=false)
      */
     protected $openDate;
 
