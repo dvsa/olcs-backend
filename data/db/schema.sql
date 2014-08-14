@@ -2066,7 +2066,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `organisation_person` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `person_id` INT NOT NULL,
-  `organisation_id` INT NOT NULL,
+  `organisation_id` INT NOT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Organisation","property":"organisationPerson"}}{/CONFIG}',
   `deleted_date` DATETIME NULL,
   `added_date` VARCHAR(45) NULL,
   `position` VARCHAR(45) NULL,
@@ -2800,7 +2800,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `person_id` INT NULL,
   `organisation_id` INT NULL,
   `transport_manager_id` INT NULL,
-  `case_id` INT NULL,
+  `case_id` INT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Cases","property":"conviction"}}{/CONFIG}',
   `application_id` INT NULL COMMENT '{CONFIG}{"inversedBy":{"entity":"Application":"property":"conviction"}}{/CONFIG}',
   `convicted_name` VARCHAR(70) NULL,
   `created_by` INT NULL,

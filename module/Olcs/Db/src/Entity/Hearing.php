@@ -31,7 +31,7 @@ class Hearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\VenueManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -44,7 +44,7 @@ class Hearing implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\PresidingTc
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
      */
     protected $presidingTc = 0;
 

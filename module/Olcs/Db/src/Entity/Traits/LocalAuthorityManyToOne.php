@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Local authority many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait LocalAuthorityManyToOne
 {
@@ -17,7 +17,7 @@ trait LocalAuthorityManyToOne
      * @var \Olcs\Db\Entity\LocalAuthority
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LocalAuthority", fetch="LAZY")
-     * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=true)
      */
     protected $localAuthority;
 

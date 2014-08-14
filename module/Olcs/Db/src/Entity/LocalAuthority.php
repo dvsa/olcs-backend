@@ -24,7 +24,7 @@ class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\Description255Field,

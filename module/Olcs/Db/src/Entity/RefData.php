@@ -30,7 +30,7 @@ class RefData implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefDataCategory
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefDataCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="ref_data_category_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="ref_data_category_id", referencedColumnName="id", nullable=false)
      */
     protected $refDataCategory;
 

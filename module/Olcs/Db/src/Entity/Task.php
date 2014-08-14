@@ -37,10 +37,9 @@ class Task implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\TransportManagerManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\AssignedToUserManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOneAlt1,
         Traits\Description4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -52,7 +51,7 @@ class Task implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Organisation
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoOrganisation;
 
@@ -62,7 +61,7 @@ class Task implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\TaskSubCategory
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $taskSubCategory;
 
@@ -72,7 +71,7 @@ class Task implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Team
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedToTeam;
 
@@ -82,9 +81,19 @@ class Task implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedByUser;
+
+    /**
+     * Assigned to user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedToUser;
 
     /**
      * Is closed
@@ -213,6 +222,29 @@ class Task implements Interfaces\EntityInterface
     public function getAssignedByUser()
     {
         return $this->assignedByUser;
+    }
+
+    /**
+     * Set the assigned to user
+     *
+     * @param \Olcs\Db\Entity\User $assignedToUser
+     * @return Task
+     */
+    public function setAssignedToUser($assignedToUser)
+    {
+        $this->assignedToUser = $assignedToUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned to user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getAssignedToUser()
+    {
+        return $this->assignedToUser;
     }
 
     /**

@@ -26,10 +26,9 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ContactTypeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\IssuedDateFieldAlt1,
         Traits\CustomCreatedOnField,
@@ -37,12 +36,22 @@ class Statement implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Contact type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=true)
+     */
+    protected $contactType;
+
+    /**
      * Requesters address
      *
      * @var \Olcs\Db\Entity\Address
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
-     * @ORM\JoinColumn(name="requesters_address_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="requesters_address_id", referencedColumnName="id", nullable=true)
      */
     protected $requestersAddress;
 
@@ -136,6 +145,29 @@ class Statement implements Interfaces\EntityInterface
      */
     protected $requestersForename;
 
+
+    /**
+     * Set the contact type
+     *
+     * @param \Olcs\Db\Entity\RefData $contactType
+     * @return Statement
+     */
+    public function setContactType($contactType)
+    {
+        $this->contactType = $contactType;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getContactType()
+    {
+        return $this->contactType;
+    }
 
     /**
      * Set the requesters address

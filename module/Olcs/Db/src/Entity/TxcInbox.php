@@ -44,7 +44,7 @@ class TxcInbox implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Document
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id", nullable=false)
      */
     protected $pdfDocument;
 
@@ -54,7 +54,7 @@ class TxcInbox implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Document
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=false)
      */
     protected $routeDocument;
 
@@ -64,7 +64,7 @@ class TxcInbox implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Document
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
      */
     protected $zipDocument;
 

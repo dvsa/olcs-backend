@@ -27,7 +27,7 @@ class DiscSequence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

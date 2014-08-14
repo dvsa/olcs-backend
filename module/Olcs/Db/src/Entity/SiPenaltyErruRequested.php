@@ -41,7 +41,7 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\SiPenaltyRequestedType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyRequestedType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siPenaltyRequestedType;
 

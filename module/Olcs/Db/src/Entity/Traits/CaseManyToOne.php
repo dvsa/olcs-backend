@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Case many to one trait
  *
- * Auto-Generated (Shared between 20 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait CaseManyToOne
 {
@@ -17,7 +17,7 @@ trait CaseManyToOne
      * @var \Olcs\Db\Entity\Cases
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
 

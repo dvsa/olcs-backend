@@ -27,7 +27,7 @@ class PiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiManyToOne,
+        Traits\PiManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -38,7 +38,7 @@ class PiReason implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Reason
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Reason", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
     protected $reason;
 

@@ -31,11 +31,20 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
-        Traits\DocumentSubCategoryManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Document sub category
+     *
+     * @var \Olcs\Db\Entity\DocumentSubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
+     */
+    protected $documentSubCategory;
 
     /**
      * Doc process
@@ -43,7 +52,7 @@ class DocTemplate implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\DocProcess
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocProcess", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id", nullable=false)
      */
     protected $docProcess;
 
@@ -65,6 +74,29 @@ class DocTemplate implements Interfaces\EntityInterface
      */
     protected $suppressFromOp;
 
+
+    /**
+     * Set the document sub category
+     *
+     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @return DocTemplate
+     */
+    public function setDocumentSubCategory($documentSubCategory)
+    {
+        $this->documentSubCategory = $documentSubCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the document sub category
+     *
+     * @return \Olcs\Db\Entity\DocumentSubCategory
+     */
+    public function getDocumentSubCategory()
+    {
+        return $this->documentSubCategory;
+    }
 
     /**
      * Set the doc process

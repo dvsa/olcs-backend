@@ -32,7 +32,7 @@ class S4Condition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
-     * @ORM\JoinColumn(name="target_condition_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="target_condition_id", referencedColumnName="id", nullable=false)
      */
     protected $targetCondition;
 
@@ -42,7 +42,7 @@ class S4Condition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
-     * @ORM\JoinColumn(name="source_condition_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="source_condition_id", referencedColumnName="id", nullable=false)
      */
     protected $sourceCondition;
 

@@ -27,7 +27,7 @@ class Submission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
