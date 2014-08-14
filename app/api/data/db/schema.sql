@@ -1116,6 +1116,7 @@ CREATE TABLE IF NOT EXISTS `cases` (
   `open_date` DATE NOT NULL,
   `close_date` DATE NULL,
   `deleted_date` DATETIME NULL,
+  `prohibition_note` VARCHAR(4000) NULL,
   `description` VARCHAR(1024) NULL COMMENT 'Short summary note in old system',
   `is_impounding` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '{CONFIG}{"type":"yesno"}{/CONFIG}',
   `erru_originating_authority` VARCHAR(50) NULL,
@@ -2716,7 +2717,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `prohibition` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
-  `notes` VARCHAR(4000) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
