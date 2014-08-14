@@ -771,10 +771,10 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
     `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `is_declared`, `operator_name`,
     `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
     `conviction_category_id`) VALUES
-    (25,28,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,1,'John Smith Haulage Ltd.','defendant_type.operator',NULL,NULL,4,NOW(),NOW(),1,397),
-    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,1,'','defendant_type.owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,1,'','defendant_type.owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,1,'John Smith Haulage Ltd.','defendant_type.operator',NULL,NULL,4,NOW(),NOW(),1,399);
+    (25,24,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,397),
+    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,1,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,1,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
 
 INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `description`, `created_on`,
     `last_modified_on`, `version`, `parent_id`) VALUES
