@@ -23,6 +23,16 @@ return [
                     ]
                 ]
             ],
+            'ref-data' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/ref-data/:id[/:lang]',
+                    'defaults' => [
+                        'controller' => 'ref-data',
+                        'lang' => 'en_en'
+                    ]
+                ]
+            ],
             'licence-organisation' => [
                 'type' => 'segment',
                 'options' => [
@@ -104,6 +114,7 @@ return [
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
+            'ref-data' => 'Olcs\Db\Controller\RefDataController'
         ]
     ],
     'view_manager' => [
@@ -125,10 +136,25 @@ return [
         'userId'   => 'XMLGatewayTestUserID'
     ],
     'doctrine' => [
+        'driver' => [
+            'translatable_metadata_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    'vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity',
+                ],
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'Gedmo\Translatable\Entity' => 'translatable_metadata_driver'
+                ],
+            ],
+        ],
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    'Gedmo\SoftDeleteable\SoftDeleteableListener'
+                    'Gedmo\SoftDeleteable\SoftDeleteableListener',
+                    'Gedmo\Translatable\TranslatableListener'
                 ],
             ],
         ],
