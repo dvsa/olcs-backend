@@ -34,7 +34,7 @@ class ApplicationAction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ApplicationActionRef
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ApplicationActionRef", fetch="LAZY")
-     * @ORM\JoinColumn(name="application_action_ref_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="application_action_ref_id", referencedColumnName="id", nullable=false)
      */
     protected $applicationActionRef;
 

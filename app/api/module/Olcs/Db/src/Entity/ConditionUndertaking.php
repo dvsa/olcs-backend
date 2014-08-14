@@ -36,10 +36,10 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\OperatingCentreManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\CaseManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -51,7 +51,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
-     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
 
@@ -61,7 +61,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
      */
     protected $approvalUser;
 
@@ -71,7 +71,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
      */
     protected $attachedTo;
 
@@ -81,7 +81,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
 
@@ -91,7 +91,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="added_via", referencedColumnName="id")
+     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
     protected $addedVia;
 

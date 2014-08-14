@@ -31,7 +31,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\StatusManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
@@ -46,7 +46,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\IrfoPsvAuthType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuthType;
 
@@ -56,7 +56,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id")
+     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
      */
     protected $journeyFrequency;
 

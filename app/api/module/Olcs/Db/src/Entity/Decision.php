@@ -22,6 +22,6 @@ class Decision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOne;
+        Traits\CaseManyToOneAlt1;
 
 }

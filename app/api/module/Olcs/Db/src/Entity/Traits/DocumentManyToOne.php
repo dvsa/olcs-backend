@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Document many to one trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait DocumentManyToOne
 {
@@ -17,7 +17,7 @@ trait DocumentManyToOne
      * @var \Olcs\Db\Entity\Document
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
     protected $document;
 

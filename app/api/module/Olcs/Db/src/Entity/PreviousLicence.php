@@ -39,7 +39,7 @@ class PreviousLicence implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=false)
      */
     protected $previousLicenceType;
 

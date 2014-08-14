@@ -29,7 +29,7 @@ class TradingName implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
@@ -42,7 +42,7 @@ class TradingName implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Organisation
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="tradingNames")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
 

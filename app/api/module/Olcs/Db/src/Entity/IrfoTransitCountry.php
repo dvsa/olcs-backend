@@ -26,10 +26,42 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
         Traits\Description45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Irfo psv auth
+     *
+     * @var \Olcs\Db\Entity\IrfoPsvAuth
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoPsvAuth;
+
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Olcs\Db\Entity\IrfoPsvAuth $irfoPsvAuth
+     * @return IrfoTransitCountry
+     */
+    public function setIrfoPsvAuth($irfoPsvAuth)
+    {
+        $this->irfoPsvAuth = $irfoPsvAuth;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth
+     *
+     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     */
+    public function getIrfoPsvAuth()
+    {
+        return $this->irfoPsvAuth;
+    }
 }

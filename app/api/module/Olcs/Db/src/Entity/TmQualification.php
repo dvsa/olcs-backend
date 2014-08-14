@@ -30,8 +30,7 @@ class TmQualification implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CountryCodeManyToOne,
-        Traits\TransportManagerManyToOne,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\IssuedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -44,9 +43,19 @@ class TmQualification implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
      */
     protected $qualificationType;
+
+    /**
+     * Country code
+     *
+     * @var \Olcs\Db\Entity\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=false)
+     */
+    protected $countryCode;
 
     /**
      * Serial no
@@ -79,6 +88,29 @@ class TmQualification implements Interfaces\EntityInterface
     public function getQualificationType()
     {
         return $this->qualificationType;
+    }
+
+    /**
+     * Set the country code
+     *
+     * @param \Olcs\Db\Entity\Country $countryCode
+     * @return TmQualification
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the country code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
     }
 
     /**

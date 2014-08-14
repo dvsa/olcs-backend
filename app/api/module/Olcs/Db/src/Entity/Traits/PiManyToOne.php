@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Pi many to one trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait PiManyToOne
 {
@@ -17,7 +17,7 @@ trait PiManyToOne
      * @var \Olcs\Db\Entity\Pi
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
 

@@ -32,7 +32,6 @@ class User implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
-        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LocalAuthorityManyToOne,
         Traits\CreatedByManyToOne,
@@ -50,9 +49,19 @@ class User implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\ContactDetails
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
-     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $partnerContactDetails;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $contactDetails;
 
     /**
      * Pid
@@ -111,6 +120,29 @@ class User implements Interfaces\EntityInterface
     public function getPartnerContactDetails()
     {
         return $this->partnerContactDetails;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return User
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**

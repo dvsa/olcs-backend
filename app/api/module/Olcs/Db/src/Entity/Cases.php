@@ -31,10 +31,10 @@ class Cases implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -46,7 +46,7 @@ class Cases implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=true)
      */
     protected $caseType;
 
@@ -98,7 +98,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="open_date", nullable=true)
+     * @ORM\Column(type="date", name="open_date", nullable=false)
      */
     protected $openDate;
 
@@ -166,6 +166,15 @@ class Cases implements Interfaces\EntityInterface
     protected $annualTestHistory;
 
     /**
+     * Conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Conviction", mappedBy="case")
+     */
+    protected $convictions;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -181,6 +190,7 @@ class Cases implements Interfaces\EntityInterface
     {
         $this->legacyOffences = new ArrayCollection();
         $this->submissionSections = new ArrayCollection();
+        $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -533,6 +543,66 @@ class Cases implements Interfaces\EntityInterface
     public function getAnnualTestHistory()
     {
         return $this->annualTestHistory;
+    }
+
+    /**
+     * Set the conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Cases
+     */
+    public function setConvictions($convictions)
+    {
+        $this->convictions = $convictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConvictions()
+    {
+        return $this->convictions;
+    }
+
+    /**
+     * Add a convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Cases
+     */
+    public function addConvictions($convictions)
+    {
+        if ($convictions instanceof ArrayCollection) {
+            $this->convictions = new ArrayCollection(
+                array_merge(
+                    $this->convictions->toArray(),
+                    $convictions->toArray()
+                )
+            );
+        } elseif (!$this->convictions->contains($convictions)) {
+            $this->convictions->add($convictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Cases
+     */
+    public function removeConvictions($convictions)
+    {
+        if ($this->convictions->contains($convictions)) {
+            $this->convictions->remove($convictions);
+        }
+
+        return $this;
     }
 
     /**

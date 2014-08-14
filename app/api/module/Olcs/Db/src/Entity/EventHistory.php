@@ -27,11 +27,29 @@ class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LicenceVehicleManyToOne,
-        Traits\TeamManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\UserManyToOne;
+
+    /**
+     * Licence vehicle
+     *
+     * @var \Olcs\Db\Entity\LicenceVehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licenceVehicle;
+
+    /**
+     * Team
+     *
+     * @var \Olcs\Db\Entity\Team
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
+     */
+    protected $team;
 
     /**
      * Event history type
@@ -39,7 +57,7 @@ class EventHistory implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\EventHistoryType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EventHistoryType", fetch="LAZY")
-     * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id", nullable=false)
      */
     protected $eventHistoryType;
 
@@ -52,6 +70,52 @@ class EventHistory implements Interfaces\EntityInterface
      */
     protected $eventDatetime;
 
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
+     * @return EventHistory
+     */
+    public function setLicenceVehicle($licenceVehicle)
+    {
+        $this->licenceVehicle = $licenceVehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicle
+     *
+     * @return \Olcs\Db\Entity\LicenceVehicle
+     */
+    public function getLicenceVehicle()
+    {
+        return $this->licenceVehicle;
+    }
+
+    /**
+     * Set the team
+     *
+     * @param \Olcs\Db\Entity\Team $team
+     * @return EventHistory
+     */
+    public function setTeam($team)
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * Get the team
+     *
+     * @return \Olcs\Db\Entity\Team
+     */
+    public function getTeam()
+    {
+        return $this->team;
+    }
 
     /**
      * Set the event history type

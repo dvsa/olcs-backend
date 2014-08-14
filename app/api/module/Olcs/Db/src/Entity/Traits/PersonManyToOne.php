@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Person many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait PersonManyToOne
 {
@@ -17,7 +17,7 @@ trait PersonManyToOne
      * @var \Olcs\Db\Entity\Person
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
      */
     protected $person;
 

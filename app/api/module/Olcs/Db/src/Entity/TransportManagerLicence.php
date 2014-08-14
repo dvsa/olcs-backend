@@ -30,7 +30,7 @@ class TransportManagerLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
-        Traits\TransportManagerManyToOne,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

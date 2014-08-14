@@ -17,7 +17,7 @@ trait SeriousInfringementManyToOne
      * @var \Olcs\Db\Entity\SeriousInfringement
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY")
-     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
      */
     protected $seriousInfringement;
 

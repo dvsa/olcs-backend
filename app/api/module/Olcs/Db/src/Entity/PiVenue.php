@@ -25,13 +25,45 @@ class PiVenue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\AddressManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=false)
+     */
+    protected $address;
+
+
+    /**
+     * Set the address
+     *
+     * @param \Olcs\Db\Entity\Address $address
+     * @return PiVenue
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get the address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
 }

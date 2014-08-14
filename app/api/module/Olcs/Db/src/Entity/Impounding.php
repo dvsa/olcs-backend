@@ -28,7 +28,7 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
@@ -45,7 +45,7 @@ class Impounding implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\PiVenue
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=false)
      */
     protected $piVenue;
 
@@ -55,7 +55,7 @@ class Impounding implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id")
+     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
 

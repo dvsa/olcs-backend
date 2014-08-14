@@ -39,7 +39,6 @@ class Document implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\DocumentSubCategoryManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IssuedDateField,
         Traits\CustomDeletedDateField,
@@ -53,7 +52,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\OperatingCentre
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
 
@@ -63,7 +62,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Opposition
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
      */
     protected $opposition;
 
@@ -73,7 +72,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\BusReg
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
 
@@ -83,7 +82,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\TrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
     protected $trafficArea;
 
@@ -93,9 +92,19 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\TransportManager
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
+
+    /**
+     * Document sub category
+     *
+     * @var \Olcs\Db\Entity\DocumentSubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $documentSubCategory;
 
     /**
      * Licence
@@ -103,7 +112,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Licence
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
 
@@ -113,7 +122,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Cases
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
 
@@ -123,7 +132,7 @@ class Document implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
 
@@ -294,6 +303,29 @@ class Document implements Interfaces\EntityInterface
     public function getTransportManager()
     {
         return $this->transportManager;
+    }
+
+    /**
+     * Set the document sub category
+     *
+     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @return Document
+     */
+    public function setDocumentSubCategory($documentSubCategory)
+    {
+        $this->documentSubCategory = $documentSubCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the document sub category
+     *
+     * @return \Olcs\Db\Entity\DocumentSubCategory
+     */
+    public function getDocumentSubCategory()
+    {
+        return $this->documentSubCategory;
     }
 
     /**

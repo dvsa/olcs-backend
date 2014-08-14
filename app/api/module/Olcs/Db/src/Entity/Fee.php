@@ -36,10 +36,10 @@ class Fee implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\TaskManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\ReceivedDateField,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
@@ -53,7 +53,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\WaiveReason
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveReason2;
 
@@ -63,7 +63,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_approver_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="waive_approver_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveApproverUser;
 
@@ -73,7 +73,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveRecommenderUser;
 
@@ -83,7 +83,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Fee
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY")
-     * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id", nullable=true)
      */
     protected $parentFee;
 
@@ -93,7 +93,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\FeeType
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\FeeType", fetch="LAZY")
-     * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
 

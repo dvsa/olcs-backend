@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Irfo gv permit many to one trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait IrfoGvPermitManyToOne
 {
@@ -17,7 +17,7 @@ trait IrfoGvPermitManyToOne
      * @var \Olcs\Db\Entity\IrfoGvPermit
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoGvPermit;
 

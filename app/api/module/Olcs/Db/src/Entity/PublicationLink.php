@@ -35,9 +35,9 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\PiManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
@@ -53,7 +53,7 @@ class PublicationLink implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\PublicationSection
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationSection;
 
@@ -63,7 +63,7 @@ class PublicationLink implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\TmPiHearing
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing", fetch="LAZY")
-     * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
 
@@ -73,7 +73,7 @@ class PublicationLink implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Publication
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
     protected $publication;
 

@@ -26,7 +26,7 @@ class Prohibition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\Notes4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

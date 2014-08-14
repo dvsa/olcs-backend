@@ -36,7 +36,7 @@ class Email implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id", nullable=true)
      */
     protected $lastUpdatedBy;
 
