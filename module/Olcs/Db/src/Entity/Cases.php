@@ -112,6 +112,15 @@ class Cases implements Interfaces\EntityInterface
     protected $closeDate;
 
     /**
+     * Prohibition note
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="prohibition_note", length=4000, nullable=true)
+     */
+    protected $prohibitionNote;
+
+    /**
      * Description
      *
      * @var string
@@ -405,6 +414,29 @@ class Cases implements Interfaces\EntityInterface
     public function getCloseDate()
     {
         return $this->closeDate;
+    }
+
+    /**
+     * Set the prohibition note
+     *
+     * @param string $prohibitionNote
+     * @return Cases
+     */
+    public function setProhibitionNote($prohibitionNote)
+    {
+        $this->prohibitionNote = $prohibitionNote;
+
+        return $this;
+    }
+
+    /**
+     * Get the prohibition note
+     *
+     * @return string
+     */
+    public function getProhibitionNote()
+    {
+        return $this->prohibitionNote;
     }
 
     /**
