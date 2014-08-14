@@ -308,6 +308,7 @@ INSERT INTO `ref_data_category` (`id`) VALUES
     ('contact_type'),
     ('disc_removal_explan'),
     ('def_type'),
+    ('erru_case_type'),
     ('impound_type'),
     ('impound_outcome'),
     ('insp_report_type'),
@@ -366,6 +367,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_subsidy','bs_no', 'No', '1'),
     ('bus_subsidy','bs_yes', 'Yes', '2'),
     ('bus_subsidy','bs_in_part', 'In Part', '3'),
+
+    ('case_type', 'case_t_app', 'Application', null),
+    ('case_type', 'case_t_lic', 'Licence', null),
+    ('case_type', 'case_t_tm', 'Transport Manager', null),
+
     ('case_type', 'case_t_msi', 'MSI', 'MSI'),
     ('case_type', 'case_t_msinre', 'MSI - No response entered', 'MSINRE'),
     ('case_type', 'case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
@@ -437,6 +443,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('def_type', 'def_t_dir', 'Director', null),
     ('def_type', 'def_t_part', 'Partner', null),
     ('def_type', 'def_t_owner', 'Owner', null),
+
+    ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
+    ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
+    ('erru_case_type', 'erru_case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
+    ('erru_case_type', 'erru_case_t_nmsi', 'Non-MSI', 'NMSI'),
+
     ('impound_type', 'impt_hearing', 'Hearing', null),
     ('impound_type', 'impt_paper', 'Paperwork', null),
     ('impound_outcome', 'impo_returned', 'Vehicle Returned', null),

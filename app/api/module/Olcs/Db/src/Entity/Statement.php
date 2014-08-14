@@ -65,22 +65,22 @@ class Statement implements Interfaces\EntityInterface
     protected $statementType;
 
     /**
-     * Date stopped
+     * Stopped date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="date_stopped", nullable=true)
+     * @ORM\Column(type="datetime", name="stopped_date", nullable=true)
      */
-    protected $dateStopped;
+    protected $stoppedDate;
 
     /**
-     * Date requested
+     * Requested date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="date_requested", nullable=true)
+     * @ORM\Column(type="datetime", name="requested_date", nullable=true)
      */
-    protected $dateRequested;
+    protected $requestedDate;
 
     /**
      * Authorisers title
@@ -216,49 +216,49 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the date stopped
+     * Set the stopped date
      *
-     * @param \DateTime $dateStopped
+     * @param \DateTime $stoppedDate
      * @return Statement
      */
-    public function setDateStopped($dateStopped)
+    public function setStoppedDate($stoppedDate)
     {
-        $this->dateStopped = $dateStopped;
+        $this->stoppedDate = $stoppedDate;
 
         return $this;
     }
 
     /**
-     * Get the date stopped
+     * Get the stopped date
      *
      * @return \DateTime
      */
-    public function getDateStopped()
+    public function getStoppedDate()
     {
-        return $this->dateStopped;
+        return $this->stoppedDate;
     }
 
     /**
-     * Set the date requested
+     * Set the requested date
      *
-     * @param \DateTime $dateRequested
+     * @param \DateTime $requestedDate
      * @return Statement
      */
-    public function setDateRequested($dateRequested)
+    public function setRequestedDate($requestedDate)
     {
-        $this->dateRequested = $dateRequested;
+        $this->requestedDate = $requestedDate;
 
         return $this;
     }
 
     /**
-     * Get the date requested
+     * Get the requested date
      *
      * @return \DateTime
      */
-    public function getDateRequested()
+    public function getRequestedDate()
     {
-        return $this->dateRequested;
+        return $this->requestedDate;
     }
 
     /**
