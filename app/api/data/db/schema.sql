@@ -2808,6 +2808,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
+  `is_dealt_with` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '{CONFIG}{"type":"yesno"}{/CONFIG}',
   PRIMARY KEY (`id`),
   INDEX `fk_conviction_conviction_category1_idx` (`conviction_category_id` ASC),
   INDEX `fk_conviction_person1_idx` (`person_id` ASC),

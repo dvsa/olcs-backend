@@ -155,6 +155,15 @@ class Conviction implements Interfaces\EntityInterface
      */
     protected $convictedName;
 
+    /**
+     * Is dealt with
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
+     */
+    protected $isDealtWith = 0;
+
 
     /**
      * Set the case
@@ -430,5 +439,28 @@ class Conviction implements Interfaces\EntityInterface
     public function getConvictedName()
     {
         return $this->convictedName;
+    }
+
+    /**
+     * Set the is dealt with
+     *
+     * @param string $isDealtWith
+     * @return Conviction
+     */
+    public function setIsDealtWith($isDealtWith)
+    {
+        $this->isDealtWith = $isDealtWith;
+
+        return $this;
+    }
+
+    /**
+     * Get the is dealt with
+     *
+     * @return string
+     */
+    public function getIsDealtWith()
+    {
+        return $this->isDealtWith;
     }
 }
