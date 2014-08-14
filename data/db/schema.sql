@@ -2722,10 +2722,19 @@ CREATE TABLE IF NOT EXISTS `prohibition` (
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
+
+  `prohibition_date` DATE NOT NULL,
+  `vrm` VARCHAR(20) NOT NULL,
+  `is_trailer` TINYINT(1) NULL COMMENT '{CONFIG}{"type":"yesnonull"}{/CONFIG}'
+  `prohibition_type` VARCHAR(32) NULL,
+  `cleared_date` DATE NOT NULL,
+  `imposed_at` VARCHAR(255) NULL,
+
   PRIMARY KEY (`id`),
   INDEX `fk_prohibition_case1_idx` (`case_id` ASC),
   INDEX `fk_prohibition_user1_idx` (`created_by` ASC),
   INDEX `fk_prohibition_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_prohibition_ref_data1_idx` (`prohibition_type` ASC),
   CONSTRAINT `fk_prohibition_case1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -2739,6 +2748,11 @@ CREATE TABLE IF NOT EXISTS `prohibition` (
   CONSTRAINT `fk_prohibition_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_prohibition_ref_data1`
+    FOREIGN KEY (`prohibition_type`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
