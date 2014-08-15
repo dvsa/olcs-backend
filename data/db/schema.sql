@@ -2628,10 +2628,10 @@ CREATE TABLE IF NOT EXISTS `statement` (
   `issued_date` DATETIME NULL,
   `licence_no` VARCHAR(20) NULL,
   `licence_type` VARCHAR(32) NULL,
-  `requesters_body` VARCHAR(40) NULL,
-  `requesters_address_id` INT NULL,
-  `requesters_family_name` VARCHAR(35) NULL,
-  `requesters_forename` VARCHAR(35) NULL,
+  `requestors_body` VARCHAR(40) NULL,
+  `requestors_address_id` INT NULL,
+  `requestors_family_name` VARCHAR(35) NULL,
+  `requestors_forename` VARCHAR(35) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -2639,7 +2639,7 @@ CREATE TABLE IF NOT EXISTS `statement` (
   `version` INT NOT NULL DEFAULT 1,
   INDEX `fk_statement_case1_idx` (`case_id` ASC),
   PRIMARY KEY (`id`),
-  INDEX `fk_statement_address1_idx` (`requesters_address_id` ASC),
+  INDEX `fk_statement_address1_idx` (`requestors_address_id` ASC),
   INDEX `fk_statement_user1_idx` (`created_by` ASC),
   INDEX `fk_statement_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_statement_ref_data2_idx` (`contact_type` ASC),
@@ -2649,7 +2649,7 @@ CREATE TABLE IF NOT EXISTS `statement` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_address1`
-    FOREIGN KEY (`requesters_address_id`)
+    FOREIGN KEY (`requestors_address_id`)
     REFERENCES `address` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
