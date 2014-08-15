@@ -474,7 +474,7 @@ return array(
         'complaint_id' => array(
             'cascade' => array(
                 'persist',
-                'delete'
+                'remove'
             )
         ),
         'case_id' => array(

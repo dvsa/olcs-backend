@@ -16,7 +16,7 @@ class Task extends ServiceAbstract
             array(
                 'id' => 1234,
                 'type' => 'Application',
-                'licenceNumber' => 'OB12345678',
+                'licNo' => 'OB12345678',
                 'category' => 'Application',
                 'subCategory' => 'Address change assisted digital',
                 'description' => 'Address change',
@@ -27,7 +27,7 @@ class Task extends ServiceAbstract
             array(
                 'id' => 5678,
                 'type' => 'Application',
-                'licenceNumber' => 'OB9876',
+                'licNo' => 'OB9876',
                 'category' => 'Application',
                 'subCategory' => 'A sub category',
                 'description' => 'A task',
