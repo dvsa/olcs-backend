@@ -19,7 +19,8 @@
   +-------------------------------------------------------------------------------+
  */
 
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * Mortgages
@@ -75,18 +76,16 @@ class Mortgages implements CHRequest
         $pattern = '/^[A-Z0-9]{8}$/';
 
         if (!preg_match($pattern, $companyNumber)) {
-            throw new Exception(
-                'Company number has to be in this pattern: ' . $pattern,
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Company number has to be in this pattern: ' . $pattern, Response::STATUS_CODE_500
             );
         }
         $this->data['companyNumber'] = $companyNumber;
 
         // --- check if company name is allowed ---
         if (!strlen($companyName) >= 1 && strlen($companyName) <= 160) {
-            throw new Exception(
-                'Searched company name must be in between 1-160 characters',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Searched company name must be in between 1-160 characters', Response::STATUS_CODE_500
             );
         }
         $this->data['companyName'] = $companyName;
@@ -120,9 +119,8 @@ class Mortgages implements CHRequest
     {
         $date = trim($date);
         if (!preg_match('/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/', $date)) {
-            throw new Exception(
-                'Date has to be in YYYY-MM-DD format',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Date has to be in YYYY-MM-DD format', Response::STATUS_CODE_500
             );
         }
         $this->data['startDate'] = $date;
@@ -138,9 +136,8 @@ class Mortgages implements CHRequest
     public function setEndDate($date)
     {
         if (!preg_match('/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/', $date)) {
-            throw new Exception(
-                'Date has to be in YYYY-MM-DD format',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Date has to be in YYYY-MM-DD format', Response::STATUS_CODE_500
             );
         }
         $this->data['endDate'] = $date;

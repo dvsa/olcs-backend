@@ -19,7 +19,8 @@
   +-------------------------------------------------------------------------------+
  */
 
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * OfficerSearch
@@ -74,9 +75,8 @@ class OfficerSearch implements CHRequest
 
         if ($officerType != 'CUR' && $officerType != 'LLP' &&
             $officerType != 'DIS' && $officerType != 'EUR') {
-            throw new Exception(
-                'Officer type can be on of: CUR, LLP, DIS, EUR',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Officer type can be on of: CUR, LLP, DIS, EUR', Response::STATUS_CODE_500
             );
         }
         $this->data['officerType'] = $officerType;

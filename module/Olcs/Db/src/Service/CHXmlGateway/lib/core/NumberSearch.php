@@ -20,8 +20,8 @@ namespace Olcs\Db\Service\CHXmlGateway\lib;
 +-------------------------------------------------------------------------------+
  */
 
-// for error codes
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * NumberSearch 
@@ -76,9 +76,8 @@ class NumberSearch implements CHRequest
         $pattern = '/^([A-Z0-9\*]{1,8}[*]{0,1}){1,8}$/';
 
         if (!preg_match($pattern, $partialCompanyNumber)) {
-            throw new Exception(
-                'Company number has to be in this pattern: ' . $pattern,
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Company number has to be in this pattern: ' . $pattern, Response::STATUS_CODE_500
             );
         }
         $this->data['partCnumber'] = $partialCompanyNumber;
@@ -92,9 +91,8 @@ class NumberSearch implements CHRequest
             $value = strtoupper($value);
             // check if value is allowed
             if (!$allowedDataSet[$value]) {
-                throw new Exception(
-                    $value.' is not allowed as data set value',
-                    AbstractRestfulController::ERROR_INVALID_PARAMETER
+                throw new RestResponseException(
+                    $value.' is not allowed as data set value', Response::STATUS_CODE_500
                 );
             }
             $cleanDataSet[] = $value;
@@ -102,7 +100,7 @@ class NumberSearch implements CHRequest
 
         // check if at least one data set is set
         if (empty($cleanDataSet)) {
-            throw new Exception('You need to set data set', AbstractRestfulController::ERROR_MISSING_FIELDS);
+            throw new RestResponseException('You need to set data set', Response::STATUS_CODE_500);
         }
 
         $this->data['dataSet']  = $cleanDataSet;
@@ -118,7 +116,7 @@ class NumberSearch implements CHRequest
     public function setSearchRows($searchRows)
     {
         if (!preg_match('/^\d+$/', $searchRows)) {
-            throw new Exception('value has to be integer', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+            throw new RestResponseException('value has to be integer', Response::STATUS_CODE_500);
         }
         $this->data['searchRows'] = $searchRows;
     }
