@@ -33,7 +33,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         'getList',
         'update',
         'patch',
-        'delete'
+        'delete',
+        'deleteList'
     );
 
     /**
@@ -212,6 +213,31 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     }
 
     /**
+     * Delete a list of records
+     *
+     * @return Response
+     */
+    public function deleteList()
+    {
+        $this->checkMethod(__METHOD__);
+
+        $data = $this->getDataFromQuery();
+
+        try {
+
+            if ($this->getService()->deleteList($data)) {
+
+                return $this->respond(Response::STATUS_CODE_200, 'Entity deleted');
+            }
+
+            return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
+        } catch (\Exception $ex) {
+
+            return $this->unknownError($ex);
+        }
+    }
+
+    /**
      *  We should try and catch all known exceptions and provide a reasonable
      *  response, if we get here, then we have no idea what went wrong
      *
@@ -322,8 +348,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     public function checkMethod($method)
     {
         if (strstr($method, '::')) {
-            list($controller, $method) = explode('::', $method);
-            unset($controller);
+            $parts = explode('::', $method);
+            $method = array_pop($parts);
         }
 
         if (!in_array($method, $this->allowedMethods)) {

@@ -182,6 +182,21 @@ abstract class ServiceAbstract
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
+        return $this->getEntityList($data);
+    }
+
+    /**
+     * Returns a list of entities
+     *  Abstracted this logic away and added extra flags to maintain backwards compat
+     *
+     * @param array $data
+     * @param boolean $filter
+     * @param boolean $bundle
+     * @param boolean $paginate
+     * @return array
+     */
+    private function getEntityList($data, $filter = true, $bundle = true, $paginate = true)
+    {
         $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -220,22 +235,24 @@ abstract class ServiceAbstract
             $qb->setParameters($params);
         }
 
-        $pag = $this->getPaginationValues($data);
-        $page = isset($pag['page']) ? $pag['page'] : 1;
+        if ($filter) {
+            $pag = $this->getPaginationValues($data);
+            $page = isset($pag['page']) ? $pag['page'] : 1;
 
-        if (!isset($pag['limit']) || $pag['limit'] != 'all') {
-            $limit = isset($pag['limit']) ? $pag['limit'] : 10;
-            $qb->setFirstResult($this->getOffset($page, $limit));
-            $qb->setMaxResults($limit);
+            if (!isset($pag['limit']) || $pag['limit'] != 'all') {
+                $limit = isset($pag['limit']) ? $pag['limit'] : 10;
+                $qb->setFirstResult($this->getOffset($page, $limit));
+                $qb->setMaxResults($limit);
+            }
+
+            $this->setOrderBy($qb, $data);
         }
-
-        $this->setOrderBy($qb, $data);
 
         $query = $qb->getQuery();
 
         $results = $query->getResult();
 
-        if (!empty($results)) {
+        if ($bundle && !empty($results)) {
 
             $rows = array();
 
@@ -247,12 +264,16 @@ abstract class ServiceAbstract
             $results = $rows;
         }
 
-        $paginator = $this->getPaginator($query, false);
+        if ($paginate) {
+            $paginator = $this->getPaginator($query, false);
 
-        return array(
-            'Count' => count($paginator),
-            'Results' => $results
-        );
+            return array(
+                'Count' => count($paginator),
+                'Results' => $results
+            );
+        }
+
+        return $results;
     }
 
     /**
@@ -372,6 +393,26 @@ abstract class ServiceAbstract
 
         $this->getEntityManager()->remove($entity);
         $this->dbFlush();
+
+        return true;
+    }
+
+    /**
+     * Delete a list of entities
+     *
+     * @param array $data
+     */
+    public function deleteList($data)
+    {
+        $results = $this->getEntityList($data, false, false, false);
+
+        foreach ($results as $row) {
+            $this->getEntityManager()->remove($row);
+        }
+
+        if (count($results) > 0) {
+            $this->dbFlush();
+        }
 
         return true;
     }

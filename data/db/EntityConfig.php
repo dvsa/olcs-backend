@@ -473,7 +473,8 @@ return array(
     'complaint_case' => array(
         'complaint_id' => array(
             'cascade' => array(
-                'persist'
+                'persist',
+                'delete'
             )
         ),
         'case_id' => array(

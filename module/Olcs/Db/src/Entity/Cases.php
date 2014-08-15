@@ -22,7 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_case_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_case_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_cases_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"})
+ *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"}),
+ *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"})
  *    }
  * )
  */
@@ -30,11 +31,11 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
         Traits\ApplicationManyToOneAlt1,
+        Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\LicenceManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -46,9 +47,19 @@ class Cases implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
      */
     protected $caseType;
+
+    /**
+     * Erru case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
+     */
+    protected $erruCaseType;
 
     /**
      * Legacy offence
@@ -244,6 +255,29 @@ class Cases implements Interfaces\EntityInterface
     public function getCaseType()
     {
         return $this->caseType;
+    }
+
+    /**
+     * Set the erru case type
+     *
+     * @param \Olcs\Db\Entity\RefData $erruCaseType
+     * @return Cases
+     */
+    public function setErruCaseType($erruCaseType)
+    {
+        $this->erruCaseType = $erruCaseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getErruCaseType()
+    {
+        return $this->erruCaseType;
     }
 
     /**
