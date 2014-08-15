@@ -29,10 +29,42 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOne,
-        Traits\ComplaintManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Complaint
+     *
+     * @var \Olcs\Db\Entity\Complaint
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Complaint", fetch="LAZY")
+     * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
+     */
+    protected $complaint;
+
+
+    /**
+     * Set the complaint
+     *
+     * @param \Olcs\Db\Entity\Complaint $complaint
+     * @return ComplaintOcLicence
+     */
+    public function setComplaint($complaint)
+    {
+        $this->complaint = $complaint;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaint
+     *
+     * @return \Olcs\Db\Entity\Complaint
+     */
+    public function getComplaint()
+    {
+        return $this->complaint;
+    }
 }

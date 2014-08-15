@@ -30,21 +30,53 @@ class ComplaintCase implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ComplaintManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Complaint
+     *
+     * @var \Olcs\Db\Entity\Complaint
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Complaint", fetch="LAZY", cascade={"persist"})
+     * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
+     */
+    protected $complaint;
 
     /**
      * Case
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="complaintCases")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", cascade={"persist"}, inversedBy="complaintCases")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
 
+
+    /**
+     * Set the complaint
+     *
+     * @param \Olcs\Db\Entity\Complaint $complaint
+     * @return ComplaintCase
+     */
+    public function setComplaint($complaint)
+    {
+        $this->complaint = $complaint;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaint
+     *
+     * @return \Olcs\Db\Entity\Complaint
+     */
+    public function getComplaint()
+    {
+        return $this->complaint;
+    }
 
     /**
      * Set the case
