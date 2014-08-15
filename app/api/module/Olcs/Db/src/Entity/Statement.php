@@ -15,7 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_address1_idx", columns={"requesters_address_id"}),
+ *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"})
@@ -46,14 +46,14 @@ class Statement implements Interfaces\EntityInterface
     protected $contactType;
 
     /**
-     * Requesters address
+     * Requestors address
      *
      * @var \Olcs\Db\Entity\Address
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
-     * @ORM\JoinColumn(name="requesters_address_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
      */
-    protected $requestersAddress;
+    protected $requestorsAddress;
 
     /**
      * Statement type
@@ -119,31 +119,31 @@ class Statement implements Interfaces\EntityInterface
     protected $licenceType;
 
     /**
-     * Requesters body
+     * Requestors body
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="requesters_body", length=40, nullable=true)
+     * @ORM\Column(type="string", name="requestors_body", length=40, nullable=true)
      */
-    protected $requestersBody;
+    protected $requestorsBody;
 
     /**
-     * Requesters family name
+     * Requestors family name
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="requesters_family_name", length=35, nullable=true)
+     * @ORM\Column(type="string", name="requestors_family_name", length=35, nullable=true)
      */
-    protected $requestersFamilyName;
+    protected $requestorsFamilyName;
 
     /**
-     * Requesters forename
+     * Requestors forename
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="requesters_forename", length=35, nullable=true)
+     * @ORM\Column(type="string", name="requestors_forename", length=35, nullable=true)
      */
-    protected $requestersForename;
+    protected $requestorsForename;
 
 
     /**
@@ -170,26 +170,26 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requesters address
+     * Set the requestors address
      *
-     * @param \Olcs\Db\Entity\Address $requestersAddress
+     * @param \Olcs\Db\Entity\Address $requestorsAddress
      * @return Statement
      */
-    public function setRequestersAddress($requestersAddress)
+    public function setRequestorsAddress($requestorsAddress)
     {
-        $this->requestersAddress = $requestersAddress;
+        $this->requestorsAddress = $requestorsAddress;
 
         return $this;
     }
 
     /**
-     * Get the requesters address
+     * Get the requestors address
      *
      * @return \Olcs\Db\Entity\Address
      */
-    public function getRequestersAddress()
+    public function getRequestorsAddress()
     {
-        return $this->requestersAddress;
+        return $this->requestorsAddress;
     }
 
     /**
@@ -354,71 +354,71 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requesters body
+     * Set the requestors body
      *
-     * @param string $requestersBody
+     * @param string $requestorsBody
      * @return Statement
      */
-    public function setRequestersBody($requestersBody)
+    public function setRequestorsBody($requestorsBody)
     {
-        $this->requestersBody = $requestersBody;
+        $this->requestorsBody = $requestorsBody;
 
         return $this;
     }
 
     /**
-     * Get the requesters body
+     * Get the requestors body
      *
      * @return string
      */
-    public function getRequestersBody()
+    public function getRequestorsBody()
     {
-        return $this->requestersBody;
+        return $this->requestorsBody;
     }
 
     /**
-     * Set the requesters family name
+     * Set the requestors family name
      *
-     * @param string $requestersFamilyName
+     * @param string $requestorsFamilyName
      * @return Statement
      */
-    public function setRequestersFamilyName($requestersFamilyName)
+    public function setRequestorsFamilyName($requestorsFamilyName)
     {
-        $this->requestersFamilyName = $requestersFamilyName;
+        $this->requestorsFamilyName = $requestorsFamilyName;
 
         return $this;
     }
 
     /**
-     * Get the requesters family name
+     * Get the requestors family name
      *
      * @return string
      */
-    public function getRequestersFamilyName()
+    public function getRequestorsFamilyName()
     {
-        return $this->requestersFamilyName;
+        return $this->requestorsFamilyName;
     }
 
     /**
-     * Set the requesters forename
+     * Set the requestors forename
      *
-     * @param string $requestersForename
+     * @param string $requestorsForename
      * @return Statement
      */
-    public function setRequestersForename($requestersForename)
+    public function setRequestorsForename($requestorsForename)
     {
-        $this->requestersForename = $requestersForename;
+        $this->requestorsForename = $requestorsForename;
 
         return $this;
     }
 
     /**
-     * Get the requesters forename
+     * Get the requestors forename
      *
      * @return string
      */
-    public function getRequestersForename()
+    public function getRequestorsForename()
     {
-        return $this->requestersForename;
+        return $this->requestorsForename;
     }
 }
