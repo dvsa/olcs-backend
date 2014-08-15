@@ -204,6 +204,15 @@ class Cases implements Interfaces\EntityInterface
     protected $complaintCases;
 
     /**
+     * Condition undertaking
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="case")
+     */
+    protected $conditionUndertakings;
+
+    /**
      * Conviction
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -229,6 +238,7 @@ class Cases implements Interfaces\EntityInterface
         $this->legacyOffences = new ArrayCollection();
         $this->submissionSections = new ArrayCollection();
         $this->complaintCases = new ArrayCollection();
+        $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -708,6 +718,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->complaintCases->contains($complaintCases)) {
             $this->complaintCases->remove($complaintCases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the condition undertaking
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function setConditionUndertakings($conditionUndertakings)
+    {
+        $this->conditionUndertakings = $conditionUndertakings;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition undertakings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditionUndertakings()
+    {
+        return $this->conditionUndertakings;
+    }
+
+    /**
+     * Add a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function addConditionUndertakings($conditionUndertakings)
+    {
+        if ($conditionUndertakings instanceof ArrayCollection) {
+            $this->conditionUndertakings = new ArrayCollection(
+                array_merge(
+                    $this->conditionUndertakings->toArray(),
+                    $conditionUndertakings->toArray()
+                )
+            );
+        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->add($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function removeConditionUndertakings($conditionUndertakings)
+    {
+        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->remove($conditionUndertakings);
         }
 
         return $this;

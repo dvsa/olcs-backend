@@ -633,6 +633,12 @@ return array(
         )
     ),
     'condition_undertaking' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'is_draft' => array(
             'type' => 'yesno'
         ),

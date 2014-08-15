@@ -407,10 +407,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('cond_added_via', 'cav_case', 'Case', 'Episode'),
     ('cond_added_via', 'cav_lic', 'Licence', 'Licence'),
     ('cond_added_via', 'cav_app', 'Application', 'Application'),
+
     ('cond_att_to', 'cat_lic', 'Licence', 'Licence'),
     ('cond_att_to', 'cat_oc', 'Operating Centre', 'OpCentre'),
+
     ('cond_type', 'cdt_con', 'Condition', '1'),
     ('cond_type', 'cdt_und', 'Undertaking', '2'),
+
     ('contact_method', 'cm_letter', 'Letter', '1'),
     ('contact_method', 'cm_fax', 'Facsimile', '2'),
     ('contact_method', 'cm_email', 'E-mail', '3'),
@@ -744,17 +747,17 @@ INSERT INTO `complaint_case` (`complaint_id`, `case_id`) VALUES
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,
     `is_fulfilled`, `notes`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,24,NULL,16,NULL,NULL,'Case','OC','Condition',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
-    (2,24,NULL,16,NULL,NULL,'Case','OC','Condition',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
-    (3,24,NULL,21,NULL,NULL,'Case','OC','Condition',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
-    (4,24,7,NULL,NULL,NULL,'Case','Licence','Undertaking',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
-    (5,24,7,NULL,NULL,NULL,'Case','Licence','Undertaking',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
-    (6,24,7,NULL,NULL,NULL,'Case','Licence','Condition',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
-    (7,24,NULL,48,NULL,NULL,'Case','OC','Condition',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,37,NULL,NULL,'Case','OC','Undertaking',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
-    (9,24,7,NULL,NULL,NULL,'Case','Licence','Condition',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
-    (10,24,7,NULL,NULL,NULL,'Case','Licence','Condition',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,7,NULL,NULL,NULL,'Case','Licence','Condition',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
+    (1,24,NULL,16,NULL,NULL,'Case','OC','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
+    (2,24,NULL,16,NULL,NULL,'Case','OC','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
+    (3,24,NULL,21,NULL,NULL,'Case','OC','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
+    (4,24,7,NULL,NULL,NULL,'Case','Licence','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
+    (5,24,7,NULL,NULL,NULL,'Case','Licence','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
+    (6,24,7,NULL,NULL,NULL,'Case','Licence','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
+    (7,24,NULL,48,NULL,NULL,'Case','OC','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
+    (8,24,NULL,37,NULL,NULL,'Case','OC','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
+    (9,24,7,NULL,NULL,NULL,'Case','Licence','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
+    (10,24,7,NULL,NULL,NULL,'Case','Licence','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
+    (11,24,7,NULL,NULL,NULL,'Case','Licence','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id`, `address_id`, `created_by`,
     `last_modified_by`, `description`, `fao`, `contact_type`, `email_address`, `created_on`, `last_modified_on`,
