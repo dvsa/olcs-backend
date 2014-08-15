@@ -471,10 +471,20 @@ return array(
             ))
     ),
     'complaint_case' => array(
+        'complaint_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
         'case_id' => array(
+            'cascade' => array(
+                'persist'
+            ),
             'inversedBy' => array(
-                'entity' => 'Cases', 'property' => 'complaintCase'
-            ))
+                'entity' => 'Cases',
+                'property' => 'complaintCase'
+            )
+        )
     ),
     'prohibition' => array(
         'is_trailer' => array(
