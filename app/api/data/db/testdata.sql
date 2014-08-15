@@ -2193,11 +2193,17 @@ INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (2,'Presiding TC Name 2'),
     (3,'Presiding TC Name 3');
 
-INSERT INTO `ref_data` (`id`, `description`) VALUES
+/*INSERT INTO `ref_data` (`id`, `description`) VALUES
     ('impounding_outcome.1','Vehicle(s) returned'),
     ('impounding_outcome.2','Vehicle(s) not returned'),
     ('impounding_type.1','Impounding type 1 (Hearing)'),
     ('impounding_type.2','Impounding type 2 (Paperwork only)');
+*/
+INSERT INTO `impounding` (`id`, `pi_venue_id`, `impounding_type`, `case_id`, `outcome`, `last_modified_by`,
+    `presiding_tc_id`, `created_by`, `application_receipt_date`, `outcome_sent_date`, `close_date`,
+    `pi_venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
+VALUES
+    (17, 1, 'impt_hearing', 24, 'impo_returned', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
 
 INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
