@@ -364,6 +364,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
+     * Conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Conviction", mappedBy="application")
+     */
+    protected $convictions;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -377,6 +386,7 @@ class Application implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -1184,6 +1194,66 @@ class Application implements Interfaces\EntityInterface
     public function getInterimAuthTrailers()
     {
         return $this->interimAuthTrailers;
+    }
+
+    /**
+     * Set the conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Application
+     */
+    public function setConvictions($convictions)
+    {
+        $this->convictions = $convictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConvictions()
+    {
+        return $this->convictions;
+    }
+
+    /**
+     * Add a convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Application
+     */
+    public function addConvictions($convictions)
+    {
+        if ($convictions instanceof ArrayCollection) {
+            $this->convictions = new ArrayCollection(
+                array_merge(
+                    $this->convictions->toArray(),
+                    $convictions->toArray()
+                )
+            );
+        } elseif (!$this->convictions->contains($convictions)) {
+            $this->convictions->add($convictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Application
+     */
+    public function removeConvictions($convictions)
+    {
+        if ($this->convictions->contains($convictions)) {
+            $this->convictions->remove($convictions);
+        }
+
+        return $this;
     }
 
     /**

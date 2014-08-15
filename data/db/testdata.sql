@@ -376,11 +376,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('case_type', 'case_t_msinre', 'MSI - No response entered', 'MSINRE'),
     ('case_type', 'case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
     ('case_type', 'case_t_nmsi', 'Non-MSI', 'NMSI'),
+
     ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
     ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
     ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS'),
     ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
     ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
+
     ('complaint_type', 'ct_cor', 'Continuing to operator after Revocation', null),
     ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),
     ('complaint_type', 'ct_dgm', 'Driving in a dangerous manner', null),
@@ -401,6 +403,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('complaint_type', 'ct_ump', 'Use of mobile phones while driving', null),
     ('complaint_type', 'ct_urd', 'Using Red Diesel', null),
     ('complaint_type', 'ct_vpo', 'Vehicles parked and causing an obstruction', null),
+
     ('cond_added_via', 'cav_case', 'Case', 'Episode'),
     ('cond_added_via', 'cav_lic', 'Licence', 'Licence'),
     ('cond_added_via', 'cav_app', 'Application', 'Application'),
@@ -726,11 +729,11 @@ INSERT INTO `submission_section` (`id`, `description`, `group`) VALUES
 INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
     `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
     `last_modified_on`, `version`) VALUES
-    (1,8,1,7,3,3,NOW(),'complaint_status.ack','12345678','All tyres bald, broken wing mirror.','complaint_type.cov',
+    (1,8,1,1,3,3,NOW(),'cs_ack','12345678','All tyres bald, broken wing mirror.','ct_cov',
     'VRM1',NOW(),NOW(),1),
-    (2,8,1,7,3,3,NOW(),'complaint_status.pin','12345678','Driving in excess of 70mph on dual carriageway',
-    'complaint_type.spe','VRM2',NOW(),'2014-08-06 08:50:27',1),
-    (3,8,1,7,3,3,NOW(),'complaint_status.rfs','12345678','Vehicle parked on bus stop.','complaint_type.vpo','VRM1',
+    (2,8,1,1,3,3,NOW(),'cs_pin','12345678','Driving in excess of 70mph on dual carriageway',
+    'ct_spe','VRM2',NOW(),'2014-08-06 08:50:27',1),
+    (3,8,1,1,3,3,NOW(),'cs_rfs','12345678','Vehicle parked on bus stop.','ct_vpo','VRM1',
     NOW(),NOW(),1);
 
 INSERT INTO `complaint_case` (`complaint_id`, `case_id`) VALUES
