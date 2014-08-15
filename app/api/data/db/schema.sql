@@ -1108,7 +1108,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cases` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `case_type` VARCHAR(32) NULL COMMENT 'MSI status',
+  `case_type` VARCHAR(32) NOT NULL,
+  `erru_case_type` VARCHAR(32) NULL COMMENT 'MSI status',
   `application_id` INT NULL,
   `transport_manager_id` INT NULL,
   `licence_id` INT NULL,
@@ -1136,6 +1137,7 @@ CREATE TABLE IF NOT EXISTS `cases` (
   INDEX `fk_case_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_cases_transport_manager1_idx` (`transport_manager_id` ASC),
   INDEX `fk_cases_ref_data1_idx` (`case_type` ASC),
+  INDEX `fk_cases_ref_data2_idx` (`erru_case_type` ASC),
   CONSTRAINT `fk_case_application1`
     FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`)
@@ -1163,6 +1165,11 @@ CREATE TABLE IF NOT EXISTS `cases` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data1`
     FOREIGN KEY (`case_type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_cases_ref_data2`
+    FOREIGN KEY (`erru_case_type`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
