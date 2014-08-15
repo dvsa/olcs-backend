@@ -38,7 +38,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\CaseManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -86,6 +85,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $conditionType;
 
     /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
      * Added via
      *
      * @var \Olcs\Db\Entity\RefData
@@ -100,7 +109,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="condition_date", nullable=false)
+     * @ORM\Column(type="datetime", name="condition_date", nullable=true)
      */
     protected $conditionDate;
 
@@ -231,6 +240,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return ConditionUndertaking
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**

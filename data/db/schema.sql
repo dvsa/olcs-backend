@@ -3508,7 +3508,7 @@ CREATE TABLE IF NOT EXISTS `condition_undertaking` (
   `added_via` VARCHAR(32) NULL COMMENT 'Episode, Application or Licence',
   `attached_to` VARCHAR(32) NULL COMMENT 'Licence or Operating Centre',
   `condition_type` VARCHAR(32) NOT NULL COMMENT 'Condition or Undertaking',
-  `condition_date` DATETIME NOT NULL,
+  `condition_date` DATETIME NULL,
   `deleted_date` DATETIME NULL,
   `is_draft` TINYINT(1) NOT NULL DEFAULT 0,
   `case_id` INT NULL,
