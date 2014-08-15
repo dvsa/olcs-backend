@@ -19,7 +19,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_complaint_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_complaint_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_complaint_ref_data1_idx", columns={"status"}),
- *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"})
+ *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"}),
+ *        @ORM\Index(name="fk_complaint_driver1_idx", columns={"driver_id"})
  *    }
  * )
  */
@@ -28,23 +29,13 @@ class Complaint implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\OrganisationManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
-     */
-    protected $status;
 
     /**
      * Complaint type
@@ -57,11 +48,31 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
+     * Driver
+     *
+     * @var \Olcs\Db\Entity\Driver
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Driver", fetch="LAZY", cascade={"persist"})
+     * @ORM\JoinColumn(name="driver_id", referencedColumnName="id", nullable=true)
+     */
+    protected $driver;
+
+    /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
+
+    /**
      * Complainant contact details
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", cascade={"persist"})
      * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $complainantContactDetails;
@@ -84,38 +95,6 @@ class Complaint implements Interfaces\EntityInterface
      */
     protected $value;
 
-    /**
-     * Driver id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="driver_id", nullable=true)
-     */
-    protected $driverId;
-
-
-    /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return Complaint
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
 
     /**
      * Set the complaint type
@@ -138,6 +117,52 @@ class Complaint implements Interfaces\EntityInterface
     public function getComplaintType()
     {
         return $this->complaintType;
+    }
+
+    /**
+     * Set the driver
+     *
+     * @param \Olcs\Db\Entity\Driver $driver
+     * @return Complaint
+     */
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Get the driver
+     *
+     * @return \Olcs\Db\Entity\Driver
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return Complaint
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -207,28 +232,5 @@ class Complaint implements Interfaces\EntityInterface
     public function getValue()
     {
         return $this->value;
-    }
-
-    /**
-     * Set the driver id
-     *
-     * @param int $driverId
-     * @return Complaint
-     */
-    public function setDriverId($driverId)
-    {
-        $this->driverId = $driverId;
-
-        return $this;
-    }
-
-    /**
-     * Get the driver id
-     *
-     * @return int
-     */
-    public function getDriverId()
-    {
-        return $this->driverId;
     }
 }

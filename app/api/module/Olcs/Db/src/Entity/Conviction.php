@@ -30,7 +30,6 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PersonManyToOne,
@@ -53,6 +52,16 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="convictions")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
 
     /**
      * Defendant type
@@ -186,6 +195,29 @@ class Conviction implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return Conviction
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**

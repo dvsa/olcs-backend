@@ -18,7 +18,7 @@ use Zend\Filter\Word\CamelCaseToSeparator;
  */
 class AlignEntitiesToSchema
 {
-    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ -uroot -ppassword -dolcs\'';
+    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config /workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs\'';
 
     const PATH_TO_DOCTRINE = '/workspace/OLCS/olcs-backend/vendor/bin/doctrine-module';
 
@@ -49,7 +49,8 @@ class AlignEntitiesToSchema
         'd' => '',
         'mapping-files' => '',
         'entity-files' => '',
-        'test-files' => ''
+        'test-files' => '',
+        'entity-config' => ''
     );
 
     /**
@@ -143,6 +144,13 @@ class AlignEntitiesToSchema
     private $tableDescription = array();
 
     /**
+     * Holds the entity config
+     *
+     * @var array
+     */
+    private $entityConfig = array();
+
+    /**
      * Initialise the variables
      */
     public function __construct()
@@ -153,7 +161,7 @@ class AlignEntitiesToSchema
 
         $this->options = getopt(
             'u:p:d:',
-            array('help', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:')
+            array('help', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
         );
 
         if (isset($this->options['help'])) {
@@ -168,6 +176,8 @@ class AlignEntitiesToSchema
      */
     public function run()
     {
+        $this->loadEntityConfig();
+
         $this->createDatabaseConnection();
 
         $this->maybeImportSchema();
@@ -195,6 +205,14 @@ class AlignEntitiesToSchema
         $this->createUnitTests();
 
         $this->importEntities();
+    }
+
+    /**
+     * Load the entity config
+     */
+    private function loadEntityConfig()
+    {
+        $this->entityConfig = include($this->options['entity-config']);
     }
 
     /**
@@ -1018,6 +1036,20 @@ class AlignEntitiesToSchema
                     $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] = $this->isNullable($columnName, $nullables);
                 }
 
+                if (isset($extraConfig['cascade'])) {
+
+                    $cascade = $extraConfig['cascade'];
+
+                    if (isset($fieldConfig['config']['@attributes']['cascade'])) {
+                        $cascade = array_merge(
+                            $extraConfig,
+                            (array)$fieldConfig['config']['@attributes']['cascade']
+                        );
+                    }
+
+                    $fieldConfig['config']['@attributes']['cascade'] = $cascade;
+                }
+
                 if (isset($extraConfig['type'])) {
                     $fieldConfig['config']['@attributes']['type'] = $extraConfig['type'];
                     unset($extraConfig['type']);
@@ -1083,6 +1115,13 @@ class AlignEntitiesToSchema
      */
     private function getConfigFromComments($comments, $key)
     {
+        if (!isset($comments[$key])) {
+            return array();
+        }
+
+        return $comments[$key];
+
+        /*
         $config = array();
 
         if (isset($comments[$key])
@@ -1096,7 +1135,7 @@ class AlignEntitiesToSchema
             }
         }
 
-        return $config;
+        return $config;*/
     }
 
     /**
@@ -1229,6 +1268,13 @@ class AlignEntitiesToSchema
      */
     private function getCommentsFromTable($table)
     {
+        if (!isset($this->entityConfig[$table])) {
+            return array();
+        }
+
+        return $this->entityConfig[$table];
+
+        /*
         $query = $this->pdo->prepare('SHOW FULL COLUMNS FROM ' . $table);
 
         $query->execute();
@@ -1241,7 +1287,7 @@ class AlignEntitiesToSchema
             $comments[$row['Field']] = $row['Comment'];
         }
 
-        return $comments;
+        return $comments;*/
     }
 
     /**

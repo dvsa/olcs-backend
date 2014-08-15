@@ -74,7 +74,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", cascade={"persist"}, inversedBy="contactDetails")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
      */
     protected $person;
