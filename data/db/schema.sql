@@ -1117,6 +1117,7 @@ CREATE TABLE IF NOT EXISTS `cases` (
   `close_date` DATE NULL,
   `deleted_date` DATETIME NULL,
   `prohibition_note` VARCHAR(4000) NULL,
+  `conviction_note` VARCHAR(4000) NULL,
   `description` VARCHAR(1024) NULL COMMENT 'Short summary note in old system',
   `is_impounding` TINYINT(1) NOT NULL DEFAULT 0,
   `erru_originating_authority` VARCHAR(50) NULL,
