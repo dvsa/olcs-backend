@@ -565,16 +565,29 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'cakeBar' => 'bar',
             'barFor' => 'black sheep',
             'numberOfStuff' => 1,
+            'isLess' => '< foo',
+            'isLessEqual' => '<= foo',
+            'isGreater' => '>foo',
+            'isGreaterEqual' => '>=      foo',
+            'isLike' => '~ %foo_',
             'page' => $page,
             'limit' => $resultLimit
         );
 
-        $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
+        $searchableFields = array(
+            'fooBar', 'barFor', 'numberOfStuff', 'somethingElse',
+            'isLess', 'isLessEqual', 'isGreater', 'isGreaterEqual', 'isLike'
+        );
 
         $expectedParams = array(
             'fooBar' => 'bar',
             'barFor' => 'black sheep',
             'numberOfStuff' => 1,
+            'isLess' => 'foo',
+            'isLessEqual' => 'foo',
+            'isGreater' => 'foo',
+            'isGreaterEqual' => 'foo',
+            'isLike' => '%foo_'
         );
 
         $results = array();
@@ -610,11 +623,31 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->once())
             ->method('where')
-            ->with('a.fooBar LIKE :fooBar');
+            ->with('a.fooBar = :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
             ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
+
+        $mockQueryBuilder->expects($this->at(5))
+            ->method('andWhere')
+            ->with('a.isLess < :isLess');
+
+        $mockQueryBuilder->expects($this->at(6))
+            ->method('andWhere')
+            ->with('a.isLessEqual <= :isLessEqual');
+
+        $mockQueryBuilder->expects($this->at(7))
+            ->method('andWhere')
+            ->with('a.isGreater > :isGreater');
+
+        $mockQueryBuilder->expects($this->at(8))
+            ->method('andWhere')
+            ->with('a.isGreaterEqual >= :isGreaterEqual');
+
+        $mockQueryBuilder->expects($this->at(9))
+            ->method('andWhere')
+            ->with('a.isLike LIKE :isLike');
 
         $mockQueryBuilder->expects($this->once())
             ->method('setParameters')
@@ -754,7 +787,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 
         $mockQueryBuilder->expects($this->once())
             ->method('where')
-            ->with('a.fooBar LIKE :fooBar');
+            ->with('a.fooBar = :fooBar');
 
         $mockQueryBuilder->expects($this->at(4))
             ->method('andWhere')
