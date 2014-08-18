@@ -311,6 +311,7 @@ INSERT INTO `ref_data_category` (`id`) VALUES
     ('erru_case_type'),
     ('impound_type'),
     ('impound_outcome'),
+    ('impound_legislation'),
     ('insp_report_type'),
     ('insp_request_type'),
     ('insp_result_type'),
@@ -460,6 +461,23 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('impound_type', 'impt_paper', 'Paperwork', null),
     ('impound_outcome', 'impo_returned', 'Vehicle Returned', null),
     ('impound_outcome', 'impo_not', 'Vehicle Not Returned', null),
+    
+    -- impound_legislation
+    
+    ('impound_legislation', 'imlgis_type_goods_gb1', 'Section A The user of the vehicle held a valid operator\'s licence (whether of not authorising the use of the vehicle)', null),
+    ('impound_legislation', 'imlgis_type_goods_gb2', 'Section B It was not being, and had not been used in contravention of Section 2 of the 1995 Act.', null),
+    ('impound_legislation', 'imlgis_type_goods_gb3', 'Section C i did not know it was being or had been used in contravention  of Section 2 of the 1995 Act.', null),
+    ('impound_legislation', 'imlgis_type_goods_gb4', 'Section D That although knowing that at the time the vehicle was detained it was being or had been used in contravention of Section 2 of the 1995 Act, but; (i) had taken steps with a view to preventing that (ii) Has taken steps with a view to preventing any further such use.', null),
+    ('impound_legislation', 'imlgis_type_psv_gb1', 'Section A The user of the vehicle held a valid operator\'s licence (whether of not authorising the use of the vehicle)', null),
+    ('impound_legislation', 'imlgis_type_psv_gb2', 'Section B It was not being, and had not been used in contravention of Section 12 of the 1981 Act.', null),
+    ('impound_legislation', 'imlgis_type_psv_gb3', 'Section C i did not know it was being or had been used in contravention  of Section 12 of the 1981 Act.', null),
+    ('impound_legislation', 'imlgis_type_psv_gb4', 'Section D That although knowing that at the time the vehicle was detained it was being or had been used in contravention of Section 12(1) of the 1981 Act, but; (i) had taken steps with a view to preventing that (ii) Has taken steps with a view to preventing any further such use.', null),
+    ('impound_legislation', 'imlgis_type_goods_ni1', 'Section A At the time the vehicle was detained, the person using the vehicle held a valid licence (whether or not authorising the use of the vehicle);', null),
+    ('impound_legislation', 'imlgis_type_goods_ni2', 'Section B At the time the vehicle was detained, the vehicle was not being, and had not been, used in contravention of section 1 of the 2010 Act;', null),
+    ('impound_legislation', 'imlgis_type_goods_ni3', 'Section C Although at the time the vehicle was detained it was being, or had been, used in contravention of section 1 of the 2010 Act, the owner did not know that it was being, or had been, so used; ', null),
+    ('impound_legislation', 'imlgis_type_goods_ni4', 'Section D Although knowing at the time the vehicle was detained that it was being, or had been, used in contravention of section 1 of the 2010 Act, the owner— (i)had taken steps with a view to preventing that use; and (ii)has taken steps with a view to preventing any further such use.', null),
+
+    
     ('insp_report_type', 'insp_rep_t_maint', 'Maintenance Request', '1'),
     ('insp_report_type', 'insp_rep_t_TE', 'Traffic Examiner', '2'),
     ('insp_report_type', 'insp_rep_t_bus', 'Bus Monitor', '3'),
@@ -2200,12 +2218,21 @@ INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     ('impounding_type.1','Impounding type 1 (Hearing)'),
     ('impounding_type.2','Impounding type 2 (Paperwork only)');
 */
-INSERT INTO `impounding` (`id`, `pi_venue_id`, `impounding_type`, `case_id`, `outcome`, `last_modified_by`,
-    `presiding_tc_id`, `created_by`, `application_receipt_date`, `outcome_sent_date`, `close_date`,
+INSERT INTO `impounding`
+    (`id`, `pi_venue_id`, `impounding_type`, `case_id`, 
+    `outcome`, `last_modified_by`, `presiding_tc_id`, `created_by`,
+    `application_receipt_date`, `outcome_sent_date`, `close_date`,
     `pi_venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
 VALUES
-    (17, 1, 'impt_hearing', 24, 'impo_returned', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    (17, 1, 'impt_hearing', 24,
+    'impo_returned', NULL, 1, NULL,
+    NOW(), NOW(), NOW(),
+    NULL, NOW(), 'Some notes - db default', NOW(), NOW(), 1);
 
+INSERT INTO `impounding_legislation_type`
+    (`impounding_id`, `impounding_legislation_type_id`)
+VALUES
+    (17, 'imlgis_type_goods_gb1');
 
 INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
     `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
