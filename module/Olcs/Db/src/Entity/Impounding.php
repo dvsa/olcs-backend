@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -35,6 +36,7 @@ class Impounding implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\HearingDateField,
         Traits\Notes4000Field,
+        Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -58,6 +60,23 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
+
+    /**
+     * Impounding legislation type
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="impoundings", fetch="LAZY")
+     * @ORM\JoinTable(name="impounding_legislation_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="impounding_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="impounding_legislation_type_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $impoundingLegislationTypes;
 
     /**
      * Application receipt date
@@ -94,6 +113,14 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="pi_venue_other", length=255, nullable=true)
      */
     protected $piVenueOther;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->impoundingLegislationTypes = new ArrayCollection();
+    }
 
 
     /**
@@ -140,6 +167,66 @@ class Impounding implements Interfaces\EntityInterface
     public function getImpoundingType()
     {
         return $this->impoundingType;
+    }
+
+    /**
+     * Set the impounding legislation type
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @return Impounding
+     */
+    public function setImpoundingLegislationTypes($impoundingLegislationTypes)
+    {
+        $this->impoundingLegislationTypes = $impoundingLegislationTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get the impounding legislation types
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getImpoundingLegislationTypes()
+    {
+        return $this->impoundingLegislationTypes;
+    }
+
+    /**
+     * Add a impounding legislation types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @return Impounding
+     */
+    public function addImpoundingLegislationTypes($impoundingLegislationTypes)
+    {
+        if ($impoundingLegislationTypes instanceof ArrayCollection) {
+            $this->impoundingLegislationTypes = new ArrayCollection(
+                array_merge(
+                    $this->impoundingLegislationTypes->toArray(),
+                    $impoundingLegislationTypes->toArray()
+                )
+            );
+        } elseif (!$this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
+            $this->impoundingLegislationTypes->add($impoundingLegislationTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a impounding legislation types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @return Impounding
+     */
+    public function removeImpoundingLegislationTypes($impoundingLegislationTypes)
+    {
+        if ($this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
+            $this->impoundingLegislationTypes->remove($impoundingLegislationTypes);
+        }
+
+        return $this;
     }
 
     /**
