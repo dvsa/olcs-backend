@@ -1,8 +1,8 @@
 <?php
 namespace Olcs\Db\Service\CHXmlGateway\lib;
 
-// for error codes
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /*
 +-------------------------------------------------------------------------------+
@@ -76,9 +76,8 @@ class CompanyDetails implements CHRequest
         $pattern = '/^[A-Z0-9]{8}$/';
 
         if (!preg_match($pattern, $companyNumber)) {
-            throw new Exception(
-                'Company number has to be in this pattern: '.$pattern,
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Company number has to be in this pattern: '.$pattern, Response::STATUS_CODE_500
             );
         }
         $this->data['companyNumber'] = $companyNumber;
