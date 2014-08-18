@@ -23,6 +23,16 @@ return [
                     ]
                 ]
             ],
+            'ref-data' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/ref-data/:id[/:lang]',
+                    'defaults' => [
+                        'controller' => 'ref-data',
+                        'lang' => 'en_en'
+                    ]
+                ]
+            ],
             'licence-organisation' => [
                 'type' => 'segment',
                 'options' => [
@@ -130,6 +140,7 @@ return [
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
             'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
             'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
+            'ref-data' => 'Olcs\Db\Controller\RefDataController'
         ]
     ],
     'view_manager' => [
@@ -159,16 +170,25 @@ return [
                     __DIR__ . '/../src/Entity'
                 ]
             ],
+            'translatable_metadata_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    'vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity',
+                ],
+            ],
             'orm_default' => [
                 'drivers' => [
-                    'Olcs\Db\Entity' => 'EntityDriver'
+                    'Olcs\Db\Entity' => 'EntityDriver',
+                    'Gedmo\Translatable\Entity' => 'translatable_metadata_driver'
                 ]
             ]
         ],
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    'Gedmo\SoftDeleteable\SoftDeleteableListener'
+                    'Gedmo\SoftDeleteable\SoftDeleteableListener',
+                    'Gedmo\Translatable\TranslatableListener'
                 ],
             ],
         ],
