@@ -449,6 +449,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('def_type', 'def_t_dir', 'Director', null),
     ('def_type', 'def_t_part', 'Partner', null),
     ('def_type', 'def_t_owner', 'Owner', null),
+    ('def_type', 'def_t_other', 'Other', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
