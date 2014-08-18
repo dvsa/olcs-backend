@@ -4,6 +4,10 @@ namespace Olcs\Db\Controller;
 
 use Zend\Http\Response;
 
+/**
+ * Class RefDataController
+ * @package Olcs\Db\Controller
+ */
 class RefDataController extends AbstractController
 {
     public function get($id)

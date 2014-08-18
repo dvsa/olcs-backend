@@ -4,6 +4,10 @@ namespace Olcs\Db\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * class RefData
+ * @package Olcs\Db\Entity\Repository
+ */
 class RefData extends EntityRepository
 {
     public function findAllByCategoryAndLanguage($category, $language)
