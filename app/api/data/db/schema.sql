@@ -3438,6 +3438,7 @@ CREATE TABLE IF NOT EXISTS `impounding` (
   `close_date` DATETIME NULL,
   `pi_venue_id` INT NOT NULL,
   `pi_venue_other` VARCHAR(255) NULL,
+  `vrm` VARCHAR(20) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -3487,6 +3488,25 @@ CREATE TABLE IF NOT EXISTS `impounding` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- ------------------------------------
+-- Table `impounding_legislation_type`
+-- ------------------------------------
+
+CREATE TABLE `impounding_legislation_type` (
+  `impounding_id` int(11) NOT NULL,
+  `impounding_legislation_type_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`impounding_id`,`impounding_legislation_type_id`),
+  KEY `fk_impounding_id_idx` (`impounding_id`),
+  KEY `fk_ref_data1_idx` (`impounding_legislation_type_id`),
+  CONSTRAINT `fk_ref_data1_impounding_legislation_type`
+  FOREIGN KEY (`impounding_legislation_type_id`)
+  REFERENCES `ref_data` (`id`),
+  CONSTRAINT `fk_impounding_id1`
+  FOREIGN KEY (`impounding_id`)
+  REFERENCES `impounding` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- -----------------------------------------------------
