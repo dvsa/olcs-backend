@@ -20,8 +20,8 @@ namespace Olcs\Db\Service\CHXmlGateway\lib;
 +-------------------------------------------------------------------------------+
  */
 
-// for error codes
-use OlcsCommon\Controller\AbstractRestfulController as AbstractRestfulController;
+use Zend\Http\Response;
+use Olcs\Db\Exceptions\RestResponseException;
 
 /**
  * interface is included in CHXmlGateway
@@ -80,18 +80,16 @@ class NameSearch implements CHRequest
         // --- check if data set is allowed ---
         if ($dataSet != 'LIVE' && $dataSet != 'DISSOLVED' &&
             $dataSet != 'FORMER' && $dataSet != 'PROPOSED') {
-            throw new Exception(
-                'Data Set can be one of the following: LIVE, DISSOLVED, FORMER, PROPOSED',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Data Set can be one of the following: LIVE, DISSOLVED, FORMER, PROPOSED', Response::STATUS_CODE_500
             );
         }
         $this->data['dataSet'] = $dataSet;
 
         // --- check if company name is allowed ---
         if (! strlen($companyName) >= 1 && strlen($companyName) <= 160) {
-            throw new Exception(
-                'Searched company name must be in between 1-160 characters',
-                AbstractRestfulController::ERROR_INVALID_PARAMETER
+            throw new RestResponseException(
+                'Searched company name must be in between 1-160 characters', Response::STATUS_CODE_500
             );
         }
         $this->data['companyName'] = $companyName;
@@ -108,7 +106,7 @@ class NameSearch implements CHRequest
     {
         // --- check if search rows is integer ---
         if (!preg_match('/^\d+$/', $searchRows)) {
-            throw new Exception('Search rows has to be integer', AbstractRestfulController::ERROR_INVALID_PARAMETER);
+            throw new RestResponseException('Search rows has to be integer', Response::STATUS_CODE_500);
         }
         $this->data['searchRows'] = $searchRows;
     }

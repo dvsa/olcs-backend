@@ -69,6 +69,30 @@ return [
                     ]
                 ]
             ],
+            'defendant-search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/defendant-search[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
+                    'defaults' => [
+                        'controller' => 'defendant-search'
+                    ]
+                ]
+            ],
+            'organisation-search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/organisation-search[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
+                    'defaults' => [
+                        'controller' => 'organisation-search'
+                    ]
+                ]
+            ],
             'person-licence-search' => [
                 'type' => 'segment',
                 'options' => [
@@ -114,6 +138,8 @@ return [
             'person-search' => 'Olcs\Db\Controller\PersonSearchController',
             'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
+            'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
+            'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
             'ref-data' => 'Olcs\Db\Controller\RefDataController'
         ]
     ],
