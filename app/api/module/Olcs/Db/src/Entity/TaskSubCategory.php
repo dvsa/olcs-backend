@@ -23,6 +23,39 @@ class TaskSubCategory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CategoryManyToOne,
-        Traits\Description45FieldAlt1;
+        Traits\Description45FieldAlt1,
+        Traits\Name45Field;
 
+    /**
+     * Is freetext description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_freetext_description", nullable=false)
+     */
+    protected $isFreetextDescription = 0;
+
+
+    /**
+     * Set the is freetext description
+     *
+     * @param string $isFreetextDescription
+     * @return TaskSubCategory
+     */
+    public function setIsFreetextDescription($isFreetextDescription)
+    {
+        $this->isFreetextDescription = $isFreetextDescription;
+
+        return $this;
+    }
+
+    /**
+     * Get the is freetext description
+     *
+     * @return string
+     */
+    public function getIsFreetextDescription()
+    {
+        return $this->isFreetextDescription;
+    }
 }

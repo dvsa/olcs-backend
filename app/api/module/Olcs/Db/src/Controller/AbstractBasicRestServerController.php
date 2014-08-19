@@ -272,10 +272,35 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         if (!$this->serviceExists($name)) {
 
-            return $serviceFactory->getService('Generic')->setEntityName('\Olcs\Db\Entity\\' . $name);
+            $entityName = $this->findEntityClass($name);
+
+            return $serviceFactory->getService('Generic')->setEntityName($entityName);
         }
 
         return $serviceFactory->getService($name);
+    }
+
+    /**
+     * Find entity class
+     *
+     * @param string $name
+     * @return string
+     */
+    private function findEntityClass($name)
+    {
+        $namespaces = array(
+            '\Olcs\Db\Entity\View\\',
+            '\Olcs\Db\Entity\\'
+        );
+
+        foreach ($namespaces as $namespace) {
+
+            $potentialClassName = $namespace . $name;
+
+            if (class_exists($potentialClassName)) {
+                return $potentialClassName;
+            }
+        }
     }
 
     /**

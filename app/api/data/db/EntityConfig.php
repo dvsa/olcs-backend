@@ -980,5 +980,18 @@ return array(
                 'property' => 'piReason'
             )
         )
+    ),
+    'category' => array(
+        'is_doc_category' => array(
+            'type' => 'yesno'
+        ),
+        'is_task_category' => array(
+            'type' => 'yesno'
+        )
+    ),
+    'task_sub_category' => array(
+        'is_freetext_description' => array(
+            'type' => 'yesno'
+        )
     )
 );

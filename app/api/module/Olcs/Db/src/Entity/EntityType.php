@@ -21,7 +21,8 @@ use Olcs\Db\Entity\Traits;
 class EntityType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity;
+        Traits\IdIdentity,
+        Traits\Name45Field;
 
     /**
      * Current template
@@ -32,15 +33,6 @@ class EntityType implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="current_template_id", referencedColumnName="id", nullable=false)
      */
     protected $currentTemplate;
-
-    /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=45, nullable=false)
-     */
-    protected $name;
 
 
     /**
@@ -64,28 +56,5 @@ class EntityType implements Interfaces\EntityInterface
     public function getCurrentTemplate()
     {
         return $this->currentTemplate;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param string $name
-     * @return EntityType
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 }
