@@ -38,7 +38,6 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1,
         Traits\ApplicationManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
-        Traits\PiManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
@@ -66,6 +65,16 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
+     */
+    protected $pi;
 
     /**
      * Publication
@@ -167,6 +176,29 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getTmPiHearing()
     {
         return $this->tmPiHearing;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PublicationLink
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
     }
 
     /**

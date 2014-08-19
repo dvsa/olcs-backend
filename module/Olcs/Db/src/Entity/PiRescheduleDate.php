@@ -30,12 +30,21 @@ class PiRescheduleDate implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\PresidedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\PiManyToOneAlt1,
         Traits\RescheduleDatetimeField,
         Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pi;
 
     /**
      * Adjournment datetime
@@ -46,6 +55,29 @@ class PiRescheduleDate implements Interfaces\EntityInterface
      */
     protected $adjournmentDatetime;
 
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PiRescheduleDate
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
+    }
 
     /**
      * Set the adjournment datetime

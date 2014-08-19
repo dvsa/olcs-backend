@@ -27,10 +27,19 @@ class PiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piReasons")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pi;
 
     /**
      * Reason
@@ -42,6 +51,29 @@ class PiReason implements Interfaces\EntityInterface
      */
     protected $reason;
 
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PiReason
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
+    }
 
     /**
      * Set the reason

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -205,6 +206,33 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="decision_notes", length=65535, nullable=true)
      */
     protected $decisionNotes;
+
+    /**
+     * Pi hearing
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PiHearing", mappedBy="pi")
+     */
+    protected $piHearings;
+
+    /**
+     * Pi reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PiReason", mappedBy="pi")
+     */
+    protected $piReasons;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->piHearings = new ArrayCollection();
+        $this->piReasons = new ArrayCollection();
+    }
 
 
     /**
@@ -619,5 +647,125 @@ class Pi implements Interfaces\EntityInterface
     public function getDecisionNotes()
     {
         return $this->decisionNotes;
+    }
+
+    /**
+     * Set the pi hearing
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @return Pi
+     */
+    public function setPiHearings($piHearings)
+    {
+        $this->piHearings = $piHearings;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi hearings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPiHearings()
+    {
+        return $this->piHearings;
+    }
+
+    /**
+     * Add a pi hearings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @return Pi
+     */
+    public function addPiHearings($piHearings)
+    {
+        if ($piHearings instanceof ArrayCollection) {
+            $this->piHearings = new ArrayCollection(
+                array_merge(
+                    $this->piHearings->toArray(),
+                    $piHearings->toArray()
+                )
+            );
+        } elseif (!$this->piHearings->contains($piHearings)) {
+            $this->piHearings->add($piHearings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pi hearings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @return Pi
+     */
+    public function removePiHearings($piHearings)
+    {
+        if ($this->piHearings->contains($piHearings)) {
+            $this->piHearings->remove($piHearings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the pi reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
+     * @return Pi
+     */
+    public function setPiReasons($piReasons)
+    {
+        $this->piReasons = $piReasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPiReasons()
+    {
+        return $this->piReasons;
+    }
+
+    /**
+     * Add a pi reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
+     * @return Pi
+     */
+    public function addPiReasons($piReasons)
+    {
+        if ($piReasons instanceof ArrayCollection) {
+            $this->piReasons = new ArrayCollection(
+                array_merge(
+                    $this->piReasons->toArray(),
+                    $piReasons->toArray()
+                )
+            );
+        } elseif (!$this->piReasons->contains($piReasons)) {
+            $this->piReasons->add($piReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pi reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
+     * @return Pi
+     */
+    public function removePiReasons($piReasons)
+    {
+        if ($this->piReasons->contains($piReasons)) {
+            $this->piReasons->remove($piReasons);
+        }
+
+        return $this;
     }
 }

@@ -28,31 +28,13 @@ class FeeType implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LicenceTypeManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Goods or psv
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
-     */
-    protected $goodsOrPsv;
-
-    /**
-     * Licence type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=true)
-     */
-    protected $licenceType;
 
     /**
      * Fee type
@@ -108,52 +90,6 @@ class FeeType implements Interfaces\EntityInterface
      */
     protected $expireFeeWithLicence = 0;
 
-
-    /**
-     * Set the goods or psv
-     *
-     * @param \Olcs\Db\Entity\RefData $goodsOrPsv
-     * @return FeeType
-     */
-    public function setGoodsOrPsv($goodsOrPsv)
-    {
-        $this->goodsOrPsv = $goodsOrPsv;
-
-        return $this;
-    }
-
-    /**
-     * Get the goods or psv
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getGoodsOrPsv()
-    {
-        return $this->goodsOrPsv;
-    }
-
-    /**
-     * Set the licence type
-     *
-     * @param \Olcs\Db\Entity\RefData $licenceType
-     * @return FeeType
-     */
-    public function setLicenceType($licenceType)
-    {
-        $this->licenceType = $licenceType;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getLicenceType()
-    {
-        return $this->licenceType;
-    }
 
     /**
      * Set the fee type

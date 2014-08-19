@@ -570,8 +570,8 @@ CREATE TABLE IF NOT EXISTS `licence` (
   `organisation_id` INT NOT NULL,
   `traffic_area_id` VARCHAR(1) NULL COMMENT 'FK to traffic area.  An Operator can have One licence per area.',
   `lic_no` VARCHAR(18) NULL COMMENT 'Licence number.  Normally 9 Chars.  First denotes goods/psv, second TA, rest ID.',
-  `goods_or_psv` VARCHAR(32) NOT NULL,
-  `licence_type` VARCHAR(32) NOT NULL,
+  `goods_or_psv` VARCHAR(32) NULL,
+  `licence_type` VARCHAR(32) NULL,
   `status` VARCHAR(32) NOT NULL,
   `vi_action` VARCHAR(1) NULL COMMENT 'C, U or D.  Triggers VI export.',
   `tot_auth_trailers` INT NULL,
@@ -674,7 +674,7 @@ CREATE TABLE IF NOT EXISTS `application` (
   `tot_auth_medium_vehicles` INT NULL,
   `tot_auth_large_vehicles` INT NULL,
   `tot_community_licences` INT NULL,
-  `licence_type` VARCHAR(32) NOT NULL,
+  `licence_type` VARCHAR(32) NULL,
   `bankrupt` TINYINT(1) NULL,
   `administration` TINYINT(1) NULL,
   `disqualified` TINYINT(1) NULL,
@@ -4475,6 +4475,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `category_id` INT NOT NULL,
   `task_sub_category_id` INT NOT NULL,
+  `case_id` INT NULL,
   `assigned_to_user_id` INT NULL,
   `assigned_to_team_id` INT NULL,
   `assigned_by_user_id` INT NULL,
@@ -4495,6 +4496,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_task_user1_idx` (`assigned_to_user_id` ASC),
+  INDEX `fk_task_case1_idx` (`case_id` ASC),
   INDEX `fk_task_team1_idx` (`assigned_to_team_id` ASC),
   INDEX `fk_task_user2_idx` (`assigned_by_user_id` ASC),
   INDEX `fk_task_licence1_idx` (`licence_id` ASC),
@@ -4509,6 +4511,11 @@ CREATE TABLE IF NOT EXISTS `task` (
   CONSTRAINT `fk_task_user1`
     FOREIGN KEY (`assigned_to_user_id`)
     REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_case1`
+    FOREIGN KEY (`case_id`)
+    REFERENCES `cases` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_team1`
@@ -7382,6 +7389,37 @@ CREATE TABLE IF NOT EXISTS `pi_hearing` (
   CONSTRAINT `FK_83AFD387DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_83AFD387E0DEB379` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`)
 ) ENGINE=InnoDB;
+
+CREATE VIEW task_search_view AS
+    SELECT t.id, t.assigned_to_team_id, t.assigned_to_user_id, t.action_date, t.urgent,
+        t.is_closed, t.category_id, t.task_sub_category_id, t.description,
+        cat.description category_name, tsc.description task_sub_category_name,
+        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') id_col,
+        coalesce(o.name, irfo.name, tmp.family_name, concat('Case ', c.id), 'Unlinked') name_col,
+        l.lic_no, irfo.name irfo_op_name, o.name op_name, tmp.family_name, c.id case_id, br.id bus_reg_id,
+        u.name user_name, COUNT(ll.id) licence_count
+    FROM `task` t
+
+    INNER JOIN (category cat, task_sub_category tsc) ON (cat.id = t.category_id AND tsc.id = t.task_sub_category_id)
+
+    LEFT JOIN licence l ON t.licence_id = l.id
+
+    LEFT JOIN organisation irfo ON t.irfo_organisation_id = irfo.id
+
+    LEFT JOIN organisation o ON l.organisation_id = o.id
+
+    LEFT JOIN licence ll ON (ll.organisation_id = o.id AND (ll.status = 'Valid'))
+
+    LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
+        ON (t.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.contact_details_id)
+
+    LEFT JOIN cases c ON t.case_id = c.id
+
+    LEFT JOIN bus_reg br ON t.bus_reg_id = br.id
+
+    LEFT JOIN user u ON t.assigned_to_user_id = u.id
+
+    GROUP BY (t.id);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
