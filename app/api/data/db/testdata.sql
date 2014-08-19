@@ -661,7 +661,12 @@ VALUES
 INSERT INTO `impounding_legislation_type`
     (`impounding_id`, `impounding_legislation_type_id`)
 VALUES
-    (17, 'imlgis_type_goods_gb1');
+    (17, 'imlgis_type_goods_ni1');
+
+INSERT INTO `impounding_legislation_type`
+    (`impounding_id`, `impounding_legislation_type_id`)
+VALUES
+    (17, 'imlgis_type_goods_ni2');
 
 INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
     `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
