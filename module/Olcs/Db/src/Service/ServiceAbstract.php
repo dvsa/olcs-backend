@@ -225,7 +225,8 @@ abstract class ServiceAbstract
                 $whereMethod = 'andWhere';
                 $params[$key] = $value;
             } else {
-                $qb->$whereMethod("a.{$field} LIKE :{$key}");
+                list($operator, $value) = $this->getOperator($key, $value);
+                $qb->$whereMethod("a.{$field} " . $operator);
                 $whereMethod = 'andWhere';
                 $params[$key] = $value;
             }
@@ -630,5 +631,21 @@ abstract class ServiceAbstract
         }
 
         return $data;
+    }
+
+    private function getOperator($key, $value)
+    {
+        if (preg_match("/^(<=|<|~|>=|>)(\s*)(.+)$/", $value, $matches)) {
+            $operator = $matches[1];
+            $value = $matches[3];
+        } else {
+            $operator = "=";
+        }
+
+        if ($operator === "~") {
+            $operator = "LIKE";
+        }
+
+        return array($operator . " :" . $key, $value);
     }
 }
