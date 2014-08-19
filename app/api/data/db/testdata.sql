@@ -2163,8 +2163,8 @@ INSERT INTO `pi_reason` (`pi_id`, `reason_id`) VALUES
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
-    (1,0,NULL,NULL,NULL,NULL,1,'venue_1',21),
-    (2,0,NULL,NULL,NULL,NULL,1,'venue_2',22),
+    (1,0,B,NULL,NULL,NULL,1,'venue_1',21),
+    (2,0,B,NULL,NULL,NULL,1,'venue_2',22),
     (3,0,NULL,NULL,NULL,NULL,1,'venue_3',23),
     (4,0,NULL,NULL,NULL,NULL,1,'venue_4',24),
     (5,0,NULL,NULL,NULL,NULL,1,'venue_5',25),
@@ -2223,7 +2223,7 @@ INSERT INTO `impounding`
     `application_receipt_date`, `outcome_sent_date`, `close_date`,
     `pi_venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
 VALUES
-    (17, 1, 'impt_hearing', 24,
+    (17, 3, 'impt_hearing', 24,
     'impo_returned', NULL, 1, NULL,
     NOW(), NOW(), NOW(),
     NULL, NOW(), 'Some notes - db default', NOW(), NOW(), 1);
