@@ -4459,7 +4459,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `task_sub_category` (
   `id` INT NOT NULL,
   `description` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
   `category_id` INT NOT NULL,
+  `is_freetext_description` TINYINT(1) DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_task_sub_category_category1_idx` (`category_id` ASC),
   CONSTRAINT `fk_task_sub_category_category1`

@@ -32,6 +32,8 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @var int
      *
+     * NOTE: The ID annotation here is to allow doctrine to create the table (Even though we remove it later)
+     * @ORM\Id
      * @ORM\Column(type="integer", name="id")
      */
     protected $id;
