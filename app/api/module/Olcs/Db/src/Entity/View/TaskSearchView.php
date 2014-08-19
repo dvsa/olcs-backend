@@ -17,7 +17,7 @@
 namespace Olcs\Db\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
-use OlcsEntities\EntityTrait;
+use Olcs\Db\Entity\Interfaces;
 
 /**
  * Task Search View
@@ -25,9 +25,16 @@ use OlcsEntities\EntityTrait;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="task_search_view")
  */
-class TaskSearchView implements EntityInterface
+class TaskSearchView implements Interfaces\EntityInterface
 {
-    use EntityTrait\Identity;
+    /**
+     * Id
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="id")
+     */
+    protected $id;
 
     /**
      * Is closed
@@ -154,6 +161,16 @@ class TaskSearchView implements EntityInterface
      * @ORM\Column(type="integer", name="licence_count")
      */
     protected $licenceCount;
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Get the is closed

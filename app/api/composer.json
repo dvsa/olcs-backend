@@ -1,5 +1,5 @@
 {
-    "name": "olcs/back-end",
+    "name": "olcs/backend",
     "description": "Back End Application for OLCS Project",
     "repositories": [{
         "type": "git",

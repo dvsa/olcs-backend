@@ -980,5 +980,13 @@ return array(
                 'property' => 'piReason'
             )
         )
+    ),
+    'category' => array(
+        'is_doc_category' => array(
+            'yesno'
+        ),
+        'is_task_category' => array(
+            'yesno'
+        )
     )
 );
