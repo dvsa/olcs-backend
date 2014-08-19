@@ -599,8 +599,8 @@ INSERT INTO `pi_reason` (`pi_id`, `reason_id`) VALUES
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
-    (1,0,B,NULL,NULL,NULL,1,'venue_1',21),
-    (2,0,B,NULL,NULL,NULL,1,'venue_2',22),
+    (1,'B',NULL,NULL,NULL,NULL,1,'venue_1',21),
+    (2,'B',NULL,NULL,NULL,NULL,1,'venue_2',22),
     (3,0,NULL,NULL,NULL,NULL,1,'venue_3',23),
     (4,0,NULL,NULL,NULL,NULL,1,'venue_4',24),
     (5,0,NULL,NULL,NULL,NULL,1,'venue_5',25),
