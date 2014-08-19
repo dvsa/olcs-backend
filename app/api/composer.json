@@ -32,7 +32,7 @@
         "zendframework/zendframework":"2.2.*",
         "doctrine/doctrine-orm-module":"0.*",
         "phpunit/phpunit":"4.0.*",
-        "olcs/olcs-entities":"0.3",
+        "olcs/olcs-entities":"dev-develop",
         "gedmo/doctrine-extensions":"~2.3.9"
     },
     "autoload":{
