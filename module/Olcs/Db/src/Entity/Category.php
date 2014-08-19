@@ -30,4 +30,68 @@ class Category implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
+    /**
+     * Is doc category
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
+     */
+    protected $isDocCategory;
+
+    /**
+     * Is task category
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
+     */
+    protected $isTaskCategory;
+
+
+    /**
+     * Set the is doc category
+     *
+     * @param string $isDocCategory
+     * @return Category
+     */
+    public function setIsDocCategory($isDocCategory)
+    {
+        $this->isDocCategory = $isDocCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the is doc category
+     *
+     * @return string
+     */
+    public function getIsDocCategory()
+    {
+        return $this->isDocCategory;
+    }
+
+    /**
+     * Set the is task category
+     *
+     * @param string $isTaskCategory
+     * @return Category
+     */
+    public function setIsTaskCategory($isTaskCategory)
+    {
+        $this->isTaskCategory = $isTaskCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the is task category
+     *
+     * @return string
+     */
+    public function getIsTaskCategory()
+    {
+        return $this->isTaskCategory;
+    }
 }

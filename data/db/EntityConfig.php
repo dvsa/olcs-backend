@@ -983,10 +983,15 @@ return array(
     ),
     'category' => array(
         'is_doc_category' => array(
-            'yesno'
+            'type' => 'yesno'
         ),
         'is_task_category' => array(
-            'yesno'
+            'type' => 'yesno'
+        )
+    ),
+    'task_sub_category' => array(
+        'is_freetext_description' => array(
+            'type' => 'yesno'
         )
     )
 );
