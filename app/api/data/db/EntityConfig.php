@@ -965,6 +965,20 @@ return array(
     'pi_hearing' => array(
         'is_adjourned' => array(
             'type' => 'yesno'
+        ),
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'piHearing'
+            )
+        )
+    ),
+    'pi_reason' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'piReason'
+            )
         )
     )
 );

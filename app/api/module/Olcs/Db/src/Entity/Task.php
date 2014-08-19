@@ -15,6 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="task",
  *    indexes={
  *        @ORM\Index(name="fk_task_user1_idx", columns={"assigned_to_user_id"}),
+ *        @ORM\Index(name="fk_task_case1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_task_team1_idx", columns={"assigned_to_team_id"}),
  *        @ORM\Index(name="fk_task_user2_idx", columns={"assigned_by_user_id"}),
  *        @ORM\Index(name="fk_task_licence1_idx", columns={"licence_id"}),
@@ -38,6 +39,7 @@ class Task implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\BusRegManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOneAlt1,
         Traits\Description4000Field,

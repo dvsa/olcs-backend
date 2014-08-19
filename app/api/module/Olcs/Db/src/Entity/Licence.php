@@ -33,7 +33,7 @@ class Licence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
