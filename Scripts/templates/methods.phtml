@@ -1,0 +1,95 @@
+    /**
+     * Set the <?php echo strtolower($this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']]))); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php else: ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php endif; ?>
+
+     * @return <?php echo $fluidReturn; ?>
+
+     */
+    public function set<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatPropertyName($item); ?>)
+    {
+        $this-><?php echo $this->formatPropertyName($item); ?> = $<?php echo $this->formatPropertyName($item); ?>;
+
+        return $this;
+    }
+
+    /**
+     * Get the <?php echo strtolower($this->getReadableStringFromName($this->formatPropertyName($item))); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @return \Doctrine\Common\Collections\ArrayCollection<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @return \<?php echo $field['@attributes']['target-entity']; ?>
+<?php else: ?>
+     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+<?php endif; ?>
+
+     */
+    public function get<?php echo ucfirst($this->formatPropertyName($item)); ?>()
+    {
+        return $this-><?php echo $this->formatPropertyName($item); ?>;
+    }
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+
+    /**
+     * Add a <?php echo strtolower($this->getReadableStringFromName($this->formatPropertyName($item))); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php else: ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php endif; ?>
+
+     * @return <?php echo $fluidReturn; ?>
+
+     */
+    public function add<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatPropertyName($item); ?>)
+    {
+        if ($<?php echo $this->formatPropertyName($item); ?> instanceof ArrayCollection) {
+            $this-><?php echo $this->formatPropertyName($item); ?> = new ArrayCollection(
+                array_merge(
+                    $this-><?php echo $this->formatPropertyName($item); ?>->toArray(),
+                    $<?php echo $this->formatPropertyName($item); ?>->toArray()
+                )
+            );
+        } elseif (!$this-><?php echo $this->formatPropertyName($item); ?>->contains($<?php echo $this->formatPropertyName($item); ?>)) {
+            $this-><?php echo $this->formatPropertyName($item); ?>->add($<?php echo $this->formatPropertyName($item); ?>);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a <?php echo strtolower($this->getReadableStringFromName($this->formatPropertyName($item))); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php else: ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+<?php endif; ?>
+
+     * @return <?php echo $fluidReturn; ?>
+
+     */
+    public function remove<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatPropertyName($item); ?>)
+    {
+        if ($this-><?php echo $this->formatPropertyName($item); ?>->contains($<?php echo $this->formatPropertyName($item); ?>)) {
+            $this-><?php echo $this->formatPropertyName($item); ?>->remove($<?php echo $this->formatPropertyName($item); ?>);
+        }
+
+        return $this;
+    }
+<?php endif; ?>

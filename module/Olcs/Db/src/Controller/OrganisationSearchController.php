@@ -27,7 +27,7 @@ class OrganisationSearchController extends AbstractBasicRestServerController
 
             $data = $this->getService('Operator')->findAllByLicence($options);
 
-        } catch  (\Exception $ex) {
+        } catch (\Exception $ex) {
 
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }

@@ -5,7 +5,6 @@ return array(
         'Olcs\Db',
         'DoctrineModule',
         'DoctrineORMModule',
-        'OlcsEntities'
     ],
 
     // These are various options for the listeners attached to the ModuleManager
@@ -16,8 +15,7 @@ return array(
         // Module class.
         'module_paths' => array(
             __DIR__ . '/../module',
-            __DIR__ . '/../vendor',
-            __DIR__ . '/../vendor/olcs/olcs-entities'
+            __DIR__ . '/../vendor'
         ),
 
         // An array of paths from which to glob configuration files after

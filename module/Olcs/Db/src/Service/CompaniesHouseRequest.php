@@ -20,7 +20,7 @@ class CompaniesHouseRequest extends ServiceAbstract
      * Saves request information
      *
      * @param string $requestType
-     * @return \OlcsEntities\Entity\CompaniesHouseRequest
+     * @return \Olcs\Db\Entity\CompaniesHouseRequest
      */
     public function initiateRequest($requestType)
     {
