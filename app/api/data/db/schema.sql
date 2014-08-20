@@ -308,6 +308,7 @@ CREATE TABLE IF NOT EXISTS `traffic_area` (
   `id` CHAR(1) NOT NULL,
   `name` VARCHAR(70) NOT NULL,
   `txc_name` VARCHAR(70) NULL,
+  `is_scottish_rules`  TINYINT(1) NOT NULL DEFAULT 0,
   `contact_details_id` INT NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
