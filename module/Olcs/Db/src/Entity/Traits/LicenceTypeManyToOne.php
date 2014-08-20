@@ -43,5 +43,4 @@ trait LicenceTypeManyToOne
     {
         return $this->licenceType;
     }
-
 }

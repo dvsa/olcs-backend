@@ -42,5 +42,4 @@ trait Notes4000Field
     {
         return $this->notes;
     }
-
 }

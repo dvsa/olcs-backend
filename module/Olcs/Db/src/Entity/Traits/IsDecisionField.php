@@ -42,5 +42,4 @@ trait IsDecisionField
     {
         return $this->isDecision;
     }
-
 }

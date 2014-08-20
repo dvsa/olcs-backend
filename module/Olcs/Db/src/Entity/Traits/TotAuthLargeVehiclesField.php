@@ -42,5 +42,4 @@ trait TotAuthLargeVehiclesField
     {
         return $this->totAuthLargeVehicles;
     }
-
 }

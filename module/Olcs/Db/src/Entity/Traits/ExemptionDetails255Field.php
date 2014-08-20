@@ -42,5 +42,4 @@ trait ExemptionDetails255Field
     {
         return $this->exemptionDetails;
     }
-
 }
