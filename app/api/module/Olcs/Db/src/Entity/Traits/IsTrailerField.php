@@ -42,5 +42,4 @@ trait IsTrailerField
     {
         return $this->isTrailer;
     }
-
 }

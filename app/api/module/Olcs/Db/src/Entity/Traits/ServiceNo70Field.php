@@ -42,5 +42,4 @@ trait ServiceNo70Field
     {
         return $this->serviceNo;
     }
-
 }

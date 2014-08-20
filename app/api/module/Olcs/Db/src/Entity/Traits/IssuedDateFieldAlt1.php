@@ -42,5 +42,4 @@ trait IssuedDateFieldAlt1
     {
         return $this->issuedDate;
     }
-
 }
