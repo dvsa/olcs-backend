@@ -38,19 +38,18 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
 
-            $this->getService('TradingName')->deleteAll(array('licence' => $data['licence']));
-            $this->getService('TradingName')->deleteAll(array('organisation' => $data['organisation']));
+            $this->getService('TradingName')->deleteList(array('licence' => $data['licence']));
+            $this->getService('TradingName')->deleteList(array('organisation' => $data['organisation']));
 
             $response = array();
 
             foreach ($data['tradingNames'] as $tradingName) {
                 $tradingName['licence'] = $data['licence'];
                 $tradingName['organisation'] = $data['organisation'];
-                $id = $this->getService('TradingName')->create($tradingName);
-                $response[] = array('id' => $id);
+                $this->getService('TradingName')->create($tradingName);
             }
 
-            return $this->respond(Response::STATUS_CODE_201, 'Entities Created', $response);
+            return $this->respond(Response::STATUS_CODE_201, 'Entities Created', true);
 
         } catch (\Exception $ex) {
 
