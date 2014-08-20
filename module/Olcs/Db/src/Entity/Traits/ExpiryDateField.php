@@ -42,5 +42,4 @@ trait ExpiryDateField
     {
         return $this->expiryDate;
     }
-
 }

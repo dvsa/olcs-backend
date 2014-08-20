@@ -43,5 +43,4 @@ trait DocBookmarkManyToOne
     {
         return $this->docBookmark;
     }
-
 }

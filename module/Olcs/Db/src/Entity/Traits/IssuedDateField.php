@@ -42,5 +42,4 @@ trait IssuedDateField
     {
         return $this->issuedDate;
     }
-
 }

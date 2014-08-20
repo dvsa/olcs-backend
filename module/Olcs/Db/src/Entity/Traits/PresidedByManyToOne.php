@@ -43,5 +43,4 @@ trait PresidedByManyToOne
     {
         return $this->presidedBy;
     }
-
 }
