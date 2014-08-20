@@ -1669,7 +1669,7 @@ CREATE VIEW task_search_view AS
         cat.description category_name, tsc.name task_sub_category_name,
         coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') id_col,
         coalesce(o.name, irfo.name, tmp.family_name, concat('Case ', c.id), 'Unlinked') name_col,
-        l.lic_no, irfo.name irfo_op_name, o.name op_name, tmp.family_name, c.id case_id, br.id bus_reg_id,
+        l.lic_no, l.id licence_id, irfo.name irfo_op_name, o.name op_name, tmp.family_name, c.id case_id, br.id bus_reg_id,
         u.name user_name, COUNT(ll.id) licence_count
     FROM `task` t
 
