@@ -43,5 +43,4 @@ trait CaseManyToOneAlt1
     {
         return $this->case;
     }
-
 }

@@ -43,5 +43,4 @@ trait StatusManyToOne
     {
         return $this->status;
     }
-
 }

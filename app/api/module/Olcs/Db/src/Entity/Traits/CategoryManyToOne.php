@@ -43,5 +43,4 @@ trait CategoryManyToOne
     {
         return $this->category;
     }
-
 }
