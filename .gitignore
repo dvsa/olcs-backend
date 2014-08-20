@@ -11,3 +11,4 @@ vendor
 vendor/bin
 test/coverage-report
 *.sw?
+data/mapping
