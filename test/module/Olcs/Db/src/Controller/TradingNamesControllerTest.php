@@ -50,7 +50,7 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateWithData()
     {
-        $mockService = $this->getMock('\stdClass', array('removeAll', 'create'));
+        $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
         $this->controller->expects($this->any())
             ->method('getService')
             ->will($this->returnValue($mockService));
@@ -60,7 +60,7 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(array(
                 'licence' => 7,
                 'tradingNames' => array(
-                    array('tradingName' => 'name', 'licence' => 1)
+                    array('name' => 'name', 'licence' => 1)
                 )
             )));
 
@@ -73,10 +73,10 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateWithExc()
     {
-        $mockService = $this->getMock('\stdClass', array('removeAll', 'create'));
+        $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
 
         $mockService->expects($this->any())
-            ->method('removeAll')
+            ->method('deleteList')
             ->will($this->throwException(new \Exception));
 
 
@@ -87,12 +87,10 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->expects($this->once())
             ->method('formatDataFromJson')
             ->will($this->returnValue(array(
-                array('tradingName' => 'name', 'licence' => 1)
+                array('name' => 'name', 'licence' => 1)
             )));
 
 
         $this->controller->create([]);
     }
-
-
 }

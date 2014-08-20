@@ -10,6 +10,7 @@ namespace Olcs\Db\Service\Bundle;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Olcs\Db\Entity\Interfaces\EntityInterface;
 
 /**
  * BundleCreator class, handles the bundling of entities
@@ -86,7 +87,11 @@ class BundleCreator
      */
     private function formatBundleForEntity($entity, $config)
     {
-        $entityArray = $this->extract($entity);
+        try {
+            $entityArray = $this->extract($entity);
+        } catch (\Exception $ex) {
+            return null;
+        }
 
         $config = array_merge(array('properties' => 'ALL'), $config);
 
@@ -128,19 +133,76 @@ class BundleCreator
 
             if (method_exists($entity, $getter)) {
 
-                $children = $entity->$getter();
-
-                if (isset($details['criteria']) && is_array($details['criteria'])) {
-                    foreach ($details['criteria'] as $field => $value) {
-                        $criteria = Criteria::create();
-                        $criteria->where(Criteria::expr()->eq($field, $value));
-                        $children = $children->matching($criteria);
-                    }
-                }
+                $children = $this->filterChildren($entity->$getter(), $details);
 
                 $entityArray[$childName] = $this->formatChild($children, $details);
             }
         }
+    }
+
+    /**
+     * Filter children
+     *
+     * @param type $children
+     * @param type $details
+     * @return type
+     */
+    private function filterChildren($children, $details)
+    {
+        if (!($children instanceof Collection)) {
+            return $children;
+        }
+
+        if (isset($details['criteria']) && is_array($details['criteria'])) {
+
+            foreach ($details['criteria'] as $field => $value) {
+
+                $children = $this->applyCriteria($children, $field, $value);
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * Apply a single criteria item
+     *
+     * @param array $children
+     * @param string $field
+     * @param string $value
+     * @return array
+     */
+    private function applyCriteria($children, $field, $value)
+    {
+        // Here we try to filter the children using doctrine's Criteria class
+        // this can fail if the field is a foreign key and the value is not an object
+        // so we need to fallback to iteration
+        try {
+
+            $criteria = Criteria::create();
+            $criteria->where(Criteria::expr()->eq($field, $value));
+            $children = $children->matching($criteria);
+
+        } catch (\Exception $ex) {
+
+            foreach ($children as $child) {
+
+                // If the method doesn't exist just break
+                if (!method_exists($child, 'get' . ucfirst($field))) {
+                    break;
+                }
+
+                $entity = $child->{'get' . ucfirst($field)}();
+
+                if ($entity instanceof EntityInterface
+                    && method_exists($entity, 'getId')
+                    && $entity->getId() != $value) {
+                    $children->removeElement($child);
+                }
+            }
+        }
+
+        return $children;
     }
 
     /**
