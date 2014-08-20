@@ -43,5 +43,4 @@ trait TmCaseDecisionManyToOne
     {
         return $this->tmCaseDecision;
     }
-
 }

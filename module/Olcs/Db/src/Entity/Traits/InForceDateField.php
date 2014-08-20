@@ -42,5 +42,4 @@ trait InForceDateField
     {
         return $this->inForceDate;
     }
-
 }
