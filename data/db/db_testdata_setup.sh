@@ -2,11 +2,7 @@
 
 mysql -uroot -ppassword < DatabaseSetup.sql
 
-pushd ../../../olcs-backend/vendor/bin/
-
-./doctrine-module orm:schema:update --force
-
-popd
+../../vendor/bin/doctrine-module orm:schema:update --force
 
 mysql -uroot -ppassword olcs_be < Rollout.sql
 
