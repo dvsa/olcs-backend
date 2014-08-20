@@ -33,7 +33,7 @@ class DefendantSearchController extends AbstractBasicRestServerController
 
             $data = $this->getService('Person')->findPersons($options);
 
-        } catch  (\Exception $ex) {
+        } catch (\Exception $ex) {
 
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }

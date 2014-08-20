@@ -42,7 +42,7 @@ class Licence extends ServiceAbstract
             'a.address_line2',
             'a.address_line3',
             'a.address_line4',
-            'a.city',
+            'a.town',
             'a.postcode'
         );
 
@@ -55,7 +55,7 @@ class Licence extends ServiceAbstract
                 'condition' => 'o.organisation_type = ?',
                 'type' => 'EQUALS'
             ),
-            'licenceNumber' => array(
+            'licNo' => array(
                 'condition' => 'l.lic_no LIKE ?',
                 'type' => 'LIKE'
             ),
@@ -68,7 +68,7 @@ class Licence extends ServiceAbstract
                 'type' => 'LIKE'
             ),
             'town' => array(
-                'condition' => 'a.city LIKE ? OR l.addressTown LIKE ?',
+                'condition' => 'a.town LIKE ? OR l.addressTown LIKE ?',
                 'type' => 'LIKE'
             ),
             'operatorId' => array(
@@ -78,8 +78,8 @@ class Licence extends ServiceAbstract
         );
 
         $lookupColumn = array(
-            'licenceNumber' => 'l.lic_no',
-            'appId' => 'app.application_number',
+            'licNo' => 'l.lic_no',
+            'appId' => 'app.id',
             'operatorName' => 'o.name',
             'companyNumber' => 'o.registered_company_number',
             'lastActionDate' => 'l.startDate',
@@ -95,26 +95,27 @@ class Licence extends ServiceAbstract
         $offset = $this->getOffset($page, $limit);
         $limitClause = $this->formatLimitClause($limit, $offset);
         $orderByClause = $this->formatOrderByClause(
-            $this->getOrderBy($options, $lookupColumn, $lookupColumn['licenceNumber']), $sortOrder
+            $this->getOrderBy($options, $lookupColumn, $lookupColumn['licNo']), $sortOrder
         );
 
         list($conditions, $params) = $this->formatConditionsFromOptions($optionConditions, $options);
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.*, o.*, a.*, app.application_number as appNumber, app.status as appStatus,
-            l.lic_no AS licenceNumber, l.id AS licenceId, count(c.id) AS caseCount ';
+        // @todo Need to know how to get trading_as now, maybe the first one from trading names?
+        $dataSql = 'SELECT l.*, o.*, o.type as organisation_type, a.*, app.id as appNumber, app.status as appStatus,
+            l.lic_no AS licNo, l.id AS licenceId, count(c.id) AS caseCount ';
 
         $countSql = 'SELECT COUNT(DISTINCT l.id) AS resultCount ';
 
         // Common part of the query
         $sql = 'FROM organisation o
 INNER JOIN licence l ON l.organisation_id = o.id
-LEFT JOIN application app ON app.licence_uid = l.id
-LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_details_type = \'correspondence\')
+LEFT JOIN application app ON app.licence_id = l.id
+LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_type = \'ct_corr\')
 LEFT JOIN address a ON cd.address_id = a.id
-LEFT JOIN trading_name tm ON l.id = tm.F_Licence_UID
-LEFT OUTER JOIN vosa_case c ON c.licence=l.id
+LEFT JOIN trading_name tm ON l.id = tm.licence_id
+LEFT OUTER JOIN cases c ON c.licence_id = l.id
 ' . $where;
 
         $dataSql .= $sql . ' GROUP BY l.id ' . $orderByClause . $limitClause;
@@ -142,25 +143,25 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
     public function findAllPersons($options)
     {
         $optionConditions = array(
-            'firstName' => array(
-                'condition' => 'p.first_name LIKE ?',
+            'forename' => array(
+                'condition' => 'p.forename LIKE ?',
                 'type' => 'LIKE'
             ),
-            'lastName' => array(
-                'condition' => 'p.surname LIKE ?',
+            'familyName' => array(
+                'condition' => 'p.familyName LIKE ?',
                 'type' => 'LIKE'
             ),
-            'dateOfBirth' => array(
+            'birthDate' => array(
                 'condition' => 'p.date_of_birth = ?',
                 'type' => 'EQUALS'
             )
         );
 
         $lookupColumn = array(
-            'name' => array('p.first_name', 'p.surname'),
-            'firstName' => 'p.first_name',
-            'lastName' => 'p.surname',
-            'dob' => 'p.date_of_birth',
+            'name' => array('p.forename', 'p.familyName'),
+            'forename' => 'p.forename',
+            'familyName' => 'p.familyName',
+            'birthDate' => 'p.birth_date',
         );
 
         $sortOrder = $this->getSortOrder($options);
@@ -191,16 +192,16 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
     public function findPersonsAndLicences($options)
     {
         $optionConditions = array(
-            'firstName' => array(
-                'condition' => 'p.first_name LIKE ?',
+            'forename' => array(
+                'condition' => 'p.forename LIKE ?',
                 'type' => 'LIKE'
             ),
-            'lastName' => array(
-                'condition' => 'p.surname = ?',
+            'familyName' => array(
+                'condition' => 'p.familyName = ?',
                 'type' => 'LIKE'
             ),
-            'dateOfBirth' => array(
-                'condition' => 'p.date_of_birth LIKE ?',
+            'birthDate' => array(
+                'condition' => 'p.birth_date LIKE ?',
                 'type' => 'DATE'
             )
         );
@@ -223,7 +224,7 @@ LEFT OUTER JOIN vosa_case c ON c.licence=l.id
 
         $where = $this->formatWhereClause($conditions);
 
-        $dataSql = 'SELECT l.id AS licenceId, l.lic_no AS licenceNumber, l.status AS licenceStatus,
+        $dataSql = 'SELECT l.id AS licenceId, l.lic_no AS licNo, l.status AS licenceStatus,
 MAX(IF(pd.status = \'Y\', 0, 1)) AS disqualificationStatus ';
 
         $countSql = 'SELECT COUNT(DISTINCT p.id, IFNULL(l.id, 0)) AS rowCount ';

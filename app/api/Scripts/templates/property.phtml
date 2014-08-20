@@ -1,0 +1,53 @@
+    /**
+     * <?php if ($item['isId']): ?>Identifier - <?php endif; ?><?php echo $this->getReadableStringFromName((isset($item['property']) ? $item['property'] : $field['@attributes'][$item['ref']])); ?>
+
+     *
+<?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
+     * @var \Doctrine\Common\Collections\ArrayCollection<?php /** Sort out white space */ ?>
+<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @var \<?php echo $field['@attributes']['target-entity']; ?>
+<?php else: ?>
+     * @var <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+<?php endif; ?>
+
+     *
+<?php if ($item['isId']): ?>
+     * @ORM\Id
+<?php endif; ?>
+<?php if (in_array($item['type'], array('id', 'field'))): ?>
+     * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php else: ?>
+     * @ORM\<?php echo ucfirst($item['type']); ?>(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], $item['type']); ?>)
+<?php endif; ?>
+<?php if (!$item['isInverse'] && in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
+<?php endif; ?>
+<?php if (isset($field['join-table'])): ?>
+     * @ORM\JoinTable(<?php echo $this->generateOptionsFromAttributes($field['join-table']['@attributes'], 'join-table'); ?>,
+     *     joinColumns={
+<?php
+
+$columns = $this->standardiseArray($field['join-table']['join-columns']['join-column']);
+
+foreach ($columns as $key => $joinColumn): ?>
+     *         @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($joinColumn['@attributes'], 'join-column'); ?>)<?php echo ($key < (count($columns) - 1) ? ',' : ''); ?>
+
+<?php endforeach; ?>
+     *     },
+     *     inverseJoinColumns={
+<?php
+
+$columns = $this->standardiseArray($field['join-table']['inverse-join-columns']['join-column']);
+
+foreach ($columns as $key => $joinColumn): ?>
+     *         @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($joinColumn['@attributes'], 'join-column'); ?>)<?php echo ($key < (count($columns) - 1) ? ',' : ''); ?>
+
+<?php endforeach; ?>
+     *     }
+     * )
+<?php endif; ?>
+<?php if (isset($field['generator']) && $field['@attributes']['type'] == 'integer'): ?>
+     * @ORM\GeneratedValue(strategy="<?php echo $field['generator']['@attributes']['strategy']; ?>")
+<?php endif; ?>
+     */
+    protected $<?php echo $this->formatPropertyName($item); ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;

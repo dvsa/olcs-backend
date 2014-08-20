@@ -42,7 +42,7 @@ class Factory implements FactoryInterface
 
         if ($setEntityName) {
 
-            $service->setEntityName('\OlcsEntities\Entity\\' . $name);
+            $service->setEntityName('\Olcs\Db\Entity\\' . $name);
         }
 
         $service->setEntityManager($this->serviceLocator->get('doctrine.entitymanager.orm_default'));
