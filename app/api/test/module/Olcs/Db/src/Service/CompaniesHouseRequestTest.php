@@ -50,7 +50,7 @@ class CompaniesHouseRequestTest extends PHPUnit_Framework_TestCase
     public function testInitiateRequest()
     {
         $request = $this->service->initiateRequest('numberSearch');
-        $requestCreated = $request instanceof \OlcsEntities\Entity\CompaniesHouseRequest;
+        $requestCreated = $request instanceof \Olcs\Db\Entity\CompaniesHouseRequest;
         $this->assertTrue($requestCreated);
     }
 }
