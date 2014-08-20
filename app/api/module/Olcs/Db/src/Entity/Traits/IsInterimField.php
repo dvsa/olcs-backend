@@ -42,5 +42,4 @@ trait IsInterimField
     {
         return $this->isInterim;
     }
-
 }

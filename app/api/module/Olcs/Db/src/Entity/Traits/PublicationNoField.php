@@ -42,5 +42,4 @@ trait PublicationNoField
     {
         return $this->publicationNo;
     }
-
 }

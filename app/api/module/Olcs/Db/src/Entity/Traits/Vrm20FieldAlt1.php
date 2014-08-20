@@ -42,5 +42,4 @@ trait Vrm20FieldAlt1
     {
         return $this->vrm;
     }
-
 }

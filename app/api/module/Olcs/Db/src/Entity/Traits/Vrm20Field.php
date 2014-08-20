@@ -42,5 +42,4 @@ trait Vrm20Field
     {
         return $this->vrm;
     }
-
 }

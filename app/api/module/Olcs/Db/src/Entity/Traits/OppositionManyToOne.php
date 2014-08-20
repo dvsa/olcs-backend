@@ -43,5 +43,4 @@ trait OppositionManyToOne
     {
         return $this->opposition;
     }
-
 }

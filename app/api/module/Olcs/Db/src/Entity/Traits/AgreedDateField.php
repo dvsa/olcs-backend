@@ -42,5 +42,4 @@ trait AgreedDateField
     {
         return $this->agreedDate;
     }
-
 }
