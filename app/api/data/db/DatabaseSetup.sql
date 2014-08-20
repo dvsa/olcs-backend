@@ -1,5 +1,5 @@
+DROP DATABASE IF EXISTS olcs_be;
+
 CREATE DATABASE olcs_be;
 
-CREATE USER olcs_be@localhost IDENTIFIED BY 'password';
-
-GRANT ALL ON *.* TO olcs_be@localhost;
+GRANT ALL ON olcs_be.* TO olcs_be@localhost IDENTIFIED BY 'password';
