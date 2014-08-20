@@ -139,7 +139,7 @@ class CompaniesHouse extends ServiceAbstract
     }
 
     /**
-     * Searches Companies House API for company appointments and gets Company Officers with 
+     * Searches Companies House API for company appointments and gets Company Officers with
      * specific appointment types and Current status
      *
      * @param object $gateway
@@ -234,9 +234,9 @@ class CompaniesHouse extends ServiceAbstract
                         in_array($appointmentType, $this->allowedAppointmentTypes) !== false) {
                         $finalResult[] = [
                             'title'       => ucfirst(strtolower((string)$item->Person->Title)),
-                            'firstName'   => (string)$item->Person->Forename,
-                            'surname'     => (string)$item->Person->Surname,
-                            'dateOfBirth' => (string)$item->Person->DOB,
+                            'forename'   => (string)$item->Person->Forename,
+                            'familyName'     => (string)$item->Person->Surname,
+                            'birthDate' => (string)$item->Person->DOB,
                         ];
                     }
                 }

@@ -62,6 +62,13 @@ abstract class ServiceAbstract
     protected $entityProperties = array();
 
     /**
+     * Cache metadata
+     *
+     * @var array
+     */
+    protected $classMetadata = array();
+
+    /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
      *
@@ -83,9 +90,31 @@ abstract class ServiceAbstract
         $this->dbPersist($entity);
         $this->dbFlush();
 
-        $id = $entity->getId();
+        return $this->getId($entity);
+    }
 
-        return $id;
+    /**
+     * Get entity id(s)
+     *
+     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
+     * difference
+     *
+     * @param EntityInterface $entity
+     * @return mixed
+     */
+    public function getId($entity)
+    {
+        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
+
+        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
+
+        $flatIds = $this->getEntityManager()->getUnitOfWork()->flattenIdentifier($class, $id);
+
+        if (count($flatIds) == 1) {
+            return array_values($flatIds)[0];
+        }
+
+        return $flatIds;
     }
 
     /**
@@ -153,6 +182,21 @@ abstract class ServiceAbstract
     {
         $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
 
+        return $this->getEntityList($data);
+    }
+
+    /**
+     * Returns a list of entities
+     *  Abstracted this logic away and added extra flags to maintain backwards compat
+     *
+     * @param array $data
+     * @param boolean $filter
+     * @param boolean $bundle
+     * @param boolean $paginate
+     * @return array
+     */
+    private function getEntityList($data, $filter = true, $bundle = true, $paginate = true)
+    {
         $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -176,6 +220,10 @@ abstract class ServiceAbstract
             } elseif ($value === 'NULL') {
                 $qb->$whereMethod("a.{$field} IS NULL");
                 $whereMethod = 'andWhere';
+            } elseif ($this->isFieldForeignKey($entityName, $field)) {
+                $qb->$whereMethod("a.{$field} = :{$key}");
+                $whereMethod = 'andWhere';
+                $params[$key] = $value;
             } else {
                 list($operator, $value) = $this->getOperator($key, $value);
                 $qb->$whereMethod("a.{$field} " . $operator);
@@ -188,22 +236,24 @@ abstract class ServiceAbstract
             $qb->setParameters($params);
         }
 
-        $pag = $this->getPaginationValues($data);
-        $page = isset($pag['page']) ? $pag['page'] : 1;
+        if ($filter) {
+            $pag = $this->getPaginationValues($data);
+            $page = isset($pag['page']) ? $pag['page'] : 1;
 
-        if (!isset($pag['limit']) || $pag['limit'] != 'all') {
-            $limit = isset($pag['limit']) ? $pag['limit'] : 10;
-            $qb->setFirstResult($this->getOffset($page, $limit));
-            $qb->setMaxResults($limit);
+            if (!isset($pag['limit']) || $pag['limit'] != 'all') {
+                $limit = isset($pag['limit']) ? $pag['limit'] : 10;
+                $qb->setFirstResult($this->getOffset($page, $limit));
+                $qb->setMaxResults($limit);
+            }
+
+            $this->setOrderBy($qb, $data);
         }
-
-        $this->setOrderBy($qb, $data);
 
         $query = $qb->getQuery();
 
         $results = $query->getResult();
 
-        if (!empty($results)) {
+        if ($bundle && !empty($results)) {
 
             $rows = array();
 
@@ -215,54 +265,47 @@ abstract class ServiceAbstract
             $results = $rows;
         }
 
-        $paginator = $this->getPaginator($query, false);
+        if ($paginate) {
+            $paginator = $this->getPaginator($query, false);
 
-        return array(
-            'Count' => count($paginator),
-            'Results' => $results
-        );
-    }
-
-    /**
-     * Method to allow easier testing
-     *
-     * @param \Doctrine\ORM\Query $query
-     * @param Bool $fetchJoinCollection
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function getPaginator($query, $fetchJoinColumns = false)
-    {
-        return new Paginator($query, $fetchJoinColumns);
-    }
-
-    /**
-     * Returns valid order by values where they exist in the array given.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function getOrderByValues(array $data)
-    {
-        return array_intersect_key($data, array_flip(['sort', 'order']));
-    }
-
-    /**
-     * Sets the sort by columns.
-     *
-     * @param unknown_type $qb
-     * @param unknown_type $data
-     */
-    public function setOrderBy($qb, $data)
-    {
-        $orderByValues = $this->getOrderByValues($data);
-        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
-        if ($sort) {
-            $sortString = 'a.' . $sort;
-            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
-
-            $qb->orderBy($sortString, $orderString);
+            return array(
+                'Count' => count($paginator),
+                'Results' => $results
+            );
         }
+
+        return $results;
+    }
+
+    /**
+     * Check if a field is a foreign key
+     *
+     * @param string $entity
+     * @param string $field
+     */
+    private function isFieldForeignKey($entity, $field)
+    {
+        $metaData = (array)$this->getClassMetadata($entity);
+
+        return isset($metaData['associationMappings'][$field]);
+    }
+
+    /**
+     * Get class metadata from entity
+     *
+     * @param string $entity
+     */
+    private function getClassMetadata($entity)
+    {
+        if (is_object($entity)) {
+            $entity = get_class($entity);
+        }
+
+        if (!isset($this->classMetadata[$entity])) {
+            $this->classMetadata[$entity] = $this->getEntityManager()->getClassMetadata($entity);
+        }
+
+        return $this->classMetadata[$entity];
     }
 
     /**
@@ -356,6 +399,68 @@ abstract class ServiceAbstract
     }
 
     /**
+     * Delete a list of entities
+     *
+     * @param array $data
+     */
+    public function deleteList($data)
+    {
+        $results = $this->getEntityList($data, false, false, false);
+
+        foreach ($results as $row) {
+            $this->getEntityManager()->remove($row);
+        }
+
+        if (count($results) > 0) {
+            $this->dbFlush();
+        }
+
+        return true;
+    }
+
+    /**
+     * Method to allow easier testing
+     *
+     * @param \Doctrine\ORM\Query $query
+     * @param boolean $fetchJoinColumns
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getPaginator($query, $fetchJoinColumns = false)
+    {
+        return new Paginator($query, $fetchJoinColumns);
+    }
+
+    /**
+     * Returns valid order by values where they exist in the array given.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function getOrderByValues(array $data)
+    {
+        return array_intersect_key($data, array_flip(['sort', 'order']));
+    }
+
+    /**
+     * Sets the sort by columns.
+     *
+     * @param unknown_type $qb
+     * @param unknown_type $data
+     */
+    public function setOrderBy($qb, $data)
+    {
+        $orderByValues = $this->getOrderByValues($data);
+        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
+        if ($sort) {
+            $sortString = 'a.' . $sort;
+            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
+
+            $qb->orderBy($sortString, $orderString);
+        }
+    }
+
+    /**
      * Return a new instance of DoctrineHydrator
      *
      * @return DoctrineObject
@@ -381,7 +486,7 @@ abstract class ServiceAbstract
     /**
      * Returns a new instance of the entity.
      *
-     * @return \OlcsEntities\Entity\EntityInterface
+     * @return \Olcs\Db\Entity\EntityInterface
      */
     public function getNewEntity()
     {
@@ -398,7 +503,7 @@ abstract class ServiceAbstract
     public function getEntityName()
     {
         if (!isset($this->entityName)) {
-            $entityPrefix = '\OlcsEntities\Entity\\';
+            $entityPrefix = '\Olcs\Db\Entity\\';
 
             $class = get_called_class();
 

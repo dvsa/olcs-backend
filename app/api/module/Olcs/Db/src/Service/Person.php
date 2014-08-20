@@ -23,7 +23,7 @@ class Person extends ServiceAbstract
      */
     public function getValidSearchFields()
     {
-        return array('firstName', 'lastName', 'dateOfBirth');
+        return array('forename', 'familyName', 'birthDate');
     }
 
     /**
@@ -37,28 +37,28 @@ class Person extends ServiceAbstract
     {
         $optionConditions = array(
             'name' => array(
-                'condition' => '(p.first_name LIKE ? OR p.surname LIKE ?)',
+                'condition' => '(p.forename LIKE ? OR p.familyName LIKE ?)',
                 'type' => 'LIKE'
             ),
-            'firstName' => array(
-                'condition' => 'p.first_name LIKE ?',
+            'forename' => array(
+                'condition' => 'p.forename LIKE ?',
                 'type' => 'LIKE'
             ),
-            'lastName' => array(
-                'condition' => 'p.surname LIKE ?',
+            'familyName' => array(
+                'condition' => 'p.familyName LIKE ?',
                 'type' => 'LIKE'
             ),
-            'dateOfBirth' => array(
-                'condition' => 'p.date_of_birth = ?',
+            'birthDate' => array(
+                'condition' => 'p.bith_date = ?',
                 'type' => 'EQUALS'
             )
         );
 
         $lookupColumn = array(
-            'name' => array('p.first_name', 'p.surname'),
-            'firstName' => 'p.first_name',
-            'lastName' => 'p.surname',
-            'dob' => 'p.date_of_birth',
+            'name' => array('p.forename', 'p.familyName'),
+            'forename' => 'p.forename',
+            'familyName' => 'p.familyName',
+            'birthDate' => 'p.birth_date',
         );
 
         $sortOrder = $this->getSortOrder($options);
