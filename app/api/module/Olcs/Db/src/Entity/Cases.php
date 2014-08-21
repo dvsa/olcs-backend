@@ -31,10 +31,10 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -186,15 +186,6 @@ class Cases implements Interfaces\EntityInterface
     protected $prohibitionNote;
 
     /**
-     * Condition undertaking
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="case")
-     */
-    protected $conditionUndertakings;
-
-    /**
      * Complaint case
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -202,6 +193,15 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ComplaintCase", mappedBy="case")
      */
     protected $complaintCases;
+
+    /**
+     * Condition undertaking
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="case")
+     */
+    protected $conditionUndertakings;
 
     /**
      * Conviction
@@ -228,8 +228,8 @@ class Cases implements Interfaces\EntityInterface
     {
         $this->legacyOffences = new ArrayCollection();
         $this->submissionSections = new ArrayCollection();
-        $this->conditionUndertakings = new ArrayCollection();
         $this->complaintCases = new ArrayCollection();
+        $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -557,29 +557,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the condition undertaking
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
-     * @return Cases
-     */
-    public function setConditionUndertakings($conditionUndertakings)
-    {
-        $this->conditionUndertakings = $conditionUndertakings;
-
-        return $this;
-    }
-
-    /**
-     * Get the condition undertakings
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getConditionUndertakings()
-    {
-        return $this->conditionUndertakings;
-    }
-
-    /**
      * Set the complaint case
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
@@ -600,6 +577,29 @@ class Cases implements Interfaces\EntityInterface
     public function getComplaintCases()
     {
         return $this->complaintCases;
+    }
+
+    /**
+     * Set the condition undertaking
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function setConditionUndertakings($conditionUndertakings)
+    {
+        $this->conditionUndertakings = $conditionUndertakings;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition undertakings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditionUndertakings()
+    {
+        return $this->conditionUndertakings;
     }
 
     /**

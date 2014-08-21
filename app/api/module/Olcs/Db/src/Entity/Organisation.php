@@ -130,15 +130,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $allowEmail = 0;
 
     /**
-     * Licence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Licence", mappedBy="organisation")
-     */
-    protected $licences;
-
-    /**
      * Contact detail
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -148,13 +139,13 @@ class Organisation implements Interfaces\EntityInterface
     protected $contactDetails;
 
     /**
-     * Trading name
+     * Licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Licence", mappedBy="organisation")
      */
-    protected $tradingNames;
+    protected $licences;
 
     /**
      * Organisation person
@@ -166,14 +157,23 @@ class Organisation implements Interfaces\EntityInterface
     protected $organisationPersons;
 
     /**
+     * Trading name
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
+     */
+    protected $tradingNames;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->licences = new ArrayCollection();
         $this->contactDetails = new ArrayCollection();
-        $this->tradingNames = new ArrayCollection();
+        $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
+        $this->tradingNames = new ArrayCollection();
     }
 
     /**
@@ -407,29 +407,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the licence
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
-     * @return Organisation
-     */
-    public function setLicences($licences)
-    {
-        $this->licences = $licences;
-
-        return $this;
-    }
-
-    /**
-     * Get the licences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getLicences()
-    {
-        return $this->licences;
-    }
-
-    /**
      * Set the contact detail
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
@@ -453,26 +430,26 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the trading name
+     * Set the licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
      * @return Organisation
      */
-    public function setTradingNames($tradingNames)
+    public function setLicences($licences)
     {
-        $this->tradingNames = $tradingNames;
+        $this->licences = $licences;
 
         return $this;
     }
 
     /**
-     * Get the trading names
+     * Get the licences
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTradingNames()
+    public function getLicences()
     {
-        return $this->tradingNames;
+        return $this->licences;
     }
 
     /**
@@ -496,5 +473,28 @@ class Organisation implements Interfaces\EntityInterface
     public function getOrganisationPersons()
     {
         return $this->organisationPersons;
+    }
+
+    /**
+     * Set the trading name
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function setTradingNames($tradingNames)
+    {
+        $this->tradingNames = $tradingNames;
+
+        return $this;
+    }
+
+    /**
+     * Get the trading names
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTradingNames()
+    {
+        return $this->tradingNames;
     }
 }

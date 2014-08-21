@@ -22,7 +22,7 @@ class InspectionEmail implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ReceivedDateFieldAlt1;
+        Traits\ReceivedDateFieldAlt2;
 
     /**
      * Inspection request

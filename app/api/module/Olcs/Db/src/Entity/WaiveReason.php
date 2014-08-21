@@ -26,7 +26,7 @@ class WaiveReason implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\IsIrfoField,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

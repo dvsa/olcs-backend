@@ -26,7 +26,7 @@ class BusRegOtherService implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
+        Traits\BusRegManyToOne,
         Traits\ServiceNo70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

@@ -36,9 +36,9 @@ class Licence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
@@ -211,15 +211,6 @@ class Licence implements Interfaces\EntityInterface
     protected $translateToWelsh = 0;
 
     /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
-     */
-    protected $contactDetails;
-
-    /**
      * Application
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -227,6 +218,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Application", mappedBy="licence")
      */
     protected $applications;
+
+    /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
+     */
+    protected $contactDetails;
 
     /**
      * Document
@@ -238,15 +238,6 @@ class Licence implements Interfaces\EntityInterface
     protected $documents;
 
     /**
-     * Workshop
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Workshop", mappedBy="licence")
-     */
-    protected $workshops;
-
-    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -256,15 +247,24 @@ class Licence implements Interfaces\EntityInterface
     protected $licenceVehicles;
 
     /**
+     * Workshop
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Workshop", mappedBy="licence")
+     */
+    protected $workshops;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->contactDetails = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->contactDetails = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->workshops = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
+        $this->workshops = new ArrayCollection();
     }
 
     /**
@@ -659,29 +659,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact detail
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function setContactDetails($contactDetails)
-    {
-        $this->contactDetails = $contactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact details
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
      * Set the application
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $applications
@@ -702,6 +679,29 @@ class Licence implements Interfaces\EntityInterface
     public function getApplications()
     {
         return $this->applications;
+    }
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**
@@ -728,29 +728,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the workshop
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
-     * @return Licence
-     */
-    public function setWorkshops($workshops)
-    {
-        $this->workshops = $workshops;
-
-        return $this;
-    }
-
-    /**
-     * Get the workshops
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getWorkshops()
-    {
-        return $this->workshops;
-    }
-
-    /**
      * Set the licence vehicle
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
@@ -771,5 +748,28 @@ class Licence implements Interfaces\EntityInterface
     public function getLicenceVehicles()
     {
         return $this->licenceVehicles;
+    }
+
+    /**
+     * Set the workshop
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function setWorkshops($workshops)
+    {
+        $this->workshops = $workshops;
+
+        return $this;
+    }
+
+    /**
+     * Get the workshops
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getWorkshops()
+    {
+        return $this->workshops;
     }
 }

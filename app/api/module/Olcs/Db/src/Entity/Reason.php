@@ -28,7 +28,7 @@ class Reason implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\GoodsOrPsv3Field,
         Traits\IsDecisionField,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\IsNiField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

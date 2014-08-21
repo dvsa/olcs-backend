@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Bus reg many to one trait
  *
- * Auto-Generated (Shared between 5 entities)
+ * Auto-Generated (Shared between 6 entities)
  */
 trait BusRegManyToOne
 {
@@ -17,7 +17,7 @@ trait BusRegManyToOne
      * @var \Olcs\Db\Entity\BusReg
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */
     protected $busReg;
 

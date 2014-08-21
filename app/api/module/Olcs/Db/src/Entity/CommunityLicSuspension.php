@@ -28,7 +28,7 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CommunityLicManyToOne,
         Traits\StartDateField,
-        Traits\EndDateField,
+        Traits\EndDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

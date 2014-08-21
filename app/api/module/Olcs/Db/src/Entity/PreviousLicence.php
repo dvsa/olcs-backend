@@ -27,7 +27,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\LicNo18Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

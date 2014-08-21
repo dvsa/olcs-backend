@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * End date field alt1 trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait EndDateFieldAlt1
 {
@@ -16,7 +16,7 @@ trait EndDateFieldAlt1
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="end_date", nullable=true)
+     * @ORM\Column(type="datetime", name="end_date", nullable=true)
      */
     protected $endDate;
 
