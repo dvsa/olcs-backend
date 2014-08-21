@@ -209,6 +209,29 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is trailer
+     *
+     * @param string $isTrailer
+     * @return LegacyOffence
+     */
+    public function setIsTrailer($isTrailer)
+    {
+        $this->isTrailer = $isTrailer;
+
+        return $this;
+    }
+
+    /**
+     * Get the is trailer
+     *
+     * @return string
+     */
+    public function getIsTrailer()
+    {
+        return $this->isTrailer;
+    }
+
+    /**
      * Set the num of offences
      *
      * @param int $numOfOffences
