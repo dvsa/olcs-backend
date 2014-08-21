@@ -193,43 +193,6 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a impounding legislation types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
-     * @return Impounding
-     */
-    public function addImpoundingLegislationTypes($impoundingLegislationTypes)
-    {
-        if ($impoundingLegislationTypes instanceof ArrayCollection) {
-            $this->impoundingLegislationTypes = new ArrayCollection(
-                array_merge(
-                    $this->impoundingLegislationTypes->toArray(),
-                    $impoundingLegislationTypes->toArray()
-                )
-            );
-        } elseif (!$this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
-            $this->impoundingLegislationTypes->add($impoundingLegislationTypes);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a impounding legislation types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
-     * @return Impounding
-     */
-    public function removeImpoundingLegislationTypes($impoundingLegislationTypes)
-    {
-        if ($this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
-            $this->impoundingLegislationTypes->remove($impoundingLegislationTypes);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the application receipt date
      *
      * @param \DateTime $applicationReceiptDate

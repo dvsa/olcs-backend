@@ -31,8 +31,8 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\AdPlacedField,
         Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
@@ -42,7 +42,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\NoOfVehiclesPossessedField,
         Traits\NoOfTrailersPossessedField,
         Traits\ViAction1Field,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -64,6 +63,15 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="added_date", nullable=true)
      */
     protected $addedDate;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Is interim
@@ -128,6 +136,29 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getAddedDate()
     {
         return $this->addedDate;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return LicenceOperatingCentre
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**

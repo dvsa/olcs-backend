@@ -24,10 +24,10 @@ class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\TrafficAreaManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\EmailAddress45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

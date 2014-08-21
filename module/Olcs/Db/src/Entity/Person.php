@@ -18,7 +18,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="person",
  *    indexes={
  *        @ORM\Index(name="fk_person_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_person_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_person_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="person_family_name_idx", columns={"family_name"}),
+ *        @ORM\Index(name="person_forename_idx", columns={"forename"})
  *    }
  * )
  */
@@ -30,9 +32,9 @@ class Person implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\BirthDateField,
         Traits\Title32Field,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomDeletedDateField,
         Traits\CustomVersionField;
 
     /**
@@ -234,42 +236,5 @@ class Person implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Person
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Person
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
-        }
-
-        return $this;
     }
 }

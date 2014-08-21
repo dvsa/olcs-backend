@@ -18,7 +18,7 @@ class Printer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\Description255FieldAlt1;
+        Traits\Description255Field;
 
     /**
      * Printer tray

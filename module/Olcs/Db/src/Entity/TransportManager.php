@@ -240,41 +240,4 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
-    /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return TransportManager
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return TransportManager
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
-    }
 }

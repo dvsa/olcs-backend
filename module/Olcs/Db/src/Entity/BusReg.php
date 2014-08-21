@@ -31,12 +31,13 @@ class BusReg implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
+        Traits\OperatingCentreManyToOne,
         Traits\ServiceNo70Field,
+        Traits\ReceivedDateFieldAlt2,
         Traits\EffectiveDateField,
-        Traits\EndDateField,
+        Traits\EndDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -140,15 +141,6 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
     protected $otherDetails;
-
-    /**
-     * Received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="received_date", nullable=true)
-     */
-    protected $receivedDate;
 
     /**
      * Is short notice
@@ -510,43 +502,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a variation reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function addVariationReasons($variationReasons)
-    {
-        if ($variationReasons instanceof ArrayCollection) {
-            $this->variationReasons = new ArrayCollection(
-                array_merge(
-                    $this->variationReasons->toArray(),
-                    $variationReasons->toArray()
-                )
-            );
-        } elseif (!$this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->add($variationReasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a variation reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function removeVariationReasons($variationReasons)
-    {
-        if ($this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->remove($variationReasons);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the bus service type
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
@@ -567,43 +522,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getBusServiceTypes()
     {
         return $this->busServiceTypes;
-    }
-
-    /**
-     * Add a bus service types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-     * @return BusReg
-     */
-    public function addBusServiceTypes($busServiceTypes)
-    {
-        if ($busServiceTypes instanceof ArrayCollection) {
-            $this->busServiceTypes = new ArrayCollection(
-                array_merge(
-                    $this->busServiceTypes->toArray(),
-                    $busServiceTypes->toArray()
-                )
-            );
-        } elseif (!$this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->add($busServiceTypes);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a bus service types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-     * @return BusReg
-     */
-    public function removeBusServiceTypes($busServiceTypes)
-    {
-        if ($this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->remove($busServiceTypes);
-        }
-
-        return $this;
     }
 
     /**
@@ -742,29 +660,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getOtherDetails()
     {
         return $this->otherDetails;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $receivedDate
-     * @return BusReg
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @return \DateTime
-     */
-    public function getReceivedDate()
-    {
-        return $this->receivedDate;
     }
 
     /**
@@ -1478,42 +1373,5 @@ class BusReg implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
-    }
-
-    /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return BusReg
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return BusReg
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
     }
 }

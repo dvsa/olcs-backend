@@ -16,8 +16,7 @@ use Olcs\Db\Entity\Traits;
  */
 class EbsrSubmissionResult implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\Description100Field;
+    use Traits\CustomBaseEntity;
 
     /**
      * Identifier - Id
@@ -55,6 +54,15 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="email_authority", nullable=false)
      */
     protected $emailAuthority = 0;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=100, nullable=true)
+     */
+    protected $description;
 
 
     /**
@@ -147,5 +155,28 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     public function getEmailAuthority()
     {
         return $this->emailAuthority;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return EbsrSubmissionResult
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

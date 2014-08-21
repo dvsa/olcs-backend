@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_traffic_area_enforcement_area_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="traffic_area_id", columns={"traffic_area_id","enforcement_area_id"})
+ *        @ORM\UniqueConstraint(name="traffic_area_enforcement_area_unique", columns={"traffic_area_id","enforcement_area_id"})
  *    }
  * )
  */
@@ -31,7 +31,7 @@ class TrafficAreaEnforcementArea implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\EnforcementAreaManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -18,7 +18,7 @@ class LegacyCaseAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\Description45FieldAlt1;
+        Traits\Description45Field;
 
     /**
      * Is driver

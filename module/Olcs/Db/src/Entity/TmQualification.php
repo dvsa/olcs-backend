@@ -31,7 +31,7 @@ class TmQualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOneAlt1,
-        Traits\IssuedDateField,
+        Traits\IssuedDateFieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

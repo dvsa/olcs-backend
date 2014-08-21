@@ -17,7 +17,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_stay_case1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_stay_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_stay_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_stay_ref_data1_idx", columns={"outcome"})
+ *        @ORM\Index(name="fk_stay_ref_data1_idx", columns={"outcome"}),
+ *        @ORM\Index(name="fk_stay_ref_data2_idx", columns={"stay_type"})
  *    }
  * )
  */
@@ -29,18 +30,20 @@ class Stay implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Is tc
+     * Stay type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="yesno", name="is_tc", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="stay_type", referencedColumnName="id", nullable=false)
      */
-    protected $isTc;
+    protected $stayType;
 
     /**
      * Request date
@@ -62,26 +65,26 @@ class Stay implements Interfaces\EntityInterface
 
 
     /**
-     * Set the is tc
+     * Set the stay type
      *
-     * @param string $isTc
+     * @param \Olcs\Db\Entity\RefData $stayType
      * @return Stay
      */
-    public function setIsTc($isTc)
+    public function setStayType($stayType)
     {
-        $this->isTc = $isTc;
+        $this->stayType = $stayType;
 
         return $this;
     }
 
     /**
-     * Get the is tc
+     * Get the stay type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getIsTc()
+    public function getStayType()
     {
-        return $this->isTc;
+        return $this->stayType;
     }
 
     /**

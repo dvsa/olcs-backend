@@ -42,243 +42,243 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Section your business status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_yb_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_status", nullable=true)
      */
     protected $sectionYourBusinessStatus;
 
     /**
      * Section your business business type status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_yb_bt_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_bt_status", nullable=true)
      */
     protected $sectionYourBusinessBusinessTypeStatus;
 
     /**
      * Section your business business details status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_yb_bd_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_bd_status", nullable=true)
      */
     protected $sectionYourBusinessBusinessDetailsStatus;
 
     /**
      * Section your business addresses status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_yb_add_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_add_status", nullable=true)
      */
     protected $sectionYourBusinessAddressesStatus;
 
     /**
      * Section your business people status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_yb_peo_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_yb_peo_status", nullable=true)
      */
     protected $sectionYourBusinessPeopleStatus;
 
     /**
      * Section type of licence status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tol_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_status", nullable=true)
      */
     protected $sectionTypeOfLicenceStatus;
 
     /**
      * Section type of licence operator location status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tol_ol_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_ol_status", nullable=true)
      */
     protected $sectionTypeOfLicenceOperatorLocationStatus;
 
     /**
      * Section type of licence operator type status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tol_ot_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_ot_status", nullable=true)
      */
     protected $sectionTypeOfLicenceOperatorTypeStatus;
 
     /**
      * Section type of licence licence type status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tol_lt_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tol_lt_status", nullable=true)
      */
     protected $sectionTypeOfLicenceLicenceTypeStatus;
 
     /**
      * Section operating centres status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ocs_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_status", nullable=true)
      */
     protected $sectionOperatingCentresStatus;
 
     /**
      * Section operating centres authorisation status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ocs_auth_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_auth_status", nullable=true)
      */
     protected $sectionOperatingCentresAuthorisationStatus;
 
     /**
      * Section operating centres financial evidence status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ocs_fe_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ocs_fe_status", nullable=true)
      */
     protected $sectionOperatingCentresFinancialEvidenceStatus;
 
     /**
      * Section transport managers status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tms_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tms_status", nullable=true)
      */
     protected $sectionTransportManagersStatus;
 
     /**
      * Section vehicle safety status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_veh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_status", nullable=true)
      */
     protected $sectionVehicleSafetyStatus;
 
     /**
      * Section vehicle safety vehicle status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_veh_v_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_v_status", nullable=true)
      */
     protected $sectionVehicleSafetyVehicleStatus;
 
     /**
      * Section vehicle safety vehicle psv status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_veh_vpsv_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_vpsv_status", nullable=true)
      */
     protected $sectionVehicleSafetyVehiclePsvStatus;
 
     /**
      * Section vehicle safety safety status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_veh_s_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_veh_s_status", nullable=true)
      */
     protected $sectionVehicleSafetySafetyStatus;
 
     /**
      * Section previous history status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ph_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_status", nullable=true)
      */
     protected $sectionPreviousHistoryStatus;
 
     /**
      * Section previous history financial history status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ph_fh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_fh_status", nullable=true)
      */
     protected $sectionPreviousHistoryFinancialHistoryStatus;
 
     /**
      * Section previous history licence history status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ph_lh_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_lh_status", nullable=true)
      */
     protected $sectionPreviousHistoryLicenceHistoryStatus;
 
     /**
      * Section previous history convictions penalties status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_ph_cp_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_ph_cp_status", nullable=true)
      */
     protected $sectionPreviousHistoryConvictionsPenaltiesStatus;
 
     /**
      * Section review declarations status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_rd_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_rd_status", nullable=true)
      */
     protected $sectionReviewDeclarationsStatus;
 
     /**
      * Section payment submission status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_pay_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_status", nullable=true)
      */
     protected $sectionPaymentSubmissionStatus;
 
     /**
      * Section payment submission payment status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_pay_pay_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_pay_status", nullable=true)
      */
     protected $sectionPaymentSubmissionPaymentStatus;
 
     /**
      * Section payment submission summary status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_pay_summary_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_pay_summary_status", nullable=true)
      */
     protected $sectionPaymentSubmissionSummaryStatus;
 
     /**
      * Section taxi phv status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tp_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tp_status", nullable=true)
      */
     protected $sectionTaxiPhvStatus;
 
     /**
      * Section taxi phv licence status
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="section_tp_lic_status", nullable=true)
+     * @ORM\Column(type="boolean", name="section_tp_lic_status", nullable=true)
      */
     protected $sectionTaxiPhvLicenceStatus;
 
@@ -318,7 +318,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business status
      *
-     * @param int $sectionYourBusinessStatus
+     * @param boolean $sectionYourBusinessStatus
      * @return ApplicationCompletion
      */
     public function setSectionYourBusinessStatus($sectionYourBusinessStatus)
@@ -331,7 +331,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section your business status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionYourBusinessStatus()
     {
@@ -341,7 +341,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business business type status
      *
-     * @param int $sectionYourBusinessBusinessTypeStatus
+     * @param boolean $sectionYourBusinessBusinessTypeStatus
      * @return ApplicationCompletion
      */
     public function setSectionYourBusinessBusinessTypeStatus($sectionYourBusinessBusinessTypeStatus)
@@ -354,7 +354,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section your business business type status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionYourBusinessBusinessTypeStatus()
     {
@@ -364,7 +364,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business business details status
      *
-     * @param int $sectionYourBusinessBusinessDetailsStatus
+     * @param boolean $sectionYourBusinessBusinessDetailsStatus
      * @return ApplicationCompletion
      */
     public function setSectionYourBusinessBusinessDetailsStatus($sectionYourBusinessBusinessDetailsStatus)
@@ -377,7 +377,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section your business business details status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionYourBusinessBusinessDetailsStatus()
     {
@@ -387,7 +387,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business addresses status
      *
-     * @param int $sectionYourBusinessAddressesStatus
+     * @param boolean $sectionYourBusinessAddressesStatus
      * @return ApplicationCompletion
      */
     public function setSectionYourBusinessAddressesStatus($sectionYourBusinessAddressesStatus)
@@ -400,7 +400,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section your business addresses status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionYourBusinessAddressesStatus()
     {
@@ -410,7 +410,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business people status
      *
-     * @param int $sectionYourBusinessPeopleStatus
+     * @param boolean $sectionYourBusinessPeopleStatus
      * @return ApplicationCompletion
      */
     public function setSectionYourBusinessPeopleStatus($sectionYourBusinessPeopleStatus)
@@ -423,7 +423,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section your business people status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionYourBusinessPeopleStatus()
     {
@@ -433,7 +433,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence status
      *
-     * @param int $sectionTypeOfLicenceStatus
+     * @param boolean $sectionTypeOfLicenceStatus
      * @return ApplicationCompletion
      */
     public function setSectionTypeOfLicenceStatus($sectionTypeOfLicenceStatus)
@@ -446,7 +446,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section type of licence status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTypeOfLicenceStatus()
     {
@@ -456,7 +456,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence operator location status
      *
-     * @param int $sectionTypeOfLicenceOperatorLocationStatus
+     * @param boolean $sectionTypeOfLicenceOperatorLocationStatus
      * @return ApplicationCompletion
      */
     public function setSectionTypeOfLicenceOperatorLocationStatus($sectionTypeOfLicenceOperatorLocationStatus)
@@ -469,7 +469,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section type of licence operator location status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTypeOfLicenceOperatorLocationStatus()
     {
@@ -479,7 +479,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence operator type status
      *
-     * @param int $sectionTypeOfLicenceOperatorTypeStatus
+     * @param boolean $sectionTypeOfLicenceOperatorTypeStatus
      * @return ApplicationCompletion
      */
     public function setSectionTypeOfLicenceOperatorTypeStatus($sectionTypeOfLicenceOperatorTypeStatus)
@@ -492,7 +492,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section type of licence operator type status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTypeOfLicenceOperatorTypeStatus()
     {
@@ -502,7 +502,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence licence type status
      *
-     * @param int $sectionTypeOfLicenceLicenceTypeStatus
+     * @param boolean $sectionTypeOfLicenceLicenceTypeStatus
      * @return ApplicationCompletion
      */
     public function setSectionTypeOfLicenceLicenceTypeStatus($sectionTypeOfLicenceLicenceTypeStatus)
@@ -515,7 +515,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section type of licence licence type status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTypeOfLicenceLicenceTypeStatus()
     {
@@ -525,7 +525,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres status
      *
-     * @param int $sectionOperatingCentresStatus
+     * @param boolean $sectionOperatingCentresStatus
      * @return ApplicationCompletion
      */
     public function setSectionOperatingCentresStatus($sectionOperatingCentresStatus)
@@ -538,7 +538,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section operating centres status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionOperatingCentresStatus()
     {
@@ -548,7 +548,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres authorisation status
      *
-     * @param int $sectionOperatingCentresAuthorisationStatus
+     * @param boolean $sectionOperatingCentresAuthorisationStatus
      * @return ApplicationCompletion
      */
     public function setSectionOperatingCentresAuthorisationStatus($sectionOperatingCentresAuthorisationStatus)
@@ -561,7 +561,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section operating centres authorisation status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionOperatingCentresAuthorisationStatus()
     {
@@ -571,7 +571,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres financial evidence status
      *
-     * @param int $sectionOperatingCentresFinancialEvidenceStatus
+     * @param boolean $sectionOperatingCentresFinancialEvidenceStatus
      * @return ApplicationCompletion
      */
     public function setSectionOperatingCentresFinancialEvidenceStatus($sectionOperatingCentresFinancialEvidenceStatus)
@@ -584,7 +584,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section operating centres financial evidence status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionOperatingCentresFinancialEvidenceStatus()
     {
@@ -594,7 +594,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section transport managers status
      *
-     * @param int $sectionTransportManagersStatus
+     * @param boolean $sectionTransportManagersStatus
      * @return ApplicationCompletion
      */
     public function setSectionTransportManagersStatus($sectionTransportManagersStatus)
@@ -607,7 +607,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section transport managers status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTransportManagersStatus()
     {
@@ -617,7 +617,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section vehicle safety status
      *
-     * @param int $sectionVehicleSafetyStatus
+     * @param boolean $sectionVehicleSafetyStatus
      * @return ApplicationCompletion
      */
     public function setSectionVehicleSafetyStatus($sectionVehicleSafetyStatus)
@@ -630,7 +630,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section vehicle safety status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionVehicleSafetyStatus()
     {
@@ -640,7 +640,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section vehicle safety vehicle status
      *
-     * @param int $sectionVehicleSafetyVehicleStatus
+     * @param boolean $sectionVehicleSafetyVehicleStatus
      * @return ApplicationCompletion
      */
     public function setSectionVehicleSafetyVehicleStatus($sectionVehicleSafetyVehicleStatus)
@@ -653,7 +653,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section vehicle safety vehicle status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionVehicleSafetyVehicleStatus()
     {
@@ -663,7 +663,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section vehicle safety vehicle psv status
      *
-     * @param int $sectionVehicleSafetyVehiclePsvStatus
+     * @param boolean $sectionVehicleSafetyVehiclePsvStatus
      * @return ApplicationCompletion
      */
     public function setSectionVehicleSafetyVehiclePsvStatus($sectionVehicleSafetyVehiclePsvStatus)
@@ -676,7 +676,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section vehicle safety vehicle psv status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionVehicleSafetyVehiclePsvStatus()
     {
@@ -686,7 +686,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section vehicle safety safety status
      *
-     * @param int $sectionVehicleSafetySafetyStatus
+     * @param boolean $sectionVehicleSafetySafetyStatus
      * @return ApplicationCompletion
      */
     public function setSectionVehicleSafetySafetyStatus($sectionVehicleSafetySafetyStatus)
@@ -699,7 +699,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section vehicle safety safety status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionVehicleSafetySafetyStatus()
     {
@@ -709,7 +709,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history status
      *
-     * @param int $sectionPreviousHistoryStatus
+     * @param boolean $sectionPreviousHistoryStatus
      * @return ApplicationCompletion
      */
     public function setSectionPreviousHistoryStatus($sectionPreviousHistoryStatus)
@@ -722,7 +722,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section previous history status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPreviousHistoryStatus()
     {
@@ -732,7 +732,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history financial history status
      *
-     * @param int $sectionPreviousHistoryFinancialHistoryStatus
+     * @param boolean $sectionPreviousHistoryFinancialHistoryStatus
      * @return ApplicationCompletion
      */
     public function setSectionPreviousHistoryFinancialHistoryStatus($sectionPreviousHistoryFinancialHistoryStatus)
@@ -745,7 +745,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section previous history financial history status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPreviousHistoryFinancialHistoryStatus()
     {
@@ -755,7 +755,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history licence history status
      *
-     * @param int $sectionPreviousHistoryLicenceHistoryStatus
+     * @param boolean $sectionPreviousHistoryLicenceHistoryStatus
      * @return ApplicationCompletion
      */
     public function setSectionPreviousHistoryLicenceHistoryStatus($sectionPreviousHistoryLicenceHistoryStatus)
@@ -768,7 +768,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section previous history licence history status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPreviousHistoryLicenceHistoryStatus()
     {
@@ -778,7 +778,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history convictions penalties status
      *
-     * @param int $sectionPreviousHistoryConvictionsPenaltiesStatus
+     * @param boolean $sectionPreviousHistoryConvictionsPenaltiesStatus
      * @return ApplicationCompletion
      */
     public function setSectionPreviousHistoryConvictionsPenaltiesStatus($sectionPreviousHistoryConvictionsPenaltiesStatus)
@@ -791,7 +791,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section previous history convictions penalties status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPreviousHistoryConvictionsPenaltiesStatus()
     {
@@ -801,7 +801,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section review declarations status
      *
-     * @param int $sectionReviewDeclarationsStatus
+     * @param boolean $sectionReviewDeclarationsStatus
      * @return ApplicationCompletion
      */
     public function setSectionReviewDeclarationsStatus($sectionReviewDeclarationsStatus)
@@ -814,7 +814,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section review declarations status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionReviewDeclarationsStatus()
     {
@@ -824,7 +824,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section payment submission status
      *
-     * @param int $sectionPaymentSubmissionStatus
+     * @param boolean $sectionPaymentSubmissionStatus
      * @return ApplicationCompletion
      */
     public function setSectionPaymentSubmissionStatus($sectionPaymentSubmissionStatus)
@@ -837,7 +837,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section payment submission status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPaymentSubmissionStatus()
     {
@@ -847,7 +847,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section payment submission payment status
      *
-     * @param int $sectionPaymentSubmissionPaymentStatus
+     * @param boolean $sectionPaymentSubmissionPaymentStatus
      * @return ApplicationCompletion
      */
     public function setSectionPaymentSubmissionPaymentStatus($sectionPaymentSubmissionPaymentStatus)
@@ -860,7 +860,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section payment submission payment status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPaymentSubmissionPaymentStatus()
     {
@@ -870,7 +870,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section payment submission summary status
      *
-     * @param int $sectionPaymentSubmissionSummaryStatus
+     * @param boolean $sectionPaymentSubmissionSummaryStatus
      * @return ApplicationCompletion
      */
     public function setSectionPaymentSubmissionSummaryStatus($sectionPaymentSubmissionSummaryStatus)
@@ -883,7 +883,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section payment submission summary status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionPaymentSubmissionSummaryStatus()
     {
@@ -893,7 +893,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section taxi phv status
      *
-     * @param int $sectionTaxiPhvStatus
+     * @param boolean $sectionTaxiPhvStatus
      * @return ApplicationCompletion
      */
     public function setSectionTaxiPhvStatus($sectionTaxiPhvStatus)
@@ -906,7 +906,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section taxi phv status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTaxiPhvStatus()
     {
@@ -916,7 +916,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section taxi phv licence status
      *
-     * @param int $sectionTaxiPhvLicenceStatus
+     * @param boolean $sectionTaxiPhvLicenceStatus
      * @return ApplicationCompletion
      */
     public function setSectionTaxiPhvLicenceStatus($sectionTaxiPhvLicenceStatus)
@@ -929,7 +929,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the section taxi phv licence status
      *
-     * @return int
+     * @return boolean
      */
     public function getSectionTaxiPhvLicenceStatus()
     {

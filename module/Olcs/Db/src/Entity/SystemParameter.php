@@ -18,7 +18,7 @@ class SystemParameter implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Id32Identity,
-        Traits\Description255FieldAlt1;
+        Traits\Description255Field;
 
     /**
      * Param value

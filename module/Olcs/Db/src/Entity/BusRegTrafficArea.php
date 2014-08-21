@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_B7B2BC1018E0B1DB", columns={"traffic_area_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="traffic_area_id", columns={"traffic_area_id","bus_reg_id"})
+ *        @ORM\UniqueConstraint(name="bus_reg_ta_unique", columns={"traffic_area_id","bus_reg_id"})
  *    }
  * )
  */
@@ -30,8 +30,8 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -80,43 +80,6 @@ class BusServiceType implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a bus regs
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
-     * @return BusServiceType
-     */
-    public function addBusRegs($busRegs)
-    {
-        if ($busRegs instanceof ArrayCollection) {
-            $this->busRegs = new ArrayCollection(
-                array_merge(
-                    $this->busRegs->toArray(),
-                    $busRegs->toArray()
-                )
-            );
-        } elseif (!$this->busRegs->contains($busRegs)) {
-            $this->busRegs->add($busRegs);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a bus regs
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
-     * @return BusServiceType
-     */
-    public function removeBusRegs($busRegs)
-    {
-        if ($this->busRegs->contains($busRegs)) {
-            $this->busRegs->remove($busRegs);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the txc service type name
      *
      * @param string $txcServiceTypeName

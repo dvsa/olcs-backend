@@ -23,7 +23,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\BusRegManyToOne;
+        Traits\BusRegManyToOneAlt1;
 
     /**
      * Requested user

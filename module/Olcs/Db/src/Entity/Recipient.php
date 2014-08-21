@@ -121,43 +121,6 @@ class Recipient implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a traffic areas
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
-     * @return Recipient
-     */
-    public function addTrafficAreas($trafficAreas)
-    {
-        if ($trafficAreas instanceof ArrayCollection) {
-            $this->trafficAreas = new ArrayCollection(
-                array_merge(
-                    $this->trafficAreas->toArray(),
-                    $trafficAreas->toArray()
-                )
-            );
-        } elseif (!$this->trafficAreas->contains($trafficAreas)) {
-            $this->trafficAreas->add($trafficAreas);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a traffic areas
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
-     * @return Recipient
-     */
-    public function removeTrafficAreas($trafficAreas)
-    {
-        if ($this->trafficAreas->contains($trafficAreas)) {
-            $this->trafficAreas->remove($trafficAreas);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the send app decision
      *
      * @param string $sendAppDecision

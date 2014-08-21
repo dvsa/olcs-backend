@@ -105,41 +105,4 @@ class Submission implements Interfaces\EntityInterface
     {
         return $this->submissionActions;
     }
-
-    /**
-     * Add a submission actions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
-     * @return Submission
-     */
-    public function addSubmissionActions($submissionActions)
-    {
-        if ($submissionActions instanceof ArrayCollection) {
-            $this->submissionActions = new ArrayCollection(
-                array_merge(
-                    $this->submissionActions->toArray(),
-                    $submissionActions->toArray()
-                )
-            );
-        } elseif (!$this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->add($submissionActions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a submission actions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
-     * @return Submission
-     */
-    public function removeSubmissionActions($submissionActions)
-    {
-        if ($this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->remove($submissionActions);
-        }
-
-        return $this;
-    }
 }

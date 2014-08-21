@@ -82,7 +82,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
      */
-    protected $bankrupt;
+    protected $bankrupt = 0;
 
     /**
      * Administration
@@ -91,7 +91,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="administration", nullable=true)
      */
-    protected $administration;
+    protected $administration = 0;
 
     /**
      * Disqualified
@@ -100,7 +100,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="disqualified", nullable=true)
      */
-    protected $disqualified;
+    protected $disqualified = 0;
 
     /**
      * Liquidation
@@ -109,7 +109,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
      */
-    protected $liquidation;
+    protected $liquidation = 0;
 
     /**
      * Receivership
@@ -118,7 +118,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
      */
-    protected $receivership;
+    protected $receivership = 0;
 
     /**
      * Insolvency confirmation
@@ -364,15 +364,6 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
-     * Conviction
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Conviction", mappedBy="application")
-     */
-    protected $convictions;
-
-    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -386,7 +377,6 @@ class Application implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -1197,66 +1187,6 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the conviction
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
-     * @return Application
-     */
-    public function setConvictions($convictions)
-    {
-        $this->convictions = $convictions;
-
-        return $this;
-    }
-
-    /**
-     * Get the convictions
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getConvictions()
-    {
-        return $this->convictions;
-    }
-
-    /**
-     * Add a convictions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
-     * @return Application
-     */
-    public function addConvictions($convictions)
-    {
-        if ($convictions instanceof ArrayCollection) {
-            $this->convictions = new ArrayCollection(
-                array_merge(
-                    $this->convictions->toArray(),
-                    $convictions->toArray()
-                )
-            );
-        } elseif (!$this->convictions->contains($convictions)) {
-            $this->convictions->add($convictions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a convictions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
-     * @return Application
-     */
-    public function removeConvictions($convictions)
-    {
-        if ($this->convictions->contains($convictions)) {
-            $this->convictions->remove($convictions);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
@@ -1277,42 +1207,5 @@ class Application implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
-    }
-
-    /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Application
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Application
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
     }
 }

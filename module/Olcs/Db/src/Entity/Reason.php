@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="reason",
  *    indexes={
- *        @ORM\Index(name="fk_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_reason_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,7 +28,7 @@ class Reason implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\GoodsOrPsv3Field,
         Traits\IsDecisionField,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\IsNiField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -100,43 +100,6 @@ class Reason implements Interfaces\EntityInterface
     public function getProposeToRevokes()
     {
         return $this->proposeToRevokes;
-    }
-
-    /**
-     * Add a propose to revokes
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
-     * @return Reason
-     */
-    public function addProposeToRevokes($proposeToRevokes)
-    {
-        if ($proposeToRevokes instanceof ArrayCollection) {
-            $this->proposeToRevokes = new ArrayCollection(
-                array_merge(
-                    $this->proposeToRevokes->toArray(),
-                    $proposeToRevokes->toArray()
-                )
-            );
-        } elseif (!$this->proposeToRevokes->contains($proposeToRevokes)) {
-            $this->proposeToRevokes->add($proposeToRevokes);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a propose to revokes
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
-     * @return Reason
-     */
-    public function removeProposeToRevokes($proposeToRevokes)
-    {
-        if ($this->proposeToRevokes->contains($proposeToRevokes)) {
-            $this->proposeToRevokes->remove($proposeToRevokes);
-        }
-
-        return $this;
     }
 
     /**

@@ -134,43 +134,6 @@ class History implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a templates
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $templates
-     * @return History
-     */
-    public function addTemplates($templates)
-    {
-        if ($templates instanceof ArrayCollection) {
-            $this->templates = new ArrayCollection(
-                array_merge(
-                    $this->templates->toArray(),
-                    $templates->toArray()
-                )
-            );
-        } elseif (!$this->templates->contains($templates)) {
-            $this->templates->add($templates);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a templates
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $templates
-     * @return History
-     */
-    public function removeTemplates($templates)
-    {
-        if ($this->templates->contains($templates)) {
-            $this->templates->remove($templates);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the data
      *
      * @param string $data

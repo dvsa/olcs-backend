@@ -14,10 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_hearing",
  *    indexes={
- *        @ORM\Index(name="IDX_83AFD387E0DEB379", columns={"pi_id"}),
- *        @ORM\Index(name="IDX_83AFD387DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_83AFD38765CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_83AFD38753BAD7A2", columns={"presiding_tc_id"})
+ *        @ORM\Index(name="fk_pi_reschedule_dates_pi_detail1_idx", columns={"pi_id"}),
+ *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_reschedule_date_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by"})
  *    }
  * )
  */
@@ -25,8 +26,9 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
+        Traits\PresidedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\CustomCreatedOnField,
@@ -39,25 +41,25 @@ class PiHearing implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Pi
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
 
     /**
-     * Is adjourned
+     * Presiding tc other
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
+     * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
      */
-    protected $isAdjourned;
+    protected $presidingTcOther;
 
     /**
      * Venue
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="venue", length=100, nullable=true)
+     * @ORM\Column(type="string", name="venue", length=255, nullable=true)
      */
     protected $venue;
 
@@ -86,26 +88,26 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is adjourned
+     * Set the presiding tc other
      *
-     * @param string $isAdjourned
+     * @param string $presidingTcOther
      * @return PiHearing
      */
-    public function setIsAdjourned($isAdjourned)
+    public function setPresidingTcOther($presidingTcOther)
     {
-        $this->isAdjourned = $isAdjourned;
+        $this->presidingTcOther = $presidingTcOther;
 
         return $this;
     }
 
     /**
-     * Get the is adjourned
+     * Get the presiding tc other
      *
      * @return string
      */
-    public function getIsAdjourned()
+    public function getPresidingTcOther()
     {
-        return $this->isAdjourned;
+        return $this->presidingTcOther;
     }
 
     /**
