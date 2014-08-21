@@ -595,8 +595,7 @@ class AlignEntitiesToSchema
 
         $error = false;
 
-        foreach ($this->fields as $key => $encode)
-        {
+        foreach ($this->fields as $key => $encode) {
             $item = json_decode($encode, true);
 
             $field = $item['config'];
@@ -631,7 +630,8 @@ class AlignEntitiesToSchema
                 $description = $field['@attributes']['length'] . $description;
             }
 
-            $trait = ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
+            $trait =
+                ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
 
             $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
             $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
@@ -1061,7 +1061,8 @@ class AlignEntitiesToSchema
                 );
 
                 if (isset($fieldConfig['config']['join-columns']['join-column'])) {
-                    $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] = $this->isNullable($columnName, $nullables);
+                    $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] =
+                        $this->isNullable($columnName, $nullables);
                 }
 
                 if (isset($extraConfig['cascade'])) {
@@ -1241,7 +1242,7 @@ class AlignEntitiesToSchema
     private function findMappingFiles()
     {
         foreach (new DirectoryIterator($this->options['mapping-files']) as $fileInfo) {
-            if($fileInfo->isDot()) {
+            if ($fileInfo->isDot()) {
                 continue;
             }
 
