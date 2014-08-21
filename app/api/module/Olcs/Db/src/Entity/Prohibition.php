@@ -28,11 +28,10 @@ class Prohibition implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField,
-        Traits\Vrm20FieldAlt1,
-        Traits\IsTrailerField;
+        Traits\CustomVersionField;
 
     /**
      * Prohibition type
@@ -40,7 +39,7 @@ class Prohibition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=false)
      */
     protected $prohibitionType;
 
@@ -58,9 +57,18 @@ class Prohibition implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="cleared_date", nullable=false)
+     * @ORM\Column(type="date", name="cleared_date", nullable=true)
      */
     protected $clearedDate;
+
+    /**
+     * Is trailer
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_trailer", nullable=false)
+     */
+    protected $isTrailer = 0;
 
     /**
      * Imposed at
@@ -139,6 +147,29 @@ class Prohibition implements Interfaces\EntityInterface
     public function getClearedDate()
     {
         return $this->clearedDate;
+    }
+
+    /**
+     * Set the is trailer
+     *
+     * @param string $isTrailer
+     * @return Prohibition
+     */
+    public function setIsTrailer($isTrailer)
+    {
+        $this->isTrailer = $isTrailer;
+
+        return $this;
+    }
+
+    /**
+     * Get the is trailer
+     *
+     * @return string
+     */
+    public function getIsTrailer()
+    {
+        return $this->isTrailer;
     }
 
     /**
