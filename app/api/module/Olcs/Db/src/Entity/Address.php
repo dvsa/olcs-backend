@@ -168,7 +168,6 @@ class Address implements Interfaces\EntityInterface
         $this->contactDetails = new ArrayCollection();
     }
 
-
     /**
      * Set the admin area
      *
@@ -489,42 +488,5 @@ class Address implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Address
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Address
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
-        }
-
-        return $this;
     }
 }

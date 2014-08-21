@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_reason",
  *    indexes={
- *        @ORM\Index(name="fk_case_rec_reason_reason1_idx", columns={"reason_id"}),
- *        @ORM\Index(name="fk_case_reason_pi1_idx", columns={"pi_id"}),
- *        @ORM\Index(name="fk_case_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_case_reason_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_case_rec_pi_reason_pi_reason1_idx", columns={"reason_id"}),
+ *        @ORM\Index(name="fk_case_pi_reason_pi_detail1_idx", columns={"pi_id"}),
+ *        @ORM\Index(name="fk_case_pi_reason_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_case_pi_reason_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="pi_reason_unique", columns={"pi_id","reason_id"})
  *    }
  * )
  */
@@ -27,6 +30,7 @@ class PiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ReasonManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -40,17 +44,6 @@ class PiReason implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
-
-    /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\Reason
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Reason", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
-
 
     /**
      * Set the pi
@@ -73,28 +66,5 @@ class PiReason implements Interfaces\EntityInterface
     public function getPi()
     {
         return $this->pi;
-    }
-
-    /**
-     * Set the reason
-     *
-     * @param \Olcs\Db\Entity\Reason $reason
-     * @return PiReason
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
-     *
-     * @return \Olcs\Db\Entity\Reason
-     */
-    public function getReason()
-    {
-        return $this->reason;
     }
 }

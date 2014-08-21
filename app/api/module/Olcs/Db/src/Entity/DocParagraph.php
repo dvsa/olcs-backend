@@ -47,7 +47,6 @@ class DocParagraph implements Interfaces\EntityInterface
      */
     protected $paraText;
 
-
     /**
      * Set the para title
      *

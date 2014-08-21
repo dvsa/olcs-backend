@@ -65,7 +65,6 @@ class SiPenalty implements Interfaces\EntityInterface
      */
     protected $reasonNotImposed;
 
-
     /**
      * Set the si penalty type
      *

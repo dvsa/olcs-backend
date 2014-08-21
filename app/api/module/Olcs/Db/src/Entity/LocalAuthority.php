@@ -51,7 +51,6 @@ class LocalAuthority implements Interfaces\EntityInterface
      */
     protected $naptanCode;
 
-
     /**
      * Set the txc name
      *

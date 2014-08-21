@@ -26,7 +26,6 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,6 +40,14 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
      */
     protected $irfoPsvAuth;
 
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=45, nullable=false)
+     */
+    protected $description;
 
     /**
      * Set the irfo psv auth
@@ -63,5 +70,28 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
     public function getIrfoPsvAuth()
     {
         return $this->irfoPsvAuth;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return IrfoTransitCountry
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

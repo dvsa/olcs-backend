@@ -26,7 +26,7 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description100FieldAlt1,
+        Traits\Description100Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -40,7 +40,6 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="irfo_country_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoCountry;
-
 
     /**
      * Set the irfo country

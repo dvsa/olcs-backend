@@ -28,7 +28,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\IrfoPsvAuthManyToOne,
-        Traits\Vrm20FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField;
 
@@ -88,6 +87,15 @@ class IrfoVehicle implements Interfaces\EntityInterface
     protected $cocT = 0;
 
     /**
+     * Vrm
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="vrm", length=20, nullable=false)
+     */
+    protected $vrm;
+
+    /**
      * Version
      *
      * @var int
@@ -95,7 +103,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="version", nullable=true)
      */
     protected $version = 1;
-
 
     /**
      * Set the irfo gv permit
@@ -233,6 +240,29 @@ class IrfoVehicle implements Interfaces\EntityInterface
     public function getCocT()
     {
         return $this->cocT;
+    }
+
+    /**
+     * Set the vrm
+     *
+     * @param string $vrm
+     * @return IrfoVehicle
+     */
+    public function setVrm($vrm)
+    {
+        $this->vrm = $vrm;
+
+        return $this;
+    }
+
+    /**
+     * Get the vrm
+     *
+     * @return string
+     */
+    public function getVrm()
+    {
+        return $this->vrm;
     }
 
     /**

@@ -42,7 +42,6 @@ class Opposer implements Interfaces\EntityInterface
      */
     protected $opposerType;
 
-
     /**
      * Set the opposer type
      *

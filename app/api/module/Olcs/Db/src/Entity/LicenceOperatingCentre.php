@@ -42,7 +42,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\NoOfVehiclesPossessedField,
         Traits\NoOfTrailersPossessedField,
         Traits\ViAction1Field,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -66,6 +65,15 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $addedDate;
 
     /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
      * Is interim
      *
      * @var string
@@ -82,7 +90,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
     protected $publicationAppropriate;
-
 
     /**
      * Set the sufficient parking
@@ -128,6 +135,29 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getAddedDate()
     {
         return $this->addedDate;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return LicenceOperatingCentre
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**

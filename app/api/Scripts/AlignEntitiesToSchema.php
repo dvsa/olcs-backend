@@ -430,11 +430,15 @@ class AlignEntitiesToSchema
 
             $config = $this->getConfigFromMappingFile($fileName);
 
+            $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
+
+            if (isset($comments['@settings']['ignore'])) {
+                continue;
+            }
+
             $defaults = $this->getDefaultsFromTable($config['entity']['@attributes']['table']);
 
             $nullables = $this->getNullablesFromTable($config['entity']['@attributes']['table']);
-
-            $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
 
             $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
 
@@ -445,6 +449,7 @@ class AlignEntitiesToSchema
             $this->entities[$camelCaseName] = array(
                 'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
+                'translatable' => $this->hasTranslatableField($fields),
                 'className' => $config['entity']['@attributes']['name'],
                 'table' => $config['entity']['@attributes']['table'],
                 'ids' => $this->getIdsFromFields($fields),
@@ -460,6 +465,11 @@ class AlignEntitiesToSchema
                 'entityFileName' => $this->formatEntityFileName($className),
                 'testFileName' => $this->formatUnitTestFileName($className)
             );
+
+            if (isset($comments['@settings']['repository'])) {
+                $this->entities[$camelCaseName]['repository'] = $comments['@settings']['repository'];
+            }
+
         }
 
         foreach ($this->entities as $className => &$details) {
@@ -561,6 +571,22 @@ class AlignEntitiesToSchema
     }
 
     /**
+     * Check if there is a translatable field
+     *
+     * @param array $fields
+     */
+    private function hasTranslatableField($fields)
+    {
+        foreach ($fields as $field) {
+            if ($field['translatable']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Create the traits
      */
     private function createTraits()
@@ -569,8 +595,7 @@ class AlignEntitiesToSchema
 
         $error = false;
 
-        foreach ($this->fields as $key => $encode)
-        {
+        foreach ($this->fields as $key => $encode) {
             $item = json_decode($encode, true);
 
             $field = $item['config'];
@@ -605,7 +630,8 @@ class AlignEntitiesToSchema
                 $description = $field['@attributes']['length'] . $description;
             }
 
-            $trait = ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
+            $trait =
+                ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
 
             $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
             $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
@@ -985,6 +1011,7 @@ class AlignEntitiesToSchema
                     'ref' => 'name',
                     'default' => $default,
                     'config' => $item,
+                    'translatable' => false
                 );
 
                 if (isset($extraConfig['type'])) {
@@ -1029,11 +1056,13 @@ class AlignEntitiesToSchema
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
                     'default' => $default,
-                    'config' => $item
+                    'config' => $item,
+                    'translatable' => false
                 );
 
                 if (isset($fieldConfig['config']['join-columns']['join-column'])) {
-                    $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] = $this->isNullable($columnName, $nullables);
+                    $fieldConfig['config']['join-columns']['join-column']['@attributes']['nullable'] =
+                        $this->isNullable($columnName, $nullables);
                 }
 
                 if (isset($extraConfig['cascade'])) {
@@ -1213,7 +1242,7 @@ class AlignEntitiesToSchema
     private function findMappingFiles()
     {
         foreach (new DirectoryIterator($this->options['mapping-files']) as $fileInfo) {
-            if($fileInfo->isDot()) {
+            if ($fileInfo->isDot()) {
                 continue;
             }
 

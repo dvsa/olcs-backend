@@ -86,7 +86,6 @@ class TxcInbox implements Interfaces\EntityInterface
      */
     protected $routeSeq;
 
-
     /**
      * Set the pdf document
      *

@@ -54,7 +54,6 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
      */
     protected $communityLicWithdrawal;
 
-
     /**
      * Set the reason
      *

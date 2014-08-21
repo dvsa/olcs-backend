@@ -62,7 +62,6 @@ class VoidDisc implements Interfaces\EntityInterface
      */
     protected $serialEnd;
 
-
     /**
      * Set the licence type
      *

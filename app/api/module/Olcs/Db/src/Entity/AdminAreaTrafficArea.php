@@ -40,7 +40,6 @@ class AdminAreaTrafficArea implements Interfaces\EntityInterface
      */
     protected $id;
 
-
     /**
      * Set the id
      *

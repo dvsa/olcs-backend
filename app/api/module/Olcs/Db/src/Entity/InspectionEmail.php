@@ -22,7 +22,7 @@ class InspectionEmail implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ReceivedDateFieldAlt1;
+        Traits\ReceivedDateFieldAlt2;
 
     /**
      * Inspection request
@@ -78,7 +78,6 @@ class InspectionEmail implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="sender_email_address", length=200, nullable=true)
      */
     protected $senderEmailAddress;
-
 
     /**
      * Set the inspection request

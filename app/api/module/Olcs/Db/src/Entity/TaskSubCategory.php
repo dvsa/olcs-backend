@@ -23,7 +23,7 @@ class TaskSubCategory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CategoryManyToOne,
-        Traits\Description45FieldAlt1,
+        Traits\Description45Field,
         Traits\Name45Field;
 
     /**
@@ -34,7 +34,6 @@ class TaskSubCategory implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_freetext_description", nullable=false)
      */
     protected $isFreetextDescription = 0;
-
 
     /**
      * Set the is freetext description

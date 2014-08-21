@@ -86,7 +86,6 @@ class CommunityLic implements Interfaces\EntityInterface
      */
     protected $status;
 
-
     /**
      * Set the expired date
      *

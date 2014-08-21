@@ -65,7 +65,6 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
      */
     protected $executed;
 
-
     /**
      * Set the si penalty imposed type
      *

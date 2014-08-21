@@ -24,6 +24,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_licence_ref_data2_idx", columns={"licence_type"}),
  *        @ORM\Index(name="fk_licence_ref_data3_idx", columns={"status"}),
  *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
  *    }
  * )
  */
@@ -263,7 +266,6 @@ class Licence implements Interfaces\EntityInterface
         $this->licenceVehicles = new ArrayCollection();
         $this->workshops = new ArrayCollection();
     }
-
 
     /**
      * Set the tachograph ins
@@ -680,43 +682,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
-     * @return Licence
-     */
-    public function addApplications($applications)
-    {
-        if ($applications instanceof ArrayCollection) {
-            $this->applications = new ArrayCollection(
-                array_merge(
-                    $this->applications->toArray(),
-                    $applications->toArray()
-                )
-            );
-        } elseif (!$this->applications->contains($applications)) {
-            $this->applications->add($applications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
-     * @return Licence
-     */
-    public function removeApplications($applications)
-    {
-        if ($this->applications->contains($applications)) {
-            $this->applications->remove($applications);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the contact detail
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
@@ -737,43 +702,6 @@ class Licence implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
-        }
-
-        return $this;
     }
 
     /**
@@ -800,43 +728,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Licence
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Licence
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the licence vehicle
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
@@ -860,43 +751,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
-     * @return Licence
-     */
-    public function addLicenceVehicles($licenceVehicles)
-    {
-        if ($licenceVehicles instanceof ArrayCollection) {
-            $this->licenceVehicles = new ArrayCollection(
-                array_merge(
-                    $this->licenceVehicles->toArray(),
-                    $licenceVehicles->toArray()
-                )
-            );
-        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->add($licenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
-     * @return Licence
-     */
-    public function removeLicenceVehicles($licenceVehicles)
-    {
-        if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the workshop
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $workshops
@@ -917,42 +771,5 @@ class Licence implements Interfaces\EntityInterface
     public function getWorkshops()
     {
         return $this->workshops;
-    }
-
-    /**
-     * Add a workshops
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
-     * @return Licence
-     */
-    public function addWorkshops($workshops)
-    {
-        if ($workshops instanceof ArrayCollection) {
-            $this->workshops = new ArrayCollection(
-                array_merge(
-                    $this->workshops->toArray(),
-                    $workshops->toArray()
-                )
-            );
-        } elseif (!$this->workshops->contains($workshops)) {
-            $this->workshops->add($workshops);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a workshops
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
-     * @return Licence
-     */
-    public function removeWorkshops($workshops)
-    {
-        if ($this->workshops->contains($workshops)) {
-            $this->workshops->remove($workshops);
-        }
-
-        return $this;
     }
 }

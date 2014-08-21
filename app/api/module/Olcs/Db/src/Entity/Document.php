@@ -173,13 +173,13 @@ class Document implements Interfaces\EntityInterface
     protected $filename;
 
     /**
-     * Size
+     * Mailed
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="size", nullable=true)
+     * @ORM\Column(type="boolean", name="mailed", nullable=false)
      */
-    protected $size;
+    protected $mailed = 0;
 
     /**
      * Initialise the collections
@@ -188,7 +188,6 @@ class Document implements Interfaces\EntityInterface
     {
         $this->emails = new ArrayCollection();
     }
-
 
     /**
      * Set the operating centre
@@ -421,43 +420,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a emails
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $emails
-     * @return Document
-     */
-    public function addEmails($emails)
-    {
-        if ($emails instanceof ArrayCollection) {
-            $this->emails = new ArrayCollection(
-                array_merge(
-                    $this->emails->toArray(),
-                    $emails->toArray()
-                )
-            );
-        } elseif (!$this->emails->contains($emails)) {
-            $this->emails->add($emails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a emails
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $emails
-     * @return Document
-     */
-    public function removeEmails($emails)
-    {
-        if ($this->emails->contains($emails)) {
-            $this->emails->remove($emails);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the identifier
      *
      * @param string $identifier
@@ -527,25 +489,25 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the size
+     * Set the mailed
      *
-     * @param int $size
+     * @param boolean $mailed
      * @return Document
      */
-    public function setSize($size)
+    public function setMailed($mailed)
     {
-        $this->size = $size;
+        $this->mailed = $mailed;
 
         return $this;
     }
 
     /**
-     * Get the size
+     * Get the mailed
      *
-     * @return int
+     * @return boolean
      */
-    public function getSize()
+    public function getMailed()
     {
-        return $this->size;
+        return $this->mailed;
     }
 }
