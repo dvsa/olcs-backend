@@ -54,7 +54,6 @@ class ComplaintCase implements Interfaces\EntityInterface
      */
     protected $case;
 
-
     /**
      * Set the complaint
      *

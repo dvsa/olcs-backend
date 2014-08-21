@@ -267,7 +267,6 @@ class Licence implements Interfaces\EntityInterface
         $this->licenceVehicles = new ArrayCollection();
     }
 
-
     /**
      * Set the tachograph ins
      *

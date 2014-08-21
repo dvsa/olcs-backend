@@ -47,7 +47,6 @@ class Country implements Interfaces\EntityInterface
      */
     protected $isMemberState = 0;
 
-
     /**
      * Set the country desc
      *

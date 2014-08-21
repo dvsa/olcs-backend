@@ -221,7 +221,6 @@ class Pi implements Interfaces\EntityInterface
         $this->piReasons = new ArrayCollection();
     }
 
-
     /**
      * Set the pi status
      *

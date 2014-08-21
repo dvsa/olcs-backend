@@ -32,5 +32,4 @@ class CommunityLicSuspensionReasonType implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
 }

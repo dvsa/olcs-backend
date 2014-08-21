@@ -51,7 +51,6 @@ class ChangeOfEntity implements Interfaces\EntityInterface
      */
     protected $oldOrganisationName;
 
-
     /**
      * Set the old licence no
      *

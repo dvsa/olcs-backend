@@ -40,7 +40,6 @@ class Driver implements Interfaces\EntityInterface
      */
     protected $contactDetails;
 
-
     /**
      * Set the contact details
      *

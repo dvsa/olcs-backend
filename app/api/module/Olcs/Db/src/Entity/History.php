@@ -86,7 +86,6 @@ class History implements Interfaces\EntityInterface
         $this->templates = new ArrayCollection();
     }
 
-
     /**
      * Set the entity type
      *

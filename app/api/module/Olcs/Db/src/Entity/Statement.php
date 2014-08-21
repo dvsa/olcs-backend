@@ -145,7 +145,6 @@ class Statement implements Interfaces\EntityInterface
      */
     protected $requestorsForename;
 
-
     /**
      * Set the contact type
      *

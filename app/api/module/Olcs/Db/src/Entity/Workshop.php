@@ -70,7 +70,6 @@ class Workshop implements Interfaces\EntityInterface
      */
     protected $safetyInspection = 0;
 
-
     /**
      * Set the licence
      *

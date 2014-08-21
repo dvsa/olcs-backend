@@ -204,7 +204,6 @@ class BusShortNotice implements Interfaces\EntityInterface
      */
     protected $notAvailableDetail;
 
-
     /**
      * Set the bank holiday change
      *

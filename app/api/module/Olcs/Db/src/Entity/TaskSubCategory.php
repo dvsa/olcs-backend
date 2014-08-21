@@ -35,7 +35,6 @@ class TaskSubCategory implements Interfaces\EntityInterface
      */
     protected $isFreetextDescription = 0;
 
-
     /**
      * Set the is freetext description
      *

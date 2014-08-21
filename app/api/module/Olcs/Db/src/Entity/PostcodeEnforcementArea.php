@@ -43,7 +43,6 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
      */
     protected $postcodeId;
 
-
     /**
      * Set the postcode id
      *

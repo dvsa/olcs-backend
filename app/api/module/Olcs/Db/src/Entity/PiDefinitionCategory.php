@@ -28,7 +28,6 @@ class PiDefinitionCategory implements Interfaces\EntityInterface
      */
     protected $category;
 
-
     /**
      * Set the category
      *

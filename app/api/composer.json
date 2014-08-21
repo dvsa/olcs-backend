@@ -11,8 +11,11 @@
         "zendframework/zendframework": "2.2.*",
         "doctrine/orm": "dev-master",
         "doctrine/doctrine-orm-module": "0.*",
-        "phpunit/phpunit": "4.0.*",
         "gedmo/doctrine-extensions": "~2.3.9"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer":"~1.5.3",
+        "phpunit/phpunit": "4.0.*"
     },
     "autoload": {
         "psr-4": {

@@ -50,7 +50,6 @@ class ProhibitionDefect implements Interfaces\EntityInterface
      */
     protected $defectType;
 
-
     /**
      * Set the prohibition
      *

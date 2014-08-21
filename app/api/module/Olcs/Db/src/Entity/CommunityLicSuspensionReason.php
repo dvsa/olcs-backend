@@ -54,7 +54,6 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
      */
     protected $communityLicSuspension;
 
-
     /**
      * Set the reason
      *

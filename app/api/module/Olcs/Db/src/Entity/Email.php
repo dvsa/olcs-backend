@@ -110,7 +110,6 @@ class Email implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the last updated by
      *

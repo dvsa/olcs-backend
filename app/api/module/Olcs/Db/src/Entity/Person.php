@@ -99,7 +99,6 @@ class Person implements Interfaces\EntityInterface
         $this->contactDetails = new ArrayCollection();
     }
 
-
     /**
      * Set the forename
      *

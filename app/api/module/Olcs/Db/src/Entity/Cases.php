@@ -234,7 +234,6 @@ class Cases implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the case type
      *

@@ -44,7 +44,6 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
      */
     protected $complaint;
 
-
     /**
      * Set the complaint
      *

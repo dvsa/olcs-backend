@@ -106,7 +106,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      */
     protected $warningLetterSentDate;
 
-
     /**
      * Set the vehicle
      *

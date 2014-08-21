@@ -104,7 +104,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      */
     protected $yearRequired;
 
-
     /**
      * Set the irfo permit status
      *

@@ -102,7 +102,6 @@ class TransportManager implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the tm type
      *

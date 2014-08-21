@@ -122,7 +122,6 @@ class Appeal implements Interfaces\EntityInterface
      */
     protected $papersSentDate;
 
-
     /**
      * Set the reason
      *

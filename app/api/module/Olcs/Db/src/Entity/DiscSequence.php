@@ -87,7 +87,6 @@ class DiscSequence implements Interfaces\EntityInterface
      */
     protected $isNiSelfServe = 0;
 
-
     /**
      * Set the restricted
      *

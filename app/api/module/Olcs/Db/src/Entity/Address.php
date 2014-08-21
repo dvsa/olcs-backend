@@ -168,7 +168,6 @@ class Address implements Interfaces\EntityInterface
         $this->contactDetails = new ArrayCollection();
     }
 
-
     /**
      * Set the admin area
      *

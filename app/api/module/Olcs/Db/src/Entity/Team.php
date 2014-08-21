@@ -44,7 +44,6 @@ class Team implements Interfaces\EntityInterface
      */
     protected $overrideTaContact;
 
-
     /**
      * Set the override ta contact
      *

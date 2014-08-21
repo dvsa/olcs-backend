@@ -54,7 +54,6 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
      */
     protected $txcNotRequired;
 
-
     /**
      * Set the txc missing
      *

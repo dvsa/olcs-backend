@@ -131,7 +131,6 @@ class PublicationLink implements Interfaces\EntityInterface
      */
     protected $origPubDate;
 
-
     /**
      * Set the publication section
      *

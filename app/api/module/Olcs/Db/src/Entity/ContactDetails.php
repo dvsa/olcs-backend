@@ -125,7 +125,6 @@ class ContactDetails implements Interfaces\EntityInterface
      */
     protected $writtenPermissionToEngage = 0;
 
-
     /**
      * Set the contact type
      *

@@ -291,7 +291,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      */
     protected $lastSection;
 
-
     /**
      * Set the id
      *

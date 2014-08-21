@@ -40,7 +40,6 @@ class EnforcementArea implements Interfaces\EntityInterface
      */
     protected $id;
 
-
     /**
      * Set the id
      *

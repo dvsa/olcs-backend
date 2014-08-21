@@ -66,7 +66,6 @@ class TmQualification implements Interfaces\EntityInterface
      */
     protected $serialNo;
 
-
     /**
      * Set the qualification type
      *

@@ -88,7 +88,6 @@ class PreviousLicence implements Interfaces\EntityInterface
      */
     protected $disqualificationLength;
 
-
     /**
      * Set the previous licence type
      *

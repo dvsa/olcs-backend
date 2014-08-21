@@ -79,7 +79,6 @@ class Prohibition implements Interfaces\EntityInterface
      */
     protected $imposedAt;
 
-
     /**
      * Set the prohibition type
      *

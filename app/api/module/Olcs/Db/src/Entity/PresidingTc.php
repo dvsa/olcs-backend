@@ -29,7 +29,6 @@ class PresidingTc implements Interfaces\EntityInterface
      */
     protected $deleted = 0;
 
-
     /**
      * Set the deleted
      *

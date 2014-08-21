@@ -59,7 +59,6 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->adDocuments = new ArrayCollection();
     }
 
-
     /**
      * Set the address
      *

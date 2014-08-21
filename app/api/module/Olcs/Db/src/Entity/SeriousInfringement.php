@@ -123,7 +123,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
      */
     protected $reason;
 
-
     /**
      * Set the si category type
      *

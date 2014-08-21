@@ -63,7 +63,6 @@ class PiHearing implements Interfaces\EntityInterface
      */
     protected $venue;
 
-
     /**
      * Set the pi
      *

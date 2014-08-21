@@ -19,5 +19,4 @@ class EbsrSubmissionStatus implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\Description45Field;
-
 }

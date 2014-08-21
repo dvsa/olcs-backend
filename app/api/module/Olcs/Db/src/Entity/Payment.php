@@ -94,7 +94,6 @@ class Payment implements Interfaces\EntityInterface
      */
     protected $guid;
 
-
     /**
      * Set the receipt document
      *

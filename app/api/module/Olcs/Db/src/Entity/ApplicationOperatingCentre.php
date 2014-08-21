@@ -85,7 +85,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      */
     protected $sufficientParking = 0;
 
-
     /**
      * Set the s4
      *

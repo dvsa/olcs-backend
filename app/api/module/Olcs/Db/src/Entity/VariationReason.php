@@ -38,7 +38,6 @@ class VariationReason implements Interfaces\EntityInterface
         $this->busRegs = new ArrayCollection();
     }
 
-
     /**
      * Set the bus reg
      *

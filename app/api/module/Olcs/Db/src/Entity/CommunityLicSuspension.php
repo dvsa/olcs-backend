@@ -42,7 +42,6 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
      */
     protected $isActioned = 0;
 
-
     /**
      * Set the is actioned
      *

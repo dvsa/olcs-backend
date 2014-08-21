@@ -431,7 +431,6 @@ class BusReg implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the bus notice period
      *

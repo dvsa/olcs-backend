@@ -64,7 +64,6 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
      */
     protected $description;
 
-
     /**
      * Set the id
      *

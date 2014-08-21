@@ -91,7 +91,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      */
     protected $publicationAppropriate;
 
-
     /**
      * Set the sufficient parking
      *

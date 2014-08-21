@@ -49,7 +49,6 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
      */
     protected $description;
 
-
     /**
      * Set the irfo psv auth
      *

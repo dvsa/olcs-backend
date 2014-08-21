@@ -39,7 +39,6 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
      */
     protected $removedDate;
 
-
     /**
      * Set the removed date
      *

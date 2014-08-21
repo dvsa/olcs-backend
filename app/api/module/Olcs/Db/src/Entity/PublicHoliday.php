@@ -74,7 +74,6 @@ class PublicHoliday implements Interfaces\EntityInterface
      */
     protected $isNi;
 
-
     /**
      * Set the public holiday date
      *
