@@ -31,7 +31,7 @@ class TrafficAreaEnforcementArea implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\EnforcementAreaManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

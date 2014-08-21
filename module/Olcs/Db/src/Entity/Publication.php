@@ -27,7 +27,7 @@ class Publication implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
         Traits\CustomCreatedOnField,

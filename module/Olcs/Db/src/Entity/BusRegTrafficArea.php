@@ -30,8 +30,8 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\BusRegManyToOne,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

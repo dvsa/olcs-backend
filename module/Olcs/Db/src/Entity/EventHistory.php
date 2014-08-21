@@ -27,8 +27,8 @@ class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\UserManyToOne;
 
     /**

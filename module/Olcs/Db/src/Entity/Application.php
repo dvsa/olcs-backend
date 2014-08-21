@@ -301,31 +301,31 @@ class Application implements Interfaces\EntityInterface
     protected $psvNoSmallVhlConfirmation = 0;
 
     /**
-     * Psv limousines
+     * Psv limosines
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_limousines", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_limosines", nullable=false)
      */
-    protected $psvLimousines = 0;
+    protected $psvLimosines = 0;
 
     /**
-     * Psv no limousine confirmation
+     * Psv no limosine confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_no_limousine_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_no_limosine_confirmation", nullable=false)
      */
-    protected $psvNoLimousineConfirmation = 0;
+    protected $psvNoLimosineConfirmation = 0;
 
     /**
-     * Psv only limousines confirmation
+     * Psv only limosines confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_only_limousines_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_only_limosines_confirmation", nullable=false)
      */
-    protected $psvOnlyLimousinesConfirmation = 0;
+    protected $psvOnlyLimosinesConfirmation = 0;
 
     /**
      * Interim start
@@ -1025,72 +1025,72 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the psv limousines
+     * Set the psv limosines
      *
-     * @param boolean $psvLimousines
+     * @param string $psvLimosines
      * @return Application
      */
-    public function setPsvLimousines($psvLimousines)
+    public function setPsvLimosines($psvLimosines)
     {
-        $this->psvLimousines = $psvLimousines;
+        $this->psvLimosines = $psvLimosines;
 
         return $this;
     }
 
     /**
-     * Get the psv limousines
+     * Get the psv limosines
      *
-     * @return boolean
+     * @return string
      */
-    public function getPsvLimousines()
+    public function getPsvLimosines()
     {
-        return $this->psvLimousines;
+        return $this->psvLimosines;
     }
 
     /**
-     * Set the psv no limousine confirmation
+     * Set the psv no limosine confirmation
      *
-     * @param boolean $psvNoLimousineConfirmation
+     * @param string $psvNoLimosineConfirmation
      * @return Application
      */
-    public function setPsvNoLimousineConfirmation($psvNoLimousineConfirmation)
+    public function setPsvNoLimosineConfirmation($psvNoLimosineConfirmation)
     {
-        $this->psvNoLimousineConfirmation = $psvNoLimousineConfirmation;
+        $this->psvNoLimosineConfirmation = $psvNoLimosineConfirmation;
 
         return $this;
     }
 
     /**
-     * Get the psv no limousine confirmation
+     * Get the psv no limosine confirmation
      *
-     * @return boolean
+     * @return string
      */
-    public function getPsvNoLimousineConfirmation()
+    public function getPsvNoLimosineConfirmation()
     {
-        return $this->psvNoLimousineConfirmation;
+        return $this->psvNoLimosineConfirmation;
     }
 
     /**
-     * Set the psv only limousines confirmation
+     * Set the psv only limosines confirmation
      *
-     * @param boolean $psvOnlyLimousinesConfirmation
+     * @param string $psvOnlyLimosinesConfirmation
      * @return Application
      */
-    public function setPsvOnlyLimousinesConfirmation($psvOnlyLimousinesConfirmation)
+    public function setPsvOnlyLimosinesConfirmation($psvOnlyLimosinesConfirmation)
     {
-        $this->psvOnlyLimousinesConfirmation = $psvOnlyLimousinesConfirmation;
+        $this->psvOnlyLimosinesConfirmation = $psvOnlyLimosinesConfirmation;
 
         return $this;
     }
 
     /**
-     * Get the psv only limousines confirmation
+     * Get the psv only limosines confirmation
      *
-     * @return boolean
+     * @return string
      */
-    public function getPsvOnlyLimousinesConfirmation()
+    public function getPsvOnlyLimosinesConfirmation()
     {
-        return $this->psvOnlyLimousinesConfirmation;
+        return $this->psvOnlyLimosinesConfirmation;
     }
 
     /**

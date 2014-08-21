@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Issued date field alt1 trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait IssuedDateFieldAlt1
 {
@@ -16,7 +16,7 @@ trait IssuedDateFieldAlt1
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="issued_date", nullable=true)
+     * @ORM\Column(type="datetime", name="issued_date", nullable=true)
      */
     protected $issuedDate;
 

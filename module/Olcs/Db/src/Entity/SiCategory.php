@@ -27,7 +27,7 @@ class SiCategory implements Interfaces\EntityInterface
         Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

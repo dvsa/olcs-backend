@@ -27,7 +27,7 @@ class AlphaSplit implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\TrafficAreaManyToOne,
         Traits\UserManyToOne,
         Traits\IsDeletedField,
         Traits\CustomCreatedOnField,

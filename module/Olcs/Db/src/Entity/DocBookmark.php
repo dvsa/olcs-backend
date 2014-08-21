@@ -25,7 +25,7 @@ class DocBookmark implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

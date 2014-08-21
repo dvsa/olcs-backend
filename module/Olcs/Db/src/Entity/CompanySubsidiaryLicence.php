@@ -30,7 +30,7 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
