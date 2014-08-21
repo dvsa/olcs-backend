@@ -165,6 +165,15 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $licenceCount;
 
     /**
+     * Licence ID
+     *
+     * @var string
+     *
+     * @ORM\Column(type="integer", name="licence_id")
+     */
+    protected $licenceId;
+
+    /**
      * Get the id
      *
      * @return int
@@ -312,5 +321,15 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getLicenceCount()
     {
         return $this->licenceCount;
+    }
+
+    /**
+     * Get the licence ID (if applicable)
+     *
+     * @return int
+     */
+    public function getLicenceId()
+    {
+        return $this->licenceId;
     }
 }
