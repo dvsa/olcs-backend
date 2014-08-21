@@ -39,6 +39,7 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
+TRUNCATE TABLE `licence`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -151,13 +152,13 @@ INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id
     (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`, `birth_date`,
-    `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `is_declared`, `operator_name`,
+    `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `operator_name`,
     `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
     `conviction_category_id`) VALUES
-    (25,24,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,397),
-    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,1,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,1,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
+    (25,24,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,397),
+    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
 
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
@@ -198,23 +199,23 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (100,100,1,4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
-    (110,75,1,4,4,'lcat_psv','PD2737289','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
+    (110,75,1,4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,1,NULL,NULL,'lcat_psv','OB1234567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,1,NULL,NULL,'lcat_psv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
     (115,105,1,NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
-    `application_received_date`, `removal`, `removal_reason`, `specified_date`, `created_on`, `last_modified_on`,
+    `removal`, `removal_reason`, `specified_date`, `created_on`, `last_modified_on`,
     `version`) VALUES
-    (1,7,1,NULL,4,'2014-02-20 00:00:00',1,'removal reason 1','2014-02-20 00:00:00','2010-01-12 00:00:00',
+    (1,7,1,NULL,4,1,'removal reason 1','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (2,7,2,NULL,4,'2014-02-20 00:00:00',1,'removal reason 2','2014-02-20 00:00:00','2010-01-12 00:00:00',
+    (2,7,2,NULL,4,1,'removal reason 2','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (3,7,3,NULL,4,'2014-02-20 00:00:00',1,'removal reason 3','2014-02-20 00:00:00','2010-01-12 00:00:00',
+    (3,7,3,NULL,4,1,'removal reason 3','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (4,7,4,NULL,4,'2014-02-20 00:00:00',1,'removal reason 4','2014-02-20 00:00:00','2010-01-12 00:00:00',
+    (4,7,4,NULL,4,1,'removal reason 4','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
 INSERT INTO `note` (`id`, `case_id`, `licence_id`, `application_id`, `created_by`, `last_modified_by`, `priority`,
@@ -297,15 +298,15 @@ INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disq
     (36,NULL,NULL,'Y','6 months','TBC',NOW(),NULL,1,15);
 
 INSERT INTO `pi` (
-    `id`, `created_by`, `last_modified_by`, `case_id`, `presiding_tc_id`, `type_app_new`, `type_app_var`,
-    `type_disciplinary`, `type_env_new`, `type_env_var`, `type_oc_review`, `type_impounding`, `witnesses`,
+    `id`, `created_by`, `last_modified_by`, `case_id`, `type_app_new`, `type_app_var`,
+    `type_env_new`, `type_env_var`, `type_oc_review`, `type_impounding`, `witnesses`,
     `agreed_date`, `decision_date`,`created_on`, `last_modified_on`,`version`, `deleted_date`) VALUES
-    (1,1,1,73,2,1,0,0,0,0,0,1,20,NOW(),NOW(), NULL,NULL,1,NULL);
+    (1,1,1,73,1,0,0,0,0,1,20,NOW(),NOW(), NULL,NULL,1,NULL);
 
-INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`, `is_adjourned`,
+INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`,
     `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,1,1,NOW(),'Some Venue',NULL,NULL,1),
-    (2,1,NULL,NULL,2,0,NOW(),'Some Alt. Venue',NULL,NULL,1);
+    (1,1,NULL,NULL,1,NOW(),'Some Venue',NULL,NULL,1),
+    (2,1,NULL,NULL,2,NOW(),'Some Alt. Venue',NULL,NULL,1);
 
 INSERT INTO `reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`description`,`is_read_only`,`is_ni`,`is_propose_to_revoke`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'GV',0,'Section 12','Objection/Representation: New application',1,0,0,NULL,NULL,NULL,NULL,1),
@@ -689,17 +690,17 @@ INSERT INTO `trading_name` (`id`, `created_by`, `last_modified_by`, `name`, `cre
     (110,0,2,'test',NOW(),NOW(),1,110);
 
 INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, `created_on`, `last_modified_on`,
-    `version`, `name`, `contact_details_id`, `is_scottish_rules`) VALUES
-    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0),
-    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0),
-    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0),
-    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0),
-    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0),
-    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0),
+    `version`, `name`, `contact_details_id`) VALUES
+    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1),
+    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2),
+    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3),
+    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4),
+    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5),
+    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6),
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
-    'London and the South East of England',7,0),
-    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0);
+    'London and the South East of England',7),
+    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8),
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9);
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
@@ -725,17 +726,17 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 6),
     (1, 7);
 
-INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`, `is_articulated`,
-    `certificate_no`, `is_refrigerated`, `is_tipper`, `vi_action`, `psv_type`, `make_model`, `created_on`,
+INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
+    `certificate_no`, `vi_action`, `psv_type`, `created_on`,
     `last_modified_on`, `version`) VALUES
-    (1,NULL,4,'VRM1',7200,0,'CERT10001',0,0,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (2,NULL,6,'VRM2',3500,0,'CERT10002',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (3,NULL,5,'VRM3',3800,0,'CERT10003',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (4,NULL,1,'VRM4',6800,1,'CERT10004',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (5,NULL,4,'VRM1',7200,0,'CERT10005',0,0,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (6,NULL,6,'VRM2',3500,0,'CERT10006',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (7,NULL,5,'VRM3',3800,0,'CERT10007',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (8,NULL,1,'VRM4',6800,1,'CERT10008',0,1,NULL,NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1);
+    (1,NULL,4,'VRM1',7200,'CERT10001',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (2,NULL,6,'VRM2',3500,'CERT10002',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (3,NULL,5,'VRM3',3800,'CERT10003',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (4,NULL,1,'VRM4',6800,'CERT10004',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (5,NULL,4,'VRM1',7200,'CERT10005',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (6,NULL,6,'VRM2',3500,'CERT10006',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (7,NULL,5,'VRM3',3800,'CERT10007',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
+    (8,NULL,1,'VRM4',6800,'CERT10008',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1);
 
 INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `description`, `ecms_no`, `open_date`,
     `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`) VALUES
