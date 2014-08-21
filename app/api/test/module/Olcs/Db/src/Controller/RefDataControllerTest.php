@@ -4,6 +4,10 @@ namespace OlcsTest\Db\Controller;
 
 use Olcs\Db\Controller\RefDataController;
 
+/**
+ * Class RefDataControllerTest
+ * @package OlcsTest\Db\Controller
+ */
 class RefDataControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
@@ -44,4 +48,3 @@ class RefDataControllerTest extends \PHPUnit_Framework_TestCase
 
     }
 }
- 

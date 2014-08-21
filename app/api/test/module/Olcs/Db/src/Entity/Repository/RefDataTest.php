@@ -4,6 +4,10 @@ namespace OlcsTest\Db\Entity\Repository;
 
 use Olcs\Db\Entity\Repository\RefData;
 
+/**
+ * Class RefDataTest
+ * @package OlcsTest\Db\Entity\Repository
+ */
 class RefDataTest extends \PHPUnit_Framework_TestCase
 {
     public function testFindAllByCategoryAndLanguage()
@@ -15,7 +19,7 @@ class RefDataTest extends \PHPUnit_Framework_TestCase
         $expectedParams = [
             [
                 \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-	            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
             ],
             [\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1],
             [\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $lang]
@@ -35,7 +39,6 @@ class RefDataTest extends \PHPUnit_Framework_TestCase
         };
 
         \Closure::bind($matcher, $this, $this);
-
 
         $mockQ = $this->getMock('\StdClass', ['setHint', 'getArrayResult']);
         $mockQ->expects($this->any())->method('setHint')->willReturnCallback($matcher);
@@ -61,4 +64,3 @@ class RefDataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $expectedCallsRemaining, 'setHint was not called the expected number of times');
     }
 }
- 
