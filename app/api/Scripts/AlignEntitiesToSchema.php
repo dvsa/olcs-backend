@@ -20,7 +20,7 @@ class AlignEntitiesToSchema
 {
     const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config /workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs\'';
 
-    const PATH_TO_DOCTRINE = '/workspace/OLCS/olcs-backend/vendor/bin/doctrine-module';
+    const PATH_TO_DOCTRINE = '/workspace/olcs-backend/vendor/bin/doctrine-module';
 
     const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
 
@@ -430,11 +430,15 @@ class AlignEntitiesToSchema
 
             $config = $this->getConfigFromMappingFile($fileName);
 
+            $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
+
+            if (isset($comments['@settings']['ignore'])) {
+                continue;
+            }
+
             $defaults = $this->getDefaultsFromTable($config['entity']['@attributes']['table']);
 
             $nullables = $this->getNullablesFromTable($config['entity']['@attributes']['table']);
-
-            $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
 
             $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
 
@@ -445,6 +449,7 @@ class AlignEntitiesToSchema
             $this->entities[$camelCaseName] = array(
                 'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
+                'translatable' => $this->hasTranslatableField($fields),
                 'className' => $config['entity']['@attributes']['name'],
                 'table' => $config['entity']['@attributes']['table'],
                 'ids' => $this->getIdsFromFields($fields),
@@ -458,8 +463,13 @@ class AlignEntitiesToSchema
                 'collections' => $this->getCollectionsFromConfig($config),
                 'mappingFileName' => $fileName,
                 'entityFileName' => $this->formatEntityFileName($className),
-                'testFileName' => $this->formatUnitTestFileName($className)
+                'testFileName' => $this->formatUnitTestFileName($className),
             );
+
+            if (isset($comments['@settings']['repository'])) {
+                $this->entities[$camelCaseName]['repository'] = $comments['@settings']['repository'];
+            }
+
         }
 
         foreach ($this->entities as $className => &$details) {
@@ -496,7 +506,7 @@ class AlignEntitiesToSchema
             }
         }
 
-        $this->respond('Entity configurations compiled', 'success');
+        $this->respond(count($this->entities) . ' Entity configurations compiled', 'success');
     }
 
     /**
@@ -553,6 +563,22 @@ class AlignEntitiesToSchema
     {
         foreach ($fields as $field) {
             if ($field['config']['@attributes'][$field['ref']] == 'deletedDate') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if there is a translatable field
+     *
+     * @param array $fields
+     */
+    private function hasTranslatableField($fields)
+    {
+        foreach ($fields as $field) {
+            if ($field['translatable']) {
                 return true;
             }
         }
@@ -985,6 +1011,7 @@ class AlignEntitiesToSchema
                     'ref' => 'name',
                     'default' => $default,
                     'config' => $item,
+                    'translatable' => false
                 );
 
                 if (isset($extraConfig['type'])) {
@@ -1029,7 +1056,8 @@ class AlignEntitiesToSchema
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
                     'default' => $default,
-                    'config' => $item
+                    'config' => $item,
+                    'translatable' => false
                 );
 
                 if (isset($fieldConfig['config']['join-columns']['join-column'])) {

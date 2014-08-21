@@ -15,11 +15,9 @@ class RefDataController extends AbstractController
         $lang = $this->params()->fromRoute('lang');
         /** @var \Doctrine\Orm\EntityManager $em */
         $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        $metadata = $em->getClassMetadata('OlcsEntities\Entity\RefData');
-        $repository = new \Olcs\Db\Entity\Repository\RefData($em, $metadata);
+        $repository = $em->getRepository('Olcs\Db\Entity\RefData');
 
         $data = $repository->findAllByCategoryAndLanguage($id, $lang);
-
         return $this->respond(Response::STATUS_CODE_200, 'OK', $data);
     }
 }
