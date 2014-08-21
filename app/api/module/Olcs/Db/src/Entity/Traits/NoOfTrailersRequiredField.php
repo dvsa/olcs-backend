@@ -42,5 +42,4 @@ trait NoOfTrailersRequiredField
     {
         return $this->noOfTrailersRequired;
     }
-
 }

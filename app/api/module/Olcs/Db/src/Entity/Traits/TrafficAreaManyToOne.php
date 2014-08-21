@@ -43,5 +43,4 @@ trait TrafficAreaManyToOne
     {
         return $this->trafficArea;
     }
-
 }

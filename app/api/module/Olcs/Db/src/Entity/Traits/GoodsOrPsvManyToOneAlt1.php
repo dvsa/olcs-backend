@@ -43,5 +43,4 @@ trait GoodsOrPsvManyToOneAlt1
     {
         return $this->goodsOrPsv;
     }
-
 }

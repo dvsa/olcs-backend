@@ -43,5 +43,4 @@ trait RemovalReasonManyToOne
     {
         return $this->removalReason;
     }
-
 }
