@@ -993,5 +993,18 @@ return array(
         'is_freetext_description' => array(
             'type' => 'yesno'
         )
+    ),
+    'ref_data' => array(
+        '@settings' => array(
+            'repository' => 'Olcs\Db\Entity\Repository\RefData'
+        ),
+        'description' => array(
+            'translatable' => true
+        )
+    ),
+    'ext_translations' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
     )
 );
