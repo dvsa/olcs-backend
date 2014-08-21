@@ -43,5 +43,4 @@ trait ApplicationManyToOneAlt1
     {
         return $this->application;
     }
-
 }

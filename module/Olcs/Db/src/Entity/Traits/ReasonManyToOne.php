@@ -43,5 +43,4 @@ trait ReasonManyToOne
     {
         return $this->reason;
     }
-
 }
