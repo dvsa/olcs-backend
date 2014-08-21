@@ -2734,44 +2734,77 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `prohibition` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
+  `prohibition_date` DATE NOT NULL,
+  `cleared_date` DATE NULL,
+  `is_trailer` TINYINT(1) NOT NULL DEFAULT 0,
+  `prohibition_type` VARCHAR(32) NOT NULL,
+  `vrm` VARCHAR(20) NULL,
+  `imposed_at` VARCHAR(255) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
-  `prohibition_date` DATE NOT NULL,
-  `vrm` VARCHAR(20) NOT NULL,
-  `is_trailer` TINYINT(1) NULL,
-  `prohibition_type` VARCHAR(32) NULL,
-  `cleared_date` DATE NOT NULL,
-  `imposed_at` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_prohibition_case1_idx` (`case_id` ASC),
   INDEX `fk_prohibition_user1_idx` (`created_by` ASC),
   INDEX `fk_prohibition_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_prohibition_ref_data1_idx` (`prohibition_type` ASC),
   CONSTRAINT `fk_prohibition_case1`
-    FOREIGN KEY (`case_id`)
-    REFERENCES `cases` (`id`)
+  FOREIGN KEY (`case_id`)
+  REFERENCES `cases` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_prohibition_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`created_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_prohibition_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`last_modified_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_prohibition_ref_data1`
-    FOREIGN KEY (`prohibition_type`)
-    REFERENCES `ref_data` (`id`)
+  FOREIGN KEY (`prohibition_type`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `prohibition_defect`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prohibition_defect` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `prohibition_id` INT NOT NULL,
+  `notes` VARCHAR(4000) NULL,
+  `defect_type` VARCHAR(255) NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_prohoibition_defect_prohibition1_idx` (`prohibition_id` ASC),
+  INDEX `fk_prohoibition_defect_user1_idx` (`created_by` ASC),
+  INDEX `fk_prohoibition_defect_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_prohoibition_defect_prohibition1`
+  FOREIGN KEY (`prohibition_id`)
+  REFERENCES `prohibition` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_prohoibition_defect_user1`
+  FOREIGN KEY (`created_by`)
+  REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_prohoibition_defect_user2`
+  FOREIGN KEY (`last_modified_by`)
+  REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `conviction_category`
