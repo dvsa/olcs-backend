@@ -63,7 +63,6 @@ class Stay implements Interfaces\EntityInterface
      */
     protected $notes;
 
-
     /**
      * Set the stay type
      *

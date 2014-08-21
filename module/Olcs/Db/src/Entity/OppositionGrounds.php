@@ -51,7 +51,6 @@ class OppositionGrounds implements Interfaces\EntityInterface
      */
     protected $isRepresentation = 0;
 
-
     /**
      * Set the grounds
      *

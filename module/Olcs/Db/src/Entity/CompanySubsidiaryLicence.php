@@ -45,7 +45,6 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
      */
     protected $companySubsidiary;
 
-
     /**
      * Set the company subsidiary
      *

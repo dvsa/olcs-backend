@@ -45,7 +45,6 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      */
     protected $docParagraph;
 
-
     /**
      * Set the doc paragraph
      *

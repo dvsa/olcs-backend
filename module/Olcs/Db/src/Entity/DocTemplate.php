@@ -74,7 +74,6 @@ class DocTemplate implements Interfaces\EntityInterface
      */
     protected $suppressFromOp;
 
-
     /**
      * Set the document sub category
      *

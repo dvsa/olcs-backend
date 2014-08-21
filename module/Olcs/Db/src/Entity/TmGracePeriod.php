@@ -87,7 +87,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
      */
     protected $gracePeriodNo = 1;
 
-
     /**
      * Set the assigned to user
      *

@@ -177,7 +177,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      */
     protected $validityPeriod;
 
-
     /**
      * Set the irfo psv auth type
      *

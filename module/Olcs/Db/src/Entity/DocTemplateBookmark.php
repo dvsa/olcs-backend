@@ -45,7 +45,6 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
      */
     protected $docTemplate;
 
-
     /**
      * Set the doc template
      *

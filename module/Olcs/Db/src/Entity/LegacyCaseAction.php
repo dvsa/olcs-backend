@@ -29,7 +29,6 @@ class LegacyCaseAction implements Interfaces\EntityInterface
      */
     protected $isDriver = 0;
 
-
     /**
      * Set the is driver
      *

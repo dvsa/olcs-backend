@@ -42,7 +42,6 @@ class EmailBody implements Interfaces\EntityInterface
      */
     protected $text;
 
-
     /**
      * Set the seq
      *

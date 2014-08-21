@@ -127,7 +127,6 @@ class Opposition implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the opposer
      *

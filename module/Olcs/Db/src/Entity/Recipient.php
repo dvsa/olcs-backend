@@ -96,7 +96,6 @@ class Recipient implements Interfaces\EntityInterface
         $this->trafficAreas = new ArrayCollection();
     }
 
-
     /**
      * Set the traffic area
      *

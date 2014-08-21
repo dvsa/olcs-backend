@@ -70,7 +70,6 @@ class Note implements Interfaces\EntityInterface
      */
     protected $priority = 0;
 
-
     /**
      * Set the note type
      *

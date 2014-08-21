@@ -77,9 +77,10 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
 <?php endforeach; ?>
     }
 <?php endif; ?>
-
+<?php if (count($details['fields'])): ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; $fluidReturn = $className; ?>
 
 <?php include('methods.phtml'); ?>
 <?php endforeach; ?>
+<?php endif;?>
 }

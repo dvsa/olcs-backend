@@ -230,7 +230,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      */
     protected $organisationId;
 
-
     /**
      * Set the ebsr submission result
      *

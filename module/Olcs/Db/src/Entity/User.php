@@ -106,7 +106,6 @@ class User implements Interfaces\EntityInterface
         $this->organisationUsers = new ArrayCollection();
     }
 
-
     /**
      * Set the partner contact details
      *

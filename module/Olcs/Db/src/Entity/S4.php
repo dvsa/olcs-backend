@@ -70,7 +70,6 @@ class S4 implements Interfaces\EntityInterface
      */
     protected $isTrueS4 = 0;
 
-
     /**
      * Set the agreed date
      *

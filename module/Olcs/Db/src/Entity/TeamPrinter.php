@@ -44,7 +44,6 @@ class TeamPrinter implements Interfaces\EntityInterface
      */
     protected $documentType;
 
-
     /**
      * Set the printer
      *

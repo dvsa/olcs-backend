@@ -80,7 +80,6 @@ class RefData implements Interfaces\EntityInterface
         $this->impoundings = new ArrayCollection();
     }
 
-
     /**
      * Set the parent
      *

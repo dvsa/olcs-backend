@@ -48,7 +48,6 @@ class Category implements Interfaces\EntityInterface
      */
     protected $isTaskCategory = 1;
 
-
     /**
      * Set the is doc category
      *

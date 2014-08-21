@@ -191,7 +191,6 @@ class InspectionRequest implements Interfaces\EntityInterface
      */
     protected $vehiclesExaminedNo;
 
-
     /**
      * Set the result type
      *

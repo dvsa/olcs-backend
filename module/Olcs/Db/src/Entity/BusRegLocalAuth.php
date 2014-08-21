@@ -45,7 +45,6 @@ class BusRegLocalAuth implements Interfaces\EntityInterface
      */
     protected $localAuthority;
 
-
     /**
      * Set the local authority
      *

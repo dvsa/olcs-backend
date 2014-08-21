@@ -42,7 +42,6 @@ class PrivateHireLicence implements Interfaces\EntityInterface
      */
     protected $privateHireLicenceNo;
 
-
     /**
      * Set the private hire licence no
      *

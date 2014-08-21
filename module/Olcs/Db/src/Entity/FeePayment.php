@@ -54,7 +54,6 @@ class FeePayment implements Interfaces\EntityInterface
      */
     protected $feeValue;
 
-
     /**
      * Set the payment
      *

@@ -50,7 +50,6 @@ class DocumentSubCategory implements Interfaces\EntityInterface
      */
     protected $displayFreeText = 0;
 
-
     /**
      * Set the is scanned
      *

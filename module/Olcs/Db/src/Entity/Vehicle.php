@@ -127,7 +127,6 @@ class Vehicle implements Interfaces\EntityInterface
         $this->licenceVehicles = new ArrayCollection();
     }
 
-
     /**
      * Set the psv type
      *

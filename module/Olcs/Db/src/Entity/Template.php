@@ -46,7 +46,6 @@ class Template implements Interfaces\EntityInterface
         $this->historys = new ArrayCollection();
     }
 
-
     /**
      * Set the history
      *

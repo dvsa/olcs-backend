@@ -124,7 +124,6 @@ class Task implements Interfaces\EntityInterface
      */
     protected $urgent = 0;
 
-
     /**
      * Set the task sub category
      *

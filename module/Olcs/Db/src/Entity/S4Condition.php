@@ -46,7 +46,6 @@ class S4Condition implements Interfaces\EntityInterface
      */
     protected $sourceCondition;
 
-
     /**
      * Set the target condition
      *

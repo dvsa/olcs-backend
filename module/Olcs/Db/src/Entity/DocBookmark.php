@@ -39,7 +39,6 @@ class DocBookmark implements Interfaces\EntityInterface
      */
     protected $name;
 
-
     /**
      * Set the name
      *

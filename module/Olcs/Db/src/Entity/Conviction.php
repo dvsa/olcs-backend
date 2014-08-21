@@ -153,7 +153,6 @@ class Conviction implements Interfaces\EntityInterface
      */
     protected $convictedName;
 
-
     /**
      * Set the case
      *

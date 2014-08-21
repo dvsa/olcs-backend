@@ -51,7 +51,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      */
     protected $comment;
 
-
     /**
      * Set the legacy recommendation
      *

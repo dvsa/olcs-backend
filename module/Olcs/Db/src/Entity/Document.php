@@ -189,7 +189,6 @@ class Document implements Interfaces\EntityInterface
         $this->emails = new ArrayCollection();
     }
 
-
     /**
      * Set the operating centre
      *

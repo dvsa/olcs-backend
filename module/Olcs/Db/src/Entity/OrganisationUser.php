@@ -65,7 +65,6 @@ class OrganisationUser implements Interfaces\EntityInterface
      */
     protected $sftpAccess = 0;
 
-
     /**
      * Set the user
      *

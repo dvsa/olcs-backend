@@ -87,7 +87,6 @@ class TrafficArea implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
     }
 
-
     /**
      * Set the id
      *

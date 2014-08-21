@@ -176,7 +176,6 @@ class Organisation implements Interfaces\EntityInterface
         $this->organisationPersons = new ArrayCollection();
     }
 
-
     /**
      * Set the lead tc area
      *

@@ -45,7 +45,6 @@ class PiReason implements Interfaces\EntityInterface
      */
     protected $pi;
 
-
     /**
      * Set the pi
      *

@@ -78,7 +78,6 @@ class Reason implements Interfaces\EntityInterface
         $this->proposeToRevokes = new ArrayCollection();
     }
 
-
     /**
      * Set the propose to revoke
      *

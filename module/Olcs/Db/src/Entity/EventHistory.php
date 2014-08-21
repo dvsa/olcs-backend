@@ -70,7 +70,6 @@ class EventHistory implements Interfaces\EntityInterface
      */
     protected $eventDatetime;
 
-
     /**
      * Set the licence vehicle
      *

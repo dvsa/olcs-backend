@@ -139,7 +139,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         $this->cases = new ArrayCollection();
     }
 
-
     /**
      * Set the case
      *

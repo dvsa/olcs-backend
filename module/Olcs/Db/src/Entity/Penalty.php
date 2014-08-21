@@ -40,7 +40,6 @@ class Penalty implements Interfaces\EntityInterface
      */
     protected $notes;
 
-
     /**
      * Set the notes
      *

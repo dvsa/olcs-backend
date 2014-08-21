@@ -95,7 +95,6 @@ class Complaint implements Interfaces\EntityInterface
      */
     protected $value;
 
-
     /**
      * Set the complaint type
      *

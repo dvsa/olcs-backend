@@ -59,7 +59,6 @@ class Submission implements Interfaces\EntityInterface
         $this->submissionActions = new ArrayCollection();
     }
 
-
     /**
      * Set the text
      *

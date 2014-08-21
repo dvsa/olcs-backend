@@ -70,7 +70,6 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         $this->reasons = new ArrayCollection();
     }
 
-
     /**
      * Set the reason
      *

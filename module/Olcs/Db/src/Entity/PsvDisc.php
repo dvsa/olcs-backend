@@ -57,7 +57,6 @@ class PsvDisc implements Interfaces\EntityInterface
      */
     protected $reprintRequired;
 
-
     /**
      * Set the is copy
      *

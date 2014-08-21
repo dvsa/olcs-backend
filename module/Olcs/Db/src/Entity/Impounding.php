@@ -122,7 +122,6 @@ class Impounding implements Interfaces\EntityInterface
         $this->impoundingLegislationTypes = new ArrayCollection();
     }
 
-
     /**
      * Set the pi venue
      *

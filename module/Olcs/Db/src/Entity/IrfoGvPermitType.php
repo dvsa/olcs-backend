@@ -41,7 +41,6 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
      */
     protected $irfoCountry;
 
-
     /**
      * Set the irfo country
      *

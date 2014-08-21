@@ -79,7 +79,6 @@ class InspectionEmail implements Interfaces\EntityInterface
      */
     protected $senderEmailAddress;
 
-
     /**
      * Set the inspection request
      *
