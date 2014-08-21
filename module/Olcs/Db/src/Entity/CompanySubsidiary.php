@@ -47,7 +47,6 @@ class CompanySubsidiary implements Interfaces\EntityInterface
      */
     protected $companyNo;
 
-
     /**
      * Set the name
      *

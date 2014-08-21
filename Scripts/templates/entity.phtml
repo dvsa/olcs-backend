@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 <?php if (!empty($details['traits'])): ?>
 use Olcs\Db\Entity\Traits;
 <?php endif; ?>
-<?php if ($details['softDeletable']): ?>
+<?php if ($details['softDeletable'] || $details['translatable']): ?>
 use Gedmo\Mapping\Annotation as Gedmo;
 <?php endif; ?>
 
@@ -18,7 +18,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * Auto-Generated
  *
+<?php if (isset($details['repository'])):?>
+ * @ORM\Entity(repositoryClass="<?php echo $details['repository']; ?>")
+<?php else:?>
  * @ORM\Entity
+<?php endif; ?>
  * @ORM\HasLifecycleCallbacks
 <?php if ($details['softDeletable']): ?>
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
@@ -73,9 +77,10 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
 <?php endforeach; ?>
     }
 <?php endif; ?>
-
+<?php if (count($details['fields'])): ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; $fluidReturn = $className; ?>
 
 <?php include('methods.phtml'); ?>
 <?php endforeach; ?>
+<?php endif;?>
 }

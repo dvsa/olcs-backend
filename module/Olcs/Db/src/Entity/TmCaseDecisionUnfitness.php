@@ -45,7 +45,6 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
      */
     protected $unfitnessReason;
 
-
     /**
      * Set the unfitness reason
      *

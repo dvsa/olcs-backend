@@ -149,7 +149,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      */
     protected $isApproved = 0;
 
-
     /**
      * Set the lic condition variation
      *

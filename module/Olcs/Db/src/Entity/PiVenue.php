@@ -43,7 +43,6 @@ class PiVenue implements Interfaces\EntityInterface
      */
     protected $address;
 
-
     /**
      * Set the address
      *

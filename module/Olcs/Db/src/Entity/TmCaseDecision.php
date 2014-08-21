@@ -91,7 +91,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
      */
     protected $unfitnessEndDate;
 
-
     /**
      * Set the decision
      *

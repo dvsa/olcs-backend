@@ -58,7 +58,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
      */
     protected $importance;
 
-
     /**
      * Set the is internal
      *

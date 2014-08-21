@@ -37,7 +37,6 @@ class EventHistoryType implements Interfaces\EntityInterface
      */
     protected $eventType;
 
-
     /**
      * Set the description
      *

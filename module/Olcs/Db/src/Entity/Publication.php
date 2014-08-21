@@ -62,7 +62,6 @@ class Publication implements Interfaces\EntityInterface
      */
     protected $docName;
 
-
     /**
      * Set the pub status
      *

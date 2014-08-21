@@ -48,7 +48,7 @@ class Prohibition implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="prohibition_date", nullable=false)
+     * @ORM\Column(type="date", name="prohibition_date", nullable=true)
      */
     protected $prohibitionDate;
 
@@ -78,7 +78,6 @@ class Prohibition implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="imposed_at", length=255, nullable=true)
      */
     protected $imposedAt;
-
 
     /**
      * Set the prohibition type

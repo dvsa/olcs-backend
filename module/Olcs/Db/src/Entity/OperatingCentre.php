@@ -59,7 +59,6 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->adDocuments = new ArrayCollection();
     }
 
-
     /**
      * Set the address
      *
@@ -104,42 +103,5 @@ class OperatingCentre implements Interfaces\EntityInterface
     public function getAdDocuments()
     {
         return $this->adDocuments;
-    }
-
-    /**
-     * Add a ad documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
-     * @return OperatingCentre
-     */
-    public function addAdDocuments($adDocuments)
-    {
-        if ($adDocuments instanceof ArrayCollection) {
-            $this->adDocuments = new ArrayCollection(
-                array_merge(
-                    $this->adDocuments->toArray(),
-                    $adDocuments->toArray()
-                )
-            );
-        } elseif (!$this->adDocuments->contains($adDocuments)) {
-            $this->adDocuments->add($adDocuments);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ad documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
-     * @return OperatingCentre
-     */
-    public function removeAdDocuments($adDocuments)
-    {
-        if ($this->adDocuments->contains($adDocuments)) {
-            $this->adDocuments->remove($adDocuments);
-        }
-
-        return $this;
     }
 }

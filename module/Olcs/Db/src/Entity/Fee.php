@@ -196,7 +196,6 @@ class Fee implements Interfaces\EntityInterface
      */
     protected $irfoFileNo;
 
-
     /**
      * Set the waive reason2
      *

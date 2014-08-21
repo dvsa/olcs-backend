@@ -63,7 +63,6 @@ class Disqualification implements Interfaces\EntityInterface
      */
     protected $period;
 
-
     /**
      * Set the is disqualified
      *

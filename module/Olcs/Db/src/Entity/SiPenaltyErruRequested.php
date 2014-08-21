@@ -54,7 +54,6 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      */
     protected $duration;
 
-
     /**
      * Set the si penalty requested type
      *

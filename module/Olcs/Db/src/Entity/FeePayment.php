@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_payment_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="fee_id", columns={"fee_id","payment_id"})
+ *        @ORM\UniqueConstraint(name="fee_payment_unique", columns={"fee_id","payment_id"})
  *    }
  * )
  */
@@ -45,6 +45,14 @@ class FeePayment implements Interfaces\EntityInterface
      */
     protected $payment;
 
+    /**
+     * Fee value
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="fee_value", precision=10, scale=2, nullable=true)
+     */
+    protected $feeValue;
 
     /**
      * Set the payment
@@ -67,5 +75,28 @@ class FeePayment implements Interfaces\EntityInterface
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * Set the fee value
+     *
+     * @param float $feeValue
+     * @return FeePayment
+     */
+    public function setFeeValue($feeValue)
+    {
+        $this->feeValue = $feeValue;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee value
+     *
+     * @return float
+     */
+    public function getFeeValue()
+    {
+        return $this->feeValue;
     }
 }

@@ -49,7 +49,6 @@ class TaskNote implements Interfaces\EntityInterface
      */
     protected $noteText;
 
-
     /**
      * Set the task
      *

@@ -52,7 +52,6 @@ class AlphaSplit implements Interfaces\EntityInterface
      */
     protected $toInclusive;
 
-
     /**
      * Set the from inclusive
      *

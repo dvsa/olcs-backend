@@ -61,13 +61,13 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $txcName;
 
     /**
-     * Is scottish rules
+     * Scottish rules
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_scottish_rules", nullable=false)
+     * @ORM\Column(type="boolean", name="scottish_rules", nullable=false)
      */
-    protected $isScottishRules = 0;
+    protected $scottishRules = 0;
 
     /**
      * Document
@@ -86,7 +86,6 @@ class TrafficArea implements Interfaces\EntityInterface
         $this->recipients = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
-
 
     /**
      * Set the id
@@ -135,43 +134,6 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a recipients
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-     * @return TrafficArea
-     */
-    public function addRecipients($recipients)
-    {
-        if ($recipients instanceof ArrayCollection) {
-            $this->recipients = new ArrayCollection(
-                array_merge(
-                    $this->recipients->toArray(),
-                    $recipients->toArray()
-                )
-            );
-        } elseif (!$this->recipients->contains($recipients)) {
-            $this->recipients->add($recipients);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a recipients
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-     * @return TrafficArea
-     */
-    public function removeRecipients($recipients)
-    {
-        if ($this->recipients->contains($recipients)) {
-            $this->recipients->remove($recipients);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the txc name
      *
      * @param string $txcName
@@ -195,26 +157,26 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is scottish rules
+     * Set the scottish rules
      *
-     * @param boolean $isScottishRules
+     * @param boolean $scottishRules
      * @return TrafficArea
      */
-    public function setIsScottishRules($isScottishRules)
+    public function setScottishRules($scottishRules)
     {
-        $this->isScottishRules = $isScottishRules;
+        $this->scottishRules = $scottishRules;
 
         return $this;
     }
 
     /**
-     * Get the is scottish rules
+     * Get the scottish rules
      *
      * @return boolean
      */
-    public function getIsScottishRules()
+    public function getScottishRules()
     {
-        return $this->isScottishRules;
+        return $this->scottishRules;
     }
 
     /**
@@ -238,42 +200,5 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
-    }
-
-    /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return TrafficArea
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return TrafficArea
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
     }
 }

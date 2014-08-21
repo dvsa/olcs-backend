@@ -60,7 +60,6 @@ class PhoneContact implements Interfaces\EntityInterface
      */
     protected $details;
 
-
     /**
      * Set the phone contact type
      *

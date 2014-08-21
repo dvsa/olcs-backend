@@ -71,7 +71,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      */
     protected $requestedTimestamp;
 
-
     /**
      * Set the requested user
      *

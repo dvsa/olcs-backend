@@ -108,7 +108,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      */
     protected $rescheduledOn;
 
-
     /**
      * Set the type
      *

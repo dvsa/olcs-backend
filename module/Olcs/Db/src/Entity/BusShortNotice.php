@@ -18,7 +18,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_short_notice_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="bus_reg_id", columns={"bus_reg_id"})
+ *        @ORM\UniqueConstraint(name="bus_reg_id_UNIQUE", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -203,7 +203,6 @@ class BusShortNotice implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="not_available_detail", length=255, nullable=true)
      */
     protected $notAvailableDetail;
-
 
     /**
      * Set the bank holiday change
