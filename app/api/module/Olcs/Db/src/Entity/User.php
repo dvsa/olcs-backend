@@ -37,7 +37,6 @@ class User implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\TeamManyToOne,
         Traits\EmailAddress45Field,
-        Traits\Name100Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -71,6 +70,15 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="pid", nullable=true)
      */
     protected $pid;
+
+    /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=100, nullable=true)
+     */
+    protected $name;
 
     /**
      * Account disabled
@@ -169,6 +177,29 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the name
+     *
+     * @param string $name
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set the account disabled
      *
      * @param string $accountDisabled
@@ -212,42 +243,5 @@ class User implements Interfaces\EntityInterface
     public function getOrganisationUsers()
     {
         return $this->organisationUsers;
-    }
-
-    /**
-     * Add a organisation users
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
-     * @return User
-     */
-    public function addOrganisationUsers($organisationUsers)
-    {
-        if ($organisationUsers instanceof ArrayCollection) {
-            $this->organisationUsers = new ArrayCollection(
-                array_merge(
-                    $this->organisationUsers->toArray(),
-                    $organisationUsers->toArray()
-                )
-            );
-        } elseif (!$this->organisationUsers->contains($organisationUsers)) {
-            $this->organisationUsers->add($organisationUsers);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a organisation users
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
-     * @return User
-     */
-    public function removeOrganisationUsers($organisationUsers)
-    {
-        if ($this->organisationUsers->contains($organisationUsers)) {
-            $this->organisationUsers->remove($organisationUsers);
-        }
-
-        return $this;
     }
 }

@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_851FEE735653D501", columns={"doc_template_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="doc_template_id", columns={"doc_template_id","doc_bookmark_id"})
+ *        @ORM\UniqueConstraint(name="doc_template_bookmark_unique", columns={"doc_template_id","doc_bookmark_id"})
  *    }
  * )
  */

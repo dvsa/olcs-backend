@@ -26,7 +26,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\BusRegManyToOneAlt1;
+        Traits\BusRegManyToOne;
 
     /**
      * Ebsr submission result

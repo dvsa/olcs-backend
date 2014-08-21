@@ -17,10 +17,10 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_local_auth_local_authority1_idx", columns={"local_authority_id"}),
  *        @ORM\Index(name="fk_bus_reg_local_auth_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_local_auth_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B1BB6E195327B2E3", columns={"bus_reg_id"})
+ *        @ORM\Index(name="fk_bus_reg_local_auth_bus_reg1", columns={"bus_reg_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="bus_reg_id", columns={"bus_reg_id","local_authority_id"})
+ *        @ORM\UniqueConstraint(name="bus_reg_la_unique", columns={"local_authority_id","bus_reg_id"})
  *    }
  * )
  */
@@ -30,7 +30,7 @@ class BusRegLocalAuth implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOne,
+        Traits\BusRegManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

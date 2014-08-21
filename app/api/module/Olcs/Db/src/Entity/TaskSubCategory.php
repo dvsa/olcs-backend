@@ -23,7 +23,7 @@ class TaskSubCategory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CategoryManyToOne,
-        Traits\Description45FieldAlt1,
+        Traits\Description45Field,
         Traits\Name45Field;
 
     /**

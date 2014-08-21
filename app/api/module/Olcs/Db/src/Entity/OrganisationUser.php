@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_user_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="organisation_id", columns={"organisation_id","user_id"})
+ *        @ORM\UniqueConstraint(name="organisation_user_unique", columns={"organisation_id","user_id"})
  *    }
  * )
  */

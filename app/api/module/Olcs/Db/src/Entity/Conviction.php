@@ -21,7 +21,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_conviction_operator_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_conviction_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"})
  *    }
  * )
@@ -32,9 +31,9 @@ class Conviction implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
@@ -49,19 +48,9 @@ class Conviction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Cases
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
-    /**
-     * Application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="convictions")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Defendant type
@@ -129,13 +118,13 @@ class Conviction implements Interfaces\EntityInterface
     protected $msi;
 
     /**
-     * Is declared
+     * Is dealt with
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_declared", nullable=false)
+     * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
      */
-    protected $isDeclared;
+    protected $isDealtWith = 0;
 
     /**
      * Operator name
@@ -164,15 +153,6 @@ class Conviction implements Interfaces\EntityInterface
      */
     protected $convictedName;
 
-    /**
-     * Is dealt with
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
-     */
-    protected $isDealtWith = 0;
-
 
     /**
      * Set the case
@@ -195,29 +175,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the application
-     *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return Conviction
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
     }
 
     /**
@@ -382,26 +339,26 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is declared
+     * Set the is dealt with
      *
-     * @param string $isDeclared
+     * @param string $isDealtWith
      * @return Conviction
      */
-    public function setIsDeclared($isDeclared)
+    public function setIsDealtWith($isDealtWith)
     {
-        $this->isDeclared = $isDeclared;
+        $this->isDealtWith = $isDealtWith;
 
         return $this;
     }
 
     /**
-     * Get the is declared
+     * Get the is dealt with
      *
      * @return string
      */
-    public function getIsDeclared()
+    public function getIsDealtWith()
     {
-        return $this->isDeclared;
+        return $this->isDealtWith;
     }
 
     /**
@@ -471,28 +428,5 @@ class Conviction implements Interfaces\EntityInterface
     public function getConvictedName()
     {
         return $this->convictedName;
-    }
-
-    /**
-     * Set the is dealt with
-     *
-     * @param string $isDealtWith
-     * @return Conviction
-     */
-    public function setIsDealtWith($isDealtWith)
-    {
-        $this->isDealtWith = $isDealtWith;
-
-        return $this;
-    }
-
-    /**
-     * Get the is dealt with
-     *
-     * @return string
-     */
-    public function getIsDealtWith()
-    {
-        return $this->isDealtWith;
     }
 }

@@ -17,12 +17,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="fk_pi_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"presided_by"}),
- *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"pi_status"}),
- *        @ORM\Index(name="fk_pi_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_pi_detail_ref_data1_idx", columns={"presided_by"}),
+ *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
+ *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -30,18 +29,15 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\PresidedByManyToOne,
-        Traits\PresidingTcManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
-        Traits\PresidingTcOther45Field,
-        Traits\RescheduleDatetimeField,
         Traits\DecisionDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomDeletedDateField,
         Traits\CustomVersionField;
 
     /**
@@ -73,13 +69,13 @@ class Pi implements Interfaces\EntityInterface
     protected $typeAppVar = 0;
 
     /**
-     * Type disciplinary
+     * Type discipliniary
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="type_disciplinary", nullable=false)
+     * @ORM\Column(type="boolean", name="type_discipliniary", nullable=false)
      */
-    protected $typeDisciplinary = 0;
+    protected $typeDiscipliniary = 0;
 
     /**
      * Type env new
@@ -127,24 +123,6 @@ class Pi implements Interfaces\EntityInterface
     protected $typeOther = 0;
 
     /**
-     * Pi datetime
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="pi_datetime", nullable=true)
-     */
-    protected $piDatetime;
-
-    /**
-     * Venue
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="venue", length=255, nullable=true)
-     */
-    protected $venue;
-
-    /**
      * Witnesses
      *
      * @var int
@@ -179,6 +157,15 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="section_code_text", length=1024, nullable=true)
      */
     protected $sectionCodeText;
+
+    /**
+     * Reschedule datetime
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="reschedule_datetime", nullable=true)
+     */
+    protected $rescheduleDatetime;
 
     /**
      * Licence revoked at pi
@@ -305,26 +292,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the type disciplinary
+     * Set the type discipliniary
      *
-     * @param string $typeDisciplinary
+     * @param boolean $typeDiscipliniary
      * @return Pi
      */
-    public function setTypeDisciplinary($typeDisciplinary)
+    public function setTypeDiscipliniary($typeDiscipliniary)
     {
-        $this->typeDisciplinary = $typeDisciplinary;
+        $this->typeDiscipliniary = $typeDiscipliniary;
 
         return $this;
     }
 
     /**
-     * Get the type disciplinary
+     * Get the type discipliniary
      *
-     * @return string
+     * @return boolean
      */
-    public function getTypeDisciplinary()
+    public function getTypeDiscipliniary()
     {
-        return $this->typeDisciplinary;
+        return $this->typeDiscipliniary;
     }
 
     /**
@@ -443,52 +430,6 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the pi datetime
-     *
-     * @param \DateTime $piDatetime
-     * @return Pi
-     */
-    public function setPiDatetime($piDatetime)
-    {
-        $this->piDatetime = $piDatetime;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi datetime
-     *
-     * @return \DateTime
-     */
-    public function getPiDatetime()
-    {
-        return $this->piDatetime;
-    }
-
-    /**
-     * Set the venue
-     *
-     * @param string $venue
-     * @return Pi
-     */
-    public function setVenue($venue)
-    {
-        $this->venue = $venue;
-
-        return $this;
-    }
-
-    /**
-     * Get the venue
-     *
-     * @return string
-     */
-    public function getVenue()
-    {
-        return $this->venue;
-    }
-
-    /**
      * Set the witnesses
      *
      * @param int $witnesses
@@ -578,6 +519,29 @@ class Pi implements Interfaces\EntityInterface
     public function getSectionCodeText()
     {
         return $this->sectionCodeText;
+    }
+
+    /**
+     * Set the reschedule datetime
+     *
+     * @param \DateTime $rescheduleDatetime
+     * @return Pi
+     */
+    public function setRescheduleDatetime($rescheduleDatetime)
+    {
+        $this->rescheduleDatetime = $rescheduleDatetime;
+
+        return $this;
+    }
+
+    /**
+     * Get the reschedule datetime
+     *
+     * @return \DateTime
+     */
+    public function getRescheduleDatetime()
+    {
+        return $this->rescheduleDatetime;
     }
 
     /**
@@ -673,43 +637,6 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a pi hearings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
-     * @return Pi
-     */
-    public function addPiHearings($piHearings)
-    {
-        if ($piHearings instanceof ArrayCollection) {
-            $this->piHearings = new ArrayCollection(
-                array_merge(
-                    $this->piHearings->toArray(),
-                    $piHearings->toArray()
-                )
-            );
-        } elseif (!$this->piHearings->contains($piHearings)) {
-            $this->piHearings->add($piHearings);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a pi hearings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
-     * @return Pi
-     */
-    public function removePiHearings($piHearings)
-    {
-        if ($this->piHearings->contains($piHearings)) {
-            $this->piHearings->remove($piHearings);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the pi reason
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
@@ -730,42 +657,5 @@ class Pi implements Interfaces\EntityInterface
     public function getPiReasons()
     {
         return $this->piReasons;
-    }
-
-    /**
-     * Add a pi reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
-     * @return Pi
-     */
-    public function addPiReasons($piReasons)
-    {
-        if ($piReasons instanceof ArrayCollection) {
-            $this->piReasons = new ArrayCollection(
-                array_merge(
-                    $this->piReasons->toArray(),
-                    $piReasons->toArray()
-                )
-            );
-        } elseif (!$this->piReasons->contains($piReasons)) {
-            $this->piReasons->add($piReasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a pi reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
-     * @return Pi
-     */
-    public function removePiReasons($piReasons)
-    {
-        if ($this->piReasons->contains($piReasons)) {
-            $this->piReasons->remove($piReasons);
-        }
-
-        return $this;
     }
 }

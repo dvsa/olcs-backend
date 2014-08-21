@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_company_subsidiary_licence_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="company_subsidiary_id", columns={"company_subsidiary_id","licence_id"})
+ *        @ORM\UniqueConstraint(name="company_subsid_licence_unique", columns={"company_subsidiary_id","licence_id"})
  *    }
  * )
  */
@@ -30,7 +30,7 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

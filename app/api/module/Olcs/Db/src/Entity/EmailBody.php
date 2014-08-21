@@ -15,9 +15,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="email_body",
  *    indexes={
  *        @ORM\Index(name="fk_email_body_email1_idx", columns={"email_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="seq", columns={"seq","email_id"})
  *    }
  * )
  */

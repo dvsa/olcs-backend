@@ -25,7 +25,7 @@ class Category implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -37,7 +37,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
      */
-    protected $isDocCategory;
+    protected $isDocCategory = 1;
 
     /**
      * Is task category
@@ -46,7 +46,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
      */
-    protected $isTaskCategory;
+    protected $isTaskCategory = 1;
 
 
     /**

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Vrm20 field trait
  *
- * Auto-Generated (Shared between 5 entities)
+ * Auto-Generated (Shared between 6 entities)
  */
 trait Vrm20Field
 {

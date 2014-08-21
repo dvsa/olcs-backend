@@ -29,7 +29,7 @@ class TradingName implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,

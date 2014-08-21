@@ -25,7 +25,7 @@ class AdminAreaTrafficArea implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

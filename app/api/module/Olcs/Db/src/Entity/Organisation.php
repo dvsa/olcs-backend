@@ -19,7 +19,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
  *        @ORM\Index(name="fk_organisation_ref_data2_idx", columns={"sic_code"}),
- *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"})
+ *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
+ *        @ORM\Index(name="organisation_name_idx", columns={"name"})
  *    }
  * )
  */
@@ -84,6 +85,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $name;
 
     /**
+     * Irfo name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
+     */
+    protected $irfoName;
+
+    /**
      * Is mlh
      *
      * @var string
@@ -120,15 +130,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $allowEmail = 0;
 
     /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
-     */
-    protected $contactDetails;
-
-    /**
      * Licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -138,13 +139,13 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
-     * Organisation person
+     * Contact detail
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationPerson", mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
      */
-    protected $organisationPersons;
+    protected $contactDetails;
 
     /**
      * Trading name
@@ -156,14 +157,23 @@ class Organisation implements Interfaces\EntityInterface
     protected $tradingNames;
 
     /**
+     * Organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationPerson", mappedBy="organisation")
+     */
+    protected $organisationPersons;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
-        $this->organisationPersons = new ArrayCollection();
+        $this->contactDetails = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
+        $this->organisationPersons = new ArrayCollection();
     }
 
 
@@ -283,6 +293,29 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the irfo name
+     *
+     * @param string $irfoName
+     * @return Organisation
+     */
+    public function setIrfoName($irfoName)
+    {
+        $this->irfoName = $irfoName;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo name
+     *
+     * @return string
+     */
+    public function getIrfoName()
+    {
+        return $this->irfoName;
+    }
+
+    /**
      * Set the is mlh
      *
      * @param string $isMlh
@@ -375,66 +408,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact detail
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function setContactDetails($contactDetails)
-    {
-        $this->contactDetails = $contactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact details
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licences
@@ -458,100 +431,26 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a licences
+     * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Organisation
      */
-    public function addLicences($licences)
+    public function setContactDetails($contactDetails)
     {
-        if ($licences instanceof ArrayCollection) {
-            $this->licences = new ArrayCollection(
-                array_merge(
-                    $this->licences->toArray(),
-                    $licences->toArray()
-                )
-            );
-        } elseif (!$this->licences->contains($licences)) {
-            $this->licences->add($licences);
-        }
+        $this->contactDetails = $contactDetails;
 
         return $this;
     }
 
     /**
-     * Remove a licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
-     * @return Organisation
-     */
-    public function removeLicences($licences)
-    {
-        if ($this->licences->contains($licences)) {
-            $this->licences->remove($licences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the organisation person
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
-     * @return Organisation
-     */
-    public function setOrganisationPersons($organisationPersons)
-    {
-        $this->organisationPersons = $organisationPersons;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation persons
+     * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getOrganisationPersons()
+    public function getContactDetails()
     {
-        return $this->organisationPersons;
-    }
-
-    /**
-     * Add a organisation persons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
-     * @return Organisation
-     */
-    public function addOrganisationPersons($organisationPersons)
-    {
-        if ($organisationPersons instanceof ArrayCollection) {
-            $this->organisationPersons = new ArrayCollection(
-                array_merge(
-                    $this->organisationPersons->toArray(),
-                    $organisationPersons->toArray()
-                )
-            );
-        } elseif (!$this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->add($organisationPersons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a organisation persons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
-     * @return Organisation
-     */
-    public function removeOrganisationPersons($organisationPersons)
-    {
-        if ($this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->remove($organisationPersons);
-        }
-
-        return $this;
+        return $this->contactDetails;
     }
 
     /**
@@ -578,39 +477,25 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a trading names
+     * Set the organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
      * @return Organisation
      */
-    public function addTradingNames($tradingNames)
+    public function setOrganisationPersons($organisationPersons)
     {
-        if ($tradingNames instanceof ArrayCollection) {
-            $this->tradingNames = new ArrayCollection(
-                array_merge(
-                    $this->tradingNames->toArray(),
-                    $tradingNames->toArray()
-                )
-            );
-        } elseif (!$this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->add($tradingNames);
-        }
+        $this->organisationPersons = $organisationPersons;
 
         return $this;
     }
 
     /**
-     * Remove a trading names
+     * Get the organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
-     * @return Organisation
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function removeTradingNames($tradingNames)
+    public function getOrganisationPersons()
     {
-        if ($this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->remove($tradingNames);
-        }
-
-        return $this;
+        return $this->organisationPersons;
     }
 }

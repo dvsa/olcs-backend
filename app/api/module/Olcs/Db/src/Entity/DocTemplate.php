@@ -31,7 +31,7 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

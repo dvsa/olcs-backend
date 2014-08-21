@@ -71,43 +71,6 @@ class Template implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a historys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $historys
-     * @return Template
-     */
-    public function addHistorys($historys)
-    {
-        if ($historys instanceof ArrayCollection) {
-            $this->historys = new ArrayCollection(
-                array_merge(
-                    $this->historys->toArray(),
-                    $historys->toArray()
-                )
-            );
-        } elseif (!$this->historys->contains($historys)) {
-            $this->historys->add($historys);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a historys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $historys
-     * @return Template
-     */
-    public function removeHistorys($historys)
-    {
-        if ($this->historys->contains($historys)) {
-            $this->historys->remove($historys);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the data
      *
      * @param string $data

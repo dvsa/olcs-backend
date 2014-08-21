@@ -5,35 +5,35 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * RefData Entity
  *
  * Auto-Generated
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Olcs\Db\Entity\Repository\RefData")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ref_data",
  *    indexes={
- *        @ORM\Index(name="fk_ref_data_ref_data_category1_idx", columns={"ref_data_category_id"})
+ *        @ORM\Index(name="fk_ref_data_ref_data1_idx", columns={"parent_id"})
  *    }
  * )
  */
 class RefData implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\Id32Identity,
-        Traits\Description100Field;
+        Traits\Id32Identity;
 
     /**
-     * Ref data category
+     * Parent
      *
-     * @var \Olcs\Db\Entity\RefDataCategory
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefDataCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="ref_data_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
-    protected $refDataCategory;
+    protected $parent;
 
     /**
      * Impounding
@@ -43,6 +43,25 @@ class RefData implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Impounding", mappedBy="impoundingLegislationTypes", fetch="LAZY")
      */
     protected $impoundings;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=100, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $description;
+
+    /**
+     * Ref data category id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ref_data_category_id", length=32, nullable=false)
+     */
+    protected $refDataCategoryId;
 
     /**
      * Olbs key
@@ -63,26 +82,26 @@ class RefData implements Interfaces\EntityInterface
 
 
     /**
-     * Set the ref data category
+     * Set the parent
      *
-     * @param \Olcs\Db\Entity\RefDataCategory $refDataCategory
+     * @param \Olcs\Db\Entity\RefData $parent
      * @return RefData
      */
-    public function setRefDataCategory($refDataCategory)
+    public function setParent($parent)
     {
-        $this->refDataCategory = $refDataCategory;
+        $this->parent = $parent;
 
         return $this;
     }
 
     /**
-     * Get the ref data category
+     * Get the parent
      *
-     * @return \Olcs\Db\Entity\RefDataCategory
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getRefDataCategory()
+    public function getParent()
     {
-        return $this->refDataCategory;
+        return $this->parent;
     }
 
     /**
@@ -109,40 +128,49 @@ class RefData implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a impoundings
+     * Set the description
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @param string $description
      * @return RefData
      */
-    public function addImpoundings($impoundings)
+    public function setDescription($description)
     {
-        if ($impoundings instanceof ArrayCollection) {
-            $this->impoundings = new ArrayCollection(
-                array_merge(
-                    $this->impoundings->toArray(),
-                    $impoundings->toArray()
-                )
-            );
-        } elseif (!$this->impoundings->contains($impoundings)) {
-            $this->impoundings->add($impoundings);
-        }
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Remove a impoundings
+     * Get the description
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the ref data category id
+     *
+     * @param string $refDataCategoryId
      * @return RefData
      */
-    public function removeImpoundings($impoundings)
+    public function setRefDataCategoryId($refDataCategoryId)
     {
-        if ($this->impoundings->contains($impoundings)) {
-            $this->impoundings->remove($impoundings);
-        }
+        $this->refDataCategoryId = $refDataCategoryId;
 
         return $this;
+    }
+
+    /**
+     * Get the ref data category id
+     *
+     * @return string
+     */
+    public function getRefDataCategoryId()
+    {
+        return $this->refDataCategoryId;
     }
 
     /**

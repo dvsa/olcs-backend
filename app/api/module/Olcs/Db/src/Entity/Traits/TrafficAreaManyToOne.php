@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Traffic area many to one trait
  *
- * Auto-Generated (Shared between 8 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait TrafficAreaManyToOne
 {
@@ -17,7 +17,7 @@ trait TrafficAreaManyToOne
      * @var \Olcs\Db\Entity\TrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
     protected $trafficArea;
 

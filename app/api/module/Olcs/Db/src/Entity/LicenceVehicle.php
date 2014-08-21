@@ -30,9 +30,10 @@ class LicenceVehicle implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\RemovalReasonManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ReceivedDateFieldAlt2,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\SpecifiedDateField,
@@ -59,15 +60,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
-
-    /**
-     * Application received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="application_received_date", nullable=true)
-     */
-    protected $applicationReceivedDate;
 
     /**
      * Removal
@@ -159,29 +151,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the application received date
-     *
-     * @param \DateTime $applicationReceivedDate
-     * @return LicenceVehicle
-     */
-    public function setApplicationReceivedDate($applicationReceivedDate)
-    {
-        $this->applicationReceivedDate = $applicationReceivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the application received date
-     *
-     * @return \DateTime
-     */
-    public function getApplicationReceivedDate()
-    {
-        return $this->applicationReceivedDate;
     }
 
     /**
