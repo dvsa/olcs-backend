@@ -255,386 +255,312 @@ INSERT INTO `country` (`id`,`country_desc`) VALUES
     ('ZM', 'Zambia'),
     ('ZW', 'Zimbabwe');
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('appeal_outcome', 'appeal_o_dis', 'Dismissed', 'DIS'),
+    ('appeal_outcome', 'appeal_o_pas', 'Partially Successful', 'PAS'),
+    ('appeal_outcome', 'appeal_o_ref', 'Refer Back to TC', 'REF'),
+    ('appeal_outcome', 'appeal_o_suc', 'Successful', 'SUC'),
+    ('appeal_reason', 'appeal_r_app', 'Application', '0'),
+    ('appeal_reason', 'appeal_r_lic_pi', 'Disciplinary PI', 'Disciplinary_PI'),
+    ('appeal_reason', 'appeal_r_lic_non_pi', 'Disciplinary Non-PI', 'Disciplinary_N_PI'),
+    ('appeal_reason', 'appeal_r_tm_pi', 'Regulatory PI', '1'),
+    ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
-/* TODO : As part of ETL process DROP the olbs columns */
+    ('app_status', 'apsts_new', 'New', null),
 
-INSERT INTO ref_data(
-  ref_data_category_id, id, description, olbs_key
-)values
-/* TL_TM_COMPLIANCE_EPISODE_APPEAL_OUTCOME */
-  ('appeal_outcome', 'appeal_o_dis', 'Dismissed', 'DIS')
-  , ('appeal_outcome', 'appeal_o_pas', 'Partially Successful', 'PAS')
-  , ('appeal_outcome', 'appeal_o_ref', 'Refer Back to TC', 'REF')
-  , ('appeal_outcome', 'appeal_o_suc', 'Successful', 'SUC')
-/* TL_TM_COMPLIANCE_EPISODE_APPEAL_REASON */
-  , ('appeal_reason', 'appeal_r_app', 'Application', '0')
-  , ('appeal_reason', 'appeal_r_lic_pi', 'Disciplinary PI', 'Disciplinary_PI')
-  , ('appeal_reason', 'appeal_r_lic_non_pi', 'Disciplinary Non-PI', 'Disciplinary_N_PI')
-  , ('appeal_reason', 'appeal_r_tm_pi', 'Regulatory PI', '1')
-  , ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2')
-/* TL_BUS_SUBSIDIES */
-  , ('bus_subsidy','bs_no', 'No', '1')
-  , ('bus_subsidy','bs_yes', 'Yes', '2')
-  , ('bus_subsidy','bs_in_part', 'In Part', '3')
-/* TL_BUS_TRC_STATUS */
-/*
-  , ('bus_trc_status', 'bts_new', 'New', null)
-  , ('bus_trc_status', 'bts_valid', 'Valid', null)
-  , ('bus_trc_status', 'bts_revoked', 'Revoked', null)
-  , ('bus_trc_status', 'bts_refused', 'Refused', null)
-  */
-/* tl_episode_type */
-  , ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI')
-  , ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE')
-  , ('erru_case_type', 'erru_case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS')
-  , ('erru_case_type', 'erru_case_t_nmsi', 'Non-MSI', 'NMSI')
-/* case type - new in olcs */
-  , ('case_type', 'case_t_app', 'Application', null)
-  , ('case_type', 'case_t_lic', 'Licence', null)
-  , ('case_type', 'case_t_tm', 'Transport Manager', null)
-  /* TL_COMPLAINT_STATUS */
-  , ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK')
-  , ('complaint_status', 'cs_pin', 'PI Notified', 'PIN')
-  , ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS')
-  , ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR')
-  , ('complaint_status', 'cs_yst', 'Are You Still There', 'YST')
-/* TL_TYPE_OF_COMPLAINT */
-  , ('complaint_type', 'ct_cor', 'Continuing to operator after Revocation', null)
-  , ('complaint_type', 'ct_cov', 'Condition of Vehicles', null)
-  , ('complaint_type', 'ct_dgm', 'Driving in a dangerous manner', null)
-  , ('complaint_type', 'ct_dsk', 'Driver smoking', null)
-  , ('complaint_type', 'ct_fls', 'Failure to operator local service', null)
-  , ('complaint_type', 'ct_lvu', 'Leaving vehicle unattended with engine running', null)
-  , ('complaint_type', 'ct_ndl', 'Not having correct category of Drivers Licence', null)
-  , ('complaint_type', 'ct_nol', 'No Operators Licence', null)
-  , ('complaint_type', 'ct_olr', 'Operating local service off route', null)
-  , ('complaint_type', 'ct_ovb', 'Obstructing other vehicles at Bus Station/Bus Stop', null)
-  , ('complaint_type', 'ct_pvo', 'Parking vehicle out with Operating Centre', null)
-  , ('complaint_type', 'ct_rds', 'Registration of duplicate services', null)
-  , ('complaint_type', 'ct_rta', 'Registered times not being adhered to', null)
-  , ('complaint_type', 'ct_sln', 'Speed Limiters non operative', null)
-  , ('complaint_type', 'ct_spe', 'Speeding', null)
-  , ('complaint_type', 'ct_tgo', 'Tachograph offences', null)
-  , ('complaint_type', 'ct_ufl', 'Unsafe loads', null)
-  , ('complaint_type', 'ct_ump', 'Use of mobile phones while driving', null)
-  , ('complaint_type', 'ct_urd', 'Using Red Diesel', null)
-  , ('complaint_type', 'ct_vpo', 'Vehicles parked and causing an obstruction', null)
-;
-INSERT INTO ref_data(
-  ref_data_category_id, id, description, olbs_key
-)values
-/* Condition Added Via */
-  ('cond_added_via', 'cav_case', 'Case', 'Episode')
-  , ('cond_added_via', 'cav_lic', 'Licence', 'Licence')
-  , ('cond_added_via', 'cav_app', 'Application', 'Application')
-/* Condition Attached To */
-  , ('cond_att_to', 'cat_lic', 'Licence', 'Licence')
-  , ('cond_att_to', 'cat_oc', 'Operating Centre', 'OpCentre')
-/* TL_CONDITION_TYPE */
-  , ('cond_type', 'cdt_con', 'Condition', '1')
-  , ('cond_type', 'cdt_und', 'Undertaking', '2')
-/* TL_CONTACT_METHOD */
-  , ('contact_method', 'cm_letter', 'Letter', '1')
-  , ('contact_method', 'cm_fax', 'Facsimile', '2')
-  , ('contact_method', 'cm_email', 'E-mail', '3')
-  , ('contact_method', 'cm_tel', 'Telephone', '4')
-/* Contact Type */
-  , ('contact_type', 'ct_est', 'Establishment', null)
-  , ('contact_type', 'ct_reg', 'Registered', null)
-  , ('contact_type', 'ct_tcon', 'Transport Consultant', null)
-  , ('contact_type', 'ct_corr', 'Correspondence', null)
-  , ('contact_type', 'ct_work','Workshop',null)
-  , ('contact_type', 'ct_complainant', 'Complainant', null)
-  , ('contact_type', 'ct_tm', 'Transport Manager', null)
-  , ('contact_type', 'ct_ta', 'Traffic Area', null)
-  , ('contact_type', 'ct_team_user', 'Team or User', null)
-  , ('contact_type', 'ct_partner', 'Partner', null)
-  , ('contact_type', 'ct_hackney', 'Hackney Licence Issue Council', null)
-  , ('contact_type', 'ct_obj', 'Objector', null)
-  , ('contact_type', 'ct_rep', 'Representor', null)
-  , ('contact_type', 'ct_irfo_op', 'IRFO Operator', null)
-  , ('contact_type', 'ct_driver', 'Driver', null)
-/* TL_DISC_REMOVAL_EXPLANATION */
-  , ('disc_removal_explan', 'dre_tao', 'Returned to TAO', '0')
-  , ('disc_removal_explan', 'dre_lost', 'Lost', '1')
-  , ('disc_removal_explan', 'dre_stolen', 'Stolen', '2')
-  , ('disc_removal_explan', 'dre_destroyed', 'Destroyed', '3')
-  ;
+    ('bus_subsidy','bs_no', 'No', '1'),
+    ('bus_subsidy','bs_yes', 'Yes', '2'),
+    ('bus_subsidy','bs_in_part', 'In Part', '3'),
 
-  INSERT INTO ref_data(
-  ref_data_category_id, id, description, olbs_key
-)values
-/* Defendant types */
-  ('def_type', 'def_t_op', 'Operator', null)
-  , ('def_type', 'def_t_driver', 'Driver', null)
-  , ('def_type', 'def_t_tm', 'Transport Manager', null)
-  , ('def_type', 'def_t_dir', 'Director', null)
-  , ('def_type', 'def_t_part', 'Partner', null)
-  , ('def_type', 'def_t_owner', 'Owner', null)
-/* Hearing Types */
-/*
-  , ('hearing_type', 'hearing_stl', 'STL Interview', 'AD_Interview')
-  , ('hearing_type', 'hearing_prelim', 'Preliminary Hearing', 'IC_Meeting')
-*/
-/* Impounding Types */
-  , ('impound_type', 'impt_hearing', 'Hearing', null)
-  , ('impound_type', 'impt_paper', 'Paperwork', null)
-/* Impounding Outcome */
-  , ('impound_outcome', 'impo_returned', 'Vehicle Returned', null)
-  , ('impound_outcome', 'impo_not', 'Vehicle Not Returned', null)
-/* TL_INSP_REPOST_TYPE */
-  , ('insp_report_type', 'insp_rep_t_maint', 'Maintenance Request', '1')
-  , ('insp_report_type', 'insp_rep_t_TE', 'Traffic Examiner', '2')
-  , ('insp_report_type', 'insp_rep_t_bus', 'Bus Monitor', '3')
-/* irfo gv permit status - new */
-  , ('irfo_permit_status', 'irfo_perm_s_refused', 'Refused', 'Refused')
-  , ('irfo_permit_status', 'irfo_perm_s_pending', 'Pending', 'Pending')
-  , ('irfo_permit_status', 'irfo_perm_s_withdrawn', 'Withdrawn', 'Withdrawn')
-  , ('irfo_permit_status', 'irfo_perm_s_appreoved', 'Approved', 'Approved')
-/* irfo_permit_stock.status */
-  , ('irfo_permit_stock_status', 'irfo_perm_s_s_issued', 'Issued', 'Issued')
-  , ('irfo_permit_stock_status', 'irfo_perm_s_s_ret', 'Returned', 'Returned')
-  , ('irfo_permit_stock_status', 'irfo_perm_s_s_void', 'Void', 'Void')
-  , ('irfo_permit_stock_status', 'irfo_perm_s_s_in_stock', 'In Stock', 'In Stock')
-/* irfo psv journey frequency */
-  , ('irfo_psv_journey_freq', 'psv_freq_other', 'OTHER', 'OTHER')
-  , ('irfo_psv_journey_freq', 'psv_freq_weekly', 'WEEKLY', 'WEEKLY')
-  , ('irfo_psv_journey_freq', 'psv_freq_daily', 'DAILY', 'DAILY')
-  , ('irfo_psv_journey_freq', 'psv_freq_fortnight', 'FORTNIGHTLY', 'FORTNIGHTLY')
-  , ('irfo_psv_journey_freq', 'psv_freq_monthly', 'MONTHLY', 'MONTHLY')
-  , ('irfo_psv_journey_freq', 'psv_freq_2_weekly', 'TWICE WEEKLY', 'TWICE WEEKLY')
-/* irfo psv auth status - new */
-  , ('irfo_auth_status', 'irfo_auth_s_approved', 'Approved', 'Approved')
-  , ('irfo_auth_status', 'irfo_auth_s_cns', 'CNS', 'CNS')
-  , ('irfo_auth_status', 'irfo_auth_s_granted', 'Granted', 'Granted')
-  , ('irfo_auth_status', 'irfo_auth_s_pending', 'Pending', 'Pending')
-  , ('irfo_auth_status', 'irfo_auth_s_renew', 'Renew', 'Renew')
-  , ('irfo_auth_status', 'irfo_auth_s_withdrawn', 'Withdrawn', 'Withdrawn')
-/* TL_REQUEST_TYPE */
-  , ('insp_request_type', 'insp_req_t_new_op', 'New OP', '1')
-  , ('insp_request_type', 'insp_req_t_var', 'Variation', '2')
-  , ('insp_request_type', 'insp_req_t_fol', 'FOL', '3')
-  , ('insp_request_type', 'insp_req_t_coe', 'Change of Entity', '4')
-  , ('insp_request_type', 'insp_req_t_tc', 'TC Request', '5')
-  , ('insp_request_type', 'insp_req_t_review', 'Review', '6')
-  , ('insp_request_type', 'insp_req_t_comp', 'Compliance', '7')
-/* TL_RESULT_TYPE */
-  , ('insp_result_type', 'insp_res_t_new', 'New', '1')
-  , ('insp_result_type', 'insp_res_t_new_sat', 'Satisfactory', '2')
-  , ('insp_result_type', 'insp_res_t_new_unsat', 'Unsatisfactory', '3')
-/* Interim Status */
-  , ('interim_status', 'int_sts_granted', 'Granted', 'Granted')
-  , ('interim_status', 'int_sts_in_force', 'In-Force', 'In-Force')
-  , ('interim_status', 'int_sts_refused', 'Refused', 'Refused')
-  , ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked')
-  , ('interim_status', 'int_sts_saved', 'Saved', 'Saved')
-/* TL_LIC_CAT */
-  , ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV')
-  , ('lic_cat', 'lcat_permit', 'Permit', 'Permit')
-  , ('lic_cat', 'lcat_psv', 'Public Service Vehicle', 'PSV')
-/* TL_LIC_STATUS */
-  , ('lic_status', 'lsts_cns', 'Continuation Not Sought', 'CNS')
-  , ('lic_status', 'lsts_curtailed', 'Curtailed', 'Curtailed')
-  , ('lic_status', 'lsts_granted', 'Granted', 'Granted')
-  , ('lic_status', 'lsts_new', 'New', 'New')
-  , ('lic_status', 'lsts_ntu', 'Not Taken Up', 'NTU')
-  , ('lic_status', 'lsts_refused', 'Refused', 'Refused')
-  , ('lic_status', 'lsts_revoked', 'Revoked', 'Revoked')
-  , ('lic_status', 'lsts_surrendered', 'Surrendered', 'Surrendered')
-  , ('lic_status', 'lsts_suspended', 'Suspended', 'Suspended')
-  , ('lic_status', 'lsts_terminated', 'Terminated', 'Terminated')
-  , ('lic_status', 'lsts_unlicenced', 'Unlicenced', 'Unlicenced')
-  , ('lic_status', 'lsts_valid', 'Valid', 'Valid')
-  , ('lic_status', 'lsts_withdrawn', 'Withdrawn', 'Withdrawn')
-/* TL_LIC_TYPE */
-  , ('lic_type', 'ltyp_cbp', 'Community', 'CBP')
-  , ('lic_type', 'ltyp_dbp', 'Designated Body/Local Authority', 'DBP')
-  , ('lic_type', 'ltyp_lbp', 'Large', 'LBP')
-  , ('lic_type', 'ltyp_r', 'Restricted', 'R')
-  , ('lic_type', 'ltyp_sbp', 'Small', 'SBP')
-  , ('lic_type', 'ltyp_si', 'Standard International', 'SI')
-  , ('lic_type', 'ltyp_sn', 'Standard National', 'SN')
-  , ('lic_type', 'ltyp_sr', 'Special Restricted', 'SR')
-  ;
+    ('case_type', 'case_t_app', 'Application', null),
+    ('case_type', 'case_t_lic', 'Licence', null),
+    ('case_type', 'case_t_tm', 'Transport Manager', null),
 
-INSERT INTO ref_data(
-  ref_data_category_id, id, description, olbs_key
-)values
-/* TL_obj_grounds */
-  ('obj_grounds', 'ogf_both', 'Both Obj and Env (Legacy ''B'')', 'B')
-  , ('obj_grounds', 'ogf_env', 'Environmental (Legacy ''E'')', 'E')
-  , ('obj_grounds', 'ogf_fin_stan', 'Financial Standing', 'Fin Stan')
-  , ('obj_grounds', 'ogf_fitness', 'Fitness', 'Fitness')
-  , ('obj_grounds', 'ogf_o', 'Objection (Legacy ''O'')', 'O')
-  , ('obj_grounds', 'ogf_o_ccap', 'O/C Capacity', 'O/CCap')
-  , ('obj_grounds', 'ogf_parking', 'Parking', 'Parking')
-  , ('obj_grounds', 'ogf_prof_com', 'Professional Competence', 'Prof Com')
-  , ('obj_grounds', 'ogf_repute', 'Repute', 'Repute')
-  , ('obj_grounds', 'ogf_safety', 'Safety', 'Safety')
-  , ('obj_grounds', 'ogf_size', 'Size', 'Size')
-  , ('obj_grounds', 'ogf_unsochrs', 'Unsocial Hours', 'UnSocHrs')
-  , ('obj_grounds', 'ogf_fumes', 'Fumes', 'Fumes')
-  , ('obj_grounds', 'ogf_noise', 'Noise', 'Noise')
-  , ('obj_grounds', 'ogf_pollution', 'Pollution', 'Pollut')
-  , ('obj_grounds', 'ogf_vib', 'Vibration', 'Vibrat')
-  , ('obj_grounds', 'ogf_vis', 'Visual Intrusion', 'Vis Int')
-/* TL_OBJ_STATUS */
-/* not used
-  , ('obj_status', 'obj_sts_closed', 'Closed', null)
-  , ('obj_status', 'obj_sts_negotiate', 'Negotiate', null)
-  , ('obj_status', 'obj_sts_open', 'Open', null)
-  , ('obj_status', 'obj_sts_pend', 'Pending', null)
-  , ('obj_status', 'obj_sts_pub_inq', 'Public Inquiry', null)
-  , ('obj_status', 'obj_sts_re_open', 'Re-open', null)
-  */
-/* TL_OBJECTOR_TYPE */
-  , ('opposer_type', 'obj_t_local_auth', 'Local Authority', '1')
-  , ('opposer_type', 'obj_t_police', 'Police', '2')
-  , ('opposer_type', 'obj_t_rta', 'RTA', '3')
-  , ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4')
-  , ('opposer_type', 'obj_t_other', 'Other', '5')
-/* TL_OP_TYPE */
-  /* Not in olcs - setting them to PA, ('org_type', 'org_t_irfo', 'IRFO Operator', 'IRFO') */
-  , ('org_type', 'org_t_p', 'Partnership', 'P')
-  , ('org_type', 'org_t_pa', 'Other (e.g. public authority, charity, trust, university)', 'PA')
-  /* Not in olcs , ('org_type', 'pb', 'Permit Body', 'TL_OP_TYPE', 'PB') */
-  , ('org_type', 'org_t_rc', 'Registered Company', 'RC')
-  , ('org_type', 'org_t_st', 'Sole Trader', 'ST')
-  , ('org_type', 'org_t_llp', 'LLP', 'LLP')
-  /* Phone contact type New to olcs - See TL_PHONE_NO_TYPE*/
-  , ('phone_contact_type', 'phone_t_tel', 'Business', 'Business')
-  , ('phone_contact_type', 'phone_t_fax', 'Fax', 'Fax')
-  , ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null)
-  , ('phone_contact_type', 'phone_t_home', 'Home', 'Home')
-  , ('phone_contact_type', 'phone_t_mobile', 'Mobile', 'Mobile')
-  /* Person title New for olcs - Keys odd to not break existing code if FK is added to model*/
-  , ('person_title', 'Dr', 'Dr', null)
-  , ('person_title', 'Miss', 'Miss', null)
-  , ('person_title', 'Mr', 'Mr', null)
-  , ('person_title', 'Mrs', 'Mrs', null)
-  , ('person_title', 'Ms', 'Ms', null)
-  , ('person_title', 'Other', 'Other', null)
-/* public enquiry status */
-  , ('pi_status', 'pi_s_schedule', 'PI Scheduled', 'SchedPI')
-  , ('pi_status', 'pi_s_reg', 'PI Registered', 'RegisterPI')
-/* previous licence type - used in completing the previous licence history section of an application*/
-  , ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null)
-  , ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null)
-  , ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null)
-  , ('prev_licence_type', 'prev_been_revoked', 'Named person on licence has had a previous licence revoked, curtailed or suspended', null)
-  , ('prev_licence_type', 'prev_been_at_pi', 'Named person on licence has been to a PI', null)
-  , ('prev_licence_type', 'prev_been_disqualified_tc', 'Named person on licence has been disqualified by a TC', null)
-  , ('prev_licence_type', 'prev_has_purchased_assets', 'Named person or company has purchased a company with a licence in the last 12 months', null)
-/* Stay Status */
-  , ('stay_status', 'stay_s_granted', 'GRANTED', '1')
-  , ('stay_status', 'stay_s_refused', 'REFUSED', '0')
-/* Stay Type*/
-  , ('stay_type', 'stay_t_tc', 'TC', null)
-  , ('stay_type', 'stay_t_UT', 'Upper Tribunal', null)
-/* TL_COMPLIANCE_SIDV */
-  , ('prohibition_type', 'pro_t_si', 'Immediate (S)', 'SI')
-  , ('prohibition_type', 'pro_t_sd', 'Delayed (S)', 'SD')
-  , ('prohibition_type', 'pro_t_sv', 'Variation (S)', 'SV')
-  , ('prohibition_type', 'pro_t_i', 'Immediate', 'I')
-  , ('prohibition_type', 'pro_t_d', 'Delayed', 'D')
-  , ('prohibition_type', 'pro_t_v', 'Variation', 'V')
-  , ('prohibition_type', 'pro_t_ro', 'Refusals Only', 'RO')
-  , ('prohibition_type', 'pro_t_vr', 'Variation & Refusals Only', 'VR')
-/* publication status */
-  , ('publication_status', 'pub_s_generated', 'Generated', 'Generated')
-  , ('publication_status', 'pub_s_new', 'New', 'New')
-  , ('publication_status', 'pub_s_printed', 'Printed', 'Printed')
-/* Note Type New to OLCS */
-  , ('note_type', 'note_t_app', 'Application', null)
-  , ('note_type', 'note_t_bus', 'Bus Registration', null)
-  , ('note_type', 'note_t_case', 'Case', null)
-  , ('note_type', 'note_t_person', 'Person', null)
-  , ('note_type', 'note_t_lic', 'Licence', null)
-  , ('note_type', 'note_t_irfo_gv', 'IRFO GV Permit', null)
-  , ('note_type', 'note_t_irfo_psv', 'IRFO PSV Auth', null)
-/* submission decision */
-  , ('submission_decision', 'sub_d_agree', 'Agree', null)
-  , ('submission_decision', 'sub_d_partial', 'Partially agree', null)
-  , ('submission_decision', 'sub_d_disagree', 'Disagree', null)
-  , ('submission_decision', 'sub_d_more_info', 'Further information required', null)
-/* submission recommendation */
-  , ('submission_recommendation', 'sub_r_other', 'Other', null)
-  , ('submission_recommendation', 'sub_r_ptr', 'In-Office revokation', null)
-  , ('submission_recommendation', 'sub_r_warn', 'Warning letter', null)
-  , ('submission_recommendation', 'sub_r_nfa', 'NFA', null)
-  , ('submission_recommendation', 'sub_r_cond', 'Undertakings & conditions', null)
-  , ('submission_recommendation', 'sub_r_pi', 'Public Inquiry', null)
-  , ('submission_recommendation', 'sub_r_prelim', 'Preliminary Hearing', null)
-  , ('submission_recommendation', 'sub_r_stl', 'STL Interview', null)
-/* Tachograh Inspection */
-  , ('tach_ins', 'tach_internal', 'Internal', null)
-  , ('tach_ins', 'tach_external', 'External', null)
-  , ('tach_ins', 'tach_na', 'Not Applicable', null)
-/* TL_PI_PRESIDING_TC_ROLE */
-  , ('tc_role', 'tc_r_dhtru', 'Deputy Head of Traffic Regulation Unit', 'DHTRU')
-  , ('tc_role', 'tc_r_dtc', 'Deputy Traffic Commissioner', 'DTC')
-  , ('tc_role', 'tc_r_htru', 'Head of Traffic Regulation Unit', 'HTRU')
-  , ('tc_role', 'tc_r_tc', 'Traffic Commissioner', 'TC')
-/* TL_TM_COMPLIANCE_CASE_DECISION */
-  , ('tm_case_decision', 'tm_decision_noa', 'No Further Action', 'NOA')
-  , ('tm_case_decision', 'tm_decision_rl', 'Declare Unfit', 'RL')
-  , ('tm_case_decision', 'tm_decision_rnl', 'Repute Not Lost', 'rnl')
-/* TL_TM_COMPLIANCE_EPISODE_DECISION_REHAB_MEASURE */
-  , ('tm_case_rehab', 'tm_rehab_adc', 'Additional Conditions On Licence', 'ADC')
-  , ('tm_case_rehab', 'tm_rehab_adt', 'Additional Training', 'ADT')
-  , ('tm_case_rehab', 'tm_rehab_oth', 'Other', 'OTH')
-  , ('tm_case_rehab', 'tm_rehab_rlc', 'Relicensing', 'RLC')
-  , ('tm_case_rehab', 'tm_rehab_rpt', 'Repeat Training', 'RPT')
-/* TL_TM_COMPLIANCE_EPISODE_DECISION_UNFITNESS_REASON */
-  , ('tm_unfit_reason', 'tm_unfit_inc', 'Infringement Of Community Rules', 'INC')
-  , ('tm_unfit_reason', 'tm_unfit_inn', 'Infringement Of National Rules', 'INN')
-/* TL_TM_COMPLIANCE_EPISODE_PI_REASON */
-  , ('tm_pi_reason', 'tm_pi_reason_art6', 'Article 6 of Regulation (EC) No 1071/2009', 'ART6')
-/* TL_TM_COMPLIANCE_EPISODE_PI_TYPE */
-  , ('tm_pi_type', 'tm_pi_t_reg', 'Regulatory', 'REG')
-/* TL_TM_QUAL_TYPE */
-  , ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR')
-  , ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI')
-  , ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN')
-  , ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI')
-  , ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN')
-  , ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR')
-  , ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI')
-  , ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN')
-  , ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI')
-  , ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN')
-/* TL_TM_STATUS */
-  , ('tm_status', 'tm_s_cur', 'Current', 'C')
-  , ('tm_status', 'tm_s_dis', 'Disqualified', 'D')
-/* TL_TM_TYPE */
-  , ('tm_type', 'tm_t_B', 'Both', 'B')
-  , ('tm_type', 'tm_t_E', 'External', 'E')
-  , ('tm_type', 'tm_t_I', 'Internal', 'I')
-/* TL_VAR_REASON - put in table for TXC stuff
-  , ('var_reason', 'vr_timetable', 'Timetable', '1')
-  , ('var_reason', 'vr_route', 'Timetable', '2')
-  , ('var_reason', 'vr_s_f_point', 'Timetable', '3')
-  , ('var_reason', 'vr_stop_places', 'Timetable', '4')
+    ('case_type', 'case_t_msi', 'MSI', 'MSI'),
+    ('case_type', 'case_t_msinre', 'MSI - No response entered', 'MSINRE'),
+    ('case_type', 'case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
+    ('case_type', 'case_t_nmsi', 'Non-MSI', 'NMSI'),
 
-  */
-/* TL_VHL_BODY_TYPE - Removed from  */
-/* TL_VHL_REMOVAL_REASON */
-  , ('vhl_removal_reason', 'vmr_cns', 'CNS', '1')
-  , ('vhl_removal_reason', 'vmr_revoke', 'Revoke', '2')
-  , ('vhl_removal_reason', 'vmr_surrender', 'Surrender', '3')
-  , ('vhl_removal_reason', 'vmr_ntu', 'NTU', '4')
-  , ('vhl_removal_reason', 'vmr_dup', 'Duplicate', '5')
+    ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
+    ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
+    ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS'),
+    ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
+    ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
 
-/* TL_VHL_TYPE TODO these might need a change */
- , ('vhl_type', 'vhl_t_a', 'Small', 'A')
- , ('vhl_type', 'vhl_t_b', 'Medium', 'B')
- , ('vhl_type', 'vhl_t_c', 'Large', 'C')
- /* TL_WithdrawnReason */
- , ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1')
- , ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2')
-;
+    ('complaint_type', 'ct_cor', 'Continuing to operator after Revocation', null),
+    ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),
+    ('complaint_type', 'ct_dgm', 'Driving in a dangerous manner', null),
+    ('complaint_type', 'ct_dsk', 'Driver smoking', null),
+    ('complaint_type', 'ct_fls', 'Failure to operator local service', null),
+    ('complaint_type', 'ct_lvu', 'Leaving vehicle unattended with engine running', null),
+    ('complaint_type', 'ct_ndl', 'Not having correct category of Drivers Licence', null),
+    ('complaint_type', 'ct_nol', 'No Operators Licence', null),
+    ('complaint_type', 'ct_olr', 'Operating local service off route', null),
+    ('complaint_type', 'ct_ovb', 'Obstructing other vehicles at Bus Station/Bus Stop', null),
+    ('complaint_type', 'ct_pvo', 'Parking vehicle out with Operating Centre', null),
+    ('complaint_type', 'ct_rds', 'Registration of duplicate services', null),
+    ('complaint_type', 'ct_rta', 'Registered times not being adhered to', null),
+    ('complaint_type', 'ct_sln', 'Speed Limiters non operative', null),
+    ('complaint_type', 'ct_spe', 'Speeding', null),
+    ('complaint_type', 'ct_tgo', 'Tachograph offences', null),
+    ('complaint_type', 'ct_ufl', 'Unsafe loads', null),
+    ('complaint_type', 'ct_ump', 'Use of mobile phones while driving', null),
+    ('complaint_type', 'ct_urd', 'Using Red Diesel', null),
+    ('complaint_type', 'ct_vpo', 'Vehicles parked and causing an obstruction', null),
 
+    ('cond_added_via', 'cav_case', 'Case', 'Episode'),
+    ('cond_added_via', 'cav_lic', 'Licence', 'Licence'),
+    ('cond_added_via', 'cav_app', 'Application', 'Application'),
 
+    ('cond_att_to', 'cat_lic', 'Licence', 'Licence'),
+    ('cond_att_to', 'cat_oc', 'Operating Centre', 'OpCentre'),
+
+    ('cond_type', 'cdt_con', 'Condition', '1'),
+    ('cond_type', 'cdt_und', 'Undertaking', '2'),
+
+    ('contact_method', 'cm_letter', 'Letter', '1'),
+    ('contact_method', 'cm_fax', 'Facsimile', '2'),
+    ('contact_method', 'cm_email', 'E-mail', '3'),
+    ('contact_method', 'cm_tel', 'Telephone', '4'),
+
+    ('contact_type', 'ct_est', 'Establishment', null),
+    ('contact_type', 'ct_reg', 'Registered', null),
+    ('contact_type', 'ct_tcon', 'Transport Consultant', null),
+    ('contact_type', 'ct_corr', 'Correspondence', null),
+    ('contact_type', 'ct_work','Workshop',null),
+    ('contact_type', 'ct_complainant', 'Complainant', null),
+    ('contact_type', 'ct_tm', 'Transport Manager', null),
+    ('contact_type', 'ct_ta', 'Traffic Area', null),
+    ('contact_type', 'ct_team_user', 'Team or User', null),
+    ('contact_type', 'ct_partner', 'Partner', null),
+    ('contact_type', 'ct_hackney', 'Hackney Licence Issue Council', null),
+    ('contact_type', 'ct_obj', 'Objector', null),
+    ('contact_type', 'ct_rep', 'Representor', null),
+    ('contact_type', 'ct_irfo_op', 'IRFO Operator', null),
+    ('contact_type', 'ct_driver', 'Driver', null),
+
+    ('contact_type', 'ct_council', 'Council', null),
+    ('contact_type', 'ct_def', 'Defendant address', null),
+    ('contact_type', 'ct_oc', 'Operating Centre', null),
+
+    ('disc_removal_explan', 'dre_tao', 'Returned to TAO', '0'),
+    ('disc_removal_explan', 'dre_lost', 'Lost', '1'),
+    ('disc_removal_explan', 'dre_stolen', 'Stolen', '2'),
+    ('disc_removal_explan', 'dre_destroyed', 'Destroyed', '3'),
+    ('def_type', 'def_t_op', 'Operator', null),
+    ('def_type', 'def_t_driver', 'Driver', null),
+    ('def_type', 'def_t_tm', 'Transport Manager', null),
+    ('def_type', 'def_t_dir', 'Director', null),
+    ('def_type', 'def_t_part', 'Partner', null),
+    ('def_type', 'def_t_owner', 'Owner', null),
+    ('def_type', 'def_t_other', 'Other', null),
+
+    ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
+    ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
+    ('erru_case_type', 'erru_case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
+    ('erru_case_type', 'erru_case_t_nmsi', 'Non-MSI', 'NMSI'),
+
+    ('impound_type', 'impt_hearing', 'Hearing', null),
+    ('impound_type', 'impt_paper', 'Paperwork', null),
+    ('impound_outcome', 'impo_returned', 'Vehicle Returned', null),
+    ('impound_outcome', 'impo_not', 'Vehicle Not Returned', null),
+
+    -- impound_legislation
+
+    ('impound_legislation_goods_gb', 'imlgis_type_goods_gb1', 'Section A The user of the vehicle held a valid operator\'s licence (whether of not authorising the use of the vehicle)', null),
+    ('impound_legislation_goods_gb', 'imlgis_type_goods_gb2', 'Section B It was not being, and had not been used in contravention of Section 2 of the 1995 Act.', null),
+    ('impound_legislation_goods_gb', 'imlgis_type_goods_gb3', 'Section C i did not know it was being or had been used in contravention  of Section 2 of the 1995 Act.', null),
+    ('impound_legislation_goods_gb', 'imlgis_type_goods_gb4', 'Section D That although knowing that at the time the vehicle was detained it was being or had been used in contravention of Section 2 of the 1995 Act, but; (i) had taken steps with a view to preventing that (ii) Has taken steps with a view to preventing any further such use.', null),
+    ('impound_legislation_psv_gb', 'imlgis_type_psv_gb1', 'Section A The user of the vehicle held a valid operator\'s licence (whether of not authorising the use of the vehicle)', null),
+    ('impound_legislation_psv_gb', 'imlgis_type_psv_gb2', 'Section B It was not being, and had not been used in contravention of Section 12 of the 1981 Act.', null),
+    ('impound_legislation_psv_gb', 'imlgis_type_psv_gb3', 'Section C i did not know it was being or had been used in contravention  of Section 12 of the 1981 Act.', null),
+    ('impound_legislation_psv_gb', 'imlgis_type_psv_gb4', 'Section D That although knowing that at the time the vehicle was detained it was being or had been used in contravention of Section 12(1) of the 1981 Act, but; (i) had taken steps with a view to preventing that (ii) Has taken steps with a view to preventing any further such use.', null),
+    ('impound_legislation_goods_ni', 'imlgis_type_goods_ni1', 'Section A At the time the vehicle was detained, the person using the vehicle held a valid licence (whether or not authorising the use of the vehicle);', null),
+    ('impound_legislation_goods_ni', 'imlgis_type_goods_ni2', 'Section B At the time the vehicle was detained, the vehicle was not being, and had not been, used in contravention of section 1 of the 2010 Act;', null),
+    ('impound_legislation_goods_ni', 'imlgis_type_goods_ni3', 'Section C Although at the time the vehicle was detained it was being, or had been, used in contravention of section 1 of the 2010 Act, the owner did not know that it was being, or had been, so used; ', null),
+    ('impound_legislation_goods_ni', 'imlgis_type_goods_ni4', 'Section D Although knowing at the time the vehicle was detained that it was being, or had been, used in contravention of section 1 of the 2010 Act, the owner— (i)had taken steps with a view to preventing that use; and (ii)has taken steps with a view to preventing any further such use.', null),
+
+    ('insp_report_type', 'insp_rep_t_maint', 'Maintenance Request', '1'),
+    ('insp_report_type', 'insp_rep_t_TE', 'Traffic Examiner', '2'),
+    ('insp_report_type', 'insp_rep_t_bus', 'Bus Monitor', '3'),
+    ('irfo_permit_status', 'irfo_perm_s_refused', 'Refused', 'Refused'),
+    ('irfo_permit_status', 'irfo_perm_s_pending', 'Pending', 'Pending'),
+    ('irfo_permit_status', 'irfo_perm_s_withdrawn', 'Withdrawn', 'Withdrawn'),
+    ('irfo_permit_status', 'irfo_perm_s_appreoved', 'Approved', 'Approved'),
+    ('irfo_permit_stock_status', 'irfo_perm_s_s_issued', 'Issued', 'Issued'),
+    ('irfo_permit_stock_status', 'irfo_perm_s_s_ret', 'Returned', 'Returned'),
+    ('irfo_permit_stock_status', 'irfo_perm_s_s_void', 'Void', 'Void'),
+    ('irfo_permit_stock_status', 'irfo_perm_s_s_in_stock', 'In Stock', 'In Stock'),
+    ('irfo_psv_journey_freq', 'psv_freq_other', 'OTHER', 'OTHER'),
+    ('irfo_psv_journey_freq', 'psv_freq_weekly', 'WEEKLY', 'WEEKLY'),
+    ('irfo_psv_journey_freq', 'psv_freq_daily', 'DAILY', 'DAILY'),
+    ('irfo_psv_journey_freq', 'psv_freq_fortnight', 'FORTNIGHTLY', 'FORTNIGHTLY'),
+    ('irfo_psv_journey_freq', 'psv_freq_monthly', 'MONTHLY', 'MONTHLY'),
+    ('irfo_psv_journey_freq', 'psv_freq_2_weekly', 'TWICE WEEKLY', 'TWICE WEEKLY'),
+    ('irfo_auth_status', 'irfo_auth_s_approved', 'Approved', 'Approved'),
+    ('irfo_auth_status', 'irfo_auth_s_cns', 'CNS', 'CNS'),
+    ('irfo_auth_status', 'irfo_auth_s_granted', 'Granted', 'Granted'),
+    ('irfo_auth_status', 'irfo_auth_s_pending', 'Pending', 'Pending'),
+    ('irfo_auth_status', 'irfo_auth_s_renew', 'Renew', 'Renew'),
+    ('irfo_auth_status', 'irfo_auth_s_withdrawn', 'Withdrawn', 'Withdrawn'),
+    ('insp_request_type', 'insp_req_t_new_op', 'New OP', '1'),
+    ('insp_request_type', 'insp_req_t_var', 'Variation', '2'),
+    ('insp_request_type', 'insp_req_t_fol', 'FOL', '3'),
+    ('insp_request_type', 'insp_req_t_coe', 'Change of Entity', '4'),
+    ('insp_request_type', 'insp_req_t_tc', 'TC Request', '5'),
+    ('insp_request_type', 'insp_req_t_review', 'Review', '6'),
+    ('insp_request_type', 'insp_req_t_comp', 'Compliance', '7'),
+    ('insp_result_type', 'insp_res_t_new', 'New', '1'),
+    ('insp_result_type', 'insp_res_t_new_sat', 'Satisfactory', '2'),
+    ('insp_result_type', 'insp_res_t_new_unsat', 'Unsatisfactory', '3'),
+    ('interim_status', 'int_sts_granted', 'Granted', 'Granted'),
+    ('interim_status', 'int_sts_in_force', 'In-Force', 'In-Force'),
+    ('interim_status', 'int_sts_refused', 'Refused', 'Refused'),
+    ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked'),
+    ('interim_status', 'int_sts_saved', 'Saved', 'Saved'),
+    ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV'),
+    ('lic_cat', 'lcat_permit', 'Permit', 'Permit'),
+    ('lic_cat', 'lcat_psv', 'Public Service Vehicle', 'PSV'),
+
+    ('lic_status', 'lsts_cns', 'Continuation Not Sought', 'CNS'),
+    ('lic_status', 'lsts_curtailed', 'Curtailed', 'Curtailed'),
+    ('lic_status', 'lsts_granted', 'Granted', 'Granted'),
+    ('lic_status', 'lsts_new', 'New', 'New'),
+    ('lic_status', 'lsts_ntu', 'Not Taken Up', 'NTU'),
+    ('lic_status', 'lsts_refused', 'Refused', 'Refused'),
+    ('lic_status', 'lsts_revoked', 'Revoked', 'Revoked'),
+    ('lic_status', 'lsts_surrendered', 'Surrendered', 'Surrendered'),
+    ('lic_status', 'lsts_suspended', 'Suspended', 'Suspended'),
+    ('lic_status', 'lsts_terminated', 'Terminated', 'Terminated'),
+    ('lic_status', 'lsts_unlicenced', 'Unlicenced', 'Unlicenced'),
+    ('lic_status', 'lsts_valid', 'Valid', 'Valid'),
+    ('lic_status', 'lsts_withdrawn', 'Withdrawn', 'Withdrawn'),
+
+    ('lic_type', 'ltyp_cbp', 'Community', 'CBP'),
+    ('lic_type', 'ltyp_dbp', 'Designated Body/Local Authority', 'DBP'),
+    ('lic_type', 'ltyp_lbp', 'Large', 'LBP'),
+    ('lic_type', 'ltyp_r', 'Restricted', 'R'),
+    ('lic_type', 'ltyp_sbp', 'Small', 'SBP'),
+    ('lic_type', 'ltyp_si', 'Standard International', 'SI'),
+    ('lic_type', 'ltyp_sn', 'Standard National', 'SN'),
+    ('lic_type', 'ltyp_sr', 'Special Restricted', 'SR'),
+
+    ('obj_grounds', 'ogf_both', 'Both Obj and Env (Legacy ''B'')', 'B'),
+    ('obj_grounds', 'ogf_env', 'Environmental (Legacy ''E'')', 'E'),
+    ('obj_grounds', 'ogf_fin_stan', 'Financial Standing', 'Fin Stan'),
+    ('obj_grounds', 'ogf_fitness', 'Fitness', 'Fitness'),
+    ('obj_grounds', 'ogf_o', 'Objection (Legacy ''O'')', 'O'),
+    ('obj_grounds', 'ogf_o_ccap', 'O/C Capacity', 'O/CCap'),
+    ('obj_grounds', 'ogf_parking', 'Parking', 'Parking'),
+    ('obj_grounds', 'ogf_prof_com', 'Professional Competence', 'Prof Com'),
+    ('obj_grounds', 'ogf_repute', 'Repute', 'Repute'),
+    ('obj_grounds', 'ogf_safety', 'Safety', 'Safety'),
+    ('obj_grounds', 'ogf_size', 'Size', 'Size'),
+    ('obj_grounds', 'ogf_unsochrs', 'Unsocial Hours', 'UnSocHrs'),
+    ('obj_grounds', 'ogf_fumes', 'Fumes', 'Fumes'),
+    ('obj_grounds', 'ogf_noise', 'Noise', 'Noise'),
+    ('obj_grounds', 'ogf_pollution', 'Pollution', 'Pollut'),
+    ('obj_grounds', 'ogf_vib', 'Vibration', 'Vibrat'),
+    ('obj_grounds', 'ogf_vis', 'Visual Intrusion', 'Vis Int'),
+    ('opposer_type', 'obj_t_local_auth', 'Local Authority', '1'),
+    ('opposer_type', 'obj_t_police', 'Police', '2'),
+    ('opposer_type', 'obj_t_rta', 'RTA', '3'),
+    ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4'),
+    ('opposer_type', 'obj_t_other', 'Other', '5'),
+    ('org_type', 'org_t_irfo', 'IRFO Operator', 'IRFO'),
+    ('org_type', 'org_t_p', 'Partnership', 'P'),
+    ('org_type', 'org_t_pa', 'Public Authority', 'PA'),
+    ('org_type', 'org_t_rc', 'Registered Company', 'RC'),
+    ('org_type', 'org_t_st', 'Sole Trader', 'ST'),
+    ('org_type', 'org_t_llp', 'LLP', 'LLP'),
+    ('phone_contact_type', 'phone_t_tel', 'Business', 'Business'),
+    ('phone_contact_type', 'phone_t_fax', 'Fax', 'Fax'),
+    ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null),
+    ('phone_contact_type', 'phone_t_home', 'Home', 'Home'),
+    ('phone_contact_type', 'phone_t_mobile', 'Mobile', 'Mobile'),
+    ('person_title', 'title_dr', 'Dr', null),
+    ('person_title', 'title_miss', 'Miss', null),
+    ('person_title', 'title_mr', 'Mr', null),
+    ('person_title', 'title_mrs', 'Mrs', null),
+    ('person_title', 'title_ms', 'Ms', null),
+    ('person_title', 'title_other', 'Other', null),
+    ('pi_status', 'pi_s_schedule', 'PI Scheduled', 'SchedPI'),
+    ('pi_status', 'pi_s_reg', 'PI Registered', 'RegisterPI'),
+    ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
+    ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
+
+    ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
+    ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
+    ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
+    ('prev_licence_type', 'prev_been_revoked', 'Named person on licence has had a previous licence revoked, curtailed or suspended', null),
+    ('prev_licence_type', 'prev_been_at_pi', 'Named person on licence has been to a PI', null),
+    ('prev_licence_type', 'prev_been_disqualified_tc', 'Named person on licence has been disqualified by a TC', null),
+    ('prev_licence_type', 'prev_has_purchased_assets', 'Named person or company has purchased a company with a licence in the last 12 months', null),
+
+    ('prohibition_type', 'pro_t_si', 'Immediate (S)', 'SI'),
+    ('prohibition_type', 'pro_t_sd', 'Delayed (S)', 'SD'),
+    ('prohibition_type', 'pro_t_sv', 'Variation (S)', 'SV'),
+    ('prohibition_type', 'pro_t_i', 'Immediate', 'I'),
+    ('prohibition_type', 'pro_t_d', 'Delayed', 'D'),
+    ('prohibition_type', 'pro_t_v', 'Variation', 'V'),
+    ('prohibition_type', 'pro_t_ro', 'Refusals Only', 'RO'),
+    ('prohibition_type', 'pro_t_vr', 'Variation & Refusals Only', 'VR'),
+    ('publication_status', 'pub_s_generated', 'Generated', 'Generated'),
+    ('publication_status', 'pub_s_new', 'New', 'New'),
+    ('publication_status', 'pub_s_printed', 'Printed', 'Printed'),
+    ('note_type', 'note_t_app', 'Application', null),
+    ('note_type', 'note_t_bus', 'Bus Registration', null),
+    ('note_type', 'note_t_case', 'Case', null),
+    ('note_type', 'note_t_person', 'Person', null),
+    ('note_type', 'note_t_lic', 'Licence', null),
+    ('note_type', 'note_t_irfo_gv', 'IRFO GV Permit', null),
+    ('note_type', 'note_t_irfo_psv', 'IRFO PSV Auth', null),
+    ('tach_ins', 'tach_internal', 'Internal', null),
+    ('tach_ins', 'tach_external', 'External', null),
+    ('tach_ins', 'tach_na', 'Not Applicable', null),
+    ('tc_role', 'tc_r_dhtru', 'Deputy Head of Traffic Regulation Unit', 'DHTRU'),
+    ('tc_role', 'tc_r_dtc', 'Deputy Traffic Commissioner', 'DTC'),
+    ('tc_role', 'tc_r_htru', 'Head of Traffic Regulation Unit', 'HTRU'),
+    ('tc_role', 'tc_r_tc', 'Traffic Commissioner', 'TC'),
+    ('tm_case_decision', 'tm_decision_noa', 'No Further Action', 'NOA'),
+    ('tm_case_decision', 'tm_decision_rl', 'Declare Unfit', 'RL'),
+    ('tm_case_decision', 'tm_decision_rnl', 'Repute Not Lost', 'rnl'),
+    ('tm_case_rehab', 'tm_rehab_adc', 'Additional Conditions On Licence', 'ADC'),
+    ('tm_case_rehab', 'tm_rehab_adt', 'Additional Training', 'ADT'),
+    ('tm_case_rehab', 'tm_rehab_oth', 'Other', 'OTH'),
+    ('tm_case_rehab', 'tm_rehab_rlc', 'Relicensing', 'RLC'),
+    ('tm_case_rehab', 'tm_rehab_rpt', 'Repeat Training', 'RPT'),
+    ('tm_unfit_reason', 'tm_unfit_inc', 'Infringement Of Community Rules', 'INC'),
+    ('tm_unfit_reason', 'tm_unfit_inn', 'Infringement Of National Rules', 'INN'),
+    ('tm_pi_reason', 'tm_pi_reason_art6', 'Article 6 of Regulation (EC) No 1071/2009', 'ART6'),
+    ('tm_pi_type', 'tm_pi_t_reg', 'Regulatory', 'REG'),
+    ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR'),
+    ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI'),
+    ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN'),
+    ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI'),
+    ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN'),
+    ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR'),
+    ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI'),
+    ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN'),
+    ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI'),
+    ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN'),
+    ('tm_status', 'tm_s_cur', 'Current', 'C'),
+    ('tm_status', 'tm_s_dis', 'Disqualified', 'D'),
+    ('tm_type', 'tm_t_B', 'Both', 'B'),
+    ('tm_type', 'tm_t_E', 'External', 'E'),
+    ('tm_type', 'tm_t_I', 'Internal', 'I'),
+    ('vhl_removal_reason', 'vmr_cns', 'CNS', '1'),
+    ('vhl_removal_reason', 'vmr_revoke', 'Revoke', '2'),
+    ('vhl_removal_reason', 'vmr_surrender', 'Surrender', '3'),
+    ('vhl_removal_reason', 'vmr_ntu', 'NTU', '4'),
+    ('vhl_removal_reason', 'vmr_dup', 'Duplicate', '5'),
+    ('vhl_type', 'vhl_t_a', 'Max. 8 seats', 'A'),
+    ('vhl_type', 'vhl_t_b', '9 to 16 seats', 'B'),
+    ('vhl_type', 'vhl_t_c', 'Single Deck', 'C'),
+    ('vhl_type', 'vhl_t_d', 'Double Deck', 'D'),
+    ('vhl_type', 'vhl_t_e', 'Articulated Bus', 'E'),
+    ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1'),
+    ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2');
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
