@@ -123,24 +123,6 @@ class Cases implements Interfaces\EntityInterface
     protected $closeDate;
 
     /**
-     * Prohibition note
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="prohibition_note", length=4000, nullable=true)
-     */
-    protected $prohibitionNote;
-
-    /**
-     * Conviction note
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
-     */
-    protected $convictionNote;
-
-    /**
      * Description
      *
      * @var string
@@ -195,6 +177,15 @@ class Cases implements Interfaces\EntityInterface
     protected $annualTestHistory;
 
     /**
+     * Prohibition note
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="prohibition_note", length=4000, nullable=true)
+     */
+    protected $prohibitionNote;
+
+    /**
      * Complaint case
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -242,7 +233,6 @@ class Cases implements Interfaces\EntityInterface
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
-
 
     /**
      * Set the case type
@@ -314,43 +304,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function addLegacyOffences($legacyOffences)
-    {
-        if ($legacyOffences instanceof ArrayCollection) {
-            $this->legacyOffences = new ArrayCollection(
-                array_merge(
-                    $this->legacyOffences->toArray(),
-                    $legacyOffences->toArray()
-                )
-            );
-        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->add($legacyOffences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function removeLegacyOffences($legacyOffences)
-    {
-        if ($this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->remove($legacyOffences);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the submission section
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
@@ -371,43 +324,6 @@ class Cases implements Interfaces\EntityInterface
     public function getSubmissionSections()
     {
         return $this->submissionSections;
-    }
-
-    /**
-     * Add a submission sections
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-     * @return Cases
-     */
-    public function addSubmissionSections($submissionSections)
-    {
-        if ($submissionSections instanceof ArrayCollection) {
-            $this->submissionSections = new ArrayCollection(
-                array_merge(
-                    $this->submissionSections->toArray(),
-                    $submissionSections->toArray()
-                )
-            );
-        } elseif (!$this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->add($submissionSections);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a submission sections
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-     * @return Cases
-     */
-    public function removeSubmissionSections($submissionSections)
-    {
-        if ($this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->remove($submissionSections);
-        }
-
-        return $this;
     }
 
     /**
@@ -477,52 +393,6 @@ class Cases implements Interfaces\EntityInterface
     public function getCloseDate()
     {
         return $this->closeDate;
-    }
-
-    /**
-     * Set the prohibition note
-     *
-     * @param string $prohibitionNote
-     * @return Cases
-     */
-    public function setProhibitionNote($prohibitionNote)
-    {
-        $this->prohibitionNote = $prohibitionNote;
-
-        return $this;
-    }
-
-    /**
-     * Get the prohibition note
-     *
-     * @return string
-     */
-    public function getProhibitionNote()
-    {
-        return $this->prohibitionNote;
-    }
-
-    /**
-     * Set the conviction note
-     *
-     * @param string $convictionNote
-     * @return Cases
-     */
-    public function setConvictionNote($convictionNote)
-    {
-        $this->convictionNote = $convictionNote;
-
-        return $this;
-    }
-
-    /**
-     * Get the conviction note
-     *
-     * @return string
-     */
-    public function getConvictionNote()
-    {
-        return $this->convictionNote;
     }
 
     /**
@@ -664,6 +534,29 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the prohibition note
+     *
+     * @param string $prohibitionNote
+     * @return Cases
+     */
+    public function setProhibitionNote($prohibitionNote)
+    {
+        $this->prohibitionNote = $prohibitionNote;
+
+        return $this;
+    }
+
+    /**
+     * Get the prohibition note
+     *
+     * @return string
+     */
+    public function getProhibitionNote()
+    {
+        return $this->prohibitionNote;
+    }
+
+    /**
      * Set the complaint case
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
@@ -684,43 +577,6 @@ class Cases implements Interfaces\EntityInterface
     public function getComplaintCases()
     {
         return $this->complaintCases;
-    }
-
-    /**
-     * Add a complaint cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
-     * @return Cases
-     */
-    public function addComplaintCases($complaintCases)
-    {
-        if ($complaintCases instanceof ArrayCollection) {
-            $this->complaintCases = new ArrayCollection(
-                array_merge(
-                    $this->complaintCases->toArray(),
-                    $complaintCases->toArray()
-                )
-            );
-        } elseif (!$this->complaintCases->contains($complaintCases)) {
-            $this->complaintCases->add($complaintCases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a complaint cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
-     * @return Cases
-     */
-    public function removeComplaintCases($complaintCases)
-    {
-        if ($this->complaintCases->contains($complaintCases)) {
-            $this->complaintCases->remove($complaintCases);
-        }
-
-        return $this;
     }
 
     /**
@@ -747,43 +603,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a condition undertakings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
-     * @return Cases
-     */
-    public function addConditionUndertakings($conditionUndertakings)
-    {
-        if ($conditionUndertakings instanceof ArrayCollection) {
-            $this->conditionUndertakings = new ArrayCollection(
-                array_merge(
-                    $this->conditionUndertakings->toArray(),
-                    $conditionUndertakings->toArray()
-                )
-            );
-        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
-            $this->conditionUndertakings->add($conditionUndertakings);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a condition undertakings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
-     * @return Cases
-     */
-    public function removeConditionUndertakings($conditionUndertakings)
-    {
-        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
-            $this->conditionUndertakings->remove($conditionUndertakings);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the conviction
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $convictions
@@ -807,43 +626,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a convictions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
-     * @return Cases
-     */
-    public function addConvictions($convictions)
-    {
-        if ($convictions instanceof ArrayCollection) {
-            $this->convictions = new ArrayCollection(
-                array_merge(
-                    $this->convictions->toArray(),
-                    $convictions->toArray()
-                )
-            );
-        } elseif (!$this->convictions->contains($convictions)) {
-            $this->convictions->add($convictions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a convictions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
-     * @return Cases
-     */
-    public function removeConvictions($convictions)
-    {
-        if ($this->convictions->contains($convictions)) {
-            $this->convictions->remove($convictions);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
@@ -864,42 +646,5 @@ class Cases implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
-    }
-
-    /**
-     * Add a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Cases
-     */
-    public function addDocuments($documents)
-    {
-        if ($documents instanceof ArrayCollection) {
-            $this->documents = new ArrayCollection(
-                array_merge(
-                    $this->documents->toArray(),
-                    $documents->toArray()
-                )
-            );
-        } elseif (!$this->documents->contains($documents)) {
-            $this->documents->add($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a documents
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Cases
-     */
-    public function removeDocuments($documents)
-    {
-        if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
-        }
-
-        return $this;
     }
 }

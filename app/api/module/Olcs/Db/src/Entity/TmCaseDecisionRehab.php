@@ -45,7 +45,6 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
      */
     protected $rehabMeasure;
 
-
     /**
      * Set the rehab measure
      *

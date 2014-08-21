@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_B7B2BC1018E0B1DB", columns={"traffic_area_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="traffic_area_id", columns={"traffic_area_id","bus_reg_id"})
+ *        @ORM\UniqueConstraint(name="bus_reg_ta_unique", columns={"traffic_area_id","bus_reg_id"})
  *    }
  * )
  */
@@ -53,7 +53,6 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="txc_not_required", nullable=true)
      */
     protected $txcNotRequired;
-
 
     /**
      * Set the txc missing

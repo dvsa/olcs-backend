@@ -2,10 +2,7 @@ SET foreign_key_checks = 0;
 
 TRUNCATE TABLE `category`;
 TRUNCATE TABLE `task_sub_category`;
-TRUNCATE TABLE `ref_data_category`;
-TRUNCATE TABLE `language`;
 TRUNCATE TABLE `ref_data`;
-TRUNCATE TABLE `ref_data_value`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `submission_section`;
 TRUNCATE TABLE `conviction_category`;
@@ -257,67 +254,6 @@ INSERT INTO `country` (`id`,`country_desc`) VALUES
     ('YE', 'Yemen'),
     ('ZM', 'Zambia'),
     ('ZW', 'Zimbabwe');
-
-INSERT INTO `ref_data_category` (`id`) VALUES
-    ('appeal_outcome'),
-    ('appeal_reason'),
-    ('app_status'),
-    ('bus_subsidy'),
-    ('case_type'),
-    ('complaint_status'),
-    ('complaint_type'),
-    ('cond_added_via'),
-    ('cond_att_to'),
-    ('cond_type'),
-    ('contact_method'),
-    ('contact_type'),
-    ('disc_removal_explan'),
-    ('def_type'),
-    ('erru_case_type'),
-    ('impound_type'),
-    ('impound_outcome'),
-    ('impound_legislation_goods_gb'),
-    ('impound_legislation_goods_ni'),
-    ('impound_legislation_psv_gb'),
-    ('insp_report_type'),
-    ('insp_request_type'),
-    ('insp_result_type'),
-    ('irfo_permit_status'),
-    ('irfo_permit_stock_status'),
-    ('irfo_auth_status'),
-    ('irfo_psv_journey_freq'),
-    ('interim_status'),
-    ('lic_cat'),
-    ('lic_status'),
-    ('lic_type'),
-    ('obj_grounds'),
-    ('opposer_type'),
-    ('org_type'),
-    ('note_type'),
-    ('person_title'),
-    ('pi_status'),
-    ('phone_contact_type'),
-    ('prev_lic_type'),
-    ('prohibition_type'),
-    ('publication_status'),
-    ('stay_status'),
-    ('tach_ins'),
-    ('tc_role'),
-    ('tm_case_decision'),
-    ('tm_case_rehab'),
-    ('tm_unfit_reason'),
-    ('tm_pi_reason'),
-    ('tm_pi_type'),
-    ('tm_qual_type'),
-    ('tm_status'),
-    ('tm_type'),
-    ('vhl_removal_reason'),
-    ('vhl_type'),
-    ('withdrawn_reason');
-
-INSERT INTO `language` (`id`, `name`) VALUES
-    ('EN','English'),
-    ('CY', 'Welsh');
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     ('appeal_outcome', 'appeal_o_dis', 'Dismissed', 'DIS'),
@@ -625,12 +561,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('vhl_type', 'vhl_t_e', 'Articulated Bus', 'E'),
     ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1'),
     ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2');
-
-INSERT INTO ref_data_value(language_id, ref_data_id, value)
-    SELECT 'EN', id, description FROM ref_data;
-
-INSERT INTO ref_data_value(language_id, ref_data_id, value)
-    SELECT 'CY', id, concat('W_', description) FROM ref_data;
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),

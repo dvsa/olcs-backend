@@ -48,6 +48,15 @@ class Vehicle implements Interfaces\EntityInterface
     protected $psvType;
 
     /**
+     * Is novelty
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
+     */
+    protected $isNovelty;
+
+    /**
      * Plated weight
      *
      * @var int
@@ -55,15 +64,6 @@ class Vehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="plated_weight", nullable=true)
      */
     protected $platedWeight;
-
-    /**
-     * Is articulated
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_articulated", nullable=true)
-     */
-    protected $isArticulated;
 
     /**
      * Certificate no
@@ -75,76 +75,40 @@ class Vehicle implements Interfaces\EntityInterface
     protected $certificateNo;
 
     /**
-     * Is refrigerated
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_refrigerated", nullable=true)
-     */
-    protected $isRefrigerated;
-
-    /**
-     * Is tipper
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_tipper", nullable=true)
-     */
-    protected $isTipper;
-
-    /**
-     * Is novelty
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
-     */
-    protected $isNovelty;
-
-    /**
      * Section26
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="section26", nullable=false)
+     * @ORM\Column(type="yesno", name="section_26", nullable=false)
      */
-    protected $section26 = 0;
+    protected $section26;
 
     /**
      * Section26 curtail
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="section26_curtail", nullable=false)
+     * @ORM\Column(type="yesno", name="section_26_curtail", nullable=false)
      */
-    protected $section26Curtail = 0;
+    protected $section26Curtail;
 
     /**
      * Section26 revoked
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="section26_revoked", nullable=false)
+     * @ORM\Column(type="yesno", name="section_26_revoked", nullable=false)
      */
-    protected $section26Revoked = 0;
+    protected $section26Revoked;
 
     /**
      * Section26 suspend
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="section26_suspend", nullable=false)
+     * @ORM\Column(type="yesno", name="section_26_suspend", nullable=false)
      */
-    protected $section26Suspend = 0;
-
-    /**
-     * Make model
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="make_model", length=100, nullable=true)
-     */
-    protected $makeModel;
+    protected $section26Suspend;
 
     /**
      * Licence vehicle
@@ -162,7 +126,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         $this->licenceVehicles = new ArrayCollection();
     }
-
 
     /**
      * Set the psv type
@@ -185,6 +148,29 @@ class Vehicle implements Interfaces\EntityInterface
     public function getPsvType()
     {
         return $this->psvType;
+    }
+
+    /**
+     * Set the is novelty
+     *
+     * @param string $isNovelty
+     * @return Vehicle
+     */
+    public function setIsNovelty($isNovelty)
+    {
+        $this->isNovelty = $isNovelty;
+
+        return $this;
+    }
+
+    /**
+     * Get the is novelty
+     *
+     * @return string
+     */
+    public function getIsNovelty()
+    {
+        return $this->isNovelty;
     }
 
     /**
@@ -211,29 +197,6 @@ class Vehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is articulated
-     *
-     * @param string $isArticulated
-     * @return Vehicle
-     */
-    public function setIsArticulated($isArticulated)
-    {
-        $this->isArticulated = $isArticulated;
-
-        return $this;
-    }
-
-    /**
-     * Get the is articulated
-     *
-     * @return string
-     */
-    public function getIsArticulated()
-    {
-        return $this->isArticulated;
-    }
-
-    /**
      * Set the certificate no
      *
      * @param string $certificateNo
@@ -254,75 +217,6 @@ class Vehicle implements Interfaces\EntityInterface
     public function getCertificateNo()
     {
         return $this->certificateNo;
-    }
-
-    /**
-     * Set the is refrigerated
-     *
-     * @param string $isRefrigerated
-     * @return Vehicle
-     */
-    public function setIsRefrigerated($isRefrigerated)
-    {
-        $this->isRefrigerated = $isRefrigerated;
-
-        return $this;
-    }
-
-    /**
-     * Get the is refrigerated
-     *
-     * @return string
-     */
-    public function getIsRefrigerated()
-    {
-        return $this->isRefrigerated;
-    }
-
-    /**
-     * Set the is tipper
-     *
-     * @param string $isTipper
-     * @return Vehicle
-     */
-    public function setIsTipper($isTipper)
-    {
-        $this->isTipper = $isTipper;
-
-        return $this;
-    }
-
-    /**
-     * Get the is tipper
-     *
-     * @return string
-     */
-    public function getIsTipper()
-    {
-        return $this->isTipper;
-    }
-
-    /**
-     * Set the is novelty
-     *
-     * @param string $isNovelty
-     * @return Vehicle
-     */
-    public function setIsNovelty($isNovelty)
-    {
-        $this->isNovelty = $isNovelty;
-
-        return $this;
-    }
-
-    /**
-     * Get the is novelty
-     *
-     * @return string
-     */
-    public function getIsNovelty()
-    {
-        return $this->isNovelty;
     }
 
     /**
@@ -418,29 +312,6 @@ class Vehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the make model
-     *
-     * @param string $makeModel
-     * @return Vehicle
-     */
-    public function setMakeModel($makeModel)
-    {
-        $this->makeModel = $makeModel;
-
-        return $this;
-    }
-
-    /**
-     * Get the make model
-     *
-     * @return string
-     */
-    public function getMakeModel()
-    {
-        return $this->makeModel;
-    }
-
-    /**
      * Set the licence vehicle
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
@@ -461,42 +332,5 @@ class Vehicle implements Interfaces\EntityInterface
     public function getLicenceVehicles()
     {
         return $this->licenceVehicles;
-    }
-
-    /**
-     * Add a licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
-     * @return Vehicle
-     */
-    public function addLicenceVehicles($licenceVehicles)
-    {
-        if ($licenceVehicles instanceof ArrayCollection) {
-            $this->licenceVehicles = new ArrayCollection(
-                array_merge(
-                    $this->licenceVehicles->toArray(),
-                    $licenceVehicles->toArray()
-                )
-            );
-        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->add($licenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
-     * @return Vehicle
-     */
-    public function removeLicenceVehicles($licenceVehicles)
-    {
-        if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
-        }
-
-        return $this;
     }
 }

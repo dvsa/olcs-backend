@@ -66,7 +66,6 @@ class Hearing implements Interfaces\EntityInterface
      */
     protected $witnessCount = 0;
 
-
     /**
      * Set the presiding tc
      *

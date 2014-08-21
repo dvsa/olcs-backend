@@ -29,7 +29,7 @@ class S4 implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\ApplicationManyToOneAlt1,
-        Traits\ReceivedDateFieldAlt1,
+        Traits\ReceivedDateFieldAlt2,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -69,7 +69,6 @@ class S4 implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
      */
     protected $isTrueS4 = 0;
-
 
     /**
      * Set the agreed date

@@ -72,7 +72,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
      */
     protected $position;
 
-
     /**
      * Set the organisation
      *

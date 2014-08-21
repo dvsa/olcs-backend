@@ -38,7 +38,6 @@ class Printer implements Interfaces\EntityInterface
      */
     protected $printerName;
 
-
     /**
      * Set the printer tray
      *

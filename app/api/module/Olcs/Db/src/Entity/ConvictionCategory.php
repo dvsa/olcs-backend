@@ -41,7 +41,6 @@ class ConvictionCategory implements Interfaces\EntityInterface
      */
     protected $parent;
 
-
     /**
      * Set the parent
      *

@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_publication_has_licence_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_publication_has_licence_publication1_idx", columns={"publication_id"}),
- *        @ORM\Index(name="fk_licence_publication_pi1_idx", columns={"pi_id"}),
+ *        @ORM\Index(name="fk_licence_publication_pi_detail1_idx", columns={"pi_id"}),
  *        @ORM\Index(name="fk_licence_publication_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_licence_publication_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_licence_publication_bus_reg1_idx", columns={"bus_reg_id"}),
@@ -130,7 +130,6 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="orig_pub_date", nullable=true)
      */
     protected $origPubDate;
-
 
     /**
      * Set the publication section

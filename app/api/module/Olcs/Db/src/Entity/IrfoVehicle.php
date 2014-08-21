@@ -104,7 +104,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
      */
     protected $version = 1;
 
-
     /**
      * Set the irfo gv permit
      *

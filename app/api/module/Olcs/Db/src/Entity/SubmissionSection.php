@@ -19,7 +19,7 @@ class SubmissionSection implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\Description45FieldAlt1;
+        Traits\Description45Field;
 
     /**
      * Case
@@ -47,7 +47,6 @@ class SubmissionSection implements Interfaces\EntityInterface
         $this->cases = new ArrayCollection();
     }
 
-
     /**
      * Set the case
      *
@@ -69,43 +68,6 @@ class SubmissionSection implements Interfaces\EntityInterface
     public function getCases()
     {
         return $this->cases;
-    }
-
-    /**
-     * Add a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return SubmissionSection
-     */
-    public function addCases($cases)
-    {
-        if ($cases instanceof ArrayCollection) {
-            $this->cases = new ArrayCollection(
-                array_merge(
-                    $this->cases->toArray(),
-                    $cases->toArray()
-                )
-            );
-        } elseif (!$this->cases->contains($cases)) {
-            $this->cases->add($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return SubmissionSection
-     */
-    public function removeCases($cases)
-    {
-        if ($this->cases->contains($cases)) {
-            $this->cases->remove($cases);
-        }
-
-        return $this;
     }
 
     /**

@@ -55,7 +55,6 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
      */
     protected $ipAddress;
 
-
     /**
      * Set the requested on
      *

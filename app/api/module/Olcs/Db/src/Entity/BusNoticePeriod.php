@@ -56,7 +56,6 @@ class BusNoticePeriod implements Interfaces\EntityInterface
      */
     protected $cancellationPeriod;
 
-
     /**
      * Set the notice area
      *

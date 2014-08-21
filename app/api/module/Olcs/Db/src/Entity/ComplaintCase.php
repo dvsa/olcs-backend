@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_A7094FAFCF10D4F5", columns={"case_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="case_id", columns={"case_id","complaint_id"})
+ *        @ORM\UniqueConstraint(name="complaint_case_unique", columns={"case_id","complaint_id"})
  *    }
  * )
  */
@@ -53,7 +53,6 @@ class ComplaintCase implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
 
     /**
      * Set the complaint

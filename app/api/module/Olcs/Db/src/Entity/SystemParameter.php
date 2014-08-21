@@ -29,7 +29,6 @@ class SystemParameter implements Interfaces\EntityInterface
      */
     protected $paramValue;
 
-
     /**
      * Set the param value
      *

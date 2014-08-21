@@ -69,7 +69,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
      */
     protected $printed;
 
-
     /**
      * Set the archived
      *

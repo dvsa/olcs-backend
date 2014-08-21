@@ -44,7 +44,6 @@ class Trailer implements Interfaces\EntityInterface
      */
     protected $trailerNo;
 
-
     /**
      * Set the trailer no
      *

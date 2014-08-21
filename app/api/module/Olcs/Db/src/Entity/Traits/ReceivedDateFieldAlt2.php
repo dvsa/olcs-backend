@@ -5,18 +5,18 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Received date field alt1 trait
+ * Received date field alt2 trait
  *
  * Auto-Generated (Shared between 2 entities)
  */
-trait ReceivedDateFieldAlt1
+trait ReceivedDateFieldAlt2
 {
     /**
      * Received date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="received_date", nullable=true)
+     * @ORM\Column(type="datetime", name="received_date", nullable=false)
      */
     protected $receivedDate;
 

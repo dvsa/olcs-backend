@@ -19,7 +19,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
  *        @ORM\Index(name="fk_organisation_ref_data2_idx", columns={"sic_code"}),
- *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"})
+ *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
+ *        @ORM\Index(name="organisation_name_idx", columns={"name"})
  *    }
  * )
  */
@@ -82,6 +83,15 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=160, nullable=true)
      */
     protected $name;
+
+    /**
+     * Irfo name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
+     */
+    protected $irfoName;
 
     /**
      * Is mlh
@@ -165,7 +175,6 @@ class Organisation implements Interfaces\EntityInterface
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
-
 
     /**
      * Set the lead tc area
@@ -280,6 +289,29 @@ class Organisation implements Interfaces\EntityInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the irfo name
+     *
+     * @param string $irfoName
+     * @return Organisation
+     */
+    public function setIrfoName($irfoName)
+    {
+        $this->irfoName = $irfoName;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo name
+     *
+     * @return string
+     */
+    public function getIrfoName()
+    {
+        return $this->irfoName;
     }
 
     /**
@@ -398,43 +430,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licences
@@ -455,43 +450,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getLicences()
     {
         return $this->licences;
-    }
-
-    /**
-     * Add a licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
-     * @return Organisation
-     */
-    public function addLicences($licences)
-    {
-        if ($licences instanceof ArrayCollection) {
-            $this->licences = new ArrayCollection(
-                array_merge(
-                    $this->licences->toArray(),
-                    $licences->toArray()
-                )
-            );
-        } elseif (!$this->licences->contains($licences)) {
-            $this->licences->add($licences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
-     * @return Organisation
-     */
-    public function removeLicences($licences)
-    {
-        if ($this->licences->contains($licences)) {
-            $this->licences->remove($licences);
-        }
-
-        return $this;
     }
 
     /**
@@ -518,43 +476,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a organisation persons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
-     * @return Organisation
-     */
-    public function addOrganisationPersons($organisationPersons)
-    {
-        if ($organisationPersons instanceof ArrayCollection) {
-            $this->organisationPersons = new ArrayCollection(
-                array_merge(
-                    $this->organisationPersons->toArray(),
-                    $organisationPersons->toArray()
-                )
-            );
-        } elseif (!$this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->add($organisationPersons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a organisation persons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
-     * @return Organisation
-     */
-    public function removeOrganisationPersons($organisationPersons)
-    {
-        if ($this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->remove($organisationPersons);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the trading name
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
@@ -575,42 +496,5 @@ class Organisation implements Interfaces\EntityInterface
     public function getTradingNames()
     {
         return $this->tradingNames;
-    }
-
-    /**
-     * Add a trading names
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
-     * @return Organisation
-     */
-    public function addTradingNames($tradingNames)
-    {
-        if ($tradingNames instanceof ArrayCollection) {
-            $this->tradingNames = new ArrayCollection(
-                array_merge(
-                    $this->tradingNames->toArray(),
-                    $tradingNames->toArray()
-                )
-            );
-        } elseif (!$this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->add($tradingNames);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a trading names
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
-     * @return Organisation
-     */
-    public function removeTradingNames($tradingNames)
-    {
-        if ($this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->remove($tradingNames);
-        }
-
-        return $this;
     }
 }

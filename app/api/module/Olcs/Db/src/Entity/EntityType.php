@@ -34,7 +34,6 @@ class EntityType implements Interfaces\EntityInterface
      */
     protected $currentTemplate;
 
-
     /**
      * Set the current template
      *

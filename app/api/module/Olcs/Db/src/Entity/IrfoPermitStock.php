@@ -71,7 +71,6 @@ class IrfoPermitStock implements Interfaces\EntityInterface
      */
     protected $voidReturnDate;
 
-
     /**
      * Set the irfo country
      *

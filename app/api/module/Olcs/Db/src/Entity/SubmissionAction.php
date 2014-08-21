@@ -91,7 +91,6 @@ class SubmissionAction implements Interfaces\EntityInterface
      */
     protected $submissionActionType;
 
-
     /**
      * Set the submission
      *

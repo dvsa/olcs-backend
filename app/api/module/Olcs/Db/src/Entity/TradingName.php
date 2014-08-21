@@ -55,7 +55,6 @@ class TradingName implements Interfaces\EntityInterface
      */
     protected $name;
 
-
     /**
      * Set the organisation
      *
