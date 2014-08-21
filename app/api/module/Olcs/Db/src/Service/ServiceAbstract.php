@@ -535,7 +535,8 @@ abstract class ServiceAbstract
      */
     public function getEntityById($id)
     {
-        return $this->getEntityManager()->find($this->getEntityName(), (int) $id);
+        $id = is_numeric($id) ? (int) $id : $id;
+        return $this->getEntityManager()->find($this->getEntityName(), $id);
     }
 
     /**
