@@ -18,9 +18,7 @@ use Zend\Filter\Word\CamelCaseToSeparator;
  */
 class AlignEntitiesToSchema
 {
-    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config /workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs\'';
-
-    const PATH_TO_DOCTRINE = '/workspace/olcs-backend/vendor/bin/doctrine-module';
+    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config /workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\'';
 
     const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
 
@@ -333,10 +331,12 @@ class AlignEntitiesToSchema
 
         $command = '%s orm:convert-mapping --namespace="%s" --force --from-database xml %s';
 
+        $pathToDoctrine = __DIR__ . '/../vendor/bin/doctrine-module';
+
         shell_exec(
             sprintf(
                 $command,
-                self::PATH_TO_DOCTRINE,
+                $pathToDoctrine,
                 str_replace('\\', '\\\\', self::ENTITY_NAMESPACE),
                 $this->options['mapping-files']
             )
@@ -463,7 +463,7 @@ class AlignEntitiesToSchema
                 'collections' => $this->getCollectionsFromConfig($config),
                 'mappingFileName' => $fileName,
                 'entityFileName' => $this->formatEntityFileName($className),
-                'testFileName' => $this->formatUnitTestFileName($className),
+                'testFileName' => $this->formatUnitTestFileName($className)
             );
 
             if (isset($comments['@settings']['repository'])) {
@@ -506,7 +506,7 @@ class AlignEntitiesToSchema
             }
         }
 
-        $this->respond(count($this->entities) . ' Entity configurations compiled', 'success');
+        $this->respond('Entity configurations compiled', 'success');
     }
 
     /**
@@ -1148,22 +1148,6 @@ class AlignEntitiesToSchema
         }
 
         return $comments[$key];
-
-        /*
-        $config = array();
-
-        if (isset($comments[$key])
-            && !empty($comments[$key])
-            && preg_match('/\{CONFIG\}(.+)\{\/CONFIG\}/', $comments[$key], $matches)) {
-
-            $config = json_decode($matches[1], true);
-
-            if (json_last_error() != JSON_ERROR_NONE) {
-                $config = array();
-            }
-        }
-
-        return $config;*/
     }
 
     /**
@@ -1301,21 +1285,6 @@ class AlignEntitiesToSchema
         }
 
         return $this->entityConfig[$table];
-
-        /*
-        $query = $this->pdo->prepare('SHOW FULL COLUMNS FROM ' . $table);
-
-        $query->execute();
-
-        $results = $query->fetchAll(Pdo::FETCH_ASSOC);
-
-        $comments = array();
-
-        foreach ($results as $row) {
-            $comments[$row['Field']] = $row['Comment'];
-        }
-
-        return $comments;*/
     }
 
     /**

@@ -23,8 +23,17 @@ use Olcs\Db\Entity\Traits;
 class S4Condition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\S4ManyToOne;
+        Traits\IdIdentity;
+
+    /**
+     * S4
+     *
+     * @var \Olcs\Db\Entity\S4
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\S4", fetch="LAZY")
+     * @ORM\JoinColumn(name="s4_id", referencedColumnName="id", nullable=false)
+     */
+    protected $s4;
 
     /**
      * Target condition
@@ -45,6 +54,29 @@ class S4Condition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="source_condition_id", referencedColumnName="id", nullable=false)
      */
     protected $sourceCondition;
+
+    /**
+     * Set the s4
+     *
+     * @param \Olcs\Db\Entity\S4 $s4
+     * @return S4Condition
+     */
+    public function setS4($s4)
+    {
+        $this->s4 = $s4;
+
+        return $this;
+    }
+
+    /**
+     * Get the s4
+     *
+     * @return \Olcs\Db\Entity\S4
+     */
+    public function getS4()
+    {
+        return $this->s4;
+    }
 
     /**
      * Set the target condition
