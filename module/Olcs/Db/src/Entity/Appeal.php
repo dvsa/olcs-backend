@@ -33,9 +33,9 @@ class Appeal implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
-        Traits\WithdrawnDateField,
         Traits\HearingDateField,
         Traits\DecisionDateField,
+        Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -67,15 +67,6 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="tm_case_id", nullable=true)
      */
     protected $tmCaseId;
-
-    /**
-     * Is withdrawn
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_withdrawn", nullable=true)
-     */
-    protected $isWithdrawn = 0;
 
     /**
      * Deadline date
@@ -130,7 +121,6 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="papers_sent_date", nullable=true)
      */
     protected $papersSentDate;
-
 
     /**
      * Set the reason
@@ -199,29 +189,6 @@ class Appeal implements Interfaces\EntityInterface
     public function getTmCaseId()
     {
         return $this->tmCaseId;
-    }
-
-    /**
-     * Set the is withdrawn
-     *
-     * @param boolean $isWithdrawn
-     * @return Appeal
-     */
-    public function setIsWithdrawn($isWithdrawn)
-    {
-        $this->isWithdrawn = $isWithdrawn;
-
-        return $this;
-    }
-
-    /**
-     * Get the is withdrawn
-     *
-     * @return boolean
-     */
-    public function getIsWithdrawn()
-    {
-        return $this->isWithdrawn;
     }
 
     /**

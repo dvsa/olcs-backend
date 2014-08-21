@@ -90,7 +90,6 @@ class FeeType implements Interfaces\EntityInterface
      */
     protected $expireFeeWithLicence = 0;
 
-
     /**
      * Set the fee type
      *

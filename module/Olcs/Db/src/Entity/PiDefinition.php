@@ -53,7 +53,6 @@ class PiDefinition implements Interfaces\EntityInterface
      */
     protected $definition;
 
-
     /**
      * Set the pi definition category
      *

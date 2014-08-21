@@ -26,7 +26,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\IsTrailerField,
         Traits\Notes4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
@@ -50,6 +49,15 @@ class LegacyOffence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="definition", length=255, nullable=true)
      */
     protected $definition;
+
+    /**
+     * Is trailer
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_trailer", nullable=true)
+     */
+    protected $isTrailer;
 
     /**
      * Num of offences
@@ -131,7 +139,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         $this->cases = new ArrayCollection();
     }
 
-
     /**
      * Set the case
      *
@@ -156,43 +163,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
-     * Add a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return LegacyOffence
-     */
-    public function addCases($cases)
-    {
-        if ($cases instanceof ArrayCollection) {
-            $this->cases = new ArrayCollection(
-                array_merge(
-                    $this->cases->toArray(),
-                    $cases->toArray()
-                )
-            );
-        } elseif (!$this->cases->contains($cases)) {
-            $this->cases->add($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return LegacyOffence
-     */
-    public function removeCases($cases)
-    {
-        if ($this->cases->contains($cases)) {
-            $this->cases->remove($cases);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the definition
      *
      * @param string $definition
@@ -213,6 +183,29 @@ class LegacyOffence implements Interfaces\EntityInterface
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * Set the is trailer
+     *
+     * @param string $isTrailer
+     * @return LegacyOffence
+     */
+    public function setIsTrailer($isTrailer)
+    {
+        $this->isTrailer = $isTrailer;
+
+        return $this;
+    }
+
+    /**
+     * Get the is trailer
+     *
+     * @return string
+     */
+    public function getIsTrailer()
+    {
+        return $this->isTrailer;
     }
 
     /**

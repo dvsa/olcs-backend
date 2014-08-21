@@ -19,7 +19,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_postcode_enforcement_area_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="postcode_id", columns={"postcode_id","enforcement_area_id"})
+ *        @ORM\UniqueConstraint(name="postcode_enforcement_area_unique", columns={"enforcement_area_id","postcode_id"})
  *    }
  * )
  */
@@ -42,7 +42,6 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="postcode_id", length=8, nullable=false)
      */
     protected $postcodeId;
-
 
     /**
      * Set the postcode id

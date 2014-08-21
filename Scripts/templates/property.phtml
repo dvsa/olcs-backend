@@ -49,5 +49,8 @@ foreach ($columns as $key => $joinColumn): ?>
 <?php if (isset($field['generator']) && $field['@attributes']['type'] == 'integer'): ?>
      * @ORM\GeneratedValue(strategy="<?php echo $field['generator']['@attributes']['strategy']; ?>")
 <?php endif; ?>
+<?php if (isset($item['translatable']) && $item['translatable']):?>
+     * @Gedmo\Translatable
+<?php endif; ?>
      */
     protected $<?php echo $this->formatPropertyName($item); ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;

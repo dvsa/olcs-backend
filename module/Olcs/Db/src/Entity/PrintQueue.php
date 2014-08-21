@@ -44,7 +44,6 @@ class PrintQueue implements Interfaces\EntityInterface
      */
     protected $addedDatetime;
 
-
     /**
      * Set the team printer
      *

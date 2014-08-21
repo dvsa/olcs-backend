@@ -37,7 +37,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
      */
-    protected $isDocCategory;
+    protected $isDocCategory = 1;
 
     /**
      * Is task category
@@ -46,8 +46,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
      */
-    protected $isTaskCategory;
-
+    protected $isTaskCategory = 1;
 
     /**
      * Set the is doc category

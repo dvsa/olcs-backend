@@ -66,7 +66,6 @@ class PreviousConviction implements Interfaces\EntityInterface
      */
     protected $courtFpn;
 
-
     /**
      * Set the conviction date
      *

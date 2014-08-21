@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="doc_bookmark_id", columns={"doc_bookmark_id","doc_paragraph_id"})
+ *        @ORM\UniqueConstraint(name="doc_paragraph_bookmark_unique", columns={"doc_bookmark_id","doc_paragraph_id"})
  *    }
  * )
  */
@@ -44,7 +44,6 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
     protected $docParagraph;
-
 
     /**
      * Set the doc paragraph

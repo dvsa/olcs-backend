@@ -66,7 +66,6 @@ class GoodsDisc implements Interfaces\EntityInterface
      */
     protected $reprintRequired = 0;
 
-
     /**
      * Set the is copy
      *

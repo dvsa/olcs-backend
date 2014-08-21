@@ -18,7 +18,7 @@ class LegacyCaseAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\Description45FieldAlt1;
+        Traits\Description45Field;
 
     /**
      * Is driver
@@ -28,7 +28,6 @@ class LegacyCaseAction implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_driver", nullable=false)
      */
     protected $isDriver = 0;
-
 
     /**
      * Set the is driver

@@ -42,7 +42,6 @@ class EmailRecipient implements Interfaces\EntityInterface
      */
     protected $emailAddress;
 
-
     /**
      * Set the type
      *

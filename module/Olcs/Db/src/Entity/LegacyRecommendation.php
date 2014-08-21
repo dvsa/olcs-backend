@@ -138,7 +138,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      */
     protected $totalPoints;
 
-
     /**
      * Set the action
      *

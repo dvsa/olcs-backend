@@ -96,7 +96,6 @@ class Recipient implements Interfaces\EntityInterface
         $this->trafficAreas = new ArrayCollection();
     }
 
-
     /**
      * Set the traffic area
      *
@@ -118,43 +117,6 @@ class Recipient implements Interfaces\EntityInterface
     public function getTrafficAreas()
     {
         return $this->trafficAreas;
-    }
-
-    /**
-     * Add a traffic areas
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
-     * @return Recipient
-     */
-    public function addTrafficAreas($trafficAreas)
-    {
-        if ($trafficAreas instanceof ArrayCollection) {
-            $this->trafficAreas = new ArrayCollection(
-                array_merge(
-                    $this->trafficAreas->toArray(),
-                    $trafficAreas->toArray()
-                )
-            );
-        } elseif (!$this->trafficAreas->contains($trafficAreas)) {
-            $this->trafficAreas->add($trafficAreas);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a traffic areas
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
-     * @return Recipient
-     */
-    public function removeTrafficAreas($trafficAreas)
-    {
-        if ($this->trafficAreas->contains($trafficAreas)) {
-            $this->trafficAreas->remove($trafficAreas);
-        }
-
-        return $this;
     }
 
     /**
