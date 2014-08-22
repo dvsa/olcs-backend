@@ -82,7 +82,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
      */
-    protected $bankrupt = 0;
+    protected $bankrupt;
 
     /**
      * Administration
@@ -91,7 +91,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="administration", nullable=true)
      */
-    protected $administration = 0;
+    protected $administration;
 
     /**
      * Disqualified
@@ -100,7 +100,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="disqualified", nullable=true)
      */
-    protected $disqualified = 0;
+    protected $disqualified;
 
     /**
      * Liquidation
@@ -109,7 +109,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
      */
-    protected $liquidation = 0;
+    protected $liquidation;
 
     /**
      * Receivership
@@ -118,7 +118,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
      */
-    protected $receivership = 0;
+    protected $receivership;
 
     /**
      * Insolvency confirmation
@@ -251,9 +251,9 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="prev_conviction", nullable=false)
+     * @ORM\Column(type="yesnonull", name="prev_conviction", nullable=true)
      */
-    protected $prevConviction = 0;
+    protected $prevConviction;
 
     /**
      * Convictions confirmation

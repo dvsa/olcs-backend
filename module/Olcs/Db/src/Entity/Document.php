@@ -164,6 +164,15 @@ class Document implements Interfaces\EntityInterface
     protected $isReadOnly;
 
     /**
+     * Size
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="size", nullable=true)
+     */
+    protected $size;
+
+    /**
      * Filename
      *
      * @var string
@@ -463,6 +472,29 @@ class Document implements Interfaces\EntityInterface
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
+    }
+
+    /**
+     * Set the size
+     *
+     * @param int $size
+     * @return Document
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * Get the size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 
     /**

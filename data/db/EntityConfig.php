@@ -82,10 +82,10 @@ return array(
             'type' => 'yesno'
         ),
         'safety_ins_varies' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'ni_flag' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'translate_to_welsh' => array(
             'type' => 'yesno'
@@ -147,7 +147,7 @@ return array(
             'type' => 'yesno'
         ),
         'prev_conviction' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'convictions_confirmation' => array(
             'type' => 'yesno'

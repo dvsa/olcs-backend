@@ -170,18 +170,18 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="safety_ins_varies", nullable=false)
+     * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=true)
      */
-    protected $safetyInsVaries = 0;
+    protected $safetyInsVaries;
 
     /**
      * Ni flag
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="ni_flag", nullable=false)
+     * @ORM\Column(type="yesnonull", name="ni_flag", nullable=true)
      */
-    protected $niFlag = 0;
+    protected $niFlag;
 
     /**
      * Tachograph ins name
