@@ -71,6 +71,17 @@ class CHXmlGateway extends ServiceAbstract
      */
     private $emailAddress = null; // set to your email or leave null
 
+    /**
+     * Proxy URL
+     *
+     * Address of proxy to use
+     * or set to null for no proxy
+     *
+     * @var string
+     * @access private
+     */
+    private $proxyUrl = null; // set to your proxy or leave null
+
     // --- you can stop editing here --- //
 
     /**
@@ -174,7 +185,14 @@ class CHXmlGateway extends ServiceAbstract
         require_once('core/CHEnvelope.php');
 
         // --- create instance of envelope ---
-        $envelope = new CHEnvelope($request, $transactionID, $this->senderID, $this->password, $this->emailAddress);
+        $envelope = new CHEnvelope(
+            $request,
+            $transactionID,
+            $this->senderID,
+            $this->password,
+            $this->emailAddress,
+            $this->proxyUrl
+        );
 
         // --- write into db ---
         //$this->insertInto($request->getClass(), $transID, $request->getData());
@@ -206,5 +224,25 @@ class CHXmlGateway extends ServiceAbstract
     public function setUserId($senderID)
     {
         $this->senderID = $senderID;
+    }
+
+    /**
+     * Sets proxy URL
+     *
+     * @param string $proxyUrl
+     */
+    public function setProxyUrl($proxyUrl)
+    {
+        $this->proxyUrl = $proxyUrl;
+    }
+
+    /**
+     * Gets proxy URL
+     *
+     * @param string $proxyUrl
+     */
+    public function getProxyUrl()
+    {
+        return $this->proxyUrl;
     }
 }
