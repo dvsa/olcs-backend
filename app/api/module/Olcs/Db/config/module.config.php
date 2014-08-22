@@ -158,8 +158,8 @@ return [
          ],
     ],
     'companies_house_credentials' => [
-        'password' => 'XMLGatewayTestPassword',
-        'userId'   => 'XMLGatewayTestUserID'
+        'password'   => 'XMLGatewayTestPassword',
+        'userId'     => 'XMLGatewayTestUserID'
     ],
     'doctrine' => [
         'driver' => [
