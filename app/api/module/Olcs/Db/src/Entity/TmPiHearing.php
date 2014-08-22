@@ -35,7 +35,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\VenueManyToOne,
         Traits\PresidingTcManyToOneAlt1,
-        Traits\PresidedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
@@ -52,6 +51,16 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     protected $type;
+
+    /**
+     * Presided by
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedBy;
 
     /**
      * Reason
@@ -129,6 +138,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set the presided by
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedBy
+     * @return TmPiHearing
+     */
+    public function setPresidedBy($presidedBy)
+    {
+        $this->presidedBy = $presidedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedBy()
+    {
+        return $this->presidedBy;
     }
 
     /**

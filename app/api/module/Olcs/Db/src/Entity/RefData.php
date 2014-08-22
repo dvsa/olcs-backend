@@ -36,6 +36,15 @@ class RefData implements Interfaces\EntityInterface
     protected $parent;
 
     /**
+     * Pi
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="piTypes", fetch="LAZY")
+     */
+    protected $pis;
+
+    /**
      * Impounding
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -77,6 +86,7 @@ class RefData implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->pis = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
     }
 
@@ -101,6 +111,29 @@ class RefData implements Interfaces\EntityInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function setPis($pis)
+    {
+        $this->pis = $pis;
+
+        return $this;
+    }
+
+    /**
+     * Get the pis
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPis()
+    {
+        return $this->pis;
     }
 
     /**
