@@ -8,6 +8,11 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema olcs
 -- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ref_data_category` (
+  `id` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `ref_data`
