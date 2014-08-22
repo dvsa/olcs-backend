@@ -223,17 +223,17 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
 
 INSERT INTO `note` (`id`, `case_id`, `licence_id`, `application_id`, `created_by`, `last_modified_by`, `priority`,
     `comment`, `note_type`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,28,7,1,2,NULL,0,'This is the first comment',30,'2011-10-03 00:00:00',NULL,1),
-    (2,28,7,NULL,4,NULL,1,'This is the second comment',30,'2011-10-03 00:00:00',NULL,1),
-    (3,28,7,1,2,NULL,0,'This is the third comment',30,'2011-10-03 00:00:00',NULL,1),
-    (4,28,7,NULL,2,NULL,1,'This is the fourth comment',30,'2011-10-03 00:00:00',NULL,1),
-    (5,28,7,1,3,NULL,0,'This is the fifth comment',30,'2011-10-03 00:00:00',NULL,1),
-    (6,28,7,NULL,5,NULL,0,'This is the sixth note',30,'2011-10-03 00:00:00',NULL,1),
-    (7,28,7,NULL,3,NULL,0,'This is a case note',30,'2011-10-03 00:00:00',NULL,1),
-    (8,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2011-10-14 00:00:00',NULL,1),
-    (9,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2012-10-10 00:00:00',NULL,1),
-    (10,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2012-10-10 00:00:00',NULL,1),
-    (11,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2013-11-05 00:00:00',NULL,1);
+    (1,28,7,1,2,NULL,0,'This is an app note','note_t_app','2011-10-03 00:00:00',NULL,1),
+    (2,28,7,NULL,4,NULL,1,'This is a licence note','note_t_lic','2011-10-03 00:00:00',NULL,1),
+    (3,28,7,1,2,NULL,0,'This is an app note','note_t_app','2011-10-03 00:00:00',NULL,1),
+    (4,28,7,NULL,2,NULL,1,'This is a gv note','note_t_irfo_gv','2011-10-03 00:00:00',NULL,1),
+    (5,28,7,1,3,NULL,0,'This is an app note','note_t_app','2011-10-03 00:00:00',NULL,1),
+    (6,28,7,NULL,5,NULL,0,'This is a licence note','note_t_lic','2011-10-03 00:00:00',NULL,1),
+    (7,28,7,NULL,3,NULL,0,'This is a case note','note_t_case','2011-10-03 00:00:00',NULL,1),
+    (8,28,7,NULL,3,NULL,0,'This is a person note','note_t_person','2011-10-14 00:00:00',NULL,1),
+    (9,28,7,NULL,3,NULL,0,'This is a licence note','note_t_lic','2012-10-10 00:00:00',NULL,1),
+    (10,75,63,NULL,3,NULL,0,'This is a bus reg note','note_t_bus','2012-10-10 00:00:00',NULL,1),
+    (11,75,63,NULL,3,NULL,0,'This is a psv note','note_t_irfo_psv','2013-11-05 00:00:00',NULL,1);
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `address_id`) VALUES
@@ -790,7 +790,8 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (71,7,NULL,NULL,'MWC test case 4','E647654','2014-02-14 16:29:03','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (72,7,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-02 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (73,7,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-03 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
-    (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
+    (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+    (75,7,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
 
 INSERT INTO team(id,version,name) VALUES
     (1,1,'Marketing'),
