@@ -185,7 +185,14 @@ class CHXmlGateway extends ServiceAbstract
         require_once('core/CHEnvelope.php');
 
         // --- create instance of envelope ---
-        $envelope = new CHEnvelope($request, $transactionID, $this->senderID, $this->password, $this->emailAddress, $this->proxyUrl);
+        $envelope = new CHEnvelope(
+            $request,
+            $transactionID,
+            $this->senderID,
+            $this->password,
+            $this->emailAddress,
+            $this->proxyUrl
+        );
 
         // --- write into db ---
         //$this->insertInto($request->getClass(), $transID, $request->getData());
@@ -238,5 +245,4 @@ class CHXmlGateway extends ServiceAbstract
     {
         return $this->proxyUrl;
     }
-
 }
