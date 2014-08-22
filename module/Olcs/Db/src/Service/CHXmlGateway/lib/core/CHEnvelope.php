@@ -2,6 +2,10 @@
 
 namespace Olcs\Db\Service\CHXmlGateway\lib;
 
+use \Zend\Http\Client as HttpClient;
+use \Zend\Http\Request as Request;
+use \Zend\Uri\Http as HttpUri;
+use \Zend\Http\Header\Accept;
 /*
   +-------------------------------------------------------------------------------+
   |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -24,9 +28,13 @@ namespace Olcs\Db\Service\CHXmlGateway\lib;
 /**
  * CHEnvelope
  *
+ * Class modified to use Zend HTTP Request methods and enable proxies by Jess
+ * as a temporary measure - see OLCS-2947
+ *
  * @package chxmlgateway
  * @version $id$
  * @copyright 2009 Peter Reisinger
+ * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
  * @author Peter Reisinger <p.reisinger@gmail.com>
  * @license GNU General Public License
  */
@@ -130,6 +138,11 @@ class CHEnvelope
     private $request;
 
     /**
+     * HTTP client
+     */
+    private $client;
+
+    /**
      * __construct
      *
      * @param CHRequest $request
@@ -137,16 +150,18 @@ class CHEnvelope
      * @param string $senderID
      * @param string $password
      * @param string $emailAddress
+     * @param string $proxyUrl
      * @access public
      * @return void
      */
-    public function __construct(CHRequest $request, $transactionID, $senderID, $password, $emailAddress = null)
+    public function __construct(CHRequest $request, $transactionID, $senderID, $password, $emailAddress = null, $proxyUrl = null)
     {
         $this->request = $request;     // Request object
         $this->transactionID = $transactionID;
         $this->senderID = $senderID;
         $this->value = md5($senderID . $password . $transactionID);
         $this->emailAddress = $emailAddress;
+        $this->proxyUrl = $proxyUrl;
     }
 
     /**
@@ -193,32 +208,34 @@ class CHEnvelope
 
         $resHeader = '';
         $response = '';
+        $this->request=new Request();
+        $this->request->setMethod(Request::METHOD_POST);
+        $this->request->setUri($this->path);
+        $this->request->getHeaders()->addHeaders(array(
+            'Content-Type' => 'text/xml'
+        ));
+        $this->request->setContent($xml);
 
-        $fp = fsockopen($this->domain, 80, $errno, $errstr, 30);
-        if (!$fp) {
-            echo "$errstr ($errno)<br />\n";
-        } else {
-            $contentLength = strlen($xml);
-
-            $out = "POST $this->path HTTPS/1.0\r\n";
-            $out .= "Host: " . $this->domain . "\r\n";
-            $out .= "Content-Type: text/xml\r\n";
-            $out .= "Content-Length: $contentLength\r\n\r\n";
-            $out .= $xml;
-
-            fwrite($fp, $out);
-
-            do {
-                // write returned header
-                $resHeader .= fgets($fp, 128);
-            } while (\strpos($resHeader, "\r\n\r\n") === false);
-            while (!feof($fp)) {
-                // write returned response
-                $line = fgets($fp, 128);
-                $response .= $line;
-            }
-            fclose($fp);
+        $this->client = new HttpClient();
+        if ( $this->proxyUrl != null ) {
+            list($proxyHost,$proxyPort)=explode(":",$this->proxyUrl);
+            $config = array(
+                'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
+                'proxy_host' => $proxyHost,
+                'proxy_port' => $proxyPort
+            );
+            $this->client->setOptions($config);
         }
-        return $response;
+        $this->client->setRequest($this->request);
+        $this->client->setUri('http://'.$this->domain.$this->path);
+        // var_dump($this->client);
+        $response=$this->client->send($this->request);
+
+        if ( $response->getStatusCode() == 403 ) {
+            return false;
+        }
+
+        $responseBody=$response->getBody();
+        return $responseBody;
     }
 }

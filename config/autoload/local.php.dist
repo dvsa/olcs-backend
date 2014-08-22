@@ -25,5 +25,9 @@ return array(
                 )
             )
         )
-    )
+    ),
+    // Set the following if you need to go via a proxy to get to Companies House
+    // 'companies_house_connection' => array(
+    //    'proxy'      => 'proxy.gw.npm:80'
+    // )
 );
