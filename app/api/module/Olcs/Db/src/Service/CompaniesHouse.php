@@ -19,6 +19,7 @@ use Olcs\Db\Service\CHXmlGateway\lib\CHXmlGateway;
  * @author S Lizzio <shaun.lizzio@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
  */
 class CompaniesHouse extends ServiceAbstract
 {
@@ -37,6 +38,11 @@ class CompaniesHouse extends ServiceAbstract
      * Password to the Companies House API
      */
     private $password;
+
+    /**
+     * Proxy for accessing Companies House API
+     */
+    private $proxy = false;
 
     /**
      * User ID for the Companies House API
@@ -89,6 +95,9 @@ class CompaniesHouse extends ServiceAbstract
         $gateway = new CHXmlGateway();
         $gateway->setPassword($this->getPassword());
         $gateway->setUserId($this->getUserId());
+        if ( $this->getProxy() != false ) {
+            $gateway->setProxyUrl($this->getProxy());
+        }
 
         return $gateway;
     }
@@ -194,6 +203,10 @@ class CompaniesHouse extends ServiceAbstract
 
         $this->setPassword($config['companies_house_credentials']['password']);
         $this->setUserId($config['companies_house_credentials']['userId']);
+
+        if ( isset($config['companies_house_connection']['proxy']) ) {
+            $this->setProxy($config['companies_house_connection']['proxy']);
+        }
     }
 
     /**
@@ -345,6 +358,25 @@ class CompaniesHouse extends ServiceAbstract
         $this->password = $password;
     }
 
+    /**
+     * Gets proxy
+     *
+     * @return string
+     */
+    private function getProxy()
+    {
+        return $this->proxy;
+    }
+
+    /**
+     * Sets proxy
+     *
+     * @param string $proxy
+     */
+    private function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
     /**
      * Gets User ID
      *
