@@ -6,6 +6,7 @@ use \Zend\Http\Client as HttpClient;
 use \Zend\Http\Request as Request;
 use \Zend\Uri\Http as HttpUri;
 use \Zend\Http\Header\Accept;
+
 /*
   +-------------------------------------------------------------------------------+
   |   Copyright 2009 Peter Reisinger - p.reisinger@gmail.com                      |
@@ -32,10 +33,9 @@ use \Zend\Http\Header\Accept;
  * as a temporary measure - see OLCS-2947
  *
  * @package chxmlgateway
- * @version $id$
- * @copyright 2009 Peter Reisinger
  * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
  * @author Peter Reisinger <p.reisinger@gmail.com>
+ * @copyright 2009 Peter Reisinger
  * @license GNU General Public License
  */
 class CHEnvelope
@@ -154,8 +154,14 @@ class CHEnvelope
      * @access public
      * @return void
      */
-    public function __construct(CHRequest $request, $transactionID, $senderID, $password, $emailAddress = null, $proxyUrl = null)
-    {
+    public function __construct(
+        CHRequest $request,
+        $transactionID,
+        $senderID,
+        $password,
+        $emailAddress = null,
+        $proxyUrl = null
+    ) {
         $this->request = $request;     // Request object
         $this->transactionID = $transactionID;
         $this->senderID = $senderID;
@@ -211,14 +217,14 @@ class CHEnvelope
         $this->request=new Request();
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setUri($this->path);
-        $this->request->getHeaders()->addHeaders(array(
-            'Content-Type' => 'text/xml'
-        ));
+        $this->request->getHeaders()->addHeaders(
+            array('Content-Type' => 'text/xml')
+        );
         $this->request->setContent($xml);
 
         $this->client = new HttpClient();
         if ( $this->proxyUrl != null ) {
-            list($proxyHost,$proxyPort)=explode(":",$this->proxyUrl);
+            list($proxyHost,$proxyPort)=explode(":", $this->proxyUrl);
             $config = array(
                 'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
                 'proxy_host' => $proxyHost,
