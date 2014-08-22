@@ -228,7 +228,6 @@ class CHEnvelope
         }
         $this->client->setRequest($this->request);
         $this->client->setUri('http://'.$this->domain.$this->path);
-        // var_dump($this->client);
         $response=$this->client->send($this->request);
 
         if ( $response->getStatusCode() == 403 ) {
