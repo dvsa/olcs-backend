@@ -50,7 +50,7 @@ class CompaniesHouse extends ServiceAbstract
     private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR', 'LLPDMEM'];
 
     /**
-     * Returns a list of records after Companies House API's call
+     * Returns a list of records aftegit diffr Companies House API's call
      *
      * @param array $data array with params
      * @return array
