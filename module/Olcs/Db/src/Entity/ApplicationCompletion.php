@@ -85,6 +85,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionYourBusinessPeopleStatus;
 
     /**
+     * Section your business sole trader status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_yb_st_status", nullable=true)
+     */
+    protected $sectionYourBusinessSoleTraderStatus;
+
+    /**
      * Section type of licence status
      *
      * @var int
@@ -157,6 +166,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionTransportManagersStatus;
 
     /**
+     * Section transport managers placeholder status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_tms_p_status", nullable=true)
+     */
+    protected $sectionTransportManagersPlaceholderStatus;
+
+    /**
      * Section vehicle safety status
      *
      * @var int
@@ -191,6 +209,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="section_veh_s_status", nullable=true)
      */
     protected $sectionVehicleSafetySafetyStatus;
+
+    /**
+     * Section vehicle safety undertakings status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_veh_und_status", nullable=true)
+     */
+    protected $sectionVehicleSafetyUndertakingsStatus;
 
     /**
      * Section previous history status
@@ -236,6 +263,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="section_rd_status", nullable=true)
      */
     protected $sectionReviewDeclarationsStatus;
+
+    /**
+     * Section review declarations summary status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_rd_sum_status", nullable=true)
+     */
+    protected $sectionReviewDeclarationsSummaryStatus;
 
     /**
      * Section payment submission status
@@ -430,6 +466,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the section your business sole trader status
+     *
+     * @param int $sectionYourBusinessSoleTraderStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionYourBusinessSoleTraderStatus($sectionYourBusinessSoleTraderStatus)
+    {
+        $this->sectionYourBusinessSoleTraderStatus = $sectionYourBusinessSoleTraderStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section your business sole trader status
+     *
+     * @return int
+     */
+    public function getSectionYourBusinessSoleTraderStatus()
+    {
+        return $this->sectionYourBusinessSoleTraderStatus;
+    }
+
+    /**
      * Set the section type of licence status
      *
      * @param int $sectionTypeOfLicenceStatus
@@ -614,6 +673,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the section transport managers placeholder status
+     *
+     * @param int $sectionTransportManagersPlaceholderStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionTransportManagersPlaceholderStatus($sectionTransportManagersPlaceholderStatus)
+    {
+        $this->sectionTransportManagersPlaceholderStatus = $sectionTransportManagersPlaceholderStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section transport managers placeholder status
+     *
+     * @return int
+     */
+    public function getSectionTransportManagersPlaceholderStatus()
+    {
+        return $this->sectionTransportManagersPlaceholderStatus;
+    }
+
+    /**
      * Set the section vehicle safety status
      *
      * @param int $sectionVehicleSafetyStatus
@@ -703,6 +785,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionVehicleSafetySafetyStatus()
     {
         return $this->sectionVehicleSafetySafetyStatus;
+    }
+
+    /**
+     * Set the section vehicle safety undertakings status
+     *
+     * @param int $sectionVehicleSafetyUndertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionVehicleSafetyUndertakingsStatus($sectionVehicleSafetyUndertakingsStatus)
+    {
+        $this->sectionVehicleSafetyUndertakingsStatus = $sectionVehicleSafetyUndertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section vehicle safety undertakings status
+     *
+     * @return int
+     */
+    public function getSectionVehicleSafetyUndertakingsStatus()
+    {
+        return $this->sectionVehicleSafetyUndertakingsStatus;
     }
 
     /**
@@ -818,6 +923,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionReviewDeclarationsStatus()
     {
         return $this->sectionReviewDeclarationsStatus;
+    }
+
+    /**
+     * Set the section review declarations summary status
+     *
+     * @param int $sectionReviewDeclarationsSummaryStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionReviewDeclarationsSummaryStatus($sectionReviewDeclarationsSummaryStatus)
+    {
+        $this->sectionReviewDeclarationsSummaryStatus = $sectionReviewDeclarationsSummaryStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section review declarations summary status
+     *
+     * @return int
+     */
+    public function getSectionReviewDeclarationsSummaryStatus()
+    {
+        return $this->sectionReviewDeclarationsSummaryStatus;
     }
 
     /**
