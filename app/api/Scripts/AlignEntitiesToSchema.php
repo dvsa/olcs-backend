@@ -18,8 +18,6 @@ use Zend\Filter\Word\CamelCaseToSeparator;
  */
 class AlignEntitiesToSchema
 {
-    const HELP = 'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql --mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files /workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files /workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config /workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\'';
-
     const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
 
     /**
@@ -163,7 +161,13 @@ class AlignEntitiesToSchema
         );
 
         if (isset($this->options['help'])) {
-            $this->exitResponse(self::HELP);
+            $this->exitResponse(
+                'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql '
+                . '--mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files '
+                . '/workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files '
+                . '/workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config '
+                . '/workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\''
+            );
         }
 
         $this->checkForRequiredParams();
@@ -975,8 +979,8 @@ class AlignEntitiesToSchema
     {
         return $this->standardiseArray(
             isset($config['entity']['unique-constraints']['unique-constraint'])
-                ? $config['entity']['unique-constraints']['unique-constraint']
-                : array()
+            ? $config['entity']['unique-constraints']['unique-constraint']
+            : array()
         );
     }
 
