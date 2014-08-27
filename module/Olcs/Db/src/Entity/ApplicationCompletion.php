@@ -184,6 +184,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionVehicleSafetyStatus;
 
     /**
+     * Section vehicle safety undertakings status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_veh_und_status", nullable=true)
+     */
+    protected $sectionVehicleSafetyUndertakingsStatus;
+
+    /**
      * Section vehicle safety vehicle status
      *
      * @var int
@@ -209,15 +218,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="section_veh_s_status", nullable=true)
      */
     protected $sectionVehicleSafetySafetyStatus;
-
-    /**
-     * Section vehicle safety undertakings status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_veh_und_status", nullable=true)
-     */
-    protected $sectionVehicleSafetyUndertakingsStatus;
 
     /**
      * Section previous history status
@@ -719,6 +719,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the section vehicle safety undertakings status
+     *
+     * @param int $sectionVehicleSafetyUndertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionVehicleSafetyUndertakingsStatus($sectionVehicleSafetyUndertakingsStatus)
+    {
+        $this->sectionVehicleSafetyUndertakingsStatus = $sectionVehicleSafetyUndertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section vehicle safety undertakings status
+     *
+     * @return int
+     */
+    public function getSectionVehicleSafetyUndertakingsStatus()
+    {
+        return $this->sectionVehicleSafetyUndertakingsStatus;
+    }
+
+    /**
      * Set the section vehicle safety vehicle status
      *
      * @param int $sectionVehicleSafetyVehicleStatus
@@ -785,29 +808,6 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionVehicleSafetySafetyStatus()
     {
         return $this->sectionVehicleSafetySafetyStatus;
-    }
-
-    /**
-     * Set the section vehicle safety undertakings status
-     *
-     * @param int $sectionVehicleSafetyUndertakingsStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionVehicleSafetyUndertakingsStatus($sectionVehicleSafetyUndertakingsStatus)
-    {
-        $this->sectionVehicleSafetyUndertakingsStatus = $sectionVehicleSafetyUndertakingsStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section vehicle safety undertakings status
-     *
-     * @return int
-     */
-    public function getSectionVehicleSafetyUndertakingsStatus()
-    {
-        return $this->sectionVehicleSafetyUndertakingsStatus;
     }
 
     /**

@@ -58,7 +58,7 @@ class RefData implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="description", length=100, nullable=true)
+     * @ORM\Column(type="string", name="description", length=512, nullable=true)
      * @Gedmo\Translatable
      */
     protected $description;

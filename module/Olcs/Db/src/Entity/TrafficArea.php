@@ -61,13 +61,13 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $txcName;
 
     /**
-     * Scottish rules
+     * Is scottish rules
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="scottish_rules", nullable=false)
+     * @ORM\Column(type="boolean", name="is_scottish_rules", nullable=false)
      */
-    protected $scottishRules = 0;
+    protected $isScottishRules = 0;
 
     /**
      * Document
@@ -157,26 +157,26 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the scottish rules
+     * Set the is scottish rules
      *
-     * @param boolean $scottishRules
+     * @param boolean $isScottishRules
      * @return TrafficArea
      */
-    public function setScottishRules($scottishRules)
+    public function setIsScottishRules($isScottishRules)
     {
-        $this->scottishRules = $scottishRules;
+        $this->isScottishRules = $isScottishRules;
 
         return $this;
     }
 
     /**
-     * Get the scottish rules
+     * Get the is scottish rules
      *
      * @return boolean
      */
-    public function getScottishRules()
+    public function getIsScottishRules()
     {
-        return $this->scottishRules;
+        return $this->isScottishRules;
     }
 
     /**
