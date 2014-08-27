@@ -3393,6 +3393,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `section_veh_v_status` INT NULL,
   `section_veh_vpsv_status` INT NULL,
   `section_veh_s_status` INT NULL,
+  `section_veh_und_status` INT NULL,
   `section_ph_status` INT NULL,
   `section_ph_fh_status` INT NULL,
   `section_ph_lh_status` INT NULL,
