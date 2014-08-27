@@ -560,6 +560,9 @@ return array(
         'section_yb_peo_status' => array(
             'property' => 'sectionYourBusinessPeopleStatus'
         ),
+        'section_yb_st_status' => array(
+            'property' => 'sectionYourBusinessSoleTraderStatus'
+        ),
         'section_tol_status' => array(
             'property' => 'sectionTypeOfLicenceStatus'
         ),
@@ -584,6 +587,9 @@ return array(
         'section_tms_status' => array(
             'property' => 'sectionTransportManagersStatus'
         ),
+        'section_tms_p_status' => array(
+            'property' => 'sectionTransportManagersPlaceholderStatus'
+        ),
         'section_veh_status' => array(
             'property' => 'sectionVehicleSafetyStatus'
         ),
@@ -595,6 +601,9 @@ return array(
         ),
         'section_veh_s_status' => array(
             'property' => 'sectionVehicleSafetySafetyStatus'
+        ),
+        'section_veh_und_status' => array(
+            'property' => 'sectionVehicleSafetyUndertakingsStatus'
         ),
         'section_ph_status' => array(
             'property' => 'sectionPreviousHistoryStatus'
@@ -610,6 +619,9 @@ return array(
         ),
         'section_rd_status' => array(
             'property' => 'sectionReviewDeclarationsStatus'
+        ),
+        'section_rd_sum_status' => array(
+            'property' => 'sectionReviewDeclarationsSummaryStatus'
         ),
         'section_pay_status' => array(
             'property' => 'sectionPaymentSubmissionStatus'
@@ -681,30 +693,6 @@ return array(
         )
     ),
     'pi' => array(
-        'type_app_new' => array(
-            'type' => 'yesno'
-        ),
-        'type_app_var' => array(
-            'type' => 'yesno'
-        ),
-        'type_disciplinary' => array(
-            'type' => 'yesno'
-        ),
-        'type_env_new' => array(
-            'type' => 'yesno'
-        ),
-        'type_env_var' => array(
-            'type' => 'yesno'
-        ),
-        'type_oc_review' => array(
-            'type' => 'yesno'
-        ),
-        'type_impounding' => array(
-            'type' => 'yesno'
-        ),
-        'type_other' => array(
-            'type' => 'yesno'
-        ),
         'is_cancelled' => array(
             'type' => 'yesno'
         ),
@@ -981,6 +969,14 @@ return array(
             )
         )
     ),
+    /* 'pi_type' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'piType'
+            )
+        )
+    ) ,*/
     'category' => array(
         'is_doc_category' => array(
             'type' => 'yesno'

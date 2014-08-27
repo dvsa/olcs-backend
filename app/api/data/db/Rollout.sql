@@ -486,9 +486,19 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('person_title', 'title_other', 'Other', null),
     ('pi_status', 'pi_s_schedule', 'PI Scheduled', 'SchedPI'),
     ('pi_status', 'pi_s_reg', 'PI Registered', 'RegisterPI'),
+
+    ('pi_type', 'pi_t_app_new', 'Application New', null),
+    ('pi_type', 'pi_t_app_var', 'Application Variation', null),
+    ('pi_type', 'pi_t_disc', 'Disciplinary', null),
+    ('pi_type', 'pi_t_env_new', 'Environmental New', null),
+    ('pi_type', 'pi_t_env_var', 'Environmental Variation', null),
+    ('pi_type', 'pi_t_oc_review', 'OC Review', null),
+    ('pi_type', 'pi_t_imp', 'Impounding', null),
+    ('pi_type', 'pi_t_other', 'Other', null),
+    
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
-
+    
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),

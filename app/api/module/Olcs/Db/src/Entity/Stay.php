@@ -55,6 +55,15 @@ class Stay implements Interfaces\EntityInterface
     protected $requestDate;
 
     /**
+     * Decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="decision_date", nullable=true)
+     */
+    protected $decisionDate;
+
+    /**
      * Notes
      *
      * @var string
@@ -107,6 +116,29 @@ class Stay implements Interfaces\EntityInterface
     public function getRequestDate()
     {
         return $this->requestDate;
+    }
+
+    /**
+     * Set the decision date
+     *
+     * @param \DateTime $decisionDate
+     * @return Stay
+     */
+    public function setDecisionDate($decisionDate)
+    {
+        $this->decisionDate = $decisionDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the decision date
+     *
+     * @return \DateTime
+     */
+    public function getDecisionDate()
+    {
+        return $this->decisionDate;
     }
 
     /**
