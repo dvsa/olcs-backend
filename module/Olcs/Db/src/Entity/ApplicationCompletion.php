@@ -399,12 +399,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business business details status
      *
-     * @param int $sectionYourBusinessBusinessDetailsStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessBusinessDetailsStatus($sectionYourBusinessBusinessDetailsStatus)
+    public function setSectionYourBusinessBusinessDetailsStatus($input)
     {
-        $this->sectionYourBusinessBusinessDetailsStatus = $sectionYourBusinessBusinessDetailsStatus;
+        $this->sectionYourBusinessBusinessDetailsStatus = $input;
 
         return $this;
     }
@@ -514,12 +514,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence operator location status
      *
-     * @param int $sectionTypeOfLicenceOperatorLocationStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceOperatorLocationStatus($sectionTypeOfLicenceOperatorLocationStatus)
+    public function setSectionTypeOfLicenceOperatorLocationStatus($input)
     {
-        $this->sectionTypeOfLicenceOperatorLocationStatus = $sectionTypeOfLicenceOperatorLocationStatus;
+        $this->sectionTypeOfLicenceOperatorLocationStatus = $input;
 
         return $this;
     }
@@ -606,12 +606,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres authorisation status
      *
-     * @param int $sectionOperatingCentresAuthorisationStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresAuthorisationStatus($sectionOperatingCentresAuthorisationStatus)
+    public function setSectionOperatingCentresAuthorisationStatus($input)
     {
-        $this->sectionOperatingCentresAuthorisationStatus = $sectionOperatingCentresAuthorisationStatus;
+        $this->sectionOperatingCentresAuthorisationStatus = $input;
 
         return $this;
     }
@@ -629,12 +629,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres financial evidence status
      *
-     * @param int $sectionOperatingCentresFinancialEvidenceStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresFinancialEvidenceStatus($sectionOperatingCentresFinancialEvidenceStatus)
+    public function setSectionOperatingCentresFinancialEvidenceStatus($input)
     {
-        $this->sectionOperatingCentresFinancialEvidenceStatus = $sectionOperatingCentresFinancialEvidenceStatus;
+        $this->sectionOperatingCentresFinancialEvidenceStatus = $input;
 
         return $this;
     }
@@ -675,12 +675,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section transport managers placeholder status
      *
-     * @param int $sectionTransportManagersPlaceholderStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionTransportManagersPlaceholderStatus($sectionTransportManagersPlaceholderStatus)
+    public function setSectionTransportManagersPlaceholderStatus($input)
     {
-        $this->sectionTransportManagersPlaceholderStatus = $sectionTransportManagersPlaceholderStatus;
+        $this->sectionTransportManagersPlaceholderStatus = $input;
 
         return $this;
     }
@@ -836,12 +836,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history financial history status
      *
-     * @param int $sectionPreviousHistoryFinancialHistoryStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryFinancialHistoryStatus($sectionPreviousHistoryFinancialHistoryStatus)
+    public function setSectionPreviousHistoryFinancialHistoryStatus($input)
     {
-        $this->sectionPreviousHistoryFinancialHistoryStatus = $sectionPreviousHistoryFinancialHistoryStatus;
+        $this->sectionPreviousHistoryFinancialHistoryStatus = $input;
 
         return $this;
     }
@@ -859,12 +859,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history licence history status
      *
-     * @param int $sectionPreviousHistoryLicenceHistoryStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryLicenceHistoryStatus($sectionPreviousHistoryLicenceHistoryStatus)
+    public function setSectionPreviousHistoryLicenceHistoryStatus($input)
     {
-        $this->sectionPreviousHistoryLicenceHistoryStatus = $sectionPreviousHistoryLicenceHistoryStatus;
+        $this->sectionPreviousHistoryLicenceHistoryStatus = $input;
 
         return $this;
     }
@@ -882,12 +882,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history convictions penalties status
      *
-     * @param int $sectionPreviousHistoryConvictionsPenaltiesStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($sectionPreviousHistoryConvictionsPenaltiesStatus)
+    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($input)
     {
-        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $sectionPreviousHistoryConvictionsPenaltiesStatus;
+        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $input;
 
         return $this;
     }
