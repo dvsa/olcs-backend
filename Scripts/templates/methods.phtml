@@ -3,19 +3,19 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatParamName($item); ?>
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item); ?>
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatParamName($item); ?>
 <?php endif; ?>
 
      * @return <?php echo $fluidReturn; ?>
 
      */
-    public function set<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatPropertyName($item); ?>)
+    public function set<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatParamName($item); ?>)
     {
-        $this-><?php echo $this->formatPropertyName($item); ?> = $<?php echo $this->formatPropertyName($item); ?>;
+        $this-><?php echo $this->formatPropertyName($item); ?> = $<?php echo $this->formatParamName($item); ?>;
 
         return $this;
     }
