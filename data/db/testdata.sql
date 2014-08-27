@@ -21,6 +21,7 @@ TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
 TRUNCATE TABLE `pi`;
+TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `pi_reason`;
@@ -301,15 +302,19 @@ INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disq
     (36,NULL,NULL,'Y','6 months','TBC',NOW(),NULL,1,15);
 
 INSERT INTO `pi` (
-    `id`, `created_by`, `last_modified_by`, `case_id`, `type_app_new`, `type_app_var`,
-    `type_env_new`, `type_env_var`, `type_oc_review`, `type_impounding`, `witnesses`,
+    `id`, `pi_status`, `created_by`, `last_modified_by`, `case_id`, `witnesses`,
     `agreed_date`, `decision_date`,`created_on`, `last_modified_on`,`version`, `deleted_date`) VALUES
-    (1,1,1,73,1,0,0,0,0,1,20,NOW(),NOW(), NULL,NULL,1,NULL);
+    (1,'pi_s_schedule',1,1,24,20,NOW(),NOW(), NULL,NULL,1,NULL);
 
-INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`,
+INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`, `presided_by_role`,
     `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,1,NOW(),'Some Venue',NULL,NULL,1),
-    (2,1,NULL,NULL,2,NOW(),'Some Alt. Venue',NULL,NULL,1);
+    (1,1,NULL,NULL,1,'tc_r_dtc', NOW(),'Some Venue',NULL,NULL,1),
+    (2,1,NULL,NULL,2,'tc_r_htru', NOW(),'Some Alt. Venue',NULL,NULL,1);
+    
+INSERT INTO `pi_type` (`pi_type_id`, `pi_id`)
+VALUES
+    ('pi_t_oc_review', 1),
+    ('pi_t_env_var', 1);
 
 INSERT INTO `reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`description`,`is_read_only`,`is_ni`,`is_propose_to_revoke`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'GV',0,'Section 12','Objection/Representation: New application',1,0,0,NULL,NULL,NULL,NULL,1),
