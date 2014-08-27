@@ -18,7 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pi",
  *    indexes={
  *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_pi_detail_ref_data1_idx", columns={"presided_by"}),
  *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
  *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"})
@@ -30,9 +29,8 @@ class Pi implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\PresidedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\AgreedDateField,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
@@ -51,76 +49,21 @@ class Pi implements Interfaces\EntityInterface
     protected $piStatus;
 
     /**
-     * Type app new
+     * Pi type
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="yesno", name="type_app_new", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="pis", fetch="LAZY")
+     * @ORM\JoinTable(name="pi_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="pi_type_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $typeAppNew = 0;
-
-    /**
-     * Type app var
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_app_var", nullable=false)
-     */
-    protected $typeAppVar = 0;
-
-    /**
-     * Type discipliniary
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="type_discipliniary", nullable=false)
-     */
-    protected $typeDiscipliniary = 0;
-
-    /**
-     * Type env new
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_env_new", nullable=false)
-     */
-    protected $typeEnvNew = 0;
-
-    /**
-     * Type env var
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_env_var", nullable=false)
-     */
-    protected $typeEnvVar = 0;
-
-    /**
-     * Type oc review
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_oc_review", nullable=false)
-     */
-    protected $typeOcReview = 0;
-
-    /**
-     * Type impounding
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_impounding", nullable=false)
-     */
-    protected $typeImpounding = 0;
-
-    /**
-     * Type other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="type_other", nullable=false)
-     */
-    protected $typeOther = 0;
+    protected $piTypes;
 
     /**
      * Witnesses
@@ -217,6 +160,7 @@ class Pi implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->piTypes = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
         $this->piReasons = new ArrayCollection();
     }
@@ -245,187 +189,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the type app new
+     * Set the pi type
      *
-     * @param string $typeAppNew
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
      * @return Pi
      */
-    public function setTypeAppNew($typeAppNew)
+    public function setPiTypes($piTypes)
     {
-        $this->typeAppNew = $typeAppNew;
+        $this->piTypes = $piTypes;
 
         return $this;
     }
 
     /**
-     * Get the type app new
+     * Get the pi types
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTypeAppNew()
+    public function getPiTypes()
     {
-        return $this->typeAppNew;
-    }
-
-    /**
-     * Set the type app var
-     *
-     * @param string $typeAppVar
-     * @return Pi
-     */
-    public function setTypeAppVar($typeAppVar)
-    {
-        $this->typeAppVar = $typeAppVar;
-
-        return $this;
-    }
-
-    /**
-     * Get the type app var
-     *
-     * @return string
-     */
-    public function getTypeAppVar()
-    {
-        return $this->typeAppVar;
-    }
-
-    /**
-     * Set the type discipliniary
-     *
-     * @param boolean $typeDiscipliniary
-     * @return Pi
-     */
-    public function setTypeDiscipliniary($typeDiscipliniary)
-    {
-        $this->typeDiscipliniary = $typeDiscipliniary;
-
-        return $this;
-    }
-
-    /**
-     * Get the type discipliniary
-     *
-     * @return boolean
-     */
-    public function getTypeDiscipliniary()
-    {
-        return $this->typeDiscipliniary;
-    }
-
-    /**
-     * Set the type env new
-     *
-     * @param string $typeEnvNew
-     * @return Pi
-     */
-    public function setTypeEnvNew($typeEnvNew)
-    {
-        $this->typeEnvNew = $typeEnvNew;
-
-        return $this;
-    }
-
-    /**
-     * Get the type env new
-     *
-     * @return string
-     */
-    public function getTypeEnvNew()
-    {
-        return $this->typeEnvNew;
-    }
-
-    /**
-     * Set the type env var
-     *
-     * @param string $typeEnvVar
-     * @return Pi
-     */
-    public function setTypeEnvVar($typeEnvVar)
-    {
-        $this->typeEnvVar = $typeEnvVar;
-
-        return $this;
-    }
-
-    /**
-     * Get the type env var
-     *
-     * @return string
-     */
-    public function getTypeEnvVar()
-    {
-        return $this->typeEnvVar;
-    }
-
-    /**
-     * Set the type oc review
-     *
-     * @param string $typeOcReview
-     * @return Pi
-     */
-    public function setTypeOcReview($typeOcReview)
-    {
-        $this->typeOcReview = $typeOcReview;
-
-        return $this;
-    }
-
-    /**
-     * Get the type oc review
-     *
-     * @return string
-     */
-    public function getTypeOcReview()
-    {
-        return $this->typeOcReview;
-    }
-
-    /**
-     * Set the type impounding
-     *
-     * @param string $typeImpounding
-     * @return Pi
-     */
-    public function setTypeImpounding($typeImpounding)
-    {
-        $this->typeImpounding = $typeImpounding;
-
-        return $this;
-    }
-
-    /**
-     * Get the type impounding
-     *
-     * @return string
-     */
-    public function getTypeImpounding()
-    {
-        return $this->typeImpounding;
-    }
-
-    /**
-     * Set the type other
-     *
-     * @param string $typeOther
-     * @return Pi
-     */
-    public function setTypeOther($typeOther)
-    {
-        $this->typeOther = $typeOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the type other
-     *
-     * @return string
-     */
-    public function getTypeOther()
-    {
-        return $this->typeOther;
+        return $this->piTypes;
     }
 
     /**

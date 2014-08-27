@@ -18,7 +18,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_reschedule_date_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by"})
+ *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by_role"})
  *    }
  * )
  */
@@ -26,7 +26,6 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PresidingTcManyToOne,
@@ -34,6 +33,16 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Presided by role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedByRole;
 
     /**
      * Pi
@@ -62,6 +71,29 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="venue", length=255, nullable=true)
      */
     protected $venue;
+
+    /**
+     * Set the presided by role
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedByRole
+     * @return PiHearing
+     */
+    public function setPresidedByRole($presidedByRole)
+    {
+        $this->presidedByRole = $presidedByRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedByRole()
+    {
+        return $this->presidedByRole;
+    }
 
     /**
      * Set the pi

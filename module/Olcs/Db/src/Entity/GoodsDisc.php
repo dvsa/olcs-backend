@@ -49,15 +49,6 @@ class GoodsDisc implements Interfaces\EntityInterface
     protected $isCopy = 0;
 
     /**
-     * Requested by self service user
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="requested_by_self_service_user", nullable=false)
-     */
-    protected $requestedBySelfServiceUser = 0;
-
-    /**
      * Reprint required
      *
      * @var string
@@ -87,29 +78,6 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
-    }
-
-    /**
-     * Set the requested by self service user
-     *
-     * @param string $requestedBySelfServiceUser
-     * @return GoodsDisc
-     */
-    public function setRequestedBySelfServiceUser($requestedBySelfServiceUser)
-    {
-        $this->requestedBySelfServiceUser = $requestedBySelfServiceUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the requested by self service user
-     *
-     * @return string
-     */
-    public function getRequestedBySelfServiceUser()
-    {
-        return $this->requestedBySelfServiceUser;
     }
 
     /**

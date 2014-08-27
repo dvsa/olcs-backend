@@ -693,30 +693,6 @@ return array(
         )
     ),
     'pi' => array(
-        'type_app_new' => array(
-            'type' => 'yesno'
-        ),
-        'type_app_var' => array(
-            'type' => 'yesno'
-        ),
-        'type_disciplinary' => array(
-            'type' => 'yesno'
-        ),
-        'type_env_new' => array(
-            'type' => 'yesno'
-        ),
-        'type_env_var' => array(
-            'type' => 'yesno'
-        ),
-        'type_oc_review' => array(
-            'type' => 'yesno'
-        ),
-        'type_impounding' => array(
-            'type' => 'yesno'
-        ),
-        'type_other' => array(
-            'type' => 'yesno'
-        ),
         'is_cancelled' => array(
             'type' => 'yesno'
         ),
@@ -993,6 +969,14 @@ return array(
             )
         )
     ),
+    /* 'pi_type' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'piType'
+            )
+        )
+    ) ,*/
     'category' => array(
         'is_doc_category' => array(
             'type' => 'yesno'

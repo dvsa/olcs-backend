@@ -164,15 +164,6 @@ class Document implements Interfaces\EntityInterface
     protected $isReadOnly;
 
     /**
-     * Size
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="size", nullable=true)
-     */
-    protected $size;
-
-    /**
      * Filename
      *
      * @var string
@@ -189,6 +180,15 @@ class Document implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="mailed", nullable=false)
      */
     protected $mailed = 0;
+
+    /**
+     * Size
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="size", nullable=true)
+     */
+    protected $size;
 
     /**
      * Initialise the collections
@@ -475,29 +475,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the size
-     *
-     * @param int $size
-     * @return Document
-     */
-    public function setSize($size)
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    /**
-     * Get the size
-     *
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->size;
-    }
-
-    /**
      * Set the filename
      *
      * @param string $filename
@@ -541,5 +518,28 @@ class Document implements Interfaces\EntityInterface
     public function getMailed()
     {
         return $this->mailed;
+    }
+
+    /**
+     * Set the size
+     *
+     * @param int $size
+     * @return Document
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * Get the size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 }
