@@ -70,7 +70,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="id_col")
+     * @ORM\Column(type="string", name="link_display")
      */
     protected $identifier;
 
@@ -79,7 +79,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="name_col")
+     * @ORM\Column(type="string", name="name_display")
      */
     protected $name;
 
@@ -95,7 +95,7 @@ class TaskSearchView implements Interfaces\EntityInterface
     /**
      * Category ID
      *
-     * @var string
+     * @var int
      *
      * @ORM\Column(type="integer", name="category_id")
      */
@@ -165,13 +165,22 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $licenceCount;
 
     /**
-     * Licence ID
+     * Name
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="link_id")
+     */
+    protected $linkId;
+
+    /**
+     * Name
      *
      * @var string
      *
-     * @ORM\Column(type="integer", name="licence_id")
+     * @ORM\Column(type="string", name="link_type")
      */
-    protected $licenceId;
+    protected $linkType;
 
     /**
      * Get the id
@@ -324,12 +333,22 @@ class TaskSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the licence ID (if applicable)
+     * Get link id
      *
      * @return int
      */
-    public function getLicenceId()
+    public function getLinkId()
     {
-        return $this->licenceId;
+        return $this->linkId;
+    }
+
+    /**
+     * Get link type
+     *
+     * @return string
+     */
+    public function getLinkType()
+    {
+        return $this->linkType;
     }
 }
