@@ -555,6 +555,23 @@ class AlignEntitiesToSchema
     }
 
     /**
+     * Format param name
+     *
+     * @param array $item
+     * @return string
+     */
+    private function formatParamName($item)
+    {
+        $property = $this->formatPropertyName($item);
+
+        if (strlen($property) >= 40) {
+            $property = 'input';
+        }
+
+        return $property;
+    }
+
+    /**
      * Check if there is a soft delete field
      *
      * @param array $fields
