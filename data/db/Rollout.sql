@@ -1604,13 +1604,30 @@ DROP TABLE IF EXISTS task_search_view;
 DROP VIEW IF EXISTS task_search_view;
 
 CREATE VIEW task_search_view AS
-    SELECT t.id, t.assigned_to_team_id, t.assigned_to_user_id, t.action_date, t.urgent,
-        t.is_closed, t.category_id, t.task_sub_category_id, t.description,
-        cat.description category_name, tsc.name task_sub_category_name,
-        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') id_col,
-        coalesce(o.name, irfo.name, tmp.family_name, concat('Case ', c.id), 'Unlinked') name_col,
-        l.lic_no, l.id licence_id, irfo.name irfo_op_name, o.name op_name, tmp.family_name, c.id case_id, br.id bus_reg_id,
-        u.name user_name, COUNT(ll.id) licence_count
+   SELECT t.id,
+       t.assigned_to_team_id,
+       t.assigned_to_user_id,
+       cat.description category_name, 
+       t.task_sub_category_id, 
+       t.description,
+       coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
+       coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
+       case when t.irfo_organisation_id is not null then 'IRFO Organisation'
+            when t.bus_reg_id is not null then 'Bus Registration'
+            when t.application_id is not null then 'Application'
+            when t.case_id is not null then 'Case'
+            when t.licence_id is not null then 'Licence'
+            when t.transport_manager_id is not null then 'Transport Manager'
+            else 'Unlinked' end link_type,
+      coalesce(o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
+      t.action_date action_date,
+      t.urgent urgent,
+      t.is_closed is_closed,
+      t.category_id category_id,
+      tsc.name task_sub_category_name,
+      u.name user_name,
+      count(ll.id) licence_count
+
     FROM `task` t
 
     INNER JOIN (category cat, task_sub_category tsc) ON (cat.id = t.category_id AND tsc.id = t.task_sub_category_id)
