@@ -3347,7 +3347,6 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `application_completion`
 -- -----------------------------------------------------
@@ -3358,6 +3357,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `section_yb_bd_status` INT NULL,
   `section_yb_add_status` INT NULL,
   `section_yb_peo_status` INT NULL,
+  `section_yb_st_status` INT NULL,
   `section_tol_status` INT NULL,
   `section_tol_ol_status` INT NULL,
   `section_tol_ot_status` INT NULL,
@@ -3366,6 +3366,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `section_ocs_auth_status` INT NULL,
   `section_ocs_fe_status` INT NULL,
   `section_tms_status` INT NULL,
+  `section_tms_p_status` INT NULL,
   `section_veh_status` INT NULL,
   `section_veh_v_status` INT NULL,
   `section_veh_vpsv_status` INT NULL,
@@ -3376,6 +3377,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `section_ph_lh_status` INT NULL,
   `section_ph_cp_status` INT NULL,
   `section_rd_status` INT NULL,
+  `section_rd_sum_status` INT NULL,
   `section_pay_status` INT NULL,
   `section_pay_pay_status` INT NULL,
   `section_pay_summary_status` INT NULL,
@@ -3406,7 +3408,6 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `presiding_tc`
