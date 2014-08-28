@@ -365,6 +365,7 @@ abstract class ServiceAbstract
         $entity->clearProperties(array_keys($data));
 
         $hydrator = $this->getDoctrineHydrator();
+
         $entity = $hydrator->hydrate($data, $entity);
 
         $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
