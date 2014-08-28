@@ -267,6 +267,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
     ('app_status', 'apsts_new', 'New', null),
+    ('app_status', 'apsts_consideration', 'Under Consideration', null),
 
     ('bus_subsidy','bs_no', 'No', '1'),
     ('bus_subsidy','bs_yes', 'Yes', '2'),
@@ -495,10 +496,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_oc_review', 'OC Review', null),
     ('pi_type', 'pi_t_imp', 'Impounding', null),
     ('pi_type', 'pi_t_other', 'Other', null),
-    
+
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
-    
+
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),

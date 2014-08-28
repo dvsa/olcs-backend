@@ -28,7 +28,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IsDecisionField,
         Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -63,6 +62,15 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
      */
     protected $senderUser;
+
+    /**
+     * Is decision
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_decision", nullable=false)
+     */
+    protected $isDecision;
 
     /**
      * Urgent
@@ -158,6 +166,29 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSenderUser()
     {
         return $this->senderUser;
+    }
+
+    /**
+     * Set the is decision
+     *
+     * @param string $isDecision
+     * @return SubmissionAction
+     */
+    public function setIsDecision($isDecision)
+    {
+        $this->isDecision = $isDecision;
+
+        return $this;
+    }
+
+    /**
+     * Get the is decision
+     *
+     * @return string
+     */
+    public function getIsDecision()
+    {
+        return $this->isDecision;
     }
 
     /**
