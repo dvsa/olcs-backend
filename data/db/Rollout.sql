@@ -1639,6 +1639,7 @@ CREATE VIEW task_search_view AS
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
+		d.file_extension,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
     FROM `document` d
@@ -1652,6 +1653,4 @@ CREATE VIEW document_search_view AS
 
     LEFT JOIN cases c ON d.case_id = c.id
 
-    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-
-    GROUP BY (d.id);
+    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id;
