@@ -58,6 +58,24 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $description;
 
     /**
+     * Filename
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="filename")
+     */
+    protected $filename;
+
+    /**
+     * File Extension
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="file_extension")
+     */
+    protected $fileExtension;
+
+    /**
      * Category ID
      *
      * @var string
@@ -113,33 +131,13 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the is closed
-     *
-     * @return unknown
-     */
-    public function getIsClosed()
-    {
-        return $this->isClosed;
-    }
-
-    /**
-     * Get the urgent flag
-     *
-     * @return unknown
-     */
-    public function getUrgent()
-    {
-        return $this->urgent;
-    }
-
-    /**
      * Get the action date
      *
      * @return \DateTime
      */
-    public function getActionDate()
+    public function getIssuedDate()
     {
-        return $this->actionDate;
+        return $this->issuedDate;
     }
 
     /**
@@ -153,16 +151,6 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Get the description
      *
      * @return string
@@ -170,6 +158,26 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Get the filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Get the file extension
+     *
+     * @return string
+     */
+    public function getFileExtension()
+    {
+        return $this->fileExtension;
     }
 
     /**
@@ -197,9 +205,9 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @return int
      */
-    public function getSubCategory()
+    public function getDocumentSubCategory()
     {
-        return $this->subCategory;
+        return $this->documentSubCategory;
     }
 
     /**
@@ -207,49 +215,9 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @return string
      */
-    public function getSubCategoryName()
+    public function getDocumentSubCategoryName()
     {
-        return $this->subCategoryName;
-    }
-
-    /**
-     * Get the task's user ID
-     *
-     * @return int
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * Get the task's user name
-     *
-     * @return string
-     */
-    public function getOwnerName()
-    {
-        return $this->ownerName;
-    }
-
-    /**
-     * Get the task's team ID
-     *
-     * @return int
-     */
-    public function getTeam()
-    {
-        return $this->team;
-    }
-
-    /**
-     * Get the number of licences relating to a task
-     *
-     * @return int
-     */
-    public function getLicenceCount()
-    {
-        return $this->licenceCount;
+        return $this->documentSubCategoryName;
     }
 
     /**
