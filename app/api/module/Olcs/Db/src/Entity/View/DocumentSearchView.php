@@ -112,6 +112,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $documentSubCategoryName;
 
     /**
+     * Is digital or not
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="is_digital")
+     */
+    protected $isDigital;
+
+    /**
      * Licence ID
      *
      * @var string
@@ -218,6 +227,16 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getDocumentSubCategoryName()
     {
         return $this->documentSubCategoryName;
+    }
+
+    /**
+     * Get if digital
+     *
+     * @return int
+     */
+    public function getIsDigital()
+    {
+        return $this->isDigital;
     }
 
     /**

@@ -1635,11 +1635,13 @@ CREATE VIEW task_search_view AS
 
     GROUP BY (t.id);
 
+DROP TABLE IF EXISTS document_search_view;
+DROP VIEW IF EXISTS document_search_view;
 
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
-		d.file_extension,
+		d.file_extension, d.is_digital,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
     FROM `document` d

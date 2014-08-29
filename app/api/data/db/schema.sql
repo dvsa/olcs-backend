@@ -1420,7 +1420,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `filename` VARCHAR(255) NULL,
   `file_extension` varchar(20) NOT null,
   `deleted_date` DATETIME NULL,
-  `mailed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag true if doc was received or sent via email',
+  `is_digital` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag true if doc was received or sent digitally',
   `size` INT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
