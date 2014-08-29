@@ -1418,6 +1418,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `bus_reg_id` INT NULL,
   `issued_date` DATE NULL,
   `filename` VARCHAR(255) NULL,
+  `file_extension` varchar(20) NOT null,
   `deleted_date` DATETIME NULL,
   `mailed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag true if doc was received or sent via email',
   `size` INT NULL,
