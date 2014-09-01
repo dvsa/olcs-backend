@@ -12,6 +12,7 @@ TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `decision`;
+TRUNCATE TABLE `document`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -317,7 +318,7 @@ INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `pres
     `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,1,'tc_r_dtc', NOW(),'Some Venue',NULL,NULL,1),
     (2,1,NULL,NULL,2,'tc_r_htru', NOW(),'Some Alt. Venue',NULL,NULL,1);
-    
+
 INSERT INTO `pi_type` (`pi_type_id`, `pi_id`)
 VALUES
     ('pi_t_oc_review', 1),
@@ -336,12 +337,12 @@ INSERT INTO `pi_reason` (`pi_id`, `reason_id`)
 VALUES
     (1,2),
     (1,6);
-    
+
 INSERT INTO `decision` (`id`, `goods_or_psv`, `last_modified_by`, `created_by`, `section_code`, `description`, `is_read_only`, `created_on`, `last_modified_on`, `version`)
 VALUES
     (1, 'lcat_gv', NULL, 1, 'T Section Decision A', 'T Descr Decision A', 0, NOW(), NULL, 1),
     (2, 'lcat_psv', NULL, 1, 'T Section Decision B', 'T Descr Decision B', 0, NOW(), NULL, 1);
-    
+
 INSERT INTO `pi_decision` (`pi_id`, `decision_id`)
 VALUES
     (1,2);
@@ -568,5 +569,31 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+
+/* Document dummy data */
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'DOC','2014-08-23');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'DOC','2014-08-25');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'DOC','2014-08-22');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (4,7,'Test document 4','testdocument4.doc',0,2,1,'DOC','2014-08-24');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (5,7,'Test document 5','testdocument5.xls',0,3,1,'XLS','2014-07-01');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (6,7,'Test document 6','testdocument6.docx',0,3,1,'DOCX','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (7,7,'Test document 7','testdocument7.xls',0,3,1,'XLS','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (8,7,'Test document 8','testdocument8.doc',1,3,2,'DOC','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (9,7,'Test document 9','testdocument9.ppt',1,5,1,'PPT','2014-08-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (10,7,'Test document 10','testdocument10.jpg',0,4,1,'JPG','2014-08-08');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (11,7,'Test document 11','testdocument11.txt',0,3,1,'TXT','2014-08-14');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (12,7,'Test document 12','testdocument12.xls',1,4,1,'XLS','2014-08-28');
 
 SET foreign_key_checks = 1;

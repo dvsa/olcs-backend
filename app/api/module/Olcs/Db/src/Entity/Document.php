@@ -47,14 +47,14 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Operating centre
+     * Traffic area
      *
-     * @var \Olcs\Db\Entity\OperatingCentre
+     * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
-    protected $operatingCentre;
+    protected $trafficArea;
 
     /**
      * Opposition
@@ -67,26 +67,6 @@ class Document implements Interfaces\EntityInterface
     protected $opposition;
 
     /**
-     * Bus reg
-     *
-     * @var \Olcs\Db\Entity\BusReg
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
-     */
-    protected $busReg;
-
-    /**
-     * Traffic area
-     *
-     * @var \Olcs\Db\Entity\TrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $trafficArea;
-
-    /**
      * Transport manager
      *
      * @var \Olcs\Db\Entity\TransportManager
@@ -97,24 +77,34 @@ class Document implements Interfaces\EntityInterface
     protected $transportManager;
 
     /**
-     * Document sub category
+     * Application
      *
-     * @var \Olcs\Db\Entity\DocumentSubCategory
+     * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
-    protected $documentSubCategory;
+    protected $application;
 
     /**
-     * Licence
+     * Operating centre
      *
-     * @var \Olcs\Db\Entity\Licence
+     * @var \Olcs\Db\Entity\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
-    protected $licence;
+    protected $operatingCentre;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
 
     /**
      * Case
@@ -127,14 +117,24 @@ class Document implements Interfaces\EntityInterface
     protected $case;
 
     /**
-     * Application
+     * Licence
      *
-     * @var \Olcs\Db\Entity\Application
+     * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
-    protected $application;
+    protected $licence;
+
+    /**
+     * Document sub category
+     *
+     * @var \Olcs\Db\Entity\DocumentSubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $documentSubCategory;
 
     /**
      * Email
@@ -173,13 +173,22 @@ class Document implements Interfaces\EntityInterface
     protected $filename;
 
     /**
-     * Mailed
+     * File extension
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="file_extension", length=20, nullable=false)
+     */
+    protected $fileExtension;
+
+    /**
+     * Is digital
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="mailed", nullable=false)
+     * @ORM\Column(type="boolean", name="is_digital", nullable=false)
      */
-    protected $mailed = 0;
+    protected $isDigital = 0;
 
     /**
      * Size
@@ -196,75 +205,6 @@ class Document implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->emails = new ArrayCollection();
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
-     * @return Document
-     */
-    public function setOperatingCentre($operatingCentre)
-    {
-        $this->operatingCentre = $operatingCentre;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centre
-     *
-     * @return \Olcs\Db\Entity\OperatingCentre
-     */
-    public function getOperatingCentre()
-    {
-        return $this->operatingCentre;
-    }
-
-    /**
-     * Set the opposition
-     *
-     * @param \Olcs\Db\Entity\Opposition $opposition
-     * @return Document
-     */
-    public function setOpposition($opposition)
-    {
-        $this->opposition = $opposition;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition
-     *
-     * @return \Olcs\Db\Entity\Opposition
-     */
-    public function getOpposition()
-    {
-        return $this->opposition;
-    }
-
-    /**
-     * Set the bus reg
-     *
-     * @param \Olcs\Db\Entity\BusReg $busReg
-     * @return Document
-     */
-    public function setBusReg($busReg)
-    {
-        $this->busReg = $busReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus reg
-     *
-     * @return \Olcs\Db\Entity\BusReg
-     */
-    public function getBusReg()
-    {
-        return $this->busReg;
     }
 
     /**
@@ -291,6 +231,29 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return Document
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
+    }
+
+    /**
      * Set the transport manager
      *
      * @param \Olcs\Db\Entity\TransportManager $transportManager
@@ -314,49 +277,72 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the document sub category
+     * Set the application
      *
-     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @param \Olcs\Db\Entity\Application $application
      * @return Document
      */
-    public function setDocumentSubCategory($documentSubCategory)
+    public function setApplication($application)
     {
-        $this->documentSubCategory = $documentSubCategory;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * Get the document sub category
+     * Get the application
      *
-     * @return \Olcs\Db\Entity\DocumentSubCategory
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getDocumentSubCategory()
+    public function getApplication()
     {
-        return $this->documentSubCategory;
+        return $this->application;
     }
 
     /**
-     * Set the licence
+     * Set the operating centre
      *
-     * @param \Olcs\Db\Entity\Licence $licence
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
      * @return Document
      */
-    public function setLicence($licence)
+    public function setOperatingCentre($operatingCentre)
     {
-        $this->licence = $licence;
+        $this->operatingCentre = $operatingCentre;
 
         return $this;
     }
 
     /**
-     * Get the licence
+     * Get the operating centre
      *
-     * @return \Olcs\Db\Entity\Licence
+     * @return \Olcs\Db\Entity\OperatingCentre
      */
-    public function getLicence()
+    public function getOperatingCentre()
     {
-        return $this->licence;
+        return $this->operatingCentre;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return Document
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 
     /**
@@ -383,26 +369,49 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application
+     * Set the licence
      *
-     * @param \Olcs\Db\Entity\Application $application
+     * @param \Olcs\Db\Entity\Licence $licence
      * @return Document
      */
-    public function setApplication($application)
+    public function setLicence($licence)
     {
-        $this->application = $application;
+        $this->licence = $licence;
 
         return $this;
     }
 
     /**
-     * Get the application
+     * Get the licence
      *
-     * @return \Olcs\Db\Entity\Application
+     * @return \Olcs\Db\Entity\Licence
      */
-    public function getApplication()
+    public function getLicence()
     {
-        return $this->application;
+        return $this->licence;
+    }
+
+    /**
+     * Set the document sub category
+     *
+     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @return Document
+     */
+    public function setDocumentSubCategory($documentSubCategory)
+    {
+        $this->documentSubCategory = $documentSubCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the document sub category
+     *
+     * @return \Olcs\Db\Entity\DocumentSubCategory
+     */
+    public function getDocumentSubCategory()
+    {
+        return $this->documentSubCategory;
     }
 
     /**
@@ -498,26 +507,49 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the mailed
+     * Set the file extension
      *
-     * @param boolean $mailed
+     * @param string $fileExtension
      * @return Document
      */
-    public function setMailed($mailed)
+    public function setFileExtension($fileExtension)
     {
-        $this->mailed = $mailed;
+        $this->fileExtension = $fileExtension;
 
         return $this;
     }
 
     /**
-     * Get the mailed
+     * Get the file extension
+     *
+     * @return string
+     */
+    public function getFileExtension()
+    {
+        return $this->fileExtension;
+    }
+
+    /**
+     * Set the is digital
+     *
+     * @param boolean $isDigital
+     * @return Document
+     */
+    public function setIsDigital($isDigital)
+    {
+        $this->isDigital = $isDigital;
+
+        return $this;
+    }
+
+    /**
+     * Get the is digital
      *
      * @return boolean
      */
-    public function getMailed()
+    public function getIsDigital()
     {
-        return $this->mailed;
+        return $this->isDigital;
     }
 
     /**
