@@ -2,6 +2,9 @@
 
 namespace Olcs\Db\Service;
 
+/**
+ * Task service
+ */
 class Task extends ServiceAbstract
 {
     protected $validSearchFields = array(
