@@ -42,6 +42,7 @@ class Application implements Interfaces\EntityInterface
         Traits\TotCommunityLicencesField,
         Traits\ReceivedDateField,
         Traits\WithdrawnDateField,
+        Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
