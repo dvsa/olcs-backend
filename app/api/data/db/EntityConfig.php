@@ -89,6 +89,9 @@ return array(
         ),
         'translate_to_welsh' => array(
             'type' => 'yesno'
+        ),
+        'is_maintenance_suitable' => array(
+            'type' => 'yesnonull'
         )
     ),
     'application' => array(
@@ -169,6 +172,9 @@ return array(
         ),
         'psv_only_limosines_confirmation' => array(
             'type' => 'yesno'
+        ),
+        'is_maintenance_suitable' => array(
+            'type' => 'yesnonull'
         )
     ),
     's4' => array(
@@ -560,6 +566,9 @@ return array(
         'section_yb_peo_status' => array(
             'property' => 'sectionYourBusinessPeopleStatus'
         ),
+        'section_yb_st_status' => array(
+            'property' => 'sectionYourBusinessSoleTraderStatus'
+        ),
         'section_tol_status' => array(
             'property' => 'sectionTypeOfLicenceStatus'
         ),
@@ -584,6 +593,9 @@ return array(
         'section_tms_status' => array(
             'property' => 'sectionTransportManagersStatus'
         ),
+        'section_tms_p_status' => array(
+            'property' => 'sectionTransportManagersPlaceholderStatus'
+        ),
         'section_veh_status' => array(
             'property' => 'sectionVehicleSafetyStatus'
         ),
@@ -595,6 +607,9 @@ return array(
         ),
         'section_veh_s_status' => array(
             'property' => 'sectionVehicleSafetySafetyStatus'
+        ),
+        'section_veh_und_status' => array(
+            'property' => 'sectionVehicleSafetyUndertakingsStatus'
         ),
         'section_ph_status' => array(
             'property' => 'sectionPreviousHistoryStatus'
@@ -610,6 +625,9 @@ return array(
         ),
         'section_rd_status' => array(
             'property' => 'sectionReviewDeclarationsStatus'
+        ),
+        'section_rd_sum_status' => array(
+            'property' => 'sectionReviewDeclarationsSummaryStatus'
         ),
         'section_pay_status' => array(
             'property' => 'sectionPaymentSubmissionStatus'

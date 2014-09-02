@@ -11,6 +11,8 @@ TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `driver`;
+TRUNCATE TABLE `decision`;
+TRUNCATE TABLE `document`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -21,12 +23,14 @@ TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
 TRUNCATE TABLE `pi`;
+TRUNCATE TABLE `pi_decision`;
 TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `pi_reason`;
 TRUNCATE TABLE `pi_venue`;
 TRUNCATE TABLE `presiding_tc`;
+TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
 TRUNCATE TABLE `tm_qualification`;
@@ -222,19 +226,24 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     (4,7,4,NULL,4,1,'removal reason 4','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
-INSERT INTO `note` (`id`, `case_id`, `licence_id`, `application_id`, `created_by`, `last_modified_by`, `priority`,
-    `comment`, `note_type`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,28,7,1,2,NULL,0,'This is the first comment',30,'2011-10-03 00:00:00',NULL,1),
-    (2,28,7,NULL,4,NULL,1,'This is the second comment',30,'2011-10-03 00:00:00',NULL,1),
-    (3,28,7,1,2,NULL,0,'This is the third comment',30,'2011-10-03 00:00:00',NULL,1),
-    (4,28,7,NULL,2,NULL,1,'This is the fourth comment',30,'2011-10-03 00:00:00',NULL,1),
-    (5,28,7,1,3,NULL,0,'This is the fifth comment',30,'2011-10-03 00:00:00',NULL,1),
-    (6,28,7,NULL,5,NULL,0,'This is the sixth note',30,'2011-10-03 00:00:00',NULL,1),
-    (7,28,7,NULL,3,NULL,0,'This is a case note',30,'2011-10-03 00:00:00',NULL,1),
-    (8,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2011-10-14 00:00:00',NULL,1),
-    (9,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2012-10-10 00:00:00',NULL,1),
-    (10,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2012-10-10 00:00:00',NULL,1),
-    (11,28,7,NULL,3,NULL,0,'This is the sixth note',30,'2013-11-05 00:00:00',NULL,1);
+INSERT INTO `note` (`id`, `note_type`, `last_modified_by`, `bus_reg_id`, `created_by`,
+  `irfo_psv_auth_id`, `licence_id`, `case_id`, `irfo_gv_permit_id`, `application_id`, `comment`,
+  `priority`, `created_on`, `last_modified_on`, `version`)
+VALUES
+(1, 'note_t_app', NULL, NULL, 2, NULL, 7, 28, NULL, 1, 'This is an app note', 0, '2011-10-03 00:00:00', NULL, 1),
+(2, 'note_t_lic', NULL, NULL, 4, NULL, 7, 28, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', NULL, 1),
+(3, 'note_t_app', NULL, NULL, 2, NULL, 7, 28, NULL, 1, 'This is an app note', 0, '2011-10-03 00:00:00', NULL, 1),
+(4, 'note_t_app', NULL, NULL, 3, NULL, 7, 28, NULL, 1, 'This is an app note', 0, '2011-10-03 00:00:00', NULL, 1),
+(5, 'note_t_lic', NULL, NULL, 5, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', NULL, 1),
+(6, 'note_t_case', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a case note', 0, '2011-10-03 00:00:00', NULL, 1),
+(7, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', NULL, 1),
+(8, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', NULL, 1),
+(9, 'note_t_bus', NULL, 1, 3, NULL, 63, 75, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', NULL, 1),
+(10, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', NULL, 1),
+(11, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', NULL, 1),
+(12, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', NULL, 1),
+(13, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', NULL, 1);
+
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `address_id`) VALUES
@@ -302,309 +311,42 @@ INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disq
     (36,NULL,NULL,'Y','6 months','TBC',NOW(),NULL,1,15);
 
 INSERT INTO `pi` (
-    `id`, `pi_status`, `created_by`, `last_modified_by`, `case_id`, `witnesses`,
+    `id`, `assigned_to`, `pi_status`, `created_by`, `last_modified_by`, `case_id`, `witnesses`,
     `agreed_date`, `decision_date`,`created_on`, `last_modified_on`,`version`, `deleted_date`) VALUES
-    (1,'pi_s_schedule',1,1,24,20,NOW(),NOW(), NULL,NULL,1,NULL);
+    (1,1,'pi_s_schedule',1,1,24,20,NOW(),NOW(), NULL,NULL,1,NULL);
 
 INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`, `presided_by_role`,
     `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,1,'tc_r_dtc', NOW(),'Some Venue',NULL,NULL,1),
     (2,1,NULL,NULL,2,'tc_r_htru', NOW(),'Some Alt. Venue',NULL,NULL,1);
-    
+
 INSERT INTO `pi_type` (`pi_type_id`, `pi_id`)
 VALUES
     ('pi_t_oc_review', 1),
     ('pi_t_env_var', 1);
 
-INSERT INTO `reason` (`id`,`goods_or_psv`,`is_decision`,`section_code`,`description`,`is_read_only`,`is_ni`,`is_propose_to_revoke`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
-    (1,'GV',0,'Section 12','Objection/Representation: New application',1,0,0,NULL,NULL,NULL,NULL,1),
-    (2,'GV',0,'Section 13','New application',1,0,0,NULL,NULL,NULL,NULL,1),
-    (3,'GV',0,'Section 13 (3)','Good Repute/Financial Standing/Prof Comp',1,0,0,NULL,NULL,NULL,NULL,1),
-    (4,'GV',0,'Section 13 (4)','Must not be unfit',1,0,0,NULL,NULL,NULL,NULL,1),
-    (5,'GV',0,'Section 13 (5)(a)','Drivers Hours and Tachographs',1,0,0,NULL,NULL,NULL,NULL,1),
-    (6,'GV',0,'Section 13 (5)(b)','Loading of Vehicles',1,0,0,NULL,NULL,NULL,NULL,1),
-    (7,'GV',0,'Section 13 (5)(c)','Maintenance',1,0,0,NULL,NULL,NULL,NULL,1),
-    (8,'GV',0,'Section 13 (5)(d)','Availability/Suitability of Operating Centre',1,0,0,NULL,NULL,NULL,NULL,1),
-    (9,'GV',0,'Section 13 (5)(e)','Capacity of Operating Centre',1,0,0,NULL,NULL,NULL,NULL,1),
-    (10,'GV',0,'Section 13 (6)','Finance for Maintenance',1,0,0,NULL,NULL,NULL,NULL,1),
-    (11,'GV',0,'Section 17','Variation application',1,0,0,NULL,NULL,NULL,NULL,1),
-    (12,'GV',0,'Section 19','Objection/Representation: Var. application',1,0,0,NULL,NULL,NULL,NULL,1),
-    (13,'GV',0,'Section 21','Conditions: Road Safety',1,0,0,NULL,NULL,NULL,NULL,1),
-    (14,'GV',0,'Section 22','Conditions: Matters to be notified',1,0,0,NULL,NULL,NULL,NULL,1),
-    (15,'GV',0,'Section 23','Conditions: Operating Centres',1,0,0,NULL,NULL,NULL,NULL,1),
-    (16,'GV',0,'Section 24','Interim Licence',1,0,0,NULL,NULL,NULL,NULL,1),
-    (17,'GV',0,'Section 25','Interim Variation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (18,'GV',0,'Section 26 (1)(a)','Unauthorised use of place as an o/c',1,0,0,NULL,NULL,NULL,NULL,1),
-    (19,'GV',0,'Section 26 (1)(b)','Contravention of Licence Condition',1,0,0,NULL,NULL,NULL,NULL,1),
-    (20,'GV',0,'Section 26 (1)(c)(i)','Convictions of Licence Holder (Sch 2, Para 5)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (21,'GV',0,'Section 26 (1)(c)(ii)','Convictions of Servant/Agent (Sch 2, Para 5)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (22,'GV',0,'Section 26 (1)(c)(iii)','Prohibitions',1,0,0,NULL,NULL,NULL,NULL,1),
-    (23,'GV',0,'Section 26 (1)(d)','Convictions (Schedule 2, Paragraph 5(j))',1,0,0,NULL,NULL,NULL,NULL,1),
-    (24,'GV',0,'Section 26 (1)(e)','False Statement/Fail to fulfil Statement of Exp.',1,0,0,NULL,NULL,NULL,NULL,1),
-    (25,'GV',0,'Section 26 (1)(f)','Fail to fulfil Undertaking',1,0,0,NULL,NULL,NULL,NULL,1),
-    (26,'GV',0,'Section 26 (1)(g)','Bankruptcy/Liquidation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (27,'GV',0,'Section 26 (1)(h)','Material Change',1,0,0,NULL,NULL,NULL,NULL,1),
-    (28,'GV',0,'Section 26 (1)(i)','Suspend/Curtail/Revoke under Section 28(4)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (29,'GV',0,'Section 27 (1)(a)','Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
-    (30,'GV',0,'Section 27 (1)(b)','Financial Standing',1,0,1,NULL,NULL,NULL,NULL,1),
-    (31,'GV',0,'Section 27 (1)(c)','Professional Competence',1,0,1,NULL,NULL,NULL,NULL,1),
-    (32,'GV',0,'Section 28','Disqualification',1,0,0,NULL,NULL,NULL,NULL,1),
-    (33,'GV',0,'Section 30','Review of Operating Centre',1,0,0,NULL,NULL,NULL,NULL,1),
-    (34,'GV',0,'Section 49','Certificate of Qualification',1,0,0,NULL,NULL,NULL,NULL,1),
-    (35,'GV',0,'Schedule 3','Transport Manager\'s Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
-    (36,'GV',0,'Art. 8(2)&(3)','Community Authorisations',1,0,0,NULL,NULL,NULL,NULL,1),
-    (37,'GV',1,'Section 13','Application Granted',1,0,0,NULL,NULL,NULL,NULL,1),
-    (38,'GV',1,'Section 13','Undertakings',1,0,0,NULL,NULL,NULL,NULL,1),
-    (39,'GV',1,'Section 13','Application Refused',1,0,0,NULL,NULL,NULL,NULL,1),
-    (40,'GV',1,'Section 14','Application Refused',1,0,0,NULL,NULL,NULL,NULL,1),
-    (41,'GV',1,'Section 15','Application Granted',1,0,0,NULL,NULL,NULL,NULL,1),
-    (42,'GV',1,'Section 17','Application Granted',1,0,0,NULL,NULL,NULL,NULL,1),
-    (43,'GV',1,'Section 17','Application Refused',1,0,0,NULL,NULL,NULL,NULL,1),
-    (44,'GV',1,'Section 19','Application Refused',1,0,0,NULL,NULL,NULL,NULL,1),
-    (45,'GV',1,'Section 21','Application Granted: Conditions: Road Safety',1,0,0,NULL,NULL,NULL,NULL,1),
-    (46,'GV',1,'Section 22','Application Granted: Conditions: Notified Matters',1,0,0,NULL,NULL,NULL,NULL,1),
-    (47,'GV',1,'Section 23','Application Granted: Conditions: O/Câ€™s',1,0,0,NULL,NULL,NULL,NULL,1),
-    (48,'GV',1,'Section 26','No Action',1,0,0,NULL,NULL,NULL,NULL,1),
-    (49,'GV',1,'Section 26','Formal Warning',1,0,0,NULL,NULL,NULL,NULL,1),
-    (50,'GV',1,'Section 26','Final Warning',1,0,0,NULL,NULL,NULL,NULL,1),
-    (51,'GV',1,'Section 26','Curtail',1,0,0,NULL,NULL,NULL,NULL,1),
-    (52,'GV',1,'Section 26','Suspend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (53,'GV',1,'Section 26','Revoke',1,0,0,NULL,NULL,NULL,NULL,1),
-    (54,'GV',1,'Section 26(6)','Direction to suspend vehicles',1,0,0,NULL,NULL,NULL,NULL,1),
-    (55,'GV',1,'Section 27','Revoke (Repute, Finance, Prof. Comp.)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (56,'GV',1,'Section 28','Disqualification',1,0,0,NULL,NULL,NULL,NULL,1),
-    (57,'GV',1,'Section 29','Direction (effective date)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (58,'GV',1,'Section 31','Direction (removal of o/c: effective date)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (59,'GV',1,'Section 32','Direction (conditions: operating centre)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (60,'GV',1,'Section 34','Undertakings (review of operating centre)',1,0,0,NULL,NULL,NULL,NULL,1),
-    (61,'GV',1,'Section 49','Certificate of Qualification Granted',1,0,0,NULL,NULL,NULL,NULL,1),
-    (62,'GV',1,'Section 49','Certificate of Qualification Refused',1,0,0,NULL,NULL,NULL,NULL,1),
-    (63,'GV',1,'Schedule 3','Loss of Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
-    (64,'GV',1,'Art. 8(2)','Withdraw Community Authorisation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (65,'GV',1,'Art. 8(3)','Suspend Community Authorisation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (66,'PSV',0,'Section 14','New application',0,0,0,NULL,NULL,NULL,NULL,1),
-    (67,'PSV',0,'Section 14    (1)(a)','Good Repute',0,0,0,NULL,NULL,NULL,NULL,1),
-    (68,'PSV',0,'Section 14    (1)(b)','Financial Standing',0,0,0,NULL,NULL,NULL,NULL,1),
-    (69,'PSV',0,'Section 14    (1)(c)','Professional Competence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (70,'PSV',0,'Section 14    (3)(a)','Facilities/arrangements for maintenance',0,0,0,NULL,NULL,NULL,NULL,1),
-    (71,'PSV',0,'Section 14    (3)(b)','Arrangements for driving/operation of vehicles',0,0,0,NULL,NULL,NULL,NULL,1),
-    (72,'PSV',0,'Section 14A','Objection: New application',0,0,0,NULL,NULL,NULL,NULL,1),
-    (73,'PSV',0,'Section 16','Application to Increase Authorisation',0,0,0,NULL,NULL,NULL,NULL,1),
-    (74,'PSV',0,'Section 17 (1)','Good Repute/Financial Standing',0,0,0,NULL,NULL,NULL,NULL,1),
-    (75,'PSV',0,'Section 17 (1)','Professional Competence (Standard Licences)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (76,'PSV',0,'Section 17 (3)(a)','False Statement/Fail to fulfil Statement of Exp.',0,0,0,NULL,NULL,NULL,NULL,1),
-    (77,'PSV',0,'Section 17 (3)(aa)','Fail to fulfil an Undertaking',0,0,0,NULL,NULL,NULL,NULL,1),
-    (78,'PSV',0,'Section 17 (3)(b)','Breach of Licence Condition',0,0,0,NULL,NULL,NULL,NULL,1),
-    (79,'PSV',0,'Section 17 (3)(c)','Prohibitions',0,0,0,NULL,NULL,NULL,NULL,1),
-    (80,'PSV',0,'Section 17 (3)(d)','Good Repute',0,0,0,NULL,NULL,NULL,NULL,1),
-    (81,'PSV',0,'Section 17 (3)(d)','Financial Standing (Restricted Licence)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (82,'PSV',0,'Section 17 (3)(e)','Material Change',0,0,0,NULL,NULL,NULL,NULL,1),
-    (83,'PSV',0,'Section 21','Certificate of Qualification',0,0,0,NULL,NULL,NULL,NULL,1),
-    (84,'PSV',0,'Schedule 3','Transport Managerâ€™s Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
-    (85,'PSV',0,'Section 26','Bus Registration: Local Services',0,0,0,NULL,NULL,NULL,NULL,1),
-    (86,'PSV',0,'Section 28','Disqualification',1,0,0,NULL,NULL,NULL,NULL,1),
-    (87,'PSV',0,'Section 111','Bus Registration: Fuel Duty',0,0,0,NULL,NULL,NULL,NULL,1),
-    (88,'PSV',0,'Art. 8(2)&(3)','Community Authorisations',1,0,0,NULL,NULL,NULL,NULL,1),
-    (89,'PSV',1,'Section 14','Application Granted',0,0,0,NULL,NULL,NULL,NULL,1),
-    (90,'PSV',1,'Section 14','Application Refused',0,0,0,NULL,NULL,NULL,NULL,1),
-    (91,'PSV',1,'Section 16','Application Granted',0,0,0,NULL,NULL,NULL,NULL,1),
-    (92,'PSV',1,'Section 16','Application Refused',0,0,0,NULL,NULL,NULL,NULL,1),
-    (93,'PSV',1,'Section 16','Conditions',0,0,0,NULL,NULL,NULL,NULL,1),
-    (94,'PSV',1,'Section 17','No Action',0,0,0,NULL,NULL,NULL,NULL,1),
-    (95,'PSV',1,'Section 17','Formal Warning',0,0,0,NULL,NULL,NULL,NULL,1),
-    (96,'PSV',1,'Section 17','Final Warning',0,0,0,NULL,NULL,NULL,NULL,1),
-    (97,'PSV',1,'Section 17','Conditions (vehicles)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (98,'PSV',1,'Section 17','Suspend',0,0,0,NULL,NULL,NULL,NULL,1),
-    (99,'PSV',1,'Section 17','Revoke (Repute, Finance, Prof. Comp.)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (100,'PSV',1,'Schedule 3','Loss of Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
-    (101,'PSV',1,'Section 26','Direction to cancel local service',0,0,0,NULL,NULL,NULL,NULL,1),
-    (102,'PSV',1,'Section 26','Condition (local services)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (103,'PSV',1,'Section 28','Disqualification',1,0,0,NULL,NULL,NULL,NULL,1),
-    (104,'PSV',1,'Section 111','Determination (Fuel Duty Rebate)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (105,'PSV',1,'Art. 8(2)','Withdraw Community Authorisation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (106,'PSV',1,'Art. 8(3)','Suspend Community Authorisation',1,0,0,NULL,NULL,NULL,NULL,1),
-    (107,'GV',0,'Other Matters','Transport Manager to attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (108,'GV',0,'Other Matters','Produce Financial Information',1,0,0,NULL,NULL,NULL,NULL,1),
-    (109,'GV',0,'Other Matters','Financial Assessor to assist TC at PI',1,0,0,NULL,NULL,NULL,NULL,1),
-    (110,'GV',0,'Other Matters','Driver Conduct Action',1,0,0,NULL,NULL,NULL,NULL,1),
-    (111,'PSV',0,'Other Matters','Transport Manager to attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (112,'PSV',0,'Other Matters','Produce Financial Information',1,0,0,NULL,NULL,NULL,NULL,1),
-    (113,'PSV',0,'Other Matters','Financial Assessor to assist TC at PI',1,0,0,NULL,NULL,NULL,NULL,1),
-    (114,'PSV',0,'Other Matters','Driver Conduct Action',1,0,0,NULL,NULL,NULL,NULL,1),
-    (115,'GV',0,'Other Matters','Vehicle Examiner to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (116,'GV',0,'Other Matters','Traffic Examiner to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (117,'GV',0,'Other Matters','Police to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (118,'PSV',0,'Other Matters','Vehicle Examiner to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (119,'PSV',0,'Other Matters','Traffic Examiner to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (120,'PSV',0,'Other Matters','Bus Monitor to Attend',0,0,0,NULL,NULL,NULL,NULL,1),
-    (121,'PSV',0,'Other Matters','Police to Attend',1,0,0,NULL,NULL,NULL,NULL,1),
-    (122,'GV',0,'01 - Section 13','New application',0,0,0,NULL,NULL,NULL,NULL,1),
-    (123,'GV',0,'02 - Section 17','Variation application',0,0,0,NULL,NULL,NULL,NULL,1),
-    (124,'GV',0,'03 - Section 26 (1)(a)','Unauthorised use of a place as an operating centre',0,0,1,NULL,NULL,NULL,NULL,1),
-    (125,'GV',0,'04 - Section 26 (1)(b)','Contravention of a licence condition (specify)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (126,'GV',0,'04.1 - Section 26 (1)(b)','(1) Fail to notify of change in maintenance arrangements',0,0,1,NULL,NULL,NULL,NULL,1),
-    (127,'GV',0,'04.2 - Section 26 (1)(b)','(2) Fail to notify of change in ownership',0,0,1,NULL,NULL,NULL,NULL,1),
-    (128,'GV',0,'04.3 - Section 26 (1)(b)','(3) Fail to notify of notifiable convictions â€“ Sch 2 (restricted)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (129,'GV',0,'04.4 - Section 26 (1)(b)','(4) Fail to notify of events which affect good repute â€“ Sch 3 (standard)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (130,'GV',0,'04.5 - Section 26 (1)(b)','(5) Fail to notify of events which affect financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
-    (131,'GV',0,'04.6 - Section 26 (1)(b)','(6) Fail to notify of events which affect professional competence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (132,'GV',0,'04.7 - Section 26 (1)(b)','(7) Breach of road safety condition',0,0,1,NULL,NULL,NULL,NULL,1),
-    (133,'GV',0,'04.8 - Section 26 (1)(b)','(8) Breach of environmental condition',0,0,1,NULL,NULL,NULL,NULL,1),
-    (134,'GV',0,'04.9 - Section 26 (1)(b)','(9) Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (135,'GV',0,'05 - Section 26 (1)(c)(i)','Schedule 2 Paragraph 5 convictions (operator)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (136,'GV',0,'06 - Section 26 (1)(c)(ii)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (137,'GV',0,'07 - Section 26 (1)(c)(iii)','Prohibitions',0,0,1,NULL,NULL,NULL,NULL,1),
-    (138,'GV',0,'08 - Section 26(1)(ca)','Fixed Penalty or conditional offer issued',0,0,1,NULL,NULL,NULL,NULL,1),
-    (139,'GV',0,'09 - Section 26(1)(d)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,0,1,NULL,NULL,NULL,NULL,1),
-    (140,'GV',0,'10 - Section 26(1)(e)','Failing to fulfil Statement of Expectation/False statement (specify)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (141,'GV',0,'10.01 - Section 26(1)(e)','(1) Failure to declare previous refusal or revocation',0,0,1,NULL,NULL,NULL,NULL,1),
-    (142,'GV',0,'10.02 - Section 26(1)(e)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (143,'GV',0,'10.03 - Section 26(1)(e)','(3) Stating that the TM would not be responsible for any other licence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (144,'GV',0,'10.04 - Section 26(1)(e)','(4) Stating that the vehicles would normally be kept at the o/c',0,0,1,NULL,NULL,NULL,NULL,1),
-    (145,'GV',0,'10.05 - Section 26(1)(e)','(5) Stating that the nominated o/c is not used by other operators',0,0,1,NULL,NULL,NULL,NULL,1),
-    (146,'GV',0,'10.06 - Section 26(1)(e)','(6) Stating that the vehicles would be given inspections at (x) intervals',0,0,1,NULL,NULL,NULL,NULL,1),
-    (147,'GV',0,'10.07 - Section 26(1)(e)','(7) Stating that the maintenance would be carried out by own staff',0,0,1,NULL,NULL,NULL,NULL,1),
-    (148,'GV',0,'10.08 - Section 26(1)(e)','(8) Stating that the maintenance would be carried out by (x) firm',0,0,1,NULL,NULL,NULL,NULL,1),
-    (149,'GV',0,'10.09 - Section 26(1)(e)','(9) Failure to declare that (x) has been made bankrupt',0,0,1,NULL,NULL,NULL,NULL,1),
-    (150,'GV',0,'10.10 - Section 26(1)(e)','(10) Failure to declare that (x) has been involved in a liquidated co',0,0,1,NULL,NULL,NULL,NULL,1),
-    (151,'GV',0,'10.11 - Section 26(1)(e)','(11) Failure to declare that (x) has been disqualified as a director',0,0,1,NULL,NULL,NULL,NULL,1),
-    (152,'GV',0,'10.12 - Section 26(1)(e)','(12) Failure to declare convictions on making the application',0,0,1,NULL,NULL,NULL,NULL,1),
-    (153,'GV',0,'10.13 - Section 26(1)(e)','(13) Stating that the holder would abide by any conditions on the licence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (154,'GV',0,'11 - Section 26(1)(f)','Failing to fulfil a licence undertaking',0,0,0,NULL,NULL,NULL,NULL,1),
-    (155,'GV',0,'11.1 - Section 26(1)(f)','(1) Rules on drivers hours and tachographs would be observed',0,0,1,NULL,NULL,NULL,NULL,1),
-    (156,'GV',0,'11.2 - Section 26(1)(f)','(2) Vehicles and trailers not to be overloaded',0,0,1,NULL,NULL,NULL,NULL,1),
-    (157,'GV',0,'11.3 - Section 26(1)(f)','(3) Vehicles operate within speed limits',0,0,1,NULL,NULL,NULL,NULL,1),
-    (158,'GV',0,'11.4 - Section 26(1)(f)','(4) Vehicles and trailers would be kept fit and serviceable',0,0,1,NULL,NULL,NULL,NULL,1),
-    (159,'GV',0,'11.5 - Section 26(1)(f)','(5) Driver reports any defects in writing',0,0,1,NULL,NULL,NULL,NULL,1),
-    (160,'GV',0,'11.6 - Section 26(1)(f)','(6) Maintenance records would be kept for 15 months',0,0,1,NULL,NULL,NULL,NULL,1),
-    (161,'GV',0,'11.7 - Section 26(1)(f)','(7) Exceeding operating centre authorisation',0,0,1,NULL,NULL,NULL,NULL,1),
-    (162,'GV',0,'11.8 - Section 26(1)(f)','(8) Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (163,'GV',0,'12 - Section 26(1)(g)','Bankruptcy/liquidation (other than voluntary liquidation)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (164,'GV',0,'13 - Section 26(1)(h)','Material Change (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (165,'GV',0,'14 - Section 26 (1)(i)','Licence liable to revocation, suspension or curtailment following a direction under section 28 (4) (director/individual disqualified on another licence)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (166,'GV',0,'15 - Section 27(1)(a)','To consider whether the operator has an effective and stable establishment in Great Britain.',0,0,1,NULL,NULL,NULL,NULL,1),
-    (167,'GV',0,'16 - Section 27(1)(a)','To consider the operator is still of good repute in accordance with paragraphs 1 to 5 of schedule 3.',0,0,1,NULL,NULL,NULL,NULL,1),
-    (168,'GV',0,'17 - Section 27(1)(a)','To consider whether the operator continues to meet the requirement to be of appropriate financial standing.',0,0,1,NULL,NULL,NULL,NULL,1),
-    (169,'GV',0,'18 - Section 27(1)(a)','No longer professionally competent.',0,0,1,NULL,NULL,NULL,NULL,1),
-    (170,'GV',0,'19 - Section 27(1)(b)','No longer of good repute (section 13A (3)(a))',0,0,1,NULL,NULL,NULL,NULL,1),
-    (171,'GV',0,'20 - Section 27(1)(b)','No longer professionally competent (section 13A (3)(b))',0,0,1,NULL,NULL,NULL,NULL,1),
-    (172,'GV',0,'21 - Section 27(1)(b)','External TM exceeds the 4/50 rule (section 13A (c))',0,0,1,NULL,NULL,NULL,NULL,1),
-    (173,'GV',0,'22 - Section 28','Disqualification to be considered - Operator licence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (174,'GV',0,'23 - Schedule 3(15)(1)','TM good repute or professional competence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (175,'GV',0,'24 - Section 28','Disqualification to be considered - Transport Manager',0,0,0,NULL,NULL,NULL,NULL,1),
-    (176,'GV',0,'24.1 - Section 28','(1) Withdraw/suspend community licence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (177,'GV',0,'24.2 - Section 28','(2) Financial assessor required',0,0,0,NULL,NULL,NULL,NULL,1),
-    (178,'GV',0,'24.3 - Section 28','(3) Other (please specify)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (179,'PSV',0,'01 - Section 14','New application',0,0,0,NULL,NULL,NULL,NULL,1),
-    (180,'PSV',0,'02 - Section 16','Variation application to be considered',0,0,0,NULL,NULL,NULL,NULL,1),
-    (181,'PSV',0,'03 - Section 17 (1)(a)(Revocation only)','To consider whether operator has an effective and stable establishment in Great Britain. (Standard licence)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (182,'PSV',0,'04 - Section 17 (1)(a)(Revocation only)','To consider the operators good repute in accordance with paragraphs 1 of schedule 3 (standard licence):',0,0,1,NULL,NULL,NULL,NULL,1),
-    (183,'PSV',0,'04.1 - Section 17 (1)(a)(Revocation only)','(a) relevant convictions have been incurred',0,0,1,NULL,NULL,NULL,NULL,1),
-    (184,'PSV',0,'04.2 - Section 17 (1)(a)(Revocation only)','(b) relevant FPN have been incurred',0,0,1,NULL,NULL,NULL,NULL,1),
-    (185,'PSV',0,'04.3 - Section 17 (1)(a)(Revocation only)','(c) any other relevant information',0,0,1,NULL,NULL,NULL,NULL,1),
-    (186,'PSV',0,'05 - Section 17 (1)(a)(Revocation only)','To consider whether the operator continues to meet the requirement to be of appropriate financial standing (standard licence)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (187,'PSV',0,'06 - Section 17 (1)(a)(Revocation only)','No longer professionally competent (Standard only)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (188,'PSV',0,'07 - Section 17 (1)(b)(Revocation only)','TM no longer of good repute (section 14ZA (3)(a)) (standard only)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (189,'PSV',0,'08 - Section 17 (1)(b)(Revocation only)','TM no longer professionally competent (section 14ZA (3)(b)) (standard only)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (190,'PSV',0,'09 - Section 17 (1)(b)(Revocation only)','External TM exceeds the 4/50 rule or prohibited (Section 14ZA (3)(c) (standard only)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (191,'PSV',0,'10 - Section 17(3)(a) Revoke/suspend/vary','Operator made a statement of fact on application/variation which was false or expectation has not been fulfilled (specify)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (192,'PSV',0,'10.1 - Section 17(3)(a) Revoke/suspend/vary','(a) Stating that the vehicles would be kept at a specified o/c',0,0,1,NULL,NULL,NULL,NULL,1),
-    (193,'PSV',0,'10.2 - Section 17(3)(a) Revoke/suspend/vary','(b) Stating that the vehicles would be given inspections at (x) intervals',0,0,1,NULL,NULL,NULL,NULL,1),
-    (194,'PSV',0,'10.3 - Section 17(3)(a) Revoke/suspend/vary','(c) Stating that the maintenance would be carried out by (x) firm',0,0,1,NULL,NULL,NULL,NULL,1),
-    (195,'PSV',0,'10.4 - Section 17(3)(a) Revoke/suspend/vary','(d) Failure to declare conviction(s) on making the application',0,0,1,NULL,NULL,NULL,NULL,1),
-    (196,'PSV',0,'10.5 - Section 17(3)(a) Revoke/suspend/vary','(e) Failure to declare on application involvement in previous licence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (197,'PSV',0,'10.6 - Section 17(3)(a) Revoke/suspend/vary','(f) Failure to declare that (x) had been made bankrupt/liquidated/disqualified (delete as applicable)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (198,'PSV',0,'10.7 - Section 17(3)(a) Revoke/suspend/vary','(g) Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (199,'PSV',0,'11 - Section 17 (3)(aa) Revoke/suspend/vary','An undertaking has not been fulfilled namely',0,0,0,NULL,NULL,NULL,NULL,1),
-    (200,'PSV',0,'11.1 - Section 17 (3)(aa) Revoke/suspend/vary','(a) the laws relating to the driving and operation of vehicles used under the licence were observed',0,0,1,NULL,NULL,NULL,NULL,1),
-    (201,'PSV',0,'11.2 - Section 17 (3)(aa) Revoke/suspend/vary','(b) the rules on driverâ€™s hours and tachographs are observed and proper records kept',0,0,1,NULL,NULL,NULL,NULL,1),
-    (202,'PSV',0,'11.3 - Section 17 (3)(aa) Revoke/suspend/vary','(c) vehicles do not carry more than the permitted number of passengers',0,0,1,NULL,NULL,NULL,NULL,1),
-    (203,'PSV',0,'11.4 - Section 17 (3)(aa) Revoke/suspend/vary','(d) vehicles, including hired vehicles, are kept in a fit and serviceable condition',0,0,1,NULL,NULL,NULL,NULL,1),
-    (204,'PSV',0,'11.5 - Section 17 (3)(aa) Revoke/suspend/vary','(e) drivers report promptly any defects that could prevent the safe operation of vehicles, and that any defects are promptly recorded in writing',0,0,1,NULL,NULL,NULL,NULL,1),
-    (205,'PSV',0,'11.6 - Section 17 (3)(aa) Revoke/suspend/vary','(f) records are kept (for 15 months) of all safety inspections, routine maintenance and repairs to vehicles and made available on request',0,0,1,NULL,NULL,NULL,NULL,1),
-    (206,'PSV',0,'11.7 - Section 17 (3)(aa) Revoke/suspend/vary','(g) Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (207,'PSV',0,'12 - Section 17 (3)(b) Revoke/suspend/vary','Contravention of any condition attached to the licence i.e. failed to inform the Commissioner within 28 days of the following:',0,0,1,NULL,NULL,NULL,NULL,1),
-    (208,'PSV',0,'12.01 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (2)(a) no longer has an effective and stable establishment in GB (S16 A)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (209,'PSV',0,'12.02 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (2)(b) requirement to be of good repute',0,0,1,NULL,NULL,NULL,NULL,1),
-    (210,'PSV',0,'12.03 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (2)(c) requirement to be of appropriate financial standing (S16A)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (211,'PSV',0,'12.04 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (2)(d) the requirement to be of professional competence',0,0,1,NULL,NULL,NULL,NULL,1),
-    (212,'PSV',0,'12.05 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (3)(a) TM no longer of good repute',0,0,1,NULL,NULL,NULL,NULL,1),
-    (213,'PSV',0,'12.06 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (3)(b) No longer professionally competent',0,0,1,NULL,NULL,NULL,NULL,1),
-    (214,'PSV',0,'12.07 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (3)(c)(i) TM is prohibited',0,0,1,NULL,NULL,NULL,NULL,1),
-    (215,'PSV',0,'12.08 - Section 17 (3)(b) Revoke/suspend/vary','14ZA (3)(c)(ii) External TM exceeds the 4/50 rule',0,0,1,NULL,NULL,NULL,NULL,1),
-    (216,'PSV',0,'12.09 - Section 17 (3)(b) Revoke/suspend/vary','Restricted licence only : No more than two PSV, not adapted to carry more than 16 passengers, can be used',0,0,1,NULL,NULL,NULL,NULL,1),
-    (217,'PSV',0,'12.10 - Section 17 (3)(b) Revoke/suspend/vary','Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (218,'PSV',0,'13 - Section 17 (3)(c) Revoke/suspend/vary','A prohibition on a vehicle owned or operated by the operator',0,0,1,NULL,NULL,NULL,NULL,1),
-    (219,'PSV',0,'14 - Section 17 (3)(d) Revoke/suspend/vary','RESTRICTED Licence holders only â€“ no longer of good repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
-    (220,'PSV',0,'15 - Section 17 (3)(e) Revoke/suspend/vary','A material change in any of the circumstances relevant to the grant or variation of the licence (incl FPN/Conviction).',0,0,1,NULL,NULL,NULL,NULL,1),
-    (221,'PSV',0,'16 - Section 17 (3)(f)','Licence subject to revocation, suspension, variation of condition following a direction under section 28(4) of the 1985 Act (director/individual disqualified on another licence)',0,0,1,NULL,NULL,NULL,NULL,1),
-    (222,'PSV',0,'17 - Schedule 3(7A)(1)','TM good repute or professional competence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (223,'PSV',0,'18 - Schedule 3(7B)(1)','Disqualification TM',0,0,0,NULL,NULL,NULL,NULL,1),
-    (224,'PSV',0,'19 - Schedule 3(7B)(1)','Financial assessor required',0,0,0,NULL,NULL,NULL,NULL,1),
-    (225,'PSV',0,'20 - Schedule 3(7B)(1)','Driver(s) to be called',0,0,0,NULL,NULL,NULL,NULL,1),
-    (226,'PSV',0,'21 - Section 26 of the Transport Act 1985','Failure to operate a local bus service in accordance with the registered details',0,0,0,NULL,NULL,NULL,NULL,1),
-    (227,'PSV',0,'22 - Section 28 of the Transport Act 1985','Disqualification  of operator',0,0,0,NULL,NULL,NULL,NULL,1),
-    (228,'PSV',0,'23.1 - Section 155 of the TA 2000','(a) Financial penalty for failure to operate bus service',0,0,0,NULL,NULL,NULL,NULL,1),
-    (229,'PSV',0,'23.2 - Section 155 of the TA 2000','(b) Withdraw/suspend community licence',0,0,0,NULL,NULL,NULL,NULL,1),
-    (230,'PSV',0,'23.3 - Section 155 of the TA 2000','(c) Other (please specify)',0,0,0,NULL,NULL,NULL,NULL,1),
-    (231,'GV',1,'x NI-Section 12','New application',0,1,0,NULL,NULL,NULL,NULL,1),
-    (232,'GV',1,'x NI-Section 16','Variation application',0,1,0,NULL,NULL,NULL,NULL,1),
-    (233,'GV',1,'x NI-Section 23(1)(a)','Unauthorised use of a place as an operating centre',0,1,1,NULL,NULL,NULL,NULL,1),
-    (234,'GV',1,'x NI-Section 23(1)(b)','Contravention of a licence condition (specify)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (235,'GV',1,'x NI-Section 23(1)(b)','(1) Fail to notify of change in maintenance arrangements',0,1,1,NULL,NULL,NULL,NULL,1),
-    (236,'GV',1,'x NI-Section 23(1)(b)','(2) Fail to notify of change in ownership',0,1,1,NULL,NULL,NULL,NULL,1),
-    (237,'GV',1,'x NI-Section 23(1)(b)','(3) Fail to notify of notifiable convictions ',0,1,1,NULL,NULL,NULL,NULL,1),
-    (238,'GV',1,'x NI-Section 23(1)(b)','(4) Fail to notify of events which affect good repute ',0,1,1,NULL,NULL,NULL,NULL,1),
-    (239,'GV',1,'x NI-Section 23(1)(b)','(5) Fail to notify of events which affect financial standing',0,1,1,NULL,NULL,NULL,NULL,1),
-    (240,'GV',1,'x NI-Section 23(1)(b)','(6) Fail to notify of events which affect professional competence',0,1,1,NULL,NULL,NULL,NULL,1),
-    (241,'GV',1,'x NI-Section 23(1)(b)','(7) Breach of road safety condition',0,1,1,NULL,NULL,NULL,NULL,1),
-    (242,'GV',1,'x NI-Section 23(1)(b)','(8) Breach of environmental condition',0,1,1,NULL,NULL,NULL,NULL,1),
-    (243,'GV',1,'x NI-Section 23(1)(b)','(9) Other (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (244,'GV',1,'x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (operator)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (245,'GV',1,'x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (246,'GV',1,'x NI-Section 23(1)(c)','Prohibitions',0,1,1,NULL,NULL,NULL,NULL,1),
-    (247,'GV',1,'x NI-Section 23(1)(c)','Fixed Penalty or conditional offer issued',0,1,1,NULL,NULL,NULL,NULL,1),
-    (248,'GV',1,'x NI-Section 23(1)(c)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,1,1,NULL,NULL,NULL,NULL,1),
-    (249,'GV',1,'x NI-Section 23(1)(d)','Failing to fulfil Statement of Expectation/False statement (specify)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (250,'GV',1,'x NI-Section 23(1)(d)','(1) Failure to declare previous refusal or revocation',0,1,1,NULL,NULL,NULL,NULL,1),
-    (251,'GV',1,'x NI-Section 23(1)(d)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,1,1,NULL,NULL,NULL,NULL,1),
-    (252,'GV',1,'x NI-Section 23(1)(d)','(3) Stating that the TM would not be responsible for any other licence',0,1,1,NULL,NULL,NULL,NULL,1),
-    (253,'GV',1,'x NI-Section 23(1)(d)','(4) Stating that the vehicles would normally be kept at the o/c',0,1,1,NULL,NULL,NULL,NULL,1),
-    (254,'GV',1,'x NI-Section 23(1)(d)','(5) Stating that the nominated o/c is not used by other operators',0,1,1,NULL,NULL,NULL,NULL,1),
-    (255,'GV',1,'x NI-Section 23(1)(d)','(6) Stating that the vehicles would be given inspections at (x) intervals',0,1,1,NULL,NULL,NULL,NULL,1),
-    (256,'GV',1,'x NI-Section 23(1)(d)','(7) Stating that the maintenance would be carried out by own staff',0,1,1,NULL,NULL,NULL,NULL,1),
-    (257,'GV',1,'x NI-Section 23(1)(d)','(8) Stating that the maintenance would be carried out by (x) firm',0,1,1,NULL,NULL,NULL,NULL,1),
-    (258,'GV',1,'x NI-Section 23(1)(d)','(9) Failure to declare that (x) has been made bankrupt',0,1,1,NULL,NULL,NULL,NULL,1),
-    (259,'GV',1,'x NI-Section 23(1)(d)','(10) Failure to declare that (x) has been involved in a liquidated co',0,1,1,NULL,NULL,NULL,NULL,1),
-    (260,'GV',1,'x NI-Section 23(1)(d)','(11) Failure to declare that (x) has been disqualified as a director',0,1,1,NULL,NULL,NULL,NULL,1),
-    (261,'GV',1,'x NI-Section 23(1)(d)','(12) Failure to declare convictions on making the application',0,1,1,NULL,NULL,NULL,NULL,1),
-    (262,'GV',1,'x NI-Section 23(1)(d)','(13) Stating that the holder would abide by any conditions on the licence',0,1,1,NULL,NULL,NULL,NULL,1),
-    (263,'GV',1,'x NI-Section 23(1)(e)','Failing to fulfil a licence undertaking',0,1,1,NULL,NULL,NULL,NULL,1),
-    (264,'GV',1,'x NI-Section 23(1)(e)','(1) Rules on drivers hours and tachographs would be observed',0,1,1,NULL,NULL,NULL,NULL,1),
-    (265,'GV',1,'x NI-Section 23(1)(e)','(2) Vehicles and trailers not to be overloaded',0,1,1,NULL,NULL,NULL,NULL,1),
-    (266,'GV',1,'x NI-Section 23(1)(e)','(3) Vehicles operate within speed limits',0,1,1,NULL,NULL,NULL,NULL,1),
-    (267,'GV',1,'x NI-Section 23(1)(e)','(4) Vehicles and trailers would be kept fit and serviceable',0,1,1,NULL,NULL,NULL,NULL,1),
-    (268,'GV',1,'x NI-Section 23(1)(e)','(5) Driver reports any defects in writing',0,1,1,NULL,NULL,NULL,NULL,1),
-    (269,'GV',1,'x NI-Section 23(1)(e)','(6) Maintenance records would be kept for 15 months',0,1,1,NULL,NULL,NULL,NULL,1),
-    (270,'GV',1,'x NI-Section 23(1)(e)','(7) Exceeding operating centre authorisation',0,1,1,NULL,NULL,NULL,NULL,1),
-    (271,'GV',1,'x NI-Section 23(1)(e)','(8) Other (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (272,'GV',1,'x NI-Section 23(1)(f)','Bankruptcy/liquidation (other than voluntary liquidation)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (273,'GV',1,'x NI-Section 23(1)(g)','Material Change (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (274,'GV',1,'x NI-Section 23(1)(h)','Licence liable to revocation, suspension or curtailment following a direction under section 25 (4) (director/individual disqualified on another licence)',0,1,1,NULL,NULL,NULL,NULL,1),
-    (275,'GV',1,'x NI-Section 24(1)(a)','To consider whether the operator has an effective and stable establishment in Great Britain.',0,1,1,NULL,NULL,NULL,NULL,1),
-    (276,'GV',1,'x NI-Section 24(1)(a)','To consider the operator is still of good repute in accordance with Regulation 5 of the Goods Vehicles (Qualifications of Operators) Regualtions(Northern Ireland) 2012',0,1,1,NULL,NULL,NULL,NULL,1),
-    (277,'GV',1,'x NI-Section 24(1)(a)','To consider whether the operator continues to meet the requirement to be of appropriate financial standing.',0,1,1,NULL,NULL,NULL,NULL,1),
-    (278,'GV',1,'x NI-Section 24(1)(a)','No longer professionally competent.',0,1,1,NULL,NULL,NULL,NULL,1),
-    (279,'GV',1,'x NI-Section 24(1)(b)','No longer of good repute (section 12A (3)(a))',0,1,1,NULL,NULL,NULL,NULL,1),
-    (280,'GV',1,'x NI-Section 24(1)(b)','No longer professionally competent (section 12A (3)(b))',0,1,1,NULL,NULL,NULL,NULL,1),
-    (281,'GV',1,'x NI-Section 24(1)(b)','External TM exceeds the 4/50 rule (section 12A (3)(c )(ii))',0,1,1,NULL,NULL,NULL,NULL,1),
-    (282,'GV',1,'x NI-Section 25','Disqualification to be considered - Operator licence',0,1,0,NULL,NULL,NULL,NULL,1),
-    (283,'GV',1,'x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,0,NULL,NULL,NULL,NULL,1),
-    (284,'GV',1,'x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1);
+INSERT INTO `reason` (`id`, `created_by`, `goods_or_psv`, `last_modified_by`, `is_read_only`, `is_propose_to_revoke`, `section_code`, `description`, `is_ni`, `created_on`, `last_modified_on`, `version`)
+VALUES
+    (2, 1, 'lcat_gv', NULL, 0, 0, 'T Section A Reason', 'T Desc A Reason', 0, NOW(), NULL, 1),
+    (3, 1, 'lcat_gv', NULL, 0, 1, 'T Section B Reason', 'T Desc B Reason', 0, NOW(), NULL, 1),
+    (4, 1, 'lcat_psv', NULL, 0, 0, 'T Section C Reason', 'T Desc C Reason', 0, NOW(), NULL, 1),
+    (6, 1, 'lcat_gv', NULL, 0, 1, 'T Section D Reason', 'T Desc D Reason', 0, NOW(), NULL, 1),
+    (7, 1, 'lcat_gv', NULL, 0, 0, 'T Section E Reason', 'T Desc E Reason', 1, NOW(), NULL, 1),
+    (8, 1, 'lcat_gv', NULL, 0, 1, 'T Section F Reason', 'T Desc F Reason', 1, NOW(), NULL, 1);
 
-INSERT INTO `pi_reason` (`pi_id`, `reason_id`) VALUES
-    (1,118),
-    (1,227);
+INSERT INTO `pi_reason` (`pi_id`, `reason_id`)
+VALUES
+    (1,2),
+    (1,6);
+
+INSERT INTO `decision` (`id`, `goods_or_psv`, `last_modified_by`, `created_by`, `section_code`, `description`, `is_read_only`, `created_on`, `last_modified_on`, `version`)
+VALUES
+    (1, 'lcat_gv', NULL, 1, 'T Section Decision A', 'T Descr Decision A', 0, NOW(), NULL, 1),
+    (2, 'lcat_psv', NULL, 1, 'T Section Decision B', 'T Descr Decision B', 0, NOW(), NULL, 1);
+
+INSERT INTO `pi_decision` (`pi_id`, `decision_id`)
+VALUES
+    (1,2);
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
@@ -795,7 +537,8 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (71,7,NULL,NULL,'MWC test case 4','E647654','2014-02-14 16:29:03','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (72,7,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-02 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (73,7,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-03 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
-    (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
+    (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+    (75,7,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
 
 INSERT INTO team(id,version,name) VALUES
     (1,1,'Marketing'),
@@ -827,5 +570,31 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+
+/* Document dummy data */
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'DOC','2014-08-23');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'DOC','2014-08-25');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'DOC','2014-08-22');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (4,7,'Test document 4','testdocument4.doc',0,2,1,'DOC','2014-08-24');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (5,7,'Test document 5','testdocument5.xls',0,3,1,'XLS','2014-07-01');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (6,7,'Test document 6','testdocument6.docx',0,3,1,'DOCX','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (7,7,'Test document 7','testdocument7.xls',0,3,1,'XLS','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (8,7,'Test document 8','testdocument8.doc',1,3,2,'DOC','2014-07-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (9,7,'Test document 9','testdocument9.ppt',1,5,1,'PPT','2014-08-05');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (10,7,'Test document 10','testdocument10.jpg',0,4,1,'JPG','2014-08-08');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (11,7,'Test document 11','testdocument11.txt',0,3,1,'TXT','2014-08-14');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (12,7,'Test document 12','testdocument12.xls',1,4,1,'XLS','2014-08-28');
 
 SET foreign_key_checks = 1;
