@@ -117,7 +117,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="task_sub_category_id")
      */
-    protected $subCategory;
+    protected $taskSubCategory;
 
     /**
      * Sub Category Name
@@ -126,7 +126,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="task_sub_category_name")
      */
-    protected $subCategoryName;
+    protected $taskSubCategoryName;
 
     /**
      * Owner ID
@@ -135,7 +135,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="assigned_to_user_id")
      */
-    protected $owner;
+    protected $assignedToUser;
 
     /**
      * Owner
@@ -153,7 +153,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="assigned_to_team_id")
      */
-    protected $team;
+    protected $assignedToTeam;
 
     /**
      * Licence Count
@@ -277,9 +277,9 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @return int
      */
-    public function getSubCategory()
+    public function getTaskSubCategory()
     {
-        return $this->subCategory;
+        return $this->taskSubCategory;
     }
 
     /**
@@ -287,9 +287,9 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @return string
      */
-    public function getSubCategoryName()
+    public function getTaskSubCategoryName()
     {
-        return $this->subCategoryName;
+        return $this->taskSubCategoryName;
     }
 
     /**
@@ -297,9 +297,9 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @return int
      */
-    public function getOwner()
+    public function getAssignedToUser()
     {
-        return $this->owner;
+        return $this->assignedToUser;
     }
 
     /**
@@ -317,9 +317,9 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @return int
      */
-    public function getTeam()
+    public function getAssignedToTeam()
     {
-        return $this->team;
+        return $this->assignedToTeam;
     }
 
     /**

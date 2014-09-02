@@ -16,7 +16,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="reason",
  *    indexes={
  *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_reason_ref_data1_idx", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -25,9 +26,9 @@ class Reason implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\GoodsOrPsv3Field,
-        Traits\IsDecisionField,
+        Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsNiField,
         Traits\CustomCreatedOnField,
@@ -44,13 +45,13 @@ class Reason implements Interfaces\EntityInterface
     protected $proposeToRevokes;
 
     /**
-     * Section code
+     * Pi
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="string", name="section_code", length=50, nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="reasons", fetch="LAZY")
      */
-    protected $sectionCode;
+    protected $pis;
 
     /**
      * Is read only
@@ -76,6 +77,7 @@ class Reason implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->proposeToRevokes = new ArrayCollection();
+        $this->pis = new ArrayCollection();
     }
 
     /**
@@ -102,26 +104,26 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the section code
+     * Set the pi
      *
-     * @param string $sectionCode
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
      * @return Reason
      */
-    public function setSectionCode($sectionCode)
+    public function setPis($pis)
     {
-        $this->sectionCode = $sectionCode;
+        $this->pis = $pis;
 
         return $this;
     }
 
     /**
-     * Get the section code
+     * Get the pis
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getSectionCode()
+    public function getPis()
     {
-        return $this->sectionCode;
+        return $this->pis;
     }
 
     /**

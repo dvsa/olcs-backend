@@ -20,7 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
  *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"})
  *    }
  * )
  */
@@ -28,8 +29,8 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\AgreedDateField,
         Traits\DecisionDateField,
@@ -37,6 +38,16 @@ class Pi implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Assigned to
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedTo;
 
     /**
      * Pi status
@@ -64,6 +75,40 @@ class Pi implements Interfaces\EntityInterface
      * )
      */
     protected $piTypes;
+
+    /**
+     * Decision
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Decision", inversedBy="pis", fetch="LAZY")
+     * @ORM\JoinTable(name="pi_decision",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="decision_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $decisions;
+
+    /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="pis", fetch="LAZY")
+     * @ORM\JoinTable(name="pi_reason",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $reasons;
 
     /**
      * Witnesses
@@ -147,22 +192,37 @@ class Pi implements Interfaces\EntityInterface
     protected $piHearings;
 
     /**
-     * Pi reason
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PiReason", mappedBy="pi")
-     */
-    protected $piReasons;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->piTypes = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
+        $this->reasons = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
-        $this->piReasons = new ArrayCollection();
+    }
+
+    /**
+     * Set the assigned to
+     *
+     * @param \Olcs\Db\Entity\User $assignedTo
+     * @return Pi
+     */
+    public function setAssignedTo($assignedTo)
+    {
+        $this->assignedTo = $assignedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned to
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getAssignedTo()
+    {
+        return $this->assignedTo;
     }
 
     /**
@@ -209,6 +269,52 @@ class Pi implements Interfaces\EntityInterface
     public function getPiTypes()
     {
         return $this->piTypes;
+    }
+
+    /**
+     * Set the decision
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Pi
+     */
+    public function setDecisions($decisions)
+    {
+        $this->decisions = $decisions;
+
+        return $this;
+    }
+
+    /**
+     * Get the decisions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDecisions()
+    {
+        return $this->decisions;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Pi
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
     }
 
     /**
@@ -416,28 +522,5 @@ class Pi implements Interfaces\EntityInterface
     public function getPiHearings()
     {
         return $this->piHearings;
-    }
-
-    /**
-     * Set the pi reason
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piReasons
-     * @return Pi
-     */
-    public function setPiReasons($piReasons)
-    {
-        $this->piReasons = $piReasons;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi reasons
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getPiReasons()
-    {
-        return $this->piReasons;
     }
 }

@@ -267,6 +267,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
     ('app_status', 'apsts_new', 'New', null),
+    ('app_status', 'apsts_consideration', 'Under Consideration', null),
 
     ('bus_subsidy','bs_no', 'No', '1'),
     ('bus_subsidy','bs_yes', 'Yes', '2'),
@@ -495,10 +496,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_oc_review', 'OC Review', null),
     ('pi_type', 'pi_t_imp', 'Impounding', null),
     ('pi_type', 'pi_t_other', 'Other', null),
-    
+
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
-    
+
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
@@ -1650,3 +1651,25 @@ CREATE VIEW task_search_view AS
     LEFT JOIN user u ON t.assigned_to_user_id = u.id
 
     GROUP BY (t.id);
+
+DROP TABLE IF EXISTS document_search_view;
+DROP VIEW IF EXISTS document_search_view;
+
+CREATE VIEW document_search_view AS
+    SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
+        cat.description category_name, dsc.description document_sub_category_name, d.filename,
+		d.file_extension, d.is_digital,
+        coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
+        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
+    FROM `document` d
+
+    INNER JOIN (category cat, document_sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.document_sub_category_id)
+
+    LEFT JOIN licence l ON d.licence_id = l.id
+
+    LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
+        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.contact_details_id)
+
+    LEFT JOIN cases c ON d.case_id = c.id
+
+    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id;

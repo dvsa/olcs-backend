@@ -85,6 +85,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionYourBusinessPeopleStatus;
 
     /**
+     * Section your business sole trader status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_yb_st_status", nullable=true)
+     */
+    protected $sectionYourBusinessSoleTraderStatus;
+
+    /**
      * Section type of licence status
      *
      * @var int
@@ -157,6 +166,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $sectionTransportManagersStatus;
 
     /**
+     * Section transport managers placeholder status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_tms_p_status", nullable=true)
+     */
+    protected $sectionTransportManagersPlaceholderStatus;
+
+    /**
      * Section vehicle safety status
      *
      * @var int
@@ -164,6 +182,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="section_veh_status", nullable=true)
      */
     protected $sectionVehicleSafetyStatus;
+
+    /**
+     * Section vehicle safety undertakings status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_veh_und_status", nullable=true)
+     */
+    protected $sectionVehicleSafetyUndertakingsStatus;
 
     /**
      * Section vehicle safety vehicle status
@@ -236,6 +263,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="section_rd_status", nullable=true)
      */
     protected $sectionReviewDeclarationsStatus;
+
+    /**
+     * Section review declarations summary status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="section_rd_sum_status", nullable=true)
+     */
+    protected $sectionReviewDeclarationsSummaryStatus;
 
     /**
      * Section payment submission status
@@ -363,12 +399,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section your business business details status
      *
-     * @param int $sectionYourBusinessBusinessDetailsStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessBusinessDetailsStatus($sectionYourBusinessBusinessDetailsStatus)
+    public function setSectionYourBusinessBusinessDetailsStatus($input)
     {
-        $this->sectionYourBusinessBusinessDetailsStatus = $sectionYourBusinessBusinessDetailsStatus;
+        $this->sectionYourBusinessBusinessDetailsStatus = $input;
 
         return $this;
     }
@@ -430,6 +466,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the section your business sole trader status
+     *
+     * @param int $sectionYourBusinessSoleTraderStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionYourBusinessSoleTraderStatus($sectionYourBusinessSoleTraderStatus)
+    {
+        $this->sectionYourBusinessSoleTraderStatus = $sectionYourBusinessSoleTraderStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section your business sole trader status
+     *
+     * @return int
+     */
+    public function getSectionYourBusinessSoleTraderStatus()
+    {
+        return $this->sectionYourBusinessSoleTraderStatus;
+    }
+
+    /**
      * Set the section type of licence status
      *
      * @param int $sectionTypeOfLicenceStatus
@@ -455,12 +514,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section type of licence operator location status
      *
-     * @param int $sectionTypeOfLicenceOperatorLocationStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceOperatorLocationStatus($sectionTypeOfLicenceOperatorLocationStatus)
+    public function setSectionTypeOfLicenceOperatorLocationStatus($input)
     {
-        $this->sectionTypeOfLicenceOperatorLocationStatus = $sectionTypeOfLicenceOperatorLocationStatus;
+        $this->sectionTypeOfLicenceOperatorLocationStatus = $input;
 
         return $this;
     }
@@ -547,12 +606,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres authorisation status
      *
-     * @param int $sectionOperatingCentresAuthorisationStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresAuthorisationStatus($sectionOperatingCentresAuthorisationStatus)
+    public function setSectionOperatingCentresAuthorisationStatus($input)
     {
-        $this->sectionOperatingCentresAuthorisationStatus = $sectionOperatingCentresAuthorisationStatus;
+        $this->sectionOperatingCentresAuthorisationStatus = $input;
 
         return $this;
     }
@@ -570,12 +629,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section operating centres financial evidence status
      *
-     * @param int $sectionOperatingCentresFinancialEvidenceStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresFinancialEvidenceStatus($sectionOperatingCentresFinancialEvidenceStatus)
+    public function setSectionOperatingCentresFinancialEvidenceStatus($input)
     {
-        $this->sectionOperatingCentresFinancialEvidenceStatus = $sectionOperatingCentresFinancialEvidenceStatus;
+        $this->sectionOperatingCentresFinancialEvidenceStatus = $input;
 
         return $this;
     }
@@ -614,6 +673,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the section transport managers placeholder status
+     *
+     * @param int $input
+     * @return ApplicationCompletion
+     */
+    public function setSectionTransportManagersPlaceholderStatus($input)
+    {
+        $this->sectionTransportManagersPlaceholderStatus = $input;
+
+        return $this;
+    }
+
+    /**
+     * Get the section transport managers placeholder status
+     *
+     * @return int
+     */
+    public function getSectionTransportManagersPlaceholderStatus()
+    {
+        return $this->sectionTransportManagersPlaceholderStatus;
+    }
+
+    /**
      * Set the section vehicle safety status
      *
      * @param int $sectionVehicleSafetyStatus
@@ -634,6 +716,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionVehicleSafetyStatus()
     {
         return $this->sectionVehicleSafetyStatus;
+    }
+
+    /**
+     * Set the section vehicle safety undertakings status
+     *
+     * @param int $sectionVehicleSafetyUndertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionVehicleSafetyUndertakingsStatus($sectionVehicleSafetyUndertakingsStatus)
+    {
+        $this->sectionVehicleSafetyUndertakingsStatus = $sectionVehicleSafetyUndertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section vehicle safety undertakings status
+     *
+     * @return int
+     */
+    public function getSectionVehicleSafetyUndertakingsStatus()
+    {
+        return $this->sectionVehicleSafetyUndertakingsStatus;
     }
 
     /**
@@ -731,12 +836,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history financial history status
      *
-     * @param int $sectionPreviousHistoryFinancialHistoryStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryFinancialHistoryStatus($sectionPreviousHistoryFinancialHistoryStatus)
+    public function setSectionPreviousHistoryFinancialHistoryStatus($input)
     {
-        $this->sectionPreviousHistoryFinancialHistoryStatus = $sectionPreviousHistoryFinancialHistoryStatus;
+        $this->sectionPreviousHistoryFinancialHistoryStatus = $input;
 
         return $this;
     }
@@ -754,12 +859,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history licence history status
      *
-     * @param int $sectionPreviousHistoryLicenceHistoryStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryLicenceHistoryStatus($sectionPreviousHistoryLicenceHistoryStatus)
+    public function setSectionPreviousHistoryLicenceHistoryStatus($input)
     {
-        $this->sectionPreviousHistoryLicenceHistoryStatus = $sectionPreviousHistoryLicenceHistoryStatus;
+        $this->sectionPreviousHistoryLicenceHistoryStatus = $input;
 
         return $this;
     }
@@ -777,12 +882,12 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the section previous history convictions penalties status
      *
-     * @param int $sectionPreviousHistoryConvictionsPenaltiesStatus
+     * @param int $input
      * @return ApplicationCompletion
      */
-    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($sectionPreviousHistoryConvictionsPenaltiesStatus)
+    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($input)
     {
-        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $sectionPreviousHistoryConvictionsPenaltiesStatus;
+        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $input;
 
         return $this;
     }
@@ -818,6 +923,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getSectionReviewDeclarationsStatus()
     {
         return $this->sectionReviewDeclarationsStatus;
+    }
+
+    /**
+     * Set the section review declarations summary status
+     *
+     * @param int $sectionReviewDeclarationsSummaryStatus
+     * @return ApplicationCompletion
+     */
+    public function setSectionReviewDeclarationsSummaryStatus($sectionReviewDeclarationsSummaryStatus)
+    {
+        $this->sectionReviewDeclarationsSummaryStatus = $sectionReviewDeclarationsSummaryStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the section review declarations summary status
+     *
+     * @return int
+     */
+    public function getSectionReviewDeclarationsSummaryStatus()
+    {
+        return $this->sectionReviewDeclarationsSummaryStatus;
     }
 
     /**
