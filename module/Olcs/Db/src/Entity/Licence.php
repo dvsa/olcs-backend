@@ -50,6 +50,7 @@ class Licence implements Interfaces\EntityInterface
         Traits\TotCommunityLicencesField,
         Traits\ExpiryDateField,
         Traits\InForceDateField,
+        Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

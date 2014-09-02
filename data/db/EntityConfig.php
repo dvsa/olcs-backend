@@ -89,6 +89,9 @@ return array(
         ),
         'translate_to_welsh' => array(
             'type' => 'yesno'
+        ),
+        'is_maintenance_suitable' => array(
+            'type' => 'yesnonull'
         )
     ),
     'application' => array(
@@ -169,6 +172,9 @@ return array(
         ),
         'psv_only_limosines_confirmation' => array(
             'type' => 'yesno'
+        ),
+        'is_maintenance_suitable' => array(
+            'type' => 'yesnonull'
         )
     ),
     's4' => array(
