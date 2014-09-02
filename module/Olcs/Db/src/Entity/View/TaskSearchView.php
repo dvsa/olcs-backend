@@ -66,15 +66,6 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $actionDate;
 
     /**
-     * Identifier
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="link_display")
-     */
-    protected $identifier;
-
-    /**
      * Name
      *
      * @var string
@@ -174,6 +165,15 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $linkId;
 
     /**
+     * Link display
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="link_display")
+     */
+    protected $linkDisplay;
+    
+    /**
      * Name
      *
      * @var string
@@ -220,16 +220,6 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getActionDate()
     {
         return $this->actionDate;
-    }
-
-    /**
-     * Get the identifier
-     *
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
     }
 
     /**
@@ -351,4 +341,14 @@ class TaskSearchView implements Interfaces\EntityInterface
     {
         return $this->linkType;
     }
+
+    /**
+     * Get link display
+     *
+     * @return string
+     */
+    public function getLinkDisplay()
+    {
+        return $this->linkDisplay;
+    }    
 }
