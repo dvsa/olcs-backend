@@ -40,7 +40,7 @@ class Application implements Interfaces\EntityInterface
         Traits\TotAuthMediumVehiclesField,
         Traits\TotAuthLargeVehiclesField,
         Traits\TotCommunityLicencesField,
-        Traits\ReceivedDateField,
+        Traits\ReceivedDateFieldAlt1,
         Traits\WithdrawnDateField,
         Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,

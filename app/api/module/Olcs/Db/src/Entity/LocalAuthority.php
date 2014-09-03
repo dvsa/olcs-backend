@@ -27,7 +27,7 @@ class LocalAuthority implements Interfaces\EntityInterface
         Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\EmailAddress45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

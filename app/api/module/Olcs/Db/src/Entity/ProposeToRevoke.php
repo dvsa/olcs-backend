@@ -27,7 +27,7 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PresidingTcManyToOneAlt1,
         Traits\ClosedDateField,

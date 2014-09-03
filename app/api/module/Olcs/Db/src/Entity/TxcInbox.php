@@ -32,7 +32,7 @@ class TxcInbox implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LocalAuthorityManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\BusRegManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

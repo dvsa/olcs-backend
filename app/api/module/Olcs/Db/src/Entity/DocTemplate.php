@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -31,7 +32,7 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -73,6 +74,23 @@ class DocTemplate implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="suppress_from_op", nullable=false)
      */
     protected $suppressFromOp;
+
+    /**
+     * Doc template bookmark
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\DocTemplateBookmark", mappedBy="docTemplate")
+     */
+    protected $docTemplateBookmarks;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->docTemplateBookmarks = new ArrayCollection();
+    }
 
     /**
      * Set the document sub category
@@ -164,5 +182,28 @@ class DocTemplate implements Interfaces\EntityInterface
     public function getSuppressFromOp()
     {
         return $this->suppressFromOp;
+    }
+
+    /**
+     * Set the doc template bookmark
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @return DocTemplate
+     */
+    public function setDocTemplateBookmarks($docTemplateBookmarks)
+    {
+        $this->docTemplateBookmarks = $docTemplateBookmarks;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc template bookmarks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDocTemplateBookmarks()
+    {
+        return $this->docTemplateBookmarks;
     }
 }

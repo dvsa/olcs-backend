@@ -33,7 +33,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,

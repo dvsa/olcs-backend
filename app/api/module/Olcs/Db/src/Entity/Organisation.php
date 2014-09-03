@@ -130,13 +130,13 @@ class Organisation implements Interfaces\EntityInterface
     protected $allowEmail = 0;
 
     /**
-     * Contact detail
+     * Trading name
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
      */
-    protected $contactDetails;
+    protected $tradingNames;
 
     /**
      * Licence
@@ -148,6 +148,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
+     */
+    protected $contactDetails;
+
+    /**
      * Organisation person
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -157,23 +166,14 @@ class Organisation implements Interfaces\EntityInterface
     protected $organisationPersons;
 
     /**
-     * Trading name
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
-     */
-    protected $tradingNames;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->contactDetails = new ArrayCollection();
-        $this->licences = new ArrayCollection();
-        $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
+        $this->licences = new ArrayCollection();
+        $this->contactDetails = new ArrayCollection();
+        $this->organisationPersons = new ArrayCollection();
     }
 
     /**
@@ -407,26 +407,26 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact detail
+     * Set the trading name
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
      * @return Organisation
      */
-    public function setContactDetails($contactDetails)
+    public function setTradingNames($tradingNames)
     {
-        $this->contactDetails = $contactDetails;
+        $this->tradingNames = $tradingNames;
 
         return $this;
     }
 
     /**
-     * Get the contact details
+     * Get the trading names
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getContactDetails()
+    public function getTradingNames()
     {
-        return $this->contactDetails;
+        return $this->tradingNames;
     }
 
     /**
@@ -453,6 +453,29 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
+
+    /**
      * Set the organisation person
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
@@ -473,28 +496,5 @@ class Organisation implements Interfaces\EntityInterface
     public function getOrganisationPersons()
     {
         return $this->organisationPersons;
-    }
-
-    /**
-     * Set the trading name
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
-     * @return Organisation
-     */
-    public function setTradingNames($tradingNames)
-    {
-        $this->tradingNames = $tradingNames;
-
-        return $this;
-    }
-
-    /**
-     * Get the trading names
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTradingNames()
-    {
-        return $this->tradingNames;
     }
 }

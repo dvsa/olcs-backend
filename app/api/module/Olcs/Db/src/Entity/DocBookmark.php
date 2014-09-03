@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -25,7 +26,7 @@ class DocBookmark implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -38,6 +39,23 @@ class DocBookmark implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=50, nullable=false)
      */
     protected $name;
+
+    /**
+     * Doc paragraph bookmark
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\DocParagraphBookmark", mappedBy="docBookmark")
+     */
+    protected $docParagraphBookmarks;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->docParagraphBookmarks = new ArrayCollection();
+    }
 
     /**
      * Set the name
@@ -60,5 +78,28 @@ class DocBookmark implements Interfaces\EntityInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the doc paragraph bookmark
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks
+     * @return DocBookmark
+     */
+    public function setDocParagraphBookmarks($docParagraphBookmarks)
+    {
+        $this->docParagraphBookmarks = $docParagraphBookmarks;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc paragraph bookmarks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDocParagraphBookmarks()
+    {
+        return $this->docParagraphBookmarks;
     }
 }

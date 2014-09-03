@@ -357,6 +357,22 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'doc_template_bookmark' => array(
+        'doc_template_id' => array(
+            'inversedBy' => array(
+                'entity' => 'DocTemplate',
+                'property' => 'docTemplateBookmark'
+            )
+        )
+    ),
+    'doc_paragraph_bookmark' => array(
+        'doc_bookmark_id' => array(
+            'inversedBy' => array(
+                'entity' => 'DocBookmark',
+                'property' => 'docParagraphBookmark'
+            )
+        )
+    ),
     'email' => array(
         'is_sensitive' => array(
             'type' => 'yesnonull'

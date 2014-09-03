@@ -28,7 +28,7 @@ class Team implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOne,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

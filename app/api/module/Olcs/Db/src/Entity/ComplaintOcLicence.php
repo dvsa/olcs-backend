@@ -28,8 +28,8 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

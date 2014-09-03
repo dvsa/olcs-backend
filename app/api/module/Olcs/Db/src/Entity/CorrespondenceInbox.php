@@ -27,7 +27,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\DocumentManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

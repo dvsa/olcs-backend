@@ -30,7 +30,7 @@ class OrganisationUser implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\AddedDateField,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
