@@ -215,6 +215,8 @@ class AlignEntitiesToSchema
     private function loadEntityConfig()
     {
         $this->entityConfig = include($this->options['entity-config']);
+
+        ksort($this->entityConfig, SORT_NATURAL);
     }
 
     /**
@@ -473,8 +475,9 @@ class AlignEntitiesToSchema
             if (isset($comments['@settings']['repository'])) {
                 $this->entities[$camelCaseName]['repository'] = $comments['@settings']['repository'];
             }
-
         }
+
+        ksort($this->entities, SORT_NATURAL);
 
         foreach ($this->entities as $className => &$details) {
             if (!isset($this->inverseFields[$className])) {
@@ -1142,6 +1145,8 @@ class AlignEntitiesToSchema
             }
         }
 
+        ksort($this->inverseFields, SORT_NATURAL);
+
         return $fields;
     }
 
@@ -1273,6 +1278,10 @@ class AlignEntitiesToSchema
 
             $this->mappingFiles[$key] = $fileName;
         }
+
+        // @Note Sort the mapping files by key, as the OS may read them in a different order which will cause
+        //   unnecessary changes
+        ksort($this->mappingFiles, SORT_NATURAL);
     }
 
     /**
