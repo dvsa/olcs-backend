@@ -1273,6 +1273,10 @@ class AlignEntitiesToSchema
 
             $this->mappingFiles[$key] = $fileName;
         }
+
+        // @Note Sort the mapping files by key, as the OS may read them in a different order which will cause
+        //   unnecessary changes
+        ksort($this->mappingFiles);
     }
 
     /**
