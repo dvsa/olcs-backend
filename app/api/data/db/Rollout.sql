@@ -1617,8 +1617,8 @@ CREATE VIEW task_search_view AS
    SELECT t.id,
        t.assigned_to_team_id,
        t.assigned_to_user_id,
-       cat.description category_name, 
-       t.task_sub_category_id, 
+       cat.description category_name,
+       t.task_sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
@@ -1667,12 +1667,14 @@ DROP VIEW IF EXISTS document_search_view;
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital,
+		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
     FROM `document` d
 
     INNER JOIN (category cat, document_sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.document_sub_category_id)
+
+    LEFT JOIN ref_data r ON d.file_extension = r.id
 
     LEFT JOIN licence l ON d.licence_id = l.id
 

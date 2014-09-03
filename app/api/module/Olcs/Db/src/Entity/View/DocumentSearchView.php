@@ -76,6 +76,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $fileExtension;
 
     /**
+     * File Extension
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="document_type")
+     */
+    protected $documentType;
+
+    /**
      * Category ID
      *
      * @var string
@@ -227,6 +236,16 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getDocumentSubCategoryName()
     {
         return $this->documentSubCategoryName;
+    }
+
+    /**
+     * Get the document file type
+     *
+     * @return string
+     */
+    public function getDocumentType()
+    {
+        return $this->documentType;
     }
 
     /**
