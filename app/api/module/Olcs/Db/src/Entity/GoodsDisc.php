@@ -30,7 +30,6 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceVehicleManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateFieldAlt1,
         Traits\CeasedDateField,
@@ -38,6 +37,16 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Licence vehicle
+     *
+     * @var \Olcs\Db\Entity\LicenceVehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY", inversedBy="goodsDiscs")
+     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licenceVehicle;
 
     /**
      * Is copy
@@ -56,6 +65,29 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
+     * @return GoodsDisc
+     */
+    public function setLicenceVehicle($licenceVehicle)
+    {
+        $this->licenceVehicle = $licenceVehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicle
+     *
+     * @return \Olcs\Db\Entity\LicenceVehicle
+     */
+    public function getLicenceVehicle()
+    {
+        return $this->licenceVehicle;
+    }
 
     /**
      * Set the is copy

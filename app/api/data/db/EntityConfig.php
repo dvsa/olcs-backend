@@ -417,6 +417,12 @@ return array(
         ),
         'reprint_required' => array(
             'type' => 'yesno'
+        ),
+        'licence_vehicle_id' => array(
+            'inversedBy' => array(
+                'entity' => 'LicenceVehicle',
+                'property' => 'goodsDisc'
+            )
         )
     ),
     'psv_disc' => array(
