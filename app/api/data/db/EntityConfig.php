@@ -474,7 +474,8 @@ return array(
         'driver_id' => array(
             'cascade' => array(
                 'persist'
-            ))
+            )
+        )
     ),
     'complaint_case' => array(
         'complaint_id' => array(
@@ -507,12 +508,16 @@ return array(
         ),
         'case_id' => array(
             'inversedBy' => array(
-                'entity' => 'Cases', 'property' => 'conviction'
-            )),
+                'entity' => 'Cases',
+                'property' => 'conviction'
+            )
+        ),
         'application_id' => array(
             'inversedBy' => array(
-                'entity' => 'Application', 'property' => 'conviction'
-            )),
+                'entity' => 'Application',
+                'property' => 'conviction'
+            )
+        ),
         'is_dealt_with' => array(
             'type' => 'yesno'
         )
@@ -547,8 +552,10 @@ return array(
         ),
         'submission_id' => array(
             'inversedBy' => array(
-                'entity' => 'Submission', 'property' => 'submissionAction'
-            ))
+                'entity' => 'Submission',
+                'property' => 'submissionAction'
+            )
+        )
     ),
     'application_completion' => array(
         'section_yb_status' => array(
@@ -675,8 +682,10 @@ return array(
     'organisation_user' => array(
         'user_id' => array(
             'inversedBy' => array(
-                'entity' => 'User', 'property' => 'organisationUser'
-            )),
+                'entity' => 'User',
+                'property' => 'organisationUser'
+            )
+        ),
         'is_administrator' => array(
             'type' => 'yesno'
         ),
@@ -976,13 +985,13 @@ return array(
         )
     ),
     /* 'pi_type' => array(
-        'pi_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Pi',
-                'property' => 'piType'
-            )
-        )
-    ) ,*/
+      'pi_id' => array(
+      'inversedBy' => array(
+      'entity' => 'Pi',
+      'property' => 'piType'
+      )
+      )
+      ) , */
     'category' => array(
         'is_doc_category' => array(
             'type' => 'yesno'
