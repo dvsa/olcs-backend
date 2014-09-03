@@ -1420,7 +1420,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `bus_reg_id` INT NULL,
   `issued_date` DATE NULL,
   `filename` VARCHAR(255) NULL,
-  `file_extension` varchar(20) NOT null,
+  `file_extension` varchar(32) NOT NULL,
   `deleted_date` DATETIME NULL,
   `is_digital` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag true if doc was received or sent digitally',
   `size` INT NULL,
@@ -1447,7 +1447,7 @@ CREATE TABLE IF NOT EXISTS `document` (
     FOREIGN KEY (`file_extension`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_traffic_area1`
     FOREIGN KEY (`traffic_area_id`)
     REFERENCES `traffic_area` (`id`)
