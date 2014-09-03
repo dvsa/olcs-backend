@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -105,6 +106,23 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="warning_letter_sent_date", nullable=true)
      */
     protected $warningLetterSentDate;
+
+    /**
+     * Goods disc
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\GoodsDisc", mappedBy="licenceVehicle")
+     */
+    protected $goodsDiscs;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->goodsDiscs = new ArrayCollection();
+    }
 
     /**
      * Set the vehicle
@@ -265,5 +283,28 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getWarningLetterSentDate()
     {
         return $this->warningLetterSentDate;
+    }
+
+    /**
+     * Set the goods disc
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function setGoodsDiscs($goodsDiscs)
+    {
+        $this->goodsDiscs = $goodsDiscs;
+
+        return $this;
+    }
+
+    /**
+     * Get the goods discs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGoodsDiscs()
+    {
+        return $this->goodsDiscs;
     }
 }

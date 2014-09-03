@@ -28,8 +28,40 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\FeeManyToOne,
-        Traits\LicenceVehicleManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Licence vehicle
+     *
+     * @var \Olcs\Db\Entity\LicenceVehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licenceVehicle;
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
+     * @return LicenceVehicleFee
+     */
+    public function setLicenceVehicle($licenceVehicle)
+    {
+        $this->licenceVehicle = $licenceVehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicle
+     *
+     * @return \Olcs\Db\Entity\LicenceVehicle
+     */
+    public function getLicenceVehicle()
+    {
+        return $this->licenceVehicle;
+    }
 }
