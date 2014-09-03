@@ -348,6 +348,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('disc_removal_explan', 'dre_lost', 'Lost', '1'),
     ('disc_removal_explan', 'dre_stolen', 'Stolen', '2'),
     ('disc_removal_explan', 'dre_destroyed', 'Destroyed', '3'),
+
     ('def_type', 'def_t_op', 'Operator', null),
     ('def_type', 'def_t_driver', 'Driver', null),
     ('def_type', 'def_t_tm', 'Transport Manager', null),
@@ -355,6 +356,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('def_type', 'def_t_part', 'Partner', null),
     ('def_type', 'def_t_owner', 'Owner', null),
     ('def_type', 'def_t_other', 'Other', null),
+
+    ('document_type', 'doc_pdf', 'PDF', null),
+    ('document_type', 'doc_doc', 'DOC', null),
+    ('document_type', 'doc_docx', 'DOCX', null),
+    ('document_type', 'doc_xls', 'XLS', null),
+    ('document_type', 'doc_ppt', 'PPT', null),
+    ('document_type', 'doc_jpg', 'JPG', null),
+    ('document_type', 'doc_txt', 'TXT', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
