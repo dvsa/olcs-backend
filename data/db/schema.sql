@@ -1428,6 +1428,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
+  INDEX `fk_document_ref_data1_idx` (`file_extension` ASC),
   INDEX `fk_document_traffic_area1_idx` (`traffic_area_id` ASC),
   INDEX `fk_document_document_category1_idx` (`category_id` ASC),
   INDEX `fk_document_document_sub_category1_idx` (`document_sub_category_id` ASC),
@@ -1440,6 +1441,11 @@ CREATE TABLE IF NOT EXISTS `document` (
   INDEX `fk_document_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_document_opposition1_idx` (`opposition_id` ASC),
   INDEX `fk_document_bus_reg1_idx` (`bus_reg_id` ASC),
+  CONSTRAINT `fk_document_ref_data1_idx`
+    FOREIGN KEY (`file_extension`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
   CONSTRAINT `fk_document_traffic_area1`
     FOREIGN KEY (`traffic_area_id`)
     REFERENCES `traffic_area` (`id`)
