@@ -94,34 +94,6 @@ class Operator extends ServiceAbstract
     }
 
     /**
-     * Get the limit
-     *
-     * @param array $options
-     * @param int $default
-     * @return int
-     */
-    private function getLimit($options, $default = 10)
-    {
-        return (
-            isset($options['limit']) && is_numeric($options['limit']) && $options['limit'] > 0
-            ) ? (int) $options['limit'] : $default;
-    }
-
-    /**
-     * Get the page number
-     *
-     * @param array $options
-     * @param int $default
-     * @return int
-     */
-    private function getPageNumber($options, $default = 1)
-    {
-        return (
-            isset($options['page']) && is_numeric($options['page']) && $options['page'] > 0
-            ) ? (int) $options['page'] : $default;
-    }
-
-    /**
      * Format the order by statement
      *
      * @param string|array $orderBy
@@ -139,25 +111,10 @@ class Operator extends ServiceAbstract
     }
 
     /**
-     * Format limit clause
-     *
-     * @param int $limit
-     * @param int $offset
-     */
-    private function formatLimitClause($limit, $offset = null)
-    {
-        if (empty($offset)) {
-            return 'LIMIT ' . $limit;
-        } else {
-            return 'LIMIT ' . $offset . ',' . $limit;
-        }
-    }
-
-    /**
      * Format where clause
      *
-     * @param bool $prependWhere
      * @param array $conditions
+     * @param bool $prependWhere
      * @return string
      */
     private function formatWhereClause($conditions, $prependWhere = true)
