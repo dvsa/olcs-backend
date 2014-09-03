@@ -27,7 +27,7 @@ class CommunityLicWithdrawal implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CommunityLicManyToOne,
-        Traits\StartDateField,
+        Traits\StartDateFieldAlt1,
         Traits\EndDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

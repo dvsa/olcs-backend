@@ -29,9 +29,9 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\PersonManyToOne,
-        Traits\StartDateFieldAlt1,
+        Traits\StartDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

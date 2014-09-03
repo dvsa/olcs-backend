@@ -30,7 +30,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         Traits\SeriousInfringementManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\StartDateFieldAlt1,
+        Traits\StartDateField,
         Traits\EndDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

@@ -595,9 +595,9 @@ INSERT INTO doc_template(id,category_id,document_sub_category_id,description,doc
     (2,4,1,'Another test template',14,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
-    (1,'a sample bookmark','',1),
-    (2,'another sample bookmark','',1),
-    (3,'a third sample bookmark','',1);
+    (1,'sample_bookmark','A sample bookmark',1),
+    (2,'another_sample_bookmark','Another sample bookmark',1),
+    (3,'a_third_sample_bookmark','A third sample bookmark',1);
 
 INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
     (1,'para 1','lorem ipsum',1),

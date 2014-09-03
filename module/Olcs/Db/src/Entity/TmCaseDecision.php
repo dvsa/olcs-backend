@@ -27,7 +27,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DecisionDateField,

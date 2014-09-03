@@ -32,7 +32,7 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceVehicleManyToOne,
         Traits\DiscNo50Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\IsInterimField,
         Traits\CustomCreatedOnField,

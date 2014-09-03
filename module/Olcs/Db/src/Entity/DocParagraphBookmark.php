@@ -30,7 +30,6 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DocBookmarkManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -44,6 +43,16 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
     protected $docParagraph;
+
+    /**
+     * Doc bookmark
+     *
+     * @var \Olcs\Db\Entity\DocBookmark
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", fetch="LAZY", inversedBy="docParagraphBookmarks")
+     * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
+     */
+    protected $docBookmark;
 
     /**
      * Set the doc paragraph
@@ -66,5 +75,28 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     public function getDocParagraph()
     {
         return $this->docParagraph;
+    }
+
+    /**
+     * Set the doc bookmark
+     *
+     * @param \Olcs\Db\Entity\DocBookmark $docBookmark
+     * @return DocParagraphBookmark
+     */
+    public function setDocBookmark($docBookmark)
+    {
+        $this->docBookmark = $docBookmark;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc bookmark
+     *
+     * @return \Olcs\Db\Entity\DocBookmark
+     */
+    public function getDocBookmark()
+    {
+        return $this->docBookmark;
     }
 }

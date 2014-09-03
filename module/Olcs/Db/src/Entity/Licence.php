@@ -36,7 +36,7 @@ class Licence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
@@ -212,31 +212,13 @@ class Licence implements Interfaces\EntityInterface
     protected $translateToWelsh = 0;
 
     /**
-     * Application
+     * Workshop
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Application", mappedBy="licence")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Workshop", mappedBy="licence")
      */
-    protected $applications;
-
-    /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
-     */
-    protected $contactDetails;
-
-    /**
-     * Document
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="licence")
-     */
-    protected $documents;
+    protected $workshops;
 
     /**
      * Licence vehicle
@@ -248,24 +230,42 @@ class Licence implements Interfaces\EntityInterface
     protected $licenceVehicles;
 
     /**
-     * Workshop
+     * Application
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Workshop", mappedBy="licence")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Application", mappedBy="licence")
      */
-    protected $workshops;
+    protected $applications;
+
+    /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="licence")
+     */
+    protected $documents;
+
+    /**
+     * Contact detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
+     */
+    protected $contactDetails;
 
     /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
-        $this->contactDetails = new ArrayCollection();
-        $this->documents = new ArrayCollection();
-        $this->licenceVehicles = new ArrayCollection();
         $this->workshops = new ArrayCollection();
+        $this->licenceVehicles = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->contactDetails = new ArrayCollection();
     }
 
     /**
@@ -660,72 +660,26 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application
+     * Set the workshop
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
      * @return Licence
      */
-    public function setApplications($applications)
+    public function setWorkshops($workshops)
     {
-        $this->applications = $applications;
+        $this->workshops = $workshops;
 
         return $this;
     }
 
     /**
-     * Get the applications
+     * Get the workshops
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getApplications()
+    public function getWorkshops()
     {
-        return $this->applications;
-    }
-
-    /**
-     * Set the contact detail
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function setContactDetails($contactDetails)
-    {
-        $this->contactDetails = $contactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact details
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
-     * @return Licence
-     */
-    public function setDocuments($documents)
-    {
-        $this->documents = $documents;
-
-        return $this;
-    }
-
-    /**
-     * Get the documents
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getDocuments()
-    {
-        return $this->documents;
+        return $this->workshops;
     }
 
     /**
@@ -752,25 +706,71 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the workshop
+     * Set the application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
      * @return Licence
      */
-    public function setWorkshops($workshops)
+    public function setApplications($applications)
     {
-        $this->workshops = $workshops;
+        $this->applications = $applications;
 
         return $this;
     }
 
     /**
-     * Get the workshops
+     * Get the applications
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getWorkshops()
+    public function getApplications()
     {
-        return $this->workshops;
+        return $this->applications;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Set the contact detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 }

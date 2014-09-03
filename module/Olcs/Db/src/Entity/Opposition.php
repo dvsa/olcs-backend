@@ -30,7 +30,7 @@ class Opposition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\Notes4000Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

@@ -29,7 +29,7 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,

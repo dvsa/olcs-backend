@@ -33,7 +33,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\SiCategoryManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

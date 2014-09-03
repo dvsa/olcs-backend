@@ -28,9 +28,9 @@ class Statement implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\Vrm20Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

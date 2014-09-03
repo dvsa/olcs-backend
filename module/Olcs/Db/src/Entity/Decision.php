@@ -25,11 +25,11 @@ class Decision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\SectionCode50Field,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\IsReadOnlyField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

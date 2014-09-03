@@ -27,7 +27,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

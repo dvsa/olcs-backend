@@ -30,7 +30,7 @@ class SiPenalty implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\SeriousInfringementManyToOne,
-        Traits\StartDateFieldAlt1,
+        Traits\StartDateField,
         Traits\EndDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

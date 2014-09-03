@@ -28,7 +28,7 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\Description4000Field,
