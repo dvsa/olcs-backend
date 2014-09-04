@@ -130,6 +130,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $licenceId;
 
     /**
+     * Document Store Identifier
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="document_store_id")
+     */
+    protected $documentStoreIdentifier;
+
+    /**
      * Get the id
      *
      * @return int
@@ -247,5 +256,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getLicenceId()
     {
         return $this->licenceId;
+    }
+
+    /**
+     * Get the document store identifier
+     *
+     * @return string
+     */
+    public function getDocumentStoreIdentifier()
+    {
+        return $this->documentStoreIdentifier;
     }
 }
