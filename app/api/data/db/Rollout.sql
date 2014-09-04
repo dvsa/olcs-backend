@@ -1657,6 +1657,7 @@ DROP VIEW IF EXISTS document_search_view;
 
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
+        d.document_store_id,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
 		d.file_extension, d.is_digital,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
