@@ -65,6 +65,7 @@ class EmailBody implements Interfaces\EntityInterface
         return $this->seq;
     }
 
+
     /**
      * Set the text
      *
@@ -87,4 +88,5 @@ class EmailBody implements Interfaces\EntityInterface
     {
         return $this->text;
     }
+
 }

@@ -88,6 +88,7 @@ class SiPenalty implements Interfaces\EntityInterface
         return $this->siPenaltyType;
     }
 
+
     /**
      * Set the imposed
      *
@@ -111,6 +112,7 @@ class SiPenalty implements Interfaces\EntityInterface
         return $this->imposed;
     }
 
+
     /**
      * Set the reason not imposed
      *
@@ -133,4 +135,5 @@ class SiPenalty implements Interfaces\EntityInterface
     {
         return $this->reasonNotImposed;
     }
+
 }

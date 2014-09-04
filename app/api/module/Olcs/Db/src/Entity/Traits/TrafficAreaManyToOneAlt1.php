@@ -43,4 +43,5 @@ trait TrafficAreaManyToOneAlt1
     {
         return $this->trafficArea;
     }
+
 }

@@ -42,4 +42,5 @@ trait Name70Field
     {
         return $this->name;
     }
+
 }

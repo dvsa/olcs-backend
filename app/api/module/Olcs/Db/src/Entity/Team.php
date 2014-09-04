@@ -66,4 +66,5 @@ class Team implements Interfaces\EntityInterface
     {
         return $this->overrideTaContact;
     }
+
 }

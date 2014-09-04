@@ -111,6 +111,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->previousLicenceType;
     }
 
+
     /**
      * Set the holder name
      *
@@ -133,6 +134,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->holderName;
     }
+
 
     /**
      * Set the purchase date
@@ -157,6 +159,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->purchaseDate;
     }
 
+
     /**
      * Set the will surrender
      *
@@ -179,6 +182,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->willSurrender;
     }
+
 
     /**
      * Set the disqualification date
@@ -203,6 +207,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->disqualificationDate;
     }
 
+
     /**
      * Set the disqualification length
      *
@@ -225,4 +230,5 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->disqualificationLength;
     }
+
 }

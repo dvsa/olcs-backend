@@ -43,4 +43,5 @@ trait OrganisationManyToOneAlt1
     {
         return $this->organisation;
     }
+
 }

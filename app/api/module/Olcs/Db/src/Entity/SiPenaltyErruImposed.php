@@ -88,6 +88,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->siPenaltyImposedType;
     }
 
+
     /**
      * Set the final decision date
      *
@@ -111,6 +112,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
         return $this->finalDecisionDate;
     }
 
+
     /**
      * Set the executed
      *
@@ -133,4 +135,5 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     {
         return $this->executed;
     }
+
 }

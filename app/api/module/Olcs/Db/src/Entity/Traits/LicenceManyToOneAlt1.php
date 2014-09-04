@@ -43,4 +43,5 @@ trait LicenceManyToOneAlt1
     {
         return $this->licence;
     }
+
 }
