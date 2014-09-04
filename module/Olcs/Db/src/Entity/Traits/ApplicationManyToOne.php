@@ -43,4 +43,5 @@ trait ApplicationManyToOne
     {
         return $this->application;
     }
+
 }

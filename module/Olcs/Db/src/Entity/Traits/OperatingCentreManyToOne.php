@@ -43,4 +43,5 @@ trait OperatingCentreManyToOne
     {
         return $this->operatingCentre;
     }
+
 }

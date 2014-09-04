@@ -44,4 +44,5 @@ trait IdIdentity
     {
         return $this->id;
     }
+
 }

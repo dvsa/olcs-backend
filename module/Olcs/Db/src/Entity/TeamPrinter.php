@@ -67,6 +67,7 @@ class TeamPrinter implements Interfaces\EntityInterface
         return $this->printer;
     }
 
+
     /**
      * Set the document type
      *
@@ -89,4 +90,5 @@ class TeamPrinter implements Interfaces\EntityInterface
     {
         return $this->documentType;
     }
+
 }

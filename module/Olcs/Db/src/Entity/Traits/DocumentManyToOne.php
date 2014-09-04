@@ -43,4 +43,5 @@ trait DocumentManyToOne
     {
         return $this->document;
     }
+
 }

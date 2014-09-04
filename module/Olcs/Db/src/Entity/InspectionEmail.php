@@ -102,6 +102,7 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->inspectionRequest;
     }
 
+
     /**
      * Set the subject
      *
@@ -124,6 +125,7 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->subject;
     }
+
 
     /**
      * Set the message body
@@ -148,6 +150,7 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->messageBody;
     }
 
+
     /**
      * Set the email status
      *
@@ -170,6 +173,7 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->emailStatus;
     }
+
 
     /**
      * Set the processed
@@ -194,6 +198,7 @@ class InspectionEmail implements Interfaces\EntityInterface
         return $this->processed;
     }
 
+
     /**
      * Set the sender email address
      *
@@ -216,4 +221,5 @@ class InspectionEmail implements Interfaces\EntityInterface
     {
         return $this->senderEmailAddress;
     }
+
 }

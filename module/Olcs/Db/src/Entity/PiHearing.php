@@ -95,6 +95,7 @@ class PiHearing implements Interfaces\EntityInterface
         return $this->presidedByRole;
     }
 
+
     /**
      * Set the pi
      *
@@ -117,6 +118,7 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->pi;
     }
+
 
     /**
      * Set the presiding tc other
@@ -141,6 +143,7 @@ class PiHearing implements Interfaces\EntityInterface
         return $this->presidingTcOther;
     }
 
+
     /**
      * Set the venue
      *
@@ -163,4 +166,5 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
+
 }

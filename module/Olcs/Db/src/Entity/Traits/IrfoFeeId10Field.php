@@ -42,4 +42,5 @@ trait IrfoFeeId10Field
     {
         return $this->irfoFeeId;
     }
+
 }

@@ -72,6 +72,7 @@ class TaskNote implements Interfaces\EntityInterface
         return $this->task;
     }
 
+
     /**
      * Set the note text
      *
@@ -94,4 +95,5 @@ class TaskNote implements Interfaces\EntityInterface
     {
         return $this->noteText;
     }
+
 }

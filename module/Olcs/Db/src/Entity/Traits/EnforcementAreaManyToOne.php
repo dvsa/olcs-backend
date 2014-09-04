@@ -43,4 +43,5 @@ trait EnforcementAreaManyToOne
     {
         return $this->enforcementArea;
     }
+
 }

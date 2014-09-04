@@ -108,6 +108,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         return $this->s4;
     }
 
+
     /**
      * Set the action
      *
@@ -130,6 +131,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     {
         return $this->action;
     }
+
 
     /**
      * Set the publication appropriate
@@ -154,6 +156,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         return $this->publicationAppropriate;
     }
 
+
     /**
      * Set the sufficient parking
      *
@@ -176,4 +179,5 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     {
         return $this->sufficientParking;
     }
+
 }

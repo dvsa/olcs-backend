@@ -42,4 +42,5 @@ trait Description1024Field
     {
         return $this->description;
     }
+
 }

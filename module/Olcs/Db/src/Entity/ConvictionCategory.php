@@ -63,4 +63,5 @@ class ConvictionCategory implements Interfaces\EntityInterface
     {
         return $this->parent;
     }
+
 }

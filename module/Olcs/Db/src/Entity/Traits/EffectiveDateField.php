@@ -42,4 +42,5 @@ trait EffectiveDateField
     {
         return $this->effectiveDate;
     }
+
 }

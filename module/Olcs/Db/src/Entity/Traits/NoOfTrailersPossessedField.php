@@ -42,4 +42,5 @@ trait NoOfTrailersPossessedField
     {
         return $this->noOfTrailersPossessed;
     }
+
 }

@@ -109,6 +109,7 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->pdfDocument;
     }
 
+
     /**
      * Set the route document
      *
@@ -131,6 +132,7 @@ class TxcInbox implements Interfaces\EntityInterface
     {
         return $this->routeDocument;
     }
+
 
     /**
      * Set the zip document
@@ -155,6 +157,7 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->zipDocument;
     }
 
+
     /**
      * Set the file read
      *
@@ -178,6 +181,7 @@ class TxcInbox implements Interfaces\EntityInterface
         return $this->fileRead;
     }
 
+
     /**
      * Set the route seq
      *
@@ -200,4 +204,5 @@ class TxcInbox implements Interfaces\EntityInterface
     {
         return $this->routeSeq;
     }
+
 }

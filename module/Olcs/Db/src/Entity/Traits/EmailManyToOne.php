@@ -43,4 +43,5 @@ trait EmailManyToOne
     {
         return $this->email;
     }
+
 }

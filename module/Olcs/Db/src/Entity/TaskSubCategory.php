@@ -57,4 +57,5 @@ class TaskSubCategory implements Interfaces\EntityInterface
     {
         return $this->isFreetextDescription;
     }
+
 }

@@ -77,6 +77,7 @@ class ComplaintCase implements Interfaces\EntityInterface
         return $this->complaint;
     }
 
+
     /**
      * Set the case
      *
@@ -99,4 +100,5 @@ class ComplaintCase implements Interfaces\EntityInterface
     {
         return $this->case;
     }
+
 }

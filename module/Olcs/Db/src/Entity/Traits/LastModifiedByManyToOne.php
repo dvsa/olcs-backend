@@ -43,4 +43,5 @@ trait LastModifiedByManyToOne
     {
         return $this->lastModifiedBy;
     }
+
 }
