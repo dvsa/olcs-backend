@@ -1606,7 +1606,9 @@ INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `desc
 INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_modified_by`, `description`, `is_scanned`,
     `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
-    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1);
+    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
+    (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
+    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1);
 
 SET foreign_key_checks = 1;
 
