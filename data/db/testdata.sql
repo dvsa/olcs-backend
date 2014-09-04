@@ -587,7 +587,7 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (10,7,'Test document 10','testdocument10.jpg',0,4,1,'JPG','2014-08-08', '/path/to/jackrabbit/file'),
     (11,7,'Test document 11','testdocument11.txt',0,3,1,'TXT','2014-08-14', '/path/to/jackrabbit/file'),
     (12,7,'Test document 12','testdocument12.xls',1,4,1,'XLS','2014-08-28', '/path/to/jackrabbit/file'),
-    (13,null,'Test template 1','testtemplate.rtf',1,4,1,'RTF','2014-08-28', '/path/to/jackrabbit/file'),
+    (13,null,'Test template 1','sample.rtf',1,4,1,'RTF','2014-08-28', 'templates/sample'),
     (14,null,'Test template 2','testtemplate2.rtf',1,4,1,'RTF','2014-08-28', '/path/to/jackrabbit/file');
 
 INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
