@@ -42,4 +42,5 @@ trait StartDateField
     {
         return $this->startDate;
     }
+
 }

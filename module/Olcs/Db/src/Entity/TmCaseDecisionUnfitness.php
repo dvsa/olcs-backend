@@ -67,4 +67,5 @@ class TmCaseDecisionUnfitness implements Interfaces\EntityInterface
     {
         return $this->unfitnessReason;
     }
+
 }

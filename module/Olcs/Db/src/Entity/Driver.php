@@ -62,4 +62,5 @@ class Driver implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
+
 }

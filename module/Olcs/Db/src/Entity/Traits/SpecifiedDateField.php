@@ -42,4 +42,5 @@ trait SpecifiedDateField
     {
         return $this->specifiedDate;
     }
+
 }

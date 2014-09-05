@@ -77,6 +77,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
         return $this->txcMissing;
     }
 
+
     /**
      * Set the txc not required
      *
@@ -99,4 +100,5 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     {
         return $this->txcNotRequired;
     }
+
 }

@@ -42,4 +42,5 @@ trait HearingDateField
     {
         return $this->hearingDate;
     }
+
 }

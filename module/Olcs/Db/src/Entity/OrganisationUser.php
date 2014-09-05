@@ -88,6 +88,7 @@ class OrganisationUser implements Interfaces\EntityInterface
         return $this->user;
     }
 
+
     /**
      * Set the is administrator
      *
@@ -111,6 +112,7 @@ class OrganisationUser implements Interfaces\EntityInterface
         return $this->isAdministrator;
     }
 
+
     /**
      * Set the sftp access
      *
@@ -133,4 +135,5 @@ class OrganisationUser implements Interfaces\EntityInterface
     {
         return $this->sftpAccess;
     }
+
 }

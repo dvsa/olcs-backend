@@ -42,4 +42,5 @@ trait PubType3Field
     {
         return $this->pubType;
     }
+
 }

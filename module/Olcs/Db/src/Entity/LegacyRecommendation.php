@@ -161,6 +161,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->action;
     }
 
+
     /**
      * Set the to user
      *
@@ -183,6 +184,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->toUser;
     }
+
 
     /**
      * Set the from user
@@ -207,6 +209,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->fromUser;
     }
 
+
     /**
      * Set the rec date
      *
@@ -229,6 +232,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->recDate;
     }
+
 
     /**
      * Set the pi reason
@@ -253,6 +257,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piReason;
     }
 
+
     /**
      * Set the notes
      *
@@ -275,6 +280,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->notes;
     }
+
 
     /**
      * Set the pi decision
@@ -299,6 +305,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->piDecision;
     }
 
+
     /**
      * Set the request
      *
@@ -321,6 +328,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->request;
     }
+
 
     /**
      * Set the revoke lic
@@ -345,6 +353,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->revokeLic;
     }
 
+
     /**
      * Set the status
      *
@@ -368,6 +377,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         return $this->status;
     }
 
+
     /**
      * Set the total points
      *
@@ -390,4 +400,5 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     {
         return $this->totalPoints;
     }
+
 }

@@ -85,6 +85,7 @@ class VoidDisc implements Interfaces\EntityInterface
         return $this->licenceType;
     }
 
+
     /**
      * Set the serial start
      *
@@ -108,6 +109,7 @@ class VoidDisc implements Interfaces\EntityInterface
         return $this->serialStart;
     }
 
+
     /**
      * Set the serial end
      *
@@ -130,4 +132,5 @@ class VoidDisc implements Interfaces\EntityInterface
     {
         return $this->serialEnd;
     }
+
 }

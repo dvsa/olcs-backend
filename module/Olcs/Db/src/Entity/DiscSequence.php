@@ -110,6 +110,7 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->restricted;
     }
 
+
     /**
      * Set the special restricted
      *
@@ -132,6 +133,7 @@ class DiscSequence implements Interfaces\EntityInterface
     {
         return $this->specialRestricted;
     }
+
 
     /**
      * Set the standard national
@@ -156,6 +158,7 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->standardNational;
     }
 
+
     /**
      * Set the standard international
      *
@@ -178,6 +181,7 @@ class DiscSequence implements Interfaces\EntityInterface
     {
         return $this->standardInternational;
     }
+
 
     /**
      * Set the is self serve
@@ -202,6 +206,7 @@ class DiscSequence implements Interfaces\EntityInterface
         return $this->isSelfServe;
     }
 
+
     /**
      * Set the is ni self serve
      *
@@ -224,4 +229,5 @@ class DiscSequence implements Interfaces\EntityInterface
     {
         return $this->isNiSelfServe;
     }
+
 }
