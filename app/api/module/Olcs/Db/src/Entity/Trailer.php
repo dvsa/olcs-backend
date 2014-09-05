@@ -66,4 +66,5 @@ class Trailer implements Interfaces\EntityInterface
     {
         return $this->trailerNo;
     }
+
 }

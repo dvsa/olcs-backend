@@ -140,6 +140,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->type;
     }
 
+
     /**
      * Set the presided by
      *
@@ -162,6 +163,7 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->presidedBy;
     }
+
 
     /**
      * Set the reason
@@ -186,6 +188,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the witnesses
      *
@@ -208,6 +211,7 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->witnesses;
     }
+
 
     /**
      * Set the adjourned date
@@ -232,6 +236,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->adjournedDate;
     }
 
+
     /**
      * Set the cancelled date
      *
@@ -254,6 +259,7 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->cancelledDate;
     }
+
 
     /**
      * Set the scheduled on
@@ -278,6 +284,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->scheduledOn;
     }
 
+
     /**
      * Set the rescheduled on
      *
@@ -300,4 +307,5 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->rescheduledOn;
     }
+
 }

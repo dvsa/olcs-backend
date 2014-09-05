@@ -42,4 +42,5 @@ trait EmailAddress45Field
     {
         return $this->emailAddress;
     }
+
 }

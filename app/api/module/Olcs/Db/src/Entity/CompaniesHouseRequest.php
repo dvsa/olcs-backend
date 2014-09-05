@@ -78,6 +78,7 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         return $this->requestedOn;
     }
 
+
     /**
      * Set the request type
      *
@@ -100,6 +101,7 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     {
         return $this->requestType;
     }
+
 
     /**
      * Set the request error
@@ -124,6 +126,7 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         return $this->requestError;
     }
 
+
     /**
      * Set the ip address
      *
@@ -146,4 +149,5 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     {
         return $this->ipAddress;
     }
+
 }

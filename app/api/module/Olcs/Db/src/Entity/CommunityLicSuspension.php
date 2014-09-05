@@ -64,4 +64,5 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
     {
         return $this->isActioned;
     }
+
 }

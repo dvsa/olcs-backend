@@ -65,4 +65,5 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
     {
         return $this->postcodeId;
     }
+
 }

@@ -67,4 +67,5 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     {
         return $this->docParagraph;
     }
+
 }

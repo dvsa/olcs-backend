@@ -74,6 +74,7 @@ class ChangeOfEntity implements Interfaces\EntityInterface
         return $this->oldLicenceNo;
     }
 
+
     /**
      * Set the old organisation name
      *
@@ -96,4 +97,5 @@ class ChangeOfEntity implements Interfaces\EntityInterface
     {
         return $this->oldOrganisationName;
     }
+
 }

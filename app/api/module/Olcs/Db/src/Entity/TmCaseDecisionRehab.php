@@ -67,4 +67,5 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
     {
         return $this->rehabMeasure;
     }
+
 }

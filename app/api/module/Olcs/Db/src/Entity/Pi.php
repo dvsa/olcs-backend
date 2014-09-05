@@ -21,7 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
  *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"})
+ *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_pi_presided_by_role1_idx", columns={"presided_by_role"})
  *    }
  * )
  */
@@ -29,10 +31,14 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\PresidingTcManyToOne,
+        Traits\PresidedByRoleManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\AgreedDateField,
+        Traits\PresidingTcOther45Field,
+        Traits\Comment4000Field,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -225,6 +231,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->assignedTo;
     }
 
+
     /**
      * Set the pi status
      *
@@ -248,6 +255,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->piStatus;
     }
 
+
     /**
      * Set the pi type
      *
@@ -269,6 +277,50 @@ class Pi implements Interfaces\EntityInterface
     public function getPiTypes()
     {
         return $this->piTypes;
+    }
+
+
+    /**
+     * Add a pi types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
+     * @return Pi
+     */
+    public function addPiTypes($piTypes)
+    {
+        if ($piTypes instanceof ArrayCollection) {
+            $this->piTypes = new ArrayCollection(
+                array_merge(
+                    $this->piTypes->toArray(),
+                    $piTypes->toArray()
+                )
+            );
+        } elseif (!$this->piTypes->contains($piTypes)) {
+            $this->piTypes->add($piTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pi types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
+     * @return Pi
+     */
+    public function removePiTypes($piTypes)
+    {
+        if ($this->piTypes->contains($piTypes)) {
+            $this->piTypes->remove($piTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -294,6 +346,50 @@ class Pi implements Interfaces\EntityInterface
         return $this->decisions;
     }
 
+
+    /**
+     * Add a decisions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Pi
+     */
+    public function addDecisions($decisions)
+    {
+        if ($decisions instanceof ArrayCollection) {
+            $this->decisions = new ArrayCollection(
+                array_merge(
+                    $this->decisions->toArray(),
+                    $decisions->toArray()
+                )
+            );
+        } elseif (!$this->decisions->contains($decisions)) {
+            $this->decisions->add($decisions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a decisions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Pi
+     */
+    public function removeDecisions($decisions)
+    {
+        if ($this->decisions->contains($decisions)) {
+            $this->decisions->remove($decisions);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the reason
      *
@@ -315,6 +411,50 @@ class Pi implements Interfaces\EntityInterface
     public function getReasons()
     {
         return $this->reasons;
+    }
+
+
+    /**
+     * Add a reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Pi
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Pi
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->remove($reasons);
+        }
+
+        return $this;
     }
 
     /**
@@ -340,6 +480,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
+
     /**
      * Set the is cancelled
      *
@@ -362,6 +503,7 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->isCancelled;
     }
+
 
     /**
      * Set the is adjourned
@@ -386,6 +528,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->isAdjourned;
     }
 
+
     /**
      * Set the section code text
      *
@@ -408,6 +551,7 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->sectionCodeText;
     }
+
 
     /**
      * Set the reschedule datetime
@@ -432,6 +576,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->rescheduleDatetime;
     }
 
+
     /**
      * Set the licence revoked at pi
      *
@@ -454,6 +599,7 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->licenceRevokedAtPi;
     }
+
 
     /**
      * Set the notification date
@@ -478,6 +624,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->notificationDate;
     }
 
+
     /**
      * Set the decision notes
      *
@@ -501,6 +648,7 @@ class Pi implements Interfaces\EntityInterface
         return $this->decisionNotes;
     }
 
+
     /**
      * Set the pi hearing
      *
@@ -522,5 +670,49 @@ class Pi implements Interfaces\EntityInterface
     public function getPiHearings()
     {
         return $this->piHearings;
+    }
+
+
+    /**
+     * Add a pi hearings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @return Pi
+     */
+    public function addPiHearings($piHearings)
+    {
+        if ($piHearings instanceof ArrayCollection) {
+            $this->piHearings = new ArrayCollection(
+                array_merge(
+                    $this->piHearings->toArray(),
+                    $piHearings->toArray()
+                )
+            );
+        } elseif (!$this->piHearings->contains($piHearings)) {
+            $this->piHearings->add($piHearings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pi hearings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @return Pi
+     */
+    public function removePiHearings($piHearings)
+    {
+        if ($this->piHearings->contains($piHearings)) {
+            $this->piHearings->remove($piHearings);
+        }
+
+        return $this;
     }
 }

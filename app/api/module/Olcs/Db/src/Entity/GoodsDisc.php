@@ -80,6 +80,7 @@ class GoodsDisc implements Interfaces\EntityInterface
         return $this->isCopy;
     }
 
+
     /**
      * Set the reprint required
      *
@@ -102,4 +103,5 @@ class GoodsDisc implements Interfaces\EntityInterface
     {
         return $this->reprintRequired;
     }
+
 }

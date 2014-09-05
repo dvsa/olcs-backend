@@ -43,4 +43,5 @@ trait S4ManyToOne
     {
         return $this->s4;
     }
+
 }

@@ -70,6 +70,7 @@ class Country implements Interfaces\EntityInterface
         return $this->countryDesc;
     }
 
+
     /**
      * Set the is member state
      *
@@ -92,4 +93,5 @@ class Country implements Interfaces\EntityInterface
     {
         return $this->isMemberState;
     }
+
 }

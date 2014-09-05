@@ -119,6 +119,50 @@ class Recipient implements Interfaces\EntityInterface
         return $this->trafficAreas;
     }
 
+
+    /**
+     * Add a traffic areas
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return Recipient
+     */
+    public function addTrafficAreas($trafficAreas)
+    {
+        if ($trafficAreas instanceof ArrayCollection) {
+            $this->trafficAreas = new ArrayCollection(
+                array_merge(
+                    $this->trafficAreas->toArray(),
+                    $trafficAreas->toArray()
+                )
+            );
+        } elseif (!$this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->add($trafficAreas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a traffic areas
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return Recipient
+     */
+    public function removeTrafficAreas($trafficAreas)
+    {
+        if ($this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->remove($trafficAreas);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the send app decision
      *
@@ -141,6 +185,7 @@ class Recipient implements Interfaces\EntityInterface
     {
         return $this->sendAppDecision;
     }
+
 
     /**
      * Set the send notices procs
@@ -165,6 +210,7 @@ class Recipient implements Interfaces\EntityInterface
         return $this->sendNoticesProcs;
     }
 
+
     /**
      * Set the is police
      *
@@ -188,6 +234,7 @@ class Recipient implements Interfaces\EntityInterface
         return $this->isPolice;
     }
 
+
     /**
      * Set the is objector
      *
@@ -210,4 +257,5 @@ class Recipient implements Interfaces\EntityInterface
     {
         return $this->isObjector;
     }
+
 }

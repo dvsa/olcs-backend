@@ -51,4 +51,5 @@ class LegacyCaseAction implements Interfaces\EntityInterface
     {
         return $this->isDriver;
     }
+
 }
