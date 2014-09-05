@@ -1418,7 +1418,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `operating_centre_id` INT NULL,
   `opposition_id` INT NULL,
   `bus_reg_id` INT NULL,
-  `issued_date` DATE NULL,
+  `issued_date` DATETIME NULL,
   `filename` VARCHAR(255) NULL,
   `file_extension` varchar(20) NOT null,
   `deleted_date` DATETIME NULL,
