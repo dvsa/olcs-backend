@@ -1017,5 +1017,13 @@ return array(
         '@settings' => array(
             'ignore' => true
         )
+    ),
+    'phone_contact' => array(
+        'contact_details_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ContactDetails',
+                'property' => 'phoneContact'
+            )
+        )
     )
 );
