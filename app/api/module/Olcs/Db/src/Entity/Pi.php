@@ -21,7 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
  *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"})
+ *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_pi_presided_by_role1_idx", columns={"presided_by_role"})
  *    }
  * )
  */
@@ -29,10 +31,14 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\PresidingTcManyToOne,
+        Traits\PresidedByRoleManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\AgreedDateField,
+        Traits\PresidingTcOther45Field,
+        Traits\Comment4000Field,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
