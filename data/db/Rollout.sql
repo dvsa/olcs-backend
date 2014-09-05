@@ -1597,7 +1597,8 @@ INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `desc
 INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_modified_by`, `description`, `is_scanned`,
     `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
-    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1);
+    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
+    (3,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
 
 SET foreign_key_checks = 1;
 
@@ -1608,8 +1609,8 @@ CREATE VIEW task_search_view AS
    SELECT t.id,
        t.assigned_to_team_id,
        t.assigned_to_user_id,
-       cat.description category_name, 
-       t.task_sub_category_id, 
+       cat.description category_name,
+       t.task_sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,

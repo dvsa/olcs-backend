@@ -587,28 +587,39 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (10,7,'Test document 10','testdocument10.jpg',0,4,1,'JPG','2014-08-08', '/path/to/jackrabbit/file'),
     (11,7,'Test document 11','testdocument11.txt',0,3,1,'TXT','2014-08-14', '/path/to/jackrabbit/file'),
     (12,7,'Test document 12','testdocument12.xls',1,4,1,'XLS','2014-08-28', '/path/to/jackrabbit/file'),
-    (13,null,'Test template 1','sample.rtf',1,4,1,'RTF','2014-08-28', 'templates/sample'),
-    (14,null,'Test template 2','testtemplate2.rtf',1,4,1,'RTF','2014-08-28', '/path/to/jackrabbit/file');
+    (13,null,'Test template 1','',1,4,1,'RTF','2014-08-28', 'templates/sample'),
+    (14,null,'GV Application Incomplete 1st Request For Supporting Docs','',1,4,1,'RTF','2014-08-28', 'templates/PUB_APPS_SUPP_DOCS_1ST(GB)');
 
 INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,4,1,'A test template',13,0,0,1),
-    (2,4,1,'Another test template',14,0,0,1);
+    (1,1,1,'A test template',13,0,0,1),
+    (2,1,3,'GV  Application Incomplete 1st Request For Supporting Docs',14,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),
     (2,'another_sample_bookmark','Another sample bookmark',1),
-    (3,'a_third_sample_bookmark','A third sample bookmark',1);
+    (3,'a_third_sample_bookmark','A third sample bookmark',1),
+    (4,'application_type','Application type',1),
+    (5,'p_unacceptable_advert','Unacceptable advert',1),
+    (6,'warning_re_early_operating','Warning RE early operating',1);
 
 INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
-    (1,'para 1','lorem ipsum',1),
-    (2,'para 2','dolor amit',1),
-    (3,'para 3','process populates a dropdown',1),
-    (4,'para 4','templates are stores',1);
+    (1,'para 1','Sample paragraph 1.',1),
+    (2,'para 2','Sample Paragraph 2.',1),
+    (3,'para 3','Sample Paragraph 3.',1),
+    (4,'para 4','Sample Paragraph 4.',1),
+    (5,'app type 1','App type number one.',1),
+    (6,'app type 2','App type number two.',1),
+    (7,'unacceptable advert','Your advert was unacceptable.',1),
+    (8,'early operating 1','Early operating text one.',1),
+    (9,'early operating 2','Early operating text two!',1);
 
 INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUES
     (1,1,1),
     (1,3,1),
-    (2,2,1);
+    (1,2,1),
+    (2,4,1),
+    (2,5,1),
+    (2,6,1);
 
 INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VALUES
     (1,1,1),
@@ -616,6 +627,11 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (1,3,1),
     (2,2,1),
     (2,4,1),
-    (3,4,1);
+    (3,4,1),
+    (4,5,1),
+    (4,6,1),
+    (5,7,1),
+    (6,8,1),
+    (6,9,1);
 
 SET foreign_key_checks = 1;
