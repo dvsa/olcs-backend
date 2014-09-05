@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -124,6 +125,23 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
     protected $writtenPermissionToEngage = 0;
+
+    /**
+     * Phone contact
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PhoneContact", mappedBy="contactDetails")
+     */
+    protected $phoneContacts;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->phoneContacts = new ArrayCollection();
+    }
 
     /**
      * Set the contact type
@@ -330,5 +348,28 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getWrittenPermissionToEngage()
     {
         return $this->writtenPermissionToEngage;
+    }
+
+    /**
+     * Set the phone contact
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @return ContactDetails
+     */
+    public function setPhoneContacts($phoneContacts)
+    {
+        $this->phoneContacts = $phoneContacts;
+
+        return $this;
+    }
+
+    /**
+     * Get the phone contacts
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPhoneContacts()
+    {
+        return $this->phoneContacts;
     }
 }
