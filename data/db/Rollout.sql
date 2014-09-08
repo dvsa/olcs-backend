@@ -499,7 +499,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_bus', 'Bus Registration', null),
     ('pi_type', 'pi_t_sect_19_22', 'Section 19 or 22', null),
     ('pi_type', 'pi_t_tm_inc', 'Transport Manager included', null),
-    ('pi_type', 'pi_t_tm_only', 'Transport Manager only', null),
+    ('pi_type', 'pi_t_tm_only', 'Transport Manager only - Regulatory', null),
 
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
