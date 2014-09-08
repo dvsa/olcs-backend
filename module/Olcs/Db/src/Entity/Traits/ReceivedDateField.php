@@ -42,4 +42,5 @@ trait ReceivedDateField
     {
         return $this->receivedDate;
     }
+
 }

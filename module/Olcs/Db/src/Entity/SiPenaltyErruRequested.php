@@ -77,6 +77,7 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
         return $this->siPenaltyRequestedType;
     }
 
+
     /**
      * Set the duration
      *
@@ -99,4 +100,5 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     {
         return $this->duration;
     }
+
 }

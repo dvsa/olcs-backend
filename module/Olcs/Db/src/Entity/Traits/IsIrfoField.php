@@ -42,4 +42,5 @@ trait IsIrfoField
     {
         return $this->isIrfo;
     }
+
 }

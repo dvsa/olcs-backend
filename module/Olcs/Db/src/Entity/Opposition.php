@@ -150,6 +150,7 @@ class Opposition implements Interfaces\EntityInterface
         return $this->opposer;
     }
 
+
     /**
      * Set the is representation
      *
@@ -172,6 +173,7 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->isRepresentation;
     }
+
 
     /**
      * Set the is copied
@@ -196,6 +198,7 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isCopied;
     }
 
+
     /**
      * Set the raised date
      *
@@ -218,6 +221,7 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->raisedDate;
     }
+
 
     /**
      * Set the is in time
@@ -242,6 +246,7 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isInTime;
     }
 
+
     /**
      * Set the is public inquiry
      *
@@ -264,6 +269,7 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->isPublicInquiry;
     }
+
 
     /**
      * Set the is valid
@@ -288,6 +294,7 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isValid;
     }
 
+
     /**
      * Set the valid notes
      *
@@ -311,6 +318,7 @@ class Opposition implements Interfaces\EntityInterface
         return $this->validNotes;
     }
 
+
     /**
      * Set the document
      *
@@ -332,5 +340,49 @@ class Opposition implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Opposition
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Opposition
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 }

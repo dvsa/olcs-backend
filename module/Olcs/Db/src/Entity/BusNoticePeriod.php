@@ -79,6 +79,7 @@ class BusNoticePeriod implements Interfaces\EntityInterface
         return $this->noticeArea;
     }
 
+
     /**
      * Set the standard period
      *
@@ -102,6 +103,7 @@ class BusNoticePeriod implements Interfaces\EntityInterface
         return $this->standardPeriod;
     }
 
+
     /**
      * Set the cancellation period
      *
@@ -124,4 +126,5 @@ class BusNoticePeriod implements Interfaces\EntityInterface
     {
         return $this->cancellationPeriod;
     }
+
 }

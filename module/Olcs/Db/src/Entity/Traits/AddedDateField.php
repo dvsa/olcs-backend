@@ -42,4 +42,5 @@ trait AddedDateField
     {
         return $this->addedDate;
     }
+
 }

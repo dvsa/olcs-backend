@@ -42,4 +42,5 @@ trait RemovedDateField
     {
         return $this->removedDate;
     }
+
 }

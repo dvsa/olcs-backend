@@ -1418,7 +1418,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `operating_centre_id` INT NULL,
   `opposition_id` INT NULL,
   `bus_reg_id` INT NULL,
-  `issued_date` DATE NULL,
+  `issued_date` DATETIME NULL,
   `filename` VARCHAR(255) NULL,
   `file_extension` varchar(20) NOT null,
   `deleted_date` DATETIME NULL,
@@ -3834,6 +3834,10 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `case_id` INT NOT NULL,
   `agreed_date` DATE NULL,
   `witnesses` INT NULL,
+  `presiding_tc_id` INT NULL,
+  `presiding_tc_other` VARCHAR(45) NULL,
+  `presided_by_role` VARCHAR(32) NULL,
+  `comment` VARCHAR(4000) NULL,
   `is_cancelled` TINYINT(1) NOT NULL DEFAULT 0,
   `pi_status` VARCHAR(32) NOT NULL,
   `is_adjourned` TINYINT(1) NOT NULL DEFAULT 0,
@@ -3856,6 +3860,8 @@ CREATE TABLE IF NOT EXISTS `pi` (
   INDEX `fk_pi_detail_user1_idx` (`created_by` ASC),
   INDEX `fk_pi_detail_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_pi_user1_idx` (`assigned_to` ASC),
+  INDEX `fk_pi_presiding_tc1_idx` (`presiding_tc_id` ASC),
+  INDEX `fk_pi_presided_by_role1_idx` (`presided_by_role` ASC),
   CONSTRAINT `fk_pi_detail_cases1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3880,9 +3886,18 @@ CREATE TABLE IF NOT EXISTS `pi` (
     FOREIGN KEY (`assigned_to`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_presiding_tc1`
+    FOREIGN KEY (`presiding_tc_id`)
+    REFERENCES `presiding_tc` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_presided_by_role1`
+    FOREIGN KEY (`presided_by_role`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `ptr_reason`

@@ -89,6 +89,7 @@ class Hearing implements Interfaces\EntityInterface
         return $this->presidingTc;
     }
 
+
     /**
      * Set the agreed by tc date
      *
@@ -112,6 +113,7 @@ class Hearing implements Interfaces\EntityInterface
         return $this->agreedByTcDate;
     }
 
+
     /**
      * Set the witness count
      *
@@ -134,4 +136,5 @@ class Hearing implements Interfaces\EntityInterface
     {
         return $this->witnessCount;
     }
+
 }

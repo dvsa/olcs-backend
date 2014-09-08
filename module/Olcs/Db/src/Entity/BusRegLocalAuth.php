@@ -67,4 +67,5 @@ class BusRegLocalAuth implements Interfaces\EntityInterface
     {
         return $this->localAuthority;
     }
+
 }

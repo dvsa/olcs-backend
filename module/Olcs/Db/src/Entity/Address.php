@@ -191,6 +191,7 @@ class Address implements Interfaces\EntityInterface
         return $this->adminArea;
     }
 
+
     /**
      * Set the country code
      *
@@ -213,6 +214,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->countryCode;
     }
+
 
     /**
      * Set the uprn
@@ -237,6 +239,7 @@ class Address implements Interfaces\EntityInterface
         return $this->uprn;
     }
 
+
     /**
      * Set the paon start
      *
@@ -259,6 +262,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->paonStart;
     }
+
 
     /**
      * Set the paon end
@@ -283,6 +287,7 @@ class Address implements Interfaces\EntityInterface
         return $this->paonEnd;
     }
 
+
     /**
      * Set the address line2
      *
@@ -305,6 +310,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine2;
     }
+
 
     /**
      * Set the saon start
@@ -329,6 +335,7 @@ class Address implements Interfaces\EntityInterface
         return $this->saonStart;
     }
 
+
     /**
      * Set the saon end
      *
@@ -351,6 +358,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->saonEnd;
     }
+
 
     /**
      * Set the address line1
@@ -375,6 +383,7 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine1;
     }
 
+
     /**
      * Set the address line3
      *
@@ -397,6 +406,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine3;
     }
+
 
     /**
      * Set the address line4
@@ -421,6 +431,7 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine4;
     }
 
+
     /**
      * Set the town
      *
@@ -443,6 +454,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->town;
     }
+
 
     /**
      * Set the postcode
@@ -467,6 +479,7 @@ class Address implements Interfaces\EntityInterface
         return $this->postcode;
     }
 
+
     /**
      * Set the contact detail
      *
@@ -488,5 +501,49 @@ class Address implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
+    }
+
+
+    /**
+     * Add a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
     }
 }

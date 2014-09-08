@@ -42,4 +42,5 @@ trait AdPlacedDateField
     {
         return $this->adPlacedDate;
     }
+
 }

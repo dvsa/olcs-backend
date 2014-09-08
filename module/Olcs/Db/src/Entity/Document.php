@@ -230,6 +230,7 @@ class Document implements Interfaces\EntityInterface
         return $this->operatingCentre;
     }
 
+
     /**
      * Set the opposition
      *
@@ -252,6 +253,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->opposition;
     }
+
 
     /**
      * Set the bus reg
@@ -276,6 +278,7 @@ class Document implements Interfaces\EntityInterface
         return $this->busReg;
     }
 
+
     /**
      * Set the traffic area
      *
@@ -298,6 +301,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->trafficArea;
     }
+
 
     /**
      * Set the transport manager
@@ -322,6 +326,7 @@ class Document implements Interfaces\EntityInterface
         return $this->transportManager;
     }
 
+
     /**
      * Set the document sub category
      *
@@ -344,6 +349,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->documentSubCategory;
     }
+
 
     /**
      * Set the licence
@@ -368,6 +374,7 @@ class Document implements Interfaces\EntityInterface
         return $this->licence;
     }
 
+
     /**
      * Set the case
      *
@@ -390,6 +397,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->case;
     }
+
 
     /**
      * Set the application
@@ -414,6 +422,7 @@ class Document implements Interfaces\EntityInterface
         return $this->application;
     }
 
+
     /**
      * Set the email
      *
@@ -435,6 +444,50 @@ class Document implements Interfaces\EntityInterface
     public function getEmails()
     {
         return $this->emails;
+    }
+
+
+    /**
+     * Add a emails
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function addEmails($emails)
+    {
+        if ($emails instanceof ArrayCollection) {
+            $this->emails = new ArrayCollection(
+                array_merge(
+                    $this->emails->toArray(),
+                    $emails->toArray()
+                )
+            );
+        } elseif (!$this->emails->contains($emails)) {
+            $this->emails->add($emails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a emails
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function removeEmails($emails)
+    {
+        if ($this->emails->contains($emails)) {
+            $this->emails->remove($emails);
+        }
+
+        return $this;
     }
 
     /**
@@ -460,6 +513,7 @@ class Document implements Interfaces\EntityInterface
         return $this->identifier;
     }
 
+
     /**
      * Set the is read only
      *
@@ -482,6 +536,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->isReadOnly;
     }
+
 
     /**
      * Set the filename
@@ -506,6 +561,7 @@ class Document implements Interfaces\EntityInterface
         return $this->filename;
     }
 
+
     /**
      * Set the file extension
      *
@@ -528,6 +584,7 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->fileExtension;
     }
+
 
     /**
      * Set the is digital
@@ -552,6 +609,7 @@ class Document implements Interfaces\EntityInterface
         return $this->isDigital;
     }
 
+
     /**
      * Set the size
      *
@@ -574,4 +632,5 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->size;
     }
+
 }

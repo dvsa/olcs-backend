@@ -127,6 +127,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->irfoPermitStatus;
     }
 
+
     /**
      * Set the irfo gv permit type
      *
@@ -149,6 +150,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     {
         return $this->irfoGvPermitType;
     }
+
 
     /**
      * Set the is fee exempt
@@ -173,6 +175,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->isFeeExempt;
     }
 
+
     /**
      * Set the no of copies
      *
@@ -195,6 +198,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     {
         return $this->noOfCopies;
     }
+
 
     /**
      * Set the note
@@ -219,6 +223,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->note;
     }
 
+
     /**
      * Set the permit printed
      *
@@ -242,6 +247,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         return $this->permitPrinted;
     }
 
+
     /**
      * Set the year required
      *
@@ -264,4 +270,5 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     {
         return $this->yearRequired;
     }
+
 }

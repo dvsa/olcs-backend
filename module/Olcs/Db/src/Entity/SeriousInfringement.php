@@ -146,6 +146,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->siCategoryType;
     }
 
+
     /**
      * Set the erru response user
      *
@@ -168,6 +169,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->erruResponseUser;
     }
+
 
     /**
      * Set the member state code
@@ -192,6 +194,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->memberStateCode;
     }
 
+
     /**
      * Set the check date
      *
@@ -214,6 +217,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->checkDate;
     }
+
 
     /**
      * Set the erru response sent
@@ -238,6 +242,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->erruResponseSent;
     }
 
+
     /**
      * Set the erru response time
      *
@@ -260,6 +265,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->erruResponseTime;
     }
+
 
     /**
      * Set the infringement date
@@ -284,6 +290,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->infringementDate;
     }
 
+
     /**
      * Set the notification number
      *
@@ -307,6 +314,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         return $this->notificationNumber;
     }
 
+
     /**
      * Set the reason
      *
@@ -329,4 +337,5 @@ class SeriousInfringement implements Interfaces\EntityInterface
     {
         return $this->reason;
     }
+
 }

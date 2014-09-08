@@ -42,4 +42,5 @@ trait SectionCode50Field
     {
         return $this->sectionCode;
     }
+
 }

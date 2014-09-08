@@ -147,6 +147,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->vehicle;
     }
 
+
     /**
      * Set the licence
      *
@@ -169,6 +170,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->licence;
     }
+
 
     /**
      * Set the removal
@@ -193,6 +195,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->removal;
     }
 
+
     /**
      * Set the removal letter seed date
      *
@@ -215,6 +218,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->removalLetterSeedDate;
     }
+
 
     /**
      * Set the is interim
@@ -239,6 +243,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->isInterim;
     }
 
+
     /**
      * Set the warning letter seed date
      *
@@ -261,6 +266,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     {
         return $this->warningLetterSeedDate;
     }
+
 
     /**
      * Set the warning letter sent date

@@ -43,4 +43,5 @@ trait CreatedByManyToOne
     {
         return $this->createdBy;
     }
+
 }
