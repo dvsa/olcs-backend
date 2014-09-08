@@ -67,5 +67,4 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
     {
         return $this->companySubsidiary;
     }
-
 }

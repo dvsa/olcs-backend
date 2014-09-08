@@ -43,5 +43,4 @@ trait BusRegManyToOne
     {
         return $this->busReg;
     }
-
 }

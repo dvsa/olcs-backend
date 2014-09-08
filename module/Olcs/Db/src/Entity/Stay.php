@@ -95,7 +95,6 @@ class Stay implements Interfaces\EntityInterface
         return $this->stayType;
     }
 
-
     /**
      * Set the request date
      *
@@ -118,7 +117,6 @@ class Stay implements Interfaces\EntityInterface
     {
         return $this->requestDate;
     }
-
 
     /**
      * Set the decision date
@@ -143,7 +141,6 @@ class Stay implements Interfaces\EntityInterface
         return $this->decisionDate;
     }
 
-
     /**
      * Set the notes
      *
@@ -166,5 +163,4 @@ class Stay implements Interfaces\EntityInterface
     {
         return $this->notes;
     }
-
 }

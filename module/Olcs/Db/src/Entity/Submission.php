@@ -82,7 +82,6 @@ class Submission implements Interfaces\EntityInterface
         return $this->text;
     }
 
-
     /**
      * Set the submission action
      *
@@ -105,7 +104,6 @@ class Submission implements Interfaces\EntityInterface
     {
         return $this->submissionActions;
     }
-
 
     /**
      * Add a submission actions

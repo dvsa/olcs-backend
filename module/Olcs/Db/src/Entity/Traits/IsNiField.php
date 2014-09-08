@@ -42,5 +42,4 @@ trait IsNiField
     {
         return $this->isNi;
     }
-
 }

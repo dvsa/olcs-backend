@@ -42,5 +42,4 @@ trait CeasedDateField
     {
         return $this->ceasedDate;
     }
-
 }

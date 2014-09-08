@@ -118,7 +118,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintType;
     }
 
-
     /**
      * Set the driver
      *
@@ -141,7 +140,6 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->driver;
     }
-
 
     /**
      * Set the status
@@ -166,7 +164,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->status;
     }
 
-
     /**
      * Set the complainant contact details
      *
@@ -189,7 +186,6 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->complainantContactDetails;
     }
-
 
     /**
      * Set the complaint date
@@ -214,7 +210,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintDate;
     }
 
-
     /**
      * Set the value
      *
@@ -237,5 +232,4 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->value;
     }
-
 }

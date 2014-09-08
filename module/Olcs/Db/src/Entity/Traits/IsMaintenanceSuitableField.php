@@ -42,5 +42,4 @@ trait IsMaintenanceSuitableField
     {
         return $this->isMaintenanceSuitable;
     }
-
 }

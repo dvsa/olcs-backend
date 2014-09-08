@@ -70,7 +70,6 @@ class SubmissionSection implements Interfaces\EntityInterface
         return $this->cases;
     }
 
-
     /**
      * Add a cases
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -136,5 +135,4 @@ class SubmissionSection implements Interfaces\EntityInterface
     {
         return $this->group;
     }
-
 }

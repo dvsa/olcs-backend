@@ -257,7 +257,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->caseType;
     }
 
-
     /**
      * Set the erru case type
      *
@@ -281,7 +280,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruCaseType;
     }
 
-
     /**
      * Set the legacy offence
      *
@@ -304,7 +302,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->legacyOffences;
     }
-
 
     /**
      * Add a legacy offences
@@ -372,7 +369,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->submissionSections;
     }
 
-
     /**
      * Add a submission sections
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -439,7 +435,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->ecmsNo;
     }
 
-
     /**
      * Set the open date
      *
@@ -462,7 +457,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->openDate;
     }
-
 
     /**
      * Set the close date
@@ -487,7 +481,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
-
     /**
      * Set the description
      *
@@ -510,7 +503,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->description;
     }
-
 
     /**
      * Set the is impounding
@@ -535,7 +527,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->isImpounding;
     }
 
-
     /**
      * Set the erru originating authority
      *
@@ -558,7 +549,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruOriginatingAuthority;
     }
-
 
     /**
      * Set the erru transport undertaking name
@@ -583,7 +573,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruTransportUndertakingName;
     }
 
-
     /**
      * Set the erru vrm
      *
@@ -606,7 +595,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruVrm;
     }
-
 
     /**
      * Set the annual test history
@@ -631,7 +619,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->annualTestHistory;
     }
 
-
     /**
      * Set the prohibition note
      *
@@ -655,7 +642,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->prohibitionNote;
     }
 
-
     /**
      * Set the complaint case
      *
@@ -678,7 +664,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->complaintCases;
     }
-
 
     /**
      * Add a complaint cases
@@ -746,7 +731,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->conditionUndertakings;
     }
 
-
     /**
      * Add a condition undertakings
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -813,7 +797,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->convictions;
     }
 
-
     /**
      * Add a convictions
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -879,7 +862,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents

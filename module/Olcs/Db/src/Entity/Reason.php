@@ -103,7 +103,6 @@ class Reason implements Interfaces\EntityInterface
         return $this->proposeToRevokes;
     }
 
-
     /**
      * Add a propose to revokes
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -169,7 +168,6 @@ class Reason implements Interfaces\EntityInterface
     {
         return $this->pis;
     }
-
 
     /**
      * Add a pis
@@ -237,7 +235,6 @@ class Reason implements Interfaces\EntityInterface
         return $this->isReadOnly;
     }
 
-
     /**
      * Set the is propose to revoke
      *
@@ -260,5 +257,4 @@ class Reason implements Interfaces\EntityInterface
     {
         return $this->isProposeToRevoke;
     }
-
 }

@@ -154,7 +154,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->publicationSection;
     }
 
-
     /**
      * Set the tm pi hearing
      *
@@ -177,7 +176,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->tmPiHearing;
     }
-
 
     /**
      * Set the pi
@@ -202,7 +200,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->pi;
     }
 
-
     /**
      * Set the publication
      *
@@ -225,7 +222,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->publication;
     }
-
 
     /**
      * Set the section id
@@ -250,7 +246,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->sectionId;
     }
 
-
     /**
      * Set the text1
      *
@@ -273,7 +268,6 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->text1;
     }
-
 
     /**
      * Set the text2
@@ -298,7 +292,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text2;
     }
 
-
     /**
      * Set the text3
      *
@@ -322,7 +315,6 @@ class PublicationLink implements Interfaces\EntityInterface
         return $this->text3;
     }
 
-
     /**
      * Set the orig pub date
      *
@@ -345,5 +337,4 @@ class PublicationLink implements Interfaces\EntityInterface
     {
         return $this->origPubDate;
     }
-
 }

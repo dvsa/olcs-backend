@@ -82,7 +82,6 @@ class OperatingCentre implements Interfaces\EntityInterface
         return $this->address;
     }
 
-
     /**
      * Set the ad document
      *
@@ -105,7 +104,6 @@ class OperatingCentre implements Interfaces\EntityInterface
     {
         return $this->adDocuments;
     }
-
 
     /**
      * Add a ad documents

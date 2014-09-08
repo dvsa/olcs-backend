@@ -113,7 +113,6 @@ class RefData implements Interfaces\EntityInterface
         return $this->parent;
     }
 
-
     /**
      * Set the pi
      *
@@ -136,7 +135,6 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->pis;
     }
-
 
     /**
      * Add a pis
@@ -204,7 +202,6 @@ class RefData implements Interfaces\EntityInterface
         return $this->impoundings;
     }
 
-
     /**
      * Add a impoundings
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -271,7 +268,6 @@ class RefData implements Interfaces\EntityInterface
         return $this->description;
     }
 
-
     /**
      * Set the ref data category id
      *
@@ -295,7 +291,6 @@ class RefData implements Interfaces\EntityInterface
         return $this->refDataCategoryId;
     }
 
-
     /**
      * Set the olbs key
      *
@@ -318,5 +313,4 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->olbsKey;
     }
-
 }

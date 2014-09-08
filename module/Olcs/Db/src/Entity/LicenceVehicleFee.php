@@ -64,5 +64,4 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
     {
         return $this->licenceVehicle;
     }
-
 }

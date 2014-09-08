@@ -93,7 +93,6 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         return $this->reasons;
     }
 
-
     /**
      * Add a reasons
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -159,5 +158,4 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     {
         return $this->ptrAgreedDate;
     }
-
 }

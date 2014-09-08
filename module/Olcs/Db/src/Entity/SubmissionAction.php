@@ -122,7 +122,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submission;
     }
 
-
     /**
      * Set the recipient user
      *
@@ -145,7 +144,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->recipientUser;
     }
-
 
     /**
      * Set the sender user
@@ -170,7 +168,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->senderUser;
     }
 
-
     /**
      * Set the is decision
      *
@@ -193,7 +190,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->isDecision;
     }
-
 
     /**
      * Set the urgent
@@ -218,7 +214,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->urgent;
     }
 
-
     /**
      * Set the submission action status
      *
@@ -242,7 +237,6 @@ class SubmissionAction implements Interfaces\EntityInterface
         return $this->submissionActionStatus;
     }
 
-
     /**
      * Set the submission action type
      *
@@ -265,5 +259,4 @@ class SubmissionAction implements Interfaces\EntityInterface
     {
         return $this->submissionActionType;
     }
-
 }
