@@ -43,4 +43,5 @@ trait OperatingCentreManyToOneAlt1
     {
         return $this->operatingCentre;
     }
+
 }

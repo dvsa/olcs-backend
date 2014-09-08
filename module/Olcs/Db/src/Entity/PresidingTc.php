@@ -51,4 +51,5 @@ class PresidingTc implements Interfaces\EntityInterface
     {
         return $this->deleted;
     }
+
 }

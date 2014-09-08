@@ -43,4 +43,5 @@ trait LocalAuthorityManyToOne
     {
         return $this->localAuthority;
     }
+
 }

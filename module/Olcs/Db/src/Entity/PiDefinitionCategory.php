@@ -50,4 +50,5 @@ class PiDefinitionCategory implements Interfaces\EntityInterface
     {
         return $this->category;
     }
+
 }

@@ -34,12 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\TotAuthTrailersField,
@@ -54,6 +54,16 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Tachograph ins
@@ -74,16 +84,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
-
-    /**
-     * Enforcement area
-     *
-     * @var \Olcs\Db\Entity\EnforcementArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $enforcementArea;
 
     /**
      * Trailers in possession
@@ -269,6 +269,30 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
+    }
+
+
+    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -290,6 +314,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->tachographIns;
     }
+
 
     /**
      * Set the organisation
@@ -314,28 +339,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-    /**
-     * Set the enforcement area
-     *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return Licence
-     */
-    public function setEnforcementArea($enforcementArea)
-    {
-        $this->enforcementArea = $enforcementArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the enforcement area
-     *
-     * @return \Olcs\Db\Entity\EnforcementArea
-     */
-    public function getEnforcementArea()
-    {
-        return $this->enforcementArea;
-    }
 
     /**
      * Set the trailers in possession
@@ -360,6 +363,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->trailersInPossession;
     }
 
+
     /**
      * Set the fabs reference
      *
@@ -382,6 +386,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->fabsReference;
     }
+
 
     /**
      * Set the granted date
@@ -406,6 +411,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->grantedDate;
     }
 
+
     /**
      * Set the review date
      *
@@ -428,6 +434,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->reviewDate;
     }
+
 
     /**
      * Set the fee date
@@ -452,6 +459,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->feeDate;
     }
 
+
     /**
      * Set the surrendered date
      *
@@ -474,6 +482,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->surrenderedDate;
     }
+
 
     /**
      * Set the safety ins trailers
@@ -498,6 +507,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsTrailers;
     }
 
+
     /**
      * Set the safety ins vehicles
      *
@@ -520,6 +530,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyInsVehicles;
     }
+
 
     /**
      * Set the safety ins
@@ -544,6 +555,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyIns;
     }
 
+
     /**
      * Set the safety ins varies
      *
@@ -566,6 +578,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyInsVaries;
     }
+
 
     /**
      * Set the ni flag
@@ -590,6 +603,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->niFlag;
     }
 
+
     /**
      * Set the tachograph ins name
      *
@@ -612,6 +626,7 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->tachographInsName;
     }
+
 
     /**
      * Set the psv discs to be printed no
@@ -636,6 +651,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->psvDiscsToBePrintedNo;
     }
 
+
     /**
      * Set the translate to welsh
      *
@@ -659,6 +675,7 @@ class Licence implements Interfaces\EntityInterface
         return $this->translateToWelsh;
     }
 
+
     /**
      * Set the application
      *
@@ -680,6 +697,50 @@ class Licence implements Interfaces\EntityInterface
     public function getApplications()
     {
         return $this->applications;
+    }
+
+
+    /**
+     * Add a applications
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return Licence
+     */
+    public function addApplications($applications)
+    {
+        if ($applications instanceof ArrayCollection) {
+            $this->applications = new ArrayCollection(
+                array_merge(
+                    $this->applications->toArray(),
+                    $applications->toArray()
+                )
+            );
+        } elseif (!$this->applications->contains($applications)) {
+            $this->applications->add($applications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a applications
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return Licence
+     */
+    public function removeApplications($applications)
+    {
+        if ($this->applications->contains($applications)) {
+            $this->applications->remove($applications);
+        }
+
+        return $this;
     }
 
     /**
@@ -705,6 +766,50 @@ class Licence implements Interfaces\EntityInterface
         return $this->contactDetails;
     }
 
+
+    /**
+     * Add a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Licence
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the document
      *
@@ -726,6 +831,50 @@ class Licence implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Licence
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 
     /**
@@ -751,6 +900,50 @@ class Licence implements Interfaces\EntityInterface
         return $this->licenceVehicles;
     }
 
+
+    /**
+     * Add a licence vehicles
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Licence
+     */
+    public function addLicenceVehicles($licenceVehicles)
+    {
+        if ($licenceVehicles instanceof ArrayCollection) {
+            $this->licenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->licenceVehicles->toArray(),
+                    $licenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->add($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence vehicles
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Licence
+     */
+    public function removeLicenceVehicles($licenceVehicles)
+    {
+        if ($this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->remove($licenceVehicles);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the workshop
      *
@@ -772,5 +965,49 @@ class Licence implements Interfaces\EntityInterface
     public function getWorkshops()
     {
         return $this->workshops;
+    }
+
+
+    /**
+     * Add a workshops
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function addWorkshops($workshops)
+    {
+        if ($workshops instanceof ArrayCollection) {
+            $this->workshops = new ArrayCollection(
+                array_merge(
+                    $this->workshops->toArray(),
+                    $workshops->toArray()
+                )
+            );
+        } elseif (!$this->workshops->contains($workshops)) {
+            $this->workshops->add($workshops);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a workshops
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $workshops
+     * @return Licence
+     */
+    public function removeWorkshops($workshops)
+    {
+        if ($this->workshops->contains($workshops)) {
+            $this->workshops->remove($workshops);
+        }
+
+        return $this;
     }
 }

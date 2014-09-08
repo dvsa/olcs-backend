@@ -227,6 +227,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->bankHolidayChange;
     }
 
+
     /**
      * Set the unforseen change
      *
@@ -249,6 +250,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->unforseenChange;
     }
+
 
     /**
      * Set the unforseen detail
@@ -273,6 +275,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->unforseenDetail;
     }
 
+
     /**
      * Set the timetable change
      *
@@ -295,6 +298,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->timetableChange;
     }
+
 
     /**
      * Set the timetable detail
@@ -319,6 +323,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->timetableDetail;
     }
 
+
     /**
      * Set the replacement change
      *
@@ -341,6 +346,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->replacementChange;
     }
+
 
     /**
      * Set the replacement detail
@@ -365,6 +371,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->replacementDetail;
     }
 
+
     /**
      * Set the holiday change
      *
@@ -387,6 +394,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->holidayChange;
     }
+
 
     /**
      * Set the holiday detail
@@ -411,6 +419,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->holidayDetail;
     }
 
+
     /**
      * Set the trc change
      *
@@ -433,6 +442,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->trcChange;
     }
+
 
     /**
      * Set the trc detail
@@ -457,6 +467,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->trcDetail;
     }
 
+
     /**
      * Set the police change
      *
@@ -479,6 +490,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->policeChange;
     }
+
 
     /**
      * Set the police detail
@@ -503,6 +515,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->policeDetail;
     }
 
+
     /**
      * Set the special occasion change
      *
@@ -525,6 +538,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->specialOccasionChange;
     }
+
 
     /**
      * Set the special occasion detail
@@ -549,6 +563,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->specialOccasionDetail;
     }
 
+
     /**
      * Set the connection change
      *
@@ -571,6 +586,7 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->connectionChange;
     }
+
 
     /**
      * Set the connection detail
@@ -595,6 +611,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->connectionDetail;
     }
 
+
     /**
      * Set the not available change
      *
@@ -618,6 +635,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         return $this->notAvailableChange;
     }
 
+
     /**
      * Set the not available detail
      *
@@ -640,4 +658,5 @@ class BusShortNotice implements Interfaces\EntityInterface
     {
         return $this->notAvailableDetail;
     }
+
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Comment4000 field trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 4 entities)
  */
 trait Comment4000Field
 {
@@ -42,4 +42,5 @@ trait Comment4000Field
     {
         return $this->comment;
     }
+
 }

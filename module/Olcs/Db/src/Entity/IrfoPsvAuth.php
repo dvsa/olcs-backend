@@ -28,27 +28,17 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\StatusManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\StatusManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
         Traits\InForceDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Irfo psv auth type
-     *
-     * @var \Olcs\Db\Entity\IrfoPsvAuthType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoPsvAuthType;
 
     /**
      * Journey frequency
@@ -59,6 +49,16 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
      */
     protected $journeyFrequency;
+
+    /**
+     * Irfo psv auth type
+     *
+     * @var \Olcs\Db\Entity\IrfoPsvAuthType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoPsvAuthType;
 
     /**
      * Is fee exempt application
@@ -178,6 +178,30 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
+     * Set the journey frequency
+     *
+     * @param \Olcs\Db\Entity\RefData $journeyFrequency
+     * @return IrfoPsvAuth
+     */
+    public function setJourneyFrequency($journeyFrequency)
+    {
+        $this->journeyFrequency = $journeyFrequency;
+
+        return $this;
+    }
+
+    /**
+     * Get the journey frequency
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getJourneyFrequency()
+    {
+        return $this->journeyFrequency;
+    }
+
+
+    /**
      * Set the irfo psv auth type
      *
      * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
@@ -200,28 +224,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->irfoPsvAuthType;
     }
 
-    /**
-     * Set the journey frequency
-     *
-     * @param \Olcs\Db\Entity\RefData $journeyFrequency
-     * @return IrfoPsvAuth
-     */
-    public function setJourneyFrequency($journeyFrequency)
-    {
-        $this->journeyFrequency = $journeyFrequency;
-
-        return $this;
-    }
-
-    /**
-     * Get the journey frequency
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getJourneyFrequency()
-    {
-        return $this->journeyFrequency;
-    }
 
     /**
      * Set the is fee exempt application
@@ -246,6 +248,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->isFeeExemptApplication;
     }
 
+
     /**
      * Set the is fee exempt annual
      *
@@ -268,6 +271,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->isFeeExemptAnnual;
     }
+
 
     /**
      * Set the irfo fee id
@@ -292,6 +296,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->irfoFeeId;
     }
 
+
     /**
      * Set the irfo file no
      *
@@ -314,6 +319,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->irfoFileNo;
     }
+
 
     /**
      * Set the copies issued
@@ -338,6 +344,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesIssued;
     }
 
+
     /**
      * Set the copies required
      *
@@ -360,6 +367,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->copiesRequired;
     }
+
 
     /**
      * Set the copies required total
@@ -384,6 +392,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->copiesRequiredTotal;
     }
 
+
     /**
      * Set the copies issued total
      *
@@ -406,6 +415,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->copiesIssuedTotal;
     }
+
 
     /**
      * Set the last date copies req
@@ -430,6 +440,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->lastDateCopiesReq;
     }
 
+
     /**
      * Set the renewal date
      *
@@ -452,6 +463,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->renewalDate;
     }
+
 
     /**
      * Set the service route from
@@ -476,6 +488,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->serviceRouteFrom;
     }
 
+
     /**
      * Set the service route to
      *
@@ -499,6 +512,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         return $this->serviceRouteTo;
     }
 
+
     /**
      * Set the validity period
      *
@@ -521,4 +535,5 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     {
         return $this->validityPeriod;
     }
+
 }

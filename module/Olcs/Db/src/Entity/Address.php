@@ -33,16 +33,6 @@ class Address implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Admin area
-     *
-     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
-     */
-    protected $adminArea;
-
-    /**
      * Country code
      *
      * @var \Olcs\Db\Entity\Country
@@ -51,6 +41,16 @@ class Address implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
+
+    /**
+     * Admin area
+     *
+     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
+     */
+    protected $adminArea;
 
     /**
      * Uprn
@@ -169,6 +169,30 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the country code
+     *
+     * @param \Olcs\Db\Entity\Country $countryCode
+     * @return Address
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the country code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
+    }
+
+
+    /**
      * Set the admin area
      *
      * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
@@ -191,28 +215,6 @@ class Address implements Interfaces\EntityInterface
         return $this->adminArea;
     }
 
-    /**
-     * Set the country code
-     *
-     * @param \Olcs\Db\Entity\Country $countryCode
-     * @return Address
-     */
-    public function setCountryCode($countryCode)
-    {
-        $this->countryCode = $countryCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the country code
-     *
-     * @return \Olcs\Db\Entity\Country
-     */
-    public function getCountryCode()
-    {
-        return $this->countryCode;
-    }
 
     /**
      * Set the uprn
@@ -237,6 +239,7 @@ class Address implements Interfaces\EntityInterface
         return $this->uprn;
     }
 
+
     /**
      * Set the paon start
      *
@@ -259,6 +262,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->paonStart;
     }
+
 
     /**
      * Set the paon end
@@ -283,6 +287,7 @@ class Address implements Interfaces\EntityInterface
         return $this->paonEnd;
     }
 
+
     /**
      * Set the address line2
      *
@@ -305,6 +310,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine2;
     }
+
 
     /**
      * Set the saon start
@@ -329,6 +335,7 @@ class Address implements Interfaces\EntityInterface
         return $this->saonStart;
     }
 
+
     /**
      * Set the saon end
      *
@@ -351,6 +358,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->saonEnd;
     }
+
 
     /**
      * Set the address line1
@@ -375,6 +383,7 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine1;
     }
 
+
     /**
      * Set the address line3
      *
@@ -397,6 +406,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine3;
     }
+
 
     /**
      * Set the address line4
@@ -421,6 +431,7 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine4;
     }
 
+
     /**
      * Set the town
      *
@@ -443,6 +454,7 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->town;
     }
+
 
     /**
      * Set the postcode
@@ -467,6 +479,7 @@ class Address implements Interfaces\EntityInterface
         return $this->postcode;
     }
 
+
     /**
      * Set the contact detail
      *
@@ -488,5 +501,49 @@ class Address implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
+    }
+
+
+    /**
+     * Add a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Address
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
     }
 }

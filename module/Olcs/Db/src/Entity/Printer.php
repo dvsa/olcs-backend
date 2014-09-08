@@ -61,6 +61,7 @@ class Printer implements Interfaces\EntityInterface
         return $this->printerTray;
     }
 
+
     /**
      * Set the printer name
      *
@@ -83,4 +84,5 @@ class Printer implements Interfaces\EntityInterface
     {
         return $this->printerName;
     }
+
 }

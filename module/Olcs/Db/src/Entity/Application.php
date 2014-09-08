@@ -29,11 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -404,6 +404,7 @@ class Application implements Interfaces\EntityInterface
         return $this->interimStatus;
     }
 
+
     /**
      * Set the licence
      *
@@ -426,6 +427,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->licence;
     }
+
 
     /**
      * Set the has entered reg
@@ -450,6 +452,7 @@ class Application implements Interfaces\EntityInterface
         return $this->hasEnteredReg;
     }
 
+
     /**
      * Set the bankrupt
      *
@@ -472,6 +475,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->bankrupt;
     }
+
 
     /**
      * Set the administration
@@ -496,6 +500,7 @@ class Application implements Interfaces\EntityInterface
         return $this->administration;
     }
 
+
     /**
      * Set the disqualified
      *
@@ -518,6 +523,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->disqualified;
     }
+
 
     /**
      * Set the liquidation
@@ -542,6 +548,7 @@ class Application implements Interfaces\EntityInterface
         return $this->liquidation;
     }
 
+
     /**
      * Set the receivership
      *
@@ -564,6 +571,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->receivership;
     }
+
 
     /**
      * Set the insolvency confirmation
@@ -588,6 +596,7 @@ class Application implements Interfaces\EntityInterface
         return $this->insolvencyConfirmation;
     }
 
+
     /**
      * Set the insolvency details
      *
@@ -610,6 +619,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->insolvencyDetails;
     }
+
 
     /**
      * Set the safety confirmation
@@ -634,6 +644,7 @@ class Application implements Interfaces\EntityInterface
         return $this->safetyConfirmation;
     }
 
+
     /**
      * Set the target completion date
      *
@@ -656,6 +667,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->targetCompletionDate;
     }
+
 
     /**
      * Set the granted date
@@ -680,6 +692,7 @@ class Application implements Interfaces\EntityInterface
         return $this->grantedDate;
     }
 
+
     /**
      * Set the refused date
      *
@@ -702,6 +715,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->refusedDate;
     }
+
 
     /**
      * Set the prev has licence
@@ -726,6 +740,7 @@ class Application implements Interfaces\EntityInterface
         return $this->prevHasLicence;
     }
 
+
     /**
      * Set the prev had licence
      *
@@ -748,6 +763,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->prevHadLicence;
     }
+
 
     /**
      * Set the prev been refused
@@ -772,6 +788,7 @@ class Application implements Interfaces\EntityInterface
         return $this->prevBeenRefused;
     }
 
+
     /**
      * Set the prev been revoked
      *
@@ -794,6 +811,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->prevBeenRevoked;
     }
+
 
     /**
      * Set the prev been at pi
@@ -818,6 +836,7 @@ class Application implements Interfaces\EntityInterface
         return $this->prevBeenAtPi;
     }
 
+
     /**
      * Set the prev been disqualified tc
      *
@@ -840,6 +859,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->prevBeenDisqualifiedTc;
     }
+
 
     /**
      * Set the prev purchased assets
@@ -864,6 +884,7 @@ class Application implements Interfaces\EntityInterface
         return $this->prevPurchasedAssets;
     }
 
+
     /**
      * Set the override ooo
      *
@@ -886,6 +907,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->overrideOoo;
     }
+
 
     /**
      * Set the prev conviction
@@ -910,6 +932,7 @@ class Application implements Interfaces\EntityInterface
         return $this->prevConviction;
     }
 
+
     /**
      * Set the convictions confirmation
      *
@@ -932,6 +955,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->convictionsConfirmation;
     }
+
 
     /**
      * Set the psv operate small vhl
@@ -956,6 +980,7 @@ class Application implements Interfaces\EntityInterface
         return $this->psvOperateSmallVhl;
     }
 
+
     /**
      * Set the psv small vhl notes
      *
@@ -978,6 +1003,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->psvSmallVhlNotes;
     }
+
 
     /**
      * Set the psv small vhl confirmation
@@ -1002,6 +1028,7 @@ class Application implements Interfaces\EntityInterface
         return $this->psvSmallVhlConfirmation;
     }
 
+
     /**
      * Set the psv no small vhl confirmation
      *
@@ -1024,6 +1051,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->psvNoSmallVhlConfirmation;
     }
+
 
     /**
      * Set the psv limousines
@@ -1048,6 +1076,7 @@ class Application implements Interfaces\EntityInterface
         return $this->psvLimousines;
     }
 
+
     /**
      * Set the psv no limousine confirmation
      *
@@ -1070,6 +1099,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->psvNoLimousineConfirmation;
     }
+
 
     /**
      * Set the psv only limousines confirmation
@@ -1094,6 +1124,7 @@ class Application implements Interfaces\EntityInterface
         return $this->psvOnlyLimousinesConfirmation;
     }
 
+
     /**
      * Set the interim start
      *
@@ -1116,6 +1147,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->interimStart;
     }
+
 
     /**
      * Set the interim end
@@ -1140,6 +1172,7 @@ class Application implements Interfaces\EntityInterface
         return $this->interimEnd;
     }
 
+
     /**
      * Set the interim auth vehicles
      *
@@ -1162,6 +1195,7 @@ class Application implements Interfaces\EntityInterface
     {
         return $this->interimAuthVehicles;
     }
+
 
     /**
      * Set the interim auth trailers
@@ -1186,6 +1220,7 @@ class Application implements Interfaces\EntityInterface
         return $this->interimAuthTrailers;
     }
 
+
     /**
      * Set the document
      *
@@ -1207,5 +1242,49 @@ class Application implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Application
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Application
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 }

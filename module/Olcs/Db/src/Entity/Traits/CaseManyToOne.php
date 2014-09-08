@@ -43,4 +43,5 @@ trait CaseManyToOne
     {
         return $this->case;
     }
+
 }

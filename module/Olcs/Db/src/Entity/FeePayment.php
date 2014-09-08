@@ -77,6 +77,7 @@ class FeePayment implements Interfaces\EntityInterface
         return $this->payment;
     }
 
+
     /**
      * Set the fee value
      *
@@ -99,4 +100,5 @@ class FeePayment implements Interfaces\EntityInterface
     {
         return $this->feeValue;
     }
+
 }

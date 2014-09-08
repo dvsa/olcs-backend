@@ -113,6 +113,7 @@ class RefData implements Interfaces\EntityInterface
         return $this->parent;
     }
 
+
     /**
      * Set the pi
      *
@@ -134,6 +135,50 @@ class RefData implements Interfaces\EntityInterface
     public function getPis()
     {
         return $this->pis;
+    }
+
+
+    /**
+     * Add a pis
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function addPis($pis)
+    {
+        if ($pis instanceof ArrayCollection) {
+            $this->pis = new ArrayCollection(
+                array_merge(
+                    $this->pis->toArray(),
+                    $pis->toArray()
+                )
+            );
+        } elseif (!$this->pis->contains($pis)) {
+            $this->pis->add($pis);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pis
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function removePis($pis)
+    {
+        if ($this->pis->contains($pis)) {
+            $this->pis->remove($pis);
+        }
+
+        return $this;
     }
 
     /**
@@ -159,6 +204,50 @@ class RefData implements Interfaces\EntityInterface
         return $this->impoundings;
     }
 
+
+    /**
+     * Add a impoundings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function addImpoundings($impoundings)
+    {
+        if ($impoundings instanceof ArrayCollection) {
+            $this->impoundings = new ArrayCollection(
+                array_merge(
+                    $this->impoundings->toArray(),
+                    $impoundings->toArray()
+                )
+            );
+        } elseif (!$this->impoundings->contains($impoundings)) {
+            $this->impoundings->add($impoundings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a impoundings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function removeImpoundings($impoundings)
+    {
+        if ($this->impoundings->contains($impoundings)) {
+            $this->impoundings->remove($impoundings);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the description
      *
@@ -181,6 +270,7 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->description;
     }
+
 
     /**
      * Set the ref data category id
@@ -205,6 +295,7 @@ class RefData implements Interfaces\EntityInterface
         return $this->refDataCategoryId;
     }
 
+
     /**
      * Set the olbs key
      *
@@ -227,4 +318,5 @@ class RefData implements Interfaces\EntityInterface
     {
         return $this->olbsKey;
     }
+
 }

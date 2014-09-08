@@ -29,27 +29,17 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
-        Traits\OutcomeManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\OutcomeManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\Notes4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pi venue
-     *
-     * @var \Olcs\Db\Entity\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=false)
-     */
-    protected $piVenue;
 
     /**
      * Impounding type
@@ -60,6 +50,16 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
+
+    /**
+     * Pi venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=false)
+     */
+    protected $piVenue;
 
     /**
      * Impounding legislation type
@@ -123,29 +123,6 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the pi venue
-     *
-     * @param \Olcs\Db\Entity\PiVenue $piVenue
-     * @return Impounding
-     */
-    public function setPiVenue($piVenue)
-    {
-        $this->piVenue = $piVenue;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue
-     *
-     * @return \Olcs\Db\Entity\PiVenue
-     */
-    public function getPiVenue()
-    {
-        return $this->piVenue;
-    }
-
-    /**
      * Set the impounding type
      *
      * @param \Olcs\Db\Entity\RefData $impoundingType
@@ -168,6 +145,31 @@ class Impounding implements Interfaces\EntityInterface
         return $this->impoundingType;
     }
 
+
+    /**
+     * Set the pi venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $piVenue
+     * @return Impounding
+     */
+    public function setPiVenue($piVenue)
+    {
+        $this->piVenue = $piVenue;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getPiVenue()
+    {
+        return $this->piVenue;
+    }
+
+
     /**
      * Set the impounding legislation type
      *
@@ -189,6 +191,50 @@ class Impounding implements Interfaces\EntityInterface
     public function getImpoundingLegislationTypes()
     {
         return $this->impoundingLegislationTypes;
+    }
+
+
+    /**
+     * Add a impounding legislation types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @return Impounding
+     */
+    public function addImpoundingLegislationTypes($impoundingLegislationTypes)
+    {
+        if ($impoundingLegislationTypes instanceof ArrayCollection) {
+            $this->impoundingLegislationTypes = new ArrayCollection(
+                array_merge(
+                    $this->impoundingLegislationTypes->toArray(),
+                    $impoundingLegislationTypes->toArray()
+                )
+            );
+        } elseif (!$this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
+            $this->impoundingLegislationTypes->add($impoundingLegislationTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a impounding legislation types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @return Impounding
+     */
+    public function removeImpoundingLegislationTypes($impoundingLegislationTypes)
+    {
+        if ($this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
+            $this->impoundingLegislationTypes->remove($impoundingLegislationTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -214,6 +260,7 @@ class Impounding implements Interfaces\EntityInterface
         return $this->applicationReceiptDate;
     }
 
+
     /**
      * Set the outcome sent date
      *
@@ -236,6 +283,7 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->outcomeSentDate;
     }
+
 
     /**
      * Set the close date
@@ -260,6 +308,7 @@ class Impounding implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
+
     /**
      * Set the pi venue other
      *
@@ -282,4 +331,5 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->piVenueOther;
     }
+
 }

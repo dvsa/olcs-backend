@@ -30,8 +30,8 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOne,
         Traits\TrafficAreaManyToOne,
+        Traits\BusRegManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -77,6 +77,7 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
         return $this->txcMissing;
     }
 
+
     /**
      * Set the txc not required
      *
@@ -99,4 +100,5 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
     {
         return $this->txcNotRequired;
     }
+
 }

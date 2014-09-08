@@ -82,6 +82,7 @@ class OperatingCentre implements Interfaces\EntityInterface
         return $this->address;
     }
 
+
     /**
      * Set the ad document
      *
@@ -103,5 +104,49 @@ class OperatingCentre implements Interfaces\EntityInterface
     public function getAdDocuments()
     {
         return $this->adDocuments;
+    }
+
+
+    /**
+     * Add a ad documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
+     * @return OperatingCentre
+     */
+    public function addAdDocuments($adDocuments)
+    {
+        if ($adDocuments instanceof ArrayCollection) {
+            $this->adDocuments = new ArrayCollection(
+                array_merge(
+                    $this->adDocuments->toArray(),
+                    $adDocuments->toArray()
+                )
+            );
+        } elseif (!$this->adDocuments->contains($adDocuments)) {
+            $this->adDocuments->add($adDocuments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ad documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
+     * @return OperatingCentre
+     */
+    public function removeAdDocuments($adDocuments)
+    {
+        if ($this->adDocuments->contains($adDocuments)) {
+            $this->adDocuments->remove($adDocuments);
+        }
+
+        return $this;
     }
 }

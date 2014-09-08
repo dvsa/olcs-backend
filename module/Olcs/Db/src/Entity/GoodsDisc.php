@@ -26,13 +26,13 @@ class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\RemovalExplanationManyToOne,
+        Traits\RemovalReasonManyToOne,
         Traits\LicenceVehicleManyToOne,
         Traits\DiscNo50Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\IsInterimField,
         Traits\CustomCreatedOnField,
@@ -80,6 +80,7 @@ class GoodsDisc implements Interfaces\EntityInterface
         return $this->isCopy;
     }
 
+
     /**
      * Set the reprint required
      *
@@ -102,4 +103,5 @@ class GoodsDisc implements Interfaces\EntityInterface
     {
         return $this->reprintRequired;
     }
+
 }

@@ -26,13 +26,13 @@ class PsvDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\RemovalExplanationManyToOne,
+        Traits\RemovalReasonManyToOne,
         Traits\LicenceManyToOne,
         Traits\DiscNo50Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
@@ -80,6 +80,7 @@ class PsvDisc implements Interfaces\EntityInterface
         return $this->isCopy;
     }
 
+
     /**
      * Set the reprint required
      *
@@ -102,4 +103,5 @@ class PsvDisc implements Interfaces\EntityInterface
     {
         return $this->reprintRequired;
     }
+
 }

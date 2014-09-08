@@ -505,6 +505,9 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_oc_review', 'OC Review', null),
     ('pi_type', 'pi_t_imp', 'Impounding', null),
     ('pi_type', 'pi_t_other', 'Other', null),
+    ('pi_type', 'pi_t_sect_19_22', 'Section 19 or 22', null),
+    ('pi_type', 'pi_t_tm_inc', 'Transport Manager included', null),
+    ('pi_type', 'pi_t_tm_only', 'Transport Manager only', null),
 
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
@@ -580,7 +583,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('vhl_type', 'vhl_t_d', 'Double Deck', 'D'),
     ('vhl_type', 'vhl_t_e', 'Articulated Bus', 'E'),
     ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1'),
-    ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2');
+    ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2'),
+    ('task-date-types', 'tdt_today', 'Today', null),
+    ('task-date-types', 'tdt_all', 'All', null),
+    ('task-status-types', 'tst_open', 'Open', null),
+    ('task-status-types', 'tst_closed', 'Closed', null),
+    ('task-status-types', 'tst_all', 'All', null);
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),

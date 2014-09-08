@@ -29,26 +29,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1;
 
     /**
-     * Ebsr submission result
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionResult
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
-     */
-    protected $ebsrSubmissionResult;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $document;
-
-    /**
      * Ebsr submission type
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionType
@@ -67,6 +47,26 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionStatus;
+
+    /**
+     * Ebsr submission result
+     *
+     * @var \Olcs\Db\Entity\EbsrSubmissionResult
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
+     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ebsrSubmissionResult;
+
+    /**
+     * Document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $document;
 
     /**
      * Submitted date
@@ -231,52 +231,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $organisationId;
 
     /**
-     * Set the ebsr submission result
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission result
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
-     */
-    public function getEbsrSubmissionResult()
-    {
-        return $this->ebsrSubmissionResult;
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return EbsrSubmission
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * Get the document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    /**
      * Set the ebsr submission type
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
@@ -298,6 +252,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->ebsrSubmissionType;
     }
+
 
     /**
      * Set the ebsr submission status
@@ -322,6 +277,55 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->ebsrSubmissionStatus;
     }
 
+
+    /**
+     * Set the ebsr submission result
+     *
+     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionResult($ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission result
+     *
+     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     */
+    public function getEbsrSubmissionResult()
+    {
+        return $this->ebsrSubmissionResult;
+    }
+
+
+    /**
+     * Set the document
+     *
+     * @param \Olcs\Db\Entity\Document $document
+     * @return EbsrSubmission
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+
     /**
      * Set the submitted date
      *
@@ -344,6 +348,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->submittedDate;
     }
+
 
     /**
      * Set the licence no
@@ -368,6 +373,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->licenceNo;
     }
 
+
     /**
      * Set the organisation email address
      *
@@ -390,6 +396,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->organisationEmailAddress;
     }
+
 
     /**
      * Set the application classification
@@ -414,6 +421,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->applicationClassification;
     }
 
+
     /**
      * Set the variation no
      *
@@ -436,6 +444,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->variationNo;
     }
+
 
     /**
      * Set the tan code
@@ -460,6 +469,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->tanCode;
     }
 
+
     /**
      * Set the registration no
      *
@@ -482,6 +492,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->registrationNo;
     }
+
 
     /**
      * Set the validation start
@@ -506,6 +517,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->validationStart;
     }
 
+
     /**
      * Set the validation end
      *
@@ -528,6 +540,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->validationEnd;
     }
+
 
     /**
      * Set the publish start
@@ -552,6 +565,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->publishStart;
     }
 
+
     /**
      * Set the publish end
      *
@@ -574,6 +588,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->publishEnd;
     }
+
 
     /**
      * Set the process start
@@ -598,6 +613,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->processStart;
     }
 
+
     /**
      * Set the process end
      *
@@ -620,6 +636,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->processEnd;
     }
+
 
     /**
      * Set the distribute start
@@ -644,6 +661,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeStart;
     }
 
+
     /**
      * Set the distribute end
      *
@@ -666,6 +684,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->distributeEnd;
     }
+
 
     /**
      * Set the distribute expire
@@ -690,6 +709,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->distributeExpire;
     }
 
+
     /**
      * Set the is from ftp
      *
@@ -713,6 +733,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
         return $this->isFromFtp;
     }
 
+
     /**
      * Set the organisation id
      *
@@ -735,4 +756,5 @@ class EbsrSubmission implements Interfaces\EntityInterface
     {
         return $this->organisationId;
     }
+
 }

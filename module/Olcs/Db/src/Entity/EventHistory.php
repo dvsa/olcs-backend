@@ -29,9 +29,9 @@ class EventHistory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\UserManyToOne,
-        Traits\LicenceManyToOneAlt1;
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOneAlt1;
 
     /**
      * Team
@@ -149,6 +149,7 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->team;
     }
 
+
     /**
      * Set the licence vehicle
      *
@@ -171,6 +172,7 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->licenceVehicle;
     }
+
 
     /**
      * Set the event history type
@@ -195,6 +197,7 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->eventHistoryType;
     }
 
+
     /**
      * Set the event datetime
      *
@@ -217,6 +220,7 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->eventDatetime;
     }
+
 
     /**
      * Set the event description
@@ -241,6 +245,7 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->eventDescription;
     }
 
+
     /**
      * Set the entity type
      *
@@ -263,6 +268,7 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->entityType;
     }
+
 
     /**
      * Set the entity pk
@@ -287,6 +293,7 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->entityPk;
     }
 
+
     /**
      * Set the entity version
      *
@@ -309,6 +316,7 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->entityVersion;
     }
+
 
     /**
      * Set the entity data
@@ -333,6 +341,7 @@ class EventHistory implements Interfaces\EntityInterface
         return $this->entityData;
     }
 
+
     /**
      * Set the operation
      *
@@ -355,4 +364,5 @@ class EventHistory implements Interfaces\EntityInterface
     {
         return $this->operation;
     }
+
 }

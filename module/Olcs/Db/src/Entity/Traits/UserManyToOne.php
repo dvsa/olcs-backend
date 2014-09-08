@@ -43,4 +43,5 @@ trait UserManyToOne
     {
         return $this->user;
     }
+
 }

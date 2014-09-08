@@ -573,28 +573,28 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 
 /* Document dummy data */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23');
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'DOC','2014-08-23 18:00:05');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25');
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'DOC','2014-08-25 12:04:35');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22');
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'DOC','2014-08-22 11:01:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24');
+    (4,7,'Test document 4','testdocument4.doc',0,2,3,'DOC','2014-08-24 16:23:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01');
+    (5,7,'Test document 5','testdocument5.xls',0,2,3,'XLS','2014-07-01 15:01:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05');
+    (6,7,'Test document 6','testdocument6.docx',0,2,3,'DOCX','2014-07-05 09:00:05');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05');
+    (7,7,'Test document 7','testdocument7.xls',0,2,4,'XLS','2014-07-05 10:23:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05');
+    (8,7,'Test document 8','testdocument8.doc',1,2,4,'DOC','2014-07-05 10:45:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05');
+    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'PPT','2014-08-05 08:59:40');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08');
+    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'JPG','2014-08-08 12:47:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14');
+    (11,7,'Test document 11','testdocument11.txt',0,1,1,'TXT','2014-08-14 14:00:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28');
+    (12,7,'Test document 12','testdocument12.xls',1,1,2,'XLS','2014-08-28 14:03:00');
 
 SET foreign_key_checks = 1;
