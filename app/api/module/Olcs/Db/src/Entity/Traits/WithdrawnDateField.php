@@ -42,5 +42,4 @@ trait WithdrawnDateField
     {
         return $this->withdrawnDate;
     }
-
 }

@@ -109,7 +109,6 @@ class History implements Interfaces\EntityInterface
         return $this->entityType;
     }
 
-
     /**
      * Set the template
      *
@@ -132,7 +131,6 @@ class History implements Interfaces\EntityInterface
     {
         return $this->templates;
     }
-
 
     /**
      * Add a templates
@@ -200,7 +198,6 @@ class History implements Interfaces\EntityInterface
         return $this->data;
     }
 
-
     /**
      * Set the entity id
      *
@@ -224,7 +221,6 @@ class History implements Interfaces\EntityInterface
         return $this->entityId;
     }
 
-
     /**
      * Set the entity version
      *
@@ -247,5 +243,4 @@ class History implements Interfaces\EntityInterface
     {
         return $this->entityVersion;
     }
-
 }

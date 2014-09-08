@@ -150,7 +150,6 @@ class Opposition implements Interfaces\EntityInterface
         return $this->opposer;
     }
 
-
     /**
      * Set the is representation
      *
@@ -173,7 +172,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->isRepresentation;
     }
-
 
     /**
      * Set the is copied
@@ -198,7 +196,6 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isCopied;
     }
 
-
     /**
      * Set the raised date
      *
@@ -221,7 +218,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->raisedDate;
     }
-
 
     /**
      * Set the is in time
@@ -246,7 +242,6 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isInTime;
     }
 
-
     /**
      * Set the is public inquiry
      *
@@ -269,7 +264,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->isPublicInquiry;
     }
-
 
     /**
      * Set the is valid
@@ -294,7 +288,6 @@ class Opposition implements Interfaces\EntityInterface
         return $this->isValid;
     }
 
-
     /**
      * Set the valid notes
      *
@@ -318,7 +311,6 @@ class Opposition implements Interfaces\EntityInterface
         return $this->validNotes;
     }
 
-
     /**
      * Set the document
      *
@@ -341,7 +333,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents

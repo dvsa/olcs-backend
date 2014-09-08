@@ -230,7 +230,6 @@ class Document implements Interfaces\EntityInterface
         return $this->operatingCentre;
     }
 
-
     /**
      * Set the opposition
      *
@@ -253,7 +252,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->opposition;
     }
-
 
     /**
      * Set the bus reg
@@ -278,7 +276,6 @@ class Document implements Interfaces\EntityInterface
         return $this->busReg;
     }
 
-
     /**
      * Set the traffic area
      *
@@ -301,7 +298,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->trafficArea;
     }
-
 
     /**
      * Set the transport manager
@@ -326,7 +322,6 @@ class Document implements Interfaces\EntityInterface
         return $this->transportManager;
     }
 
-
     /**
      * Set the document sub category
      *
@@ -349,7 +344,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->documentSubCategory;
     }
-
 
     /**
      * Set the licence
@@ -374,7 +368,6 @@ class Document implements Interfaces\EntityInterface
         return $this->licence;
     }
 
-
     /**
      * Set the case
      *
@@ -397,7 +390,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->case;
     }
-
 
     /**
      * Set the application
@@ -422,7 +414,6 @@ class Document implements Interfaces\EntityInterface
         return $this->application;
     }
 
-
     /**
      * Set the email
      *
@@ -445,7 +436,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->emails;
     }
-
 
     /**
      * Add a emails
@@ -513,7 +503,6 @@ class Document implements Interfaces\EntityInterface
         return $this->identifier;
     }
 
-
     /**
      * Set the is read only
      *
@@ -536,7 +525,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->isReadOnly;
     }
-
 
     /**
      * Set the filename
@@ -561,7 +549,6 @@ class Document implements Interfaces\EntityInterface
         return $this->filename;
     }
 
-
     /**
      * Set the file extension
      *
@@ -584,7 +571,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->fileExtension;
     }
-
 
     /**
      * Set the is digital
@@ -609,7 +595,6 @@ class Document implements Interfaces\EntityInterface
         return $this->isDigital;
     }
 
-
     /**
      * Set the size
      *
@@ -632,5 +617,4 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->size;
     }
-
 }

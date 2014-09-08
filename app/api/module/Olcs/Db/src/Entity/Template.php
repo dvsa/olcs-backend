@@ -69,7 +69,6 @@ class Template implements Interfaces\EntityInterface
         return $this->historys;
     }
 
-
     /**
      * Add a historys
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -135,5 +134,4 @@ class Template implements Interfaces\EntityInterface
     {
         return $this->data;
     }
-
 }

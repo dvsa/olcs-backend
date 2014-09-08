@@ -110,7 +110,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->id;
     }
 
-
     /**
      * Set the recipient
      *
@@ -133,7 +132,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->recipients;
     }
-
 
     /**
      * Add a recipients
@@ -201,7 +199,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->txcName;
     }
 
-
     /**
      * Set the is scottish rules
      *
@@ -225,7 +222,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->isScottishRules;
     }
 
-
     /**
      * Set the document
      *
@@ -248,7 +244,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents

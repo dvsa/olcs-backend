@@ -145,7 +145,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->piVenue;
     }
 
-
     /**
      * Set the impounding type
      *
@@ -169,7 +168,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->impoundingType;
     }
 
-
     /**
      * Set the impounding legislation type
      *
@@ -192,7 +190,6 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->impoundingLegislationTypes;
     }
-
 
     /**
      * Add a impounding legislation types
@@ -260,7 +257,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->applicationReceiptDate;
     }
 
-
     /**
      * Set the outcome sent date
      *
@@ -283,7 +279,6 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->outcomeSentDate;
     }
-
 
     /**
      * Set the close date
@@ -308,7 +303,6 @@ class Impounding implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
-
     /**
      * Set the pi venue other
      *
@@ -331,5 +325,4 @@ class Impounding implements Interfaces\EntityInterface
     {
         return $this->piVenueOther;
     }
-
 }

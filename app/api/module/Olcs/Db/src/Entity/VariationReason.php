@@ -61,7 +61,6 @@ class VariationReason implements Interfaces\EntityInterface
         return $this->busRegs;
     }
 
-
     /**
      * Add a bus regs
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably

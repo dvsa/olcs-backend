@@ -43,5 +43,4 @@ trait IrfoPsvAuthManyToOne
     {
         return $this->irfoPsvAuth;
     }
-
 }

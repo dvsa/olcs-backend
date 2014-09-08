@@ -119,7 +119,6 @@ class Recipient implements Interfaces\EntityInterface
         return $this->trafficAreas;
     }
 
-
     /**
      * Add a traffic areas
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -186,7 +185,6 @@ class Recipient implements Interfaces\EntityInterface
         return $this->sendAppDecision;
     }
 
-
     /**
      * Set the send notices procs
      *
@@ -209,7 +207,6 @@ class Recipient implements Interfaces\EntityInterface
     {
         return $this->sendNoticesProcs;
     }
-
 
     /**
      * Set the is police
@@ -234,7 +231,6 @@ class Recipient implements Interfaces\EntityInterface
         return $this->isPolice;
     }
 
-
     /**
      * Set the is objector
      *
@@ -257,5 +253,4 @@ class Recipient implements Interfaces\EntityInterface
     {
         return $this->isObjector;
     }
-
 }

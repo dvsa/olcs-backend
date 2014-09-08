@@ -71,7 +71,6 @@ class Category implements Interfaces\EntityInterface
         return $this->isDocCategory;
     }
 
-
     /**
      * Set the is task category
      *
@@ -94,5 +93,4 @@ class Category implements Interfaces\EntityInterface
     {
         return $this->isTaskCategory;
     }
-
 }

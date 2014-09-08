@@ -291,7 +291,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographIns;
     }
 
-
     /**
      * Set the organisation
      *
@@ -314,7 +313,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->organisation;
     }
-
 
     /**
      * Set the enforcement area
@@ -339,7 +337,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->enforcementArea;
     }
 
-
     /**
      * Set the trailers in possession
      *
@@ -362,7 +359,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->trailersInPossession;
     }
-
 
     /**
      * Set the fabs reference
@@ -387,7 +383,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->fabsReference;
     }
 
-
     /**
      * Set the granted date
      *
@@ -410,7 +405,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->grantedDate;
     }
-
 
     /**
      * Set the review date
@@ -435,7 +429,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->reviewDate;
     }
 
-
     /**
      * Set the fee date
      *
@@ -458,7 +451,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->feeDate;
     }
-
 
     /**
      * Set the surrendered date
@@ -483,7 +475,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->surrenderedDate;
     }
 
-
     /**
      * Set the safety ins trailers
      *
@@ -506,7 +497,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyInsTrailers;
     }
-
 
     /**
      * Set the safety ins vehicles
@@ -531,7 +521,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVehicles;
     }
 
-
     /**
      * Set the safety ins
      *
@@ -554,7 +543,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyIns;
     }
-
 
     /**
      * Set the safety ins varies
@@ -579,7 +567,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVaries;
     }
 
-
     /**
      * Set the ni flag
      *
@@ -602,7 +589,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->niFlag;
     }
-
 
     /**
      * Set the tachograph ins name
@@ -627,7 +613,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographInsName;
     }
 
-
     /**
      * Set the psv discs to be printed no
      *
@@ -650,7 +635,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->psvDiscsToBePrintedNo;
     }
-
 
     /**
      * Set the translate to welsh
@@ -675,7 +659,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->translateToWelsh;
     }
 
-
     /**
      * Set the application
      *
@@ -698,7 +681,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->applications;
     }
-
 
     /**
      * Add a applications
@@ -766,7 +748,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->contactDetails;
     }
 
-
     /**
      * Add a contact details
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -832,7 +813,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -900,7 +880,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->licenceVehicles;
     }
 
-
     /**
      * Add a licence vehicles
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -966,7 +945,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->workshops;
     }
-
 
     /**
      * Add a workshops

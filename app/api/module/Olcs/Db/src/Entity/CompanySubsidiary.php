@@ -70,7 +70,6 @@ class CompanySubsidiary implements Interfaces\EntityInterface
         return $this->name;
     }
 
-
     /**
      * Set the company no
      *
@@ -93,5 +92,4 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     {
         return $this->companyNo;
     }
-
 }

@@ -93,7 +93,6 @@ class Note implements Interfaces\EntityInterface
         return $this->noteType;
     }
 
-
     /**
      * Set the comment
      *
@@ -117,7 +116,6 @@ class Note implements Interfaces\EntityInterface
         return $this->comment;
     }
 
-
     /**
      * Set the priority
      *
@@ -140,5 +138,4 @@ class Note implements Interfaces\EntityInterface
     {
         return $this->priority;
     }
-
 }

@@ -147,7 +147,6 @@ class Task implements Interfaces\EntityInterface
         return $this->taskSubCategory;
     }
 
-
     /**
      * Set the irfo organisation
      *
@@ -170,7 +169,6 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->irfoOrganisation;
     }
-
 
     /**
      * Set the assigned by user
@@ -195,7 +193,6 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedByUser;
     }
 
-
     /**
      * Set the assigned to team
      *
@@ -218,7 +215,6 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->assignedToTeam;
     }
-
 
     /**
      * Set the assigned to user
@@ -243,7 +239,6 @@ class Task implements Interfaces\EntityInterface
         return $this->assignedToUser;
     }
 
-
     /**
      * Set the is closed
      *
@@ -266,7 +261,6 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->isClosed;
     }
-
 
     /**
      * Set the action date
@@ -291,7 +285,6 @@ class Task implements Interfaces\EntityInterface
         return $this->actionDate;
     }
 
-
     /**
      * Set the urgent
      *
@@ -314,5 +307,4 @@ class Task implements Interfaces\EntityInterface
     {
         return $this->urgent;
     }
-
 }

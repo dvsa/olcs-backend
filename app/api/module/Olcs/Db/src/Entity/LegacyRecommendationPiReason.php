@@ -83,7 +83,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->legacyPiReason;
     }
 
-
     /**
      * Set the legacy recommendation
      *
@@ -107,7 +106,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         return $this->legacyRecommendation;
     }
 
-
     /**
      * Set the comment
      *
@@ -130,5 +128,4 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     {
         return $this->comment;
     }
-
 }

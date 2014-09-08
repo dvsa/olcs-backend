@@ -42,5 +42,4 @@ trait IsDeletedField
     {
         return $this->isDeleted;
     }
-
 }

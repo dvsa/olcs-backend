@@ -129,7 +129,6 @@ class User implements Interfaces\EntityInterface
         return $this->partnerContactDetails;
     }
 
-
     /**
      * Set the contact details
      *
@@ -152,7 +151,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Set the pid
@@ -177,7 +175,6 @@ class User implements Interfaces\EntityInterface
         return $this->pid;
     }
 
-
     /**
      * Set the name
      *
@@ -200,7 +197,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 
     /**
      * Set the account disabled
@@ -225,7 +221,6 @@ class User implements Interfaces\EntityInterface
         return $this->accountDisabled;
     }
 
-
     /**
      * Set the organisation user
      *
@@ -248,7 +243,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->organisationUsers;
     }
-
 
     /**
      * Add a organisation users

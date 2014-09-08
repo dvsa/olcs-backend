@@ -43,5 +43,4 @@ trait TransportManagerManyToOne
     {
         return $this->transportManager;
     }
-
 }

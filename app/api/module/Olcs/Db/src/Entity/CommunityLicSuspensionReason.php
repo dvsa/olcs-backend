@@ -77,7 +77,6 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
-
     /**
      * Set the community lic suspension
      *
@@ -100,5 +99,4 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
     {
         return $this->communityLicSuspension;
     }
-
 }

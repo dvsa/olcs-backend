@@ -219,7 +219,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason2;
     }
 
-
     /**
      * Set the waive approver user
      *
@@ -242,7 +241,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->waiveApproverUser;
     }
-
 
     /**
      * Set the waive recommender user
@@ -267,7 +265,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveRecommenderUser;
     }
 
-
     /**
      * Set the parent fee
      *
@@ -290,7 +287,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->parentFee;
     }
-
 
     /**
      * Set the fee type
@@ -315,7 +311,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
-
     /**
      * Set the amount
      *
@@ -338,7 +333,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->amount;
     }
-
 
     /**
      * Set the received amount
@@ -363,7 +357,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->receivedAmount;
     }
 
-
     /**
      * Set the invoice no
      *
@@ -386,7 +379,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->invoiceNo;
     }
-
 
     /**
      * Set the invoice line no
@@ -411,7 +403,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->invoiceLineNo;
     }
 
-
     /**
      * Set the invoiced date
      *
@@ -434,7 +425,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->invoicedDate;
     }
-
 
     /**
      * Set the fee status
@@ -459,7 +449,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->feeStatus;
     }
 
-
     /**
      * Set the waive approval date
      *
@@ -482,7 +471,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->waiveApprovalDate;
     }
-
 
     /**
      * Set the waive reason
@@ -507,7 +495,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->waiveReason;
     }
 
-
     /**
      * Set the waive recommendation date
      *
@@ -530,7 +517,6 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->waiveRecommendationDate;
     }
-
 
     /**
      * Set the irfo fee exempt
@@ -555,7 +541,6 @@ class Fee implements Interfaces\EntityInterface
         return $this->irfoFeeExempt;
     }
 
-
     /**
      * Set the irfo file no
      *
@@ -578,5 +563,4 @@ class Fee implements Interfaces\EntityInterface
     {
         return $this->irfoFileNo;
     }
-
 }
