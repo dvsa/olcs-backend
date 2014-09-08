@@ -31,7 +31,6 @@ class TmQualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOneAlt1,
-        Traits\IssuedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -56,6 +55,15 @@ class TmQualification implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=false)
      */
     protected $countryCode;
+
+    /**
+     * Issued date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="issued_date", nullable=true)
+     */
+    protected $issuedDate;
 
     /**
      * Serial no
@@ -111,6 +119,30 @@ class TmQualification implements Interfaces\EntityInterface
     public function getCountryCode()
     {
         return $this->countryCode;
+    }
+
+
+    /**
+     * Set the issued date
+     *
+     * @param \DateTime $issuedDate
+     * @return TmQualification
+     */
+    public function setIssuedDate($issuedDate)
+    {
+        $this->issuedDate = $issuedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the issued date
+     *
+     * @return \DateTime
+     */
+    public function getIssuedDate()
+    {
+        return $this->issuedDate;
     }
 
 

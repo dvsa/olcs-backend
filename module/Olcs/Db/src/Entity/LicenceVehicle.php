@@ -291,6 +291,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
         return $this->warningLetterSentDate;
     }
 
+
     /**
      * Set the goods disc
      *
@@ -312,5 +313,49 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getGoodsDiscs()
     {
         return $this->goodsDiscs;
+    }
+
+
+    /**
+     * Add a goods discs
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function addGoodsDiscs($goodsDiscs)
+    {
+        if ($goodsDiscs instanceof ArrayCollection) {
+            $this->goodsDiscs = new ArrayCollection(
+                array_merge(
+                    $this->goodsDiscs->toArray(),
+                    $goodsDiscs->toArray()
+                )
+            );
+        } elseif (!$this->goodsDiscs->contains($goodsDiscs)) {
+            $this->goodsDiscs->add($goodsDiscs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a goods discs
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function removeGoodsDiscs($goodsDiscs)
+    {
+        if ($this->goodsDiscs->contains($goodsDiscs)) {
+            $this->goodsDiscs->remove($goodsDiscs);
+        }
+
+        return $this;
     }
 }

@@ -31,7 +31,7 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DiscNo50Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\IsInterimField,
         Traits\CustomCreatedOnField,
@@ -88,6 +88,7 @@ class GoodsDisc implements Interfaces\EntityInterface
     {
         return $this->licenceVehicle;
     }
+
 
     /**
      * Set the is copy

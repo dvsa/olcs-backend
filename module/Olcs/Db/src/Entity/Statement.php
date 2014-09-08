@@ -30,7 +30,7 @@ class Statement implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
