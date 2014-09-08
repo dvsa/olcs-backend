@@ -113,6 +113,7 @@ class FeeType implements Interfaces\EntityInterface
         return $this->feeType;
     }
 
+
     /**
      * Set the effective from
      *
@@ -135,6 +136,7 @@ class FeeType implements Interfaces\EntityInterface
     {
         return $this->effectiveFrom;
     }
+
 
     /**
      * Set the fixed value
@@ -159,6 +161,7 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fixedValue;
     }
 
+
     /**
      * Set the annual value
      *
@@ -181,6 +184,7 @@ class FeeType implements Interfaces\EntityInterface
     {
         return $this->annualValue;
     }
+
 
     /**
      * Set the five year value
@@ -205,6 +209,7 @@ class FeeType implements Interfaces\EntityInterface
         return $this->fiveYearValue;
     }
 
+
     /**
      * Set the expire fee with licence
      *
@@ -227,4 +232,5 @@ class FeeType implements Interfaces\EntityInterface
     {
         return $this->expireFeeWithLicence;
     }
+
 }

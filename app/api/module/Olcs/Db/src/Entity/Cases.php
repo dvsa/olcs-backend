@@ -257,6 +257,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->caseType;
     }
 
+
     /**
      * Set the erru case type
      *
@@ -280,6 +281,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruCaseType;
     }
 
+
     /**
      * Set the legacy offence
      *
@@ -301,6 +303,50 @@ class Cases implements Interfaces\EntityInterface
     public function getLegacyOffences()
     {
         return $this->legacyOffences;
+    }
+
+
+    /**
+     * Add a legacy offences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function addLegacyOffences($legacyOffences)
+    {
+        if ($legacyOffences instanceof ArrayCollection) {
+            $this->legacyOffences = new ArrayCollection(
+                array_merge(
+                    $this->legacyOffences->toArray(),
+                    $legacyOffences->toArray()
+                )
+            );
+        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->add($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a legacy offences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function removeLegacyOffences($legacyOffences)
+    {
+        if ($this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->remove($legacyOffences);
+        }
+
+        return $this;
     }
 
     /**
@@ -326,6 +372,50 @@ class Cases implements Interfaces\EntityInterface
         return $this->submissionSections;
     }
 
+
+    /**
+     * Add a submission sections
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
+     * @return Cases
+     */
+    public function addSubmissionSections($submissionSections)
+    {
+        if ($submissionSections instanceof ArrayCollection) {
+            $this->submissionSections = new ArrayCollection(
+                array_merge(
+                    $this->submissionSections->toArray(),
+                    $submissionSections->toArray()
+                )
+            );
+        } elseif (!$this->submissionSections->contains($submissionSections)) {
+            $this->submissionSections->add($submissionSections);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a submission sections
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
+     * @return Cases
+     */
+    public function removeSubmissionSections($submissionSections)
+    {
+        if ($this->submissionSections->contains($submissionSections)) {
+            $this->submissionSections->remove($submissionSections);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the ecms no
      *
@@ -348,6 +438,7 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->ecmsNo;
     }
+
 
     /**
      * Set the open date
@@ -372,6 +463,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->openDate;
     }
 
+
     /**
      * Set the close date
      *
@@ -394,6 +486,7 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->closeDate;
     }
+
 
     /**
      * Set the description
@@ -418,6 +511,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->description;
     }
 
+
     /**
      * Set the is impounding
      *
@@ -440,6 +534,7 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->isImpounding;
     }
+
 
     /**
      * Set the erru originating authority
@@ -464,6 +559,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruOriginatingAuthority;
     }
 
+
     /**
      * Set the erru transport undertaking name
      *
@@ -486,6 +582,7 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruTransportUndertakingName;
     }
+
 
     /**
      * Set the erru vrm
@@ -510,6 +607,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruVrm;
     }
 
+
     /**
      * Set the annual test history
      *
@@ -532,6 +630,7 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->annualTestHistory;
     }
+
 
     /**
      * Set the prohibition note
@@ -556,6 +655,7 @@ class Cases implements Interfaces\EntityInterface
         return $this->prohibitionNote;
     }
 
+
     /**
      * Set the complaint case
      *
@@ -577,6 +677,50 @@ class Cases implements Interfaces\EntityInterface
     public function getComplaintCases()
     {
         return $this->complaintCases;
+    }
+
+
+    /**
+     * Add a complaint cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
+     * @return Cases
+     */
+    public function addComplaintCases($complaintCases)
+    {
+        if ($complaintCases instanceof ArrayCollection) {
+            $this->complaintCases = new ArrayCollection(
+                array_merge(
+                    $this->complaintCases->toArray(),
+                    $complaintCases->toArray()
+                )
+            );
+        } elseif (!$this->complaintCases->contains($complaintCases)) {
+            $this->complaintCases->add($complaintCases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a complaint cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
+     * @return Cases
+     */
+    public function removeComplaintCases($complaintCases)
+    {
+        if ($this->complaintCases->contains($complaintCases)) {
+            $this->complaintCases->remove($complaintCases);
+        }
+
+        return $this;
     }
 
     /**
@@ -602,6 +746,50 @@ class Cases implements Interfaces\EntityInterface
         return $this->conditionUndertakings;
     }
 
+
+    /**
+     * Add a condition undertakings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function addConditionUndertakings($conditionUndertakings)
+    {
+        if ($conditionUndertakings instanceof ArrayCollection) {
+            $this->conditionUndertakings = new ArrayCollection(
+                array_merge(
+                    $this->conditionUndertakings->toArray(),
+                    $conditionUndertakings->toArray()
+                )
+            );
+        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->add($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a condition undertakings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Cases
+     */
+    public function removeConditionUndertakings($conditionUndertakings)
+    {
+        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->remove($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the conviction
      *
@@ -625,6 +813,50 @@ class Cases implements Interfaces\EntityInterface
         return $this->convictions;
     }
 
+
+    /**
+     * Add a convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Cases
+     */
+    public function addConvictions($convictions)
+    {
+        if ($convictions instanceof ArrayCollection) {
+            $this->convictions = new ArrayCollection(
+                array_merge(
+                    $this->convictions->toArray(),
+                    $convictions->toArray()
+                )
+            );
+        } elseif (!$this->convictions->contains($convictions)) {
+            $this->convictions->add($convictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $convictions
+     * @return Cases
+     */
+    public function removeConvictions($convictions)
+    {
+        if ($this->convictions->contains($convictions)) {
+            $this->convictions->remove($convictions);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the document
      *
@@ -646,5 +878,49 @@ class Cases implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Cases
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Cases
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 }

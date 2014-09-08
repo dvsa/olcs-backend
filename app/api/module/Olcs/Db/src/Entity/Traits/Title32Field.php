@@ -42,4 +42,5 @@ trait Title32Field
     {
         return $this->title;
     }
+
 }

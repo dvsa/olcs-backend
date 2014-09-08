@@ -86,6 +86,7 @@ class Disqualification implements Interfaces\EntityInterface
         return $this->isDisqualified;
     }
 
+
     /**
      * Set the notes
      *
@@ -109,6 +110,7 @@ class Disqualification implements Interfaces\EntityInterface
         return $this->notes;
     }
 
+
     /**
      * Set the period
      *
@@ -131,4 +133,5 @@ class Disqualification implements Interfaces\EntityInterface
     {
         return $this->period;
     }
+
 }

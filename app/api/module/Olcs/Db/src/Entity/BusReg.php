@@ -454,6 +454,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->busNoticePeriod;
     }
 
+
     /**
      * Set the subsidised
      *
@@ -477,6 +478,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidised;
     }
 
+
     /**
      * Set the variation reason
      *
@@ -498,6 +500,50 @@ class BusReg implements Interfaces\EntityInterface
     public function getVariationReasons()
     {
         return $this->variationReasons;
+    }
+
+
+    /**
+     * Add a variation reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function addVariationReasons($variationReasons)
+    {
+        if ($variationReasons instanceof ArrayCollection) {
+            $this->variationReasons = new ArrayCollection(
+                array_merge(
+                    $this->variationReasons->toArray(),
+                    $variationReasons->toArray()
+                )
+            );
+        } elseif (!$this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->add($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function removeVariationReasons($variationReasons)
+    {
+        if ($this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->remove($variationReasons);
+        }
+
+        return $this;
     }
 
     /**
@@ -523,6 +569,50 @@ class BusReg implements Interfaces\EntityInterface
         return $this->busServiceTypes;
     }
 
+
+    /**
+     * Add a bus service types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function addBusServiceTypes($busServiceTypes)
+    {
+        if ($busServiceTypes instanceof ArrayCollection) {
+            $this->busServiceTypes = new ArrayCollection(
+                array_merge(
+                    $this->busServiceTypes->toArray(),
+                    $busServiceTypes->toArray()
+                )
+            );
+        } elseif (!$this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->add($busServiceTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus service types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function removeBusServiceTypes($busServiceTypes)
+    {
+        if ($this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->remove($busServiceTypes);
+        }
+
+        return $this;
+    }
+
     /**
      * Set the route no
      *
@@ -545,6 +635,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->routeNo;
     }
+
 
     /**
      * Set the reg no
@@ -569,6 +660,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->regNo;
     }
 
+
     /**
      * Set the start point
      *
@@ -591,6 +683,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->startPoint;
     }
+
 
     /**
      * Set the finish point
@@ -615,6 +708,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->finishPoint;
     }
 
+
     /**
      * Set the via
      *
@@ -637,6 +731,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->via;
     }
+
 
     /**
      * Set the other details
@@ -661,6 +756,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->otherDetails;
     }
 
+
     /**
      * Set the is short notice
      *
@@ -683,6 +779,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->isShortNotice;
     }
+
 
     /**
      * Set the use all stops
@@ -707,6 +804,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->useAllStops;
     }
 
+
     /**
      * Set the has manoeuvre
      *
@@ -729,6 +827,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->hasManoeuvre;
     }
+
 
     /**
      * Set the manoeuvre detail
@@ -753,6 +852,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->manoeuvreDetail;
     }
 
+
     /**
      * Set the need new stop
      *
@@ -775,6 +875,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->needNewStop;
     }
+
 
     /**
      * Set the new stop detail
@@ -799,6 +900,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->newStopDetail;
     }
 
+
     /**
      * Set the has not fixed stop
      *
@@ -821,6 +923,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->hasNotFixedStop;
     }
+
 
     /**
      * Set the not fixed stop detail
@@ -845,6 +948,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->notFixedStopDetail;
     }
 
+
     /**
      * Set the subsidy detail
      *
@@ -867,6 +971,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->subsidyDetail;
     }
+
 
     /**
      * Set the timetable acceptable
@@ -891,6 +996,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->timetableAcceptable;
     }
 
+
     /**
      * Set the map supplied
      *
@@ -913,6 +1019,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->mapSupplied;
     }
+
 
     /**
      * Set the route description
@@ -937,6 +1044,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeDescription;
     }
 
+
     /**
      * Set the copied to la pte
      *
@@ -959,6 +1067,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->copiedToLaPte;
     }
+
 
     /**
      * Set the la short note
@@ -983,6 +1092,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->laShortNote;
     }
 
+
     /**
      * Set the application signed
      *
@@ -1005,6 +1115,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->applicationSigned;
     }
+
 
     /**
      * Set the completed date
@@ -1029,6 +1140,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->completedDate;
     }
 
+
     /**
      * Set the route seq
      *
@@ -1051,6 +1163,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->routeSeq;
     }
+
 
     /**
      * Set the op notified la pte
@@ -1075,6 +1188,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->opNotifiedLaPte;
     }
 
+
     /**
      * Set the stopping arrangements
      *
@@ -1097,6 +1211,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->stoppingArrangements;
     }
+
 
     /**
      * Set the trc condition checked
@@ -1121,6 +1236,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->trcConditionChecked;
     }
 
+
     /**
      * Set the trc notes
      *
@@ -1143,6 +1259,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->trcNotes;
     }
+
 
     /**
      * Set the status
@@ -1167,6 +1284,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->status;
     }
 
+
     /**
      * Set the revert status
      *
@@ -1189,6 +1307,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->revertStatus;
     }
+
 
     /**
      * Set the organisation email
@@ -1213,6 +1332,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->organisationEmail;
     }
 
+
     /**
      * Set the is txc app
      *
@@ -1235,6 +1355,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->isTxcApp;
     }
+
 
     /**
      * Set the txc app type
@@ -1259,6 +1380,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->txcAppType;
     }
 
+
     /**
      * Set the reason cancelled
      *
@@ -1281,6 +1403,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->reasonCancelled;
     }
+
 
     /**
      * Set the reason refused
@@ -1305,6 +1428,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonRefused;
     }
 
+
     /**
      * Set the reason sn refused
      *
@@ -1327,6 +1451,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->reasonSnRefused;
     }
+
 
     /**
      * Set the short notice refused
@@ -1351,6 +1476,7 @@ class BusReg implements Interfaces\EntityInterface
         return $this->shortNoticeRefused;
     }
 
+
     /**
      * Set the document
      *
@@ -1372,5 +1498,49 @@ class BusReg implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return BusReg
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return BusReg
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->remove($documents);
+        }
+
+        return $this;
     }
 }

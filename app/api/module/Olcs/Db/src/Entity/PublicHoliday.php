@@ -97,6 +97,7 @@ class PublicHoliday implements Interfaces\EntityInterface
         return $this->publicHolidayDate;
     }
 
+
     /**
      * Set the is england
      *
@@ -119,6 +120,7 @@ class PublicHoliday implements Interfaces\EntityInterface
     {
         return $this->isEngland;
     }
+
 
     /**
      * Set the is wales
@@ -143,6 +145,7 @@ class PublicHoliday implements Interfaces\EntityInterface
         return $this->isWales;
     }
 
+
     /**
      * Set the is scotland
      *
@@ -166,6 +169,7 @@ class PublicHoliday implements Interfaces\EntityInterface
         return $this->isScotland;
     }
 
+
     /**
      * Set the is ni
      *
@@ -188,4 +192,5 @@ class PublicHoliday implements Interfaces\EntityInterface
     {
         return $this->isNi;
     }
+
 }

@@ -65,4 +65,5 @@ class PiVenue implements Interfaces\EntityInterface
     {
         return $this->address;
     }
+
 }

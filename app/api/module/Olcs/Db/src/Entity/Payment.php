@@ -117,6 +117,7 @@ class Payment implements Interfaces\EntityInterface
         return $this->receiptDocument;
     }
 
+
     /**
      * Set the legacy status
      *
@@ -139,6 +140,7 @@ class Payment implements Interfaces\EntityInterface
     {
         return $this->legacyStatus;
     }
+
 
     /**
      * Set the legacy method
@@ -163,6 +165,7 @@ class Payment implements Interfaces\EntityInterface
         return $this->legacyMethod;
     }
 
+
     /**
      * Set the legacy choice
      *
@@ -185,6 +188,7 @@ class Payment implements Interfaces\EntityInterface
     {
         return $this->legacyChoice;
     }
+
 
     /**
      * Set the legacy guid
@@ -209,6 +213,7 @@ class Payment implements Interfaces\EntityInterface
         return $this->legacyGuid;
     }
 
+
     /**
      * Set the completed date
      *
@@ -232,6 +237,7 @@ class Payment implements Interfaces\EntityInterface
         return $this->completedDate;
     }
 
+
     /**
      * Set the guid
      *
@@ -254,4 +260,5 @@ class Payment implements Interfaces\EntityInterface
     {
         return $this->guid;
     }
+
 }

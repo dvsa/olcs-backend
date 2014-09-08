@@ -42,4 +42,5 @@ trait ViAction1Field
     {
         return $this->viAction;
     }
+
 }

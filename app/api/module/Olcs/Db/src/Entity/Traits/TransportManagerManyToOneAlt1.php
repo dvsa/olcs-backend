@@ -43,4 +43,5 @@ trait TransportManagerManyToOneAlt1
     {
         return $this->transportManager;
     }
+
 }

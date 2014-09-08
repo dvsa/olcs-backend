@@ -42,4 +42,5 @@ trait EndDateField
     {
         return $this->endDate;
     }
+
 }

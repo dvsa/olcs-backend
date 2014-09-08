@@ -43,4 +43,5 @@ trait SeriousInfringementManyToOne
     {
         return $this->seriousInfringement;
     }
+
 }

@@ -76,6 +76,7 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->piDefinitionCategory;
     }
 
+
     /**
      * Set the section code
      *
@@ -99,6 +100,7 @@ class PiDefinition implements Interfaces\EntityInterface
         return $this->sectionCode;
     }
 
+
     /**
      * Set the definition
      *
@@ -121,4 +123,5 @@ class PiDefinition implements Interfaces\EntityInterface
     {
         return $this->definition;
     }
+
 }

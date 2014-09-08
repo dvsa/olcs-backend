@@ -67,4 +67,5 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
     {
         return $this->docTemplate;
     }
+
 }
