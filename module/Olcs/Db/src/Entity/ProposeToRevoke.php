@@ -131,7 +131,7 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     public function removeReasons($reasons)
     {
         if ($this->reasons->contains($reasons)) {
-            $this->reasons->remove($reasons);
+            $this->reasons->removeElement($reasons);
         }
 
         return $this;

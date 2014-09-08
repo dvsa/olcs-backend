@@ -353,7 +353,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function removeGoodsDiscs($goodsDiscs)
     {
         if ($this->goodsDiscs->contains($goodsDiscs)) {
-            $this->goodsDiscs->remove($goodsDiscs);
+            $this->goodsDiscs->removeElement($goodsDiscs);
         }
 
         return $this;

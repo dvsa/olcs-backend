@@ -484,7 +484,7 @@ class Document implements Interfaces\EntityInterface
     public function removeEmails($emails)
     {
         if ($this->emails->contains($emails)) {
-            $this->emails->remove($emails);
+            $this->emails->removeElement($emails);
         }
 
         return $this;

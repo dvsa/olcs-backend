@@ -175,7 +175,7 @@ class RefData implements Interfaces\EntityInterface
     public function removePis($pis)
     {
         if ($this->pis->contains($pis)) {
-            $this->pis->remove($pis);
+            $this->pis->removeElement($pis);
         }
 
         return $this;
@@ -242,7 +242,7 @@ class RefData implements Interfaces\EntityInterface
     public function removeImpoundings($impoundings)
     {
         if ($this->impoundings->contains($impoundings)) {
-            $this->impoundings->remove($impoundings);
+            $this->impoundings->removeElement($impoundings);
         }
 
         return $this;

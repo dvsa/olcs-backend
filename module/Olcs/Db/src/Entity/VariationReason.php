@@ -99,7 +99,7 @@ class VariationReason implements Interfaces\EntityInterface
     public function removeBusRegs($busRegs)
     {
         if ($this->busRegs->contains($busRegs)) {
-            $this->busRegs->remove($busRegs);
+            $this->busRegs->removeElement($busRegs);
         }
 
         return $this;

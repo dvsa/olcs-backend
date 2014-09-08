@@ -141,7 +141,7 @@ class Reason implements Interfaces\EntityInterface
     public function removeProposeToRevokes($proposeToRevokes)
     {
         if ($this->proposeToRevokes->contains($proposeToRevokes)) {
-            $this->proposeToRevokes->remove($proposeToRevokes);
+            $this->proposeToRevokes->removeElement($proposeToRevokes);
         }
 
         return $this;
@@ -208,7 +208,7 @@ class Reason implements Interfaces\EntityInterface
     public function removePis($pis)
     {
         if ($this->pis->contains($pis)) {
-            $this->pis->remove($pis);
+            $this->pis->removeElement($pis);
         }
 
         return $this;

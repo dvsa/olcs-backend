@@ -540,7 +540,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeVariationReasons($variationReasons)
     {
         if ($this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->remove($variationReasons);
+            $this->variationReasons->removeElement($variationReasons);
         }
 
         return $this;
@@ -607,7 +607,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeBusServiceTypes($busServiceTypes)
     {
         if ($this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->remove($busServiceTypes);
+            $this->busServiceTypes->removeElement($busServiceTypes);
         }
 
         return $this;
@@ -1538,7 +1538,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

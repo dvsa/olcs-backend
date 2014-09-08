@@ -280,7 +280,7 @@ class Person implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;

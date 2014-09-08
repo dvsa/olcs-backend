@@ -107,7 +107,7 @@ class Template implements Interfaces\EntityInterface
     public function removeHistorys($historys)
     {
         if ($this->historys->contains($historys)) {
-            $this->historys->remove($historys);
+            $this->historys->removeElement($historys);
         }
 
         return $this;

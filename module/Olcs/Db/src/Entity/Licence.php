@@ -737,7 +737,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeApplications($applications)
     {
         if ($this->applications->contains($applications)) {
-            $this->applications->remove($applications);
+            $this->applications->removeElement($applications);
         }
 
         return $this;
@@ -804,7 +804,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;
@@ -871,7 +871,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;
@@ -938,7 +938,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeLicenceVehicles($licenceVehicles)
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
+            $this->licenceVehicles->removeElement($licenceVehicles);
         }
 
         return $this;
@@ -1005,7 +1005,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeWorkshops($workshops)
     {
         if ($this->workshops->contains($workshops)) {
-            $this->workshops->remove($workshops);
+            $this->workshops->removeElement($workshops);
         }
 
         return $this;

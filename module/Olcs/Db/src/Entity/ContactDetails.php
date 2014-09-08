@@ -420,7 +420,7 @@ class ContactDetails implements Interfaces\EntityInterface
     public function removePhoneContacts($phoneContacts)
     {
         if ($this->phoneContacts->contains($phoneContacts)) {
-            $this->phoneContacts->remove($phoneContacts);
+            $this->phoneContacts->removeElement($phoneContacts);
         }
 
         return $this;

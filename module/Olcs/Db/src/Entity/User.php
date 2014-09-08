@@ -287,7 +287,7 @@ class User implements Interfaces\EntityInterface
     public function removeOrganisationUsers($organisationUsers)
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
-            $this->organisationUsers->remove($organisationUsers);
+            $this->organisationUsers->removeElement($organisationUsers);
         }
 
         return $this;

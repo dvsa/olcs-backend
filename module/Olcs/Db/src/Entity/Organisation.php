@@ -477,7 +477,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;
@@ -544,7 +544,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeLicences($licences)
     {
         if ($this->licences->contains($licences)) {
-            $this->licences->remove($licences);
+            $this->licences->removeElement($licences);
         }
 
         return $this;
@@ -611,7 +611,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeOrganisationPersons($organisationPersons)
     {
         if ($this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->remove($organisationPersons);
+            $this->organisationPersons->removeElement($organisationPersons);
         }
 
         return $this;
@@ -678,7 +678,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeTradingNames($tradingNames)
     {
         if ($this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->remove($tradingNames);
+            $this->tradingNames->removeElement($tradingNames);
         }
 
         return $this;
