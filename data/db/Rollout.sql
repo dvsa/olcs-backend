@@ -575,11 +575,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('vhl_type', 'vhl_t_e', 'Articulated Bus', 'E'),
     ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1'),
     ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2'),
-    ('task-date-types', 'today', 'Today', null),
-    ('task-date-types', 'all', 'All', null),
-    ('task-status-types', 'open', 'Open', null),
-    ('task-status-types', 'closed', 'Closed', null),
-    ('task-status-types', 'all', 'All', null);
+    ('task-date-types', 'tdt_today', 'Today', null),
+    ('task-date-types', 'tdt_all', 'All', null),
+    ('task-status-types', 'tst_open', 'Open', null),
+    ('task-status-types', 'tst_closed', 'Closed', null),
+    ('task-status-types', 'tst_all', 'All', null);
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
