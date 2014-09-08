@@ -32,7 +32,7 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\DiscNo50Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
