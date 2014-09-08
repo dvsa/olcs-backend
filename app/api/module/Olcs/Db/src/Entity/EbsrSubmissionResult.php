@@ -87,6 +87,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->id;
     }
 
+
     /**
      * Set the email subject
      *
@@ -109,6 +110,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     {
         return $this->emailSubject;
     }
+
 
     /**
      * Set the email body template
@@ -133,6 +135,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->emailBodyTemplate;
     }
 
+
     /**
      * Set the email authority
      *
@@ -156,6 +159,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
         return $this->emailAuthority;
     }
 
+
     /**
      * Set the description
      *
@@ -178,4 +182,5 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
     {
         return $this->description;
     }
+
 }

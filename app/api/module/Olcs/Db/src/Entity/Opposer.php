@@ -64,4 +64,5 @@ class Opposer implements Interfaces\EntityInterface
     {
         return $this->opposerType;
     }
+
 }

@@ -72,6 +72,7 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
         return $this->irfoPsvAuth;
     }
 
+
     /**
      * Set the description
      *
@@ -94,4 +95,5 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
     {
         return $this->description;
     }
+
 }

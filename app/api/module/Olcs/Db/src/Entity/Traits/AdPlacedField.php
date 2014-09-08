@@ -42,4 +42,5 @@ trait AdPlacedField
     {
         return $this->adPlaced;
     }
+
 }

@@ -27,8 +27,8 @@ class PrivateHireLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
         Traits\LicenceManyToOne,
+        Traits\ContactDetailsManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -64,4 +64,5 @@ class PrivateHireLicence implements Interfaces\EntityInterface
     {
         return $this->privateHireLicenceNo;
     }
+
 }

@@ -29,9 +29,9 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OutcomeManyToOne,
         Traits\CaseManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
@@ -145,6 +145,7 @@ class Appeal implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
     /**
      * Set the appeal no
      *
@@ -167,6 +168,7 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->appealNo;
     }
+
 
     /**
      * Set the tm case id
@@ -191,6 +193,7 @@ class Appeal implements Interfaces\EntityInterface
         return $this->tmCaseId;
     }
 
+
     /**
      * Set the deadline date
      *
@@ -213,6 +216,7 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->deadlineDate;
     }
+
 
     /**
      * Set the appeal date
@@ -237,6 +241,7 @@ class Appeal implements Interfaces\EntityInterface
         return $this->appealDate;
     }
 
+
     /**
      * Set the outline ground
      *
@@ -259,6 +264,7 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->outlineGround;
     }
+
 
     /**
      * Set the papers due date
@@ -283,6 +289,7 @@ class Appeal implements Interfaces\EntityInterface
         return $this->papersDueDate;
     }
 
+
     /**
      * Set the comment
      *
@@ -306,6 +313,7 @@ class Appeal implements Interfaces\EntityInterface
         return $this->comment;
     }
 
+
     /**
      * Set the papers sent date
      *
@@ -328,4 +336,5 @@ class Appeal implements Interfaces\EntityInterface
     {
         return $this->papersSentDate;
     }
+
 }

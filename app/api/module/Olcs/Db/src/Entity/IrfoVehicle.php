@@ -127,6 +127,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->irfoGvPermit;
     }
 
+
     /**
      * Set the coc a
      *
@@ -149,6 +150,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->cocA;
     }
+
 
     /**
      * Set the coc b
@@ -173,6 +175,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->cocB;
     }
 
+
     /**
      * Set the coc c
      *
@@ -195,6 +198,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->cocC;
     }
+
 
     /**
      * Set the coc d
@@ -219,6 +223,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->cocD;
     }
 
+
     /**
      * Set the coc t
      *
@@ -241,6 +246,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->cocT;
     }
+
 
     /**
      * Set the vrm
@@ -265,6 +271,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
         return $this->vrm;
     }
 
+
     /**
      * Set the version
      *
@@ -287,4 +294,5 @@ class IrfoVehicle implements Interfaces\EntityInterface
     {
         return $this->version;
     }
+
 }

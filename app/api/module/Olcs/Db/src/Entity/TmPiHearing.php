@@ -53,16 +53,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $type;
 
     /**
-     * Presided by
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
-     */
-    protected $presidedBy;
-
-    /**
      * Reason
      *
      * @var \Olcs\Db\Entity\RefData
@@ -71,6 +61,16 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
     protected $reason;
+
+    /**
+     * Presided by
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedBy;
 
     /**
      * Witnesses
@@ -140,28 +140,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->type;
     }
 
-    /**
-     * Set the presided by
-     *
-     * @param \Olcs\Db\Entity\RefData $presidedBy
-     * @return TmPiHearing
-     */
-    public function setPresidedBy($presidedBy)
-    {
-        $this->presidedBy = $presidedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the presided by
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPresidedBy()
-    {
-        return $this->presidedBy;
-    }
 
     /**
      * Set the reason
@@ -186,6 +164,31 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->reason;
     }
 
+
+    /**
+     * Set the presided by
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedBy
+     * @return TmPiHearing
+     */
+    public function setPresidedBy($presidedBy)
+    {
+        $this->presidedBy = $presidedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedBy()
+    {
+        return $this->presidedBy;
+    }
+
+
     /**
      * Set the witnesses
      *
@@ -208,6 +211,7 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->witnesses;
     }
+
 
     /**
      * Set the adjourned date
@@ -232,6 +236,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->adjournedDate;
     }
 
+
     /**
      * Set the cancelled date
      *
@@ -254,6 +259,7 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->cancelledDate;
     }
+
 
     /**
      * Set the scheduled on
@@ -278,6 +284,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         return $this->scheduledOn;
     }
 
+
     /**
      * Set the rescheduled on
      *
@@ -300,4 +307,5 @@ class TmPiHearing implements Interfaces\EntityInterface
     {
         return $this->rescheduledOn;
     }
+
 }

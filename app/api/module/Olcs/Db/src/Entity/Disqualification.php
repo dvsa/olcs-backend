@@ -29,8 +29,8 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
-        Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -86,6 +86,7 @@ class Disqualification implements Interfaces\EntityInterface
         return $this->isDisqualified;
     }
 
+
     /**
      * Set the notes
      *
@@ -109,6 +110,7 @@ class Disqualification implements Interfaces\EntityInterface
         return $this->notes;
     }
 
+
     /**
      * Set the period
      *
@@ -131,4 +133,5 @@ class Disqualification implements Interfaces\EntityInterface
     {
         return $this->period;
     }
+
 }

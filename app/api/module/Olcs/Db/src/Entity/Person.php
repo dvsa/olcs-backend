@@ -122,6 +122,7 @@ class Person implements Interfaces\EntityInterface
         return $this->forename;
     }
 
+
     /**
      * Set the family name
      *
@@ -144,6 +145,7 @@ class Person implements Interfaces\EntityInterface
     {
         return $this->familyName;
     }
+
 
     /**
      * Set the birth place
@@ -168,6 +170,7 @@ class Person implements Interfaces\EntityInterface
         return $this->birthPlace;
     }
 
+
     /**
      * Set the other name
      *
@@ -190,6 +193,7 @@ class Person implements Interfaces\EntityInterface
     {
         return $this->otherName;
     }
+
 
     /**
      * Set the title other
@@ -214,6 +218,7 @@ class Person implements Interfaces\EntityInterface
         return $this->titleOther;
     }
 
+
     /**
      * Set the contact detail
      *
@@ -235,5 +240,49 @@ class Person implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
+    }
+
+
+    /**
+     * Add a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Person
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Person
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->remove($contactDetails);
+        }
+
+        return $this;
     }
 }

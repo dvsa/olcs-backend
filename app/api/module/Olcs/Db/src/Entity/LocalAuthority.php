@@ -24,9 +24,9 @@ class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\Description255Field,
         Traits\EmailAddress45Field,
         Traits\CustomCreatedOnField,
@@ -74,6 +74,7 @@ class LocalAuthority implements Interfaces\EntityInterface
         return $this->txcName;
     }
 
+
     /**
      * Set the naptan code
      *
@@ -96,4 +97,5 @@ class LocalAuthority implements Interfaces\EntityInterface
     {
         return $this->naptanCode;
     }
+
 }

@@ -43,4 +43,5 @@ trait Id8Identity
     {
         return $this->id;
     }
+
 }
