@@ -113,7 +113,7 @@ class Decision implements Interfaces\EntityInterface
     public function removePis($pis)
     {
         if ($this->pis->contains($pis)) {
-            $this->pis->remove($pis);
+            $this->pis->removeElement($pis);
         }
 
         return $this;

@@ -144,7 +144,7 @@ class OperatingCentre implements Interfaces\EntityInterface
     public function removeAdDocuments($adDocuments)
     {
         if ($this->adDocuments->contains($adDocuments)) {
-            $this->adDocuments->remove($adDocuments);
+            $this->adDocuments->removeElement($adDocuments);
         }
 
         return $this;

@@ -144,7 +144,7 @@ class Submission implements Interfaces\EntityInterface
     public function removeSubmissionActions($submissionActions)
     {
         if ($this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->remove($submissionActions);
+            $this->submissionActions->removeElement($submissionActions);
         }
 
         return $this;

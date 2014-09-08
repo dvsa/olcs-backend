@@ -171,7 +171,7 @@ class History implements Interfaces\EntityInterface
     public function removeTemplates($templates)
     {
         if ($this->templates->contains($templates)) {
-            $this->templates->remove($templates);
+            $this->templates->removeElement($templates);
         }
 
         return $this;

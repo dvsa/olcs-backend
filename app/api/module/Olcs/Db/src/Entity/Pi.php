@@ -317,7 +317,7 @@ class Pi implements Interfaces\EntityInterface
     public function removePiTypes($piTypes)
     {
         if ($this->piTypes->contains($piTypes)) {
-            $this->piTypes->remove($piTypes);
+            $this->piTypes->removeElement($piTypes);
         }
 
         return $this;
@@ -384,7 +384,7 @@ class Pi implements Interfaces\EntityInterface
     public function removeDecisions($decisions)
     {
         if ($this->decisions->contains($decisions)) {
-            $this->decisions->remove($decisions);
+            $this->decisions->removeElement($decisions);
         }
 
         return $this;
@@ -451,7 +451,7 @@ class Pi implements Interfaces\EntityInterface
     public function removeReasons($reasons)
     {
         if ($this->reasons->contains($reasons)) {
-            $this->reasons->remove($reasons);
+            $this->reasons->removeElement($reasons);
         }
 
         return $this;
@@ -710,7 +710,7 @@ class Pi implements Interfaces\EntityInterface
     public function removePiHearings($piHearings)
     {
         if ($this->piHearings->contains($piHearings)) {
-            $this->piHearings->remove($piHearings);
+            $this->piHearings->removeElement($piHearings);
         }
 
         return $this;

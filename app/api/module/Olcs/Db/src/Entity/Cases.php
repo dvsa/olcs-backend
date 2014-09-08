@@ -343,7 +343,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeLegacyOffences($legacyOffences)
     {
         if ($this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->remove($legacyOffences);
+            $this->legacyOffences->removeElement($legacyOffences);
         }
 
         return $this;
@@ -410,7 +410,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeSubmissionSections($submissionSections)
     {
         if ($this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->remove($submissionSections);
+            $this->submissionSections->removeElement($submissionSections);
         }
 
         return $this;
@@ -717,7 +717,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeComplaintCases($complaintCases)
     {
         if ($this->complaintCases->contains($complaintCases)) {
-            $this->complaintCases->remove($complaintCases);
+            $this->complaintCases->removeElement($complaintCases);
         }
 
         return $this;
@@ -784,7 +784,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeConditionUndertakings($conditionUndertakings)
     {
         if ($this->conditionUndertakings->contains($conditionUndertakings)) {
-            $this->conditionUndertakings->remove($conditionUndertakings);
+            $this->conditionUndertakings->removeElement($conditionUndertakings);
         }
 
         return $this;
@@ -851,7 +851,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeConvictions($convictions)
     {
         if ($this->convictions->contains($convictions)) {
-            $this->convictions->remove($convictions);
+            $this->convictions->removeElement($convictions);
         }
 
         return $this;
@@ -918,7 +918,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

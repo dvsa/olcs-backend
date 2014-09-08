@@ -200,7 +200,7 @@ class LegacyOffence implements Interfaces\EntityInterface
     public function removeCases($cases)
     {
         if ($this->cases->contains($cases)) {
-            $this->cases->remove($cases);
+            $this->cases->removeElement($cases);
         }
 
         return $this;

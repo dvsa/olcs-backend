@@ -172,7 +172,7 @@ class TrafficArea implements Interfaces\EntityInterface
     public function removeRecipients($recipients)
     {
         if ($this->recipients->contains($recipients)) {
-            $this->recipients->remove($recipients);
+            $this->recipients->removeElement($recipients);
         }
 
         return $this;
@@ -287,7 +287,7 @@ class TrafficArea implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

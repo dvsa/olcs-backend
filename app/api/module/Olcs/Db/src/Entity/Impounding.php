@@ -231,7 +231,7 @@ class Impounding implements Interfaces\EntityInterface
     public function removeImpoundingLegislationTypes($impoundingLegislationTypes)
     {
         if ($this->impoundingLegislationTypes->contains($impoundingLegislationTypes)) {
-            $this->impoundingLegislationTypes->remove($impoundingLegislationTypes);
+            $this->impoundingLegislationTypes->removeElement($impoundingLegislationTypes);
         }
 
         return $this;

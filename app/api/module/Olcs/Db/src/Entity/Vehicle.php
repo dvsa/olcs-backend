@@ -380,7 +380,7 @@ class Vehicle implements Interfaces\EntityInterface
     public function removeLicenceVehicles($licenceVehicles)
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
+            $this->licenceVehicles->removeElement($licenceVehicles);
         }
 
         return $this;

@@ -157,7 +157,7 @@ class Recipient implements Interfaces\EntityInterface
     public function removeTrafficAreas($trafficAreas)
     {
         if ($this->trafficAreas->contains($trafficAreas)) {
-            $this->trafficAreas->remove($trafficAreas);
+            $this->trafficAreas->removeElement($trafficAreas);
         }
 
         return $this;
