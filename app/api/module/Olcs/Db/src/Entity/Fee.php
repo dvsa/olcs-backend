@@ -35,10 +35,10 @@ class Fee implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\IrfoGvPermitManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\LicenceManyToOneAlt1,
         Traits\TaskManyToOne,
+        Traits\LicenceManyToOneAlt1,
+        Traits\BusRegManyToOneAlt1,
+        Traits\IrfoGvPermitManyToOne,
         Traits\ApplicationManyToOneAlt1,
         Traits\ReceivedDateField,
         Traits\Description255FieldAlt1,
@@ -46,16 +46,6 @@ class Fee implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Waive reason2
-     *
-     * @var \Olcs\Db\Entity\WaiveReason
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveReason2;
 
     /**
      * Waive approver user
@@ -76,6 +66,16 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveRecommenderUser;
+
+    /**
+     * Waive reason2
+     *
+     * @var \Olcs\Db\Entity\WaiveReason
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
+     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
+     */
+    protected $waiveReason2;
 
     /**
      * Parent fee
@@ -197,30 +197,6 @@ class Fee implements Interfaces\EntityInterface
     protected $irfoFileNo;
 
     /**
-     * Set the waive reason2
-     *
-     * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
-     * @return Fee
-     */
-    public function setWaiveReason2($waiveReason2)
-    {
-        $this->waiveReason2 = $waiveReason2;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive reason2
-     *
-     * @return \Olcs\Db\Entity\WaiveReason
-     */
-    public function getWaiveReason2()
-    {
-        return $this->waiveReason2;
-    }
-
-
-    /**
      * Set the waive approver user
      *
      * @param \Olcs\Db\Entity\User $waiveApproverUser
@@ -265,6 +241,30 @@ class Fee implements Interfaces\EntityInterface
     public function getWaiveRecommenderUser()
     {
         return $this->waiveRecommenderUser;
+    }
+
+
+    /**
+     * Set the waive reason2
+     *
+     * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
+     * @return Fee
+     */
+    public function setWaiveReason2($waiveReason2)
+    {
+        $this->waiveReason2 = $waiveReason2;
+
+        return $this;
+    }
+
+    /**
+     * Get the waive reason2
+     *
+     * @return \Olcs\Db\Entity\WaiveReason
+     */
+    public function getWaiveReason2()
+    {
+        return $this->waiveReason2;
     }
 
 

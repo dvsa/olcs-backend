@@ -32,26 +32,16 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\TaskManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
-        Traits\OperatingCentreManyToOne,
-        Traits\TaskManyToOne,
         Traits\CaseManyToOne,
         Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Result type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
-     */
-    protected $resultType;
 
     /**
      * Requestor user
@@ -62,6 +52,16 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestorUser;
+
+    /**
+     * Result type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     */
+    protected $resultType;
 
     /**
      * Request type
@@ -192,30 +192,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
-     * Set the result type
-     *
-     * @param \Olcs\Db\Entity\RefData $resultType
-     * @return InspectionRequest
-     */
-    public function setResultType($resultType)
-    {
-        $this->resultType = $resultType;
-
-        return $this;
-    }
-
-    /**
-     * Get the result type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getResultType()
-    {
-        return $this->resultType;
-    }
-
-
-    /**
      * Set the requestor user
      *
      * @param \Olcs\Db\Entity\User $requestorUser
@@ -236,6 +212,30 @@ class InspectionRequest implements Interfaces\EntityInterface
     public function getRequestorUser()
     {
         return $this->requestorUser;
+    }
+
+
+    /**
+     * Set the result type
+     *
+     * @param \Olcs\Db\Entity\RefData $resultType
+     * @return InspectionRequest
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+
+        return $this;
+    }
+
+    /**
+     * Get the result type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
     }
 
 

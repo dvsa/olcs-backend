@@ -33,16 +33,6 @@ class Address implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Admin area
-     *
-     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
-     */
-    protected $adminArea;
-
-    /**
      * Country code
      *
      * @var \Olcs\Db\Entity\Country
@@ -51,6 +41,16 @@ class Address implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
+
+    /**
+     * Admin area
+     *
+     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
+     */
+    protected $adminArea;
 
     /**
      * Uprn
@@ -169,30 +169,6 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the admin area
-     *
-     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
-     * @return Address
-     */
-    public function setAdminArea($adminArea)
-    {
-        $this->adminArea = $adminArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the admin area
-     *
-     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
-     */
-    public function getAdminArea()
-    {
-        return $this->adminArea;
-    }
-
-
-    /**
      * Set the country code
      *
      * @param \Olcs\Db\Entity\Country $countryCode
@@ -213,6 +189,30 @@ class Address implements Interfaces\EntityInterface
     public function getCountryCode()
     {
         return $this->countryCode;
+    }
+
+
+    /**
+     * Set the admin area
+     *
+     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
+     * @return Address
+     */
+    public function setAdminArea($adminArea)
+    {
+        $this->adminArea = $adminArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the admin area
+     *
+     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
+     */
+    public function getAdminArea()
+    {
+        return $this->adminArea;
     }
 
 
