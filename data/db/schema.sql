@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `ref_data` (
   `ref_data_category_id` VARCHAR(32) NOT NULL,
   `olbs_key` VARCHAR(20) NULL,
   `parent_id` VARCHAR(32) NULL,
+  `display_order` INTEGER NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ref_data_ref_data1_idx` (`parent_id` ASC),
   CONSTRAINT `fk_ref_data_ref_data1`
