@@ -348,6 +348,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('disc_removal_explan', 'dre_lost', 'Lost', '1'),
     ('disc_removal_explan', 'dre_stolen', 'Stolen', '2'),
     ('disc_removal_explan', 'dre_destroyed', 'Destroyed', '3'),
+
     ('def_type', 'def_t_op', 'Operator', null),
     ('def_type', 'def_t_driver', 'Driver', null),
     ('def_type', 'def_t_tm', 'Transport Manager', null),
@@ -355,6 +356,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('def_type', 'def_t_part', 'Partner', null),
     ('def_type', 'def_t_owner', 'Owner', null),
     ('def_type', 'def_t_other', 'Other', null),
+
+    ('document_type', 'doc_pdf', 'PDF', null),
+    ('document_type', 'doc_doc', 'DOC', null),
+    ('document_type', 'doc_docx', 'DOCX', null),
+    ('document_type', 'doc_xls', 'XLS', null),
+    ('document_type', 'doc_ppt', 'PPT', null),
+    ('document_type', 'doc_jpg', 'JPG', null),
+    ('document_type', 'doc_txt', 'TXT', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -496,9 +505,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_oc_review', 'OC Review', null),
     ('pi_type', 'pi_t_imp', 'Impounding', null),
     ('pi_type', 'pi_t_other', 'Other', null),
+    ('pi_type', 'pi_t_bus', 'Bus Registration', null),
     ('pi_type', 'pi_t_sect_19_22', 'Section 19 or 22', null),
     ('pi_type', 'pi_t_tm_inc', 'Transport Manager included', null),
-    ('pi_type', 'pi_t_tm_only', 'Transport Manager only', null),
+    ('pi_type', 'pi_t_tm_only', 'Transport Manager only - Regulatory', null),
 
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
@@ -1605,7 +1615,9 @@ INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `desc
 INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_modified_by`, `description`, `is_scanned`,
     `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
-    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1);
+    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
+    (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
+    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1);
 
 SET foreign_key_checks = 1;
 
@@ -1616,8 +1628,8 @@ CREATE VIEW task_search_view AS
    SELECT t.id,
        t.assigned_to_team_id,
        t.assigned_to_user_id,
-       cat.description category_name, 
-       t.task_sub_category_id, 
+       cat.description category_name,
+       t.task_sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
@@ -1666,12 +1678,14 @@ DROP VIEW IF EXISTS document_search_view;
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital,
+		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
     FROM `document` d
 
     INNER JOIN (category cat, document_sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.document_sub_category_id)
+
+    LEFT JOIN ref_data r ON d.file_extension = r.id
 
     LEFT JOIN licence l ON d.licence_id = l.id
 
