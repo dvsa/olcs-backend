@@ -17,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
+ *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
  *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
  *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
@@ -47,14 +48,34 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Operating centre
+     * Traffic area
      *
-     * @var \Olcs\Db\Entity\OperatingCentre
+     * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
-    protected $operatingCentre;
+    protected $trafficArea;
+
+    /**
+     * File extension
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="file_extension", referencedColumnName="id", nullable=false)
+     */
+    protected $fileExtension;
+
+    /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManager;
 
     /**
      * Opposition
@@ -67,6 +88,26 @@ class Document implements Interfaces\EntityInterface
     protected $opposition;
 
     /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
      * Bus reg
      *
      * @var \Olcs\Db\Entity\BusReg
@@ -77,24 +118,14 @@ class Document implements Interfaces\EntityInterface
     protected $busReg;
 
     /**
-     * Traffic area
+     * Application
      *
-     * @var \Olcs\Db\Entity\TrafficArea
+     * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
-    protected $trafficArea;
-
-    /**
-     * Transport manager
-     *
-     * @var \Olcs\Db\Entity\TransportManager
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
-     */
-    protected $transportManager;
+    protected $application;
 
     /**
      * Document sub category
@@ -115,26 +146,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
-
-    /**
-     * Application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Email
@@ -173,15 +184,6 @@ class Document implements Interfaces\EntityInterface
     protected $filename;
 
     /**
-     * File extension
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="file_extension", length=20, nullable=false)
-     */
-    protected $fileExtension;
-
-    /**
      * Is digital
      *
      * @var boolean
@@ -208,26 +210,74 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the operating centre
+     * Set the traffic area
      *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @param \Olcs\Db\Entity\TrafficArea $trafficArea
      * @return Document
      */
-    public function setOperatingCentre($operatingCentre)
+    public function setTrafficArea($trafficArea)
     {
-        $this->operatingCentre = $operatingCentre;
+        $this->trafficArea = $trafficArea;
 
         return $this;
     }
 
     /**
-     * Get the operating centre
+     * Get the traffic area
      *
-     * @return \Olcs\Db\Entity\OperatingCentre
+     * @return \Olcs\Db\Entity\TrafficArea
      */
-    public function getOperatingCentre()
+    public function getTrafficArea()
     {
-        return $this->operatingCentre;
+        return $this->trafficArea;
+    }
+
+
+    /**
+     * Set the file extension
+     *
+     * @param \Olcs\Db\Entity\RefData $fileExtension
+     * @return Document
+     */
+    public function setFileExtension($fileExtension)
+    {
+        $this->fileExtension = $fileExtension;
+
+        return $this;
+    }
+
+    /**
+     * Get the file extension
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getFileExtension()
+    {
+        return $this->fileExtension;
+    }
+
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return Document
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
     }
 
 
@@ -256,6 +306,54 @@ class Document implements Interfaces\EntityInterface
 
 
     /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return Document
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
+    }
+
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+
+    /**
      * Set the bus reg
      *
      * @param \Olcs\Db\Entity\BusReg $busReg
@@ -280,50 +378,26 @@ class Document implements Interfaces\EntityInterface
 
 
     /**
-     * Set the traffic area
+     * Set the application
      *
-     * @param \Olcs\Db\Entity\TrafficArea $trafficArea
+     * @param \Olcs\Db\Entity\Application $application
      * @return Document
      */
-    public function setTrafficArea($trafficArea)
+    public function setApplication($application)
     {
-        $this->trafficArea = $trafficArea;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * Get the traffic area
+     * Get the application
      *
-     * @return \Olcs\Db\Entity\TrafficArea
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getTrafficArea()
+    public function getApplication()
     {
-        return $this->trafficArea;
-    }
-
-
-    /**
-     * Set the transport manager
-     *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
-     * @return Document
-     */
-    public function setTransportManager($transportManager)
-    {
-        $this->transportManager = $transportManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager
-     *
-     * @return \Olcs\Db\Entity\TransportManager
-     */
-    public function getTransportManager()
-    {
-        return $this->transportManager;
+        return $this->application;
     }
 
 
@@ -372,54 +446,6 @@ class Document implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Document
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-
-    /**
-     * Set the application
-     *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return Document
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
     }
 
 
@@ -559,30 +585,6 @@ class Document implements Interfaces\EntityInterface
     public function getFilename()
     {
         return $this->filename;
-    }
-
-
-    /**
-     * Set the file extension
-     *
-     * @param string $fileExtension
-     * @return Document
-     */
-    public function setFileExtension($fileExtension)
-    {
-        $this->fileExtension = $fileExtension;
-
-        return $this;
-    }
-
-    /**
-     * Get the file extension
-     *
-     * @return string
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
     }
 
 

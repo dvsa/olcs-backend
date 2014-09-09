@@ -27,9 +27,9 @@ class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
