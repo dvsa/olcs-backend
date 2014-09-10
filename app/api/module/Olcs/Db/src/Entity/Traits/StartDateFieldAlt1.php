@@ -42,5 +42,4 @@ trait StartDateFieldAlt1
     {
         return $this->startDate;
     }
-
 }

@@ -81,7 +81,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
         return $this->isInternal;
     }
 
-
     /**
      * Set the activate date
      *
@@ -105,7 +104,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
         return $this->activateDate;
     }
 
-
     /**
      * Set the importance
      *
@@ -128,5 +126,4 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     {
         return $this->importance;
     }
-
 }

@@ -42,5 +42,4 @@ trait LicNo18Field
     {
         return $this->licNo;
     }
-
 }

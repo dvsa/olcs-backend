@@ -43,5 +43,4 @@ trait FeeManyToOne
     {
         return $this->fee;
     }
-
 }

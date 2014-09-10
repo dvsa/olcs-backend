@@ -77,7 +77,6 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
         return $this->reason;
     }
 
-
     /**
      * Set the community lic withdrawal
      *
@@ -100,5 +99,4 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     {
         return $this->communityLicWithdrawal;
     }
-
 }

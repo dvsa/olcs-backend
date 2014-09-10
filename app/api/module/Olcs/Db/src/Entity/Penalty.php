@@ -62,5 +62,4 @@ class Penalty implements Interfaces\EntityInterface
     {
         return $this->notes;
     }
-
 }

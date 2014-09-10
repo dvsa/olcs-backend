@@ -33,16 +33,6 @@ class Address implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Admin area
-     *
-     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
-     */
-    protected $adminArea;
-
-    /**
      * Country code
      *
      * @var \Olcs\Db\Entity\Country
@@ -51,6 +41,16 @@ class Address implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
+
+    /**
+     * Admin area
+     *
+     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
+     */
+    protected $adminArea;
 
     /**
      * Uprn
@@ -169,30 +169,6 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the admin area
-     *
-     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
-     * @return Address
-     */
-    public function setAdminArea($adminArea)
-    {
-        $this->adminArea = $adminArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the admin area
-     *
-     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
-     */
-    public function getAdminArea()
-    {
-        return $this->adminArea;
-    }
-
-
-    /**
      * Set the country code
      *
      * @param \Olcs\Db\Entity\Country $countryCode
@@ -215,6 +191,28 @@ class Address implements Interfaces\EntityInterface
         return $this->countryCode;
     }
 
+    /**
+     * Set the admin area
+     *
+     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
+     * @return Address
+     */
+    public function setAdminArea($adminArea)
+    {
+        $this->adminArea = $adminArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the admin area
+     *
+     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
+     */
+    public function getAdminArea()
+    {
+        return $this->adminArea;
+    }
 
     /**
      * Set the uprn
@@ -239,7 +237,6 @@ class Address implements Interfaces\EntityInterface
         return $this->uprn;
     }
 
-
     /**
      * Set the paon start
      *
@@ -262,7 +259,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->paonStart;
     }
-
 
     /**
      * Set the paon end
@@ -287,7 +283,6 @@ class Address implements Interfaces\EntityInterface
         return $this->paonEnd;
     }
 
-
     /**
      * Set the address line2
      *
@@ -310,7 +305,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine2;
     }
-
 
     /**
      * Set the saon start
@@ -335,7 +329,6 @@ class Address implements Interfaces\EntityInterface
         return $this->saonStart;
     }
 
-
     /**
      * Set the saon end
      *
@@ -358,7 +351,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->saonEnd;
     }
-
 
     /**
      * Set the address line1
@@ -383,7 +375,6 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine1;
     }
 
-
     /**
      * Set the address line3
      *
@@ -406,7 +397,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->addressLine3;
     }
-
 
     /**
      * Set the address line4
@@ -431,7 +421,6 @@ class Address implements Interfaces\EntityInterface
         return $this->addressLine4;
     }
 
-
     /**
      * Set the town
      *
@@ -454,7 +443,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->town;
     }
-
 
     /**
      * Set the postcode
@@ -479,7 +467,6 @@ class Address implements Interfaces\EntityInterface
         return $this->postcode;
     }
 
-
     /**
      * Set the contact detail
      *
@@ -502,7 +489,6 @@ class Address implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Add a contact details
@@ -541,7 +527,7 @@ class Address implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;

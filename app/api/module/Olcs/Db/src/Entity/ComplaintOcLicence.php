@@ -66,5 +66,4 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
     {
         return $this->complaint;
     }
-
 }

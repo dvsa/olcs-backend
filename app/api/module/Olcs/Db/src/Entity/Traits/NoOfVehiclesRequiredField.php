@@ -42,5 +42,4 @@ trait NoOfVehiclesRequiredField
     {
         return $this->noOfVehiclesRequired;
     }
-
 }

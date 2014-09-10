@@ -133,7 +133,6 @@ class Email implements Interfaces\EntityInterface
         return $this->lastUpdatedBy;
     }
 
-
     /**
      * Set the document
      *
@@ -156,7 +155,6 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -195,7 +193,7 @@ class Email implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;
@@ -224,7 +222,6 @@ class Email implements Interfaces\EntityInterface
         return $this->deferredDate;
     }
 
-
     /**
      * Set the sent date
      *
@@ -247,7 +244,6 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->sentDate;
     }
-
 
     /**
      * Set the importance
@@ -272,7 +268,6 @@ class Email implements Interfaces\EntityInterface
         return $this->importance;
     }
 
-
     /**
      * Set the is sensitive
      *
@@ -296,7 +291,6 @@ class Email implements Interfaces\EntityInterface
         return $this->isSensitive;
     }
 
-
     /**
      * Set the subject
      *
@@ -319,5 +313,4 @@ class Email implements Interfaces\EntityInterface
     {
         return $this->subject;
     }
-
 }

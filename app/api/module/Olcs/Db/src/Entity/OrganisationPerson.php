@@ -35,16 +35,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationPersons")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
      * Person
      *
      * @var \Olcs\Db\Entity\Person
@@ -53,6 +43,16 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
     protected $person;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationPersons")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
 
     /**
      * Added date
@@ -71,30 +71,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="position", length=45, nullable=true)
      */
     protected $position;
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return OrganisationPerson
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
 
     /**
      * Set the person
@@ -119,6 +95,28 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->person;
     }
 
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return OrganisationPerson
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
 
     /**
      * Set the added date
@@ -143,7 +141,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
-
     /**
      * Set the position
      *
@@ -166,5 +163,4 @@ class OrganisationPerson implements Interfaces\EntityInterface
     {
         return $this->position;
     }
-
 }

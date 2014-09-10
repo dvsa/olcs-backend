@@ -24,9 +24,9 @@ use Olcs\Db\Entity\Traits;
 class TrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ContactDetailsManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -110,7 +110,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->id;
     }
 
-
     /**
      * Set the recipient
      *
@@ -133,7 +132,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->recipients;
     }
-
 
     /**
      * Add a recipients
@@ -172,7 +170,7 @@ class TrafficArea implements Interfaces\EntityInterface
     public function removeRecipients($recipients)
     {
         if ($this->recipients->contains($recipients)) {
-            $this->recipients->remove($recipients);
+            $this->recipients->removeElement($recipients);
         }
 
         return $this;
@@ -201,7 +199,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->txcName;
     }
 
-
     /**
      * Set the is scottish rules
      *
@@ -225,7 +222,6 @@ class TrafficArea implements Interfaces\EntityInterface
         return $this->isScottishRules;
     }
 
-
     /**
      * Set the document
      *
@@ -248,7 +244,6 @@ class TrafficArea implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -287,7 +282,7 @@ class TrafficArea implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

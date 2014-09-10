@@ -31,8 +31,8 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1,
         Traits\TransportManagerManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
@@ -40,16 +40,6 @@ class Cases implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
-     */
-    protected $caseType;
 
     /**
      * Erru case type
@@ -60,6 +50,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
      */
     protected $erruCaseType;
+
+    /**
+     * Case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
+     */
+    protected $caseType;
 
     /**
      * Legacy offence
@@ -235,30 +235,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case type
-     *
-     * @param \Olcs\Db\Entity\RefData $caseType
-     * @return Cases
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
-    }
-
-
-    /**
      * Set the erru case type
      *
      * @param \Olcs\Db\Entity\RefData $erruCaseType
@@ -281,6 +257,28 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruCaseType;
     }
 
+    /**
+     * Set the case type
+     *
+     * @param \Olcs\Db\Entity\RefData $caseType
+     * @return Cases
+     */
+    public function setCaseType($caseType)
+    {
+        $this->caseType = $caseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getCaseType()
+    {
+        return $this->caseType;
+    }
 
     /**
      * Set the legacy offence
@@ -304,7 +302,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->legacyOffences;
     }
-
 
     /**
      * Add a legacy offences
@@ -343,7 +340,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeLegacyOffences($legacyOffences)
     {
         if ($this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->remove($legacyOffences);
+            $this->legacyOffences->removeElement($legacyOffences);
         }
 
         return $this;
@@ -371,7 +368,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->submissionSections;
     }
-
 
     /**
      * Add a submission sections
@@ -410,7 +406,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeSubmissionSections($submissionSections)
     {
         if ($this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->remove($submissionSections);
+            $this->submissionSections->removeElement($submissionSections);
         }
 
         return $this;
@@ -439,7 +435,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->ecmsNo;
     }
 
-
     /**
      * Set the open date
      *
@@ -462,7 +457,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->openDate;
     }
-
 
     /**
      * Set the close date
@@ -487,7 +481,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->closeDate;
     }
 
-
     /**
      * Set the description
      *
@@ -510,7 +503,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->description;
     }
-
 
     /**
      * Set the is impounding
@@ -535,7 +527,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->isImpounding;
     }
 
-
     /**
      * Set the erru originating authority
      *
@@ -558,7 +549,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruOriginatingAuthority;
     }
-
 
     /**
      * Set the erru transport undertaking name
@@ -583,7 +573,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->erruTransportUndertakingName;
     }
 
-
     /**
      * Set the erru vrm
      *
@@ -606,7 +595,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->erruVrm;
     }
-
 
     /**
      * Set the annual test history
@@ -631,7 +619,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->annualTestHistory;
     }
 
-
     /**
      * Set the prohibition note
      *
@@ -655,7 +642,6 @@ class Cases implements Interfaces\EntityInterface
         return $this->prohibitionNote;
     }
 
-
     /**
      * Set the complaint case
      *
@@ -678,7 +664,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->complaintCases;
     }
-
 
     /**
      * Add a complaint cases
@@ -717,7 +702,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeComplaintCases($complaintCases)
     {
         if ($this->complaintCases->contains($complaintCases)) {
-            $this->complaintCases->remove($complaintCases);
+            $this->complaintCases->removeElement($complaintCases);
         }
 
         return $this;
@@ -745,7 +730,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->conditionUndertakings;
     }
-
 
     /**
      * Add a condition undertakings
@@ -784,7 +768,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeConditionUndertakings($conditionUndertakings)
     {
         if ($this->conditionUndertakings->contains($conditionUndertakings)) {
-            $this->conditionUndertakings->remove($conditionUndertakings);
+            $this->conditionUndertakings->removeElement($conditionUndertakings);
         }
 
         return $this;
@@ -812,7 +796,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->convictions;
     }
-
 
     /**
      * Add a convictions
@@ -851,7 +834,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeConvictions($convictions)
     {
         if ($this->convictions->contains($convictions)) {
-            $this->convictions->remove($convictions);
+            $this->convictions->removeElement($convictions);
         }
 
         return $this;
@@ -879,7 +862,6 @@ class Cases implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -918,7 +900,7 @@ class Cases implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

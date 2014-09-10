@@ -70,7 +70,6 @@ class DocParagraph implements Interfaces\EntityInterface
         return $this->paraTitle;
     }
 
-
     /**
      * Set the para text
      *
@@ -93,5 +92,4 @@ class DocParagraph implements Interfaces\EntityInterface
     {
         return $this->paraText;
     }
-
 }

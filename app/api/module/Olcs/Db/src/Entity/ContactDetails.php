@@ -31,8 +31,8 @@ class ContactDetails implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\EmailAddress60Field,
         Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
@@ -49,26 +49,6 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
      */
     protected $contactType;
-
-    /**
-     * Address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $address;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $organisation;
 
     /**
      * Person
@@ -89,6 +69,26 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
+
+    /**
+     * Address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
+     */
+    protected $address;
 
     /**
      * Fao
@@ -166,55 +166,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->contactType;
     }
 
-
-    /**
-     * Set the address
-     *
-     * @param \Olcs\Db\Entity\Address $address
-     * @return ContactDetails
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get the address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return ContactDetails
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-
     /**
      * Set the person
      *
@@ -237,7 +188,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->person;
     }
-
 
     /**
      * Set the licence
@@ -262,6 +212,51 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->licence;
     }
 
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return ContactDetails
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Set the address
+     *
+     * @param \Olcs\Db\Entity\Address $address
+     * @return ContactDetails
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get the address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
 
     /**
      * Set the fao
@@ -286,7 +281,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->fao;
     }
 
-
     /**
      * Set the forename
      *
@@ -309,7 +303,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->forename;
     }
-
 
     /**
      * Set the family name
@@ -334,7 +327,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->familyName;
     }
 
-
     /**
      * Set the written permission to engage
      *
@@ -358,7 +350,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->writtenPermissionToEngage;
     }
 
-
     /**
      * Set the phone contact
      *
@@ -381,7 +372,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->phoneContacts;
     }
-
 
     /**
      * Add a phone contacts
@@ -420,7 +410,7 @@ class ContactDetails implements Interfaces\EntityInterface
     public function removePhoneContacts($phoneContacts)
     {
         if ($this->phoneContacts->contains($phoneContacts)) {
-            $this->phoneContacts->remove($phoneContacts);
+            $this->phoneContacts->removeElement($phoneContacts);
         }
 
         return $this;

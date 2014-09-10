@@ -62,5 +62,4 @@ class AdminAreaTrafficArea implements Interfaces\EntityInterface
     {
         return $this->id;
     }
-
 }

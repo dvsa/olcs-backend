@@ -67,7 +67,6 @@ class PrintQueue implements Interfaces\EntityInterface
         return $this->teamPrinter;
     }
 
-
     /**
      * Set the added datetime
      *
@@ -90,5 +89,4 @@ class PrintQueue implements Interfaces\EntityInterface
     {
         return $this->addedDatetime;
     }
-
 }

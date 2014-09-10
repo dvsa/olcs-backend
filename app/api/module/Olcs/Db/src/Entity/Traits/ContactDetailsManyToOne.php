@@ -43,5 +43,4 @@ trait ContactDetailsManyToOne
     {
         return $this->contactDetails;
     }
-
 }
