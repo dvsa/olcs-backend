@@ -29,10 +29,10 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\LicenceManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
         Traits\ReceivedDateFieldAlt1,
