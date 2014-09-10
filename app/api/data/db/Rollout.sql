@@ -649,8 +649,6 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (44, 'submission_section', 'submission_section_maps', 'Maps', NULL),
     (45, 'submission_section', 'submission_section_surr', 'Surrender', NULL);
 
-INSERT INTO ref_data() values ('submission_section_case_details', NULL, 'Case Details', 'submission_section', NULL);
-
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
     (2, 'Address Change ', 'Address Change Digital', 9, 0),
@@ -1667,6 +1665,14 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
     (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
     (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1);
+
+INSERT INTO `submission` (`id`, `last_modified_by`, `created_by`, `case_id`, `text`, `closed_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+	(2, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:36', NULL, 1),
+	(5, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:47', NULL, 1),
+	(7, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:49', NULL, 1),
+	(8, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:52', NULL, 1),
+	(9, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:59', NULL, 1);
 
 SET foreign_key_checks = 1;
 
