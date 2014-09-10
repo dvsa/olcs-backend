@@ -5,6 +5,18 @@
         {
             "type": "git",
             "url": "https://github.com/MajorCaiger/doctrine2.git"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "olcs/companies-house",
+                "version": "dev-develop",
+                "source": {
+                    "url": "git@gitlab.clb.npm:olcs/companies-house.git",
+                    "type": "git",
+                    "reference": "origin/develop"
+                }
+            }
         }
     ],
     "minimum-stability": "dev",
@@ -13,7 +25,8 @@
         "zendframework/zendframework": "2.2.*",
         "doctrine/orm": "dev-master",
         "doctrine/doctrine-orm-module": "0.*",
-        "gedmo/doctrine-extensions": "~2.3.9"
+        "gedmo/doctrine-extensions": "~2.3.9",
+        "olcs/companies-house": "dev-develop"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1.5.3",
@@ -21,7 +34,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Olcs\\Db\\": "module/Olcs/Db/src"
+            "Olcs\\Db\\": "module/Olcs/Db/src",
+            "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
     }
 }

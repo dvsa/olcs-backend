@@ -23,7 +23,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 abstract class ServiceAbstract
 {
-
     use ZendServiceLocatorAwareTrait,
         OlcsEntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
