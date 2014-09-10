@@ -82,6 +82,15 @@ class RefData implements Interfaces\EntityInterface
     protected $olbsKey;
 
     /**
+     * Display order
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="display_order", nullable=true)
+     */
+    protected $displayOrder;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -317,6 +326,30 @@ class RefData implements Interfaces\EntityInterface
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+
+    /**
+     * Set the display order
+     *
+     * @param int $displayOrder
+     * @return RefData
+     */
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get the display order
+     *
+     * @return int
+     */
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
     }
 
 }
