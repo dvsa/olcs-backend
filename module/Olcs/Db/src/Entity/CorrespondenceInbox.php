@@ -92,7 +92,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
         return $this->archived;
     }
 
-
     /**
      * Set the accessed
      *
@@ -115,7 +114,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     {
         return $this->accessed;
     }
-
 
     /**
      * Set the email reminder sent
@@ -140,7 +138,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
         return $this->emailReminderSent;
     }
 
-
     /**
      * Set the printed
      *
@@ -163,5 +160,4 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     {
         return $this->printed;
     }
-
 }

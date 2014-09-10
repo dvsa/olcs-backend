@@ -42,5 +42,4 @@ trait EmailAddress60Field
     {
         return $this->emailAddress;
     }
-
 }

@@ -43,5 +43,4 @@ trait PresidedByRoleManyToOne
     {
         return $this->presidedByRole;
     }
-
 }

@@ -61,5 +61,4 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
     {
         return $this->removedDate;
     }
-
 }

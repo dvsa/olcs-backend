@@ -26,10 +26,10 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidedByRoleManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\PresidedByRoleManyToOne,
         Traits\HearingDateField,
         Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,
@@ -78,7 +78,6 @@ class PiHearing implements Interfaces\EntityInterface
         return $this->pi;
     }
 
-
     /**
      * Set the venue
      *
@@ -101,5 +100,4 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
-
 }

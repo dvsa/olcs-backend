@@ -43,5 +43,4 @@ trait PresidingTcManyToOne
     {
         return $this->presidingTc;
     }
-
 }

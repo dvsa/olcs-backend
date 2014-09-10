@@ -74,7 +74,6 @@ class OppositionGrounds implements Interfaces\EntityInterface
         return $this->grounds;
     }
 
-
     /**
      * Set the is representation
      *
@@ -97,5 +96,4 @@ class OppositionGrounds implements Interfaces\EntityInterface
     {
         return $this->isRepresentation;
     }
-
 }

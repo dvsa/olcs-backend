@@ -43,5 +43,4 @@ trait PresidingTcManyToOneAlt1
     {
         return $this->presidingTc;
     }
-
 }

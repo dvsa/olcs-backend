@@ -168,7 +168,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->contactType;
     }
 
-
     /**
      * Set the requestors address
      *
@@ -191,7 +190,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->requestorsAddress;
     }
-
 
     /**
      * Set the statement type
@@ -216,7 +214,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->statementType;
     }
 
-
     /**
      * Set the stopped date
      *
@@ -239,7 +236,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->stoppedDate;
     }
-
 
     /**
      * Set the requested date
@@ -264,7 +260,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestedDate;
     }
 
-
     /**
      * Set the authorisers title
      *
@@ -287,7 +282,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->authorisersTitle;
     }
-
 
     /**
      * Set the authorisers decision
@@ -312,7 +306,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->authorisersDecision;
     }
 
-
     /**
      * Set the licence no
      *
@@ -335,7 +328,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->licenceNo;
     }
-
 
     /**
      * Set the licence type
@@ -360,7 +352,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->licenceType;
     }
 
-
     /**
      * Set the requestors body
      *
@@ -383,7 +374,6 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->requestorsBody;
     }
-
 
     /**
      * Set the requestors family name
@@ -408,7 +398,6 @@ class Statement implements Interfaces\EntityInterface
         return $this->requestorsFamilyName;
     }
 
-
     /**
      * Set the requestors forename
      *
@@ -431,5 +420,4 @@ class Statement implements Interfaces\EntityInterface
     {
         return $this->requestorsForename;
     }
-
 }

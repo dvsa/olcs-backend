@@ -30,11 +30,11 @@ class Note implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOneAlt1,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\ApplicationManyToOneAlt1,
@@ -93,7 +93,6 @@ class Note implements Interfaces\EntityInterface
         return $this->noteType;
     }
 
-
     /**
      * Set the comment
      *
@@ -117,7 +116,6 @@ class Note implements Interfaces\EntityInterface
         return $this->comment;
     }
 
-
     /**
      * Set the priority
      *
@@ -140,5 +138,4 @@ class Note implements Interfaces\EntityInterface
     {
         return $this->priority;
     }
-
 }
