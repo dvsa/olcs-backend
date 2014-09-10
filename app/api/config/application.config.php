@@ -5,6 +5,7 @@ return array(
         'Olcs\Db',
         'DoctrineModule',
         'DoctrineORMModule',
+        'CompaniesHouse'
     ],
 
     // These are various options for the listeners attached to the ModuleManager
