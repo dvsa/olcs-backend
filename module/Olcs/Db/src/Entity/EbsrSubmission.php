@@ -29,26 +29,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1;
 
     /**
-     * Ebsr submission type
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $ebsrSubmissionType;
-
-    /**
-     * Ebsr submission status
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionStatus
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
-     */
-    protected $ebsrSubmissionStatus;
-
-    /**
      * Ebsr submission result
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionResult
@@ -67,6 +47,26 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;
+
+    /**
+     * Ebsr submission type
+     *
+     * @var \Olcs\Db\Entity\EbsrSubmissionType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType", fetch="LAZY")
+     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $ebsrSubmissionType;
+
+    /**
+     * Ebsr submission status
+     *
+     * @var \Olcs\Db\Entity\EbsrSubmissionStatus
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus", fetch="LAZY")
+     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
+     */
+    protected $ebsrSubmissionStatus;
 
     /**
      * Submitted date
@@ -231,54 +231,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $organisationId;
 
     /**
-     * Set the ebsr submission type
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionType($ebsrSubmissionType)
-    {
-        $this->ebsrSubmissionType = $ebsrSubmissionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission type
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionType
-     */
-    public function getEbsrSubmissionType()
-    {
-        return $this->ebsrSubmissionType;
-    }
-
-
-    /**
-     * Set the ebsr submission status
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionStatus $ebsrSubmissionStatus
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
-    {
-        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission status
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionStatus
-     */
-    public function getEbsrSubmissionStatus()
-    {
-        return $this->ebsrSubmissionStatus;
-    }
-
-
-    /**
      * Set the ebsr submission result
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
@@ -323,6 +275,54 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getDocument()
     {
         return $this->document;
+    }
+
+
+    /**
+     * Set the ebsr submission type
+     *
+     * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionType($ebsrSubmissionType)
+    {
+        $this->ebsrSubmissionType = $ebsrSubmissionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission type
+     *
+     * @return \Olcs\Db\Entity\EbsrSubmissionType
+     */
+    public function getEbsrSubmissionType()
+    {
+        return $this->ebsrSubmissionType;
+    }
+
+
+    /**
+     * Set the ebsr submission status
+     *
+     * @param \Olcs\Db\Entity\EbsrSubmissionStatus $ebsrSubmissionStatus
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
+    {
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission status
+     *
+     * @return \Olcs\Db\Entity\EbsrSubmissionStatus
+     */
+    public function getEbsrSubmissionStatus()
+    {
+        return $this->ebsrSubmissionStatus;
     }
 
 

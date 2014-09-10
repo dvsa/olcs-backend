@@ -3671,7 +3671,7 @@ CREATE TABLE IF NOT EXISTS `previous_licence` (
   `purchase_date` DATE NULL,
   `will_surrender` TINYINT(1) NULL,
   `disqualification_date` DATE NULL,
-  `disqualification_length` INT NULL,
+  `disqualification_length` VARCHAR(255) NULL,
   `previous_licence_type` VARCHAR(32) NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,

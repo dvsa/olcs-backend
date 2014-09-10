@@ -28,27 +28,17 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\WithdrawnReasonManyToOne,
         Traits\StatusManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\OrganisationManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
         Traits\InForceDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Journey frequency
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
-     */
-    protected $journeyFrequency;
 
     /**
      * Irfo psv auth type
@@ -59,6 +49,16 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuthType;
+
+    /**
+     * Journey frequency
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
+     */
+    protected $journeyFrequency;
 
     /**
      * Is fee exempt application
@@ -178,30 +178,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
-     * Set the journey frequency
-     *
-     * @param \Olcs\Db\Entity\RefData $journeyFrequency
-     * @return IrfoPsvAuth
-     */
-    public function setJourneyFrequency($journeyFrequency)
-    {
-        $this->journeyFrequency = $journeyFrequency;
-
-        return $this;
-    }
-
-    /**
-     * Get the journey frequency
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getJourneyFrequency()
-    {
-        return $this->journeyFrequency;
-    }
-
-
-    /**
      * Set the irfo psv auth type
      *
      * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
@@ -222,6 +198,30 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getIrfoPsvAuthType()
     {
         return $this->irfoPsvAuthType;
+    }
+
+
+    /**
+     * Set the journey frequency
+     *
+     * @param \Olcs\Db\Entity\RefData $journeyFrequency
+     * @return IrfoPsvAuth
+     */
+    public function setJourneyFrequency($journeyFrequency)
+    {
+        $this->journeyFrequency = $journeyFrequency;
+
+        return $this;
+    }
+
+    /**
+     * Get the journey frequency
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getJourneyFrequency()
+    {
+        return $this->journeyFrequency;
     }
 
 

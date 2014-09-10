@@ -40,16 +40,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Erru response user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $erruResponseUser;
-
-    /**
      * Si category type
      *
      * @var \Olcs\Db\Entity\SiCategoryType
@@ -58,6 +48,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategoryType;
+
+    /**
+     * Erru response user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $erruResponseUser;
 
     /**
      * Member state code
@@ -124,30 +124,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $reason;
 
     /**
-     * Set the erru response user
-     *
-     * @param \Olcs\Db\Entity\User $erruResponseUser
-     * @return SeriousInfringement
-     */
-    public function setErruResponseUser($erruResponseUser)
-    {
-        $this->erruResponseUser = $erruResponseUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru response user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getErruResponseUser()
-    {
-        return $this->erruResponseUser;
-    }
-
-
-    /**
      * Set the si category type
      *
      * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
@@ -168,6 +144,30 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getSiCategoryType()
     {
         return $this->siCategoryType;
+    }
+
+
+    /**
+     * Set the erru response user
+     *
+     * @param \Olcs\Db\Entity\User $erruResponseUser
+     * @return SeriousInfringement
+     */
+    public function setErruResponseUser($erruResponseUser)
+    {
+        $this->erruResponseUser = $erruResponseUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru response user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getErruResponseUser()
+    {
+        return $this->erruResponseUser;
     }
 
 
