@@ -150,7 +150,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->psvType;
     }
 
-
     /**
      * Set the is novelty
      *
@@ -173,7 +172,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->isNovelty;
     }
-
 
     /**
      * Set the plated weight
@@ -198,7 +196,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->platedWeight;
     }
 
-
     /**
      * Set the certificate no
      *
@@ -221,7 +218,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->certificateNo;
     }
-
 
     /**
      * Set the section26
@@ -246,7 +242,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26;
     }
 
-
     /**
      * Set the section26 curtail
      *
@@ -269,7 +264,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->section26Curtail;
     }
-
 
     /**
      * Set the section26 revoked
@@ -294,7 +288,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26Revoked;
     }
 
-
     /**
      * Set the section26 suspend
      *
@@ -318,7 +311,6 @@ class Vehicle implements Interfaces\EntityInterface
         return $this->section26Suspend;
     }
 
-
     /**
      * Set the licence vehicle
      *
@@ -341,7 +333,6 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->licenceVehicles;
     }
-
 
     /**
      * Add a licence vehicles
@@ -380,7 +371,7 @@ class Vehicle implements Interfaces\EntityInterface
     public function removeLicenceVehicles($licenceVehicles)
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
+            $this->licenceVehicles->removeElement($licenceVehicles);
         }
 
         return $this;

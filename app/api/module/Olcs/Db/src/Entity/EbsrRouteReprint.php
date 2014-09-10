@@ -94,7 +94,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->requestedUser;
     }
 
-
     /**
      * Set the exception name
      *
@@ -117,7 +116,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     {
         return $this->exceptionName;
     }
-
 
     /**
      * Set the scale
@@ -142,7 +140,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->scale;
     }
 
-
     /**
      * Set the published timestamp
      *
@@ -166,7 +163,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
         return $this->publishedTimestamp;
     }
 
-
     /**
      * Set the requested timestamp
      *
@@ -189,5 +185,4 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     {
         return $this->requestedTimestamp;
     }
-
 }

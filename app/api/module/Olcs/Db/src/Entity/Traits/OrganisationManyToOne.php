@@ -43,5 +43,4 @@ trait OrganisationManyToOne
     {
         return $this->organisation;
     }
-
 }

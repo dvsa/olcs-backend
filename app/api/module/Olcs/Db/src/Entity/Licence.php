@@ -34,12 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\TotAuthTrailersField,
@@ -54,6 +54,16 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Tachograph ins
@@ -74,16 +84,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
-
-    /**
-     * Enforcement area
-     *
-     * @var \Olcs\Db\Entity\EnforcementArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $enforcementArea;
 
     /**
      * Trailers in possession
@@ -269,6 +269,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
+    }
+
+    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -290,7 +313,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->tachographIns;
     }
-
 
     /**
      * Set the organisation
@@ -315,31 +337,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-
-    /**
-     * Set the enforcement area
-     *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return Licence
-     */
-    public function setEnforcementArea($enforcementArea)
-    {
-        $this->enforcementArea = $enforcementArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the enforcement area
-     *
-     * @return \Olcs\Db\Entity\EnforcementArea
-     */
-    public function getEnforcementArea()
-    {
-        return $this->enforcementArea;
-    }
-
-
     /**
      * Set the trailers in possession
      *
@@ -362,7 +359,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->trailersInPossession;
     }
-
 
     /**
      * Set the fabs reference
@@ -387,7 +383,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->fabsReference;
     }
 
-
     /**
      * Set the granted date
      *
@@ -410,7 +405,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->grantedDate;
     }
-
 
     /**
      * Set the review date
@@ -435,7 +429,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->reviewDate;
     }
 
-
     /**
      * Set the fee date
      *
@@ -458,7 +451,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->feeDate;
     }
-
 
     /**
      * Set the surrendered date
@@ -483,7 +475,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->surrenderedDate;
     }
 
-
     /**
      * Set the safety ins trailers
      *
@@ -506,7 +497,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyInsTrailers;
     }
-
 
     /**
      * Set the safety ins vehicles
@@ -531,7 +521,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVehicles;
     }
 
-
     /**
      * Set the safety ins
      *
@@ -554,7 +543,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->safetyIns;
     }
-
 
     /**
      * Set the safety ins varies
@@ -579,7 +567,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->safetyInsVaries;
     }
 
-
     /**
      * Set the ni flag
      *
@@ -602,7 +589,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->niFlag;
     }
-
 
     /**
      * Set the tachograph ins name
@@ -627,7 +613,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->tachographInsName;
     }
 
-
     /**
      * Set the psv discs to be printed no
      *
@@ -650,7 +635,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->psvDiscsToBePrintedNo;
     }
-
 
     /**
      * Set the translate to welsh
@@ -675,7 +659,6 @@ class Licence implements Interfaces\EntityInterface
         return $this->translateToWelsh;
     }
 
-
     /**
      * Set the application
      *
@@ -698,7 +681,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->applications;
     }
-
 
     /**
      * Add a applications
@@ -737,7 +719,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeApplications($applications)
     {
         if ($this->applications->contains($applications)) {
-            $this->applications->remove($applications);
+            $this->applications->removeElement($applications);
         }
 
         return $this;
@@ -765,7 +747,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Add a contact details
@@ -804,7 +785,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;
@@ -832,7 +813,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -871,7 +851,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;
@@ -899,7 +879,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->licenceVehicles;
     }
-
 
     /**
      * Add a licence vehicles
@@ -938,7 +917,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeLicenceVehicles($licenceVehicles)
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
-            $this->licenceVehicles->remove($licenceVehicles);
+            $this->licenceVehicles->removeElement($licenceVehicles);
         }
 
         return $this;
@@ -966,7 +945,6 @@ class Licence implements Interfaces\EntityInterface
     {
         return $this->workshops;
     }
-
 
     /**
      * Add a workshops
@@ -1005,7 +983,7 @@ class Licence implements Interfaces\EntityInterface
     public function removeWorkshops($workshops)
     {
         if ($this->workshops->contains($workshops)) {
-            $this->workshops->remove($workshops);
+            $this->workshops->removeElement($workshops);
         }
 
         return $this;

@@ -56,5 +56,4 @@ class EntityType implements Interfaces\EntityInterface
     {
         return $this->currentTemplate;
     }
-
 }

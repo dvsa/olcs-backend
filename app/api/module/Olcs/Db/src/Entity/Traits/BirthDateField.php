@@ -42,5 +42,4 @@ trait BirthDateField
     {
         return $this->birthDate;
     }
-
 }

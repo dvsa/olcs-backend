@@ -73,7 +73,6 @@ class ProhibitionDefect implements Interfaces\EntityInterface
         return $this->prohibition;
     }
 
-
     /**
      * Set the defect type
      *
@@ -96,5 +95,4 @@ class ProhibitionDefect implements Interfaces\EntityInterface
     {
         return $this->defectType;
     }
-
 }

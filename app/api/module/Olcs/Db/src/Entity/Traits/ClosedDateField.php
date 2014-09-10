@@ -42,5 +42,4 @@ trait ClosedDateField
     {
         return $this->closedDate;
     }
-
 }

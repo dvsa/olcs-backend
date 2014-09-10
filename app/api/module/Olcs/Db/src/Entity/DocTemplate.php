@@ -27,9 +27,9 @@ class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
@@ -97,7 +97,6 @@ class DocTemplate implements Interfaces\EntityInterface
         return $this->documentSubCategory;
     }
 
-
     /**
      * Set the doc process
      *
@@ -120,7 +119,6 @@ class DocTemplate implements Interfaces\EntityInterface
     {
         return $this->docProcess;
     }
-
 
     /**
      * Set the is ni
@@ -145,7 +143,6 @@ class DocTemplate implements Interfaces\EntityInterface
         return $this->isNi;
     }
 
-
     /**
      * Set the suppress from op
      *
@@ -168,5 +165,4 @@ class DocTemplate implements Interfaces\EntityInterface
     {
         return $this->suppressFromOp;
     }
-
 }

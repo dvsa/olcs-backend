@@ -42,5 +42,4 @@ trait Description4000Field
     {
         return $this->description;
     }
-
 }

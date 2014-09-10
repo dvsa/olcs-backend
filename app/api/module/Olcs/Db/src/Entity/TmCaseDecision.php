@@ -27,9 +27,9 @@ class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -114,7 +114,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->decision;
     }
 
-
     /**
      * Set the notified date
      *
@@ -137,7 +136,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     {
         return $this->notifiedDate;
     }
-
 
     /**
      * Set the is msi
@@ -162,7 +160,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->isMsi;
     }
 
-
     /**
      * Set the repute not lost reason
      *
@@ -185,7 +182,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     {
         return $this->reputeNotLostReason;
     }
-
 
     /**
      * Set the unfitness start date
@@ -210,7 +206,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
         return $this->unfitnessStartDate;
     }
 
-
     /**
      * Set the unfitness end date
      *
@@ -233,5 +228,4 @@ class TmCaseDecision implements Interfaces\EntityInterface
     {
         return $this->unfitnessEndDate;
     }
-
 }

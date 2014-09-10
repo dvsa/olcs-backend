@@ -69,7 +69,6 @@ class S4Condition implements Interfaces\EntityInterface
         return $this->targetCondition;
     }
 
-
     /**
      * Set the source condition
      *
@@ -92,5 +91,4 @@ class S4Condition implements Interfaces\EntityInterface
     {
         return $this->sourceCondition;
     }
-
 }
