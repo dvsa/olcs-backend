@@ -29,10 +29,10 @@ class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\RemovalReasonManyToOne,
         Traits\ApplicationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\ReceivedDateFieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
