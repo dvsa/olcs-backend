@@ -26,10 +26,10 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
+        Traits\PresidedByRoleManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PresidedByRoleManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,
