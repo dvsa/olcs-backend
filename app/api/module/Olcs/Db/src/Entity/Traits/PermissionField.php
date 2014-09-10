@@ -42,5 +42,4 @@ trait PermissionField
     {
         return $this->permission;
     }
-
 }

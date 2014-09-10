@@ -82,7 +82,6 @@ class Submission implements Interfaces\EntityInterface
         return $this->text;
     }
 
-
     /**
      * Set the submission action
      *
@@ -105,7 +104,6 @@ class Submission implements Interfaces\EntityInterface
     {
         return $this->submissionActions;
     }
-
 
     /**
      * Add a submission actions
@@ -144,7 +142,7 @@ class Submission implements Interfaces\EntityInterface
     public function removeSubmissionActions($submissionActions)
     {
         if ($this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->remove($submissionActions);
+            $this->submissionActions->removeElement($submissionActions);
         }
 
         return $this;

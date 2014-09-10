@@ -43,5 +43,4 @@ trait OutcomeManyToOne
     {
         return $this->outcome;
     }
-
 }

@@ -42,5 +42,4 @@ trait TotCommunityLicencesField
     {
         return $this->totCommunityLicences;
     }
-
 }

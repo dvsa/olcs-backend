@@ -32,26 +32,16 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\TaskManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
-        Traits\OperatingCentreManyToOne,
-        Traits\TaskManyToOne,
         Traits\CaseManyToOne,
         Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Result type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
-     */
-    protected $resultType;
 
     /**
      * Requestor user
@@ -62,6 +52,16 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestorUser;
+
+    /**
+     * Result type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     */
+    protected $resultType;
 
     /**
      * Request type
@@ -192,30 +192,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
-     * Set the result type
-     *
-     * @param \Olcs\Db\Entity\RefData $resultType
-     * @return InspectionRequest
-     */
-    public function setResultType($resultType)
-    {
-        $this->resultType = $resultType;
-
-        return $this;
-    }
-
-    /**
-     * Get the result type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getResultType()
-    {
-        return $this->resultType;
-    }
-
-
-    /**
      * Set the requestor user
      *
      * @param \Olcs\Db\Entity\User $requestorUser
@@ -238,6 +214,28 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestorUser;
     }
 
+    /**
+     * Set the result type
+     *
+     * @param \Olcs\Db\Entity\RefData $resultType
+     * @return InspectionRequest
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+
+        return $this;
+    }
+
+    /**
+     * Get the result type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
+    }
 
     /**
      * Set the request type
@@ -262,7 +260,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestType;
     }
 
-
     /**
      * Set the report type
      *
@@ -285,7 +282,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->reportType;
     }
-
 
     /**
      * Set the requestor notes
@@ -310,7 +306,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestorNotes;
     }
 
-
     /**
      * Set the inspector notes
      *
@@ -333,7 +328,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->inspectorNotes;
     }
-
 
     /**
      * Set the due date
@@ -358,7 +352,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->dueDate;
     }
 
-
     /**
      * Set the from date
      *
@@ -381,7 +374,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->fromDate;
     }
-
 
     /**
      * Set the to date
@@ -406,7 +398,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->toDate;
     }
 
-
     /**
      * Set the request date
      *
@@ -429,7 +420,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->requestDate;
     }
-
 
     /**
      * Set the return date
@@ -454,7 +444,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->returnDate;
     }
 
-
     /**
      * Set the deferred date
      *
@@ -477,7 +466,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->deferredDate;
     }
-
 
     /**
      * Set the inspector name
@@ -502,7 +490,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->inspectorName;
     }
 
-
     /**
      * Set the local services no
      *
@@ -525,7 +512,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->localServicesNo;
     }
-
 
     /**
      * Set the trailors examined no
@@ -550,7 +536,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->trailorsExaminedNo;
     }
 
-
     /**
      * Set the vehicles examined no
      *
@@ -573,5 +558,4 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->vehiclesExaminedNo;
     }
-
 }

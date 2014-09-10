@@ -61,5 +61,4 @@ class DocBookmark implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 }

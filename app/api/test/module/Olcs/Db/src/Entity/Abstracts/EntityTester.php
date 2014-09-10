@@ -7,6 +7,8 @@
  */
 namespace OlcsTest\Db\Entity\Abstracts;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Abstract entity tester
  *
@@ -51,6 +53,37 @@ abstract class EntityTester extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider providerAddMethods
+     */
+    public function testAddMethods($methodName)
+    {
+        if ($methodName == null) {
+            $this->markTestSkipped();
+        }
+
+        $classToTestName = $this->getClassToTestName();
+        $entity = new $classToTestName();
+
+        $this->assertEquals(0, count($entity->{'get' . $methodName}()));
+
+        $entity->{'add' . $methodName}('foo');
+        $entity->{'add' . $methodName}('bar');
+        $entity->{'add' . $methodName}('cake');
+
+        $this->assertEquals(3, count($entity->{'get' . $methodName}()));
+
+        $entity->{'remove' . $methodName}('bar');
+
+        $this->assertEquals(2, count($entity->{'get' . $methodName}()));
+
+        $collection = new ArrayCollection(array('bish', 'bash', 'bosh'));
+
+        $entity->{'add' . $methodName}($collection);
+
+        $this->assertEquals(5, count($entity->{'get' . $methodName}()));
+    }
+
+    /**
      * @return array
      * @TODO abstract special cases, provide api to ignore certain fields
      */
@@ -89,5 +122,29 @@ abstract class EntityTester extends \PHPUnit_Framework_TestCase
             }
         }
         return $this->testMethods;
+    }
+
+    /**
+     * @return array
+     */
+    public function providerAddMethods()
+    {
+        $classToTestName = $this->getClassToTestName();
+        $reflection = new \ReflectionClass($classToTestName);
+
+        $methods = $reflection->getMethods();
+
+        $testMethods = array(
+            array(null)
+        );
+
+        foreach ($methods as $method) {
+            if (substr($method->getName(), 0, 3) == 'add') {
+                $methodName = substr($method->getName(), 3);
+
+                $testMethods[] = array($methodName);
+            }
+        }
+        return $testMethods;
     }
 }

@@ -199,7 +199,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->leadTcArea;
     }
 
-
     /**
      * Set the sic code
      *
@@ -222,7 +221,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->sicCode;
     }
-
 
     /**
      * Set the type
@@ -247,7 +245,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->type;
     }
 
-
     /**
      * Set the company or llp no
      *
@@ -270,7 +267,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->companyOrLlpNo;
     }
-
 
     /**
      * Set the name
@@ -295,7 +291,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->name;
     }
 
-
     /**
      * Set the irfo name
      *
@@ -318,7 +313,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->irfoName;
     }
-
 
     /**
      * Set the is mlh
@@ -343,7 +337,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->isMlh;
     }
 
-
     /**
      * Set the company cert seen
      *
@@ -366,7 +359,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->companyCertSeen;
     }
-
 
     /**
      * Set the irfo nationality
@@ -391,7 +383,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->irfoNationality;
     }
 
-
     /**
      * Set the allow email
      *
@@ -415,7 +406,6 @@ class Organisation implements Interfaces\EntityInterface
         return $this->allowEmail;
     }
 
-
     /**
      * Set the contact detail
      *
@@ -438,7 +428,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Add a contact details
@@ -477,7 +466,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeContactDetails($contactDetails)
     {
         if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->remove($contactDetails);
+            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;
@@ -505,7 +494,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->licences;
     }
-
 
     /**
      * Add a licences
@@ -544,7 +532,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeLicences($licences)
     {
         if ($this->licences->contains($licences)) {
-            $this->licences->remove($licences);
+            $this->licences->removeElement($licences);
         }
 
         return $this;
@@ -572,7 +560,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->organisationPersons;
     }
-
 
     /**
      * Add a organisation persons
@@ -611,7 +598,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeOrganisationPersons($organisationPersons)
     {
         if ($this->organisationPersons->contains($organisationPersons)) {
-            $this->organisationPersons->remove($organisationPersons);
+            $this->organisationPersons->removeElement($organisationPersons);
         }
 
         return $this;
@@ -639,7 +626,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         return $this->tradingNames;
     }
-
 
     /**
      * Add a trading names
@@ -678,7 +664,7 @@ class Organisation implements Interfaces\EntityInterface
     public function removeTradingNames($tradingNames)
     {
         if ($this->tradingNames->contains($tradingNames)) {
-            $this->tradingNames->remove($tradingNames);
+            $this->tradingNames->removeElement($tradingNames);
         }
 
         return $this;

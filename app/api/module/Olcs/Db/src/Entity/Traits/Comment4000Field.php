@@ -42,5 +42,4 @@ trait Comment4000Field
     {
         return $this->comment;
     }
-
 }

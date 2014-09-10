@@ -42,5 +42,4 @@ trait IsReadOnlyField
     {
         return $this->isReadOnly;
     }
-
 }

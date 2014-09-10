@@ -43,5 +43,4 @@ trait TeamManyToOne
     {
         return $this->team;
     }
-
 }

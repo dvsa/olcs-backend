@@ -78,7 +78,6 @@ class TradingName implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-
     /**
      * Set the name
      *
@@ -101,5 +100,4 @@ class TradingName implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 }
