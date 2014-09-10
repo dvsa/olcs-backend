@@ -28,9 +28,9 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\OrganisationManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
@@ -48,16 +48,6 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
-     * Status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
-     */
-    protected $status;
-
-    /**
      * Driver
      *
      * @var \Olcs\Db\Entity\Driver
@@ -66,6 +56,16 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="driver_id", referencedColumnName="id", nullable=true)
      */
     protected $driver;
+
+    /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
 
     /**
      * Complainant contact details
@@ -119,29 +119,6 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return Complaint
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set the driver
      *
      * @param \Olcs\Db\Entity\Driver $driver
@@ -162,6 +139,29 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return Complaint
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

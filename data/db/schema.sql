@@ -1304,6 +1304,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bus_reg` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(32) NOT NULL,
+  `revert_status` VARCHAR(32) NOT NULL,
   `licence_id` INT NOT NULL,
   `bus_notice_period_id` INT NOT NULL COMMENT 'Scottish or other',
   `route_no` INT NOT NULL COMMENT 'Increases by one for each registration added to licence',
@@ -1339,8 +1341,6 @@ CREATE TABLE IF NOT EXISTS `bus_reg` (
   `stopping_arrangements` VARCHAR(800) NULL,
   `trc_condition_checked` TINYINT(1) NOT NULL DEFAULT 0,
   `trc_notes` VARCHAR(255) NULL,
-  `status` VARCHAR(20) NOT NULL,
-  `revert_status` VARCHAR(20) NULL COMMENT 'If status manually changed by caseworker this is the changed from status.  Used to revert back.',
   `organisation_email` VARCHAR(255) NULL,
   `is_txc_app` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Was created through transxchange',
   `txc_app_type` VARCHAR(20) NULL,
@@ -1362,42 +1362,54 @@ CREATE TABLE IF NOT EXISTS `bus_reg` (
   INDEX `fk_bus_reg_user1_idx` (`created_by` ASC),
   INDEX `fk_bus_reg_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_bus_reg_ref_data2_idx` (`withdrawn_reason` ASC),
+  INDEX `fk_bus_reg_ref_data3_idx` (`status` ASC),
+  INDEX `fk_bus_reg_ref_data4_idx` (`revert_status` ASC),
   CONSTRAINT `fk_bus_reg_licence1`
-    FOREIGN KEY (`licence_id`)
-    REFERENCES `licence` (`id`)
+  FOREIGN KEY (`licence_id`)
+  REFERENCES `licence` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_bus_notice_period1`
-    FOREIGN KEY (`bus_notice_period_id`)
-    REFERENCES `bus_notice_period` (`id`)
+  FOREIGN KEY (`bus_notice_period_id`)
+  REFERENCES `bus_notice_period` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data1`
-    FOREIGN KEY (`subsidised`)
-    REFERENCES `ref_data` (`id`)
+  FOREIGN KEY (`subsidised`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_operating_centre1`
-    FOREIGN KEY (`operating_centre_id`)
-    REFERENCES `operating_centre` (`id`)
+  FOREIGN KEY (`operating_centre_id`)
+  REFERENCES `operating_centre` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`created_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`last_modified_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data2`
-    FOREIGN KEY (`withdrawn_reason`)
-    REFERENCES `ref_data` (`id`)
+  FOREIGN KEY (`withdrawn_reason`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_ref_data3`
+  FOREIGN KEY (`status`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_ref_data4`
+  FOREIGN KEY (`revert_status`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
