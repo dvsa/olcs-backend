@@ -93,7 +93,6 @@ class S4 implements Interfaces\EntityInterface
         return $this->agreedDate;
     }
 
-
     /**
      * Set the outcome
      *
@@ -116,7 +115,6 @@ class S4 implements Interfaces\EntityInterface
     {
         return $this->outcome;
     }
-
 
     /**
      * Set the surrender licence
@@ -141,7 +139,6 @@ class S4 implements Interfaces\EntityInterface
         return $this->surrenderLicence;
     }
 
-
     /**
      * Set the is true s4
      *
@@ -164,5 +161,4 @@ class S4 implements Interfaces\EntityInterface
     {
         return $this->isTrueS4;
     }
-
 }

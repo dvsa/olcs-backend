@@ -25,10 +25,10 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OppositionManyToOne,
+        Traits\OperatingCentreManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\OppositionManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

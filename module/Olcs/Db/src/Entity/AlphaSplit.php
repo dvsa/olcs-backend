@@ -27,8 +27,8 @@ class AlphaSplit implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
         Traits\UserManyToOne,
+        Traits\TrafficAreaManyToOne,
         Traits\IsDeletedField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -75,7 +75,6 @@ class AlphaSplit implements Interfaces\EntityInterface
         return $this->fromInclusive;
     }
 
-
     /**
      * Set the to inclusive
      *
@@ -98,5 +97,4 @@ class AlphaSplit implements Interfaces\EntityInterface
     {
         return $this->toInclusive;
     }
-
 }

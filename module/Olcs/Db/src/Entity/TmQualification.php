@@ -97,7 +97,6 @@ class TmQualification implements Interfaces\EntityInterface
         return $this->qualificationType;
     }
 
-
     /**
      * Set the country code
      *
@@ -120,7 +119,6 @@ class TmQualification implements Interfaces\EntityInterface
     {
         return $this->countryCode;
     }
-
 
     /**
      * Set the issued date
@@ -145,7 +143,6 @@ class TmQualification implements Interfaces\EntityInterface
         return $this->issuedDate;
     }
 
-
     /**
      * Set the serial no
      *
@@ -168,5 +165,4 @@ class TmQualification implements Interfaces\EntityInterface
     {
         return $this->serialNo;
     }
-
 }

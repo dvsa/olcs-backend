@@ -28,9 +28,9 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
@@ -48,16 +48,6 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
-     * Driver
-     *
-     * @var \Olcs\Db\Entity\Driver
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Driver", fetch="LAZY", cascade={"persist"})
-     * @ORM\JoinColumn(name="driver_id", referencedColumnName="id", nullable=true)
-     */
-    protected $driver;
-
-    /**
      * Status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -66,6 +56,16 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
     protected $status;
+
+    /**
+     * Driver
+     *
+     * @var \Olcs\Db\Entity\Driver
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Driver", fetch="LAZY", cascade={"persist"})
+     * @ORM\JoinColumn(name="driver_id", referencedColumnName="id", nullable=true)
+     */
+    protected $driver;
 
     /**
      * Complainant contact details
@@ -118,6 +118,28 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintType;
     }
 
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return Complaint
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * Set the driver
@@ -142,31 +164,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->driver;
     }
 
-
-    /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return Complaint
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-
     /**
      * Set the complainant contact details
      *
@@ -189,7 +186,6 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->complainantContactDetails;
     }
-
 
     /**
      * Set the complaint date
@@ -214,7 +210,6 @@ class Complaint implements Interfaces\EntityInterface
         return $this->complaintDate;
     }
 
-
     /**
      * Set the value
      *
@@ -237,5 +232,4 @@ class Complaint implements Interfaces\EntityInterface
     {
         return $this->value;
     }
-
 }

@@ -43,5 +43,4 @@ trait BusRegManyToOneAlt1
     {
         return $this->busReg;
     }
-
 }

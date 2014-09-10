@@ -102,7 +102,6 @@ class Prohibition implements Interfaces\EntityInterface
         return $this->prohibitionType;
     }
 
-
     /**
      * Set the prohibition date
      *
@@ -125,7 +124,6 @@ class Prohibition implements Interfaces\EntityInterface
     {
         return $this->prohibitionDate;
     }
-
 
     /**
      * Set the cleared date
@@ -150,7 +148,6 @@ class Prohibition implements Interfaces\EntityInterface
         return $this->clearedDate;
     }
 
-
     /**
      * Set the is trailer
      *
@@ -174,7 +171,6 @@ class Prohibition implements Interfaces\EntityInterface
         return $this->isTrailer;
     }
 
-
     /**
      * Set the imposed at
      *
@@ -197,5 +193,4 @@ class Prohibition implements Interfaces\EntityInterface
     {
         return $this->imposedAt;
     }
-
 }

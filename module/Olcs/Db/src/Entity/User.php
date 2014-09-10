@@ -31,11 +31,11 @@ class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\LocalAuthorityManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\TeamManyToOne,
+        Traits\LocalAuthorityManyToOne,
         Traits\EmailAddress45Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -129,7 +129,6 @@ class User implements Interfaces\EntityInterface
         return $this->partnerContactDetails;
     }
 
-
     /**
      * Set the contact details
      *
@@ -152,7 +151,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Set the pid
@@ -177,7 +175,6 @@ class User implements Interfaces\EntityInterface
         return $this->pid;
     }
 
-
     /**
      * Set the name
      *
@@ -200,7 +197,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->name;
     }
-
 
     /**
      * Set the account disabled
@@ -225,7 +221,6 @@ class User implements Interfaces\EntityInterface
         return $this->accountDisabled;
     }
 
-
     /**
      * Set the organisation user
      *
@@ -248,7 +243,6 @@ class User implements Interfaces\EntityInterface
     {
         return $this->organisationUsers;
     }
-
 
     /**
      * Add a organisation users
@@ -287,7 +281,7 @@ class User implements Interfaces\EntityInterface
     public function removeOrganisationUsers($organisationUsers)
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
-            $this->organisationUsers->remove($organisationUsers);
+            $this->organisationUsers->removeElement($organisationUsers);
         }
 
         return $this;

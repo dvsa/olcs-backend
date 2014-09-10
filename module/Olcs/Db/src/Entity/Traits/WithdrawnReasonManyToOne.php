@@ -43,5 +43,4 @@ trait WithdrawnReasonManyToOne
     {
         return $this->withdrawnReason;
     }
-
 }
