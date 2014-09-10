@@ -34,12 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\TotAuthTrailersField,
@@ -54,16 +54,6 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Enforcement area
-     *
-     * @var \Olcs\Db\Entity\EnforcementArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $enforcementArea;
 
     /**
      * Tachograph ins
@@ -84,6 +74,16 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Trailers in possession
@@ -269,29 +269,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the enforcement area
-     *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return Licence
-     */
-    public function setEnforcementArea($enforcementArea)
-    {
-        $this->enforcementArea = $enforcementArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the enforcement area
-     *
-     * @return \Olcs\Db\Entity\EnforcementArea
-     */
-    public function getEnforcementArea()
-    {
-        return $this->enforcementArea;
-    }
-
-    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -335,6 +312,29 @@ class Licence implements Interfaces\EntityInterface
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
     }
 
     /**

@@ -34,6 +34,16 @@ class SubmissionAction implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Submission
+     *
+     * @var \Olcs\Db\Entity\Submission
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
+     */
+    protected $submission;
+
+    /**
      * Recipient user
      *
      * @var \Olcs\Db\Entity\User
@@ -52,16 +62,6 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
      */
     protected $senderUser;
-
-    /**
-     * Submission
-     *
-     * @var \Olcs\Db\Entity\Submission
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
-     */
-    protected $submission;
 
     /**
      * Is decision
@@ -98,6 +98,29 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="submission_action_type", length=45, nullable=false)
      */
     protected $submissionActionType;
+
+    /**
+     * Set the submission
+     *
+     * @param \Olcs\Db\Entity\Submission $submission
+     * @return SubmissionAction
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Olcs\Db\Entity\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
 
     /**
      * Set the recipient user
@@ -143,29 +166,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSenderUser()
     {
         return $this->senderUser;
-    }
-
-    /**
-     * Set the submission
-     *
-     * @param \Olcs\Db\Entity\Submission $submission
-     * @return SubmissionAction
-     */
-    public function setSubmission($submission)
-    {
-        $this->submission = $submission;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission
-     *
-     * @return \Olcs\Db\Entity\Submission
-     */
-    public function getSubmission()
-    {
-        return $this->submission;
     }
 
     /**
