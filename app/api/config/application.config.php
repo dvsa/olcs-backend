@@ -4,8 +4,7 @@ return array(
     'modules' => [
         'Olcs\Db',
         'DoctrineModule',
-        'DoctrineORMModule',
-        'CompaniesHouse'
+        'DoctrineORMModule'
     ],
 
     // These are various options for the listeners attached to the ModuleManager
