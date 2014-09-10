@@ -53,16 +53,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $type;
 
     /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
-
-    /**
      * Presided by
      *
      * @var \Olcs\Db\Entity\RefData
@@ -71,6 +61,16 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
      */
     protected $presidedBy;
+
+    /**
+     * Reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
+     */
+    protected $reason;
 
     /**
      * Witnesses
@@ -141,29 +141,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the reason
-     *
-     * @param \Olcs\Db\Entity\RefData $reason
-     * @return TmPiHearing
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
      * Set the presided by
      *
      * @param \Olcs\Db\Entity\RefData $presidedBy
@@ -184,6 +161,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getPresidedBy()
     {
         return $this->presidedBy;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\RefData $reason
+     * @return TmPiHearing
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     /**
