@@ -11,7 +11,7 @@ namespace Olcs\Db\Service;
 
 use Olcs\Db\Exceptions\RestResponseException;
 use Zend\Http\Response;
-use Olcs\Db\Service\CHXmlGateway\lib\CHXmlGateway;
+use CompaniesHouse\CHXmlGateway;
 
 /**
  * Companies House Request Service
@@ -88,7 +88,7 @@ class CompaniesHouse extends ServiceAbstract
     /**
      * Get a new instance of gateway
      *
-     * @return \Olcs\Db\Service\CHXmlGateway\lib\CHXmlGateway
+     * @return \CompaniesHouse\CHXmlGateway
      */
     public function getNewGateway()
     {
