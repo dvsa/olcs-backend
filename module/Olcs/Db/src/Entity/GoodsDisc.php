@@ -26,10 +26,10 @@ class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\RemovalExplanationManyToOne,
         Traits\RemovalReasonManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LicenceVehicleManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
