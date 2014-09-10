@@ -42,5 +42,4 @@ trait DiscNo50Field
     {
         return $this->discNo;
     }
-
 }

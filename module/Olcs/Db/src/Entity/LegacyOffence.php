@@ -162,7 +162,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->cases;
     }
 
-
     /**
      * Add a cases
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -200,7 +199,7 @@ class LegacyOffence implements Interfaces\EntityInterface
     public function removeCases($cases)
     {
         if ($this->cases->contains($cases)) {
-            $this->cases->remove($cases);
+            $this->cases->removeElement($cases);
         }
 
         return $this;
@@ -229,7 +228,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->definition;
     }
 
-
     /**
      * Set the is trailer
      *
@@ -252,7 +250,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->isTrailer;
     }
-
 
     /**
      * Set the num of offences
@@ -277,7 +274,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->numOfOffences;
     }
 
-
     /**
      * Set the offence authority
      *
@@ -300,7 +296,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceAuthority;
     }
-
 
     /**
      * Set the offence date
@@ -325,7 +320,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenceDate;
     }
 
-
     /**
      * Set the offence to date
      *
@@ -348,7 +342,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceToDate;
     }
-
 
     /**
      * Set the offender name
@@ -373,7 +366,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->offenderName;
     }
 
-
     /**
      * Set the points
      *
@@ -396,7 +388,6 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->points;
     }
-
 
     /**
      * Set the position
@@ -421,7 +412,6 @@ class LegacyOffence implements Interfaces\EntityInterface
         return $this->position;
     }
 
-
     /**
      * Set the offence type
      *
@@ -444,5 +434,4 @@ class LegacyOffence implements Interfaces\EntityInterface
     {
         return $this->offenceType;
     }
-
 }

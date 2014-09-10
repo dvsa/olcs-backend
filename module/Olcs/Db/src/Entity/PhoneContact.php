@@ -92,7 +92,6 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneContactType;
     }
 
-
     /**
      * Set the contact details
      *
@@ -115,7 +114,6 @@ class PhoneContact implements Interfaces\EntityInterface
     {
         return $this->contactDetails;
     }
-
 
     /**
      * Set the phone number
@@ -140,7 +138,6 @@ class PhoneContact implements Interfaces\EntityInterface
         return $this->phoneNumber;
     }
 
-
     /**
      * Set the details
      *
@@ -163,5 +160,4 @@ class PhoneContact implements Interfaces\EntityInterface
     {
         return $this->details;
     }
-
 }
