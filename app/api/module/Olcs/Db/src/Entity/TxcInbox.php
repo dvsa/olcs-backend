@@ -29,10 +29,10 @@ class TxcInbox implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LocalAuthorityManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\BusRegManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -49,16 +49,6 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $pdfDocument;
 
     /**
-     * Zip document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
-     */
-    protected $zipDocument;
-
-    /**
      * Route document
      *
      * @var \Olcs\Db\Entity\Document
@@ -67,6 +57,16 @@ class TxcInbox implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=false)
      */
     protected $routeDocument;
+
+    /**
+     * Zip document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
+     */
+    protected $zipDocument;
 
     /**
      * File read
@@ -111,30 +111,6 @@ class TxcInbox implements Interfaces\EntityInterface
 
 
     /**
-     * Set the zip document
-     *
-     * @param \Olcs\Db\Entity\Document $zipDocument
-     * @return TxcInbox
-     */
-    public function setZipDocument($zipDocument)
-    {
-        $this->zipDocument = $zipDocument;
-
-        return $this;
-    }
-
-    /**
-     * Get the zip document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getZipDocument()
-    {
-        return $this->zipDocument;
-    }
-
-
-    /**
      * Set the route document
      *
      * @param \Olcs\Db\Entity\Document $routeDocument
@@ -155,6 +131,30 @@ class TxcInbox implements Interfaces\EntityInterface
     public function getRouteDocument()
     {
         return $this->routeDocument;
+    }
+
+
+    /**
+     * Set the zip document
+     *
+     * @param \Olcs\Db\Entity\Document $zipDocument
+     * @return TxcInbox
+     */
+    public function setZipDocument($zipDocument)
+    {
+        $this->zipDocument = $zipDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the zip document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getZipDocument()
+    {
+        return $this->zipDocument;
     }
 
 

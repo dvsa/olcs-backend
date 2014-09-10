@@ -27,8 +27,8 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceVehicleManyToOne,
         Traits\FeeManyToOne,
+        Traits\LicenceVehicleManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

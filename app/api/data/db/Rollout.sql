@@ -647,7 +647,16 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (42, 'submission_section', 'submission_section_reps', 'Representations', NULL),
     (43, 'submission_section', 'submission_section_prev', 'Previous history', NULL),
     (44, 'submission_section', 'submission_section_maps', 'Maps', NULL),
-    (45, 'submission_section', 'submission_section_surr', 'Surrender', NULL);
+    (45, 'submission_section', 'submission_section_surr', 'Surrender', NULL),
+    (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
+    (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
+    (3, 'submission_type', 'submission_type_o_clo_psv', 'CLO (PSV)', NULL),
+    (4, 'submission_type', 'submission_type_o_clo_fep', 'FEP (Fees)', NULL),
+    (5, 'submission_type', 'submission_type_o_otc', 'OTC', NULL),
+    (6, 'submission_type', 'submission_type_o_env', 'ENV', NULL),
+    (7, 'submission_type', 'submission_type_o_irfo', 'IRFO', NULL),
+    (8, 'submission_type', 'submission_type_o_bus_reg', 'Bus Registration', NULL),
+    (9, 'submission_type', 'submission_type_o_tm', 'TM Only', NULL);
 
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
