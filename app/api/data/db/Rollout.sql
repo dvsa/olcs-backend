@@ -279,6 +279,18 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_subsidy','bs_yes', 'Yes', '2'),
     ('bus_subsidy','bs_in_part', 'In Part', '3'),
 
+    ('bus_reg_status', 'breg_s_admin', 'Admin Cancelled', 'AdminCancelled'),
+    ('bus_reg_status', 'breg_s_registered', 'Registered', 'Registered'),
+    ('bus_reg_status', 'breg_s_refused', 'Refused', 'Refused'),
+    ('bus_reg_status', 'breg_s_cancellation', 'Cancellation', 'Cancellation'),
+    ('bus_reg_status', 'breg_s_withdrawn', 'Withdrawn', 'WithDrawn'),
+    ('bus_reg_status', 'breg_s_var', 'Variation', 'Variation'),
+    ('bus_reg_status', 'breg_s_cns', 'CNS', 'CNS'),
+    ('bus_reg_status', 'breg_s_revoked', 'Revoked', 'Revoked'),
+    ('bus_reg_status', 'breg_s_cancelled', 'Cancelled', 'Cancelled'),
+    ('bus_reg_status', 'breg_s_new', 'New', 'New'),
+    ('bus_reg_status', 'breg_s_surr', 'Surrendered', 'Surrendered'),
+
     ('case_type', 'case_t_app', 'Application', null),
     ('case_type', 'case_t_lic', 'Licence', null),
     ('case_type', 'case_t_tm', 'Transport Manager', null),
