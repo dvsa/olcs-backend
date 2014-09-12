@@ -82,7 +82,6 @@ class OperatingCentre implements Interfaces\EntityInterface
         return $this->address;
     }
 
-
     /**
      * Set the ad document
      *
@@ -105,7 +104,6 @@ class OperatingCentre implements Interfaces\EntityInterface
     {
         return $this->adDocuments;
     }
-
 
     /**
      * Add a ad documents
@@ -144,7 +142,7 @@ class OperatingCentre implements Interfaces\EntityInterface
     public function removeAdDocuments($adDocuments)
     {
         if ($this->adDocuments->contains($adDocuments)) {
-            $this->adDocuments->remove($adDocuments);
+            $this->adDocuments->removeElement($adDocuments);
         }
 
         return $this;

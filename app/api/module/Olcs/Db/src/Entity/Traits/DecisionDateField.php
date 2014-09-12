@@ -42,5 +42,4 @@ trait DecisionDateField
     {
         return $this->decisionDate;
     }
-
 }

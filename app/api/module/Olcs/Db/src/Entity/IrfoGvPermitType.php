@@ -63,5 +63,4 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
     {
         return $this->irfoCountry;
     }
-
 }

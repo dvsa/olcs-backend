@@ -73,7 +73,6 @@ class DocumentSubCategory implements Interfaces\EntityInterface
         return $this->isScanned;
     }
 
-
     /**
      * Set the display free text
      *
@@ -96,5 +95,4 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     {
         return $this->displayFreeText;
     }
-
 }

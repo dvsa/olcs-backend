@@ -35,7 +35,7 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="issued_date")
+     * @ORM\Column(type="datetime", name="issued_date")
      */
     protected $issuedDate;
 

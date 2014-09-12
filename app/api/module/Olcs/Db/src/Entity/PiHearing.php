@@ -78,7 +78,6 @@ class PiHearing implements Interfaces\EntityInterface
         return $this->pi;
     }
 
-
     /**
      * Set the venue
      *
@@ -101,5 +100,4 @@ class PiHearing implements Interfaces\EntityInterface
     {
         return $this->venue;
     }
-
 }

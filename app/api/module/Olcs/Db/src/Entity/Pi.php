@@ -231,7 +231,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->assignedTo;
     }
 
-
     /**
      * Set the pi status
      *
@@ -255,7 +254,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->piStatus;
     }
 
-
     /**
      * Set the pi type
      *
@@ -278,7 +276,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->piTypes;
     }
-
 
     /**
      * Add a pi types
@@ -317,7 +314,7 @@ class Pi implements Interfaces\EntityInterface
     public function removePiTypes($piTypes)
     {
         if ($this->piTypes->contains($piTypes)) {
-            $this->piTypes->remove($piTypes);
+            $this->piTypes->removeElement($piTypes);
         }
 
         return $this;
@@ -345,7 +342,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->decisions;
     }
-
 
     /**
      * Add a decisions
@@ -384,7 +380,7 @@ class Pi implements Interfaces\EntityInterface
     public function removeDecisions($decisions)
     {
         if ($this->decisions->contains($decisions)) {
-            $this->decisions->remove($decisions);
+            $this->decisions->removeElement($decisions);
         }
 
         return $this;
@@ -412,7 +408,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->reasons;
     }
-
 
     /**
      * Add a reasons
@@ -451,7 +446,7 @@ class Pi implements Interfaces\EntityInterface
     public function removeReasons($reasons)
     {
         if ($this->reasons->contains($reasons)) {
-            $this->reasons->remove($reasons);
+            $this->reasons->removeElement($reasons);
         }
 
         return $this;
@@ -480,7 +475,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->witnesses;
     }
 
-
     /**
      * Set the is cancelled
      *
@@ -503,7 +497,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->isCancelled;
     }
-
 
     /**
      * Set the is adjourned
@@ -528,7 +521,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->isAdjourned;
     }
 
-
     /**
      * Set the section code text
      *
@@ -551,7 +543,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->sectionCodeText;
     }
-
 
     /**
      * Set the reschedule datetime
@@ -576,7 +567,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->rescheduleDatetime;
     }
 
-
     /**
      * Set the licence revoked at pi
      *
@@ -599,7 +589,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->licenceRevokedAtPi;
     }
-
 
     /**
      * Set the notification date
@@ -624,7 +613,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->notificationDate;
     }
 
-
     /**
      * Set the decision notes
      *
@@ -648,7 +636,6 @@ class Pi implements Interfaces\EntityInterface
         return $this->decisionNotes;
     }
 
-
     /**
      * Set the pi hearing
      *
@@ -671,7 +658,6 @@ class Pi implements Interfaces\EntityInterface
     {
         return $this->piHearings;
     }
-
 
     /**
      * Add a pi hearings
@@ -710,7 +696,7 @@ class Pi implements Interfaces\EntityInterface
     public function removePiHearings($piHearings)
     {
         if ($this->piHearings->contains($piHearings)) {
-            $this->piHearings->remove($piHearings);
+            $this->piHearings->removeElement($piHearings);
         }
 
         return $this;

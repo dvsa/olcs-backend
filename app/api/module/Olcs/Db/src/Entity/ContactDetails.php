@@ -166,7 +166,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->contactType;
     }
 
-
     /**
      * Set the address
      *
@@ -189,7 +188,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->address;
     }
-
 
     /**
      * Set the organisation
@@ -214,7 +212,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-
     /**
      * Set the person
      *
@@ -237,7 +234,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->person;
     }
-
 
     /**
      * Set the licence
@@ -262,7 +258,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->licence;
     }
 
-
     /**
      * Set the fao
      *
@@ -285,7 +280,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->fao;
     }
-
 
     /**
      * Set the forename
@@ -310,7 +304,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->forename;
     }
 
-
     /**
      * Set the family name
      *
@@ -333,7 +326,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->familyName;
     }
-
 
     /**
      * Set the written permission to engage
@@ -358,7 +350,6 @@ class ContactDetails implements Interfaces\EntityInterface
         return $this->writtenPermissionToEngage;
     }
 
-
     /**
      * Set the phone contact
      *
@@ -381,7 +372,6 @@ class ContactDetails implements Interfaces\EntityInterface
     {
         return $this->phoneContacts;
     }
-
 
     /**
      * Add a phone contacts
@@ -420,7 +410,7 @@ class ContactDetails implements Interfaces\EntityInterface
     public function removePhoneContacts($phoneContacts)
     {
         if ($this->phoneContacts->contains($phoneContacts)) {
-            $this->phoneContacts->remove($phoneContacts);
+            $this->phoneContacts->removeElement($phoneContacts);
         }
 
         return $this;

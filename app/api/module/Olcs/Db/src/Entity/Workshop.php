@@ -93,7 +93,6 @@ class Workshop implements Interfaces\EntityInterface
         return $this->licence;
     }
 
-
     /**
      * Set the is external
      *
@@ -116,7 +115,6 @@ class Workshop implements Interfaces\EntityInterface
     {
         return $this->isExternal;
     }
-
 
     /**
      * Set the maintenance
@@ -141,7 +139,6 @@ class Workshop implements Interfaces\EntityInterface
         return $this->maintenance;
     }
 
-
     /**
      * Set the safety inspection
      *
@@ -164,5 +161,4 @@ class Workshop implements Interfaces\EntityInterface
     {
         return $this->safetyInspection;
     }
-
 }

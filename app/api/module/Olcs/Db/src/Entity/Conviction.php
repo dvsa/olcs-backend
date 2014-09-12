@@ -176,7 +176,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->case;
     }
 
-
     /**
      * Set the defendant type
      *
@@ -199,7 +198,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->defendantType;
     }
-
 
     /**
      * Set the conviction category
@@ -224,7 +222,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->convictionCategory;
     }
 
-
     /**
      * Set the offence date
      *
@@ -247,7 +244,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->offenceDate;
     }
-
 
     /**
      * Set the conviction date
@@ -272,7 +268,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->convictionDate;
     }
 
-
     /**
      * Set the court
      *
@@ -295,7 +290,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->court;
     }
-
 
     /**
      * Set the costs
@@ -320,7 +314,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->costs;
     }
 
-
     /**
      * Set the msi
      *
@@ -343,7 +336,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->msi;
     }
-
 
     /**
      * Set the is dealt with
@@ -368,7 +360,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->isDealtWith;
     }
 
-
     /**
      * Set the operator name
      *
@@ -391,7 +382,6 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->operatorName;
     }
-
 
     /**
      * Set the taken into consideration
@@ -416,7 +406,6 @@ class Conviction implements Interfaces\EntityInterface
         return $this->takenIntoConsideration;
     }
 
-
     /**
      * Set the convicted name
      *
@@ -439,5 +428,4 @@ class Conviction implements Interfaces\EntityInterface
     {
         return $this->convictedName;
     }
-
 }

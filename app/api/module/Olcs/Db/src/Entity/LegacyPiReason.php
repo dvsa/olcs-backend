@@ -74,7 +74,6 @@ class LegacyPiReason implements Interfaces\EntityInterface
         return $this->isNi;
     }
 
-
     /**
      * Set the is decision
      *
@@ -97,5 +96,4 @@ class LegacyPiReason implements Interfaces\EntityInterface
     {
         return $this->isDecision;
     }
-
 }
