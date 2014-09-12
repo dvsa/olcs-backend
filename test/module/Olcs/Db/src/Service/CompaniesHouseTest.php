@@ -36,7 +36,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
 
         $gateway = $service->getNewGateway();
 
-        $this->assertInstanceOf('Olcs\Db\Service\CHXmlGateway\lib\CHXmlGateway', $gateway);
+        $this->assertInstanceOf('CompaniesHouse\CHXmlGateway', $gateway);
     }
 
     /**

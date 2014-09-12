@@ -109,7 +109,6 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->expiredDate;
     }
 
-
     /**
      * Set the licence expired date
      *
@@ -132,7 +131,6 @@ class CommunityLic implements Interfaces\EntityInterface
     {
         return $this->licenceExpiredDate;
     }
-
 
     /**
      * Set the issue no
@@ -157,7 +155,6 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->issueNo;
     }
 
-
     /**
      * Set the serial no
      *
@@ -180,7 +177,6 @@ class CommunityLic implements Interfaces\EntityInterface
     {
         return $this->serialNo;
     }
-
 
     /**
      * Set the serial no prefix
@@ -205,7 +201,6 @@ class CommunityLic implements Interfaces\EntityInterface
         return $this->serialNoPrefix;
     }
 
-
     /**
      * Set the status
      *
@@ -228,5 +223,4 @@ class CommunityLic implements Interfaces\EntityInterface
     {
         return $this->status;
     }
-
 }

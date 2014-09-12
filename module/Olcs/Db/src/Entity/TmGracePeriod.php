@@ -110,7 +110,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->assignedToUser;
     }
 
-
     /**
      * Set the is active
      *
@@ -133,7 +132,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->isActive;
     }
-
 
     /**
      * Set the start date
@@ -158,7 +156,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->startDate;
     }
 
-
     /**
      * Set the end date
      *
@@ -181,7 +178,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->endDate;
     }
-
 
     /**
      * Set the action date
@@ -206,7 +202,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
         return $this->actionDate;
     }
 
-
     /**
      * Set the grace period no
      *
@@ -229,5 +224,4 @@ class TmGracePeriod implements Interfaces\EntityInterface
     {
         return $this->gracePeriodNo;
     }
-
 }

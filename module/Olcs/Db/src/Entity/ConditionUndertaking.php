@@ -172,7 +172,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->licConditionVariation;
     }
 
-
     /**
      * Set the approval user
      *
@@ -195,7 +194,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->approvalUser;
     }
-
 
     /**
      * Set the attached to
@@ -220,7 +218,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->attachedTo;
     }
 
-
     /**
      * Set the condition type
      *
@@ -243,7 +240,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->conditionType;
     }
-
 
     /**
      * Set the case
@@ -268,7 +264,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->case;
     }
 
-
     /**
      * Set the added via
      *
@@ -291,7 +286,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->addedVia;
     }
-
 
     /**
      * Set the condition date
@@ -316,7 +310,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->conditionDate;
     }
 
-
     /**
      * Set the is draft
      *
@@ -339,7 +332,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->isDraft;
     }
-
 
     /**
      * Set the is fulfilled
@@ -364,7 +356,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->isFulfilled;
     }
 
-
     /**
      * Set the notes
      *
@@ -388,7 +379,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         return $this->notes;
     }
 
-
     /**
      * Set the is approved
      *
@@ -411,5 +401,4 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         return $this->isApproved;
     }
-
 }

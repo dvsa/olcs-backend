@@ -114,7 +114,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         return $this->sufficientParking;
     }
 
-
     /**
      * Set the added date
      *
@@ -137,7 +136,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     {
         return $this->addedDate;
     }
-
 
     /**
      * Set the deleted date
@@ -162,7 +160,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         return $this->deletedDate;
     }
 
-
     /**
      * Set the is interim
      *
@@ -186,7 +183,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         return $this->isInterim;
     }
 
-
     /**
      * Set the publication appropriate
      *
@@ -209,5 +205,4 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     {
         return $this->publicationAppropriate;
     }
-
 }

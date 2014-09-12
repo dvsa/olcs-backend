@@ -21,7 +21,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
  *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
  *    }
  * )
  */
@@ -29,9 +31,10 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
+        Traits\StatusManyToOne,
         Traits\LicenceManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
@@ -41,6 +44,16 @@ class BusReg implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Revert status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
+     */
+    protected $revertStatus;
 
     /**
      * Bus notice period
@@ -332,24 +345,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $trcNotes;
 
     /**
-     * Status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="status", length=20, nullable=false)
-     */
-    protected $status;
-
-    /**
-     * Revert status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="revert_status", length=20, nullable=true)
-     */
-    protected $revertStatus;
-
-    /**
      * Organisation email
      *
      * @var string
@@ -432,6 +427,29 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the revert status
+     *
+     * @param \Olcs\Db\Entity\RefData $revertStatus
+     * @return BusReg
+     */
+    public function setRevertStatus($revertStatus)
+    {
+        $this->revertStatus = $revertStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the revert status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRevertStatus()
+    {
+        return $this->revertStatus;
+    }
+
+    /**
      * Set the bus notice period
      *
      * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
@@ -453,7 +471,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->busNoticePeriod;
     }
-
 
     /**
      * Set the subsidised
@@ -478,7 +495,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidised;
     }
 
-
     /**
      * Set the variation reason
      *
@@ -501,7 +517,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->variationReasons;
     }
-
 
     /**
      * Add a variation reasons
@@ -540,7 +555,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeVariationReasons($variationReasons)
     {
         if ($this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->remove($variationReasons);
+            $this->variationReasons->removeElement($variationReasons);
         }
 
         return $this;
@@ -568,7 +583,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->busServiceTypes;
     }
-
 
     /**
      * Add a bus service types
@@ -607,7 +621,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeBusServiceTypes($busServiceTypes)
     {
         if ($this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->remove($busServiceTypes);
+            $this->busServiceTypes->removeElement($busServiceTypes);
         }
 
         return $this;
@@ -636,7 +650,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeNo;
     }
 
-
     /**
      * Set the reg no
      *
@@ -659,7 +672,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->regNo;
     }
-
 
     /**
      * Set the start point
@@ -684,7 +696,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->startPoint;
     }
 
-
     /**
      * Set the finish point
      *
@@ -707,7 +718,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->finishPoint;
     }
-
 
     /**
      * Set the via
@@ -732,7 +742,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->via;
     }
 
-
     /**
      * Set the other details
      *
@@ -755,7 +764,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->otherDetails;
     }
-
 
     /**
      * Set the is short notice
@@ -780,7 +788,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->isShortNotice;
     }
 
-
     /**
      * Set the use all stops
      *
@@ -803,7 +810,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->useAllStops;
     }
-
 
     /**
      * Set the has manoeuvre
@@ -828,7 +834,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->hasManoeuvre;
     }
 
-
     /**
      * Set the manoeuvre detail
      *
@@ -851,7 +856,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->manoeuvreDetail;
     }
-
 
     /**
      * Set the need new stop
@@ -876,7 +880,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->needNewStop;
     }
 
-
     /**
      * Set the new stop detail
      *
@@ -899,7 +902,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->newStopDetail;
     }
-
 
     /**
      * Set the has not fixed stop
@@ -924,7 +926,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->hasNotFixedStop;
     }
 
-
     /**
      * Set the not fixed stop detail
      *
@@ -947,7 +948,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->notFixedStopDetail;
     }
-
 
     /**
      * Set the subsidy detail
@@ -972,7 +972,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->subsidyDetail;
     }
 
-
     /**
      * Set the timetable acceptable
      *
@@ -995,7 +994,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->timetableAcceptable;
     }
-
 
     /**
      * Set the map supplied
@@ -1020,7 +1018,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->mapSupplied;
     }
 
-
     /**
      * Set the route description
      *
@@ -1043,7 +1040,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->routeDescription;
     }
-
 
     /**
      * Set the copied to la pte
@@ -1068,7 +1064,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->copiedToLaPte;
     }
 
-
     /**
      * Set the la short note
      *
@@ -1091,7 +1086,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->laShortNote;
     }
-
 
     /**
      * Set the application signed
@@ -1116,7 +1110,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->applicationSigned;
     }
 
-
     /**
      * Set the completed date
      *
@@ -1139,7 +1132,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->completedDate;
     }
-
 
     /**
      * Set the route seq
@@ -1164,7 +1156,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->routeSeq;
     }
 
-
     /**
      * Set the op notified la pte
      *
@@ -1187,7 +1178,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->opNotifiedLaPte;
     }
-
 
     /**
      * Set the stopping arrangements
@@ -1212,7 +1202,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->stoppingArrangements;
     }
 
-
     /**
      * Set the trc condition checked
      *
@@ -1235,7 +1224,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->trcConditionChecked;
     }
-
 
     /**
      * Set the trc notes
@@ -1260,55 +1248,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->trcNotes;
     }
 
-
-    /**
-     * Set the status
-     *
-     * @param string $status
-     * @return BusReg
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-
-    /**
-     * Set the revert status
-     *
-     * @param string $revertStatus
-     * @return BusReg
-     */
-    public function setRevertStatus($revertStatus)
-    {
-        $this->revertStatus = $revertStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the revert status
-     *
-     * @return string
-     */
-    public function getRevertStatus()
-    {
-        return $this->revertStatus;
-    }
-
-
     /**
      * Set the organisation email
      *
@@ -1331,7 +1270,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->organisationEmail;
     }
-
 
     /**
      * Set the is txc app
@@ -1356,7 +1294,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->isTxcApp;
     }
 
-
     /**
      * Set the txc app type
      *
@@ -1379,7 +1316,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->txcAppType;
     }
-
 
     /**
      * Set the reason cancelled
@@ -1404,7 +1340,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonCancelled;
     }
 
-
     /**
      * Set the reason refused
      *
@@ -1427,7 +1362,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->reasonRefused;
     }
-
 
     /**
      * Set the reason sn refused
@@ -1452,7 +1386,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->reasonSnRefused;
     }
 
-
     /**
      * Set the short notice refused
      *
@@ -1476,7 +1409,6 @@ class BusReg implements Interfaces\EntityInterface
         return $this->shortNoticeRefused;
     }
 
-
     /**
      * Set the document
      *
@@ -1499,7 +1431,6 @@ class BusReg implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -1538,7 +1469,7 @@ class BusReg implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

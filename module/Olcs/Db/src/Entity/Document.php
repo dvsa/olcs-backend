@@ -232,7 +232,6 @@ class Document implements Interfaces\EntityInterface
         return $this->operatingCentre;
     }
 
-
     /**
      * Set the opposition
      *
@@ -255,7 +254,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->opposition;
     }
-
 
     /**
      * Set the bus reg
@@ -280,7 +278,6 @@ class Document implements Interfaces\EntityInterface
         return $this->busReg;
     }
 
-
     /**
      * Set the transport manager
      *
@@ -303,7 +300,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->transportManager;
     }
-
 
     /**
      * Set the case
@@ -328,7 +324,6 @@ class Document implements Interfaces\EntityInterface
         return $this->case;
     }
 
-
     /**
      * Set the traffic area
      *
@@ -351,7 +346,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->trafficArea;
     }
-
 
     /**
      * Set the file extension
@@ -376,7 +370,6 @@ class Document implements Interfaces\EntityInterface
         return $this->fileExtension;
     }
 
-
     /**
      * Set the document sub category
      *
@@ -399,7 +392,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->documentSubCategory;
     }
-
 
     /**
      * Set the licence
@@ -424,6 +416,28 @@ class Document implements Interfaces\EntityInterface
         return $this->licence;
     }
 
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return Document
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
     /**
      * Set the application
@@ -472,7 +486,6 @@ class Document implements Interfaces\EntityInterface
         return $this->emails;
     }
 
-
     /**
      * Add a emails
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
@@ -510,7 +523,7 @@ class Document implements Interfaces\EntityInterface
     public function removeEmails($emails)
     {
         if ($this->emails->contains($emails)) {
-            $this->emails->remove($emails);
+            $this->emails->removeElement($emails);
         }
 
         return $this;
@@ -539,7 +552,6 @@ class Document implements Interfaces\EntityInterface
         return $this->identifier;
     }
 
-
     /**
      * Set the is read only
      *
@@ -562,7 +574,6 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->isReadOnly;
     }
-
 
     /**
      * Set the filename
@@ -587,7 +598,6 @@ class Document implements Interfaces\EntityInterface
         return $this->filename;
     }
 
-
     /**
      * Set the is digital
      *
@@ -611,7 +621,6 @@ class Document implements Interfaces\EntityInterface
         return $this->isDigital;
     }
 
-
     /**
      * Set the size
      *
@@ -634,5 +643,4 @@ class Document implements Interfaces\EntityInterface
     {
         return $this->size;
     }
-
 }

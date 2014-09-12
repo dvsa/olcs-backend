@@ -5,6 +5,7 @@ TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
+TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_case`;
 TRUNCATE TABLE `condition_undertaking`;
@@ -102,6 +103,20 @@ INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_b
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,1,16);
+
+INSERT INTO `bus_reg`
+(`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
+ `operating_centre_id`, `route_no`, `reg_no`, `start_point`, `finish_point`, `via`, `other_details`, `is_short_notice`,
+ `use_all_stops`, `has_manoeuvre`, `manoeuvre_detail`, `need_new_stop`, `new_stop_detail`, `has_not_fixed_stop`,
+ `not_fixed_stop_detail`, `subsidy_detail`, `timetable_acceptable`, `map_supplied`, `route_description`,
+ `copied_to_la_pte`, `la_short_note`, `application_signed`, `completed_date`, `route_seq`, `op_notified_la_pte`,
+ `stopping_arrangements`, `trc_condition_checked`, `trc_notes`, `status`, `revert_status`, `organisation_email`,
+ `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
+ `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
+   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 12345678, 1, 'Stopping arrangements', 1,
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
 
 INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
     `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
@@ -573,28 +588,28 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 
 /* Document dummy data */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'DOC','2014-08-23 18:00:05');
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'DOC','2014-08-25 12:04:35');
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'DOC','2014-08-22 11:01:00');
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (4,7,'Test document 4','testdocument4.doc',0,2,3,'DOC','2014-08-24 16:23:00');
+    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (5,7,'Test document 5','testdocument5.xls',0,2,3,'XLS','2014-07-01 15:01:00');
+    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (6,7,'Test document 6','testdocument6.docx',0,2,3,'DOCX','2014-07-05 09:00:05');
+    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (7,7,'Test document 7','testdocument7.xls',0,2,4,'XLS','2014-07-05 10:23:00');
+    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (8,7,'Test document 8','testdocument8.doc',1,2,4,'DOC','2014-07-05 10:45:00');
+    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'PPT','2014-08-05 08:59:40');
+    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'JPG','2014-08-08 12:47:00');
+    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (11,7,'Test document 11','testdocument11.txt',0,1,1,'TXT','2014-08-14 14:00:00');
+    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00');
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'XLS','2014-08-28 14:03:00');
+    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00');
 
 SET foreign_key_checks = 1;

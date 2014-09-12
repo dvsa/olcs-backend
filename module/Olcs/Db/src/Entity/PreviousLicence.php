@@ -82,9 +82,9 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Disqualification length
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="disqualification_length", nullable=true)
+     * @ORM\Column(type="string", name="disqualification_length", length=255, nullable=true)
      */
     protected $disqualificationLength;
 
@@ -111,7 +111,6 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->previousLicenceType;
     }
 
-
     /**
      * Set the holder name
      *
@@ -134,7 +133,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->holderName;
     }
-
 
     /**
      * Set the purchase date
@@ -159,7 +157,6 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->purchaseDate;
     }
 
-
     /**
      * Set the will surrender
      *
@@ -182,7 +179,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     {
         return $this->willSurrender;
     }
-
 
     /**
      * Set the disqualification date
@@ -207,11 +203,10 @@ class PreviousLicence implements Interfaces\EntityInterface
         return $this->disqualificationDate;
     }
 
-
     /**
      * Set the disqualification length
      *
-     * @param int $disqualificationLength
+     * @param string $disqualificationLength
      * @return PreviousLicence
      */
     public function setDisqualificationLength($disqualificationLength)
@@ -224,11 +219,10 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Get the disqualification length
      *
-     * @return int
+     * @return string
      */
     public function getDisqualificationLength()
     {
         return $this->disqualificationLength;
     }
-
 }

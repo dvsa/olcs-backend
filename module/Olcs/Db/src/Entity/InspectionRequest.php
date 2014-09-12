@@ -214,7 +214,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->resultType;
     }
 
-
     /**
      * Set the requestor user
      *
@@ -237,7 +236,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->requestorUser;
     }
-
 
     /**
      * Set the request type
@@ -262,7 +260,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestType;
     }
 
-
     /**
      * Set the report type
      *
@@ -285,7 +282,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->reportType;
     }
-
 
     /**
      * Set the requestor notes
@@ -310,7 +306,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->requestorNotes;
     }
 
-
     /**
      * Set the inspector notes
      *
@@ -333,7 +328,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->inspectorNotes;
     }
-
 
     /**
      * Set the due date
@@ -358,7 +352,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->dueDate;
     }
 
-
     /**
      * Set the from date
      *
@@ -381,7 +374,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->fromDate;
     }
-
 
     /**
      * Set the to date
@@ -406,7 +398,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->toDate;
     }
 
-
     /**
      * Set the request date
      *
@@ -429,7 +420,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->requestDate;
     }
-
 
     /**
      * Set the return date
@@ -454,7 +444,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->returnDate;
     }
 
-
     /**
      * Set the deferred date
      *
@@ -477,7 +466,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->deferredDate;
     }
-
 
     /**
      * Set the inspector name
@@ -502,7 +490,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->inspectorName;
     }
 
-
     /**
      * Set the local services no
      *
@@ -525,7 +512,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->localServicesNo;
     }
-
 
     /**
      * Set the trailors examined no
@@ -550,7 +536,6 @@ class InspectionRequest implements Interfaces\EntityInterface
         return $this->trailorsExaminedNo;
     }
 
-
     /**
      * Set the vehicles examined no
      *
@@ -573,5 +558,4 @@ class InspectionRequest implements Interfaces\EntityInterface
     {
         return $this->vehiclesExaminedNo;
     }
-
 }

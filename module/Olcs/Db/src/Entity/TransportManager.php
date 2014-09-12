@@ -125,7 +125,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->tmType;
     }
 
-
     /**
      * Set the tm status
      *
@@ -148,7 +147,6 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->tmStatus;
     }
-
 
     /**
      * Set the disqualification tm case id
@@ -173,7 +171,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->disqualificationTmCaseId;
     }
 
-
     /**
      * Set the nysiis family name
      *
@@ -196,7 +193,6 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->nysiisFamilyName;
     }
-
 
     /**
      * Set the nysiis forename
@@ -221,7 +217,6 @@ class TransportManager implements Interfaces\EntityInterface
         return $this->nysiisForename;
     }
 
-
     /**
      * Set the document
      *
@@ -244,7 +239,6 @@ class TransportManager implements Interfaces\EntityInterface
     {
         return $this->documents;
     }
-
 
     /**
      * Add a documents
@@ -283,7 +277,7 @@ class TransportManager implements Interfaces\EntityInterface
     public function removeDocuments($documents)
     {
         if ($this->documents->contains($documents)) {
-            $this->documents->remove($documents);
+            $this->documents->removeElement($documents);
         }
 
         return $this;

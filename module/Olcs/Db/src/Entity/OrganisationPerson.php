@@ -95,7 +95,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->organisation;
     }
 
-
     /**
      * Set the person
      *
@@ -118,7 +117,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
     {
         return $this->person;
     }
-
 
     /**
      * Set the added date
@@ -143,7 +141,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
         return $this->addedDate;
     }
 
-
     /**
      * Set the position
      *
@@ -166,5 +163,4 @@ class OrganisationPerson implements Interfaces\EntityInterface
     {
         return $this->position;
     }
-
 }
