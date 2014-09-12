@@ -114,9 +114,9 @@ INSERT INTO `bus_reg`
  `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 1, 'ABCD123', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
+  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
    1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 12345678, 1, 'Stopping arrangements', 1,
-  'Trc notes', 'status', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
 
 INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
     `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,

@@ -21,7 +21,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
  *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
  *    }
  * )
  */
@@ -29,9 +31,10 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
+        Traits\StatusManyToOne,
         Traits\LicenceManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
@@ -41,6 +44,16 @@ class BusReg implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Revert status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
+     */
+    protected $revertStatus;
 
     /**
      * Bus notice period
@@ -332,24 +345,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $trcNotes;
 
     /**
-     * Status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="status", length=20, nullable=false)
-     */
-    protected $status;
-
-    /**
-     * Revert status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="revert_status", length=20, nullable=true)
-     */
-    protected $revertStatus;
-
-    /**
      * Organisation email
      *
      * @var string
@@ -429,6 +424,29 @@ class BusReg implements Interfaces\EntityInterface
         $this->variationReasons = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * Set the revert status
+     *
+     * @param \Olcs\Db\Entity\RefData $revertStatus
+     * @return BusReg
+     */
+    public function setRevertStatus($revertStatus)
+    {
+        $this->revertStatus = $revertStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the revert status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRevertStatus()
+    {
+        return $this->revertStatus;
     }
 
     /**
@@ -1228,52 +1246,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getTrcNotes()
     {
         return $this->trcNotes;
-    }
-
-    /**
-     * Set the status
-     *
-     * @param string $status
-     * @return BusReg
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set the revert status
-     *
-     * @param string $revertStatus
-     * @return BusReg
-     */
-    public function setRevertStatus($revertStatus)
-    {
-        $this->revertStatus = $revertStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the revert status
-     *
-     * @return string
-     */
-    public function getRevertStatus()
-    {
-        return $this->revertStatus;
     }
 
     /**
