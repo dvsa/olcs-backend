@@ -36,8 +36,6 @@
     {
         return $this-><?php echo $this->formatPropertyName($item); ?>;
     }
-<?php
-    $oldCode = <<<'EOT'
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
 
     /**
@@ -95,11 +93,9 @@
     public function remove<?php echo ucfirst($this->formatPropertyName($item)); ?>($<?php echo $this->formatPropertyName($item); ?>)
     {
         if ($this-><?php echo $this->formatPropertyName($item); ?>->contains($<?php echo $this->formatPropertyName($item); ?>)) {
-            $this-><?php echo $this->formatPropertyName($item); ?>->remove($<?php echo $this->formatPropertyName($item); ?>);
+            $this-><?php echo $this->formatPropertyName($item); ?>->removeElement($<?php echo $this->formatPropertyName($item); ?>);
         }
 
         return $this;
     }
 <?php endif; ?>
-
-EOT;

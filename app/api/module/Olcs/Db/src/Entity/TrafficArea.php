@@ -134,6 +134,49 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a recipients
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @return TrafficArea
+     */
+    public function addRecipients($recipients)
+    {
+        if ($recipients instanceof ArrayCollection) {
+            $this->recipients = new ArrayCollection(
+                array_merge(
+                    $this->recipients->toArray(),
+                    $recipients->toArray()
+                )
+            );
+        } elseif (!$this->recipients->contains($recipients)) {
+            $this->recipients->add($recipients);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a recipients
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @return TrafficArea
+     */
+    public function removeRecipients($recipients)
+    {
+        if ($this->recipients->contains($recipients)) {
+            $this->recipients->removeElement($recipients);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the txc name
      *
      * @param string $txcName
@@ -200,5 +243,48 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return TrafficArea
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return TrafficArea
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->removeElement($documents);
+        }
+
+        return $this;
     }
 }

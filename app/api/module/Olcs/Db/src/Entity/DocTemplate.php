@@ -32,7 +32,7 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -205,5 +205,48 @@ class DocTemplate implements Interfaces\EntityInterface
     public function getDocTemplateBookmarks()
     {
         return $this->docTemplateBookmarks;
+    }
+
+    /**
+     * Add a doc template bookmarks
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @return DocTemplate
+     */
+    public function addDocTemplateBookmarks($docTemplateBookmarks)
+    {
+        if ($docTemplateBookmarks instanceof ArrayCollection) {
+            $this->docTemplateBookmarks = new ArrayCollection(
+                array_merge(
+                    $this->docTemplateBookmarks->toArray(),
+                    $docTemplateBookmarks->toArray()
+                )
+            );
+        } elseif (!$this->docTemplateBookmarks->contains($docTemplateBookmarks)) {
+            $this->docTemplateBookmarks->add($docTemplateBookmarks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a doc template bookmarks
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @return DocTemplate
+     */
+    public function removeDocTemplateBookmarks($docTemplateBookmarks)
+    {
+        if ($this->docTemplateBookmarks->contains($docTemplateBookmarks)) {
+            $this->docTemplateBookmarks->removeElement($docTemplateBookmarks);
+        }
+
+        return $this;
     }
 }

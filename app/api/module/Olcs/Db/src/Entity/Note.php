@@ -34,10 +34,10 @@ class Note implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\IrfoPsvAuthManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\IrfoGvPermitManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

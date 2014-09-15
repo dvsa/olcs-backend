@@ -27,7 +27,6 @@ class PhoneContact implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,6 +40,16 @@ class PhoneContact implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="phone_contact_type", referencedColumnName="id", nullable=false)
      */
     protected $phoneContactType;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", inversedBy="phoneContacts")
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=false)
+     */
+    protected $contactDetails;
 
     /**
      * Phone number
@@ -81,6 +90,29 @@ class PhoneContact implements Interfaces\EntityInterface
     public function getPhoneContactType()
     {
         return $this->phoneContactType;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return PhoneContact
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**

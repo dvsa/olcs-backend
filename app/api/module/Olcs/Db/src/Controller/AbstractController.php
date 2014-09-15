@@ -78,6 +78,7 @@ abstract class AbstractController extends ZendAbstractRestfulController
     public function doDispatch($e)
     {
         try {
+
             return parent::onDispatch($e);
 
         } catch (RestResponseException $ex) {
@@ -103,9 +104,9 @@ abstract class AbstractController extends ZendAbstractRestfulController
      */
     public function getControllerName()
     {
-        $controller = $this->params()->fromRoute('controller');
-
-        $controller = $this->formatControllerName($controller);
+        $controller = $this->formatControllerName(
+            $this->params()->fromRoute('controller')
+        );
 
         return $controller;
     }

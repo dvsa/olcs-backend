@@ -1304,6 +1304,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bus_reg` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(32) NOT NULL,
+  `revert_status` VARCHAR(32) NOT NULL,
   `licence_id` INT NOT NULL,
   `bus_notice_period_id` INT NOT NULL COMMENT 'Scottish or other',
   `route_no` INT NOT NULL COMMENT 'Increases by one for each registration added to licence',
@@ -1339,8 +1341,6 @@ CREATE TABLE IF NOT EXISTS `bus_reg` (
   `stopping_arrangements` VARCHAR(800) NULL,
   `trc_condition_checked` TINYINT(1) NOT NULL DEFAULT 0,
   `trc_notes` VARCHAR(255) NULL,
-  `status` VARCHAR(20) NOT NULL,
-  `revert_status` VARCHAR(20) NULL COMMENT 'If status manually changed by caseworker this is the changed from status.  Used to revert back.',
   `organisation_email` VARCHAR(255) NULL,
   `is_txc_app` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Was created through transxchange',
   `txc_app_type` VARCHAR(20) NULL,
@@ -1362,42 +1362,54 @@ CREATE TABLE IF NOT EXISTS `bus_reg` (
   INDEX `fk_bus_reg_user1_idx` (`created_by` ASC),
   INDEX `fk_bus_reg_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_bus_reg_ref_data2_idx` (`withdrawn_reason` ASC),
+  INDEX `fk_bus_reg_ref_data3_idx` (`status` ASC),
+  INDEX `fk_bus_reg_ref_data4_idx` (`revert_status` ASC),
   CONSTRAINT `fk_bus_reg_licence1`
-    FOREIGN KEY (`licence_id`)
-    REFERENCES `licence` (`id`)
+  FOREIGN KEY (`licence_id`)
+  REFERENCES `licence` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_bus_notice_period1`
-    FOREIGN KEY (`bus_notice_period_id`)
-    REFERENCES `bus_notice_period` (`id`)
+  FOREIGN KEY (`bus_notice_period_id`)
+  REFERENCES `bus_notice_period` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data1`
-    FOREIGN KEY (`subsidised`)
-    REFERENCES `ref_data` (`id`)
+  FOREIGN KEY (`subsidised`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_operating_centre1`
-    FOREIGN KEY (`operating_centre_id`)
-    REFERENCES `operating_centre` (`id`)
+  FOREIGN KEY (`operating_centre_id`)
+  REFERENCES `operating_centre` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`created_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
+  FOREIGN KEY (`last_modified_by`)
+  REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data2`
-    FOREIGN KEY (`withdrawn_reason`)
-    REFERENCES `ref_data` (`id`)
+  FOREIGN KEY (`withdrawn_reason`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_ref_data3`
+  FOREIGN KEY (`status`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_ref_data4`
+  FOREIGN KEY (`revert_status`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -1418,9 +1430,9 @@ CREATE TABLE IF NOT EXISTS `document` (
   `operating_centre_id` INT NULL,
   `opposition_id` INT NULL,
   `bus_reg_id` INT NULL,
-  `issued_date` DATE NULL,
+  `issued_date` DATETIME NULL,
   `filename` VARCHAR(255) NULL,
-  `file_extension` varchar(20) NOT null,
+  `file_extension` varchar(32) NOT NULL,
   `deleted_date` DATETIME NULL,
   `is_digital` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag true if doc was received or sent digitally',
   `size` INT NULL,
@@ -1430,6 +1442,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
+  INDEX `fk_document_ref_data1_idx` (`file_extension` ASC),
   INDEX `fk_document_traffic_area1_idx` (`traffic_area_id` ASC),
   INDEX `fk_document_document_category1_idx` (`category_id` ASC),
   INDEX `fk_document_document_sub_category1_idx` (`document_sub_category_id` ASC),
@@ -1442,6 +1455,11 @@ CREATE TABLE IF NOT EXISTS `document` (
   INDEX `fk_document_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_document_opposition1_idx` (`opposition_id` ASC),
   INDEX `fk_document_bus_reg1_idx` (`bus_reg_id` ASC),
+  CONSTRAINT `fk_document_ref_data1_idx`
+    FOREIGN KEY (`file_extension`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_traffic_area1`
     FOREIGN KEY (`traffic_area_id`)
     REFERENCES `traffic_area` (`id`)
@@ -3665,7 +3683,7 @@ CREATE TABLE IF NOT EXISTS `previous_licence` (
   `purchase_date` DATE NULL,
   `will_surrender` TINYINT(1) NULL,
   `disqualification_date` DATE NULL,
-  `disqualification_length` INT NULL,
+  `disqualification_length` VARCHAR(255) NULL,
   `previous_licence_type` VARCHAR(32) NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
@@ -3834,6 +3852,10 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `case_id` INT NOT NULL,
   `agreed_date` DATE NULL,
   `witnesses` INT NULL,
+  `presiding_tc_id` INT NULL,
+  `presiding_tc_other` VARCHAR(45) NULL,
+  `presided_by_role` VARCHAR(32) NULL,
+  `comment` VARCHAR(4000) NULL,
   `is_cancelled` TINYINT(1) NOT NULL DEFAULT 0,
   `pi_status` VARCHAR(32) NOT NULL,
   `is_adjourned` TINYINT(1) NOT NULL DEFAULT 0,
@@ -3856,6 +3878,8 @@ CREATE TABLE IF NOT EXISTS `pi` (
   INDEX `fk_pi_detail_user1_idx` (`created_by` ASC),
   INDEX `fk_pi_detail_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_pi_user1_idx` (`assigned_to` ASC),
+  INDEX `fk_pi_presiding_tc1_idx` (`presiding_tc_id` ASC),
+  INDEX `fk_pi_presided_by_role1_idx` (`presided_by_role` ASC),
   CONSTRAINT `fk_pi_detail_cases1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3880,9 +3904,18 @@ CREATE TABLE IF NOT EXISTS `pi` (
     FOREIGN KEY (`assigned_to`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_presiding_tc1`
+    FOREIGN KEY (`presiding_tc_id`)
+    REFERENCES `presiding_tc` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_presided_by_role1`
+    FOREIGN KEY (`presided_by_role`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `ptr_reason`

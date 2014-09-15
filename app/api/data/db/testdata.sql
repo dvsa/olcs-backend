@@ -5,6 +5,7 @@ TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
+TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_case`;
 TRUNCATE TABLE `condition_undertaking`;
@@ -102,6 +103,20 @@ INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_b
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,1,16);
+
+INSERT INTO `bus_reg`
+(`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
+ `operating_centre_id`, `route_no`, `reg_no`, `start_point`, `finish_point`, `via`, `other_details`, `is_short_notice`,
+ `use_all_stops`, `has_manoeuvre`, `manoeuvre_detail`, `need_new_stop`, `new_stop_detail`, `has_not_fixed_stop`,
+ `not_fixed_stop_detail`, `subsidy_detail`, `timetable_acceptable`, `map_supplied`, `route_description`,
+ `copied_to_la_pte`, `la_short_note`, `application_signed`, `completed_date`, `route_seq`, `op_notified_la_pte`,
+ `stopping_arrangements`, `trc_condition_checked`, `trc_notes`, `status`, `revert_status`, `organisation_email`,
+ `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
+ `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
+   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 12345678, 1, 'Stopping arrangements', 1,
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
 
 INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
     `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
@@ -574,19 +589,19 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
 
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date,document_store_id) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'DOC','2014-08-23', '/path/to/jackrabbit/file'),
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'DOC','2014-08-25', '/path/to/jackrabbit/file'),
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'DOC','2014-08-22', '/path/to/jackrabbit/file'),
-    (4,7,'Test document 4','testdocument4.doc',0,2,1,'DOC','2014-08-24', '/path/to/jackrabbit/file'),
-    (5,7,'Test document 5','testdocument5.xls',0,3,1,'XLS','2014-07-01', '/path/to/jackrabbit/file'),
-    (6,7,'Test document 6','testdocument6.docx',0,3,1,'DOCX','2014-07-05', '/path/to/jackrabbit/file'),
-    (7,7,'Test document 7','testdocument7.xls',0,3,1,'XLS','2014-07-05', '/path/to/jackrabbit/file'),
-    (8,7,'Test document 8','testdocument8.doc',1,3,2,'DOC','2014-07-05', '/path/to/jackrabbit/file'),
-    (9,7,'Test document 9','testdocument9.ppt',1,5,1,'PPT','2014-08-05', '/path/to/jackrabbit/file'),
-    (10,7,'Test document 10','testdocument10.jpg',0,4,1,'JPG','2014-08-08', '/path/to/jackrabbit/file'),
-    (11,7,'Test document 11','testdocument11.txt',0,3,1,'TXT','2014-08-14', '/path/to/jackrabbit/file'),
-    (12,7,'Test document 12','testdocument12.xls',1,4,1,'XLS','2014-08-28', '/path/to/jackrabbit/file'),
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05'),
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35'),
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00'),
+    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00'),
+    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00'),
+    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05'),
+    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00'),
+    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00'),
+    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40'),
+    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00'),
+    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00'),
+    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00');
     (13,null,'Test template 1','',1,4,1,'RTF','2014-08-28', 'templates/sample'),
     (14,null,'GV Application Incomplete 1st Request For Supporting Docs','',1,4,1,'RTF','2014-08-28', 'templates/PUB_APPS_SUPP_DOCS_1ST(GB)');
 

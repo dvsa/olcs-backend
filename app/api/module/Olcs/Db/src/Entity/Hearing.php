@@ -31,7 +31,7 @@ class Hearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\VenueManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

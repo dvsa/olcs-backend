@@ -273,6 +273,18 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_subsidy','bs_yes', 'Yes', '2'),
     ('bus_subsidy','bs_in_part', 'In Part', '3'),
 
+    ('bus_reg_status', 'breg_s_admin', 'Admin Cancelled', 'AdminCancelled'),
+    ('bus_reg_status', 'breg_s_registered', 'Registered', 'Registered'),
+    ('bus_reg_status', 'breg_s_refused', 'Refused', 'Refused'),
+    ('bus_reg_status', 'breg_s_cancellation', 'Cancellation', 'Cancellation'),
+    ('bus_reg_status', 'breg_s_withdrawn', 'Withdrawn', 'WithDrawn'),
+    ('bus_reg_status', 'breg_s_var', 'Variation', 'Variation'),
+    ('bus_reg_status', 'breg_s_cns', 'CNS', 'CNS'),
+    ('bus_reg_status', 'breg_s_revoked', 'Revoked', 'Revoked'),
+    ('bus_reg_status', 'breg_s_cancelled', 'Cancelled', 'Cancelled'),
+    ('bus_reg_status', 'breg_s_new', 'New', 'New'),
+    ('bus_reg_status', 'breg_s_surr', 'Surrendered', 'Surrendered'),
+
     ('case_type', 'case_t_app', 'Application', null),
     ('case_type', 'case_t_lic', 'Licence', null),
     ('case_type', 'case_t_tm', 'Transport Manager', null),
@@ -348,6 +360,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('disc_removal_explan', 'dre_lost', 'Lost', '1'),
     ('disc_removal_explan', 'dre_stolen', 'Stolen', '2'),
     ('disc_removal_explan', 'dre_destroyed', 'Destroyed', '3'),
+
     ('def_type', 'def_t_op', 'Operator', null),
     ('def_type', 'def_t_driver', 'Driver', null),
     ('def_type', 'def_t_tm', 'Transport Manager', null),
@@ -355,6 +368,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('def_type', 'def_t_part', 'Partner', null),
     ('def_type', 'def_t_owner', 'Owner', null),
     ('def_type', 'def_t_other', 'Other', null),
+
+    ('document_type', 'doc_pdf', 'PDF', null),
+    ('document_type', 'doc_doc', 'DOC', null),
+    ('document_type', 'doc_docx', 'DOCX', null),
+    ('document_type', 'doc_xls', 'XLS', null),
+    ('document_type', 'doc_ppt', 'PPT', null),
+    ('document_type', 'doc_jpg', 'JPG', null),
+    ('document_type', 'doc_txt', 'TXT', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -496,6 +517,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_type', 'pi_t_oc_review', 'OC Review', null),
     ('pi_type', 'pi_t_imp', 'Impounding', null),
     ('pi_type', 'pi_t_other', 'Other', null),
+    ('pi_type', 'pi_t_bus', 'Bus Registration', null),
+    ('pi_type', 'pi_t_sect_19_22', 'Section 19 or 22', null),
+    ('pi_type', 'pi_t_tm_inc', 'Transport Manager included', null),
+    ('pi_type', 'pi_t_tm_only', 'Transport Manager only - Regulatory', null),
 
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
@@ -571,7 +596,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('vhl_type', 'vhl_t_d', 'Double Deck', 'D'),
     ('vhl_type', 'vhl_t_e', 'Articulated Bus', 'E'),
     ('withdrawn_reason', 'withdrawn', 'Withdrawn', '1'),
-    ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2');
+    ('withdrawn_reason', 'reg_in_error', 'Registered In Error', '2'),
+    ('task-date-types', 'tdt_today', 'Today', null),
+    ('task-date-types', 'tdt_all', 'All', null),
+    ('task-status-types', 'tst_open', 'Open', null),
+    ('task-status-types', 'tst_closed', 'Closed', null),
+    ('task-status-types', 'tst_all', 'All', null);
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
@@ -1598,7 +1628,9 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     `created_on`, `last_modified_on`, `version`) VALUES
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
     (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
-    (3,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
+    (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
+    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
+    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
 
 SET foreign_key_checks = 1;
 
@@ -1660,12 +1692,14 @@ CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital,
+		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
     FROM `document` d
 
     INNER JOIN (category cat, document_sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.document_sub_category_id)
+
+    LEFT JOIN ref_data r ON d.file_extension = r.id
 
     LEFT JOIN licence l ON d.licence_id = l.id
 
