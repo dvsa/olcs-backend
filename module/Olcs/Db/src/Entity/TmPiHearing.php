@@ -35,7 +35,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\VenueManyToOne,
         Traits\PresidingTcManyToOneAlt1,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

@@ -27,7 +27,7 @@ class LegacyPiReason implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\GoodsOrPsv3Field,
         Traits\SectionCode50Field,
-        Traits\Description255FieldAlt1,
+        Traits\Description255Field,
         Traits\IsReadOnlyField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

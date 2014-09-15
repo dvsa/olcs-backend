@@ -29,7 +29,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\Comment4000Field,
         Traits\EffectiveDateField,
         Traits\CustomCreatedOnField,

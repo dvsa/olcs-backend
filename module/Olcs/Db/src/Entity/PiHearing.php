@@ -26,23 +26,15 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\PresidedByRoleManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
+        Traits\PresidingTcOther45Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Presided by role
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
-     */
-    protected $presidedByRole;
 
     /**
      * Pi
@@ -55,15 +47,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $pi;
 
     /**
-     * Presiding tc other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
-     */
-    protected $presidingTcOther;
-
-    /**
      * Venue
      *
      * @var string
@@ -71,29 +54,6 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="venue", length=255, nullable=true)
      */
     protected $venue;
-
-    /**
-     * Set the presided by role
-     *
-     * @param \Olcs\Db\Entity\RefData $presidedByRole
-     * @return PiHearing
-     */
-    public function setPresidedByRole($presidedByRole)
-    {
-        $this->presidedByRole = $presidedByRole;
-
-        return $this;
-    }
-
-    /**
-     * Get the presided by role
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPresidedByRole()
-    {
-        return $this->presidedByRole;
-    }
 
     /**
      * Set the pi
@@ -116,29 +76,6 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPi()
     {
         return $this->pi;
-    }
-
-    /**
-     * Set the presiding tc other
-     *
-     * @param string $presidingTcOther
-     * @return PiHearing
-     */
-    public function setPresidingTcOther($presidingTcOther)
-    {
-        $this->presidingTcOther = $presidingTcOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the presiding tc other
-     *
-     * @return string
-     */
-    public function getPresidingTcOther()
-    {
-        return $this->presidingTcOther;
     }
 
     /**

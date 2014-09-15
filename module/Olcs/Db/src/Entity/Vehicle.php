@@ -333,4 +333,47 @@ class Vehicle implements Interfaces\EntityInterface
     {
         return $this->licenceVehicles;
     }
+
+    /**
+     * Add a licence vehicles
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Vehicle
+     */
+    public function addLicenceVehicles($licenceVehicles)
+    {
+        if ($licenceVehicles instanceof ArrayCollection) {
+            $this->licenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->licenceVehicles->toArray(),
+                    $licenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->add($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence vehicles
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Vehicle
+     */
+    public function removeLicenceVehicles($licenceVehicles)
+    {
+        if ($this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->removeElement($licenceVehicles);
+        }
+
+        return $this;
+    }
 }

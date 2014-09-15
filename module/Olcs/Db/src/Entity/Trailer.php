@@ -28,7 +28,7 @@ class Trailer implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

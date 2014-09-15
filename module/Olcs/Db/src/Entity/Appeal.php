@@ -32,7 +32,7 @@ class Appeal implements Interfaces\EntityInterface
         Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,

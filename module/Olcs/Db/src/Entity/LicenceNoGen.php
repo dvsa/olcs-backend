@@ -22,5 +22,5 @@ class LicenceNoGen implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1;
+        Traits\ApplicationManyToOne;
 }

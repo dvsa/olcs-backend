@@ -27,7 +27,7 @@ class Submission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -103,5 +103,48 @@ class Submission implements Interfaces\EntityInterface
     public function getSubmissionActions()
     {
         return $this->submissionActions;
+    }
+
+    /**
+     * Add a submission actions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Submission
+     */
+    public function addSubmissionActions($submissionActions)
+    {
+        if ($submissionActions instanceof ArrayCollection) {
+            $this->submissionActions = new ArrayCollection(
+                array_merge(
+                    $this->submissionActions->toArray(),
+                    $submissionActions->toArray()
+                )
+            );
+        } elseif (!$this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->add($submissionActions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a submission actions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Submission
+     */
+    public function removeSubmissionActions($submissionActions)
+    {
+        if ($this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->removeElement($submissionActions);
+        }
+
+        return $this;
     }
 }

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,7 +34,7 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\EmailAddress60Field,
-        Traits\Description255Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -124,6 +125,23 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
     protected $writtenPermissionToEngage = 0;
+
+    /**
+     * Phone contact
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PhoneContact", mappedBy="contactDetails")
+     */
+    protected $phoneContacts;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->phoneContacts = new ArrayCollection();
+    }
 
     /**
      * Set the contact type
@@ -330,5 +348,71 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getWrittenPermissionToEngage()
     {
         return $this->writtenPermissionToEngage;
+    }
+
+    /**
+     * Set the phone contact
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @return ContactDetails
+     */
+    public function setPhoneContacts($phoneContacts)
+    {
+        $this->phoneContacts = $phoneContacts;
+
+        return $this;
+    }
+
+    /**
+     * Get the phone contacts
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPhoneContacts()
+    {
+        return $this->phoneContacts;
+    }
+
+    /**
+     * Add a phone contacts
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @return ContactDetails
+     */
+    public function addPhoneContacts($phoneContacts)
+    {
+        if ($phoneContacts instanceof ArrayCollection) {
+            $this->phoneContacts = new ArrayCollection(
+                array_merge(
+                    $this->phoneContacts->toArray(),
+                    $phoneContacts->toArray()
+                )
+            );
+        } elseif (!$this->phoneContacts->contains($phoneContacts)) {
+            $this->phoneContacts->add($phoneContacts);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a phone contacts
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @return ContactDetails
+     */
+    public function removePhoneContacts($phoneContacts)
+    {
+        if ($this->phoneContacts->contains($phoneContacts)) {
+            $this->phoneContacts->removeElement($phoneContacts);
+        }
+
+        return $this;
     }
 }

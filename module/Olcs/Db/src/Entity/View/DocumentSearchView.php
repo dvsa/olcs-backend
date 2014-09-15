@@ -35,7 +35,7 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="issued_date")
+     * @ORM\Column(type="datetime", name="issued_date")
      */
     protected $issuedDate;
 
@@ -74,6 +74,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="file_extension")
      */
     protected $fileExtension;
+
+    /**
+     * File Extension
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="document_type")
+     */
+    protected $documentType;
 
     /**
      * Category ID
@@ -245,6 +254,16 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getDocumentSubCategoryName()
     {
         return $this->documentSubCategoryName;
+    }
+
+    /**
+     * Get the document file type
+     *
+     * @return string
+     */
+    public function getDocumentType()
+    {
+        return $this->documentType;
     }
 
     /**

@@ -433,6 +433,12 @@ return array(
         ),
         'reprint_required' => array(
             'type' => 'yesno'
+        ),
+        'licence_vehicle_id' => array(
+            'inversedBy' => array(
+                'entity' => 'LicenceVehicle',
+                'property' => 'goodsDisc'
+            )
         )
     ),
     'psv_disc' => array(
@@ -1032,6 +1038,14 @@ return array(
     'ext_translations' => array(
         '@settings' => array(
             'ignore' => true
+        )
+    ),
+    'phone_contact' => array(
+        'contact_details_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ContactDetails',
+                'property' => 'phoneContact'
+            )
         )
     )
 );

@@ -27,7 +27,7 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
+        Traits\OperatingCentreManyToOne,
         Traits\OppositionManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

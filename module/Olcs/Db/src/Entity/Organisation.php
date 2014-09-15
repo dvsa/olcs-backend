@@ -130,13 +130,13 @@ class Organisation implements Interfaces\EntityInterface
     protected $allowEmail = 0;
 
     /**
-     * Trading name
+     * Contact detail
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
      */
-    protected $tradingNames;
+    protected $contactDetails;
 
     /**
      * Licence
@@ -148,15 +148,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
-     */
-    protected $contactDetails;
-
-    /**
      * Organisation person
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -166,14 +157,23 @@ class Organisation implements Interfaces\EntityInterface
     protected $organisationPersons;
 
     /**
+     * Trading name
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="organisation")
+     */
+    protected $tradingNames;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->tradingNames = new ArrayCollection();
-        $this->licences = new ArrayCollection();
         $this->contactDetails = new ArrayCollection();
+        $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
+        $this->tradingNames = new ArrayCollection();
     }
 
     /**
@@ -407,26 +407,69 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the trading name
+     * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Organisation
      */
-    public function setTradingNames($tradingNames)
+    public function setContactDetails($contactDetails)
     {
-        $this->tradingNames = $tradingNames;
+        $this->contactDetails = $contactDetails;
 
         return $this;
     }
 
     /**
-     * Get the trading names
+     * Get the contact details
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTradingNames()
+    public function getContactDetails()
     {
-        return $this->tradingNames;
+        return $this->contactDetails;
+    }
+
+    /**
+     * Add a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function addContactDetails($contactDetails)
+    {
+        if ($contactDetails instanceof ArrayCollection) {
+            $this->contactDetails = new ArrayCollection(
+                array_merge(
+                    $this->contactDetails->toArray(),
+                    $contactDetails->toArray()
+                )
+            );
+        } elseif (!$this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->add($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a contact details
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @return Organisation
+     */
+    public function removeContactDetails($contactDetails)
+    {
+        if ($this->contactDetails->contains($contactDetails)) {
+            $this->contactDetails->removeElement($contactDetails);
+        }
+
+        return $this;
     }
 
     /**
@@ -453,26 +496,46 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact detail
+     * Add a licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
      * @return Organisation
      */
-    public function setContactDetails($contactDetails)
+    public function addLicences($licences)
     {
-        $this->contactDetails = $contactDetails;
+        if ($licences instanceof ArrayCollection) {
+            $this->licences = new ArrayCollection(
+                array_merge(
+                    $this->licences->toArray(),
+                    $licences->toArray()
+                )
+            );
+        } elseif (!$this->licences->contains($licences)) {
+            $this->licences->add($licences);
+        }
 
         return $this;
     }
 
     /**
-     * Get the contact details
+     * Remove a licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Organisation
      */
-    public function getContactDetails()
+    public function removeLicences($licences)
     {
-        return $this->contactDetails;
+        if ($this->licences->contains($licences)) {
+            $this->licences->removeElement($licences);
+        }
+
+        return $this;
     }
 
     /**
@@ -496,5 +559,114 @@ class Organisation implements Interfaces\EntityInterface
     public function getOrganisationPersons()
     {
         return $this->organisationPersons;
+    }
+
+    /**
+     * Add a organisation persons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Organisation
+     */
+    public function addOrganisationPersons($organisationPersons)
+    {
+        if ($organisationPersons instanceof ArrayCollection) {
+            $this->organisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->organisationPersons->toArray(),
+                    $organisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->add($organisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation persons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Organisation
+     */
+    public function removeOrganisationPersons($organisationPersons)
+    {
+        if ($this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->removeElement($organisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the trading name
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function setTradingNames($tradingNames)
+    {
+        $this->tradingNames = $tradingNames;
+
+        return $this;
+    }
+
+    /**
+     * Get the trading names
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTradingNames()
+    {
+        return $this->tradingNames;
+    }
+
+    /**
+     * Add a trading names
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function addTradingNames($tradingNames)
+    {
+        if ($tradingNames instanceof ArrayCollection) {
+            $this->tradingNames = new ArrayCollection(
+                array_merge(
+                    $this->tradingNames->toArray(),
+                    $tradingNames->toArray()
+                )
+            );
+        } elseif (!$this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->add($tradingNames);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a trading names
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Organisation
+     */
+    public function removeTradingNames($tradingNames)
+    {
+        if ($this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->removeElement($tradingNames);
+        }
+
+        return $this;
     }
 }

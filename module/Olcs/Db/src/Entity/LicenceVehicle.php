@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -30,10 +31,10 @@ class LicenceVehicle implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\RemovalReasonManyToOne,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ReceivedDateField,
+        Traits\ReceivedDateFieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
         Traits\SpecifiedDateField,
@@ -105,6 +106,23 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="warning_letter_sent_date", nullable=true)
      */
     protected $warningLetterSentDate;
+
+    /**
+     * Goods disc
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\GoodsDisc", mappedBy="licenceVehicle")
+     */
+    protected $goodsDiscs;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->goodsDiscs = new ArrayCollection();
+    }
 
     /**
      * Set the vehicle
@@ -265,5 +283,71 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getWarningLetterSentDate()
     {
         return $this->warningLetterSentDate;
+    }
+
+    /**
+     * Set the goods disc
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function setGoodsDiscs($goodsDiscs)
+    {
+        $this->goodsDiscs = $goodsDiscs;
+
+        return $this;
+    }
+
+    /**
+     * Get the goods discs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGoodsDiscs()
+    {
+        return $this->goodsDiscs;
+    }
+
+    /**
+     * Add a goods discs
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function addGoodsDiscs($goodsDiscs)
+    {
+        if ($goodsDiscs instanceof ArrayCollection) {
+            $this->goodsDiscs = new ArrayCollection(
+                array_merge(
+                    $this->goodsDiscs->toArray(),
+                    $goodsDiscs->toArray()
+                )
+            );
+        } elseif (!$this->goodsDiscs->contains($goodsDiscs)) {
+            $this->goodsDiscs->add($goodsDiscs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a goods discs
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @return LicenceVehicle
+     */
+    public function removeGoodsDiscs($goodsDiscs)
+    {
+        if ($this->goodsDiscs->contains($goodsDiscs)) {
+            $this->goodsDiscs->removeElement($goodsDiscs);
+        }
+
+        return $this;
     }
 }

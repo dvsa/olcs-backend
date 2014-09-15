@@ -27,7 +27,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\LicNo18Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -82,9 +82,9 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Disqualification length
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="disqualification_length", nullable=true)
+     * @ORM\Column(type="string", name="disqualification_length", length=255, nullable=true)
      */
     protected $disqualificationLength;
 
@@ -206,7 +206,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Set the disqualification length
      *
-     * @param int $disqualificationLength
+     * @param string $disqualificationLength
      * @return PreviousLicence
      */
     public function setDisqualificationLength($disqualificationLength)
@@ -219,7 +219,7 @@ class PreviousLicence implements Interfaces\EntityInterface
     /**
      * Get the disqualification length
      *
-     * @return int
+     * @return string
      */
     public function getDisqualificationLength()
     {

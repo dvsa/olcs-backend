@@ -17,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
+ *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
  *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
  *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
@@ -39,8 +40,8 @@ class Document implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\Description255Field,
-        Traits\IssuedDateFieldAlt1,
+        Traits\Description255FieldAlt1,
+        Traits\IssuedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -77,6 +78,26 @@ class Document implements Interfaces\EntityInterface
     protected $busReg;
 
     /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManager;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
      * Traffic area
      *
      * @var \Olcs\Db\Entity\TrafficArea
@@ -87,14 +108,14 @@ class Document implements Interfaces\EntityInterface
     protected $trafficArea;
 
     /**
-     * Transport manager
+     * File extension
      *
-     * @var \Olcs\Db\Entity\TransportManager
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="file_extension", referencedColumnName="id", nullable=false)
      */
-    protected $transportManager;
+    protected $fileExtension;
 
     /**
      * Document sub category
@@ -115,16 +136,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
 
     /**
      * Application
@@ -171,15 +182,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="filename", length=255, nullable=true)
      */
     protected $filename;
-
-    /**
-     * File extension
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="file_extension", length=20, nullable=false)
-     */
-    protected $fileExtension;
 
     /**
      * Is digital
@@ -277,6 +279,52 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return Document
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
      * Set the traffic area
      *
      * @param \Olcs\Db\Entity\TrafficArea $trafficArea
@@ -300,26 +348,26 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the transport manager
+     * Set the file extension
      *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @param \Olcs\Db\Entity\RefData $fileExtension
      * @return Document
      */
-    public function setTransportManager($transportManager)
+    public function setFileExtension($fileExtension)
     {
-        $this->transportManager = $transportManager;
+        $this->fileExtension = $fileExtension;
 
         return $this;
     }
 
     /**
-     * Get the transport manager
+     * Get the file extension
      *
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getTransportManager()
+    public function getFileExtension()
     {
-        return $this->transportManager;
+        return $this->fileExtension;
     }
 
     /**
@@ -369,29 +417,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Document
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-    /**
      * Set the application
      *
      * @param \Olcs\Db\Entity\Application $application
@@ -435,6 +460,49 @@ class Document implements Interfaces\EntityInterface
     public function getEmails()
     {
         return $this->emails;
+    }
+
+    /**
+     * Add a emails
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function addEmails($emails)
+    {
+        if ($emails instanceof ArrayCollection) {
+            $this->emails = new ArrayCollection(
+                array_merge(
+                    $this->emails->toArray(),
+                    $emails->toArray()
+                )
+            );
+        } elseif (!$this->emails->contains($emails)) {
+            $this->emails->add($emails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a emails
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $emails
+     * @return Document
+     */
+    public function removeEmails($emails)
+    {
+        if ($this->emails->contains($emails)) {
+            $this->emails->removeElement($emails);
+        }
+
+        return $this;
     }
 
     /**
@@ -504,29 +572,6 @@ class Document implements Interfaces\EntityInterface
     public function getFilename()
     {
         return $this->filename;
-    }
-
-    /**
-     * Set the file extension
-     *
-     * @param string $fileExtension
-     * @return Document
-     */
-    public function setFileExtension($fileExtension)
-    {
-        $this->fileExtension = $fileExtension;
-
-        return $this;
-    }
-
-    /**
-     * Get the file extension
-     *
-     * @return string
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
     }
 
     /**

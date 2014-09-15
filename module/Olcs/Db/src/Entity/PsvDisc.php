@@ -30,11 +30,11 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\StartDateField,
+        Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -21,7 +21,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
  *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
  *    }
  * )
  */
@@ -29,18 +31,29 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\StatusManyToOne,
+        Traits\LicenceManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
-        Traits\ReceivedDateField,
+        Traits\ReceivedDateFieldAlt1,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Revert status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
+     */
+    protected $revertStatus;
 
     /**
      * Bus notice period
@@ -332,24 +345,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $trcNotes;
 
     /**
-     * Status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="status", length=20, nullable=false)
-     */
-    protected $status;
-
-    /**
-     * Revert status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="revert_status", length=20, nullable=true)
-     */
-    protected $revertStatus;
-
-    /**
      * Organisation email
      *
      * @var string
@@ -432,6 +427,29 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the revert status
+     *
+     * @param \Olcs\Db\Entity\RefData $revertStatus
+     * @return BusReg
+     */
+    public function setRevertStatus($revertStatus)
+    {
+        $this->revertStatus = $revertStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the revert status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRevertStatus()
+    {
+        return $this->revertStatus;
+    }
+
+    /**
      * Set the bus notice period
      *
      * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
@@ -501,6 +519,49 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Add a variation reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function addVariationReasons($variationReasons)
+    {
+        if ($variationReasons instanceof ArrayCollection) {
+            $this->variationReasons = new ArrayCollection(
+                array_merge(
+                    $this->variationReasons->toArray(),
+                    $variationReasons->toArray()
+                )
+            );
+        } elseif (!$this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->add($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function removeVariationReasons($variationReasons)
+    {
+        if ($this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->removeElement($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the bus service type
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
@@ -521,6 +582,49 @@ class BusReg implements Interfaces\EntityInterface
     public function getBusServiceTypes()
     {
         return $this->busServiceTypes;
+    }
+
+    /**
+     * Add a bus service types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function addBusServiceTypes($busServiceTypes)
+    {
+        if ($busServiceTypes instanceof ArrayCollection) {
+            $this->busServiceTypes = new ArrayCollection(
+                array_merge(
+                    $this->busServiceTypes->toArray(),
+                    $busServiceTypes->toArray()
+                )
+            );
+        } elseif (!$this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->add($busServiceTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus service types
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @return BusReg
+     */
+    public function removeBusServiceTypes($busServiceTypes)
+    {
+        if ($this->busServiceTypes->contains($busServiceTypes)) {
+            $this->busServiceTypes->removeElement($busServiceTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -1145,52 +1249,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the status
-     *
-     * @param string $status
-     * @return BusReg
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set the revert status
-     *
-     * @param string $revertStatus
-     * @return BusReg
-     */
-    public function setRevertStatus($revertStatus)
-    {
-        $this->revertStatus = $revertStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the revert status
-     *
-     * @return string
-     */
-    public function getRevertStatus()
-    {
-        return $this->revertStatus;
-    }
-
-    /**
      * Set the organisation email
      *
      * @param string $organisationEmail
@@ -1372,5 +1430,48 @@ class BusReg implements Interfaces\EntityInterface
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return BusReg
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return BusReg
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->removeElement($documents);
+        }
+
+        return $this;
     }
 }
