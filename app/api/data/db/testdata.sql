@@ -601,9 +601,9 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40'),
     (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00'),
     (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00'),
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00');
-    (13,null,'Test template 1','',1,4,1,'RTF','2014-08-28', 'templates/sample'),
-    (14,null,'GV Application Incomplete 1st Request For Supporting Docs','',1,4,1,'RTF','2014-08-28', 'templates/PUB_APPS_SUPP_DOCS_1ST(GB)');
+    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00'),
+    (13,null,'Test template 1','templates/sample',1,4,1,'doc_rtf','2014-08-28 15:03:00'),
+    (14,null,'GV Application Incomplete 1st Request For Supporting Docs','templates/PUB_APPS_SUPP_DOCS_1ST(GB)',1,4,1,'doc_rtf','2014-09-09 12:00:00');
 
 INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
     (1,1,1,'A test template',13,0,0,1),

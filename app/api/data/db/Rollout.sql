@@ -266,14 +266,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('appeal_reason', 'appeal_r_tm_pi', 'Regulatory PI', '1'),
     ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
-    ('app_status', 'apsts_not_submitted', 'Not Yet Submissed', null),
-    ('app_status', 'apsts_curtailed', 'Curtailed', 'Curtailed'),
-    ('app_status', 'apsts_granted', 'Granted', 'Granted'),
-    ('app_status', 'apsts_ntu', 'Not Taken Up', 'NTU'),
-    ('app_status', 'apsts_refused', 'Refused', 'Refused'),
-    ('app_status', 'apsts_valid', 'Valid', 'Valid'),
-    ('app_status', 'apsts_withdrawn', 'Withdrawn', 'Withdrawn'),
-    ('app_status', 'apsts_consideration', 'Under Consideration', 'New'),
+    ('app_status', 'apsts_new', 'New', null),
+    ('app_status', 'apsts_consideration', 'Under Consideration', null),
 
     ('bus_subsidy','bs_no', 'No', '1'),
     ('bus_subsidy','bs_yes', 'Yes', '2'),
@@ -382,6 +376,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_ppt', 'PPT', null),
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
+    ('document_type', 'doc_rtf', 'RTF', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
