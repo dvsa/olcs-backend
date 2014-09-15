@@ -421,7 +421,10 @@ return array(
         'licence_vehicle_id' => array(
             'inversedBy' => array(
                 'entity' => 'LicenceVehicle',
-                'property' => 'goodsDisc'
+                'property' => 'goodsDisc',
+                'orderBy' => array(
+                    'createdOn' => 'DESC'
+                )
             )
         )
     ),

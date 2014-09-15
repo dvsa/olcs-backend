@@ -94,7 +94,8 @@ class AlignEntitiesToSchema
             'column' => 'inversedBy="%s"',
             'manyToOne' => 'inversedBy="%ss"',
             'manyToMany' => 'inversedBy="%ss"'
-        )
+        ),
+        'order-by' => '{"%s"}'
     );
 
     /**
@@ -493,7 +494,8 @@ class AlignEntitiesToSchema
                         'field' => $fieldDetails['property'],
                         'target-entity' => $fieldDetails['targetEntity'],
                         $property => $fieldDetails['inversedBy']
-                    )
+                    ),
+                    'orderBy' => $fieldDetails['orderBy']
                 );
 
                 $details['fields'][] = array(
@@ -1135,7 +1137,10 @@ class AlignEntitiesToSchema
                         'inversedBy' => $this->formatPropertyName($fieldConfig),
                         'targetEntity' => self::ENTITY_NAMESPACE . ucfirst($className),
                         'property' => $fieldConfig['inversedBy']['property'],
-                        'relationship' => $relationship
+                        'relationship' => $relationship,
+                        'orderBy' => isset($fieldConfig['inversedBy']['orderBy'])
+                            ? $fieldConfig['inversedBy']['orderBy']
+                            : null
                     );
 
                     $fieldConfig['config']['@attributes']['inversed-by'] = $fieldConfig['inversedBy']['property'];
@@ -1398,7 +1403,18 @@ class AlignEntitiesToSchema
             }
 
             if (is_array($value)) {
-                $value = implode('","', $value);
+
+                $values = array();
+
+                foreach ($value as $index => $val) {
+                    if (!is_numeric($index)) {
+                        $values[] = sprintf('%s" = "%s', $index, $val);
+                    } else {
+                        $values[] = $val;
+                    }
+                }
+
+                $value = implode('","', $values);
             }
 
             if (isset($this->optionFormat[$key][$which])) {
