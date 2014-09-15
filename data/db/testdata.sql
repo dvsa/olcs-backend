@@ -179,9 +179,9 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
     `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
     `conviction_category_id`) VALUES
     (25,24,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,397),
-    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
+    (26,24,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (27,24,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (29,24,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
 
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
@@ -506,7 +506,7 @@ INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_we
 INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `description`, `ecms_no`, `open_date`,
     `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`) VALUES
     (24,7,NULL,NULL,'Case for convictions against company directors','E123456','2012-03-21 00:00:00','Compliance',NULL,NULL,'2013-11-12 12:27:33',   NULL,1),
-    (28,7,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','Compliance',NULL,NULL,'2014-05-25 12:27:33',NULL,1),
+    (28,7,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','Compliance',NULL,NULL,'2014-01-01 11:11:11',NULL,1),
     (29,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (30,7,NULL,NULL,'werwrew','','2014-02-11 12:27:47','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (31,7,NULL,NULL,'345345345','','2014-02-11 12:28:07','licence','2014-05-25 12:27:33',NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
@@ -553,7 +553,7 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (72,7,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-02 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (73,7,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-03 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
     (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
-    (75,7,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
+    (75,110,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
 
 INSERT INTO team(id,version,name) VALUES
     (1,1,'Marketing'),
