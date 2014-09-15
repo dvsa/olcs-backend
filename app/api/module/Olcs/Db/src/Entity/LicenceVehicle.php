@@ -113,6 +113,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\GoodsDisc", mappedBy="licenceVehicle")
+     * @ORM\OrderBy({"createdOn" = "DESC"})
      */
     protected $goodsDiscs;
 
