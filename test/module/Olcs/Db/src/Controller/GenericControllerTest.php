@@ -1,16 +1,20 @@
 <?php
 
 /**
- * Tests AbstractController
+ * Tests GenericController
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
 use Olcs\Db\Controller\GenericController;
 
+/**
+ * Tests GenericController
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
 class GenericControllerTest extends PHPUnit_Framework_TestCase
 {
     public function testGetDashToCamelCaseFilter()
@@ -24,7 +28,9 @@ class GenericControllerTest extends PHPUnit_Framework_TestCase
 
     public function testOnDispatch()
     {
-        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))->disableOriginalConstructor()->getMock();
+        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $mockEvent->expects($this->any())
             ->method('getRouteMatch')
@@ -43,7 +49,10 @@ class GenericControllerTest extends PHPUnit_Framework_TestCase
             ->method('fromRoute')
             ->will($this->returnValue('foo-bar'));
 
-        $controller = $this->getMock('\Olcs\Db\Controller\GenericController', array('getDashToCamelCaseFilter', 'params', 'setServiceName', 'logRequest', 'doDispatch'));
+        $controller = $this->getMock(
+            '\Olcs\Db\Controller\GenericController',
+            array('getDashToCamelCaseFilter', 'params', 'setServiceName', 'logRequest', 'doDispatch')
+        );
 
         $controller->expects($this->once())
             ->method('getDashToCamelCaseFilter')
