@@ -113,7 +113,8 @@ class SchemaMetadata
      */
     private function outputMetadata()
     {
-        $tableQueryString = 'SELECT table_name FROM information_schema.tables WHERE table_schema = \'%s\' ORDER BY table_name';
+        $tableQueryString = 'SELECT table_name FROM information_schema.tables WHERE table_schema = \'%s\' '
+            . 'ORDER BY table_name';
 
         $tableQuery = $this->pdo->prepare(
             sprintf(
@@ -130,7 +131,8 @@ class SchemaMetadata
 
             echo sprintf(self::TABLE_FORMAT, $row['table_name']);
 
-            $columnQueryString = 'SELECT column_name, column_type FROM information_schema.columns WHERE table_schema = \'%s\' AND table_name = \'%s\' ORDER BY column_name';
+            $columnQueryString = 'SELECT column_name, column_type FROM information_schema.columns'
+                . ' WHERE table_schema = \'%s\' AND table_name = \'%s\' ORDER BY column_name';
 
             $columnQuery = $this->pdo->prepare(
                 sprintf(

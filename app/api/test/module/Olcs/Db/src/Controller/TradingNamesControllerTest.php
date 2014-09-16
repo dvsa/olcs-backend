@@ -57,13 +57,16 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
 
         $this->controller->expects($this->once())
             ->method('formatDataFromJson')
-            ->will($this->returnValue(array(
-                'licence' => 7,
-                'tradingNames' => array(
-                    array('name' => 'name', 'licence' => 1)
+            ->will(
+                $this->returnValue(
+                    array(
+                        'licence' => 7,
+                        'tradingNames' => array(
+                            array('name' => 'name', 'licence' => 1)
+                        )
+                    )
                 )
-            )));
-
+            );
 
         $this->controller->create([]);
     }
@@ -79,17 +82,19 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
             ->method('deleteList')
             ->will($this->throwException(new \Exception));
 
-
         $this->controller->expects($this->once())
             ->method('getService')
             ->will($this->returnValue($mockService));
 
         $this->controller->expects($this->once())
             ->method('formatDataFromJson')
-            ->will($this->returnValue(array(
-                array('name' => 'name', 'licence' => 1)
-            )));
-
+            ->will(
+                $this->returnValue(
+                    array(
+                        array('name' => 'name', 'licence' => 1)
+                    )
+                )
+            );
 
         $this->controller->create([]);
     }
