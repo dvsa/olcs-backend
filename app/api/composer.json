@@ -37,5 +37,11 @@
             "Olcs\\Db\\": "module/Olcs/Db/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
+    },
+    "config": {
+      "preferred-install": "dist",
+        "github-oauth": {
+          "github.com": "5cdf40f8d81a7675fdaa5fc92e9381526ef4db7f"
+      }
     }
 }
