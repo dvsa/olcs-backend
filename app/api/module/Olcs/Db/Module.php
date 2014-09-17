@@ -14,6 +14,9 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+/**
+ * Module class
+ */
 class Module implements BootstrapListenerInterface
 {
     public function onBootstrap(EventInterface $e)
@@ -32,5 +35,4 @@ class Module implements BootstrapListenerInterface
     {
         return include __DIR__ . '/config/module.config.php';
     }
-
 }

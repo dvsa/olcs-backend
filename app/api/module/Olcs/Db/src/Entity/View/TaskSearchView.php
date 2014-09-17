@@ -172,7 +172,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="link_display")
      */
     protected $linkDisplay;
-    
+
     /**
      * Name
      *
@@ -350,5 +350,5 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getLinkDisplay()
     {
         return $this->linkDisplay;
-    }    
+    }
 }

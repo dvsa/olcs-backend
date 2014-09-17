@@ -291,6 +291,14 @@ return array(
         ),
         'short_notice_refused' => array(
             'type' => 'yesno'
+        ),
+    ),
+    'bus_reg_other_service' => array(
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'otherService'
+            )
         )
     ),
     'document' => array(
@@ -421,7 +429,10 @@ return array(
         'licence_vehicle_id' => array(
             'inversedBy' => array(
                 'entity' => 'LicenceVehicle',
-                'property' => 'goodsDisc'
+                'property' => 'goodsDisc',
+                'orderBy' => array(
+                    'createdOn' => 'DESC'
+                )
             )
         )
     ),

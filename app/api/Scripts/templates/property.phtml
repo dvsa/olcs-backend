@@ -22,6 +22,9 @@
 <?php if (!$item['isInverse'] && in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)
 <?php endif; ?>
+<?php if (isset($field['orderBy']) && !empty($field['orderBy'])): ?>
+     * @ORM\OrderBy(<?php echo $this->generateOptionsFromAttributes(array('order-by' => $field['orderBy'])); ?>)
+<?php endif; ?>
 <?php if (isset($field['join-table'])): ?>
      * @ORM\JoinTable(<?php echo $this->generateOptionsFromAttributes($field['join-table']['@attributes'], 'join-table'); ?>,
      *     joinColumns={
