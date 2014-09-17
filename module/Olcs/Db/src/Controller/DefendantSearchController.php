@@ -45,5 +45,4 @@ class DefendantSearchController extends AbstractBasicRestServerController
 
         return $this->respond(Response::STATUS_CODE_200, '', $response);
     }
-
 }
