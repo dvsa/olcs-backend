@@ -6,6 +6,7 @@ TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
+TRUNCATE TABLE `bus_reg_other_service`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_case`;
 TRUNCATE TABLE `condition_undertaking`;
@@ -115,8 +116,15 @@ INSERT INTO `bus_reg`
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
   (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
-   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 12345678, 1, 'Stopping arrangements', 1,
+   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
   'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
+
+INSERT INTO `bus_reg_other_service`
+(`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 1, 1, 90840, '2013-11-25 00:00:00', '2013-11-27 13:41:00', 1),
+  (2, 1, 1, 1, 90841, '2013-11-26 00:00:00', '2013-11-28 15:47:00', 1);
+
 
 INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
     `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
@@ -179,9 +187,9 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
     `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
     `conviction_category_id`) VALUES
     (25,24,3,4,NULL,NULL,'2012-03-10','2012-06-15','FPN','3 points on licence','60',0,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,397),
-    (26,NULL,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (27,28,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
-    (29,28,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
+    (26,24,0,4,NULL,NULL,'2012-04-10','2012-05-15','Leeds Magistrate court','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (27,24,1,3,NULL,NULL,'2012-12-17','2013-03-02','FPN','3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1,399),
+    (29,24,3,3,NULL,NULL,'2012-03-10','2012-06-15','Leeds Magistrate court','6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1,399);
 
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
@@ -253,7 +261,7 @@ VALUES
 (6, 'note_t_case', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a case note', 0, '2011-10-03 00:00:00', NULL, 1),
 (7, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', NULL, 1),
 (8, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', NULL, 1),
-(9, 'note_t_bus', NULL, 1, 3, NULL, 63, 75, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', NULL, 1),
+(9, 'note_t_bus', NULL, 1, 3, NULL, 110, 75, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', NULL, 1),
 (10, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', NULL, 1),
 (11, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', NULL, 1),
 (12, 'note_t_lic', NULL, NULL, 3, NULL, 7, 28, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', NULL, 1),
@@ -506,7 +514,7 @@ INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_we
 INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `description`, `ecms_no`, `open_date`,
     `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`) VALUES
     (24,7,NULL,NULL,'Case for convictions against company directors','E123456','2012-03-21 00:00:00','Compliance',NULL,NULL,'2013-11-12 12:27:33',   NULL,1),
-    (28,7,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','Compliance',NULL,NULL,'2014-05-25 12:27:33',NULL,1),
+    (28,7,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','Compliance',NULL,NULL,'2014-01-01 11:11:11',NULL,1),
     (29,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (30,7,NULL,NULL,'werwrew','','2014-02-11 12:27:47','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (31,7,NULL,NULL,'345345345','','2014-02-11 12:28:07','licence','2014-05-25 12:27:33',NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
@@ -553,7 +561,7 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (72,7,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-02 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
     (73,7,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-03 00:00:00','Compliance',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
     (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
-    (75,7,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
+    (75,110,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);;
 
 INSERT INTO team(id,version,name) VALUES
     (1,1,'Marketing'),

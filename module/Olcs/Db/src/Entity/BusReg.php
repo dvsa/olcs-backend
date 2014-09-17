@@ -408,6 +408,15 @@ class BusReg implements Interfaces\EntityInterface
     protected $shortNoticeRefused = 0;
 
     /**
+     * Other service
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusRegOtherService", mappedBy="busReg")
+     */
+    protected $otherServices;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -423,6 +432,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         $this->variationReasons = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
+        $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -1407,6 +1417,72 @@ class BusReg implements Interfaces\EntityInterface
     public function getShortNoticeRefused()
     {
         return $this->shortNoticeRefused;
+    }
+
+    /**
+     * Set the other service
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @return BusReg
+     */
+    public function setOtherServices($otherServices)
+    {
+        $this->otherServices = $otherServices;
+
+        return $this;
+    }
+
+    /**
+     * Get the other services
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOtherServices()
+    {
+        return $this->otherServices;
+    }
+
+    /**
+     * Add a other services
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @return BusReg
+     */
+    public function addOtherServices($otherServices)
+    {
+        if ($otherServices instanceof ArrayCollection) {
+            $this->otherServices = new ArrayCollection(
+                array_merge(
+                    $this->otherServices->toArray(),
+                    $otherServices->toArray()
+                )
+            );
+        } elseif (!$this->otherServices->contains($otherServices)) {
+            $this->otherServices->add($otherServices);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a other services
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @return BusReg
+     */
+    public function removeOtherServices($otherServices)
+    {
+        if ($this->otherServices->contains($otherServices)) {
+            $this->otherServices->removeElement($otherServices);
+        }
+
+        return $this;
     }
 
     /**
