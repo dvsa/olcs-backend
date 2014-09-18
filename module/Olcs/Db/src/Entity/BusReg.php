@@ -37,7 +37,8 @@ class BusReg implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\ReceivedDateField,
+        Traits\ServiceNo70Field,
+        Traits\ReceivedDateFieldAlt1,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -117,15 +118,6 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="reg_no", length=70, nullable=false)
      */
     protected $regNo;
-
-    /**
-     * Service no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
-     */
-    protected $serviceNo;
 
     /**
      * Start point
@@ -689,29 +681,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getRegNo()
     {
         return $this->regNo;
-    }
-
-    /**
-     * Set the service no
-     *
-     * @param string $serviceNo
-     * @return BusReg
-     */
-    public function setServiceNo($serviceNo)
-    {
-        $this->serviceNo = $serviceNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the service no
-     *
-     * @return string
-     */
-    public function getServiceNo()
-    {
-        return $this->serviceNo;
     }
 
     /**

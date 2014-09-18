@@ -37,6 +37,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
+        Traits\CategoryText1024Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -142,15 +143,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
      */
     protected $takenIntoConsideration;
-
-    /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
 
     /**
      * Convicted name
@@ -412,29 +404,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getTakenIntoConsideration()
     {
         return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
     }
 
     /**

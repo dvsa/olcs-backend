@@ -29,7 +29,7 @@ class S4 implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\ApplicationManyToOneAlt1,
-        Traits\ReceivedDateFieldAlt1,
+        Traits\ReceivedDateFieldAlt2,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

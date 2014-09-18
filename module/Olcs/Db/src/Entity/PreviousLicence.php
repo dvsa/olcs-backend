@@ -28,6 +28,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\LicNo18Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,15 +42,6 @@ class PreviousLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=false)
      */
     protected $previousLicenceType;
-
-    /**
-     * Lic no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
-     */
-    protected $licNo;
 
     /**
      * Holder name
@@ -117,29 +109,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     public function getPreviousLicenceType()
     {
         return $this->previousLicenceType;
-    }
-
-    /**
-     * Set the lic no
-     *
-     * @param string $licNo
-     * @return PreviousLicence
-     */
-    public function setLicNo($licNo)
-    {
-        $this->licNo = $licNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the lic no
-     *
-     * @return string
-     */
-    public function getLicNo()
-    {
-        return $this->licNo;
     }
 
     /**

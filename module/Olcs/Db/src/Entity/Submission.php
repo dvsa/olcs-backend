@@ -17,7 +17,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_submission_case1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_submission_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_submission_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_submission_ref_data1_idx", columns={"submission_type"})
  *    }
  * )
  */
@@ -32,6 +33,16 @@ class Submission implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Submission type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
+     */
+    protected $submissionType;
 
     /**
      * Text
@@ -57,6 +68,29 @@ class Submission implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->submissionActions = new ArrayCollection();
+    }
+
+    /**
+     * Set the submission type
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionType
+     * @return Submission
+     */
+    public function setSubmissionType($submissionType)
+    {
+        $this->submissionType = $submissionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionType()
+    {
+        return $this->submissionType;
     }
 
     /**
