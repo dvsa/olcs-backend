@@ -25,13 +25,21 @@ class LegacyPiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsv3Field,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Goods or psv
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="goods_or_psv", length=3, nullable=false)
+     */
+    protected $goodsOrPsv;
 
     /**
      * Is ni
@@ -50,6 +58,29 @@ class LegacyPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="is_decision", nullable=false)
      */
     protected $isDecision;
+
+    /**
+     * Set the goods or psv
+     *
+     * @param string $goodsOrPsv
+     * @return LegacyPiReason
+     */
+    public function setGoodsOrPsv($goodsOrPsv)
+    {
+        $this->goodsOrPsv = $goodsOrPsv;
+
+        return $this;
+    }
+
+    /**
+     * Get the goods or psv
+     *
+     * @return string
+     */
+    public function getGoodsOrPsv()
+    {
+        return $this->goodsOrPsv;
+    }
 
     /**
      * Set the is ni

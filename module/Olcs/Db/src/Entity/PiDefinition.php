@@ -14,7 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_definition",
  *    indexes={
- *        @ORM\Index(name="fk_pi_definition_pi_definition_category1_idx", columns={"pi_definition_category_id"})
+ *        @ORM\Index(name="fk_pi_definition_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_pi_definition_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_definition_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -22,16 +24,20 @@ class PiDefinition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\GoodsOrPsv3Field,
-        Traits\IsNiField;
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOne,
+        Traits\Description255Field,
+        Traits\CustomCreatedOnField,
+        Traits\CustomLastModifiedOnField,
+        Traits\CustomVersionField;
 
     /**
      * Pi definition category
      *
-     * @var \Olcs\Db\Entity\PiDefinitionCategory
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiDefinitionCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_definition_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="string", name="pi_definition_category", length=32, nullable=false)
      */
     protected $piDefinitionCategory;
 
@@ -45,18 +51,18 @@ class PiDefinition implements Interfaces\EntityInterface
     protected $sectionCode;
 
     /**
-     * Definition
+     * Is ni
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="definition", length=255, nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
-    protected $definition;
+    protected $isNi;
 
     /**
      * Set the pi definition category
      *
-     * @param \Olcs\Db\Entity\PiDefinitionCategory $piDefinitionCategory
+     * @param string $piDefinitionCategory
      * @return PiDefinition
      */
     public function setPiDefinitionCategory($piDefinitionCategory)
@@ -69,7 +75,7 @@ class PiDefinition implements Interfaces\EntityInterface
     /**
      * Get the pi definition category
      *
-     * @return \Olcs\Db\Entity\PiDefinitionCategory
+     * @return string
      */
     public function getPiDefinitionCategory()
     {
@@ -100,25 +106,25 @@ class PiDefinition implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the definition
+     * Set the is ni
      *
-     * @param string $definition
+     * @param string $isNi
      * @return PiDefinition
      */
-    public function setDefinition($definition)
+    public function setIsNi($isNi)
     {
-        $this->definition = $definition;
+        $this->isNi = $isNi;
 
         return $this;
     }
 
     /**
-     * Get the definition
+     * Get the is ni
      *
      * @return string
      */
-    public function getDefinition()
+    public function getIsNi()
     {
-        return $this->definition;
+        return $this->isNi;
     }
 }

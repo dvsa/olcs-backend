@@ -22,8 +22,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
- *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_pi_presided_by_role1_idx", columns={"presided_by_role"})
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc2_idx", columns={"decided_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"agreed_by_tc_role"}),
+ *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"decided_by_tc_role"})
  *    }
  * )
  */
@@ -31,19 +33,56 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
-        Traits\PresidedByRoleManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\AgreedDateField,
-        Traits\PresidingTcOther45Field,
-        Traits\Comment4000Field,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
+        Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Decided by tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTc;
+
+    /**
+     * Agreed by tc role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
+     */
+    protected $agreedByTcRole;
+
+    /**
+     * Decided by tc role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTcRole;
+
+    /**
+     * Agreed by tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="agreed_by_tc_id", referencedColumnName="id", nullable=true)
+     */
+    protected $agreedByTc;
 
     /**
      * Assigned to
@@ -206,6 +245,98 @@ class Pi implements Interfaces\EntityInterface
         $this->decisions = new ArrayCollection();
         $this->reasons = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
+    }
+
+    /**
+     * Set the decided by tc
+     *
+     * @param \Olcs\Db\Entity\PresidingTc $decidedByTc
+     * @return Pi
+     */
+    public function setDecidedByTc($decidedByTc)
+    {
+        $this->decidedByTc = $decidedByTc;
+
+        return $this;
+    }
+
+    /**
+     * Get the decided by tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getDecidedByTc()
+    {
+        return $this->decidedByTc;
+    }
+
+    /**
+     * Set the agreed by tc role
+     *
+     * @param \Olcs\Db\Entity\RefData $agreedByTcRole
+     * @return Pi
+     */
+    public function setAgreedByTcRole($agreedByTcRole)
+    {
+        $this->agreedByTcRole = $agreedByTcRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed by tc role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAgreedByTcRole()
+    {
+        return $this->agreedByTcRole;
+    }
+
+    /**
+     * Set the decided by tc role
+     *
+     * @param \Olcs\Db\Entity\RefData $decidedByTcRole
+     * @return Pi
+     */
+    public function setDecidedByTcRole($decidedByTcRole)
+    {
+        $this->decidedByTcRole = $decidedByTcRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the decided by tc role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getDecidedByTcRole()
+    {
+        return $this->decidedByTcRole;
+    }
+
+    /**
+     * Set the agreed by tc
+     *
+     * @param \Olcs\Db\Entity\PresidingTc $agreedByTc
+     * @return Pi
+     */
+    public function setAgreedByTc($agreedByTc)
+    {
+        $this->agreedByTc = $agreedByTc;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed by tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getAgreedByTc()
+    {
+        return $this->agreedByTc;
     }
 
     /**
