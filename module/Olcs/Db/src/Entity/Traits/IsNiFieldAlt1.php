@@ -5,25 +5,25 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Is ni field trait
+ * Is ni field alt1 trait
  *
  * Auto-Generated (Shared between 2 entities)
  */
-trait IsNiField
+trait IsNiFieldAlt1
 {
     /**
      * Is ni
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
      */
     protected $isNi;
 
     /**
      * Set the is ni
      *
-     * @param boolean $isNi
+     * @param string $isNi
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
     public function setIsNi($isNi)
@@ -36,7 +36,7 @@ trait IsNiField
     /**
      * Get the is ni
      *
-     * @return boolean
+     * @return string
      */
     public function getIsNi()
     {
