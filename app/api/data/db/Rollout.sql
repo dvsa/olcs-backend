@@ -673,7 +673,16 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (6, 'submission_type', 'submission_type_o_env', 'ENV', NULL),
     (7, 'submission_type', 'submission_type_o_irfo', 'IRFO', NULL),
     (8, 'submission_type', 'submission_type_o_bus_reg', 'Bus Registration', NULL),
-    (9, 'submission_type', 'submission_type_o_tm', 'TM Only', NULL);
+    (9, 'submission_type', 'submission_type_o_tm', 'TM Only', NULL),
+    (1, 'submission_type_title', 'submission_type_t_mlh', 'MLH Submission', NULL),
+    (2, 'submission_type_title', 'submission_type_t_clo_g', 'Licencing (G) Submission', NULL),
+    (3, 'submission_type_title', 'submission_type_t_clo_psv', 'Licencing (PSV) Submission', NULL),
+    (4, 'submission_type_title', 'submission_type_t_clo_fep', 'Licencing Fees Submission', NULL),
+    (5, 'submission_type_title', 'submission_type_t_otc', 'Compliance submission', NULL),
+    (6, 'submission_type_title', 'submission_type_t_env', 'ENV Submission', NULL),
+    (7, 'submission_type_title', 'submission_type_t_irfo', 'IRFO Submission', NULL),
+    (8, 'submission_type_title', 'submission_type_t_bus_reg', 'Bus Registration Submission', NULL),
+    (9, 'submission_type_title', 'submission_type_t_tm', 'TM Only Submission', NULL);
 
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
