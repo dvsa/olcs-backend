@@ -28,6 +28,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOne,
@@ -47,16 +48,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * S4
-     *
-     * @var \Olcs\Db\Entity\S4
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\S4", fetch="LAZY")
-     * @ORM\JoinColumn(name="s4_id", referencedColumnName="id", nullable=true)
-     */
-    protected $s4;
 
     /**
      * Action
@@ -84,29 +75,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking = 0;
-
-    /**
-     * Set the s4
-     *
-     * @param \Olcs\Db\Entity\S4 $s4
-     * @return ApplicationOperatingCentre
-     */
-    public function setS4($s4)
-    {
-        $this->s4 = $s4;
-
-        return $this;
-    }
-
-    /**
-     * Get the s4
-     *
-     * @return \Olcs\Db\Entity\S4
-     */
-    public function getS4()
-    {
-        return $this->s4;
-    }
 
     /**
      * Set the action
