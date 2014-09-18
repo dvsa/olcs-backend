@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Vi action1 field trait
  *
- * Auto-Generated (Shared between 8 entities)
+ * Auto-Generated (Shared between 7 entities)
  */
 trait ViAction1Field
 {

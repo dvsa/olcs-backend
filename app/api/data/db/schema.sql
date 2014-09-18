@@ -871,7 +871,7 @@ CREATE TABLE IF NOT EXISTS `licence_operating_centre` (
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
-  `s4_id` INT NOT NULL,
+  `s4_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_LicenceOperatingCentre_licence_idx` (`licence_id` ASC),
   INDEX `fk_LicenceOperatingCentre_OperatingCentre1_idx` (`operating_centre_id` ASC),
