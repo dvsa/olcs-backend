@@ -31,6 +31,7 @@ class Decision implements Interfaces\EntityInterface
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
+        Traits\IsNiField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
