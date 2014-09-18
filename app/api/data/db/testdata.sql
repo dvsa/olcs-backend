@@ -7,6 +7,7 @@ TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
+TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_case`;
 TRUNCATE TABLE `condition_undertaking`;
@@ -115,9 +116,12 @@ INSERT INTO `bus_reg`
  `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
+  (1, 1, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 1,
    1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
-  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1),
+  (2, 1, 'bs_yes', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 1,
+   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 46474, null, null, null, null, null, 1);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -194,6 +198,14 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
 (1,7,3,3,NOW(),NOW(),1);
+
+INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`, `ebsr_submission_type_id`,
+    `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
+    `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
+    `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
+    `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
+  (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
+   null, 0, null);
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`) VALUES
