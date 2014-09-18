@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `ref_data` (
   `ref_data_category_id` VARCHAR(32) NOT NULL,
   `olbs_key` VARCHAR(20) NULL,
   `parent_id` VARCHAR(32) NULL,
+  `display_order` INTEGER NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ref_data_ref_data1_idx` (`parent_id` ASC),
   CONSTRAINT `fk_ref_data_ref_data1`
@@ -26,7 +27,6 @@ CREATE TABLE IF NOT EXISTS `ref_data` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `organisation`
@@ -3272,6 +3272,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `submission` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
+  `submission_type` VARCHAR(32) NOT NULL,
   `text` TEXT NULL,
   `closed_date` DATETIME NULL,
   `created_by` INT NULL,
@@ -3283,6 +3284,7 @@ CREATE TABLE IF NOT EXISTS `submission` (
   INDEX `fk_submission_case1_idx` (`case_id` ASC),
   INDEX `fk_submission_user1_idx` (`created_by` ASC),
   INDEX `fk_submission_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_submission_ref_data1_idx` (`submission_type` ASC),
   CONSTRAINT `fk_submission_case1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3296,6 +3298,11 @@ CREATE TABLE IF NOT EXISTS `submission` (
   CONSTRAINT `fk_submission_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_submission_ref_data1`
+    FOREIGN KEY (`submission_type`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
