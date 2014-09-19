@@ -186,6 +186,15 @@ class Cases implements Interfaces\EntityInterface
     protected $prohibitionNote;
 
     /**
+     * Conviction note
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
+     */
+    protected $convictionNote;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -630,6 +639,29 @@ class Cases implements Interfaces\EntityInterface
     public function getProhibitionNote()
     {
         return $this->prohibitionNote;
+    }
+
+    /**
+     * Set the conviction note
+     *
+     * @param string $convictionNote
+     * @return Cases
+     */
+    public function setConvictionNote($convictionNote)
+    {
+        $this->convictionNote = $convictionNote;
+
+        return $this;
+    }
+
+    /**
+     * Get the conviction note
+     *
+     * @return string
+     */
+    public function getConvictionNote()
+    {
+        return $this->convictionNote;
     }
 
     /**
