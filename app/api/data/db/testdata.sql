@@ -8,7 +8,7 @@ TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
 TRUNCATE TABLE `complaint`;
-TRUNCATE TABLE `complaint_oc_licence`;
+TRUNCATE TABLE `complaint_case`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
@@ -125,12 +125,21 @@ VALUES
   (1, 1, 1, 1, 90840, '2013-11-25 00:00:00', '2013-11-27 13:41:00', 1),
   (2, 1, 1, 1, 90841, '2013-11-26 00:00:00', '2013-11-28 15:47:00', 1);
 
-INSERT INTO `complaint` (`id`, `case_id`, `complainant_contact_details_id`, `complaint_date`, `status`, `description`,
-    `complaint_type`, `vrm`, `created_by`, `driver_forename`, `driver_family_name`, `last_modified_by`, `created_on`, 
-    `last_modified_on`, `version`)
-VALUES
-    (3, 24, 7, '2014-09-16 08:59:53', 'cs_ack', 'Some major complaint about condition of vehicle', 'ct_cov',
-    'VRM123T', NULL, 'John', 'Smith', NULL, NULL, NULL, 1);
+
+INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
+    `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
+    `last_modified_on`, `version`) VALUES
+    (1,8,1,1,3,3,NOW(),'cs_ack','12345678','All tyres bald, broken wing mirror.','ct_cov',
+    'VRM1',NOW(),NOW(),1),
+    (2,8,1,1,3,3,NOW(),'cs_pin','12345678','Driving in excess of 70mph on dual carriageway',
+    'ct_spe','VRM2',NOW(),'2014-08-06 08:50:27',1),
+    (3,8,1,1,3,3,NOW(),'cs_rfs','12345678','Vehicle parked on bus stop.','ct_vpo','VRM1',
+    NOW(),NOW(),1);
+
+INSERT INTO `complaint_case` (`complaint_id`, `case_id`) VALUES
+    (1,24),
+    (2,24),
+    (3,24);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,

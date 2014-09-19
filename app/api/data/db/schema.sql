@@ -2607,37 +2607,66 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `complaint`
 -- -----------------------------------------------------
-
-CREATE TABLE `complaint` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `case_id` int(11) DEFAULT NULL,
-  `complainant_contact_details_id` int(11) DEFAULT NULL,
-  `complaint_date` datetime DEFAULT NULL,
-  `status` varchar(32) DEFAULT NULL,
-  `description` varchar(4000) DEFAULT NULL,
-  `complaint_type` varchar(32) DEFAULT NULL,
-  `vrm` varchar(20) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `driver_forename` varchar(40) DEFAULT NULL,
-  `driver_family_name` varchar(40) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
+CREATE TABLE IF NOT EXISTS `complaint` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `complainant_contact_details_id` INT NULL,
+  `complaint_date` DATETIME NULL,
+  `status` VARCHAR(32) NULL,
+  `value` VARCHAR(8) NULL,
+  `description` VARCHAR(4000) NULL,
+  `complaint_type` VARCHAR(32) NULL,
+  `organisation_id` INT NULL,
+  `driver_id` INT NULL,
+  `vrm` VARCHAR(20) NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  KEY `IDX_5F2732B553DF8182` (`complaint_type`),
-  KEY `IDX_5F2732B57B00651C` (`status`),
-  KEY `IDX_5F2732B5C97DA9B9` (`complainant_contact_details_id`),
-  KEY `IDX_5F2732B5DE12AB56` (`created_by`),
-  KEY `IDX_5F2732B565CF370E` (`last_modified_by`),
-  KEY `case_id` (`case_id`),
-  CONSTRAINT `complaint_cases_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`),
-  CONSTRAINT `FK_5F2732B553DF8182` FOREIGN KEY (`complaint_type`) REFERENCES `ref_data` (`id`),
-  CONSTRAINT `FK_5F2732B565CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_5F2732B57B00651C` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`),
-  CONSTRAINT `FK_5F2732B5C97DA9B9` FOREIGN KEY (`complainant_contact_details_id`) REFERENCES `contact_details` (`id`),
-  CONSTRAINT `FK_5F2732B5DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB;
+  INDEX `fk_complaint_contact_details1_idx` (`complainant_contact_details_id` ASC),
+  INDEX `fk_complaint_user1_idx` (`created_by` ASC),
+  INDEX `fk_complaint_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_complaint_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_complaint_ref_data1_idx` (`status` ASC),
+  INDEX `fk_complaint_ref_data2_idx` (`complaint_type` ASC),
+  INDEX `fk_complaint_driver1_idx` (`driver_id` ASC),
+  CONSTRAINT `fk_complaint_contact_details1`
+    FOREIGN KEY (`complainant_contact_details_id`)
+    REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_organisation1`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_ref_data1`
+    FOREIGN KEY (`status`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_ref_data2`
+    FOREIGN KEY (`complaint_type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_driver1`
+    FOREIGN KEY (`driver_id`)
+    REFERENCES `driver` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -2697,6 +2726,47 @@ CREATE TABLE IF NOT EXISTS `statement` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `complaint_case`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `complaint_case` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `case_id` INT NOT NULL,
+  `complaint_id` INT NOT NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_complaint_case_complaint1_idx` (`complaint_id` ASC),
+  INDEX `fk_complaint_case_user1_idx` (`created_by` ASC),
+  INDEX `fk_complaint_case_user2_idx` (`last_modified_by` ASC),
+  UNIQUE INDEX `complaint_case_unique` (`case_id` ASC, `complaint_id` ASC),
+  CONSTRAINT `fk_complaint_case_case1`
+    FOREIGN KEY (`case_id`)
+    REFERENCES `cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_case_complaint1`
+    FOREIGN KEY (`complaint_id`)
+    REFERENCES `complaint` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_case_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_case_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `prohibition`
@@ -2800,8 +2870,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `organisation_id` INT NULL,
   `transport_manager_id` INT NULL,
   `case_id` INT NOT NULL,
-  `person_firstname` VARCHAR(70) NULL,
-  `person_lastname` VARCHAR(70) NULL,
+  `convicted_name` VARCHAR(70) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
