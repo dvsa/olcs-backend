@@ -1131,6 +1131,7 @@ CREATE TABLE IF NOT EXISTS `cases` (
   `annual_test_history` VARCHAR(4000) NULL,
   `prohibition_note` VARCHAR(4000) NULL,
   `conviction_note` VARCHAR(4000) NULL,
+  `penalties_note` VARCHAR(4000) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
