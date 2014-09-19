@@ -45,6 +45,15 @@ class Decision implements Interfaces\EntityInterface
     protected $pis;
 
     /**
+     * Is ni
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     */
+    protected $isNi;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -116,5 +125,28 @@ class Decision implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param boolean $isNi
+     * @return Decision
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return boolean
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 }

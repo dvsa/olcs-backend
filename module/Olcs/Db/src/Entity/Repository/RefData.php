@@ -14,6 +14,7 @@ class RefData extends EntityRepository
     {
         $qb = $this->createQueryBuilder('r');
         $qb->where('r.refDataCategoryId = ?0');
+        $qb->orderBy('r.displayOrder');
 
         $qb->setParameters([$category]);
 
