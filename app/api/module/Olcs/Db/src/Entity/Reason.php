@@ -30,7 +30,7 @@ class Reason implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\SectionCode50Field,
         Traits\Description255Field,
-        Traits\IsNiField,
+        Traits\IsNiFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

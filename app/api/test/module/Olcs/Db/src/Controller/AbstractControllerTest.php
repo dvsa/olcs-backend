@@ -53,7 +53,9 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockController(array('logRequest'));
 
-        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))->disableOriginalConstructor()->getMock();
+        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $mockEvent->expects($this->any())
             ->method('getRouteMatch')
@@ -85,7 +87,9 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
             ->with('action')
             ->will($this->returnValue('missing-action'));
 
-        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))->disableOriginalConstructor()->getMock();
+        $mockEvent = $this->getMockBuilder('\Zend\Mvc\MvcEvent', array('getRouteMatch'))
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $mockEvent->expects($this->any())
             ->method('getRouteMatch')
