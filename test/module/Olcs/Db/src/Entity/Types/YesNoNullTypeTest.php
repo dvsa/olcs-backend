@@ -33,7 +33,10 @@ class YesNoNullTypeTest extends PHPUnit_Framework_TestCase
     public function testGetSqlDeclaration()
     {
         $mockPlatform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
-        $this->assertEquals('tinyint(1) NULL COMMENT \'(DC2Type:yesnonull)\'', $this->type->getSqlDeclaration(array(), $mockPlatform));
+        $this->assertEquals(
+            'tinyint(1) NULL COMMENT \'(DC2Type:yesnonull)\'',
+            $this->type->getSqlDeclaration(array(), $mockPlatform)
+        );
     }
 
     /**
