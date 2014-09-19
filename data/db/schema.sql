@@ -2672,100 +2672,35 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `statement`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `statement` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `case_id` INT NOT NULL,
-  `statement_type` INT NOT NULL,
-  `vrm` VARCHAR(20) NULL,
-  `stopped_date` DATETIME NULL,
-  `requested_date` DATETIME NULL,
-  `authorisers_title` VARCHAR(40) NULL,
-  `authorisers_decision` VARCHAR(4000) NULL,
-  `contact_type` VARCHAR(32) NULL,
-  `issued_date` DATETIME NULL,
-  `licence_no` VARCHAR(20) NULL,
-  `licence_type` VARCHAR(32) NULL,
-  `requestors_body` VARCHAR(40) NULL,
-  `requestors_address_id` INT NULL,
-  `requestors_family_name` VARCHAR(35) NULL,
-  `requestors_forename` VARCHAR(35) NULL,
-  `created_by` INT NULL,
-  `last_modified_by` INT NULL,
-  `created_on` DATETIME NULL,
-  `last_modified_on` DATETIME NULL,
-  `version` INT NOT NULL DEFAULT 1,
-  INDEX `fk_statement_case1_idx` (`case_id` ASC),
+CREATE TABLE `complaint` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `complainant_forename` varchar(40) DEFAULT NULL,
+  `complainant_family_name` varchar(40) DEFAULT NULL,
+  `status` varchar(32) DEFAULT NULL,
+  `complaint_type` varchar(32) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `case_id` int(11) DEFAULT NULL,
+  `complaint_date` datetime DEFAULT NULL,
+  `driver_forename` varchar(40) DEFAULT NULL,
+  `driver_family_name` varchar(40) DEFAULT NULL,
+  `description` varchar(4000) DEFAULT NULL,
+  `vrm` varchar(20) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  INDEX `fk_statement_address1_idx` (`requestors_address_id` ASC),
-  INDEX `fk_statement_user1_idx` (`created_by` ASC),
-  INDEX `fk_statement_user2_idx` (`last_modified_by` ASC),
-  INDEX `fk_statement_ref_data2_idx` (`contact_type` ASC),
-  CONSTRAINT `fk_statement_case1`
-    FOREIGN KEY (`case_id`)
-    REFERENCES `cases` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_address1`
-    FOREIGN KEY (`requestors_address_id`)
-    REFERENCES `address` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_ref_data2`
-    FOREIGN KEY (`contact_type`)
-    REFERENCES `ref_data` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `complaint_case`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `complaint_case` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `case_id` INT NOT NULL,
-  `complaint_id` INT NOT NULL,
-  `created_by` INT NULL,
-  `last_modified_by` INT NULL,
-  `created_on` DATETIME NULL,
-  `last_modified_on` DATETIME NULL,
-  `version` INT NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  INDEX `fk_complaint_case_complaint1_idx` (`complaint_id` ASC),
-  INDEX `fk_complaint_case_user1_idx` (`created_by` ASC),
-  INDEX `fk_complaint_case_user2_idx` (`last_modified_by` ASC),
-  UNIQUE INDEX `complaint_case_unique` (`case_id` ASC, `complaint_id` ASC),
-  CONSTRAINT `fk_complaint_case_case1`
-    FOREIGN KEY (`case_id`)
-    REFERENCES `cases` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_complaint_case_complaint1`
-    FOREIGN KEY (`complaint_id`)
-    REFERENCES `complaint` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_complaint_case_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_complaint_case_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `IDX_5F2732B57B00651C` (`status`),
+  KEY `IDX_5F2732B553DF8182` (`complaint_type`),
+  KEY `IDX_5F2732B5DE12AB56` (`created_by`),
+  KEY `IDX_5F2732B565CF370E` (`last_modified_by`),
+  KEY `IDX_5F2732B5CF10D4F5` (`case_id`),
+  CONSTRAINT `FK_5F2732B553DF8182` FOREIGN KEY (`complaint_type`) REFERENCES `ref_data` (`id`),
+  CONSTRAINT `FK_5F2732B565CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_5F2732B57B00651C` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`),
+  CONSTRAINT `FK_5F2732B5CF10D4F5` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`),
+  CONSTRAINT `FK_5F2732B5DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB;
 
 
 -- -----------------------------------------------------
@@ -2870,7 +2805,8 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `organisation_id` INT NULL,
   `transport_manager_id` INT NULL,
   `case_id` INT NOT NULL,
-  `convicted_name` VARCHAR(70) NULL,
+  `person_firstname` VARCHAR(70) NULL,
+  `person_lastname` VARCHAR(70) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
