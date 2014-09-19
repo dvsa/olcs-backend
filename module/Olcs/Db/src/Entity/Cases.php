@@ -186,6 +186,15 @@ class Cases implements Interfaces\EntityInterface
     protected $prohibitionNote;
 
     /**
+     * Complaint case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ComplaintCase", mappedBy="case")
+     */
+    protected $complaintCases;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -219,6 +228,7 @@ class Cases implements Interfaces\EntityInterface
     {
         $this->legacyOffences = new ArrayCollection();
         $this->submissionSections = new ArrayCollection();
+        $this->complaintCases = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -630,6 +640,72 @@ class Cases implements Interfaces\EntityInterface
     public function getProhibitionNote()
     {
         return $this->prohibitionNote;
+    }
+
+    /**
+     * Set the complaint case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
+     * @return Cases
+     */
+    public function setComplaintCases($complaintCases)
+    {
+        $this->complaintCases = $complaintCases;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaint cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getComplaintCases()
+    {
+        return $this->complaintCases;
+    }
+
+    /**
+     * Add a complaint cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
+     * @return Cases
+     */
+    public function addComplaintCases($complaintCases)
+    {
+        if ($complaintCases instanceof ArrayCollection) {
+            $this->complaintCases = new ArrayCollection(
+                array_merge(
+                    $this->complaintCases->toArray(),
+                    $complaintCases->toArray()
+                )
+            );
+        } elseif (!$this->complaintCases->contains($complaintCases)) {
+            $this->complaintCases->add($complaintCases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a complaint cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaintCases
+     * @return Cases
+     */
+    public function removeComplaintCases($complaintCases)
+    {
+        if ($this->complaintCases->contains($complaintCases)) {
+            $this->complaintCases->removeElement($complaintCases);
+        }
+
+        return $this;
     }
 
     /**
