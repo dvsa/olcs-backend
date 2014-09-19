@@ -611,7 +611,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('task-date-types', 'tdt_all', 'All', null),
     ('task-status-types', 'tst_open', 'Open', null),
     ('task-status-types', 'tst_closed', 'Closed', null),
-    ('task-status-types', 'tst_all', 'All', null);
+    ('task-status-types', 'tst_all', 'All', null),
+    ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
+    ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
+    ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
+;
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
