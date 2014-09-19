@@ -3875,6 +3875,15 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `deleted_date` DATETIME NULL,
   `assigned_to` INT NULL,
   `comment` VARCHAR(4000) NULL,
+  `call_up_letter_date` DATE NULL,
+  `brief_to_tc_date` DATE NULL,
+  `written_outcome` VARCHAR(32) NULL,
+  `written_reason_date` DATE NULL,
+  `decision_letter_sent_date` DATE NULL,
+  `tc_written_decision_date` DATE NULL,
+  `tc_written_reason_date` DATE NULL,
+  `written_reason_letter_date` DATE NULL,
+  `decision_letter_sent_after_written_decision_date` DATE NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -3890,6 +3899,7 @@ CREATE TABLE IF NOT EXISTS `pi` (
   INDEX `fk_pi_presiding_tc2_idx` (`decided_by_tc_id` ASC),
   INDEX `fk_pi_ref_data1_idx` (`agreed_by_tc_role` ASC),
   INDEX `fk_pi_ref_data2_idx` (`decided_by_tc_role` ASC),
+  INDEX `fk_pi_ref_data3_idx` (`written_outcome` ASC),
   CONSTRAINT `fk_pi_detail_cases1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3933,6 +3943,11 @@ CREATE TABLE IF NOT EXISTS `pi` (
   CONSTRAINT `fk_pi_ref_data2`
     FOREIGN KEY (`decided_by_tc_role`)
     REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_ref_data3`
+  FOREIGN KEY (`written_outcome`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
