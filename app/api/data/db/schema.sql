@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `ref_data` (
   `ref_data_category_id` VARCHAR(32) NOT NULL,
   `olbs_key` VARCHAR(20) NULL,
   `parent_id` VARCHAR(32) NULL,
+  `display_order` INTEGER NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ref_data_ref_data1_idx` (`parent_id` ASC),
   CONSTRAINT `fk_ref_data_ref_data1`
@@ -26,7 +27,6 @@ CREATE TABLE IF NOT EXISTS `ref_data` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `organisation`
@@ -3272,6 +3272,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `submission` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
+  `submission_type` VARCHAR(32) NOT NULL,
   `text` TEXT NULL,
   `closed_date` DATETIME NULL,
   `created_by` INT NULL,
@@ -3283,6 +3284,7 @@ CREATE TABLE IF NOT EXISTS `submission` (
   INDEX `fk_submission_case1_idx` (`case_id` ASC),
   INDEX `fk_submission_user1_idx` (`created_by` ASC),
   INDEX `fk_submission_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_submission_ref_data1_idx` (`submission_type` ASC),
   CONSTRAINT `fk_submission_case1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3296,6 +3298,11 @@ CREATE TABLE IF NOT EXISTS `submission` (
   CONSTRAINT `fk_submission_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_submission_ref_data1`
+    FOREIGN KEY (`submission_type`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -3849,13 +3856,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pi` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `agreed_by_tc_id` INT NULL,
+  `decided_by_tc_id` INT NULL,
+  `agreed_by_tc_role` VARCHAR(32) NULL,
+  `decided_by_tc_role` VARCHAR(32) NULL,
   `case_id` INT NOT NULL,
   `agreed_date` DATE NULL,
   `witnesses` INT NULL,
-  `presiding_tc_id` INT NULL,
-  `presiding_tc_other` VARCHAR(45) NULL,
-  `presided_by_role` VARCHAR(32) NULL,
-  `comment` VARCHAR(4000) NULL,
   `is_cancelled` TINYINT(1) NOT NULL DEFAULT 0,
   `pi_status` VARCHAR(32) NOT NULL,
   `is_adjourned` TINYINT(1) NOT NULL DEFAULT 0,
@@ -3867,6 +3874,16 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `decision_notes` TEXT NULL,
   `deleted_date` DATETIME NULL,
   `assigned_to` INT NULL,
+  `comment` VARCHAR(4000) NULL,
+  `call_up_letter_date` DATE NULL,
+  `brief_to_tc_date` DATE NULL,
+  `written_outcome` VARCHAR(32) NULL,
+  `written_reason_date` DATE NULL,
+  `decision_letter_sent_date` DATE NULL,
+  `tc_written_decision_date` DATE NULL,
+  `tc_written_reason_date` DATE NULL,
+  `written_reason_letter_date` DATE NULL,
+  `decision_letter_sent_after_written_decision_date` DATE NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -3878,8 +3895,11 @@ CREATE TABLE IF NOT EXISTS `pi` (
   INDEX `fk_pi_detail_user1_idx` (`created_by` ASC),
   INDEX `fk_pi_detail_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_pi_user1_idx` (`assigned_to` ASC),
-  INDEX `fk_pi_presiding_tc1_idx` (`presiding_tc_id` ASC),
-  INDEX `fk_pi_presided_by_role1_idx` (`presided_by_role` ASC),
+  INDEX `fk_pi_presiding_tc1_idx` (`agreed_by_tc_id` ASC),
+  INDEX `fk_pi_presiding_tc2_idx` (`decided_by_tc_id` ASC),
+  INDEX `fk_pi_ref_data1_idx` (`agreed_by_tc_role` ASC),
+  INDEX `fk_pi_ref_data2_idx` (`decided_by_tc_role` ASC),
+  INDEX `fk_pi_ref_data3_idx` (`written_outcome` ASC),
   CONSTRAINT `fk_pi_detail_cases1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
@@ -3906,13 +3926,28 @@ CREATE TABLE IF NOT EXISTS `pi` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_presiding_tc1`
-    FOREIGN KEY (`presiding_tc_id`)
+    FOREIGN KEY (`agreed_by_tc_id`)
     REFERENCES `presiding_tc` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_presided_by_role1`
-    FOREIGN KEY (`presided_by_role`)
+  CONSTRAINT `fk_pi_presiding_tc2`
+    FOREIGN KEY (`decided_by_tc_id`)
+    REFERENCES `presiding_tc` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_ref_data1`
+    FOREIGN KEY (`agreed_by_tc_role`)
     REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_ref_data2`
+    FOREIGN KEY (`decided_by_tc_role`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_ref_data3`
+  FOREIGN KEY (`written_outcome`)
+  REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -4017,28 +4052,35 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `pi_definition_category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pi_definition_category` (
-  `id` INT NOT NULL,
-  `category` VARCHAR(32) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `pi_definition`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pi_definition` (
-  `id` INT NOT NULL,
-  `pi_definition_category_id` INT NOT NULL,
-  `goods_or_psv` VARCHAR(3) NOT NULL COMMENT 'GV or PSV',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `pi_definition_category` VARCHAR(32) NOT NULL,
   `section_code` VARCHAR(20) NOT NULL,
-  `definition` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) NOT NULL,
   `is_ni` TINYINT(1) NOT NULL,
+  `goods_or_psv` VARCHAR(32) NOT NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_pi_definition_pi_definition_category1_idx` (`pi_definition_category_id` ASC),
-  CONSTRAINT `fk_pi_definition_pi_definition_category1`
-    FOREIGN KEY (`pi_definition_category_id`)
-    REFERENCES `pi_definition_category` (`id`)
+  INDEX `fk_pi_definition_ref_data1_idx` (`goods_or_psv` ASC),
+  INDEX `fk_pi_definition_user1_idx` (`created_by` ASC),
+  INDEX `fk_pi_definition_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_pi_definition_ref_data1`
+    FOREIGN KEY (`goods_or_psv`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_definition_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_definition_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -7415,6 +7457,7 @@ CREATE TABLE IF NOT EXISTS `decision` (
   `section_code` VARCHAR(50) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
   `is_read_only` TINYINT(1) NOT NULL,
+  `is_ni` tinyint(1) NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
