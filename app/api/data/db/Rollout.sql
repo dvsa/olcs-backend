@@ -535,6 +535,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
 
+    ('stay_type', 'stay_t_tc', 'Traffic commissioner / Transport Regulator',
+    null),
+    ('stay_type', 'stay_t_ut', 'Upper tribunal', null),
+
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
