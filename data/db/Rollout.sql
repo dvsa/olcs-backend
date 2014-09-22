@@ -618,7 +618,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('statement_type', 'statement_type.3', 'NI Section 43', null),
     ('statement_type', 'statement_type.4', 'NI Section 9', null),
     ('statement_type', 'statement_type.5', 'NI Section 36', null),
-    ('statement_type', 'statement_type.6', 'NI Section 38', null);
+    ('statement_type', 'statement_type.6', 'NI Section 38', null),
+
+    ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
+    ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
+    ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
+;
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
