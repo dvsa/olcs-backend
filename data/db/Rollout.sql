@@ -535,6 +535,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
 
+    ('stay_type', 'stay_t_tc', 'Traffic commissioner / Transport Regulator',
+    null),
+    ('stay_type', 'stay_t_ut', 'Upper tribunal', null),
+
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
@@ -611,7 +615,19 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('task-date-types', 'tdt_all', 'All', null),
     ('task-status-types', 'tst_open', 'Open', null),
     ('task-status-types', 'tst_closed', 'Closed', null),
-    ('task-status-types', 'tst_all', 'All', null);
+    ('task-status-types', 'tst_all', 'All', null),
+
+    ('statement_type', 'statement_type.1', 'Section 43', null),
+    ('statement_type', 'statement_type.2', 'Section 9', null),
+    ('statement_type', 'statement_type.3', 'NI Section 43', null),
+    ('statement_type', 'statement_type.4', 'NI Section 9', null),
+    ('statement_type', 'statement_type.5', 'NI Section 36', null),
+    ('statement_type', 'statement_type.6', 'NI Section 38', null),
+
+    ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
+    ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
+    ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
+;
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
