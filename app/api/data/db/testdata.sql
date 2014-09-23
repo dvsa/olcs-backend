@@ -31,6 +31,8 @@ TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `pi_reason`;
 TRUNCATE TABLE `pi_venue`;
+TRUNCATE TABLE `prohibition`;
+TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
@@ -628,6 +630,17 @@ INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
     (2,'Presiding TC Name 2'),
     (3,'Presiding TC Name 3');
+
+INSERT INTO `prohibition` (`id`, `prohibition_type`, `last_modified_by`, `created_by`, `case_id`, `prohibition_date`,
+ `cleared_date`, `is_trailer`, `imposed_at`, `vrm`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 'pro_t_d', 1, 1, 24, '2014-01-24', '2014-03-11', 1, 'Doncaster', 'AB52 CDE', '2014-06-09 11:01:21',
+   '2014-06-09 11:01:21', 1);
+
+INSERT INTO `prohibition_defect` (`id`, `prohibition_id`, `last_modified_by`, `created_by`, `defect_type`, `notes`,
+ `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 1, 1, 'defect type', 'defect description', '2014-06-09 12:06:41', '2014-06-09 12:06:41', 1);
 
 INSERT INTO `impounding`
     (`id`, `pi_venue_id`, `impounding_type`, `case_id`,
