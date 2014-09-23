@@ -107,7 +107,10 @@ abstract class ServiceAbstract
 
         $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
 
-        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierConverter($this->getEntityManager());
+        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierFlattener(
+            $this->getEntityManager()->getUnitOfWork(),
+            $this->getEntityManager()->getMetadataFactory()
+        );
 
         $flatIds = $identifierConverter->flattenIdentifier($class, $id);
 
