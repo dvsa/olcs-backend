@@ -381,6 +381,7 @@ INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_c
 INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id`, `address_id`, `created_by`,
     `last_modified_by`, `description`, `fao`, `contact_type`, `email_address`, `created_on`, `last_modified_on`,
     `version`, `deleted_date`, `forename`, `family_name`) VALUES
+    (1,NULL,NULL,NULL,26,0,2,NULL,NULL,'ct_ta',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (7,9,7,NULL,7,0,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (8,10,7,NULL,8,3,2,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (21,NULL,1,NULL,21,2,0,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
@@ -403,7 +404,7 @@ INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id
     (75,NULL,75,NULL,75,3,4,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (76,46,75,NULL,76,1,4,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (101,NULL,NULL,NULL,NULL,1,4,NULL,NULL,'ct_team_user','loggedin@user.com',NOW(),NOW(),1,NULL, 'Logged in', 'User');
+    (101,NULL,NULL,NULL,26,1,4,NULL,NULL,'ct_team_user','loggedin@user.com',NOW(),NOW(),1,NULL, 'Logged in', 'User');
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`, `birth_date`,
     `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `operator_name`,
@@ -767,11 +768,11 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
     (75,110,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0);
 
-INSERT INTO team(id,version,name) VALUES
-    (1,1,'Marketing'),
-    (2,1,'Development'),
-    (3,1,'Infrastructure'),
-    (4,1,'Support');
+INSERT INTO team(id,version,name,traffic_area_id) VALUES
+    (1,1,'Marketing',''),
+    (2,1,'Development','B'),
+    (3,1,'Infrastructure',''),
+    (4,1,'Support','');
 
 /**
  * NOTE: These inserts can't be grouped into one as they insert different columns
