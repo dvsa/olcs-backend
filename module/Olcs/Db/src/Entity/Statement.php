@@ -58,9 +58,9 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Statement type
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="statement_type", nullable=false)
+     * @ORM\Column(type="string", name="statement_type", length=32, nullable=false)
      */
     protected $statementType;
 
@@ -194,7 +194,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Set the statement type
      *
-     * @param int $statementType
+     * @param string $statementType
      * @return Statement
      */
     public function setStatementType($statementType)
@@ -207,7 +207,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Get the statement type
      *
-     * @return int
+     * @return string
      */
     public function getStatementType()
     {
