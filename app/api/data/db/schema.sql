@@ -2646,7 +2646,7 @@ CREATE TABLE `complaint` (
 CREATE TABLE IF NOT EXISTS `statement` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
-  `statement_type` INT NOT NULL,
+  `statement_type` varchar(32) NOT NULL,
   `vrm` VARCHAR(20) NULL,
   `stopped_date` DATETIME NULL,
   `requested_date` DATETIME NULL,
