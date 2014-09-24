@@ -153,13 +153,22 @@ class Conviction implements Interfaces\EntityInterface
     protected $categoryText;
 
     /**
-     * Convicted name
+     * Person firstname
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="convicted_name", length=70, nullable=true)
+     * @ORM\Column(type="string", name="person_firstname", length=70, nullable=true)
      */
-    protected $convictedName;
+    protected $personFirstname;
+
+    /**
+     * Person lastname
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="person_lastname", length=70, nullable=true)
+     */
+    protected $personLastname;
 
     /**
      * Set the case
@@ -438,25 +447,48 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the convicted name
+     * Set the person firstname
      *
-     * @param string $convictedName
+     * @param string $personFirstname
      * @return Conviction
      */
-    public function setConvictedName($convictedName)
+    public function setPersonFirstname($personFirstname)
     {
-        $this->convictedName = $convictedName;
+        $this->personFirstname = $personFirstname;
 
         return $this;
     }
 
     /**
-     * Get the convicted name
+     * Get the person firstname
      *
      * @return string
      */
-    public function getConvictedName()
+    public function getPersonFirstname()
     {
-        return $this->convictedName;
+        return $this->personFirstname;
+    }
+
+    /**
+     * Set the person lastname
+     *
+     * @param string $personLastname
+     * @return Conviction
+     */
+    public function setPersonLastname($personLastname)
+    {
+        $this->personLastname = $personLastname;
+
+        return $this;
+    }
+
+    /**
+     * Get the person lastname
+     *
+     * @return string
+     */
+    public function getPersonLastname()
+    {
+        return $this->personLastname;
     }
 }

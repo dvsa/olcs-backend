@@ -7,13 +7,15 @@ TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
+TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
-TRUNCATE TABLE `complaint_case`;
+TRUNCATE TABLE `complaint_oc_licence`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `document`;
+TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -29,6 +31,8 @@ TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `pi_reason`;
 TRUNCATE TABLE `pi_venue`;
+TRUNCATE TABLE `prohibition`;
+TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
@@ -337,9 +341,12 @@ INSERT INTO `bus_reg`
  `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
+  (1, 1, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 1,
    1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
-  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1),
+  (2, 1, 'bs_yes', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 1,
+   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 46474, null, null, null, null, null, 1);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -348,35 +355,27 @@ VALUES
   (2, 1, 1, 1, 90841, '2013-11-26 00:00:00', '2013-11-28 15:47:00', 1);
 
 
-INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
-    `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
-    `last_modified_on`, `version`) VALUES
-    (1,8,1,1,3,3,NOW(),'cs_ack','12345678','All tyres bald, broken wing mirror.','ct_cov',
-    'VRM1',NOW(),NOW(),1),
-    (2,8,1,1,3,3,NOW(),'cs_pin','12345678','Driving in excess of 70mph on dual carriageway',
-    'ct_spe','VRM2',NOW(),'2014-08-06 08:50:27',1),
-    (3,8,1,1,3,3,NOW(),'cs_rfs','12345678','Vehicle parked on bus stop.','ct_vpo','VRM1',
-    NOW(),NOW(),1);
-
-INSERT INTO `complaint_case` (`complaint_id`, `case_id`) VALUES
-    (1,24),
-    (2,24),
-    (3,24);
+INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `status`, `complaint_type`, `created_by`,
+    `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
+    `created_on`, `last_modified_on`, `version`)
+VALUES
+    ('Complainant First Name', 'Complainant Last Name', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,
     `is_fulfilled`, `notes`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,24,NULL,16,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
-    (2,24,NULL,16,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
-    (3,24,NULL,21,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
-    (4,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
-    (5,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
-    (6,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
-    (7,24,NULL,48,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,37,NULL,NULL,'Case','cat_oc','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
-    (9,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
-    (10,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
+    (1,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
+    (2,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
+    (3,24,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
+    (4,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
+    (5,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
+    (6,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
+    (7,24,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
+    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
+    (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
+    (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
+    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id`, `address_id`, `created_by`,
     `last_modified_by`, `description`, `fao`, `contact_type`, `email_address`, `created_on`, `last_modified_on`,
@@ -418,6 +417,14 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
 (1,7,3,3,NOW(),NOW(),1);
+
+INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`, `ebsr_submission_type_id`,
+    `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
+    `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
+    `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
+    `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
+  (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
+   null, 0, null);
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -625,6 +632,17 @@ INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
     (2,'Presiding TC Name 2'),
     (3,'Presiding TC Name 3');
+
+INSERT INTO `prohibition` (`id`, `prohibition_type`, `last_modified_by`, `created_by`, `case_id`, `prohibition_date`,
+ `cleared_date`, `is_trailer`, `imposed_at`, `vrm`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 'pro_t_d', 1, 1, 24, '2014-01-24', '2014-03-11', 1, 'Doncaster', 'AB52 CDE', '2014-06-09 11:01:21',
+   '2014-06-09 11:01:21', 1);
+
+INSERT INTO `prohibition_defect` (`id`, `prohibition_id`, `last_modified_by`, `created_by`, `defect_type`, `notes`,
+ `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 1, 1, 'defect type', 'defect description', '2014-06-09 12:06:41', '2014-06-09 12:06:41', 1);
 
 INSERT INTO `impounding`
     (`id`, `pi_venue_id`, `impounding_type`, `case_id`,
