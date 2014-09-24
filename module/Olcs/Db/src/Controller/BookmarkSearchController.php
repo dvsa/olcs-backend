@@ -1,10 +1,21 @@
 <?php
 
+/**
+ * Bookmark Search REST controller
+ *
+ * @author Nick Payne <nick.payne@valtech.co.uk>
+ */
+
 namespace Olcs\Db\Controller;
 
 use Zend\Http\Response;
 use Olcs\Db\Exceptions\RestResponseException;
 
+/**
+ * Bookmark Search REST controller
+ *
+ * @author Nick Payne <nick.payne@valtech.co.uk>
+ */
 class BookmarkSearchController extends AbstractBasicRestServerController
 {
     protected $allowedMethods = array('getList');
@@ -12,6 +23,11 @@ class BookmarkSearchController extends AbstractBasicRestServerController
     public function getList()
     {
         $queries = $this->getDataFromQuery();
+
+        if (!isset($queries['bundle'])) {
+            throw new RestResponseException('Please provide a bundle', Response::STATUS_CODE_500);
+        }
+
         $queries = json_decode($queries['bundle'], true);
 
         // we expect query to be an associative array whose
