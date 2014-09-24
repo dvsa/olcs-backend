@@ -292,6 +292,15 @@ return array(
         'short_notice_refused' => array(
             'type' => 'yesno'
         ),
+        'is_quality_partnership' => array(
+            'type' => 'yesno'
+        ),
+        'quality_partnership_facilities_used' => array(
+            'type' => 'yesno'
+        ),
+        'is_quality_contract' => array(
+            'type' => 'yesno'
+        ),
     ),
     'bus_reg_other_service' => array(
         'bus_reg_id' => array(
