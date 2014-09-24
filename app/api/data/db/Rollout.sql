@@ -386,6 +386,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_ppt', 'PPT', null),
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
+    ('document_type', 'doc_rtf', 'RTF', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -1667,7 +1668,8 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
     (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
     (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
-    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1);
+    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
+    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
 
 INSERT INTO `submission` (`id`, `last_modified_by`, `created_by`, `case_id`, `text`, `closed_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -2163,6 +2165,7 @@ DROP VIEW IF EXISTS document_search_view;
 
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
+        d.document_store_id, d.id document_id,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
 		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
