@@ -278,8 +278,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('app_status', 'apsts_valid', 'Valid', 'Valid'),
     ('app_status', 'apsts_withdrawn', 'Withdrawn', 'Withdrawn'),
     ('app_status', 'apsts_consideration', 'Under Consideration', 'New'),
-    ('app_status', 'apsts_new', 'New', null),
-    ('app_status', 'apsts_consideration', 'Under Consideration', null),
 
     ('bus_subsidy','bs_no', 'No', '1'),
     ('bus_subsidy','bs_yes', 'Yes', '2'),
