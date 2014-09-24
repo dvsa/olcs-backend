@@ -270,6 +270,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('appeal_reason', 'appeal_r_tm_pi', 'Regulatory PI', '1'),
     ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
+    ('app_status', 'apsts_not_submitted', 'Not Yet Submissed', null),
+    ('app_status', 'apsts_curtailed', 'Curtailed', 'Curtailed'),
+    ('app_status', 'apsts_granted', 'Granted', 'Granted'),
+    ('app_status', 'apsts_ntu', 'Not Taken Up', 'NTU'),
+    ('app_status', 'apsts_refused', 'Refused', 'Refused'),
+    ('app_status', 'apsts_valid', 'Valid', 'Valid'),
+    ('app_status', 'apsts_withdrawn', 'Withdrawn', 'Withdrawn'),
+    ('app_status', 'apsts_consideration', 'Under Consideration', 'New'),
     ('app_status', 'apsts_new', 'New', null),
     ('app_status', 'apsts_consideration', 'Under Consideration', null),
 
