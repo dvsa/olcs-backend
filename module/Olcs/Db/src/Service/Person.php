@@ -37,7 +37,7 @@ class Person extends ServiceAbstract
     {
         $optionConditions = array(
             'name' => array(
-                'condition' => '(p.forename LIKE ? OR p.familyName LIKE ?)',
+                'condition' => '(p.forename LIKE ? OR p.family_name LIKE ?)',
                 'type' => 'LIKE'
             ),
             'forename' => array(
@@ -45,7 +45,7 @@ class Person extends ServiceAbstract
                 'type' => 'LIKE'
             ),
             'familyName' => array(
-                'condition' => 'p.familyName LIKE ?',
+                'condition' => 'p.family_name LIKE ?',
                 'type' => 'LIKE'
             ),
             'birthDate' => array(
@@ -55,9 +55,9 @@ class Person extends ServiceAbstract
         );
 
         $lookupColumn = array(
-            'name' => array('p.forename', 'p.familyName'),
+            'name' => array('p.forename', 'p.family_name'),
             'forename' => 'p.forename',
-            'familyName' => 'p.familyName',
+            'familyName' => 'p.family_name',
             'birthDate' => 'p.birth_date',
         );
 

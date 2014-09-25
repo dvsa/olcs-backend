@@ -15,6 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_statement_type1_idx", columns={"statement_type"}),
  *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
@@ -58,9 +59,10 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Statement type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="statement_type", length=32, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
      */
     protected $statementType;
 
@@ -194,7 +196,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Set the statement type
      *
-     * @param string $statementType
+     * @param \Olcs\Db\Entity\RefData $statementType
      * @return Statement
      */
     public function setStatementType($statementType)
@@ -207,7 +209,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Get the statement type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getStatementType()
     {
