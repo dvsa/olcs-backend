@@ -292,6 +292,15 @@ return array(
         'short_notice_refused' => array(
             'type' => 'yesno'
         ),
+        'is_quality_partnership' => array(
+            'type' => 'yesno'
+        ),
+        'quality_partnership_facilities_used' => array(
+            'type' => 'yesno'
+        ),
+        'is_quality_contract' => array(
+            'type' => 'yesno'
+        ),
     ),
     'bus_reg_other_service' => array(
         'bus_reg_id' => array(
@@ -363,6 +372,22 @@ return array(
         ),
         'suppress_from_op' => array(
             'type' => 'yesno'
+        )
+    ),
+    'doc_template_bookmark' => array(
+        'doc_template_id' => array(
+            'inversedBy' => array(
+                'entity' => 'DocTemplate',
+                'property' => 'docTemplateBookmark'
+            )
+        )
+    ),
+    'doc_paragraph_bookmark' => array(
+        'doc_bookmark_id' => array(
+            'inversedBy' => array(
+                'entity' => 'DocBookmark',
+                'property' => 'docParagraphBookmark'
+            )
         )
     ),
     'email' => array(
