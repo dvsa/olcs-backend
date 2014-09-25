@@ -2672,10 +2672,16 @@ CREATE TABLE IF NOT EXISTS `statement` (
   `version` INT NOT NULL DEFAULT 1,
   INDEX `fk_statement_case1_idx` (`case_id` ASC),
   PRIMARY KEY (`id`),
+  INDEX `fk_statement_type1_idx` (`statement_type` ASC),
   INDEX `fk_statement_address1_idx` (`requestors_address_id` ASC),
   INDEX `fk_statement_user1_idx` (`created_by` ASC),
   INDEX `fk_statement_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_statement_ref_data2_idx` (`contact_type` ASC),
+  CONSTRAINT `fk_statement_type1`
+    FOREIGN KEY (`statement_type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_case1`
     FOREIGN KEY (`case_id`)
     REFERENCES `cases` (`id`)
