@@ -576,25 +576,6 @@ INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disq
     (32,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,32),
     (36,NULL,NULL,1,'6 months','TBC',NOW(),NULL,1,15);
 
-INSERT INTO `pi` (
-    `id`, `pi_status`, `created_by`, `last_modified_by`, `case_id`, `witnesses`, `is_cancelled`, `is_adjourned`, `licence_revoked_at_pi`,
-    `agreed_date`, `decision_date`,`created_on`, `last_modified_on`,`version`, `deleted_date`) VALUES
-    (1,'pi_s_schedule',1,1,24,20,0,0,0,NOW(),NOW(), NULL,NULL,1,NULL);
-
-INSERT INTO `pi_hearing` (`id`, `pi_id`, `created_by`, `last_modified_by`, `presiding_tc_id`, `presided_by_role`,
-    `hearing_date`, `venue`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,1,'tc_r_dtc', NOW(),'Some Venue',NULL,NULL,1),
-    (2,1,NULL,NULL,2,'tc_r_htru', NOW(),'Some Alt. Venue',NULL,NULL,1);
-
-INSERT INTO `pi_reason` (`pi_id`, `reason_id`)
-VALUES
-    (1,2),
-    (1,6);
-
-INSERT INTO `pi_decision` (`pi_id`, `decision_id`)
-VALUES
-    (1,2);
-
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
     (1,'B',NULL,NULL,NULL,NULL,1,'venue_1',21),
