@@ -486,6 +486,12 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     (4,7,4,NULL,4,1,'removal reason 4','2014-02-20 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
+INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1, 0, '1231', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (2, 0, '1232', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (3, 0, '1233', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (4, 0, '1234', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1);
+
 INSERT INTO `note` (`id`, `note_type`, `last_modified_by`, `bus_reg_id`, `created_by`,
   `irfo_psv_auth_id`, `licence_id`, `case_id`, `irfo_gv_permit_id`, `application_id`, `comment`,
   `priority`, `created_on`, `last_modified_on`, `version`)
