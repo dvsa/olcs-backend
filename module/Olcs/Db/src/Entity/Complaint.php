@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="fk_complaint_contact_details1_idx", columns={"complainant_contact_details_id"}),
- *        @ORM\Index(name="fk_complaint_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_complaint_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_complaint_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_complaint_ref_data1_idx", columns={"status"}),
- *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"}),
- *        @ORM\Index(name="fk_complaint_driver1_idx", columns={"driver_id"})
+ *        @ORM\Index(name="IDX_5F2732B5C97DA9B9", columns={"complainant_contact_details_id"}),
+ *        @ORM\Index(name="IDX_5F2732B5C3423909", columns={"driver_id"}),
+ *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
+ *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_5F2732B59E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,8 +28,8 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
@@ -38,14 +38,14 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Complaint type
+     * Complainant contact details
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", cascade={"persist"})
+     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
      */
-    protected $complaintType;
+    protected $complainantContactDetails;
 
     /**
      * Driver
@@ -58,6 +58,16 @@ class Complaint implements Interfaces\EntityInterface
     protected $driver;
 
     /**
+     * Complaint type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id", nullable=true)
+     */
+    protected $complaintType;
+
+    /**
      * Status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -66,16 +76,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
     protected $status;
-
-    /**
-     * Complainant contact details
-     *
-     * @var \Olcs\Db\Entity\ContactDetails
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", cascade={"persist"})
-     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
-     */
-    protected $complainantContactDetails;
 
     /**
      * Complaint date
@@ -96,26 +96,26 @@ class Complaint implements Interfaces\EntityInterface
     protected $value;
 
     /**
-     * Set the complaint type
+     * Set the complainant contact details
      *
-     * @param \Olcs\Db\Entity\RefData $complaintType
+     * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
      * @return Complaint
      */
-    public function setComplaintType($complaintType)
+    public function setComplainantContactDetails($complainantContactDetails)
     {
-        $this->complaintType = $complaintType;
+        $this->complainantContactDetails = $complainantContactDetails;
 
         return $this;
     }
 
     /**
-     * Get the complaint type
+     * Get the complainant contact details
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Olcs\Db\Entity\ContactDetails
      */
-    public function getComplaintType()
+    public function getComplainantContactDetails()
     {
-        return $this->complaintType;
+        return $this->complainantContactDetails;
     }
 
     /**
@@ -142,6 +142,29 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the complaint type
+     *
+     * @param \Olcs\Db\Entity\RefData $complaintType
+     * @return Complaint
+     */
+    public function setComplaintType($complaintType)
+    {
+        $this->complaintType = $complaintType;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaint type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getComplaintType()
+    {
+        return $this->complaintType;
+    }
+
+    /**
      * Set the status
      *
      * @param \Olcs\Db\Entity\RefData $status
@@ -162,29 +185,6 @@ class Complaint implements Interfaces\EntityInterface
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Set the complainant contact details
-     *
-     * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
-     * @return Complaint
-     */
-    public function setComplainantContactDetails($complainantContactDetails)
-    {
-        $this->complainantContactDetails = $complainantContactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the complainant contact details
-     *
-     * @return \Olcs\Db\Entity\ContactDetails
-     */
-    public function getComplainantContactDetails()
-    {
-        return $this->complainantContactDetails;
     }
 
     /**

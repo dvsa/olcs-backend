@@ -18,7 +18,7 @@ trait IsDeletedField
      *
      * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
      */
-    protected $isDeleted = 0;
+    protected $isDeleted;
 
     /**
      * Set the is deleted

@@ -16,13 +16,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
- *        @ORM\Index(name="fk_serious_infringement_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user1_idx", columns={"erru_response_user_id"}),
- *        @ORM\Index(name="fk_serious_infringement_country1_idx", columns={"member_state_code"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category1_idx", columns={"si_category_id"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category_type1_idx", columns={"si_category_type_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_serious_infringement_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_106EA68CE71044B9", columns={"erru_response_user_id"}),
+ *        @ORM\Index(name="IDX_106EA68C7CE276A9", columns={"si_category_type_id"}),
+ *        @ORM\Index(name="IDX_106EA68C8B8A7B7", columns={"member_state_code"}),
+ *        @ORM\Index(name="IDX_106EA68CF9FDD69C", columns={"si_category_id"}),
+ *        @ORM\Index(name="IDX_106EA68CDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_106EA68CCF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_106EA68C65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -30,24 +30,14 @@ class SeriousInfringement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\SiCategoryManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Si category type
-     *
-     * @var \Olcs\Db\Entity\SiCategoryType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siCategoryType;
 
     /**
      * Erru response user
@@ -58,6 +48,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
      */
     protected $erruResponseUser;
+
+    /**
+     * Si category type
+     *
+     * @var \Olcs\Db\Entity\SiCategoryType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
+     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siCategoryType;
 
     /**
      * Member state code
@@ -85,7 +85,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false)
      */
-    protected $erruResponseSent = 0;
+    protected $erruResponseSent;
 
     /**
      * Erru response time
@@ -124,29 +124,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $reason;
 
     /**
-     * Set the si category type
-     *
-     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
-     * @return SeriousInfringement
-     */
-    public function setSiCategoryType($siCategoryType)
-    {
-        $this->siCategoryType = $siCategoryType;
-
-        return $this;
-    }
-
-    /**
-     * Get the si category type
-     *
-     * @return \Olcs\Db\Entity\SiCategoryType
-     */
-    public function getSiCategoryType()
-    {
-        return $this->siCategoryType;
-    }
-
-    /**
      * Set the erru response user
      *
      * @param \Olcs\Db\Entity\User $erruResponseUser
@@ -167,6 +144,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getErruResponseUser()
     {
         return $this->erruResponseUser;
+    }
+
+    /**
+     * Set the si category type
+     *
+     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
+     * @return SeriousInfringement
+     */
+    public function setSiCategoryType($siCategoryType)
+    {
+        $this->siCategoryType = $siCategoryType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si category type
+     *
+     * @return \Olcs\Db\Entity\SiCategoryType
+     */
+    public function getSiCategoryType()
+    {
+        return $this->siCategoryType;
     }
 
     /**

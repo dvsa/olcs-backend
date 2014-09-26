@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="opposition_grounds",
  *    indexes={
- *        @ORM\Index(name="fk_opposition_ground_opposition1_idx", columns={"opposition_id"}),
- *        @ORM\Index(name="fk_opposition_ground_ref_data1_idx", columns={"grounds"}),
- *        @ORM\Index(name="fk_opposition_grounds_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_opposition_grounds_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_3591EE4258C0D9E2", columns={"grounds"}),
+ *        @ORM\Index(name="IDX_3591EE42DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_3591EE42B4BE57B7", columns={"opposition_id"}),
+ *        @ORM\Index(name="IDX_3591EE4265CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,9 +25,10 @@ class OppositionGrounds implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OppositionManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\IsRepresentationField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,15 +42,6 @@ class OppositionGrounds implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="grounds", referencedColumnName="id", nullable=false)
      */
     protected $grounds;
-
-    /**
-     * Is representation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_representation", nullable=false)
-     */
-    protected $isRepresentation = 0;
 
     /**
      * Set the grounds
@@ -72,28 +64,5 @@ class OppositionGrounds implements Interfaces\EntityInterface
     public function getGrounds()
     {
         return $this->grounds;
-    }
-
-    /**
-     * Set the is representation
-     *
-     * @param string $isRepresentation
-     * @return OppositionGrounds
-     */
-    public function setIsRepresentation($isRepresentation)
-    {
-        $this->isRepresentation = $isRepresentation;
-
-        return $this;
-    }
-
-    /**
-     * Get the is representation
-     *
-     * @return string
-     */
-    public function getIsRepresentation()
-    {
-        return $this->isRepresentation;
     }
 }

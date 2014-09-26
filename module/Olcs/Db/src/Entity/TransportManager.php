@@ -17,11 +17,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager",
  *    indexes={
- *        @ORM\Index(name="fk_transport_manager_ref_data1_idx", columns={"tm_status"}),
- *        @ORM\Index(name="fk_transport_manager_ref_data2_idx", columns={"tm_type"}),
- *        @ORM\Index(name="fk_transport_manager_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_transport_manager_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_transport_manager_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_6EF3E54826F8E7ED", columns={"tm_type"}),
+ *        @ORM\Index(name="IDX_6EF3E5481FF76EFC", columns={"tm_status"}),
+ *        @ORM\Index(name="IDX_6EF3E548DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_6EF3E5487CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_6EF3E54865CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -29,9 +29,9 @@ class TransportManager implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\Notes4000Field,
         Traits\CustomCreatedOnField,

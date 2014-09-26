@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="recipient",
  *    indexes={
- *        @ORM\Index(name="fk_recipient_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_recipient_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_recipient_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_6804FB49DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_6804FB497CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_6804FB4965CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class Recipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -59,7 +59,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
      */
-    protected $sendAppDecision = 0;
+    protected $sendAppDecision;
 
     /**
      * Send notices procs
@@ -68,7 +68,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
      */
-    protected $sendNoticesProcs = 0;
+    protected $sendNoticesProcs;
 
     /**
      * Is police
@@ -77,7 +77,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_police", nullable=false)
      */
-    protected $isPolice = 0;
+    protected $isPolice;
 
     /**
      * Is objector
@@ -86,7 +86,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_objector", nullable=false)
      */
-    protected $isObjector = 0;
+    protected $isObjector;
 
     /**
      * Initialise the collections

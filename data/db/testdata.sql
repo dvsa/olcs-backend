@@ -823,4 +823,29 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
     (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00');
 
+/* Disc sequence dummy data */
+INSERT INTO `disc_sequence` (
+  `id`,`goods_or_psv`,`restricted`,`r_prefix`,`standard_national`,`sn_prefix`,
+  `standard_international`, `si_prefix`, `traffic_area_id`,`version`,`is_self_serve`,
+  `is_ni_self_serve`) VALUES
+    (1,'lcat_gv',305069,'OK',472557,'OK',293379,'OK','K',1,0,0),
+    (2,'lcat_gv',304435,'OF',556843,'OF',396163,'OF','F',1,0,0),
+    (3,'lcat_gv',285053,'OH',531439,'OH',266083,'OH','H',1,0,0),
+    (4,'lcat_gv',343603,'OD',480707,'OD',301603,'OD','D',1,0,0),
+    (5,'lcat_gv',303267,'OC',637663,'OC',325647,'OC','C',1,0,0),
+    (6,'lcat_gv',317281,'OB',590773,'OB',343105,'OB','B',1,0,0),
+    (7,'lcat_gv',163111,'OG',247449,'OG',116379,'OG','G',1,0,0),
+    (8,'lcat_gv',189799,'OM',404255,'OM',157277,'OM','M',1,0,0),
+    (9,'lcat_psv',10225,'PK',54253,'PK',154221,'PK','K',1,0,0),
+    (10,'lcat_psv',12187,'PF',50965,'PF',92279,'PF','F',1,0,0),
+    (11,'lcat_psv',13237,'PH',55701,'PH',105111,'PH','H',1,0,0),
+    (12,'lcat_psv',11597,'PD',46619,'PD',58689,'PD','D',1,0,0),
+    (13,'lcat_psv',19901,'PC',67481,'PC',115301,'PC','C',1,0,0),
+    (14,'lcat_psv',21151,'PB',49251,'PB',127179,'PB','B',1,0,0),
+    (15,'lcat_psv',12213,'PG',23499,'PG',61789,'PG','G',1,0,0),
+    (16,'lcat_psv',14299,'PM',67675,'PM',86713,'PM','M',1,0,0),
+    (18,'lcat_gv',295889,'RS',774299,'NS',455705,'IS','D',1,0,0),
+    (19,'lcat_gv',10231,'ON',4003,'ON',14533,'ON','N',1,0,0),
+    (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
+
 SET foreign_key_checks = 1;

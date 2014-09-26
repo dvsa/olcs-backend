@@ -17,13 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
- *        @ORM\Index(name="fk_contact_details_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_contact_details_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_contact_details_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_contact_details_address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_contact_details_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_contact_details_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_contact_details_ref_data1_idx", columns={"contact_type"})
+ *        @ORM\Index(name="IDX_E8092A0BF5B7AF75", columns={"address_id"}),
+ *        @ORM\Index(name="IDX_E8092A0BA421D5D6", columns={"contact_type"}),
+ *        @ORM\Index(name="IDX_E8092A0B9E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B217BBB47", columns={"person_id"}),
+ *        @ORM\Index(name="IDX_E8092A0BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_E8092A0B65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -31,24 +31,14 @@ class ContactDetails implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\EmailAddress60Field,
         Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Contact type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
-     */
-    protected $contactType;
 
     /**
      * Address
@@ -59,6 +49,16 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
+
+    /**
+     * Contact type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
+     */
+    protected $contactType;
 
     /**
      * Organisation
@@ -124,7 +124,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
-    protected $writtenPermissionToEngage = 0;
+    protected $writtenPermissionToEngage;
 
     /**
      * Phone contact
@@ -141,29 +141,6 @@ class ContactDetails implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->phoneContacts = new ArrayCollection();
-    }
-
-    /**
-     * Set the contact type
-     *
-     * @param \Olcs\Db\Entity\RefData $contactType
-     * @return ContactDetails
-     */
-    public function setContactType($contactType)
-    {
-        $this->contactType = $contactType;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getContactType()
-    {
-        return $this->contactType;
     }
 
     /**
@@ -187,6 +164,29 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set the contact type
+     *
+     * @param \Olcs\Db\Entity\RefData $contactType
+     * @return ContactDetails
+     */
+    public function setContactType($contactType)
+    {
+        $this->contactType = $contactType;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getContactType()
+    {
+        return $this->contactType;
     }
 
     /**

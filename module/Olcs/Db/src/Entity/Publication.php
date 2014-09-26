@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="publication",
  *    indexes={
- *        @ORM\Index(name="fk_publication_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_publication_ref_data1_idx", columns={"pub_status"}),
- *        @ORM\Index(name="fk_publication_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_publication_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_AF3C677922669153", columns={"pub_status"}),
+ *        @ORM\Index(name="IDX_AF3C6779DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_AF3C677965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_AF3C677918E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class Publication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,

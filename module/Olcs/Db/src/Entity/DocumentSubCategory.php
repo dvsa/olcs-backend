@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="document_sub_category",
  *    indexes={
- *        @ORM\Index(name="fk_document_sub_category_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_sub_category_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_sub_category_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_1106D6E9DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_1106D6E965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_1106D6E912469DE2", columns={"category_id"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class DocumentSubCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
@@ -39,7 +39,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_scanned", nullable=false)
      */
-    protected $isScanned = 0;
+    protected $isScanned;
 
     /**
      * Display free text
@@ -48,7 +48,7 @@ class DocumentSubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="display_free_text", nullable=false)
      */
-    protected $displayFreeText = 0;
+    protected $displayFreeText;
 
     /**
      * Set the is scanned
