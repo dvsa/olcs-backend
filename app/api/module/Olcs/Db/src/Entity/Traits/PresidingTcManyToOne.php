@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Presiding tc many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait PresidingTcManyToOne
 {
@@ -17,7 +17,7 @@ trait PresidingTcManyToOne
      * @var \Olcs\Db\Entity\PresidingTc
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $presidingTc;
 

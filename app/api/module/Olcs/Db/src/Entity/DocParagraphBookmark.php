@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_paragraph_bookmark",
  *    indexes={
- *        @ORM\Index(name="IDX_34C3914939BEDB8D", columns={"doc_paragraph_id"}),
- *        @ORM\Index(name="IDX_34C39149DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"}),
- *        @ORM\Index(name="IDX_34C3914965CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_doc_paragraph_bookmark_doc_paragraph1_idx", columns={"doc_paragraph_id"}),
+ *        @ORM\Index(name="fk_doc_paragraph_bookmark_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_doc_paragraph_bookmark_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="doc_paragraph_bookmark_unique", columns={"doc_bookmark_id","doc_paragraph_id"})
@@ -28,6 +28,7 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

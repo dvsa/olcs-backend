@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_route_reprint",
  *    indexes={
- *        @ORM\Index(name="IDX_7069A27A65A2CAD1", columns={"requested_user_id"}),
- *        @ORM\Index(name="IDX_7069A27A5327B2E3", columns={"bus_reg_id"})
+ *        @ORM\Index(name="fk_ebsr_route_reprint_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_ebsr_route_reprint_user1_idx", columns={"requested_user_id"})
  *    }
  * )
  */
@@ -51,7 +51,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="scale", nullable=false)
      */
-    protected $scale;
+    protected $scale = 0;
 
     /**
      * Published timestamp

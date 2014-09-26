@@ -15,7 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="history",
  *    indexes={
- *        @ORM\Index(name="IDX_27BA704B5681BEB0", columns={"entity_type_id"})
+ *        @ORM\Index(name="fk_history_entity1_idx", columns={"entity_type_id"})
  *    }
  * )
  */

@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty_erru_requested",
  *    indexes={
- *        @ORM\Index(name="IDX_6E063F799031E693", columns={"si_penalty_requested_type_id"}),
- *        @ORM\Index(name="IDX_6E063F79DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6E063F79DC3970F4", columns={"serious_infringement_id"}),
- *        @ORM\Index(name="IDX_6E063F7965CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_si_penalty_erru_requested_serious_infringement1_idx", columns={"serious_infringement_id"}),
+ *        @ORM\Index(name="fk_si_penalty_erru_requested_si_penalty_requested_type1_idx", columns={"si_penalty_requested_type_id"}),
+ *        @ORM\Index(name="fk_si_penalty_erru_requested_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_si_penalty_erru_requested_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\SeriousInfringementManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

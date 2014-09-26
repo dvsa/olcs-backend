@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="decision",
  *    indexes={
- *        @ORM\Index(name="IDX_84ACBE48DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_84ACBE4865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_84ACBE48324926D6", columns={"goods_or_psv"})
+ *        @ORM\Index(name="fk_decision_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_decision_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_decision_ref_data1_idx", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -25,9 +25,9 @@ class Decision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\GoodsOrPsvManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,

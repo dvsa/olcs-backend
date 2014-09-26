@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="email",
  *    indexes={
- *        @ORM\Index(name="IDX_E7927C74FF8A180B", columns={"last_updated_by"}),
- *        @ORM\Index(name="IDX_E7927C74DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_email_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_email_user2_idx", columns={"last_updated_by"})
  *    }
  * )
  */

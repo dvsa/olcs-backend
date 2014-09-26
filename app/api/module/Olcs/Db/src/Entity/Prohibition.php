@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="prohibition",
  *    indexes={
- *        @ORM\Index(name="IDX_C3C90DC9B93D5C07", columns={"prohibition_type"}),
- *        @ORM\Index(name="IDX_C3C90DC9DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C3C90DC9CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_C3C90DC965CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_prohibition_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_prohibition_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_prohibition_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_prohibition_ref_data1_idx", columns={"prohibition_type"})
  *    }
  * )
  */
@@ -25,9 +25,9 @@ class Prohibition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -68,7 +68,7 @@ class Prohibition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="is_trailer", nullable=false)
      */
-    protected $isTrailer;
+    protected $isTrailer = 0;
 
     /**
      * Imposed at

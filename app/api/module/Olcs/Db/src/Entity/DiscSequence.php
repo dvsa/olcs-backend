@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disc_sequence",
  *    indexes={
- *        @ORM\Index(name="IDX_B39AADB7DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_B39AADB765CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B39AADB7324926D6", columns={"goods_or_psv"}),
- *        @ORM\Index(name="IDX_B39AADB718E0B1DB", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_disc_sequence_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_disc_sequence_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_disc_sequence_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_disc_sequence_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,10 +25,10 @@ class DiscSequence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -70,31 +70,13 @@ class DiscSequence implements Interfaces\EntityInterface
     protected $standardInternational;
 
     /**
-     * Is self serve
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
-     */
-    protected $isSelfServe;
-
-    /**
-     * Is ni self serve
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
-     */
-    protected $isNiSelfServe;
-
-    /**
      * R prefix
      *
      * @var string
      *
      * @ORM\Column(type="string", name="r_prefix", length=3, nullable=true)
      */
-    protected $rPrefix = '';
+    protected $rPrefix;
 
     /**
      * Sn prefix
@@ -103,7 +85,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="sn_prefix", length=3, nullable=true)
      */
-    protected $snPrefix = '';
+    protected $snPrefix;
 
     /**
      * Si prefix
@@ -112,7 +94,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="si_prefix", length=3, nullable=true)
      */
-    protected $siPrefix = '';
+    protected $siPrefix;
 
     /**
      * Sr prefix
@@ -122,6 +104,24 @@ class DiscSequence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="sr_prefix", length=3, nullable=true)
      */
     protected $srPrefix;
+
+    /**
+     * Is self serve
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
+     */
+    protected $isSelfServe = 0;
+
+    /**
+     * Is ni self serve
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
+     */
+    protected $isNiSelfServe = 0;
 
     /**
      * Set the restricted
@@ -216,52 +216,6 @@ class DiscSequence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is self serve
-     *
-     * @param string $isSelfServe
-     * @return DiscSequence
-     */
-    public function setIsSelfServe($isSelfServe)
-    {
-        $this->isSelfServe = $isSelfServe;
-
-        return $this;
-    }
-
-    /**
-     * Get the is self serve
-     *
-     * @return string
-     */
-    public function getIsSelfServe()
-    {
-        return $this->isSelfServe;
-    }
-
-    /**
-     * Set the is ni self serve
-     *
-     * @param string $isNiSelfServe
-     * @return DiscSequence
-     */
-    public function setIsNiSelfServe($isNiSelfServe)
-    {
-        $this->isNiSelfServe = $isNiSelfServe;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni self serve
-     *
-     * @return string
-     */
-    public function getIsNiSelfServe()
-    {
-        return $this->isNiSelfServe;
-    }
-
-    /**
      * Set the r prefix
      *
      * @param string $rPrefix
@@ -351,5 +305,51 @@ class DiscSequence implements Interfaces\EntityInterface
     public function getSrPrefix()
     {
         return $this->srPrefix;
+    }
+
+    /**
+     * Set the is self serve
+     *
+     * @param string $isSelfServe
+     * @return DiscSequence
+     */
+    public function setIsSelfServe($isSelfServe)
+    {
+        $this->isSelfServe = $isSelfServe;
+
+        return $this;
+    }
+
+    /**
+     * Get the is self serve
+     *
+     * @return string
+     */
+    public function getIsSelfServe()
+    {
+        return $this->isSelfServe;
+    }
+
+    /**
+     * Set the is ni self serve
+     *
+     * @param string $isNiSelfServe
+     * @return DiscSequence
+     */
+    public function setIsNiSelfServe($isNiSelfServe)
+    {
+        $this->isNiSelfServe = $isNiSelfServe;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni self serve
+     *
+     * @return string
+     */
+    public function getIsNiSelfServe()
+    {
+        return $this->isNiSelfServe;
     }
 }

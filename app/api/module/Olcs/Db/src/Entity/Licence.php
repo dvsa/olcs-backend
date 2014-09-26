@@ -15,15 +15,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence",
  *    indexes={
- *        @ORM\Index(name="IDX_1DAAE6489E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_1DAAE648DBE65552", columns={"tachograph_ins"}),
- *        @ORM\Index(name="IDX_1DAAE6486522907", columns={"enforcement_area_id"}),
- *        @ORM\Index(name="IDX_1DAAE648DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_1DAAE6487B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_1DAAE64865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_1DAAE648324926D6", columns={"goods_or_psv"}),
- *        @ORM\Index(name="IDX_1DAAE64861EF9EF4", columns={"licence_type"}),
- *        @ORM\Index(name="IDX_1DAAE64818E0B1DB", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_licence_vehicle_inspectorate1_idx", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="fk_licence_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_licence_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_licence_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_licence_ref_data2_idx", columns={"licence_type"}),
+ *        @ORM\Index(name="fk_licence_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
@@ -34,11 +34,10 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\TotAuthTrailersField,
@@ -54,16 +53,6 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
      * Tachograph ins
      *
      * @var \Olcs\Db\Entity\RefData
@@ -72,6 +61,16 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
      */
     protected $tachographIns;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
 
     /**
      * Enforcement area
@@ -189,7 +188,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
      */
-    protected $safetyIns;
+    protected $safetyIns = 0;
 
     /**
      * Safety ins varies
@@ -234,7 +233,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
-    protected $translateToWelsh;
+    protected $translateToWelsh = 0;
 
     /**
      * Application
@@ -294,29 +293,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return Licence
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -337,6 +313,29 @@ class Licence implements Interfaces\EntityInterface
     public function getTachographIns()
     {
         return $this->tachographIns;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return Licence
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 
     /**

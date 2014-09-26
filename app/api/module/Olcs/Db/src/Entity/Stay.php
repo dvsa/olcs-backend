@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="stay",
  *    indexes={
- *        @ORM\Index(name="IDX_5E09839C1108BFA3", columns={"stay_type"}),
- *        @ORM\Index(name="IDX_5E09839CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5E09839CCF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_5E09839C65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5E09839C30BC6DC2", columns={"outcome"})
+ *        @ORM\Index(name="fk_stay_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_stay_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_stay_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_stay_ref_data1_idx", columns={"outcome"}),
+ *        @ORM\Index(name="fk_stay_ref_data2_idx", columns={"stay_type"})
  *    }
  * )
  */
@@ -26,10 +26,10 @@ class Stay implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OutcomeManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
-        Traits\OutcomeManyToOne,
         Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

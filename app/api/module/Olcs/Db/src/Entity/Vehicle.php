@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="vehicle",
  *    indexes={
- *        @ORM\Index(name="IDX_1B80E486DE50BABC", columns={"psv_type"}),
- *        @ORM\Index(name="IDX_1B80E486DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_1B80E48665CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_vehicle_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_vehicle_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_vehicle_ref_data1_idx", columns={"psv_type"})
  *    }
  * )
  */
@@ -27,6 +27,7 @@ class Vehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,

@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="previous_licence",
  *    indexes={
- *        @ORM\Index(name="IDX_2C318C9BCC3ADCB9", columns={"previous_licence_type"}),
- *        @ORM\Index(name="IDX_2C318C9BDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_2C318C9B65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_2C318C9B3E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="fk_previous_licence_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_previous_licence_ref_data1_idx", columns={"previous_licence_type"}),
+ *        @ORM\Index(name="fk_previous_licence_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_previous_licence_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class PreviousLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\ApplicationManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
