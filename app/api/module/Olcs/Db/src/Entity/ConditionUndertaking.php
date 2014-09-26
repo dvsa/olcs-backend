@@ -16,17 +16,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="condition_undertaking",
  *    indexes={
- *        @ORM\Index(name="fk_Condition_ref_data1_idx", columns={"added_via"}),
- *        @ORM\Index(name="fk_Condition_ref_data2_idx", columns={"attached_to"}),
- *        @ORM\Index(name="fk_Condition_ref_data3_idx", columns={"condition_type"}),
- *        @ORM\Index(name="fk_Condition_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_Condition_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_Condition_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_condition_undertaking_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_condition_undertaking_condition_undertaking1_idx", columns={"lic_condition_variation_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_user3_idx", columns={"approval_user_id"})
+ *        @ORM\Index(name="IDX_41813C5ECF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_41813C5EFEA0059A", columns={"attached_to"}),
+ *        @ORM\Index(name="IDX_41813C5EFF5A82AC", columns={"added_via"}),
+ *        @ORM\Index(name="IDX_41813C5EB2EF47D6", columns={"lic_condition_variation_id"}),
+ *        @ORM\Index(name="IDX_41813C5E332E6CD3", columns={"approval_user_id"}),
+ *        @ORM\Index(name="IDX_41813C5E3E2A0208", columns={"condition_type"}),
+ *        @ORM\Index(name="IDX_41813C5EDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_41813C5E65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_41813C5E35382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_41813C5E3E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_41813C5E26EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -36,13 +36,43 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
+        Traits\ApplicationManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
+     * Attached to
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
+     */
+    protected $attachedTo;
+
+    /**
+     * Added via
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
+     */
+    protected $addedVia;
 
     /**
      * Lic condition variation
@@ -65,16 +95,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $approvalUser;
 
     /**
-     * Attached to
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
-     */
-    protected $attachedTo;
-
-    /**
      * Condition type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -83,26 +103,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
-
-    /**
-     * Added via
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
-     */
-    protected $addedVia;
 
     /**
      * Condition date
@@ -120,7 +120,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_draft", nullable=false)
      */
-    protected $isDraft = 0;
+    protected $isDraft;
 
     /**
      * Is fulfilled
@@ -129,7 +129,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false)
      */
-    protected $isFulfilled = 0;
+    protected $isFulfilled;
 
     /**
      * Notes
@@ -147,7 +147,76 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_approved", nullable=false)
      */
-    protected $isApproved = 0;
+    protected $isApproved;
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return ConditionUndertaking
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the attached to
+     *
+     * @param \Olcs\Db\Entity\RefData $attachedTo
+     * @return ConditionUndertaking
+     */
+    public function setAttachedTo($attachedTo)
+    {
+        $this->attachedTo = $attachedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the attached to
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAttachedTo()
+    {
+        return $this->attachedTo;
+    }
+
+    /**
+     * Set the added via
+     *
+     * @param \Olcs\Db\Entity\RefData $addedVia
+     * @return ConditionUndertaking
+     */
+    public function setAddedVia($addedVia)
+    {
+        $this->addedVia = $addedVia;
+
+        return $this;
+    }
+
+    /**
+     * Get the added via
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAddedVia()
+    {
+        return $this->addedVia;
+    }
 
     /**
      * Set the lic condition variation
@@ -196,29 +265,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the attached to
-     *
-     * @param \Olcs\Db\Entity\RefData $attachedTo
-     * @return ConditionUndertaking
-     */
-    public function setAttachedTo($attachedTo)
-    {
-        $this->attachedTo = $attachedTo;
-
-        return $this;
-    }
-
-    /**
-     * Get the attached to
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAttachedTo()
-    {
-        return $this->attachedTo;
-    }
-
-    /**
      * Set the condition type
      *
      * @param \Olcs\Db\Entity\RefData $conditionType
@@ -239,52 +285,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return ConditionUndertaking
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-    /**
-     * Set the added via
-     *
-     * @param \Olcs\Db\Entity\RefData $addedVia
-     * @return ConditionUndertaking
-     */
-    public function setAddedVia($addedVia)
-    {
-        $this->addedVia = $addedVia;
-
-        return $this;
-    }
-
-    /**
-     * Get the added via
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAddedVia()
-    {
-        return $this->addedVia;
     }
 
     /**

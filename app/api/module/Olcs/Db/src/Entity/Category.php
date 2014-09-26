@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="category",
  *    indexes={
- *        @ORM\Index(name="fk_document_category_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_category_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_64C19C1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_64C19C165CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class Category implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -37,7 +37,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
      */
-    protected $isDocCategory = 1;
+    protected $isDocCategory;
 
     /**
      * Is task category
@@ -46,7 +46,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
      */
-    protected $isTaskCategory = 1;
+    protected $isTaskCategory;
 
     /**
      * Set the is doc category

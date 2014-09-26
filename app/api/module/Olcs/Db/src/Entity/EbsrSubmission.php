@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", columns={"ebsr_submission_status_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", columns={"ebsr_submission_type_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_document1_idx", columns={"document_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_result1_idx", columns={"ebsr_submission_result_id"})
+ *        @ORM\Index(name="IDX_D75FA74DC33F7837", columns={"document_id"}),
+ *        @ORM\Index(name="IDX_D75FA74D479D4E59", columns={"ebsr_submission_type_id"}),
+ *        @ORM\Index(name="IDX_D75FA74D43D8A8CA", columns={"ebsr_submission_result_id"}),
+ *        @ORM\Index(name="IDX_D75FA74D2F881E34", columns={"ebsr_submission_status_id"}),
+ *        @ORM\Index(name="IDX_D75FA74D5327B2E3", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -27,16 +27,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\BusRegManyToOneAlt1;
-
-    /**
-     * Ebsr submission result
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionResult
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
-     */
-    protected $ebsrSubmissionResult;
 
     /**
      * Document
@@ -57,6 +47,16 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionType;
+
+    /**
+     * Ebsr submission result
+     *
+     * @var \Olcs\Db\Entity\EbsrSubmissionResult
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
+     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ebsrSubmissionResult;
 
     /**
      * Ebsr submission status
@@ -219,7 +219,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false)
      */
-    protected $isFromFtp = 0;
+    protected $isFromFtp;
 
     /**
      * Organisation id
@@ -229,29 +229,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="organisation_id", nullable=true)
      */
     protected $organisationId;
-
-    /**
-     * Set the ebsr submission result
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission result
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
-     */
-    public function getEbsrSubmissionResult()
-    {
-        return $this->ebsrSubmissionResult;
-    }
 
     /**
      * Set the document
@@ -297,6 +274,29 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getEbsrSubmissionType()
     {
         return $this->ebsrSubmissionType;
+    }
+
+    /**
+     * Set the ebsr submission result
+     *
+     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionResult($ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission result
+     *
+     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     */
+    public function getEbsrSubmissionResult()
+    {
+        return $this->ebsrSubmissionResult;
     }
 
     /**

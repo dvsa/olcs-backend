@@ -18,7 +18,7 @@ trait IsIrfoField
      *
      * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
      */
-    protected $isIrfo = 0;
+    protected $isIrfo;
 
     /**
      * Set the is irfo

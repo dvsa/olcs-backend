@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty",
  *    indexes={
- *        @ORM\Index(name="fk_si_penalty_serious_infringement1_idx", columns={"serious_infringement_id"}),
- *        @ORM\Index(name="fk_si_penalty_si_penalty_type1_idx", columns={"si_penalty_type_id"}),
- *        @ORM\Index(name="fk_si_penalty_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_si_penalty_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_B0BCD0DE749FD19F", columns={"si_penalty_type_id"}),
+ *        @ORM\Index(name="IDX_B0BCD0DEDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B0BCD0DEDC3970F4", columns={"serious_infringement_id"}),
+ *        @ORM\Index(name="IDX_B0BCD0DE65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class SiPenalty implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\SeriousInfringementManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\EndDateField,
         Traits\CustomDeletedDateField,

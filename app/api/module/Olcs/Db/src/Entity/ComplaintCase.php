@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="complaint_case",
  *    indexes={
- *        @ORM\Index(name="fk_complaint_case_complaint1_idx", columns={"complaint_id"}),
- *        @ORM\Index(name="fk_complaint_case_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_complaint_case_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_A7094FAFCF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_A7094FAFEDAE188E", columns={"complaint_id"}),
+ *        @ORM\Index(name="IDX_A7094FAFCF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_A7094FAFDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_A7094FAF65CF370E", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="complaint_case_unique", columns={"case_id","complaint_id"})
@@ -28,8 +28,8 @@ class ComplaintCase implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

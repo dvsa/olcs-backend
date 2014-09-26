@@ -17,13 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="cases",
  *    indexes={
- *        @ORM\Index(name="fk_case_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_case_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_case_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_case_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_cases_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"}),
- *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"})
+ *        @ORM\Index(name="IDX_1C1B038BE7B9F467", columns={"erru_case_type"}),
+ *        @ORM\Index(name="IDX_1C1B038BDC68D9A", columns={"case_type"}),
+ *        @ORM\Index(name="IDX_1C1B038BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_1C1B038B1F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_1C1B038B65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_1C1B038B26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_1C1B038B3E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -31,25 +31,15 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1,
-        Traits\TransportManagerManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
+        Traits\TransportManagerManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
-     */
-    protected $caseType;
 
     /**
      * Erru case type
@@ -60,6 +50,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
      */
     protected $erruCaseType;
+
+    /**
+     * Case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
+     */
+    protected $caseType;
 
     /**
      * Legacy offence
@@ -138,7 +138,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
      */
-    protected $isImpounding = 0;
+    protected $isImpounding;
 
     /**
      * Erru originating authority
@@ -235,29 +235,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case type
-     *
-     * @param \Olcs\Db\Entity\RefData $caseType
-     * @return Cases
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
-    }
-
-    /**
      * Set the erru case type
      *
      * @param \Olcs\Db\Entity\RefData $erruCaseType
@@ -278,6 +255,29 @@ class Cases implements Interfaces\EntityInterface
     public function getErruCaseType()
     {
         return $this->erruCaseType;
+    }
+
+    /**
+     * Set the case type
+     *
+     * @param \Olcs\Db\Entity\RefData $caseType
+     * @return Cases
+     */
+    public function setCaseType($caseType)
+    {
+        $this->caseType = $caseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getCaseType()
+    {
+        return $this->caseType;
     }
 
     /**

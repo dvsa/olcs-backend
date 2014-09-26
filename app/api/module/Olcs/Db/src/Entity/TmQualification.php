@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_qualification",
  *    indexes={
- *        @ORM\Index(name="fk_qualification_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_qualification_country1_idx", columns={"country_code"}),
- *        @ORM\Index(name="fk_qualification_ref_data1_idx", columns={"qualification_type"}),
- *        @ORM\Index(name="fk_tm_qualification_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_qualification_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_90254A03F026BB7C", columns={"country_code"}),
+ *        @ORM\Index(name="IDX_90254A03B59E284E", columns={"qualification_type"}),
+ *        @ORM\Index(name="IDX_90254A03DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_90254A0365CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_90254A031F75BD29", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -28,23 +28,13 @@ class TmQualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\TransportManagerManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Qualification type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
-     */
-    protected $qualificationType;
 
     /**
      * Country code
@@ -55,6 +45,16 @@ class TmQualification implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=false)
      */
     protected $countryCode;
+
+    /**
+     * Qualification type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
+     */
+    protected $qualificationType;
 
     /**
      * Issued date
@@ -73,29 +73,6 @@ class TmQualification implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="serial_no", length=20, nullable=true)
      */
     protected $serialNo;
-
-    /**
-     * Set the qualification type
-     *
-     * @param \Olcs\Db\Entity\RefData $qualificationType
-     * @return TmQualification
-     */
-    public function setQualificationType($qualificationType)
-    {
-        $this->qualificationType = $qualificationType;
-
-        return $this;
-    }
-
-    /**
-     * Get the qualification type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getQualificationType()
-    {
-        return $this->qualificationType;
-    }
 
     /**
      * Set the country code
@@ -118,6 +95,29 @@ class TmQualification implements Interfaces\EntityInterface
     public function getCountryCode()
     {
         return $this->countryCode;
+    }
+
+    /**
+     * Set the qualification type
+     *
+     * @param \Olcs\Db\Entity\RefData $qualificationType
+     * @return TmQualification
+     */
+    public function setQualificationType($qualificationType)
+    {
+        $this->qualificationType = $qualificationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the qualification type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getQualificationType()
+    {
+        return $this->qualificationType;
     }
 
     /**

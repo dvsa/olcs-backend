@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="void_disc",
  *    indexes={
- *        @ORM\Index(name="fk_void_disc_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_void_disc_ref_data2_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_void_disc_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_void_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_void_disc_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_78988AAA61EF9EF4", columns={"licence_type"}),
+ *        @ORM\Index(name="IDX_78988AAADE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_78988AAA65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_78988AAA324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_78988AAA18E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -26,10 +26,10 @@ class VoidDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\GoodsOrPsvManyToOne,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

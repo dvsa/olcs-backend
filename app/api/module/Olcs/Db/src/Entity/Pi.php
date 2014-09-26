@@ -17,15 +17,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
- *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
- *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"agreed_by_tc_id"}),
- *        @ORM\Index(name="fk_pi_presiding_tc2_idx", columns={"decided_by_tc_id"}),
- *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"agreed_by_tc_role"}),
- *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"decided_by_tc_role"})
+ *        @ORM\Index(name="IDX_5A88B2F5D34341AA", columns={"agreed_by_tc_role"}),
+ *        @ORM\Index(name="IDX_5A88B2F5DCBFC605", columns={"decided_by_tc_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F53174D383", columns={"decided_by_tc_role"}),
+ *        @ORM\Index(name="IDX_5A88B2F5C651310A", columns={"pi_status"}),
+ *        @ORM\Index(name="IDX_5A88B2F5511CF0D9", columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F589EEAF91", columns={"assigned_to"}),
+ *        @ORM\Index(name="IDX_5A88B2F5DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_5A88B2F5CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F565CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -33,9 +33,9 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
@@ -43,16 +43,6 @@ class Pi implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Decided by tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
-     */
-    protected $decidedByTc;
 
     /**
      * Agreed by tc role
@@ -65,14 +55,24 @@ class Pi implements Interfaces\EntityInterface
     protected $agreedByTcRole;
 
     /**
-     * Decided by tc role
+     * Decided by tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTc;
+
+    /**
+     * Pi status
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
      */
-    protected $decidedByTcRole;
+    protected $piStatus;
 
     /**
      * Agreed by tc
@@ -85,6 +85,16 @@ class Pi implements Interfaces\EntityInterface
     protected $agreedByTc;
 
     /**
+     * Decided by tc role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTcRole;
+
+    /**
      * Assigned to
      *
      * @var \Olcs\Db\Entity\User
@@ -93,16 +103,6 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
      */
     protected $assignedTo;
-
-    /**
-     * Pi status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
-     */
-    protected $piStatus;
 
     /**
      * Pi type
@@ -171,7 +171,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
      */
-    protected $isCancelled = 0;
+    protected $isCancelled;
 
     /**
      * Is adjourned
@@ -180,7 +180,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
-    protected $isAdjourned = 0;
+    protected $isAdjourned;
 
     /**
      * Section code text
@@ -207,7 +207,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
      */
-    protected $licenceRevokedAtPi = 0;
+    protected $licenceRevokedAtPi;
 
     /**
      * Notification date
@@ -248,29 +248,6 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the decided by tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $decidedByTc
-     * @return Pi
-     */
-    public function setDecidedByTc($decidedByTc)
-    {
-        $this->decidedByTc = $decidedByTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the decided by tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getDecidedByTc()
-    {
-        return $this->decidedByTc;
-    }
-
-    /**
      * Set the agreed by tc role
      *
      * @param \Olcs\Db\Entity\RefData $agreedByTcRole
@@ -294,26 +271,49 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the decided by tc role
+     * Set the decided by tc
      *
-     * @param \Olcs\Db\Entity\RefData $decidedByTcRole
+     * @param \Olcs\Db\Entity\PresidingTc $decidedByTc
      * @return Pi
      */
-    public function setDecidedByTcRole($decidedByTcRole)
+    public function setDecidedByTc($decidedByTc)
     {
-        $this->decidedByTcRole = $decidedByTcRole;
+        $this->decidedByTc = $decidedByTc;
 
         return $this;
     }
 
     /**
-     * Get the decided by tc role
+     * Get the decided by tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getDecidedByTc()
+    {
+        return $this->decidedByTc;
+    }
+
+    /**
+     * Set the pi status
+     *
+     * @param \Olcs\Db\Entity\RefData $piStatus
+     * @return Pi
+     */
+    public function setPiStatus($piStatus)
+    {
+        $this->piStatus = $piStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi status
      *
      * @return \Olcs\Db\Entity\RefData
      */
-    public function getDecidedByTcRole()
+    public function getPiStatus()
     {
-        return $this->decidedByTcRole;
+        return $this->piStatus;
     }
 
     /**
@@ -340,6 +340,29 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the decided by tc role
+     *
+     * @param \Olcs\Db\Entity\RefData $decidedByTcRole
+     * @return Pi
+     */
+    public function setDecidedByTcRole($decidedByTcRole)
+    {
+        $this->decidedByTcRole = $decidedByTcRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the decided by tc role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getDecidedByTcRole()
+    {
+        return $this->decidedByTcRole;
+    }
+
+    /**
      * Set the assigned to
      *
      * @param \Olcs\Db\Entity\User $assignedTo
@@ -360,29 +383,6 @@ class Pi implements Interfaces\EntityInterface
     public function getAssignedTo()
     {
         return $this->assignedTo;
-    }
-
-    /**
-     * Set the pi status
-     *
-     * @param \Olcs\Db\Entity\RefData $piStatus
-     * @return Pi
-     */
-    public function setPiStatus($piStatus)
-    {
-        $this->piStatus = $piStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPiStatus()
-    {
-        return $this->piStatus;
     }
 
     /**
