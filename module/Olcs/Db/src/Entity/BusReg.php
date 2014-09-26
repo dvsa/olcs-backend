@@ -37,9 +37,7 @@ class BusReg implements Interfaces\EntityInterface
         Traits\LicenceManyToOne,
         Traits\StatusManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\RouteSeqField,
-        Traits\ServiceNo70Field,
-        Traits\ReceivedDateFieldAlt1,
+        Traits\ReceivedDateField,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -119,6 +117,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="reg_no", length=70, nullable=false)
      */
     protected $regNo;
+
+    /**
+     * Service no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
+     */
+    protected $serviceNo;
 
     /**
      * Start point
@@ -400,6 +407,51 @@ class BusReg implements Interfaces\EntityInterface
     protected $shortNoticeRefused;
 
     /**
+     * Is quality partnership
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false)
+     */
+    protected $isQualityPartnership = 0;
+
+    /**
+     * Quality partnership details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="quality_partnership_details", length=4000, nullable=true)
+     */
+    protected $qualityPartnershipDetails;
+
+    /**
+     * Quality partnership facilities used
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false)
+     */
+    protected $qualityPartnershipFacilitiesUsed = 0;
+
+    /**
+     * Is quality contract
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_quality_contract", nullable=false)
+     */
+    protected $isQualityContract = 0;
+
+    /**
+     * Quality contract details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="quality_contract_details", length=4000, nullable=true)
+     */
+    protected $qualityContractDetails;
+
+    /**
      * Other service
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -673,6 +725,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getRegNo()
     {
         return $this->regNo;
+    }
+
+    /**
+     * Set the service no
+     *
+     * @param string $serviceNo
+     * @return BusReg
+     */
+    public function setServiceNo($serviceNo)
+    {
+        $this->serviceNo = $serviceNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the service no
+     *
+     * @return string
+     */
+    public function getServiceNo()
+    {
+        return $this->serviceNo;
     }
 
     /**
@@ -1386,6 +1461,121 @@ class BusReg implements Interfaces\EntityInterface
     public function getShortNoticeRefused()
     {
         return $this->shortNoticeRefused;
+    }
+
+    /**
+     * Set the is quality partnership
+     *
+     * @param string $isQualityPartnership
+     * @return BusReg
+     */
+    public function setIsQualityPartnership($isQualityPartnership)
+    {
+        $this->isQualityPartnership = $isQualityPartnership;
+
+        return $this;
+    }
+
+    /**
+     * Get the is quality partnership
+     *
+     * @return string
+     */
+    public function getIsQualityPartnership()
+    {
+        return $this->isQualityPartnership;
+    }
+
+    /**
+     * Set the quality partnership details
+     *
+     * @param string $qualityPartnershipDetails
+     * @return BusReg
+     */
+    public function setQualityPartnershipDetails($qualityPartnershipDetails)
+    {
+        $this->qualityPartnershipDetails = $qualityPartnershipDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the quality partnership details
+     *
+     * @return string
+     */
+    public function getQualityPartnershipDetails()
+    {
+        return $this->qualityPartnershipDetails;
+    }
+
+    /**
+     * Set the quality partnership facilities used
+     *
+     * @param string $qualityPartnershipFacilitiesUsed
+     * @return BusReg
+     */
+    public function setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed)
+    {
+        $this->qualityPartnershipFacilitiesUsed = $qualityPartnershipFacilitiesUsed;
+
+        return $this;
+    }
+
+    /**
+     * Get the quality partnership facilities used
+     *
+     * @return string
+     */
+    public function getQualityPartnershipFacilitiesUsed()
+    {
+        return $this->qualityPartnershipFacilitiesUsed;
+    }
+
+    /**
+     * Set the is quality contract
+     *
+     * @param string $isQualityContract
+     * @return BusReg
+     */
+    public function setIsQualityContract($isQualityContract)
+    {
+        $this->isQualityContract = $isQualityContract;
+
+        return $this;
+    }
+
+    /**
+     * Get the is quality contract
+     *
+     * @return string
+     */
+    public function getIsQualityContract()
+    {
+        return $this->isQualityContract;
+    }
+
+    /**
+     * Set the quality contract details
+     *
+     * @param string $qualityContractDetails
+     * @return BusReg
+     */
+    public function setQualityContractDetails($qualityContractDetails)
+    {
+        $this->qualityContractDetails = $qualityContractDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the quality contract details
+     *
+     * @return string
+     */
+    public function getQualityContractDetails()
+    {
+        return $this->qualityContractDetails;
     }
 
     /**

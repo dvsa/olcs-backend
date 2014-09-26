@@ -40,15 +40,13 @@ class Licence implements Interfaces\EntityInterface
         Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LicenceTypeManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\LicNo18Field,
-        Traits\ViAction1Field,
+        Traits\CreatedByManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
         Traits\TotAuthMediumVehiclesField,
         Traits\TotAuthLargeVehiclesField,
         Traits\TotCommunityLicencesField,
-        Traits\ExpiryDateField,
         Traits\InForceDateField,
         Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
@@ -86,6 +84,24 @@ class Licence implements Interfaces\EntityInterface
     protected $enforcementArea;
 
     /**
+     * Lic no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
+     */
+    protected $licNo;
+
+    /**
+     * Vi action
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
+     */
+    protected $viAction;
+
+    /**
      * Trailers in possession
      *
      * @var int
@@ -102,6 +118,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="fabs_reference", length=10, nullable=true)
      */
     protected $fabsReference;
+
+    /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
 
     /**
      * Granted date
@@ -338,6 +363,52 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the lic no
+     *
+     * @param string $licNo
+     * @return Licence
+     */
+    public function setLicNo($licNo)
+    {
+        $this->licNo = $licNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the lic no
+     *
+     * @return string
+     */
+    public function getLicNo()
+    {
+        return $this->licNo;
+    }
+
+    /**
+     * Set the vi action
+     *
+     * @param string $viAction
+     * @return Licence
+     */
+    public function setViAction($viAction)
+    {
+        $this->viAction = $viAction;
+
+        return $this;
+    }
+
+    /**
+     * Get the vi action
+     *
+     * @return string
+     */
+    public function getViAction()
+    {
+        return $this->viAction;
+    }
+
+    /**
      * Set the trailers in possession
      *
      * @param int $trailersInPossession
@@ -381,6 +452,29 @@ class Licence implements Interfaces\EntityInterface
     public function getFabsReference()
     {
         return $this->fabsReference;
+    }
+
+    /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate
+     * @return Licence
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate()
+    {
+        return $this->expiryDate;
     }
 
     /**

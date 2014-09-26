@@ -31,7 +31,6 @@ class Decision implements Interfaces\EntityInterface
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
-        Traits\IsNiField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -44,6 +43,15 @@ class Decision implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="decisions", fetch="LAZY")
      */
     protected $pis;
+
+    /**
+     * Is ni
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     */
+    protected $isNi;
 
     /**
      * Initialise the collections
@@ -117,5 +125,28 @@ class Decision implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param boolean $isNi
+     * @return Decision
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return boolean
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 }

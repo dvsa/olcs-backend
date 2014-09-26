@@ -37,7 +37,6 @@ class Conviction implements Interfaces\EntityInterface
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
-        Traits\CategoryText1024Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -145,13 +144,31 @@ class Conviction implements Interfaces\EntityInterface
     protected $takenIntoConsideration;
 
     /**
-     * Convicted name
+     * Category text
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="convicted_name", length=70, nullable=true)
+     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
      */
-    protected $convictedName;
+    protected $categoryText;
+
+    /**
+     * Person firstname
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="person_firstname", length=70, nullable=true)
+     */
+    protected $personFirstname;
+
+    /**
+     * Person lastname
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="person_lastname", length=70, nullable=true)
+     */
+    protected $personLastname;
 
     /**
      * Set the case
@@ -407,25 +424,71 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the convicted name
+     * Set the category text
      *
-     * @param string $convictedName
+     * @param string $categoryText
      * @return Conviction
      */
-    public function setConvictedName($convictedName)
+    public function setCategoryText($categoryText)
     {
-        $this->convictedName = $convictedName;
+        $this->categoryText = $categoryText;
 
         return $this;
     }
 
     /**
-     * Get the convicted name
+     * Get the category text
      *
      * @return string
      */
-    public function getConvictedName()
+    public function getCategoryText()
     {
-        return $this->convictedName;
+        return $this->categoryText;
+    }
+
+    /**
+     * Set the person firstname
+     *
+     * @param string $personFirstname
+     * @return Conviction
+     */
+    public function setPersonFirstname($personFirstname)
+    {
+        $this->personFirstname = $personFirstname;
+
+        return $this;
+    }
+
+    /**
+     * Get the person firstname
+     *
+     * @return string
+     */
+    public function getPersonFirstname()
+    {
+        return $this->personFirstname;
+    }
+
+    /**
+     * Set the person lastname
+     *
+     * @param string $personLastname
+     * @return Conviction
+     */
+    public function setPersonLastname($personLastname)
+    {
+        $this->personLastname = $personLastname;
+
+        return $this;
+    }
+
+    /**
+     * Get the person lastname
+     *
+     * @return string
+     */
+    public function getPersonLastname()
+    {
+        return $this->personLastname;
     }
 }

@@ -28,8 +28,7 @@ class S4 implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOneAlt1,
-        Traits\LicenceManyToOne,
-        Traits\ReceivedDateFieldAlt2,
+        Traits\ReceivedDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
