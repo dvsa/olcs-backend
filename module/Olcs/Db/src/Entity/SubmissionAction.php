@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="submission_action",
  *    indexes={
- *        @ORM\Index(name="IDX_7FC9D12CE1FD4933", columns={"submission_id"}),
- *        @ORM\Index(name="IDX_7FC9D12CB15EFB97", columns={"recipient_user_id"}),
- *        @ORM\Index(name="IDX_7FC9D12C2A98155E", columns={"sender_user_id"}),
- *        @ORM\Index(name="IDX_7FC9D12CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_7FC9D12C65CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_submission_action_user1_idx", columns={"sender_user_id"}),
+ *        @ORM\Index(name="fk_submission_action_user2_idx", columns={"recipient_user_id"}),
+ *        @ORM\Index(name="fk_submission_action_user3_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_submission_action_user4_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_submission_action_submission1_idx", columns={"submission_id"})
  *    }
  * )
  */
@@ -26,8 +26,8 @@ class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

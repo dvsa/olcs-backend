@@ -27,7 +27,7 @@ class PresidingTc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="deleted", nullable=true)
      */
-    protected $deleted;
+    protected $deleted = 0;
 
     /**
      * Set the deleted

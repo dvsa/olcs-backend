@@ -34,9 +34,9 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
@@ -56,24 +56,14 @@ class Pi implements Interfaces\EntityInterface
     protected $agreedByTcRole;
 
     /**
-     * Decided by tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
-     */
-    protected $decidedByTc;
-
-    /**
-     * Pi status
+     * Decided by tc role
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
      */
-    protected $piStatus;
+    protected $decidedByTcRole;
 
     /**
      * Written outcome
@@ -108,22 +98,22 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Assigned to
      *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
-     */
-    protected $decidedByTcRole;
-
-    /**
-     * Assigned to
-     *
      * @var \Olcs\Db\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
      */
     protected $assignedTo;
+
+    /**
+     * Pi status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
+     */
+    protected $piStatus;
 
     /**
      * Pi type
@@ -192,7 +182,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
      */
-    protected $isCancelled;
+    protected $isCancelled = 0;
 
     /**
      * Is adjourned
@@ -201,7 +191,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
      */
-    protected $isAdjourned;
+    protected $isAdjourned = 0;
 
     /**
      * Section code text
@@ -228,7 +218,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
      */
-    protected $licenceRevokedAtPi;
+    protected $licenceRevokedAtPi = 0;
 
     /**
      * Notification date
@@ -379,7 +369,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the decided by tc role
      *
-     * @return \Olcs\Db\Entity\PresidingTc
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getDecidedByTcRole()
     {
@@ -476,6 +466,29 @@ class Pi implements Interfaces\EntityInterface
     public function getAssignedTo()
     {
         return $this->assignedTo;
+    }
+
+    /**
+     * Set the pi status
+     *
+     * @param \Olcs\Db\Entity\RefData $piStatus
+     * @return Pi
+     */
+    public function setPiStatus($piStatus)
+    {
+        $this->piStatus = $piStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPiStatus()
+    {
+        return $this->piStatus;
     }
 
     /**

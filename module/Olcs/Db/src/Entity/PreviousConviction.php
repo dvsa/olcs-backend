@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="previous_conviction",
  *    indexes={
- *        @ORM\Index(name="IDX_7D04230D3E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="fk_previous_convictions_application1_idx", columns={"application_id"})
  *    }
  * )
  */

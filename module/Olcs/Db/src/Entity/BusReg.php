@@ -15,15 +15,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_reg",
  *    indexes={
- *        @ORM\Index(name="IDX_6B9F4C0CAD64EA09", columns={"revert_status"}),
- *        @ORM\Index(name="IDX_6B9F4C0CA0B663B", columns={"subsidised"}),
- *        @ORM\Index(name="IDX_6B9F4C0C4A22916B", columns={"bus_notice_period_id"}),
- *        @ORM\Index(name="IDX_6B9F4C0CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6B9F4C0CE02018B7", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="IDX_6B9F4C0C26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_6B9F4C0C35382CCB", columns={"operating_centre_id"}),
- *        @ORM\Index(name="IDX_6B9F4C0C7B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_6B9F4C0C65CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_bus_reg_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_bus_reg_bus_notice_period1_idx", columns={"bus_notice_period_id"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data1_idx", columns={"subsidised"}),
+ *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
  *    }
  * )
  */
@@ -31,11 +31,11 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOne,
         Traits\StatusManyToOne,
+        Traits\LicenceManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\ReceivedDateField,
         Traits\EffectiveDateField,
@@ -55,16 +55,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $revertStatus;
 
     /**
-     * Subsidised
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
-     */
-    protected $subsidised;
-
-    /**
      * Bus notice period
      *
      * @var \Olcs\Db\Entity\BusNoticePeriod
@@ -73,6 +63,16 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
      */
     protected $busNoticePeriod;
+
+    /**
+     * Subsidised
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
+     */
+    protected $subsidised;
 
     /**
      * Variation reason
@@ -170,7 +170,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_short_notice", nullable=false)
      */
-    protected $isShortNotice;
+    protected $isShortNotice = 0;
 
     /**
      * Use all stops
@@ -179,7 +179,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
      */
-    protected $useAllStops;
+    protected $useAllStops = 0;
 
     /**
      * Has manoeuvre
@@ -188,7 +188,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
      */
-    protected $hasManoeuvre;
+    protected $hasManoeuvre = 0;
 
     /**
      * Manoeuvre detail
@@ -206,7 +206,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="need_new_stop", nullable=false)
      */
-    protected $needNewStop;
+    protected $needNewStop = 0;
 
     /**
      * New stop detail
@@ -224,7 +224,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
      */
-    protected $hasNotFixedStop;
+    protected $hasNotFixedStop = 0;
 
     /**
      * Not fixed stop detail
@@ -251,7 +251,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
      */
-    protected $timetableAcceptable;
+    protected $timetableAcceptable = 0;
 
     /**
      * Map supplied
@@ -260,7 +260,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
      */
-    protected $mapSupplied;
+    protected $mapSupplied = 0;
 
     /**
      * Route description
@@ -278,7 +278,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
      */
-    protected $copiedToLaPte;
+    protected $copiedToLaPte = 0;
 
     /**
      * La short note
@@ -287,7 +287,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
      */
-    protected $laShortNote;
+    protected $laShortNote = 0;
 
     /**
      * Application signed
@@ -296,7 +296,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="application_signed", nullable=false)
      */
-    protected $applicationSigned;
+    protected $applicationSigned = 0;
 
     /**
      * Completed date
@@ -308,13 +308,22 @@ class BusReg implements Interfaces\EntityInterface
     protected $completedDate;
 
     /**
+     * Route seq
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="route_seq", nullable=false)
+     */
+    protected $routeSeq = 0;
+
+    /**
      * Op notified la pte
      *
      * @var string
      *
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false)
      */
-    protected $opNotifiedLaPte;
+    protected $opNotifiedLaPte = 0;
 
     /**
      * Stopping arrangements
@@ -332,7 +341,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
      */
-    protected $trcConditionChecked;
+    protected $trcConditionChecked = 0;
 
     /**
      * Trc notes
@@ -359,7 +368,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
      */
-    protected $isTxcApp;
+    protected $isTxcApp = 0;
 
     /**
      * Txc app type
@@ -404,7 +413,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false)
      */
-    protected $shortNoticeRefused;
+    protected $shortNoticeRefused = 0;
 
     /**
      * Is quality partnership
@@ -504,29 +513,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the subsidised
-     *
-     * @param \Olcs\Db\Entity\RefData $subsidised
-     * @return BusReg
-     */
-    public function setSubsidised($subsidised)
-    {
-        $this->subsidised = $subsidised;
-
-        return $this;
-    }
-
-    /**
-     * Get the subsidised
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubsidised()
-    {
-        return $this->subsidised;
-    }
-
-    /**
      * Set the bus notice period
      *
      * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
@@ -547,6 +533,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getBusNoticePeriod()
     {
         return $this->busNoticePeriod;
+    }
+
+    /**
+     * Set the subsidised
+     *
+     * @param \Olcs\Db\Entity\RefData $subsidised
+     * @return BusReg
+     */
+    public function setSubsidised($subsidised)
+    {
+        $this->subsidised = $subsidised;
+
+        return $this;
+    }
+
+    /**
+     * Get the subsidised
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubsidised()
+    {
+        return $this->subsidised;
     }
 
     /**
@@ -1208,6 +1217,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getCompletedDate()
     {
         return $this->completedDate;
+    }
+
+    /**
+     * Set the route seq
+     *
+     * @param int $routeSeq
+     * @return BusReg
+     */
+    public function setRouteSeq($routeSeq)
+    {
+        $this->routeSeq = $routeSeq;
+
+        return $this;
+    }
+
+    /**
+     * Get the route seq
+     *
+     * @return int
+     */
+    public function getRouteSeq()
+    {
+        return $this->routeSeq;
     }
 
     /**

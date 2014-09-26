@@ -16,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ref_data",
  *    indexes={
- *        @ORM\Index(name="IDX_BA80B2E4727ACA70", columns={"parent_id"})
+ *        @ORM\Index(name="fk_ref_data_ref_data1_idx", columns={"parent_id"})
  *    }
  * )
  */

@@ -27,9 +27,9 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
         Traits\Vrm20Field,
         Traits\IssuedDateField,
         Traits\CustomCreatedOnField,

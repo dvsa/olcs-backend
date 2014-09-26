@@ -17,12 +17,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence_vehicle",
  *    indexes={
- *        @ORM\Index(name="IDX_D5372E35545317D1", columns={"vehicle_id"}),
- *        @ORM\Index(name="IDX_D5372E3526EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_D5372E35D45B0D47", columns={"removal_reason"}),
- *        @ORM\Index(name="IDX_D5372E35DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_D5372E3565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_D5372E353E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="fk_licence_vehicle_vehicle1_idx", columns={"vehicle_id"}),
+ *        @ORM\Index(name="fk_licence_vehicle_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_vehicle_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_vehicle_ref_data1_idx", columns={"removal_reason"}),
+ *        @ORM\Index(name="fk_licence_vehicle_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_licence_vehicle_licence1", columns={"licence_id"})
  *    }
  * )
  */
@@ -31,6 +31,8 @@ class LicenceVehicle implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\RemovalReasonManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ReceivedDateField,
         Traits\CustomDeletedDateField,

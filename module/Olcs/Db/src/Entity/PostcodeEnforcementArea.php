@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcode_enforcement_area",
  *    indexes={
- *        @ORM\Index(name="IDX_B5D94625DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_B5D9462565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B5D946256522907", columns={"enforcement_area_id"})
+ *        @ORM\Index(name="fk_PostcodeVehicleInspectorate_VehicleInspectorate1_idx", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="fk_postcode_enforcement_area_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_postcode_enforcement_area_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="postcode_enforcement_area_unique", columns={"enforcement_area_id","postcode_id"})
@@ -27,8 +27,8 @@ class PostcodeEnforcementArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\EnforcementAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

@@ -38,7 +38,7 @@ class Complaint implements Interfaces\EntityInterface
     /**
      * Status
      *
-     * @var \Olcs\Db\Entity\ContactDetails
+     * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
@@ -116,7 +116,7 @@ class Complaint implements Interfaces\EntityInterface
     /**
      * Get the status
      *
-     * @return \Olcs\Db\Entity\ContactDetails
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getStatus()
     {
@@ -178,6 +178,7 @@ class Complaint implements Interfaces\EntityInterface
     public function setComplainantFamilyName($complainantFamilyName)
     {
         $this->complainantFamilyName = $complainantFamilyName;
+
         return $this;
     }
 

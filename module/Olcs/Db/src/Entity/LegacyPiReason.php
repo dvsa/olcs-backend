@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_pi_reason",
  *    indexes={
- *        @ORM\Index(name="IDX_CB480FBFDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_CB480FBF65CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class LegacyPiReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
