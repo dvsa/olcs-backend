@@ -7,13 +7,21 @@ TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
+TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
-TRUNCATE TABLE `complaint_case`;
+TRUNCATE TABLE `complaint_oc_licence`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `document`;
+TRUNCATE TABLE `doc_template`;
+TRUNCATE TABLE `doc_bookmark`;
+TRUNCATE TABLE `doc_template`;
+TRUNCATE TABLE `doc_paragraph`;
+TRUNCATE TABLE `doc_template_bookmark`;
+TRUNCATE TABLE `doc_paragraph_bookmark`;
+TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -29,6 +37,8 @@ TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `pi_reason`;
 TRUNCATE TABLE `pi_venue`;
+TRUNCATE TABLE `prohibition`;
+TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
@@ -337,9 +347,12 @@ INSERT INTO `bus_reg`
  `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 'subsidised_key1', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Doncaster', 'Doncaster', 'Other details', 1,
-   1, 1, '', 1, '', 1, '', '', 1, 1, 'Route description', 1, 1, 1, null, 0, 1, 'Stopping arrangements', 1,
-  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1);
+  (1, 1, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1),
+  (2, 1, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 46474, null, null, null, null, null, 1);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -348,61 +361,55 @@ VALUES
   (2, 1, 1, 1, 90841, '2013-11-26 00:00:00', '2013-11-28 15:47:00', 1);
 
 
-INSERT INTO `complaint` (`id`, `complainant_contact_details_id`, `driver_id`, `organisation_id`, `created_by`,
-    `last_modified_by`, `complaint_date`, `status`, `value`, `description`, `complaint_type`, `vrm`, `created_on`,
-    `last_modified_on`, `version`) VALUES
-    (1,8,1,1,3,3,NOW(),'cs_ack','12345678','All tyres bald, broken wing mirror.','ct_cov',
-    'VRM1',NOW(),NOW(),1),
-    (2,8,1,1,3,3,NOW(),'cs_pin','12345678','Driving in excess of 70mph on dual carriageway',
-    'ct_spe','VRM2',NOW(),'2014-08-06 08:50:27',1),
-    (3,8,1,1,3,3,NOW(),'cs_rfs','12345678','Vehicle parked on bus stop.','ct_vpo','VRM1',
-    NOW(),NOW(),1);
-
-INSERT INTO `complaint_case` (`complaint_id`, `case_id`) VALUES
-    (1,24),
-    (2,24),
-    (3,24);
+INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `status`, `complaint_type`, `created_by`,
+    `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
+    `created_on`, `last_modified_on`, `version`)
+VALUES
+    ('Complainant First Name', 'Complainant Last Name', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,
     `is_fulfilled`, `notes`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,24,NULL,16,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
-    (2,24,NULL,16,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
-    (3,24,NULL,21,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
-    (4,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
-    (5,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
-    (6,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
-    (7,24,NULL,48,NULL,NULL,'Case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,37,NULL,NULL,'Case','cat_oc','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
-    (9,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
-    (10,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,7,NULL,NULL,NULL,'Case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
+    (1,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
+    (2,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
+    (3,24,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
+    (4,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
+    (5,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
+    (6,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
+    (7,24,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
+    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
+    (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
+    (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
+    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id`, `address_id`, `created_by`,
     `last_modified_by`, `description`, `fao`, `contact_type`, `email_address`, `created_on`, `last_modified_on`,
-    `version`, `deleted_date`) VALUES
-    (7,9,7,NULL,7,0,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL),
-    (8,10,7,NULL,8,3,2,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (21,NULL,1,NULL,21,2,0,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL),
-    (25,NULL,1,NULL,25,4,4,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL),
-    (26,NULL,1,NULL,26,3,0,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL),
-    (27,NULL,1,NULL,27,4,2,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL),
-    (29,NULL,7,NULL,29,1,3,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL),
-    (30,NULL,30,NULL,30,3,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL),
-    (31,NULL,30,NULL,31,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (37,NULL,30,NULL,37,2,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL),
-    (39,NULL,30,NULL,39,2,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL),
-    (41,NULL,41,NULL,41,1,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL),
-    (42,NULL,41,NULL,42,4,1,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (54,NULL,54,NULL,54,2,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL),
-    (55,NULL,54,NULL,55,3,3,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (63,NULL,63,NULL,63,4,3,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL),
-    (64,NULL,63,NULL,64,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (67,NULL,63,NULL,67,4,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL),
-    (72,NULL,63,NULL,72,4,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL),
-    (75,NULL,75,NULL,75,3,4,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL),
-    (76,46,75,NULL,76,1,4,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL),
-    (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL);
+    `version`, `deleted_date`, `forename`, `family_name`) VALUES
+    (1,NULL,NULL,NULL,26,0,2,NULL,NULL,'ct_ta',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (7,9,7,NULL,7,0,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (8,10,7,NULL,8,3,2,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (21,NULL,1,NULL,21,2,0,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (25,NULL,1,NULL,25,4,4,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (26,NULL,1,NULL,26,3,0,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (27,NULL,1,NULL,27,4,2,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (29,NULL,7,NULL,29,1,3,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (30,NULL,30,NULL,30,3,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (31,NULL,30,NULL,31,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (37,NULL,30,NULL,37,2,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (39,NULL,30,NULL,39,2,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (41,NULL,41,NULL,41,1,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (42,NULL,41,NULL,42,4,1,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (54,NULL,54,NULL,54,2,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (55,NULL,54,NULL,55,3,3,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (63,NULL,63,NULL,63,4,3,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (64,NULL,63,NULL,64,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (67,NULL,63,NULL,67,4,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (72,NULL,63,NULL,72,4,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (75,NULL,75,NULL,75,3,4,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (76,46,75,NULL,76,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (101,NULL,NULL,NULL,26,1,4,NULL,NULL,'ct_team_user','loggedin@user.com',NOW(),NOW(),1,NULL, 'Logged in', 'User');
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`, `birth_date`,
     `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `operator_name`,
@@ -416,6 +423,14 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
 INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`) VALUES
 (1,7,3,3,NOW(),NOW(),1);
+
+INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`, `ebsr_submission_type_id`,
+    `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
+    `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
+    `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
+    `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
+  (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
+   null, 0, null);
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -624,6 +639,17 @@ INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (2,'Presiding TC Name 2'),
     (3,'Presiding TC Name 3');
 
+INSERT INTO `prohibition` (`id`, `prohibition_type`, `last_modified_by`, `created_by`, `case_id`, `prohibition_date`,
+ `cleared_date`, `is_trailer`, `imposed_at`, `vrm`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 'pro_t_d', 1, 1, 24, '2014-01-24', '2014-03-11', 1, 'Doncaster', 'AB52 CDE', '2014-06-09 11:01:21',
+   '2014-06-09 11:01:21', 1);
+
+INSERT INTO `prohibition_defect` (`id`, `prohibition_id`, `last_modified_by`, `created_by`, `defect_type`, `notes`,
+ `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 1, 1, 'defect type', 'defect description', '2014-06-09 12:06:41', '2014-06-09 12:06:41', 1);
+
 INSERT INTO `impounding`
     (`id`, `pi_venue_id`, `impounding_type`, `case_id`,
     `outcome`, `last_modified_by`, `presiding_tc_id`, `created_by`,
@@ -684,14 +710,14 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (2,NULL,NULL,'active','External',NULL,NULL,NULL,1);
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
-    `name`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman'),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox'),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg'),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt'),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney'),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson');
+    `name`,`contact_details_id`) VALUES
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -766,12 +792,15 @@ INSERT INTO `cases` (`id`, `licence_id`, `created_by`, `last_modified_by`, `desc
     (74,7,NULL,NULL,'1213213','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
     (75,110,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','licence',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0);
 
-INSERT INTO team(id,version,name) VALUES
-    (1,1,'Marketing'),
-    (2,1,'Development'),
-    (3,1,'Infrastructure'),
-    (4,1,'Support');
+INSERT INTO team(id,version,name,traffic_area_id) VALUES
+    (1,1,'Marketing',''),
+    (2,1,'Development','B'),
+    (3,1,'Infrastructure',''),
+    (4,1,'Support','');
 
+/**
+ * NOTE: These inserts can't be grouped into one as they insert different columns
+ */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (1,2,110,9,32,1,2,'A test task','2014-08-12',1);
@@ -797,31 +826,77 @@ INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,a
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
 
-/* Document dummy data */
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00');
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date) VALUES
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00');
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date,document_store_id) VALUES
+    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
+    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
+    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
+    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
+    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
+    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
+    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
+    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
+    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
+    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
+    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
+    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
+    (13,null,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-08-28 15:03:00','/templates/PUB_APPS_SUPP_DOCS_1ST(GB).rtf'),
+    (14,null,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PUB_APPS_SUPP_DOCS_1ST(NI).rtf'),
+    (15,null,'GB PSV - New/App incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_NEW_APP_SUPP_DOCS_1ST.rtf'),
+    (16,null,'GB Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf'),
+    (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
+    (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
+
+INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
+    (1,1,5,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
+    (2,1,5,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
+    (3,1,5,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
+    (4,1,5,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
+    (5,1,5,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
+    (6,1,5,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+
+INSERT INTO doc_bookmark(id,name,description,version) VALUES
+    (1,'sample_bookmark','A sample bookmark',1),
+    (2,'another_sample_bookmark','Another sample bookmark',1),
+    (3,'a_third_sample_bookmark','A third sample bookmark',1),
+    (4,'application_type','Application type',1),
+    (5,'p_unacceptable_advert','Unacceptable advert',1),
+    (6,'warning_re_early_operating','Warning RE early operating',1);
+
+INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
+    (1,'para 1','Sample paragraph 1.',1),
+    (2,'para 2','Sample Paragraph 2.',1),
+    (3,'para 3','Sample Paragraph 3.',1),
+    (4,'para 4','Sample Paragraph 4.',1),
+    (5,'app type 1','App type number one.',1),
+    (6,'app type 2','App type number two.',1),
+    (7,'unacceptable advert','Your advert was unacceptable.',1),
+    (8,'early operating 1','Early operating text one.',1),
+    (9,'early operating 2','Early operating text two!',1);
+
+INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUES
+    (1,1,1),
+    (1,3,1),
+    (1,2,1),
+    (2,4,1),
+    (2,5,1),
+    (2,6,1),
+    (3,1,1),
+    (4,1,1),
+    (5,1,1),
+    (6,1,1);
+
+INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VALUES
+    (1,1,1),
+    (1,2,1),
+    (1,3,1),
+    (2,2,1),
+    (2,4,1),
+    (3,4,1),
+    (4,5,1),
+    (4,6,1),
+    (5,7,1),
+    (6,8,1),
+    (6,9,1);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (

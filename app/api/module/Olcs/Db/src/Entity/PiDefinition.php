@@ -28,7 +28,6 @@ class PiDefinition implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\GoodsOrPsvManyToOne,
         Traits\Description255Field,
-        Traits\IsNiFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -50,6 +49,15 @@ class PiDefinition implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="section_code", length=20, nullable=false)
      */
     protected $sectionCode;
+
+    /**
+     * Is ni
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
+     */
+    protected $isNi;
 
     /**
      * Set the pi definition category
@@ -95,5 +103,28 @@ class PiDefinition implements Interfaces\EntityInterface
     public function getSectionCode()
     {
         return $this->sectionCode;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param string $isNi
+     * @return PiDefinition
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return string
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 }

@@ -17,15 +17,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="IDX_5A88B2F5D34341AA", columns={"agreed_by_tc_role"}),
- *        @ORM\Index(name="IDX_5A88B2F5DCBFC605", columns={"decided_by_tc_id"}),
- *        @ORM\Index(name="IDX_5A88B2F53174D383", columns={"decided_by_tc_role"}),
- *        @ORM\Index(name="IDX_5A88B2F5C651310A", columns={"pi_status"}),
- *        @ORM\Index(name="IDX_5A88B2F5511CF0D9", columns={"agreed_by_tc_id"}),
- *        @ORM\Index(name="IDX_5A88B2F589EEAF91", columns={"assigned_to"}),
- *        @ORM\Index(name="IDX_5A88B2F5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5A88B2F5CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_5A88B2F565CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
+ *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc2_idx", columns={"decided_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"agreed_by_tc_role"}),
+ *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"decided_by_tc_role"}),
+ *        @ORM\Index(name="fk_pi_ref_data3_idx", columns={"written_outcome"})
  *    }
  * )
  */
@@ -75,6 +76,16 @@ class Pi implements Interfaces\EntityInterface
     protected $piStatus;
 
     /**
+     * Written outcome
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="written_outcome", referencedColumnName="id", nullable=true)
+     */
+    protected $writtenOutcome;
+
+    /**
      * Agreed by tc
      *
      * @var \Olcs\Db\Entity\PresidingTc
@@ -85,7 +96,17 @@ class Pi implements Interfaces\EntityInterface
     protected $agreedByTc;
 
     /**
-     * Decided by tc role
+     * Decided by tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTc;
+
+    /**
+     * Assigned to
      *
      * @var \Olcs\Db\Entity\RefData
      *
@@ -228,6 +249,78 @@ class Pi implements Interfaces\EntityInterface
     protected $decisionNotes;
 
     /**
+     * Call up letter date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="call_up_letter_date", nullable=true)
+     */
+    protected $callUpLetterDate;
+
+    /**
+     * Brief to tc date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="brief_to_tc_date", nullable=true)
+     */
+    protected $briefToTcDate;
+
+    /**
+     * Written reason date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="written_reason_date", nullable=true)
+     */
+    protected $writtenReasonDate;
+
+    /**
+     * Decision letter sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="decision_letter_sent_date", nullable=true)
+     */
+    protected $decisionLetterSentDate;
+
+    /**
+     * Tc written decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="tc_written_decision_date", nullable=true)
+     */
+    protected $tcWrittenDecisionDate;
+
+    /**
+     * Tc written reason date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="tc_written_reason_date", nullable=true)
+     */
+    protected $tcWrittenReasonDate;
+
+    /**
+     * Written reason letter date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="written_reason_letter_date", nullable=true)
+     */
+    protected $writtenReasonLetterDate;
+
+    /**
+     * Decision letter sent after written decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="decision_letter_sent_after_written_decision_date", nullable=true)
+     */
+    protected $decisionLetterSentAfterWrittenDecisionDate;
+
+    /**
      * Pi hearing
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -271,49 +364,49 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the decided by tc
+     * Set the decided by tc role
      *
-     * @param \Olcs\Db\Entity\PresidingTc $decidedByTc
+     * @param \Olcs\Db\Entity\RefData $decidedByTcRole
      * @return Pi
      */
-    public function setDecidedByTc($decidedByTc)
+    public function setDecidedByTcRole($decidedByTcRole)
     {
-        $this->decidedByTc = $decidedByTc;
+        $this->decidedByTcRole = $decidedByTcRole;
 
         return $this;
     }
 
     /**
-     * Get the decided by tc
+     * Get the decided by tc role
      *
      * @return \Olcs\Db\Entity\PresidingTc
      */
-    public function getDecidedByTc()
+    public function getDecidedByTcRole()
     {
-        return $this->decidedByTc;
+        return $this->decidedByTcRole;
     }
 
     /**
-     * Set the pi status
+     * Set the written outcome
      *
-     * @param \Olcs\Db\Entity\RefData $piStatus
+     * @param \Olcs\Db\Entity\RefData $writtenOutcome
      * @return Pi
      */
-    public function setPiStatus($piStatus)
+    public function setWrittenOutcome($writtenOutcome)
     {
-        $this->piStatus = $piStatus;
+        $this->writtenOutcome = $writtenOutcome;
 
         return $this;
     }
 
     /**
-     * Get the pi status
+     * Get the written outcome
      *
      * @return \Olcs\Db\Entity\RefData
      */
-    public function getPiStatus()
+    public function getWrittenOutcome()
     {
-        return $this->piStatus;
+        return $this->writtenOutcome;
     }
 
     /**
@@ -340,26 +433,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the decided by tc role
+     * Set the decided by tc
      *
-     * @param \Olcs\Db\Entity\RefData $decidedByTcRole
+     * @param \Olcs\Db\Entity\PresidingTc $decidedByTc
      * @return Pi
      */
-    public function setDecidedByTcRole($decidedByTcRole)
+    public function setDecidedByTc($decidedByTc)
     {
-        $this->decidedByTcRole = $decidedByTcRole;
+        $this->decidedByTc = $decidedByTc;
 
         return $this;
     }
 
     /**
-     * Get the decided by tc role
+     * Get the decided by tc
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Olcs\Db\Entity\PresidingTc
      */
-    public function getDecidedByTcRole()
+    public function getDecidedByTc()
     {
-        return $this->decidedByTcRole;
+        return $this->decidedByTc;
     }
 
     /**
@@ -765,6 +858,190 @@ class Pi implements Interfaces\EntityInterface
     public function getDecisionNotes()
     {
         return $this->decisionNotes;
+    }
+
+    /**
+     * Set the call up letter date
+     *
+     * @param \DateTime $callUpLetterDate
+     * @return Pi
+     */
+    public function setCallUpLetterDate($callUpLetterDate)
+    {
+        $this->callUpLetterDate = $callUpLetterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the call up letter date
+     *
+     * @return \DateTime
+     */
+    public function getCallUpLetterDate()
+    {
+        return $this->callUpLetterDate;
+    }
+
+    /**
+     * Set the brief to tc date
+     *
+     * @param \DateTime $briefToTcDate
+     * @return Pi
+     */
+    public function setBriefToTcDate($briefToTcDate)
+    {
+        $this->briefToTcDate = $briefToTcDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the brief to tc date
+     *
+     * @return \DateTime
+     */
+    public function getBriefToTcDate()
+    {
+        return $this->briefToTcDate;
+    }
+
+    /**
+     * Set the written reason date
+     *
+     * @param \DateTime $writtenReasonDate
+     * @return Pi
+     */
+    public function setWrittenReasonDate($writtenReasonDate)
+    {
+        $this->writtenReasonDate = $writtenReasonDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the written reason date
+     *
+     * @return \DateTime
+     */
+    public function getWrittenReasonDate()
+    {
+        return $this->writtenReasonDate;
+    }
+
+    /**
+     * Set the decision letter sent date
+     *
+     * @param \DateTime $decisionLetterSentDate
+     * @return Pi
+     */
+    public function setDecisionLetterSentDate($decisionLetterSentDate)
+    {
+        $this->decisionLetterSentDate = $decisionLetterSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the decision letter sent date
+     *
+     * @return \DateTime
+     */
+    public function getDecisionLetterSentDate()
+    {
+        return $this->decisionLetterSentDate;
+    }
+
+    /**
+     * Set the tc written decision date
+     *
+     * @param \DateTime $tcWrittenDecisionDate
+     * @return Pi
+     */
+    public function setTcWrittenDecisionDate($tcWrittenDecisionDate)
+    {
+        $this->tcWrittenDecisionDate = $tcWrittenDecisionDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the tc written decision date
+     *
+     * @return \DateTime
+     */
+    public function getTcWrittenDecisionDate()
+    {
+        return $this->tcWrittenDecisionDate;
+    }
+
+    /**
+     * Set the tc written reason date
+     *
+     * @param \DateTime $tcWrittenReasonDate
+     * @return Pi
+     */
+    public function setTcWrittenReasonDate($tcWrittenReasonDate)
+    {
+        $this->tcWrittenReasonDate = $tcWrittenReasonDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the tc written reason date
+     *
+     * @return \DateTime
+     */
+    public function getTcWrittenReasonDate()
+    {
+        return $this->tcWrittenReasonDate;
+    }
+
+    /**
+     * Set the written reason letter date
+     *
+     * @param \DateTime $writtenReasonLetterDate
+     * @return Pi
+     */
+    public function setWrittenReasonLetterDate($writtenReasonLetterDate)
+    {
+        $this->writtenReasonLetterDate = $writtenReasonLetterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the written reason letter date
+     *
+     * @return \DateTime
+     */
+    public function getWrittenReasonLetterDate()
+    {
+        return $this->writtenReasonLetterDate;
+    }
+
+    /**
+     * Set the decision letter sent after written decision date
+     *
+     * @param \DateTime $input
+     * @return Pi
+     */
+    public function setDecisionLetterSentAfterWrittenDecisionDate($input)
+    {
+        $this->decisionLetterSentAfterWrittenDecisionDate = $input;
+
+        return $this;
+    }
+
+    /**
+     * Get the decision letter sent after written decision date
+     *
+     * @return \DateTime
+     */
+    public function getDecisionLetterSentAfterWrittenDecisionDate()
+    {
+        return $this->decisionLetterSentAfterWrittenDecisionDate;
     }
 
     /**

@@ -14,13 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="IDX_5F2732B5C97DA9B9", columns={"complainant_contact_details_id"}),
- *        @ORM\Index(name="IDX_5F2732B5C3423909", columns={"driver_id"}),
  *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
  *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
  *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5F2732B59E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"})
  *    }
  * )
  */
@@ -29,7 +27,7 @@ class Complaint implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
@@ -38,24 +36,14 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Complainant contact details
+     * Status
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", cascade={"persist"})
-     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
-    protected $complainantContactDetails;
-
-    /**
-     * Driver
-     *
-     * @var \Olcs\Db\Entity\Driver
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Driver", fetch="LAZY", cascade={"persist"})
-     * @ORM\JoinColumn(name="driver_id", referencedColumnName="id", nullable=true)
-     */
-    protected $driver;
+    protected $status;
 
     /**
      * Complaint type
@@ -68,14 +56,22 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
-     * Status
+     * Complainant forename
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="complainant_forename", length=40, nullable=true)
      */
-    protected $status;
+    protected $complainantForename;
+
+    /**
+     * Complainant family name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="complainant_family_name", length=40, nullable=true)
+     */
+    protected $complainantFamilyName;
 
     /**
      * Complaint date
@@ -87,58 +83,44 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintDate;
 
     /**
-     * Value
+     * Driver forename
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="value", length=8, nullable=true)
+     * @ORM\Column(type="string", name="driver_forename", length=40, nullable=true)
      */
-    protected $value;
+    protected $driverForename;
 
     /**
-     * Set the complainant contact details
+     * Driver family name
      *
-     * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
+     * @var string
+     *
+     * @ORM\Column(type="string", name="driver_family_name", length=40, nullable=true)
+     */
+    protected $driverFamilyName;
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
      * @return Complaint
      */
-    public function setComplainantContactDetails($complainantContactDetails)
+    public function setStatus($status)
     {
-        $this->complainantContactDetails = $complainantContactDetails;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get the complainant contact details
+     * Get the status
      *
      * @return \Olcs\Db\Entity\ContactDetails
      */
-    public function getComplainantContactDetails()
+    public function getStatus()
     {
-        return $this->complainantContactDetails;
-    }
-
-    /**
-     * Set the driver
-     *
-     * @param \Olcs\Db\Entity\Driver $driver
-     * @return Complaint
-     */
-    public function setDriver($driver)
-    {
-        $this->driver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * Get the driver
-     *
-     * @return \Olcs\Db\Entity\Driver
-     */
-    public function getDriver()
-    {
-        return $this->driver;
+        return $this->status;
     }
 
     /**
@@ -165,26 +147,48 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the status
+     * Set the complainant forename
      *
-     * @param \Olcs\Db\Entity\RefData $status
+     * @param string $complainantForename
      * @return Complaint
      */
-    public function setStatus($status)
+    public function setComplainantForename($complainantForename)
     {
-        $this->status = $status;
+        $this->complainantForename = $complainantForename;
 
         return $this;
     }
 
     /**
-     * Get the status
+     * Get the complainant forename
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getStatus()
+    public function getComplainantForename()
     {
-        return $this->status;
+        return $this->complainantForename;
+    }
+
+    /**
+     * Set the complainant family name
+     *
+     * @param string $complainantFamilyName
+     * @return Complaint
+     */
+    public function setComplainantFamilyName($complainantFamilyName)
+    {
+        $this->complainantFamilyName = $complainantFamilyName;
+        return $this;
+    }
+
+    /**
+     * Get the complainant family name
+     *
+     * @return string
+     */
+    public function getComplainantFamilyName()
+    {
+        return $this->complainantFamilyName;
     }
 
     /**
@@ -211,25 +215,48 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the value
+     * Set the driver forename
      *
-     * @param string $value
+     * @param string $driverForename
      * @return Complaint
      */
-    public function setValue($value)
+    public function setDriverForename($driverForename)
     {
-        $this->value = $value;
+        $this->driverForename = $driverForename;
 
         return $this;
     }
 
     /**
-     * Get the value
+     * Get the driver forename
      *
      * @return string
      */
-    public function getValue()
+    public function getDriverForename()
     {
-        return $this->value;
+        return $this->driverForename;
+    }
+
+    /**
+     * Set the driver family name
+     *
+     * @param string $driverFamilyName
+     * @return Complaint
+     */
+    public function setDriverFamilyName($driverFamilyName)
+    {
+        $this->driverFamilyName = $driverFamilyName;
+
+        return $this;
+    }
+
+    /**
+     * Get the driver family name
+     *
+     * @return string
+     */
+    public function getDriverFamilyName()
+    {
+        return $this->driverFamilyName;
     }
 }

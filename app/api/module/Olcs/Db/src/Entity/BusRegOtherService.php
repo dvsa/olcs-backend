@@ -25,8 +25,6 @@ class BusRegOtherService implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\ServiceNo70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -40,6 +38,15 @@ class BusRegOtherService implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */
     protected $busReg;
+
+    /**
+     * Service no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
+     */
+    protected $serviceNo;
 
     /**
      * Set the bus reg
@@ -62,5 +69,28 @@ class BusRegOtherService implements Interfaces\EntityInterface
     public function getBusReg()
     {
         return $this->busReg;
+    }
+
+    /**
+     * Set the service no
+     *
+     * @param string $serviceNo
+     * @return BusRegOtherService
+     */
+    public function setServiceNo($serviceNo)
+    {
+        $this->serviceNo = $serviceNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the service no
+     *
+     * @return string
+     */
+    public function getServiceNo()
+    {
+        return $this->serviceNo;
     }
 }

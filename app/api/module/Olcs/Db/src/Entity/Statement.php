@@ -14,11 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="statement",
  *    indexes={
- *        @ORM\Index(name="IDX_C0DB5176A421D5D6", columns={"contact_type"}),
- *        @ORM\Index(name="IDX_C0DB517658B606A3", columns={"requestors_address_id"}),
- *        @ORM\Index(name="IDX_C0DB5176DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C0DB5176CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_C0DB517665CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_statement_type1_idx", columns={"statement_type"}),
+ *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
+ *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"})
  *    }
  * )
  */
@@ -58,9 +59,10 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Statement type
      *
-     * @var int
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="integer", name="statement_type", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
      */
     protected $statementType;
 
@@ -194,7 +196,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Set the statement type
      *
-     * @param int $statementType
+     * @param \Olcs\Db\Entity\RefData $statementType
      * @return Statement
      */
     public function setStatementType($statementType)
@@ -207,7 +209,7 @@ class Statement implements Interfaces\EntityInterface
     /**
      * Get the statement type
      *
-     * @return int
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getStatementType()
     {

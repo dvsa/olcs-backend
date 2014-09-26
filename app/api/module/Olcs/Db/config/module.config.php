@@ -117,6 +117,15 @@ return [
                     ]
                 ]
             ],
+            'bookmark-search' => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/bookmark-search',
+                    'defaults' => [
+                        'controller' => 'bookmark-search'
+                    ]
+                ]
+            ],
         ]
     ],
     'service_manager' => [
@@ -140,7 +149,8 @@ return [
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
             'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
             'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
-            'ref-data' => 'Olcs\Db\Controller\RefDataController'
+            'ref-data' => 'Olcs\Db\Controller\RefDataController',
+            'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
         ]
     ],
     'view_manager' => [

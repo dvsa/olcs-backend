@@ -40,7 +40,6 @@ class Application implements Interfaces\EntityInterface
         Traits\TotAuthMediumVehiclesField,
         Traits\TotAuthLargeVehiclesField,
         Traits\TotCommunityLicencesField,
-        Traits\ReceivedDateField,
         Traits\WithdrawnDateField,
         Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
@@ -147,6 +146,15 @@ class Application implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
      */
     protected $safetyConfirmation;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
 
     /**
      * Target completion date
@@ -632,6 +640,29 @@ class Application implements Interfaces\EntityInterface
     public function getSafetyConfirmation()
     {
         return $this->safetyConfirmation;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return Application
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**

@@ -70,7 +70,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     }
 
     /**
-     * Get an entity by it's id
+     * Get an entity by its id
      *
      * @param int $id
      * @return Response

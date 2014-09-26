@@ -4,6 +4,10 @@ TRUNCATE TABLE `category`;
 TRUNCATE TABLE `task_sub_category`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
+TRUNCATE TABLE `decision`;
+TRUNCATE TABLE `pi_definition`;
+TRUNCATE TABLE `reason`;
+TRUNCATE TABLE `submission`;
 TRUNCATE TABLE `submission_section`;
 TRUNCATE TABLE `conviction_category`;
 TRUNCATE TABLE `document_sub_category`;
@@ -382,6 +386,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_ppt', 'PPT', null),
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
+    ('document_type', 'doc_rtf', 'RTF', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -531,6 +536,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('stay_status', 'stay_s_granted', 'GRANTED', '1'),
     ('stay_status', 'stay_s_refused', 'REFUSED', '0'),
 
+    ('stay_type', 'stay_t_tc', 'Traffic commissioner / Transport Regulator',
+    null),
+    ('stay_type', 'stay_t_ut', 'Upper tribunal', null),
+
     ('prev_licence_type', 'prev_has_licence', 'Named person on licence is on a current licence', null),
     ('prev_licence_type', 'prev_had_licence', 'Named person on licence has been on previous licence', null),
     ('prev_licence_type', 'prev_been_refused', 'Named person on licence has been refused a licence previously', null),
@@ -607,7 +616,19 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('task-date-types', 'tdt_all', 'All', null),
     ('task-status-types', 'tst_open', 'Open', null),
     ('task-status-types', 'tst_closed', 'Closed', null),
-    ('task-status-types', 'tst_all', 'All', null);
+    ('task-status-types', 'tst_all', 'All', null),
+
+    ('statement_type', 'statement_type.1', 'Section 43', null),
+    ('statement_type', 'statement_type.2', 'Section 9', null),
+    ('statement_type', 'statement_type.3', 'NI Section 43', null),
+    ('statement_type', 'statement_type.4', 'NI Section 9', null),
+    ('statement_type', 'statement_type.5', 'NI Section 36', null),
+    ('statement_type', 'statement_type.6', 'NI Section 38', null),
+
+    ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
+    ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
+    ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
+;
 
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
@@ -621,50 +642,52 @@ INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,
     (10,'Submission',0,1,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
-    (1, 'submission_section', 'submission_section_case', 'Case details', NULL),
-    (3, 'submission_section', 'submission_section_pers', 'Persons', NULL),
-    (5, 'submission_section', 'submission_section_ochi', 'Operating centre history', NULL),
-    (7, 'submission_section', 'submission_section_inuc', 'Intelligence unit check', NULL),
-    (9, 'submission_section', 'submission_section_advt', 'Advertisement', NULL),
-    (11, 'submission_section', 'submission_section_alau', 'All auths', NULL),
-    (13, 'submission_section', 'submission_section_cusu', 'Current submissions', NULL),
-    (15, 'submission_section', 'submission_section_trma', 'Transport managers', NULL),
-    (17, 'submission_section', 'submission_section_fire', 'Fitness & repute', NULL),
-    (19, 'submission_section', 'submission_section_brad', 'Bus registration application details', NULL),
-    (21, 'submission_section', 'submission_section_tbus', 'Total bus registrations', NULL),
-    (23, 'submission_section', 'submission_section_mlhh', 'Linked MLH history', NULL),
-    (25, 'submission_section', 'submission_section_mtdh', 'Maintenance / Tachographs / Drivers hours', NULL),
-    (27, 'submission_section', 'submission_section_cpoh', 'Conviction / FPN / Offence history', NULL),
-    (29, 'submission_section', 'submission_section_pens', 'Penalties', NULL),
-    (31, 'submission_section', 'submission_section_terp', 'TE reports', NULL),
-    (33, 'submission_section', 'submission_section_plpm', 'Planning permission', NULL),
-    (35, 'submission_section', 'submission_section_vaes', 'Visibility / access egress size', NULL),
-    (37, 'submission_section', 'submission_section_envc', 'Environmental complaints', NULL),
-    (39, 'submission_section', 'submission_section_objs', 'Objections', NULL),
-    (41, 'submission_section', 'submission_section_fnin', 'Financial information', NULL),
-    (43, 'submission_section', 'submission_section_wflf', 'Waive fee / Late fee', NULL),
-    (44, 'submission_section', 'submission_section_annx', 'Annex', NULL),
-    (2, 'submission_section', 'submission_section_msin', 'Most serious incident', NULL),
-    (4, 'submission_section', 'submission_section_opce', 'Operating centres', NULL),
-    (6, 'submission_section', 'submission_section_ctud', 'Conditions and undertakings', NULL),
-    (8, 'submission_section', 'submission_section_intm', 'Interim', NULL),
-    (10, 'submission_section', 'submission_section_llan', 'Linked licences & application numbers', NULL),
-    (12, 'submission_section', 'submission_section_ltca', 'Lead TC area', NULL),
-    (14, 'submission_section', 'submission_section_auth', 'Authorisation requested applied for', NULL),
-    (16, 'submission_section', 'submission_section_cnec', 'Continuous and effective control', NULL),
-    (18, 'submission_section', 'submission_section_preh', 'Previous history', NULL),
-    (20, 'submission_section', 'submission_section_trac', 'Transport authority comments', NULL),
-    (22, 'submission_section', 'submission_section_llhi', 'Local licence history', NULL),
-    (24, 'submission_section', 'submission_section_regd', 'Registration details', NULL),
-    (26, 'submission_section', 'submission_section_proh', 'Prohibition history', NULL),
-    (28, 'submission_section', 'submission_section_anth', 'Annual test history', NULL),
-    (30, 'submission_section', 'submission_section_misc', 'Other issues / misc', NULL),
-    (32, 'submission_section', 'submission_section_site', 'Site plans', NULL),
-    (34, 'submission_section', 'submission_section_acom', 'Applicants comments', NULL),
-    (36, 'submission_section', 'submission_section_comp', 'Case complaints', NULL),
-    (38, 'submission_section', 'submission_section_reps', 'Representations', NULL),
-    (40, 'submission_section', 'submission_section_maps', 'Maps', NULL),
-    (42, 'submission_section', 'submission_section_surr', 'Surrender', NULL),
+    (1, 'submission_section', 'submission_section_intr', 'Introduction', NULL),
+    (2, 'submission_section', 'submission_section_casu', 'Case summary', NULL),
+    (3, 'submission_section', 'submission_section_case', 'Case outline', NULL),
+    (4, 'submission_section', 'submission_section_msin', 'Most serious infringement', NULL),
+    (5, 'submission_section', 'submission_section_pers', 'Persons', NULL),
+    (6, 'submission_section', 'submission_section_opce', 'Operating centres', NULL),
+    (7, 'submission_section', 'submission_section_ochi', 'Operating centre history', NULL),
+    (8, 'submission_section', 'submission_section_ctud', 'Conditions and undertakings', NULL),
+    (9, 'submission_section', 'submission_section_inuc', 'Intelligence unit check', NULL),
+    (10, 'submission_section', 'submission_section_intm', 'Interim', NULL),
+    (11, 'submission_section', 'submission_section_advt', 'Advertisement', NULL),
+    (12, 'submission_section', 'submission_section_llan', 'Linked licences & application numbers', NULL),
+    (13, 'submission_section', 'submission_section_alau', 'All auths', NULL),
+    (14, 'submission_section', 'submission_section_ltca', 'Lead TC area', NULL),
+    (15, 'submission_section', 'submission_section_cusu', 'Current submissions', NULL),
+    (16, 'submission_section', 'submission_section_auth', 'Authorisation requested / applied for', NULL),
+    (17, 'submission_section', 'submission_section_trma', 'Transport managers', NULL),
+    (18, 'submission_section', 'submission_section_cnec', 'Continuous and effective control', NULL),
+    (19, 'submission_section', 'submission_section_fire', 'Fitness & repute', NULL),
+    (20, 'submission_section', 'submission_section_preh', 'Previous history', NULL),
+    (21, 'submission_section', 'submission_section_brad', 'Bus registration application details', NULL),
+    (22, 'submission_section', 'submission_section_trac', 'Transport authority comments', NULL),
+    (23, 'submission_section', 'submission_section_tbus', 'Total bus registrations', NULL),
+    (24, 'submission_section', 'submission_section_llhi', 'Local licence history', NULL),
+    (25, 'submission_section', 'submission_section_mlhh', 'Linked MLH history', NULL),
+    (26, 'submission_section', 'submission_section_regd', 'Registration details', NULL),
+    (27, 'submission_section', 'submission_section_mtdh', 'Maintenance / Tachographs / Drivers hours', NULL),
+    (28, 'submission_section', 'submission_section_proh', 'Prohibition history', NULL),
+    (29, 'submission_section', 'submission_section_cpoh', 'Conviction / FPN / Offence history', NULL),
+    (30, 'submission_section', 'submission_section_anth', 'Annual test history', NULL),
+    (31, 'submission_section', 'submission_section_pens', 'Penalties', NULL),
+    (32, 'submission_section', 'submission_section_misc', 'Other issues / misc', NULL),
+    (33, 'submission_section', 'submission_section_terp', 'TE reports', NULL),
+    (34, 'submission_section', 'submission_section_site', 'Site plans', NULL),
+    (35, 'submission_section', 'submission_section_plpm', 'Planning permission', NULL),
+    (36, 'submission_section', 'submission_section_acom', 'Applicants comments', NULL),
+    (37, 'submission_section', 'submission_section_vaes', 'Visibility / access egress size', NULL),
+    (38, 'submission_section', 'submission_section_comp', 'Case complaints', NULL),
+    (39, 'submission_section', 'submission_section_envc', 'Environmental complaints', NULL),
+    (40, 'submission_section', 'submission_section_reps', 'Representations', NULL),
+    (41, 'submission_section', 'submission_section_objs', 'Objections', NULL),
+    (42, 'submission_section', 'submission_section_fnin', 'Financial information', NULL),
+    (43, 'submission_section', 'submission_section_maps', 'Maps', NULL),
+    (44, 'submission_section', 'submission_section_wflf', 'Waive fee / Late fee', NULL),
+    (45, 'submission_section', 'submission_section_surr', 'Surrender', NULL),
+    (46, 'submission_section', 'submission_section_annx', 'Annex', NULL),
     (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
     (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
     (3, 'submission_type', 'submission_type_o_clo_psv', 'CLO (PSV)', NULL),
@@ -1647,7 +1670,8 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
     (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
     (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
-    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1);
+    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
+    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
 
 INSERT INTO `submission` (`id`, `last_modified_by`, `created_by`, `case_id`, `text`, `closed_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -2143,6 +2167,7 @@ DROP VIEW IF EXISTS document_search_view;
 
 CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
+        d.document_store_id, d.id document_id,
         cat.description category_name, dsc.description document_sub_category_name, d.filename,
 		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
