@@ -645,8 +645,8 @@ INSERT INTO `impounding`
 VALUES
     (17, 3, 'impt_hearing', 24,
     'impo_returned', NULL, 1, NULL,
-    NOW(), NOW(), NOW(),
-    NULL, NOW(), 'Some notes - db default', NOW(), NOW(), 1);
+    '2014-06-09 11:15:00', '2014-06-11 14:30:00', NOW(),
+    NULL, '2014-06-10 15:45:00', 'Some notes - db default', NOW(), NOW(), 1);
 
 INSERT INTO `impounding_legislation_type`
     (`impounding_id`, `impounding_legislation_type_id`)
