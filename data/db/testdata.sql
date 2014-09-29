@@ -885,4 +885,6 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (6,8,1),
     (6,9,1);
 
+ALTER TABLE companies_house_request AUTO_INCREMENT=52;
+
 SET foreign_key_checks = 1;
