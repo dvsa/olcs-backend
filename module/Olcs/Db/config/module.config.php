@@ -167,10 +167,6 @@ return [
              'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
          ],
     ],
-    'companies_house_credentials' => [
-        'password'   => 'XMLGatewayTestPassword',
-        'userId'     => 'XMLGatewayTestUserID'
-    ],
     'doctrine' => [
         'driver' => [
             'EntityDriver' => [
