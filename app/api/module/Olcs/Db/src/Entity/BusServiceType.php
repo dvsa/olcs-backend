@@ -26,15 +26,7 @@ class BusServiceType implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="busServiceTypes", fetch="LAZY")
-     * @ORM\JoinTable(name="bus_reg_bus_service_type",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="bus_service_type_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes", fetch="LAZY")
      */
     protected $busRegs;
 
