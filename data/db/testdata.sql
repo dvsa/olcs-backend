@@ -7,6 +7,8 @@ TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
+TRUNCATE TABLE `bus_notice_period`;
+TRUNCATE TABLE `bus_service_type`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_oc_licence`;
@@ -362,6 +364,25 @@ VALUES
   (1, 1, 1, 1, 90840, '2013-11-25 00:00:00', '2013-11-27 13:41:00', 1),
   (2, 1, 1, 1, 90841, '2013-11-26 00:00:00', '2013-11-28 15:47:00', 1);
 
+INSERT INTO `bus_notice_period`
+(`id`, `notice_area`, `standard_period`, `cancellation_period`, `created_by`, `last_modified_by`, `created_on`,
+ `last_modified_on`,`version`)
+VALUES
+  (1,'Scotland',56,90,NULL,NULL,NULL,NULL,1),
+  (2,'Other',56,0,NULL,NULL,NULL,NULL,1);
+
+INSERT INTO `bus_service_type` (`id`,`description`,`txc_service_type_name`)
+VALUES
+  (1,'Normal Stopping','NormalStopping'),
+  (2,'Limited Stop','LimitedStops'),
+  (3,'Frequent Service',NULL),
+  (4,'Hail & Ride','HailAndRide'),
+  (5,'Excursion or Tour','ExcursionOrTour'),
+  (6,'School or Works','SchoolOrWorks'),
+  (7,'Dial-a-ride','DialARide'),
+  (8,'Circular',NULL),
+  (9,'Rural Bus Service','RuralService'),
+  (10,'Flexible Registration','Flexible');
 
 INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `status`, `complaint_type`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,

@@ -4861,14 +4861,13 @@ CREATE TABLE IF NOT EXISTS `bus_service_type` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `bus_reg_bus_service_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bus_reg_bus_service_type` (
-  `bus_service_type_id` INT NOT NULL,
   `bus_reg_id` INT NOT NULL,
-  PRIMARY KEY (`bus_service_type_id`, `bus_reg_id`),
+  `bus_service_type_id` INT NOT NULL,
+  PRIMARY KEY (`bus_reg_id`, `bus_service_type_id`),
   INDEX `fk_bus_reg_bus_service_type_bus_reg1_idx` (`bus_reg_id` ASC),
   CONSTRAINT `fk_bus_reg_bus_service_type_bus_service_type1`
     FOREIGN KEY (`bus_service_type_id`)
@@ -4881,7 +4880,6 @@ CREATE TABLE IF NOT EXISTS `bus_reg_bus_service_type` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `bus_reg_traffic_area`
