@@ -307,7 +307,7 @@ class CompaniesHouse extends ServiceAbstract
             $return = array();
         }
 
-        if (isset($return->Error) && $return->Error->Number != 600) {
+        if (isset($return->Error) && $return->Error->Number != 600 && substr($return->Error->Number, 0, 1) !== '9') {
             throw new \Exception(
                 'Companies house API error: Number - ' . $return->Error->Number
                 . ' type: ' . $return->Error->Type
