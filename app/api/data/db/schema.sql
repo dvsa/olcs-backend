@@ -3433,7 +3433,7 @@ CREATE TABLE IF NOT EXISTS `impounding` (
   `outcome` VARCHAR(32) NULL COMMENT 'Vehicle(s) returned or not returned',
   `notes` VARCHAR(4000) NULL,
   `close_date` DATETIME NULL,
-  `pi_venue_id` INT NOT NULL,
+  `pi_venue_id` INT NULL,
   `pi_venue_other` VARCHAR(255) NULL,
   `vrm` VARCHAR(20) NULL,
   `created_by` INT NULL,
