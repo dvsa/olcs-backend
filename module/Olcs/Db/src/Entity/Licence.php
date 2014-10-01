@@ -15,15 +15,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence",
  *    indexes={
- *        @ORM\Index(name="IDX_1DAAE648DBE65552", columns={"tachograph_ins"}),
- *        @ORM\Index(name="IDX_1DAAE6489E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_1DAAE6486522907", columns={"enforcement_area_id"}),
- *        @ORM\Index(name="IDX_1DAAE64861EF9EF4", columns={"licence_type"}),
- *        @ORM\Index(name="IDX_1DAAE6487B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_1DAAE648324926D6", columns={"goods_or_psv"}),
- *        @ORM\Index(name="IDX_1DAAE64865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_1DAAE64818E0B1DB", columns={"traffic_area_id"}),
- *        @ORM\Index(name="IDX_1DAAE648DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_licence_vehicle_inspectorate1_idx", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="fk_licence_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_licence_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_licence_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_licence_ref_data2_idx", columns={"licence_type"}),
+ *        @ORM\Index(name="fk_licence_ref_data3_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
@@ -34,15 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOneAlt1,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicNo18Field,
-        Traits\ViAction1Field,
-        Traits\ExpiryDateField,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -56,16 +53,6 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
      * Tachograph ins
      *
      * @var \Olcs\Db\Entity\RefData
@@ -76,6 +63,16 @@ class Licence implements Interfaces\EntityInterface
     protected $tachographIns;
 
     /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
+
+    /**
      * Enforcement area
      *
      * @var \Olcs\Db\Entity\EnforcementArea
@@ -84,6 +81,24 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
      */
     protected $enforcementArea;
+
+    /**
+     * Lic no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
+     */
+    protected $licNo;
+
+    /**
+     * Vi action
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
+     */
+    protected $viAction;
 
     /**
      * Trailers in possession
@@ -102,6 +117,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="fabs_reference", length=10, nullable=true)
      */
     protected $fabsReference;
+
+    /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
 
     /**
      * Granted date
@@ -164,7 +188,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
      */
-    protected $safetyIns;
+    protected $safetyIns = 0;
 
     /**
      * Safety ins varies
@@ -209,7 +233,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
-    protected $translateToWelsh;
+    protected $translateToWelsh = 0;
 
     /**
      * Application
@@ -269,29 +293,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return Licence
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -315,6 +316,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return Licence
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
      * Set the enforcement area
      *
      * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
@@ -335,6 +359,52 @@ class Licence implements Interfaces\EntityInterface
     public function getEnforcementArea()
     {
         return $this->enforcementArea;
+    }
+
+    /**
+     * Set the lic no
+     *
+     * @param string $licNo
+     * @return Licence
+     */
+    public function setLicNo($licNo)
+    {
+        $this->licNo = $licNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the lic no
+     *
+     * @return string
+     */
+    public function getLicNo()
+    {
+        return $this->licNo;
+    }
+
+    /**
+     * Set the vi action
+     *
+     * @param string $viAction
+     * @return Licence
+     */
+    public function setViAction($viAction)
+    {
+        $this->viAction = $viAction;
+
+        return $this;
+    }
+
+    /**
+     * Get the vi action
+     *
+     * @return string
+     */
+    public function getViAction()
+    {
+        return $this->viAction;
     }
 
     /**
@@ -381,6 +451,29 @@ class Licence implements Interfaces\EntityInterface
     public function getFabsReference()
     {
         return $this->fabsReference;
+    }
+
+    /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate
+     * @return Licence
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate()
+    {
+        return $this->expiryDate;
     }
 
     /**

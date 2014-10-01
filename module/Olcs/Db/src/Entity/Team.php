@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="team",
  *    indexes={
- *        @ORM\Index(name="IDX_C4E0A61FF508DBD2", columns={"override_ta_contact_id"}),
- *        @ORM\Index(name="IDX_C4E0A61F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_C4E0A61FDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C4E0A61F18E0B1DB", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_team_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_team_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_team_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_team_contact_details1_idx", columns={"override_ta_contact_id"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class Team implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\Description255FieldAlt1,
         Traits\Name70Field,

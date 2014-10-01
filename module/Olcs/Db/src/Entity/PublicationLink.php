@@ -16,16 +16,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="publication_link",
  *    indexes={
- *        @ORM\Index(name="IDX_3D54183CB654A69B", columns={"publication_section_id"}),
- *        @ORM\Index(name="IDX_3D54183C49705ADE", columns={"tm_pi_hearing_id"}),
- *        @ORM\Index(name="IDX_3D54183CE0DEB379", columns={"pi_id"}),
- *        @ORM\Index(name="IDX_3D54183C38B217A7", columns={"publication_id"}),
- *        @ORM\Index(name="IDX_3D54183CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_3D54183C65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_3D54183C5327B2E3", columns={"bus_reg_id"}),
- *        @ORM\Index(name="IDX_3D54183C3E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_3D54183C26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_3D54183C18E0B1DB", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_publication_has_licence_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_publication_has_licence_publication1_idx", columns={"publication_id"}),
+ *        @ORM\Index(name="fk_licence_publication_pi_detail1_idx", columns={"pi_id"}),
+ *        @ORM\Index(name="fk_licence_publication_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_licence_publication_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_licence_publication_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_licence_publication_publication_section1_idx", columns={"publication_section_id"}),
+ *        @ORM\Index(name="fk_licence_publication_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_publication_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_publication_tm_pi_hearing1_idx", columns={"tm_pi_hearing_id"})
  *    }
  * )
  */
@@ -33,11 +33,11 @@ class PublicationLink implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
@@ -57,16 +57,6 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $publicationSection;
 
     /**
-     * Pi
-     *
-     * @var \Olcs\Db\Entity\Pi
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
-     */
-    protected $pi;
-
-    /**
      * Tm pi hearing
      *
      * @var \Olcs\Db\Entity\TmPiHearing
@@ -75,6 +65,16 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
+     */
+    protected $pi;
 
     /**
      * Publication
@@ -155,29 +155,6 @@ class PublicationLink implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the pi
-     *
-     * @param \Olcs\Db\Entity\Pi $pi
-     * @return PublicationLink
-     */
-    public function setPi($pi)
-    {
-        $this->pi = $pi;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi
-     *
-     * @return \Olcs\Db\Entity\Pi
-     */
-    public function getPi()
-    {
-        return $this->pi;
-    }
-
-    /**
      * Set the tm pi hearing
      *
      * @param \Olcs\Db\Entity\TmPiHearing $tmPiHearing
@@ -198,6 +175,29 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getTmPiHearing()
     {
         return $this->tmPiHearing;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PublicationLink
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
     }
 
     /**

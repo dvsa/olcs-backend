@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence_vehicle_fee",
  *    indexes={
- *        @ORM\Index(name="IDX_48BA9859F75B4EBD", columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="IDX_48BA985965CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_48BA9859DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_48BA9859AB45AECA", columns={"fee_id"})
+ *        @ORM\Index(name="fk_licence_vehicle_fee_fee1_idx", columns={"fee_id"}),
+ *        @ORM\Index(name="fk_licence_vehicle_fee_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_vehicle_fee_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_vehicle_fee_licence_vehicle1", columns={"licence_vehicle_id"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\FeeManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

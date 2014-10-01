@@ -15,13 +15,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application",
  *    indexes={
- *        @ORM\Index(name="IDX_A45BDDC15727D560", columns={"interim_status"}),
- *        @ORM\Index(name="IDX_A45BDDC126EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_A45BDDC1E02018B7", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="IDX_A45BDDC17B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_A45BDDC161EF9EF4", columns={"licence_type"}),
- *        @ORM\Index(name="IDX_A45BDDC1DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_A45BDDC165CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_application_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_application_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
+ *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
+ *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"})
  *    }
  * )
  */
@@ -29,12 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\StatusManyToOne,
         Traits\LicenceTypeManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ReceivedDateField,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -48,16 +47,6 @@ class Application implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="applications")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licence;
-
-    /**
      * Interim status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -66,6 +55,16 @@ class Application implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="interim_status", referencedColumnName="id", nullable=true)
      */
     protected $interimStatus;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="applications")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Has entered reg
@@ -128,7 +127,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false)
      */
-    protected $insolvencyConfirmation;
+    protected $insolvencyConfirmation = 0;
 
     /**
      * Insolvency details
@@ -146,7 +145,16 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
      */
-    protected $safetyConfirmation;
+    protected $safetyConfirmation = 1;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
 
     /**
      * Target completion date
@@ -245,7 +253,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="override_ooo", nullable=false)
      */
-    protected $overrideOoo;
+    protected $overrideOoo = 0;
 
     /**
      * Prev conviction
@@ -263,7 +271,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false)
      */
-    protected $convictionsConfirmation;
+    protected $convictionsConfirmation = 0;
 
     /**
      * Psv operate small vhl
@@ -290,7 +298,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="psv_small_vhl_confirmation", nullable=false)
      */
-    protected $psvSmallVhlConfirmation;
+    protected $psvSmallVhlConfirmation = 0;
 
     /**
      * Psv no small vhl confirmation
@@ -299,7 +307,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="psv_no_small_vhl_confirmation", nullable=false)
      */
-    protected $psvNoSmallVhlConfirmation;
+    protected $psvNoSmallVhlConfirmation = 0;
 
     /**
      * Psv limousines
@@ -308,7 +316,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="psv_limousines", nullable=false)
      */
-    protected $psvLimousines;
+    protected $psvLimousines = 0;
 
     /**
      * Psv no limousine confirmation
@@ -317,7 +325,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="psv_no_limousine_confirmation", nullable=false)
      */
-    protected $psvNoLimousineConfirmation;
+    protected $psvNoLimousineConfirmation = 0;
 
     /**
      * Psv only limousines confirmation
@@ -326,7 +334,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="psv_only_limousines_confirmation", nullable=false)
      */
-    protected $psvOnlyLimousinesConfirmation;
+    protected $psvOnlyLimousinesConfirmation = 0;
 
     /**
      * Interim start
@@ -382,29 +390,6 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return Application
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
-
-    /**
      * Set the interim status
      *
      * @param \Olcs\Db\Entity\RefData $interimStatus
@@ -425,6 +410,29 @@ class Application implements Interfaces\EntityInterface
     public function getInterimStatus()
     {
         return $this->interimStatus;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Application
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**
@@ -632,6 +640,29 @@ class Application implements Interfaces\EntityInterface
     public function getSafetyConfirmation()
     {
         return $this->safetyConfirmation;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return Application
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**

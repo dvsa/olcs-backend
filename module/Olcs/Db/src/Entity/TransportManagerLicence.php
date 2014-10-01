@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_licence",
  *    indexes={
- *        @ORM\Index(name="IDX_7706F54665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_7706F546DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_7706F54626EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_7706F5461F75BD29", columns={"transport_manager_id"})
+ *        @ORM\Index(name="fk_transport_manager_licence_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_transport_manager_licence_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_transport_manager_licence_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_transport_manager_licence_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class TransportManagerLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\TransportManagerManyToOneAlt1,
         Traits\CustomDeletedDateField,

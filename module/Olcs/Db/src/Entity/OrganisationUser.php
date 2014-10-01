@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation_user",
  *    indexes={
- *        @ORM\Index(name="IDX_CFD7D651A76ED395", columns={"user_id"}),
- *        @ORM\Index(name="IDX_CFD7D65165CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_CFD7D651DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_CFD7D6519E6B1585", columns={"organisation_id"})
+ *        @ORM\Index(name="fk_organisation_has_user_user1_idx", columns={"user_id"}),
+ *        @ORM\Index(name="fk_organisation_has_user_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_organisation_user_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_organisation_user_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="organisation_user_unique", columns={"organisation_id","user_id"})
@@ -28,8 +28,8 @@ class OrganisationUser implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\OrganisationManyToOneAlt1,
         Traits\AddedDateField,
         Traits\RemovedDateField,
@@ -54,7 +54,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_administrator", nullable=false)
      */
-    protected $isAdministrator;
+    protected $isAdministrator = 0;
 
     /**
      * Sftp access
@@ -63,7 +63,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="sftp_access", nullable=false)
      */
-    protected $sftpAccess;
+    protected $sftpAccess = 0;
 
     /**
      * Set the user

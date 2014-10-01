@@ -16,14 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_pi_hearing",
  *    indexes={
- *        @ORM\Index(name="IDX_48A7AF65C54C8C93", columns={"type_id"}),
- *        @ORM\Index(name="IDX_48A7AF65221D9101", columns={"presided_by"}),
- *        @ORM\Index(name="IDX_48A7AF6559BB1592", columns={"reason_id"}),
- *        @ORM\Index(name="IDX_48A7AF65DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_48A7AF6565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_48A7AF6540A73EBA", columns={"venue_id"}),
- *        @ORM\Index(name="IDX_48A7AF6553BAD7A2", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="IDX_48A7AF65CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="fk_tm_pi_hearing_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_ref_data1_idx", columns={"presided_by"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_ref_data2_idx", columns={"reason_id"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_ref_data3_idx", columns={"type_id"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_tm_pi_hearing_pi_venue1_idx", columns={"venue_id"})
  *    }
  * )
  */
@@ -31,10 +31,10 @@ class TmPiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\VenueManyToOne,
+        Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
@@ -53,16 +53,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $type;
 
     /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
-
-    /**
      * Presided by
      *
      * @var \Olcs\Db\Entity\RefData
@@ -73,13 +63,23 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $presidedBy;
 
     /**
+     * Reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
+     */
+    protected $reason;
+
+    /**
      * Witnesses
      *
      * @var int
      *
      * @ORM\Column(type="integer", name="witnesses", nullable=false)
      */
-    protected $witnesses;
+    protected $witnesses = 0;
 
     /**
      * Adjourned date
@@ -141,29 +141,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the reason
-     *
-     * @param \Olcs\Db\Entity\RefData $reason
-     * @return TmPiHearing
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
      * Set the presided by
      *
      * @param \Olcs\Db\Entity\RefData $presidedBy
@@ -184,6 +161,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getPresidedBy()
     {
         return $this->presidedBy;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\RefData $reason
+     * @return TmPiHearing
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     /**

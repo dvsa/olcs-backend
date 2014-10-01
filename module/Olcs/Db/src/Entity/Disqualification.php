@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disqualification",
  *    indexes={
- *        @ORM\Index(name="IDX_1BEFF80B65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_1BEFF80BDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_1BEFF80B1F75BD29", columns={"transport_manager_id"}),
- *        @ORM\Index(name="IDX_1BEFF80B9E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_1BEFF80B217BBB47", columns={"person_id"})
+ *        @ORM\Index(name="fk_disqualification_person1_idx", columns={"person_id"}),
+ *        @ORM\Index(name="fk_disqualification_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_disqualification_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_disqualification_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_disqualification_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,10 +26,10 @@ class Disqualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,

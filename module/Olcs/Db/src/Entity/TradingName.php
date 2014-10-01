@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trading_name",
  *    indexes={
- *        @ORM\Index(name="IDX_18562FA9E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_18562FA65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_18562FADE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_18562FA26EF07C9", columns={"licence_id"})
+ *        @ORM\Index(name="fk_trading_name_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_trading_name_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_trading_name_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_trading_name_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class TradingName implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,

@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="s4",
  *    indexes={
- *        @ORM\Index(name="IDX_647FCC7F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_647FCC7FDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_647FCC7F26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_647FCC7F3E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="fk_s4_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_s4_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_s4_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_s4_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,11 +25,11 @@ class S4 implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\ApplicationManyToOneAlt1,
-        Traits\ReceivedDateFieldAlt2,
+        Traits\ReceivedDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -59,7 +59,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="surrender_licence", nullable=false)
      */
-    protected $surrenderLicence;
+    protected $surrenderLicence = 0;
 
     /**
      * Is true s4
@@ -68,7 +68,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
      */
-    protected $isTrueS4;
+    protected $isTrueS4 = 0;
 
     /**
      * Set the agreed date

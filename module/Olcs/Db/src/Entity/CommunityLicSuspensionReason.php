@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_suspension_reason",
  *    indexes={
- *        @ORM\Index(name="IDX_AAD53DD059BB1592", columns={"reason_id"}),
- *        @ORM\Index(name="IDX_AAD53DD010888A2E", columns={"community_lic_suspension_id"}),
- *        @ORM\Index(name="IDX_AAD53DD065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_AAD53DD0DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx", columns={"community_lic_suspension_id"}),
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx1", columns={"reason_id"}),
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

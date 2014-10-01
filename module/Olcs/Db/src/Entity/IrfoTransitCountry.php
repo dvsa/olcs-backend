@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_transit_country",
  *    indexes={
- *        @ORM\Index(name="IDX_FE3794FA4425C407", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="IDX_FE3794FA65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_FE3794FADE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_irfo_transit_country_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="fk_irfo_transit_country_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irfo_transit_country_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

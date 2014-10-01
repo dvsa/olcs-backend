@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="recipient",
  *    indexes={
- *        @ORM\Index(name="IDX_6804FB4965CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_6804FB49DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6804FB497CA35EB5", columns={"contact_details_id"})
+ *        @ORM\Index(name="fk_recipient_contact_details1_idx", columns={"contact_details_id"}),
+ *        @ORM\Index(name="fk_recipient_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_recipient_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class Recipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -59,7 +59,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
      */
-    protected $sendAppDecision;
+    protected $sendAppDecision = 0;
 
     /**
      * Send notices procs
@@ -68,7 +68,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
      */
-    protected $sendNoticesProcs;
+    protected $sendNoticesProcs = 0;
 
     /**
      * Is police
@@ -77,7 +77,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_police", nullable=false)
      */
-    protected $isPolice;
+    protected $isPolice = 0;
 
     /**
      * Is objector
@@ -86,7 +86,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_objector", nullable=false)
      */
-    protected $isObjector;
+    protected $isObjector = 0;
 
     /**
      * Initialise the collections

@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="previous_conviction",
  *    indexes={
- *        @ORM\Index(name="IDX_7D04230D3E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="fk_previous_convictions_application1_idx", columns={"application_id"})
  *    }
  * )
  */
@@ -23,7 +23,6 @@ class PreviousConviction implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\ApplicationManyToOne,
-        Traits\CategoryText1024Field,
         Traits\Title32Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
@@ -56,6 +55,15 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="family_name", length=35, nullable=false)
      */
     protected $familyName;
+
+    /**
+     * Category text
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
+     */
+    protected $categoryText;
 
     /**
      * Court fpn
@@ -133,6 +141,29 @@ class PreviousConviction implements Interfaces\EntityInterface
     public function getFamilyName()
     {
         return $this->familyName;
+    }
+
+    /**
+     * Set the category text
+     *
+     * @param string $categoryText
+     * @return PreviousConviction
+     */
+    public function setCategoryText($categoryText)
+    {
+        $this->categoryText = $categoryText;
+
+        return $this;
+    }
+
+    /**
+     * Get the category text
+     *
+     * @return string
+     */
+    public function getCategoryText()
+    {
+        return $this->categoryText;
     }
 
     /**
