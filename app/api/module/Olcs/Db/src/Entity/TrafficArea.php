@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="traffic_area",
  *    indexes={
- *        @ORM\Index(name="IDX_21D267267CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_21D2672665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_21D26726DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_traffic_area_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_traffic_area_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_traffic_area_contact_details1_idx", columns={"contact_details_id"})
  *    }
  * )
  */
@@ -67,7 +67,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_scottish_rules", nullable=false)
      */
-    protected $isScottishRules;
+    protected $isScottishRules = 0;
 
     /**
      * Document

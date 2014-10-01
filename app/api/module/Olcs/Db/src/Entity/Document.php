@@ -17,19 +17,19 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="IDX_D8698A7635382CCB", columns={"operating_centre_id"}),
- *        @ORM\Index(name="IDX_D8698A76B4BE57B7", columns={"opposition_id"}),
- *        @ORM\Index(name="IDX_D8698A765327B2E3", columns={"bus_reg_id"}),
- *        @ORM\Index(name="IDX_D8698A761F75BD29", columns={"transport_manager_id"}),
- *        @ORM\Index(name="IDX_D8698A76CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_D8698A7618E0B1DB", columns={"traffic_area_id"}),
- *        @ORM\Index(name="IDX_D8698A7611B88201", columns={"file_extension"}),
- *        @ORM\Index(name="IDX_D8698A76FE73E9A2", columns={"document_sub_category_id"}),
- *        @ORM\Index(name="IDX_D8698A7626EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_D8698A763E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_D8698A76DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_D8698A7665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_D8698A7612469DE2", columns={"category_id"})
+ *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
+ *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
+ *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_document_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_document_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_document_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_document_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_document_operating_centre1_idx", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="fk_document_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_document_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_document_opposition1_idx", columns={"opposition_id"}),
+ *        @ORM\Index(name="fk_document_bus_reg1_idx", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -37,8 +37,8 @@ class Document implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IssuedDateField,
@@ -46,6 +46,16 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
 
     /**
      * Opposition
@@ -58,26 +68,6 @@ class Document implements Interfaces\EntityInterface
     protected $opposition;
 
     /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
-
-    /**
-     * Document sub category
-     *
-     * @var \Olcs\Db\Entity\DocumentSubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
-     */
-    protected $documentSubCategory;
-
-    /**
      * Bus reg
      *
      * @var \Olcs\Db\Entity\BusReg
@@ -88,14 +78,24 @@ class Document implements Interfaces\EntityInterface
     protected $busReg;
 
     /**
-     * Application
+     * Transport manager
      *
-     * @var \Olcs\Db\Entity\Application
+     * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
-    protected $application;
+    protected $transportManager;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
 
     /**
      * Traffic area
@@ -118,14 +118,14 @@ class Document implements Interfaces\EntityInterface
     protected $fileExtension;
 
     /**
-     * Transport manager
+     * Document sub category
      *
-     * @var \Olcs\Db\Entity\TransportManager
+     * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
      */
-    protected $transportManager;
+    protected $documentSubCategory;
 
     /**
      * Licence
@@ -138,14 +138,14 @@ class Document implements Interfaces\EntityInterface
     protected $licence;
 
     /**
-     * Operating centre
+     * Application
      *
-     * @var \Olcs\Db\Entity\OperatingCentre
+     * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
-    protected $operatingCentre;
+    protected $application;
 
     /**
      * Email
@@ -190,7 +190,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_digital", nullable=false)
      */
-    protected $isDigital;
+    protected $isDigital = 0;
 
     /**
      * Size
@@ -207,6 +207,29 @@ class Document implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->emails = new ArrayCollection();
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return Document
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
     }
 
     /**
@@ -233,52 +256,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Document
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-    /**
-     * Set the document sub category
-     *
-     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
-     * @return Document
-     */
-    public function setDocumentSubCategory($documentSubCategory)
-    {
-        $this->documentSubCategory = $documentSubCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the document sub category
-     *
-     * @return \Olcs\Db\Entity\DocumentSubCategory
-     */
-    public function getDocumentSubCategory()
-    {
-        return $this->documentSubCategory;
-    }
-
-    /**
      * Set the bus reg
      *
      * @param \Olcs\Db\Entity\BusReg $busReg
@@ -302,26 +279,49 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application
+     * Set the transport manager
      *
-     * @param \Olcs\Db\Entity\Application $application
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
      * @return Document
      */
-    public function setApplication($application)
+    public function setTransportManager($transportManager)
     {
-        $this->application = $application;
+        $this->transportManager = $transportManager;
 
         return $this;
     }
 
     /**
-     * Get the application
+     * Get the transport manager
      *
-     * @return \Olcs\Db\Entity\Application
+     * @return \Olcs\Db\Entity\TransportManager
      */
-    public function getApplication()
+    public function getTransportManager()
     {
-        return $this->application;
+        return $this->transportManager;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
@@ -371,26 +371,26 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the transport manager
+     * Set the document sub category
      *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
      * @return Document
      */
-    public function setTransportManager($transportManager)
+    public function setDocumentSubCategory($documentSubCategory)
     {
-        $this->transportManager = $transportManager;
+        $this->documentSubCategory = $documentSubCategory;
 
         return $this;
     }
 
     /**
-     * Get the transport manager
+     * Get the document sub category
      *
-     * @return \Olcs\Db\Entity\TransportManager
+     * @return \Olcs\Db\Entity\DocumentSubCategory
      */
-    public function getTransportManager()
+    public function getDocumentSubCategory()
     {
-        return $this->transportManager;
+        return $this->documentSubCategory;
     }
 
     /**
@@ -417,26 +417,26 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the operating centre
+     * Set the application
      *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @param \Olcs\Db\Entity\Application $application
      * @return Document
      */
-    public function setOperatingCentre($operatingCentre)
+    public function setApplication($application)
     {
-        $this->operatingCentre = $operatingCentre;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * Get the operating centre
+     * Get the application
      *
-     * @return \Olcs\Db\Entity\OperatingCentre
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getOperatingCentre()
+    public function getApplication()
     {
-        return $this->operatingCentre;
+        return $this->application;
     }
 
     /**

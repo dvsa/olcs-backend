@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_reg_traffic_area",
  *    indexes={
- *        @ORM\Index(name="IDX_B7B2BC1065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B7B2BC10DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_B7B2BC105327B2E3", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_bus_reg_traffic_area_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_bus_reg_traffic_area_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_bus_reg_traffic_area_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B7B2BC1018E0B1DB", columns={"traffic_area_id"})
  *    },
  *    uniqueConstraints={
@@ -28,8 +28,8 @@ class BusRegTrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\BusRegManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,

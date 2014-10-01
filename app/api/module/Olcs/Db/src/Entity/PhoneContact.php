@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="phone_contact",
  *    indexes={
- *        @ORM\Index(name="IDX_DC206A0ADA10E407", columns={"phone_contact_type"}),
- *        @ORM\Index(name="IDX_DC206A0A7CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_DC206A0A65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_DC206A0ADE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_phone_contact_contact_details1_idx", columns={"contact_details_id"}),
+ *        @ORM\Index(name="fk_phone_contact_ref_data1_idx", columns={"phone_contact_type"}),
+ *        @ORM\Index(name="fk_phone_contact_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_phone_contact_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

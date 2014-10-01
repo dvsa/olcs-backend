@@ -14,17 +14,17 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_request",
  *    indexes={
- *        @ORM\Index(name="IDX_93C29C8D1CE54C67", columns={"result_type"}),
- *        @ORM\Index(name="IDX_93C29C8DAD5A61E3", columns={"requestor_user_id"}),
- *        @ORM\Index(name="IDX_93C29C8DF37970D3", columns={"request_type"}),
- *        @ORM\Index(name="IDX_93C29C8DFFF2BAD2", columns={"report_type"}),
- *        @ORM\Index(name="IDX_93C29C8DDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_93C29C8D65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_93C29C8D3E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_93C29C8D35382CCB", columns={"operating_centre_id"}),
- *        @ORM\Index(name="IDX_93C29C8D8DB60186", columns={"task_id"}),
- *        @ORM\Index(name="IDX_93C29C8DCF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_93C29C8D26EF07C9", columns={"licence_id"})
+ *        @ORM\Index(name="fk_inspection_request_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_inspection_request_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_inspection_request_operating_centre1_idx", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="fk_inspection_request_task1_idx", columns={"task_id"}),
+ *        @ORM\Index(name="fk_inspection_request_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_inspection_request_ref_data1_idx", columns={"report_type"}),
+ *        @ORM\Index(name="fk_inspection_request_ref_data2_idx", columns={"request_type"}),
+ *        @ORM\Index(name="fk_inspection_request_ref_data3_idx", columns={"result_type"}),
+ *        @ORM\Index(name="fk_inspection_request_user1_idx", columns={"requestor_user_id"}),
+ *        @ORM\Index(name="fk_inspection_request_user2_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_inspection_request_user3_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -32,16 +32,36 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TaskManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\OperatingCentreManyToOne,
+        Traits\TaskManyToOne,
+        Traits\CaseManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Result type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     */
+    protected $resultType;
+
+    /**
+     * Requestor user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $requestorUser;
 
     /**
      * Request type
@@ -62,26 +82,6 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
      */
     protected $reportType;
-
-    /**
-     * Requestor user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $requestorUser;
-
-    /**
-     * Result type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
-     */
-    protected $resultType;
 
     /**
      * Requestor notes
@@ -192,6 +192,52 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
+     * Set the result type
+     *
+     * @param \Olcs\Db\Entity\RefData $resultType
+     * @return InspectionRequest
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+
+        return $this;
+    }
+
+    /**
+     * Get the result type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
+    }
+
+    /**
+     * Set the requestor user
+     *
+     * @param \Olcs\Db\Entity\User $requestorUser
+     * @return InspectionRequest
+     */
+    public function setRequestorUser($requestorUser)
+    {
+        $this->requestorUser = $requestorUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestor user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRequestorUser()
+    {
+        return $this->requestorUser;
+    }
+
+    /**
      * Set the request type
      *
      * @param \Olcs\Db\Entity\RefData $requestType
@@ -235,52 +281,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     public function getReportType()
     {
         return $this->reportType;
-    }
-
-    /**
-     * Set the requestor user
-     *
-     * @param \Olcs\Db\Entity\User $requestorUser
-     * @return InspectionRequest
-     */
-    public function setRequestorUser($requestorUser)
-    {
-        $this->requestorUser = $requestorUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestor user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getRequestorUser()
-    {
-        return $this->requestorUser;
-    }
-
-    /**
-     * Set the result type
-     *
-     * @param \Olcs\Db\Entity\RefData $resultType
-     * @return InspectionRequest
-     */
-    public function setResultType($resultType)
-    {
-        $this->resultType = $resultType;
-
-        return $this;
-    }
-
-    /**
-     * Get the result type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getResultType()
-    {
-        return $this->resultType;
     }
 
     /**

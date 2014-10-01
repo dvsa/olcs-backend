@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="correspondence_inbox",
  *    indexes={
- *        @ORM\Index(name="IDX_C8A620F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_C8A620FDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C8A620F26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_C8A620FC33F7837", columns={"document_id"})
+ *        @ORM\Index(name="fk_correspondence_inbox_document1_idx", columns={"document_id"}),
+ *        @ORM\Index(name="fk_correspondence_inbox_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_correspondence_inbox_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_correspondence_inbox_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\DocumentManyToOne,
         Traits\CustomCreatedOnField,

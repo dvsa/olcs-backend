@@ -15,12 +15,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template",
  *    indexes={
- *        @ORM\Index(name="IDX_F6D402D8FE73E9A2", columns={"document_sub_category_id"}),
- *        @ORM\Index(name="IDX_F6D402D8448B7C86", columns={"doc_process_id"}),
- *        @ORM\Index(name="IDX_F6D402D865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_F6D402D812469DE2", columns={"category_id"}),
- *        @ORM\Index(name="IDX_F6D402D8DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_F6D402D8C33F7837", columns={"document_id"})
+ *        @ORM\Index(name="fk_doc_template_doc_process1_idx", columns={"doc_process_id"}),
+ *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_doc_template_document1_idx", columns={"document_id"}),
+ *        @ORM\Index(name="fk_doc_template_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_doc_template_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_doc_template_document_category1_idx", columns={"category_id"})
  *    }
  * )
  */
@@ -28,11 +28,10 @@ class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\DocumentManyToOne,
-        Traits\IsNiFieldAlt1,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -57,6 +56,15 @@ class DocTemplate implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id", nullable=false)
      */
     protected $docProcess;
+
+    /**
+     * Is ni
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
+     */
+    protected $isNi = 0;
 
     /**
      * Suppress from op
@@ -128,6 +136,29 @@ class DocTemplate implements Interfaces\EntityInterface
     public function getDocProcess()
     {
         return $this->docProcess;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param string $isNi
+     * @return DocTemplate
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return string
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 
     /**

@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_gv_permit",
  *    indexes={
- *        @ORM\Index(name="IDX_DAFAFBC58A75AA28", columns={"irfo_permit_status"}),
- *        @ORM\Index(name="IDX_DAFAFBC592771719", columns={"irfo_gv_permit_type_id"}),
- *        @ORM\Index(name="IDX_DAFAFBC5E02018B7", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="IDX_DAFAFBC59E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_DAFAFBC565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_DAFAFBC5DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_irfo_gv_permit_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_irfo_gv_permit_type1_idx", columns={"irfo_gv_permit_type_id"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_ref_data1_idx", columns={"irfo_permit_status"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_ref_data2_idx", columns={"withdrawn_reason"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class IrfoGvPermit implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOneAlt1,
         Traits\WithdrawnReasonManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
@@ -38,16 +38,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Irfo gv permit type
-     *
-     * @var \Olcs\Db\Entity\IrfoGvPermitType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermitType", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_gv_permit_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoGvPermitType;
 
     /**
      * Irfo permit status
@@ -60,13 +50,23 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     protected $irfoPermitStatus;
 
     /**
+     * Irfo gv permit type
+     *
+     * @var \Olcs\Db\Entity\IrfoGvPermitType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermitType", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_gv_permit_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoGvPermitType;
+
+    /**
      * Is fee exempt
      *
      * @var string
      *
      * @ORM\Column(type="yesno", name="is_fee_exempt", nullable=false)
      */
-    protected $isFeeExempt;
+    protected $isFeeExempt = 0;
 
     /**
      * No of copies
@@ -75,7 +75,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="no_of_copies", nullable=false)
      */
-    protected $noOfCopies;
+    protected $noOfCopies = 0;
 
     /**
      * Note
@@ -93,7 +93,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="permit_printed", nullable=false)
      */
-    protected $permitPrinted;
+    protected $permitPrinted = 0;
 
     /**
      * Year required
@@ -103,29 +103,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="year_required", nullable=true)
      */
     protected $yearRequired;
-
-    /**
-     * Set the irfo gv permit type
-     *
-     * @param \Olcs\Db\Entity\IrfoGvPermitType $irfoGvPermitType
-     * @return IrfoGvPermit
-     */
-    public function setIrfoGvPermitType($irfoGvPermitType)
-    {
-        $this->irfoGvPermitType = $irfoGvPermitType;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo gv permit type
-     *
-     * @return \Olcs\Db\Entity\IrfoGvPermitType
-     */
-    public function getIrfoGvPermitType()
-    {
-        return $this->irfoGvPermitType;
-    }
 
     /**
      * Set the irfo permit status
@@ -148,6 +125,29 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     public function getIrfoPermitStatus()
     {
         return $this->irfoPermitStatus;
+    }
+
+    /**
+     * Set the irfo gv permit type
+     *
+     * @param \Olcs\Db\Entity\IrfoGvPermitType $irfoGvPermitType
+     * @return IrfoGvPermit
+     */
+    public function setIrfoGvPermitType($irfoGvPermitType)
+    {
+        $this->irfoGvPermitType = $irfoGvPermitType;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo gv permit type
+     *
+     * @return \Olcs\Db\Entity\IrfoGvPermitType
+     */
+    public function getIrfoGvPermitType()
+    {
+        return $this->irfoGvPermitType;
     }
 
     /**

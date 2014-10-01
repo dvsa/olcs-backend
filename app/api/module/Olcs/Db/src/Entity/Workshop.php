@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="workshop",
  *    indexes={
- *        @ORM\Index(name="IDX_9B6F02C426EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_9B6F02C47CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_9B6F02C465CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_9B6F02C4DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_workshop_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_workshop_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_workshop_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_workshop_contact_details1_idx", columns={"contact_details_id"})
  *    }
  * )
  */
@@ -50,7 +50,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_external", nullable=false)
      */
-    protected $isExternal;
+    protected $isExternal = 0;
 
     /**
      * Maintenance
@@ -59,7 +59,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="maintenance", nullable=false)
      */
-    protected $maintenance;
+    protected $maintenance = 0;
 
     /**
      * Safety inspection
@@ -68,7 +68,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_inspection", nullable=false)
      */
-    protected $safetyInspection;
+    protected $safetyInspection = 0;
 
     /**
      * Set the licence

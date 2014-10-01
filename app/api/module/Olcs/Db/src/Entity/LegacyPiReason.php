@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_pi_reason",
  *    indexes={
- *        @ORM\Index(name="IDX_CB480FBF65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_CB480FBFDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,7 +25,6 @@ class LegacyPiReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IsNiField,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
@@ -41,6 +40,15 @@ class LegacyPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="goods_or_psv", length=3, nullable=false)
      */
     protected $goodsOrPsv;
+
+    /**
+     * Is ni
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     */
+    protected $isNi;
 
     /**
      * Is decision
@@ -72,6 +80,29 @@ class LegacyPiReason implements Interfaces\EntityInterface
     public function getGoodsOrPsv()
     {
         return $this->goodsOrPsv;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param boolean $isNi
+     * @return LegacyPiReason
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return boolean
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 
     /**

@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="conviction_category",
  *    indexes={
- *        @ORM\Index(name="IDX_74916A60727ACA70", columns={"parent_id"}),
- *        @ORM\Index(name="IDX_74916A6065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_74916A60DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_conviction_category_conviction_category1_idx", columns={"parent_id"}),
+ *        @ORM\Index(name="fk_conviction_category_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_conviction_category_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

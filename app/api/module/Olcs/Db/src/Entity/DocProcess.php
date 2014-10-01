@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_process",
  *    indexes={
- *        @ORM\Index(name="IDX_59FF904812469DE2", columns={"category_id"}),
- *        @ORM\Index(name="IDX_59FF904865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_59FF9048DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="fk_doc_process_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_doc_process_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_doc_process_document_category1_idx", columns={"category_id"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class DocProcess implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
