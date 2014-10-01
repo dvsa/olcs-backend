@@ -14,14 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="txc_inbox",
  *    indexes={
- *        @ORM\Index(name="fk_txc_inbox_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_txc_inbox_local_authority1_idx", columns={"local_authority_id"}),
- *        @ORM\Index(name="fk_txc_inbox_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document1_idx", columns={"zip_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document2_idx", columns={"route_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document3_idx", columns={"pdf_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_txc_inbox_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_CB46E42CCBFD05C", columns={"pdf_document_id"}),
+ *        @ORM\Index(name="IDX_CB46E42CFD5F7826", columns={"route_document_id"}),
+ *        @ORM\Index(name="IDX_CB46E42CC8A8A416", columns={"zip_document_id"}),
+ *        @ORM\Index(name="IDX_CB46E42CDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_CB46E42C65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_CB46E42CB0E901C6", columns={"local_authority_id"}),
+ *        @ORM\Index(name="IDX_CB46E42C9E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_CB46E42C5327B2E3", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -30,10 +30,11 @@ class TxcInbox implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\LocalAuthorityManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\OrganisationManyToOne,
         Traits\BusRegManyToOne,
+        Traits\RouteSeqField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -76,15 +77,6 @@ class TxcInbox implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
      */
     protected $fileRead;
-
-    /**
-     * Route seq
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="route_seq", nullable=false)
-     */
-    protected $routeSeq;
 
     /**
      * Set the pdf document
@@ -176,28 +168,5 @@ class TxcInbox implements Interfaces\EntityInterface
     public function getFileRead()
     {
         return $this->fileRead;
-    }
-
-    /**
-     * Set the route seq
-     *
-     * @param int $routeSeq
-     * @return TxcInbox
-     */
-    public function setRouteSeq($routeSeq)
-    {
-        $this->routeSeq = $routeSeq;
-
-        return $this;
-    }
-
-    /**
-     * Get the route seq
-     *
-     * @return int
-     */
-    public function getRouteSeq()
-    {
-        return $this->routeSeq;
     }
 }

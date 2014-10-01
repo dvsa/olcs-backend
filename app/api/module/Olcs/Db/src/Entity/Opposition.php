@@ -17,10 +17,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="opposition",
  *    indexes={
- *        @ORM\Index(name="fk_opposition_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_opposition_opposer1_idx", columns={"opposer_id"}),
- *        @ORM\Index(name="fk_opposition_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_10CBCFC26639AAA5", columns={"opposer_id"}),
+ *        @ORM\Index(name="IDX_10CBCFC265CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_10CBCFC2DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_10CBCFC23E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -28,9 +28,10 @@ class Opposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\IsRepresentationField,
         Traits\Notes4000Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -48,22 +49,13 @@ class Opposition implements Interfaces\EntityInterface
     protected $opposer;
 
     /**
-     * Is representation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_representation", nullable=false)
-     */
-    protected $isRepresentation;
-
-    /**
      * Is copied
      *
      * @var string
      *
      * @ORM\Column(type="yesno", name="is_copied", nullable=false)
      */
-    protected $isCopied = 0;
+    protected $isCopied;
 
     /**
      * Raised date
@@ -81,7 +73,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_in_time", nullable=false)
      */
-    protected $isInTime = 0;
+    protected $isInTime;
 
     /**
      * Is public inquiry
@@ -90,7 +82,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false)
      */
-    protected $isPublicInquiry = 0;
+    protected $isPublicInquiry;
 
     /**
      * Is valid
@@ -148,29 +140,6 @@ class Opposition implements Interfaces\EntityInterface
     public function getOpposer()
     {
         return $this->opposer;
-    }
-
-    /**
-     * Set the is representation
-     *
-     * @param string $isRepresentation
-     * @return Opposition
-     */
-    public function setIsRepresentation($isRepresentation)
-    {
-        $this->isRepresentation = $isRepresentation;
-
-        return $this;
-    }
-
-    /**
-     * Get the is representation
-     *
-     * @return string
-     */
-    public function getIsRepresentation()
-    {
-        return $this->isRepresentation;
     }
 
     /**

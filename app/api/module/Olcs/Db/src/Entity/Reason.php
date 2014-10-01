@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="reason",
  *    indexes={
- *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_reason_ref_data1_idx", columns={"goods_or_psv"})
+ *        @ORM\Index(name="IDX_3BB8880CDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_3BB8880C324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_3BB8880C65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,9 +25,10 @@ class Reason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\GoodsOrPsvManyToOne,
-        Traits\LastModifiedByManyToOne,
+        Traits\IsNiFieldAlt1,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
@@ -60,15 +61,6 @@ class Reason implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
      */
     protected $isReadOnly;
-
-    /**
-     * Is ni
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
-     */
-    protected $isNi;
 
     /**
      * Is propose to revoke
@@ -241,29 +233,6 @@ class Reason implements Interfaces\EntityInterface
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
-    }
-
-    /**
-     * Set the is ni
-     *
-     * @param string $isNi
-     * @return Reason
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return string
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
     }
 
     /**

@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_notice_period",
  *    indexes={
- *        @ORM\Index(name="fk_bus_notice_period_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_notice_period_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_3C6F891465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_3C6F8914DE12AB56", columns={"created_by"})
  *    }
  * )
  */

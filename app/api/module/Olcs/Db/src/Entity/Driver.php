@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="driver",
  *    indexes={
- *        @ORM\Index(name="fk_driver_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_driver_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_driver_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_11667CD97CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_11667CD965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_11667CD9DE12AB56", columns={"created_by"})
  *    }
  * )
  */

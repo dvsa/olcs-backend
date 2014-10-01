@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_case_decision_rehab",
  *    indexes={
- *        @ORM\Index(name="fk_tm_case_decision_rehab_tm_case_decision1_idx", columns={"tm_case_decision_id"}),
- *        @ORM\Index(name="fk_tm_case_decision_rehab_ref_data1_idx", columns={"rehab_measure_id"}),
- *        @ORM\Index(name="fk_tm_case_decision_rehab_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_rehab_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_353BF96738237A80", columns={"rehab_measure_id"}),
+ *        @ORM\Index(name="IDX_353BF96765CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_353BF967DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_353BF9672543F459", columns={"tm_case_decision_id"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\TmCaseDecisionManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application_operating_centre",
  *    indexes={
- *        @ORM\Index(name="fk_ApplicationOperatingCentre_Application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_ApplicationOperatingCentre_OperatingCentre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_application_operating_centre_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_operating_centre_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_application_operating_centre_s41_idx", columns={"s4_id"})
+ *        @ORM\Index(name="IDX_E08171B09E191ED6", columns={"s4_id"}),
+ *        @ORM\Index(name="IDX_E08171B065CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_E08171B0DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_E08171B035382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_E08171B03E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -28,11 +28,12 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\SufficientParkingField,
         Traits\AdPlacedField,
         Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
@@ -65,16 +66,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false)
      */
-    protected $publicationAppropriate = 0;
-
-    /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
-     */
-    protected $sufficientParking = 0;
+    protected $publicationAppropriate;
 
     /**
      * Set the action
@@ -120,28 +112,5 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
-    }
-
-    /**
-     * Set the sufficient parking
-     *
-     * @param string $sufficientParking
-     * @return ApplicationOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
-     *
-     * @return string
-     */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
     }
 }

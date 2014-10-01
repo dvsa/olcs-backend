@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_sub_category",
  *    indexes={
- *        @ORM\Index(name="fk_task_sub_category_category1_idx", columns={"category_id"})
+ *        @ORM\Index(name="IDX_7472D3B512469DE2", columns={"category_id"})
  *    }
  * )
  */
@@ -33,7 +33,7 @@ class TaskSubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_freetext_description", nullable=false)
      */
-    protected $isFreetextDescription = 0;
+    protected $isFreetextDescription;
 
     /**
      * Set the is freetext description
