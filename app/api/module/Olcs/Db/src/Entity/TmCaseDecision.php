@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_case_decision",
  *    indexes={
- *        @ORM\Index(name="fk_tm_case_decision_ref_data1_idx", columns={"decision"}),
- *        @ORM\Index(name="fk_tm_case_decision_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="IDX_34E67EF884ACBE48", columns={"decision"}),
+ *        @ORM\Index(name="IDX_34E67EF8CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_34E67EF865CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_34E67EF8DE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -62,7 +62,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_msi", nullable=false)
      */
-    protected $isMsi = 0;
+    protected $isMsi;
 
     /**
      * Repute not lost reason

@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="local_authority",
  *    indexes={
- *        @ORM\Index(name="fk_local_authority_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_local_authority_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_local_authority_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="IDX_B4BEE5A018E0B1DB", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="IDX_B4BEE5A065CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B4BEE5A0DE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\Description255Field,
         Traits\EmailAddress45Field,

@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence_operating_centre",
  *    indexes={
- *        @ORM\Index(name="fk_LicenceOperatingCentre_licence_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_LicenceOperatingCentre_OperatingCentre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_licence_operating_centre_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_operating_centre_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_operating_centre_s41_idx", columns={"s4_id"})
+ *        @ORM\Index(name="IDX_E7ABF5329E191ED6", columns={"s4_id"}),
+ *        @ORM\Index(name="IDX_E7ABF53265CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_E7ABF532DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_E7ABF53235382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_E7ABF53226EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -28,11 +28,12 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\LicenceManyToOne,
+        Traits\SufficientParkingField,
         Traits\AdPlacedField,
         Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
@@ -45,15 +46,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
-     */
-    protected $sufficientParking;
 
     /**
      * Added date
@@ -90,29 +82,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
     protected $publicationAppropriate;
-
-    /**
-     * Set the sufficient parking
-     *
-     * @param string $sufficientParking
-     * @return LicenceOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
-     *
-     * @return string
-     */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
-    }
 
     /**
      * Set the added date

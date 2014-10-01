@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_country",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_country_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_country_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_755AB6F465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_755AB6F4DE12AB56", columns={"created_by"})
  *    }
  * )
  */

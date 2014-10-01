@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="private_hire_licence",
  *    indexes={
- *        @ORM\Index(name="fk_hackney_licence_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_hackney_licence_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_hackney_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_hackney_licence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_C0E7953465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_C0E79534DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_C0E795347CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_C0E7953426EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -25,9 +25,9 @@ class PrivateHireLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

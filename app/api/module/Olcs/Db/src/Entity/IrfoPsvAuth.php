@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_psv_auth_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data1_idx", columns={"journey_frequency"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_irfo_psv_auth_type1_idx", columns={"irfo_psv_auth_type_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data3_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="IDX_B47786DBF2D54BC1", columns={"irfo_psv_auth_type_id"}),
+ *        @ORM\Index(name="IDX_B47786DB48B55060", columns={"journey_frequency"}),
+ *        @ORM\Index(name="IDX_B47786DB7B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_B47786DBE02018B7", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="IDX_B47786DB65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B47786DB9E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_B47786DBDE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -28,10 +28,10 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\StatusManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\OrganisationManyToOneAlt1,
+        Traits\StatusManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
@@ -67,7 +67,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false)
      */
-    protected $isFeeExemptApplication = 0;
+    protected $isFeeExemptApplication;
 
     /**
      * Is fee exempt annual
@@ -76,7 +76,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false)
      */
-    protected $isFeeExemptAnnual = 0;
+    protected $isFeeExemptAnnual;
 
     /**
      * Irfo fee id
@@ -103,7 +103,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="copies_issued", nullable=false)
      */
-    protected $copiesIssued = 0;
+    protected $copiesIssued;
 
     /**
      * Copies required
@@ -112,7 +112,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="copies_required", nullable=false)
      */
-    protected $copiesRequired = 0;
+    protected $copiesRequired;
 
     /**
      * Copies required total
@@ -121,7 +121,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="copies_required_total", nullable=false)
      */
-    protected $copiesRequiredTotal = 0;
+    protected $copiesRequiredTotal;
 
     /**
      * Copies issued total
@@ -130,7 +130,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="copies_issued_total", nullable=false)
      */
-    protected $copiesIssuedTotal = 0;
+    protected $copiesIssuedTotal;
 
     /**
      * Last date copies req

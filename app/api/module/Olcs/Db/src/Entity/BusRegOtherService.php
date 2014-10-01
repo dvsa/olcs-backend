@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_reg_other_service",
  *    indexes={
- *        @ORM\Index(name="fk_bus_reg_other_service_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_bus_reg_other_service_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_reg_other_service_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_3DECF1FC5327B2E3", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="IDX_3DECF1FC65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_3DECF1FCDE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -26,6 +26,7 @@ class BusRegOtherService implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ServiceNo70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -39,15 +40,6 @@ class BusRegOtherService implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */
     protected $busReg;
-
-    /**
-     * Service no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
-     */
-    protected $serviceNo;
 
     /**
      * Set the bus reg
@@ -70,28 +62,5 @@ class BusRegOtherService implements Interfaces\EntityInterface
     public function getBusReg()
     {
         return $this->busReg;
-    }
-
-    /**
-     * Set the service no
-     *
-     * @param string $serviceNo
-     * @return BusRegOtherService
-     */
-    public function setServiceNo($serviceNo)
-    {
-        $this->serviceNo = $serviceNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the service no
-     *
-     * @return string
-     */
-    public function getServiceNo()
-    {
-        return $this->serviceNo;
     }
 }

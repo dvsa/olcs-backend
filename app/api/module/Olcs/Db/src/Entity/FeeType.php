@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_type",
  *    indexes={
- *        @ORM\Index(name="fk_fee_type_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_fee_type_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_fee_type_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_E5C85BD165CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_E5C85BD1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_E5C85BD1324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_E5C85BD161EF9EF4", columns={"licence_type"}),
+ *        @ORM\Index(name="IDX_E5C85BD118E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -26,10 +26,10 @@ class FeeType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceTypeManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
@@ -88,7 +88,7 @@ class FeeType implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false)
      */
-    protected $expireFeeWithLicence = 0;
+    protected $expireFeeWithLicence;
 
     /**
      * Set the fee type

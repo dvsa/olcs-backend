@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="company_subsidiary_licence",
  *    indexes={
- *        @ORM\Index(name="fk_company_subsidiary_has_licence_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_company_subsidiary_has_licence_company_subsidiary1_idx", columns={"company_subsidiary_id"}),
- *        @ORM\Index(name="fk_company_subsidiary_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_company_subsidiary_licence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_A4097CA1A8859FDF", columns={"company_subsidiary_id"}),
+ *        @ORM\Index(name="IDX_A4097CA165CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_A4097CA1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_A4097CA126EF07C9", columns={"licence_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="company_subsid_licence_unique", columns={"company_subsidiary_id","licence_id"})
@@ -28,8 +28,8 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

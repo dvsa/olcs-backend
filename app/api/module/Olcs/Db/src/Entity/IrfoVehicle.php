@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_vehicle",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_vehicle_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_irfo_vehicle_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_vehicle_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_vehicle_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"})
+ *        @ORM\Index(name="IDX_3DA99B145B05B235", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="IDX_3DA99B1465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_3DA99B14DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_3DA99B144425C407", columns={"irfo_psv_auth_id"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class IrfoVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\IrfoPsvAuthManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField;
@@ -48,7 +48,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_a", nullable=false)
      */
-    protected $cocA = 0;
+    protected $cocA;
 
     /**
      * Coc b
@@ -57,7 +57,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_b", nullable=false)
      */
-    protected $cocB = 0;
+    protected $cocB;
 
     /**
      * Coc c
@@ -66,7 +66,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_c", nullable=false)
      */
-    protected $cocC = 0;
+    protected $cocC;
 
     /**
      * Coc d
@@ -75,7 +75,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_d", nullable=false)
      */
-    protected $cocD = 0;
+    protected $cocD;
 
     /**
      * Coc t
@@ -84,7 +84,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_t", nullable=false)
      */
-    protected $cocT = 0;
+    protected $cocT;
 
     /**
      * Vrm
@@ -102,7 +102,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="version", nullable=true)
      */
-    protected $version = 1;
+    protected $version;
 
     /**
      * Set the irfo gv permit
