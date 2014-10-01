@@ -14,19 +14,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task",
  *    indexes={
- *        @ORM\Index(name="fk_task_user1_idx", columns={"assigned_to_user_id"}),
- *        @ORM\Index(name="fk_task_team1_idx", columns={"assigned_to_team_id"}),
- *        @ORM\Index(name="fk_task_user2_idx", columns={"assigned_by_user_id"}),
- *        @ORM\Index(name="fk_task_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_task_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_task_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_task_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_task_organisation1_idx", columns={"irfo_organisation_id"}),
- *        @ORM\Index(name="fk_task_user3_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_task_user4_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_task_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"task_sub_category_id"}),
- *        @ORM\Index(name="fk_task_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="IDX_527EDB25B1CA7F73", columns={"task_sub_category_id"}),
+ *        @ORM\Index(name="IDX_527EDB2587CC8891", columns={"irfo_organisation_id"}),
+ *        @ORM\Index(name="IDX_527EDB25E43D4745", columns={"assigned_by_user_id"}),
+ *        @ORM\Index(name="IDX_527EDB259F55862A", columns={"assigned_to_team_id"}),
+ *        @ORM\Index(name="IDX_527EDB2511578D11", columns={"assigned_to_user_id"}),
+ *        @ORM\Index(name="IDX_527EDB2565CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_527EDB25DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_527EDB2512469DE2", columns={"category_id"}),
+ *        @ORM\Index(name="IDX_527EDB25CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_527EDB251F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_527EDB2526EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_527EDB253E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_527EDB255327B2E3", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -34,10 +34,10 @@ class Task implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CategoryManyToOne,
         Traits\CaseManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\CategoryManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOneAlt1,
@@ -58,14 +58,14 @@ class Task implements Interfaces\EntityInterface
     protected $taskSubCategory;
 
     /**
-     * Irfo organisation
+     * Assigned to team
      *
-     * @var \Olcs\Db\Entity\Organisation
+     * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
      */
-    protected $irfoOrganisation;
+    protected $assignedToTeam;
 
     /**
      * Assigned by user
@@ -78,14 +78,14 @@ class Task implements Interfaces\EntityInterface
     protected $assignedByUser;
 
     /**
-     * Assigned to team
+     * Irfo organisation
      *
-     * @var \Olcs\Db\Entity\Team
+     * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
-    protected $assignedToTeam;
+    protected $irfoOrganisation;
 
     /**
      * Assigned to user
@@ -104,7 +104,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_closed", nullable=false)
      */
-    protected $isClosed = 0;
+    protected $isClosed;
 
     /**
      * Action date
@@ -122,7 +122,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="urgent", nullable=false)
      */
-    protected $urgent = 0;
+    protected $urgent;
 
     /**
      * Set the task sub category
@@ -148,26 +148,26 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the irfo organisation
+     * Set the assigned to team
      *
-     * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
+     * @param \Olcs\Db\Entity\Team $assignedToTeam
      * @return Task
      */
-    public function setIrfoOrganisation($irfoOrganisation)
+    public function setAssignedToTeam($assignedToTeam)
     {
-        $this->irfoOrganisation = $irfoOrganisation;
+        $this->assignedToTeam = $assignedToTeam;
 
         return $this;
     }
 
     /**
-     * Get the irfo organisation
+     * Get the assigned to team
      *
-     * @return \Olcs\Db\Entity\Organisation
+     * @return \Olcs\Db\Entity\Team
      */
-    public function getIrfoOrganisation()
+    public function getAssignedToTeam()
     {
-        return $this->irfoOrganisation;
+        return $this->assignedToTeam;
     }
 
     /**
@@ -194,26 +194,26 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the assigned to team
+     * Set the irfo organisation
      *
-     * @param \Olcs\Db\Entity\Team $assignedToTeam
+     * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
      * @return Task
      */
-    public function setAssignedToTeam($assignedToTeam)
+    public function setIrfoOrganisation($irfoOrganisation)
     {
-        $this->assignedToTeam = $assignedToTeam;
+        $this->irfoOrganisation = $irfoOrganisation;
 
         return $this;
     }
 
     /**
-     * Get the assigned to team
+     * Get the irfo organisation
      *
-     * @return \Olcs\Db\Entity\Team
+     * @return \Olcs\Db\Entity\Organisation
      */
-    public function getAssignedToTeam()
+    public function getIrfoOrganisation()
     {
-        return $this->assignedToTeam;
+        return $this->irfoOrganisation;
     }
 
     /**

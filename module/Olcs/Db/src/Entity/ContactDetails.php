@@ -17,13 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
- *        @ORM\Index(name="fk_contact_details_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_contact_details_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_contact_details_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_contact_details_address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_contact_details_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_contact_details_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_contact_details_ref_data1_idx", columns={"contact_type"})
+ *        @ORM\Index(name="IDX_E8092A0BA421D5D6", columns={"contact_type"}),
+ *        @ORM\Index(name="IDX_E8092A0BF5B7AF75", columns={"address_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B9E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B217BBB47", columns={"person_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_E8092A0B65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_E8092A0BDE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -124,7 +124,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
      */
-    protected $writtenPermissionToEngage = 0;
+    protected $writtenPermissionToEngage;
 
     /**
      * Phone contact

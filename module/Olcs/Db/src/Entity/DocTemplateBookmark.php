@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template_bookmark",
  *    indexes={
- *        @ORM\Index(name="fk_doc_template_bookmark_doc_bookmark1_idx", columns={"doc_bookmark_id"}),
- *        @ORM\Index(name="fk_doc_template_bookmark_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_doc_template_bookmark_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_851FEE735653D501", columns={"doc_template_id"})
+ *        @ORM\Index(name="IDX_851FEE73C1FDC79C", columns={"doc_bookmark_id"}),
+ *        @ORM\Index(name="IDX_851FEE735653D501", columns={"doc_template_id"}),
+ *        @ORM\Index(name="IDX_851FEE7365CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_851FEE73DE12AB56", columns={"created_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="doc_template_bookmark_unique", columns={"doc_template_id","doc_bookmark_id"})

@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="event_history",
  *    indexes={
- *        @ORM\Index(name="fk_event_history_event_history_type1_idx", columns={"event_history_type_id"}),
- *        @ORM\Index(name="fk_event_history_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_event_history_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_event_history_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="IDX_A2EDD9E4296CD8AE", columns={"team_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E4F75B4EBD", columns={"licence_vehicle_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E428F8C449", columns={"event_history_type_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E41F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E43E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E4A76ED395", columns={"user_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E426EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -28,20 +28,10 @@ class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\UserManyToOne,
+        Traits\ApplicationManyToOneAlt1,
+        Traits\TransportManagerManyToOne,
         Traits\LicenceManyToOneAlt1;
-
-    /**
-     * Team
-     *
-     * @var \Olcs\Db\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
-     */
-    protected $team;
 
     /**
      * Licence vehicle
@@ -52,6 +42,16 @@ class EventHistory implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=true)
      */
     protected $licenceVehicle;
+
+    /**
+     * Team
+     *
+     * @var \Olcs\Db\Entity\Team
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
+     */
+    protected $team;
 
     /**
      * Event history type
@@ -127,29 +127,6 @@ class EventHistory implements Interfaces\EntityInterface
     protected $operation;
 
     /**
-     * Set the team
-     *
-     * @param \Olcs\Db\Entity\Team $team
-     * @return EventHistory
-     */
-    public function setTeam($team)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * Get the team
-     *
-     * @return \Olcs\Db\Entity\Team
-     */
-    public function getTeam()
-    {
-        return $this->team;
-    }
-
-    /**
      * Set the licence vehicle
      *
      * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
@@ -170,6 +147,29 @@ class EventHistory implements Interfaces\EntityInterface
     public function getLicenceVehicle()
     {
         return $this->licenceVehicle;
+    }
+
+    /**
+     * Set the team
+     *
+     * @param \Olcs\Db\Entity\Team $team
+     * @return EventHistory
+     */
+    public function setTeam($team)
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * Get the team
+     *
+     * @return \Olcs\Db\Entity\Team
+     */
+    public function getTeam()
+    {
+        return $this->team;
     }
 
     /**

@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disc_sequence",
  *    indexes={
- *        @ORM\Index(name="fk_disc_sequence_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_disc_sequence_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_disc_sequence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_disc_sequence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_B39AADB765CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B39AADB7DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B39AADB718E0B1DB", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="IDX_B39AADB7324926D6", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class DiscSequence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOne,
         Traits\CustomCreatedOnField,
@@ -112,7 +112,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
      */
-    protected $isSelfServe = 0;
+    protected $isSelfServe;
 
     /**
      * Is ni self serve
@@ -121,7 +121,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
      */
-    protected $isNiSelfServe = 0;
+    protected $isNiSelfServe;
 
     /**
      * Set the restricted

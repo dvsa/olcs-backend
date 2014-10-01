@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_paragraph_bookmark",
  *    indexes={
- *        @ORM\Index(name="fk_doc_paragraph_bookmark_doc_paragraph1_idx", columns={"doc_paragraph_id"}),
- *        @ORM\Index(name="fk_doc_paragraph_bookmark_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_doc_paragraph_bookmark_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"})
+ *        @ORM\Index(name="IDX_34C3914939BEDB8D", columns={"doc_paragraph_id"}),
+ *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"}),
+ *        @ORM\Index(name="IDX_34C3914965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_34C39149DE12AB56", columns={"created_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="doc_paragraph_bookmark_unique", columns={"doc_bookmark_id","doc_paragraph_id"})
@@ -35,16 +35,6 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Doc paragraph
-     *
-     * @var \Olcs\Db\Entity\DocParagraph
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docParagraph;
-
-    /**
      * Doc bookmark
      *
      * @var \Olcs\Db\Entity\DocBookmark
@@ -55,27 +45,14 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     protected $docBookmark;
 
     /**
-     * Set the doc paragraph
+     * Doc paragraph
      *
-     * @param \Olcs\Db\Entity\DocParagraph $docParagraph
-     * @return DocParagraphBookmark
-     */
-    public function setDocParagraph($docParagraph)
-    {
-        $this->docParagraph = $docParagraph;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc paragraph
+     * @var \Olcs\Db\Entity\DocParagraph
      *
-     * @return \Olcs\Db\Entity\DocParagraph
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph", fetch="LAZY")
+     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
-    public function getDocParagraph()
-    {
-        return $this->docParagraph;
-    }
+    protected $docParagraph;
 
     /**
      * Set the doc bookmark
@@ -98,5 +75,28 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     public function getDocBookmark()
     {
         return $this->docBookmark;
+    }
+
+    /**
+     * Set the doc paragraph
+     *
+     * @param \Olcs\Db\Entity\DocParagraph $docParagraph
+     * @return DocParagraphBookmark
+     */
+    public function setDocParagraph($docParagraph)
+    {
+        $this->docParagraph = $docParagraph;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc paragraph
+     *
+     * @return \Olcs\Db\Entity\DocParagraph
+     */
+    public function getDocParagraph()
+    {
+        return $this->docParagraph;
     }
 }

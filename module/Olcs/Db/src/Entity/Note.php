@@ -14,15 +14,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="note",
  *    indexes={
- *        @ORM\Index(name="fk_note_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_note_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_note_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_note_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="fk_note_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_note_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_note_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_note_ref_data1_idx", columns={"note_type"}),
- *        @ORM\Index(name="fk_note_bus_reg1_idx", columns={"bus_reg_id"})
+ *        @ORM\Index(name="IDX_CFBDFA142CA44671", columns={"note_type"}),
+ *        @ORM\Index(name="IDX_CFBDFA1465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_CFBDFA145327B2E3", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA14DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_CFBDFA144425C407", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA1426EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA14CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA145B05B235", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA143E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -31,12 +31,12 @@ class Note implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\CaseManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\IrfoPsvAuthManyToOne,
         Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -68,7 +68,7 @@ class Note implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="priority", nullable=false)
      */
-    protected $priority = 0;
+    protected $priority;
 
     /**
      * Set the note type

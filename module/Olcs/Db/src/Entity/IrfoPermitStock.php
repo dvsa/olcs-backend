@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_permit_stock",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_permit_stock_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_irfo_country1_idx", columns={"irfo_country_id"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_ref_data1_idx", columns={"status"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_EA1B20B1EDADAF9D", columns={"irfo_country_id"}),
+ *        @ORM\Index(name="IDX_EA1B20B165CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_EA1B20B1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_EA1B20B17B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_EA1B20B15B05B235", columns={"irfo_gv_permit_id"})
  *    }
  * )
  */
@@ -26,9 +26,9 @@ class IrfoPermitStock implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\StatusManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

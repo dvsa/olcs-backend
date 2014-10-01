@@ -14,14 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="conviction",
  *    indexes={
- *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category_id"}),
- *        @ORM\Index(name="fk_conviction_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_conviction_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_conviction_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_conviction_operator_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"})
+ *        @ORM\Index(name="IDX_A0461B4CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_A0461B43FF90F24", columns={"defendant_type"}),
+ *        @ORM\Index(name="IDX_A0461B4368C2E9B", columns={"conviction_category_id"}),
+ *        @ORM\Index(name="IDX_A0461B465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_A0461B4DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_A0461B41F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_A0461B4217BBB47", columns={"person_id"}),
+ *        @ORM\Index(name="IDX_A0461B49E6B1585", columns={"organisation_id"})
  *    }
  * )
  */
@@ -34,6 +34,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
+        Traits\CategoryText1024Field,
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
@@ -123,7 +124,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
      */
-    protected $isDealtWith = 0;
+    protected $isDealtWith;
 
     /**
      * Operator name
@@ -142,15 +143,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
      */
     protected $takenIntoConsideration;
-
-    /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
 
     /**
      * Person firstname
@@ -421,29 +413,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getTakenIntoConsideration()
     {
         return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
     }
 
     /**
