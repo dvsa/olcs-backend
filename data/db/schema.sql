@@ -871,7 +871,7 @@ CREATE TABLE IF NOT EXISTS `licence_operating_centre` (
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
-  `s4_id` INT NOT NULL,
+  `s4_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_LicenceOperatingCentre_licence_idx` (`licence_id` ASC),
   INDEX `fk_LicenceOperatingCentre_OperatingCentre1_idx` (`operating_centre_id` ASC),
@@ -4862,14 +4862,13 @@ CREATE TABLE IF NOT EXISTS `bus_service_type` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `bus_reg_bus_service_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bus_reg_bus_service_type` (
-  `bus_service_type_id` INT NOT NULL,
   `bus_reg_id` INT NOT NULL,
-  PRIMARY KEY (`bus_service_type_id`, `bus_reg_id`),
+  `bus_service_type_id` INT NOT NULL,
+  PRIMARY KEY (`bus_reg_id`, `bus_service_type_id`),
   INDEX `fk_bus_reg_bus_service_type_bus_reg1_idx` (`bus_reg_id` ASC),
   CONSTRAINT `fk_bus_reg_bus_service_type_bus_service_type1`
     FOREIGN KEY (`bus_service_type_id`)
@@ -4882,7 +4881,6 @@ CREATE TABLE IF NOT EXISTS `bus_reg_bus_service_type` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `bus_reg_traffic_area`
