@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_venue",
  *    indexes={
- *        @ORM\Index(name="fk_pi_venue_address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_pi_venue_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_venue_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_venue_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="IDX_7D3711FDF5B7AF75", columns={"address_id"}),
+ *        @ORM\Index(name="IDX_7D3711FD18E0B1DB", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="IDX_7D3711FD65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_7D3711FDDE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class PiVenue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,

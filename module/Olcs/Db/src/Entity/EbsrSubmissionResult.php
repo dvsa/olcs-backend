@@ -53,7 +53,7 @@ class EbsrSubmissionResult implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="email_authority", nullable=false)
      */
-    protected $emailAuthority = 0;
+    protected $emailAuthority;
 
     /**
      * Description

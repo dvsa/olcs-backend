@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="vehicle",
  *    indexes={
- *        @ORM\Index(name="fk_vehicle_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_vehicle_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_vehicle_ref_data1_idx", columns={"psv_type"})
+ *        @ORM\Index(name="IDX_1B80E486DE50BABC", columns={"psv_type"}),
+ *        @ORM\Index(name="IDX_1B80E48665CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_1B80E486DE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -29,6 +29,7 @@ class Vehicle implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\Vrm20Field,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
         Traits\SpecifiedDateField,
@@ -54,15 +55,6 @@ class Vehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
      */
     protected $isNovelty;
-
-    /**
-     * Vrm
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vrm", length=20, nullable=true)
-     */
-    protected $vrm;
 
     /**
      * Plated weight
@@ -179,29 +171,6 @@ class Vehicle implements Interfaces\EntityInterface
     public function getIsNovelty()
     {
         return $this->isNovelty;
-    }
-
-    /**
-     * Set the vrm
-     *
-     * @param string $vrm
-     * @return Vehicle
-     */
-    public function setVrm($vrm)
-    {
-        $this->vrm = $vrm;
-
-        return $this;
-    }
-
-    /**
-     * Get the vrm
-     *
-     * @return string
-     */
-    public function getVrm()
-    {
-        return $this->vrm;
     }
 
     /**

@@ -16,7 +16,7 @@ trait ReceivedDateFieldAlt1
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="received_date", nullable=false)
+     * @ORM\Column(type="date", name="received_date", nullable=true)
      */
     protected $receivedDate;
 

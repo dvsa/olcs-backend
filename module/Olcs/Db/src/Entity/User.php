@@ -17,13 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="user",
  *    indexes={
- *        @ORM\Index(name="fk_user_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_user_local_authority1_idx", columns={"local_authority_id"}),
- *        @ORM\Index(name="fk_user_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_user_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_user_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_user_contact_details2_idx", columns={"partner_contact_details_id"}),
- *        @ORM\Index(name="fk_user_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="IDX_8D93D649FC6A2D51", columns={"partner_contact_details_id"}),
+ *        @ORM\Index(name="IDX_8D93D6497CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_8D93D6491F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_8D93D64965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_8D93D649B0E901C6", columns={"local_authority_id"}),
+ *        @ORM\Index(name="IDX_8D93D649DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_8D93D649296CD8AE", columns={"team_id"})
  *    }
  * )
  */
@@ -31,10 +31,10 @@ class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
+        Traits\LocalAuthorityManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\LocalAuthorityManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\TeamManyToOne,
         Traits\EmailAddress45Field,
         Traits\CustomDeletedDateField,
@@ -87,7 +87,7 @@ class User implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
      */
-    protected $accountDisabled = 0;
+    protected $accountDisabled;
 
     /**
      * Organisation user

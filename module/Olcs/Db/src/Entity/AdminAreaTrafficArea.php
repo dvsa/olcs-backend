@@ -14,17 +14,17 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="admin_area_traffic_area",
  *    indexes={
- *        @ORM\Index(name="fk_admin_area_traffic_area_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_admin_area_traffic_area_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_admin_area_traffic_area_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_C97FDA1865CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_C97FDA18DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_C97FDA1818E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
 class AdminAreaTrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

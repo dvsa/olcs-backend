@@ -15,13 +15,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="impounding",
  *    indexes={
- *        @ORM\Index(name="fk_impounding_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_impounding_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_impounding_transport_commissioner1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_impounding_ref_data1_idx", columns={"outcome"}),
- *        @ORM\Index(name="fk_impounding_ref_data2_idx", columns={"impounding_type"}),
- *        @ORM\Index(name="fk_impounding_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_impounding_pi_venue1_idx", columns={"pi_venue_id"})
+ *        @ORM\Index(name="IDX_14FDFBD43039A3D1", columns={"pi_venue_id"}),
+ *        @ORM\Index(name="IDX_14FDFBD46F5B58DB", columns={"impounding_type"}),
+ *        @ORM\Index(name="IDX_14FDFBD4CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_14FDFBD430BC6DC2", columns={"outcome"}),
+ *        @ORM\Index(name="IDX_14FDFBD465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_14FDFBD453BAD7A2", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="IDX_14FDFBD4DE12AB56", columns={"created_by"})
  *    }
  * )
  */
@@ -30,9 +30,9 @@ class Impounding implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CaseManyToOneAlt1,
-        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\PresidingTcManyToOneAlt1,
+        Traits\OutcomeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\HearingDateField,
         Traits\Notes4000Field,
@@ -40,16 +40,6 @@ class Impounding implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pi venue
-     *
-     * @var \Olcs\Db\Entity\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
-     */
-    protected $piVenue;
 
     /**
      * Impounding type
@@ -60,6 +50,16 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
+
+    /**
+     * Pi venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
+     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
+     */
+    protected $piVenue;
 
     /**
      * Impounding legislation type
@@ -123,29 +123,6 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the pi venue
-     *
-     * @param \Olcs\Db\Entity\PiVenue $piVenue
-     * @return Impounding
-     */
-    public function setPiVenue($piVenue)
-    {
-        $this->piVenue = $piVenue;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue
-     *
-     * @return \Olcs\Db\Entity\PiVenue
-     */
-    public function getPiVenue()
-    {
-        return $this->piVenue;
-    }
-
-    /**
      * Set the impounding type
      *
      * @param \Olcs\Db\Entity\RefData $impoundingType
@@ -166,6 +143,29 @@ class Impounding implements Interfaces\EntityInterface
     public function getImpoundingType()
     {
         return $this->impoundingType;
+    }
+
+    /**
+     * Set the pi venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $piVenue
+     * @return Impounding
+     */
+    public function setPiVenue($piVenue)
+    {
+        $this->piVenue = $piVenue;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getPiVenue()
+    {
+        return $this->piVenue;
     }
 
     /**

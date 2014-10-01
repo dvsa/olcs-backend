@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="previous_licence",
  *    indexes={
- *        @ORM\Index(name="fk_previous_licence_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_previous_licence_ref_data1_idx", columns={"previous_licence_type"}),
- *        @ORM\Index(name="fk_previous_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_previous_licence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_2C318C9BCC3ADCB9", columns={"previous_licence_type"}),
+ *        @ORM\Index(name="IDX_2C318C9B65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_2C318C9BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_2C318C9B3E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -25,9 +25,10 @@ class PreviousLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\LicNo18Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,15 +42,6 @@ class PreviousLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=false)
      */
     protected $previousLicenceType;
-
-    /**
-     * Lic no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
-     */
-    protected $licNo;
 
     /**
      * Holder name
@@ -117,29 +109,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     public function getPreviousLicenceType()
     {
         return $this->previousLicenceType;
-    }
-
-    /**
-     * Set the lic no
-     *
-     * @param string $licNo
-     * @return PreviousLicence
-     */
-    public function setLicNo($licNo)
-    {
-        $this->licNo = $licNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the lic no
-     *
-     * @return string
-     */
-    public function getLicNo()
-    {
-        return $this->licNo;
     }
 
     /**

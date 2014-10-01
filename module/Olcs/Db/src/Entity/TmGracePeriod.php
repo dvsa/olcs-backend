@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="tm_grace_period",
  *    indexes={
- *        @ORM\Index(name="fk_transport_manager_grace_period_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user1_idx", columns={"assigned_to_user_id"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_D68D956811578D11", columns={"assigned_to_user_id"}),
+ *        @ORM\Index(name="IDX_D68D956865CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_D68D9568DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_D68D956826EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class TmGracePeriod implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -49,7 +49,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_active", nullable=false)
      */
-    protected $isActive = 0;
+    protected $isActive;
 
     /**
      * Start date
@@ -85,7 +85,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="grace_period_no", nullable=false)
      */
-    protected $gracePeriodNo = 1;
+    protected $gracePeriodNo;
 
     /**
      * Set the assigned to user

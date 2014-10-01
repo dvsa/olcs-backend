@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="hearing",
  *    indexes={
- *        @ORM\Index(name="fk_hearing_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_hearing_pi_venue1_idx", columns={"venue_id"}),
- *        @ORM\Index(name="fk_hearing_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_hearing_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_hearing_presiding_tc1_idx", columns={"presiding_tc_id"})
+ *        @ORM\Index(name="IDX_77C6378253BAD7A2", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="IDX_77C6378265CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_77C63782DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_77C6378240A73EBA", columns={"venue_id"}),
+ *        @ORM\Index(name="IDX_77C63782CF10D4F5", columns={"case_id"})
  *    }
  * )
  */
@@ -28,8 +28,9 @@ class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\VenueManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
@@ -37,16 +38,6 @@ class Hearing implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Presiding tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
-     */
-    protected $presidingTc = 0;
 
     /**
      * Agreed by tc date
@@ -64,30 +55,7 @@ class Hearing implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="witness_count", nullable=false)
      */
-    protected $witnessCount = 0;
-
-    /**
-     * Set the presiding tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
-     * @return Hearing
-     */
-    public function setPresidingTc($presidingTc)
-    {
-        $this->presidingTc = $presidingTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the presiding tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getPresidingTc()
-    {
-        return $this->presidingTc;
-    }
+    protected $witnessCount;
 
     /**
      * Set the agreed by tc date

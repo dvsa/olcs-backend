@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="change_of_entity",
  *    indexes={
- *        @ORM\Index(name="fk_change_of_entity_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_change_of_entity_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_5E3DBA1165CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_5E3DBA11DE12AB56", columns={"created_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="licence_id_UNIQUE", columns={"licence_id"})
@@ -26,8 +26,8 @@ class ChangeOfEntity implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

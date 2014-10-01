@@ -445,6 +445,9 @@ return array(
         'is_interim' => array(
             'type' => 'yesno'
         ),
+        'is_printing' => array(
+            'type' => 'yesno'
+        ),
         'requested_by_self_service_user' => array(
             'type' => 'yesno'
         ),
