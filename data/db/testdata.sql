@@ -317,13 +317,13 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_large_vehicles`, `tot_community_licences`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
-    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`) VALUES
+    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
     (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,NOW(),NULL,1),
+    NULL,NOW(),NULL,1,0),
     (2,110,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,1),
+    NULL,1,1),
     (6,114,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1);
+    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0);
 
 INSERT INTO `application_completion` (`id`, `created_by`, `last_modified_by`, `section_tol_status`,
     `section_tol_ol_status`, `section_tol_ot_status`, `section_tol_lt_status`, `section_yb_status`,
@@ -449,7 +449,7 @@ INSERT INTO `legacy_offence` (`id`, `created_by`, `last_modified_by`, `definitio
 VALUES
     (1, 1, 1, 'Some Definition', 1, 1, 'Authority 1', '2014-09-26', '2015-09-26', 'Some Offender', 3,
     'Some Position', 'Some Offence Type', 'Some Notes for Offence', 'VRM12', NOW(), NOW(), 1);
-    
+
 INSERT INTO `legacy_case_offence` (`case_id`, `legacy_offence_id`)
 VALUES
     (24, 1);
@@ -713,17 +713,17 @@ INSERT INTO `trading_name` (`id`, `created_by`, `last_modified_by`, `name`, `cre
     (110,0,2,'test',NOW(),NOW(),1,110);
 
 INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, `created_on`, `last_modified_on`,
-    `version`, `name`, `contact_details_id`) VALUES
-    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1),
-    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2),
-    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3),
-    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4),
-    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5),
-    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6),
+    `version`, `name`, `contact_details_id`, `is_scottish_rules`) VALUES
+    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0),
+    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0),
+    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0),
+    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0),
+    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0),
+    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0),
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
-    'London and the South East of England',7),
-    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9);
+    'London and the South East of England',7,0),
+    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1),
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,1);
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
