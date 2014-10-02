@@ -29,11 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -65,6 +65,15 @@ class Application implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
+
+    /**
+     * Is variation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_variation", nullable=false)
+     */
+    protected $isVariation;
 
     /**
      * Has entered reg
@@ -433,6 +442,29 @@ class Application implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the is variation
+     *
+     * @param boolean $isVariation
+     * @return Application
+     */
+    public function setIsVariation($isVariation)
+    {
+        $this->isVariation = $isVariation;
+
+        return $this;
+    }
+
+    /**
+     * Get the is variation
+     *
+     * @return boolean
+     */
+    public function getIsVariation()
+    {
+        return $this->isVariation;
     }
 
     /**
