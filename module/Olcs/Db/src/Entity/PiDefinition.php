@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_definition",
  *    indexes={
- *        @ORM\Index(name="IDX_608702D3DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_608702D365CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_608702D3324926D6", columns={"goods_or_psv"})
+ *        @ORM\Index(name="fk_pi_definition_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_pi_definition_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_definition_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,10 +24,9 @@ class PiDefinition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\GoodsOrPsvManyToOne,
-        Traits\IsNiFieldAlt1,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -50,6 +49,15 @@ class PiDefinition implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="section_code", length=20, nullable=false)
      */
     protected $sectionCode;
+
+    /**
+     * Is ni
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
+     */
+    protected $isNi;
 
     /**
      * Set the pi definition category
@@ -95,5 +103,28 @@ class PiDefinition implements Interfaces\EntityInterface
     public function getSectionCode()
     {
         return $this->sectionCode;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param string $isNi
+     * @return PiDefinition
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return string
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 }

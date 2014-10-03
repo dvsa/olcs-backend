@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_email",
  *    indexes={
- *        @ORM\Index(name="IDX_F3B9325827322BFA", columns={"inspection_request_id"})
+ *        @ORM\Index(name="fk_ea_inspection_email_inspection_request1_idx", columns={"inspection_request_id"})
  *    }
  * )
  */
@@ -22,7 +22,7 @@ class InspectionEmail implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ReceivedDateFieldAlt2;
+        Traits\ReceivedDateFieldAlt1;
 
     /**
      * Inspection request
@@ -68,7 +68,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="processed", nullable=false)
      */
-    protected $processed;
+    protected $processed = 0;
 
     /**
      * Sender email address

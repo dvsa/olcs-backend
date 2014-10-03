@@ -14,18 +14,18 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee",
  *    indexes={
- *        @ORM\Index(name="IDX_964964B5CF63AA2F", columns={"waive_reason_id"}),
- *        @ORM\Index(name="IDX_964964B5D557506A", columns={"waive_approver_user_id"}),
- *        @ORM\Index(name="IDX_964964B5E4566D0C", columns={"parent_fee_id"}),
- *        @ORM\Index(name="IDX_964964B526FA54CF", columns={"fee_type_id"}),
- *        @ORM\Index(name="IDX_964964B51F9832D8", columns={"waive_recommender_user_id"}),
- *        @ORM\Index(name="IDX_964964B58DB60186", columns={"task_id"}),
- *        @ORM\Index(name="IDX_964964B5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_964964B565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_964964B55B05B235", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="IDX_964964B526EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_964964B53E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_964964B55327B2E3", columns={"bus_reg_id"})
+ *        @ORM\Index(name="fk_fee_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_fee_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_fee_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_fee_task1_idx", columns={"task_id"}),
+ *        @ORM\Index(name="fk_fee_fee_type1_idx", columns={"fee_type_id"}),
+ *        @ORM\Index(name="fk_fee_fee1_idx", columns={"parent_fee_id"}),
+ *        @ORM\Index(name="fk_fee_user1_idx", columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="fk_fee_user2_idx", columns={"waive_approver_user_id"}),
+ *        @ORM\Index(name="fk_fee_waive_reason1_idx", columns={"waive_reason_id"}),
+ *        @ORM\Index(name="fk_fee_user3_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_fee_user4_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_fee_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"})
  *    }
  * )
  */
@@ -33,14 +33,13 @@ class Fee implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TaskManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
-        Traits\LicenceManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1,
         Traits\BusRegManyToOneAlt1,
-        Traits\ReceivedDateField,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TaskManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
@@ -68,16 +67,6 @@ class Fee implements Interfaces\EntityInterface
     protected $waiveApproverUser;
 
     /**
-     * Parent fee
-     *
-     * @var \Olcs\Db\Entity\Fee
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY")
-     * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id", nullable=true)
-     */
-    protected $parentFee;
-
-    /**
      * Waive recommender user
      *
      * @var \Olcs\Db\Entity\User
@@ -86,6 +75,16 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveRecommenderUser;
+
+    /**
+     * Parent fee
+     *
+     * @var \Olcs\Db\Entity\Fee
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY")
+     * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id", nullable=true)
+     */
+    protected $parentFee;
 
     /**
      * Fee type
@@ -141,6 +140,15 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="invoiced_date", nullable=true)
      */
     protected $invoicedDate;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
 
     /**
      * Fee status
@@ -243,29 +251,6 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the parent fee
-     *
-     * @param \Olcs\Db\Entity\Fee $parentFee
-     * @return Fee
-     */
-    public function setParentFee($parentFee)
-    {
-        $this->parentFee = $parentFee;
-
-        return $this;
-    }
-
-    /**
-     * Get the parent fee
-     *
-     * @return \Olcs\Db\Entity\Fee
-     */
-    public function getParentFee()
-    {
-        return $this->parentFee;
-    }
-
-    /**
      * Set the waive recommender user
      *
      * @param \Olcs\Db\Entity\User $waiveRecommenderUser
@@ -286,6 +271,29 @@ class Fee implements Interfaces\EntityInterface
     public function getWaiveRecommenderUser()
     {
         return $this->waiveRecommenderUser;
+    }
+
+    /**
+     * Set the parent fee
+     *
+     * @param \Olcs\Db\Entity\Fee $parentFee
+     * @return Fee
+     */
+    public function setParentFee($parentFee)
+    {
+        $this->parentFee = $parentFee;
+
+        return $this;
+    }
+
+    /**
+     * Get the parent fee
+     *
+     * @return \Olcs\Db\Entity\Fee
+     */
+    public function getParentFee()
+    {
+        return $this->parentFee;
     }
 
     /**
@@ -424,6 +432,29 @@ class Fee implements Interfaces\EntityInterface
     public function getInvoicedDate()
     {
         return $this->invoicedDate;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return Fee
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**

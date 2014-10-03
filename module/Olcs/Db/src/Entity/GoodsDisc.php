@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="goods_disc",
  *    indexes={
- *        @ORM\Index(name="IDX_31474EB2F75B4EBD", columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="IDX_31474EB2FC21D85", columns={"removal_explanation"}),
- *        @ORM\Index(name="IDX_31474EB2DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_31474EB2D45B0D47", columns={"removal_reason"}),
- *        @ORM\Index(name="IDX_31474EB265CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_goods_disc_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
+ *        @ORM\Index(name="fk_goods_disc_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_goods_disc_ref_data1_idx", columns={"removal_reason"}),
+ *        @ORM\Index(name="fk_goods_disc_ref_data2_idx", columns={"removal_explanation"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class GoodsDisc implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\RemovalExplanationManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
@@ -55,7 +55,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
-    protected $isCopy;
+    protected $isCopy = 0;
 
     /**
      * Is printing
@@ -64,7 +64,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_printing", nullable=false)
      */
-    protected $isPrinting;
+    protected $isPrinting = 0;
 
     /**
      * Reprint required
@@ -73,7 +73,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
-    protected $reprintRequired;
+    protected $reprintRequired = 0;
 
     /**
      * Set the licence vehicle

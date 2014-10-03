@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="appeal",
  *    indexes={
- *        @ORM\Index(name="IDX_967943513BB8880C", columns={"reason"}),
- *        @ORM\Index(name="IDX_96794351DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_96794351CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_9679435165CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_9679435130BC6DC2", columns={"outcome"})
+ *        @ORM\Index(name="fk_appeal_case1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_appeal_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_appeal_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_appeal_ref_data1_idx", columns={"reason"}),
+ *        @ORM\Index(name="fk_appeal_ref_data2_idx", columns={"outcome"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="appeal_no_UNIQUE", columns={"appeal_no"})
@@ -29,10 +29,10 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OutcomeManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\OutcomeManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,

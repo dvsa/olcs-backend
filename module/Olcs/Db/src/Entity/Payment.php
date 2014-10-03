@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="payment",
  *    indexes={
- *        @ORM\Index(name="IDX_6D28840DF41D6079", columns={"receipt_document_id"}),
- *        @ORM\Index(name="IDX_6D28840DDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6D28840D65CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_payment_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_payment_document1_idx", columns={"receipt_document_id"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class Payment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

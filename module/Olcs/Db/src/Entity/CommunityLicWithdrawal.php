@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="community_lic_withdrawal",
  *    indexes={
- *        @ORM\Index(name="IDX_F7BB8126DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_F7BB81269B8FCA82", columns={"community_lic_id"}),
- *        @ORM\Index(name="IDX_F7BB812665CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_community_lic_withdrawal_community_lic1_idx", columns={"community_lic_id"}),
+ *        @ORM\Index(name="fk_community_lic_withdrawal_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_community_lic_withdrawal_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,9 +24,9 @@ class CommunityLicWithdrawal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CommunityLicManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\StartDateField,
         Traits\EndDateFieldAlt1,
         Traits\CustomCreatedOnField,

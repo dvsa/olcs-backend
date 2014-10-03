@@ -15,11 +15,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation",
  *    indexes={
- *        @ORM\Index(name="IDX_E6E132B4FD3895E1", columns={"lead_tc_area_id"}),
- *        @ORM\Index(name="IDX_E6E132B48CDE5729", columns={"type"}),
- *        @ORM\Index(name="IDX_E6E132B43BA18A46", columns={"sic_code"}),
- *        @ORM\Index(name="IDX_E6E132B4DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_E6E132B465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_organisation_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
+ *        @ORM\Index(name="fk_organisation_ref_data2_idx", columns={"sic_code"}),
+ *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
  *        @ORM\Index(name="organisation_name_idx", columns={"name"})
  *    }
  * )
@@ -28,8 +28,8 @@ class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\ViAction1Field,
         Traits\IsIrfoField,
         Traits\CustomLastModifiedOnField,
@@ -47,16 +47,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $leadTcArea;
 
     /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
-     */
-    protected $type;
-
-    /**
      * Sic code
      *
      * @var \Olcs\Db\Entity\RefData
@@ -65,6 +55,16 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="sic_code", referencedColumnName="id", nullable=true)
      */
     protected $sicCode;
+
+    /**
+     * Type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
+     */
+    protected $type;
 
     /**
      * Company or llp no
@@ -100,7 +100,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
      */
-    protected $isMlh;
+    protected $isMlh = 0;
 
     /**
      * Company cert seen
@@ -109,7 +109,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
      */
-    protected $companyCertSeen;
+    protected $companyCertSeen = 0;
 
     /**
      * Irfo nationality
@@ -127,7 +127,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="allow_email", nullable=false)
      */
-    protected $allowEmail;
+    protected $allowEmail = 0;
 
     /**
      * Contact detail
@@ -200,29 +200,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the type
-     *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return Organisation
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set the sic code
      *
      * @param \Olcs\Db\Entity\RefData $sicCode
@@ -243,6 +220,29 @@ class Organisation implements Interfaces\EntityInterface
     public function getSicCode()
     {
         return $this->sicCode;
+    }
+
+    /**
+     * Set the type
+     *
+     * @param \Olcs\Db\Entity\RefData $type
+     * @return Organisation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

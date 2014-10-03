@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_recommendation",
  *    indexes={
- *        @ORM\Index(name="IDX_5279245C9D32F035", columns={"action_id"}),
- *        @ORM\Index(name="IDX_5279245C29F6EE60", columns={"to_user_id"}),
- *        @ORM\Index(name="IDX_5279245C2130303A", columns={"from_user_id"}),
- *        @ORM\Index(name="IDX_5279245CCF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_5279245CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5279245C65CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_case_recommendation_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_case_recommendation_user1_idx", columns={"from_user_id"}),
+ *        @ORM\Index(name="fk_case_recommendation_user2_idx", columns={"to_user_id"}),
+ *        @ORM\Index(name="fk_legacy_recommendation_legacy_case_action1_idx", columns={"action_id"}),
+ *        @ORM\Index(name="fk_legacy_recommendation_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_legacy_recommendation_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class LegacyRecommendation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\Comment4000Field,
         Traits\EffectiveDateField,
         Traits\CustomCreatedOnField,
