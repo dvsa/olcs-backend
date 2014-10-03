@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="event_history",
  *    indexes={
- *        @ORM\Index(name="IDX_A2EDD9E4296CD8AE", columns={"team_id"}),
  *        @ORM\Index(name="IDX_A2EDD9E4F75B4EBD", columns={"licence_vehicle_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E4296CD8AE", columns={"team_id"}),
  *        @ORM\Index(name="IDX_A2EDD9E428F8C449", columns={"event_history_type_id"}),
- *        @ORM\Index(name="IDX_A2EDD9E41F75BD29", columns={"transport_manager_id"}),
- *        @ORM\Index(name="IDX_A2EDD9E43E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_A2EDD9E4A76ED395", columns={"user_id"}),
- *        @ORM\Index(name="IDX_A2EDD9E426EF07C9", columns={"licence_id"})
+ *        @ORM\Index(name="IDX_A2EDD9E43E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E426EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_A2EDD9E41F75BD29", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -30,8 +30,8 @@ class EventHistory implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\UserManyToOne,
         Traits\ApplicationManyToOneAlt1,
-        Traits\TransportManagerManyToOne,
-        Traits\LicenceManyToOneAlt1;
+        Traits\LicenceManyToOneAlt1,
+        Traits\TransportManagerManyToOne;
 
     /**
      * Licence vehicle

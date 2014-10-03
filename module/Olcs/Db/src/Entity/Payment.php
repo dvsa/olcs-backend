@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="payment",
  *    indexes={
  *        @ORM\Index(name="IDX_6D28840DF41D6079", columns={"receipt_document_id"}),
- *        @ORM\Index(name="IDX_6D28840D65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_6D28840DDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_6D28840DDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_6D28840D65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class Payment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

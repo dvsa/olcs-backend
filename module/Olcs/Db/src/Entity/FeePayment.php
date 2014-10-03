@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="fee_payment",
  *    indexes={
  *        @ORM\Index(name="IDX_8E9E5C514C3A3BB", columns={"payment_id"}),
- *        @ORM\Index(name="IDX_8E9E5C5165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_8E9E5C51DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_8E9E5C51AB45AECA", columns={"fee_id"})
+ *        @ORM\Index(name="IDX_8E9E5C51AB45AECA", columns={"fee_id"}),
+ *        @ORM\Index(name="IDX_8E9E5C5165CF370E", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="fee_payment_unique", columns={"fee_id","payment_id"})
@@ -29,8 +29,8 @@ class FeePayment implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\FeeManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

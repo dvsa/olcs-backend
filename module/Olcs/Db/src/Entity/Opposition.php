@@ -18,8 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="opposition",
  *    indexes={
  *        @ORM\Index(name="IDX_10CBCFC26639AAA5", columns={"opposer_id"}),
- *        @ORM\Index(name="IDX_10CBCFC265CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_10CBCFC2DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_10CBCFC265CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_10CBCFC23E030ACD", columns={"application_id"})
  *    }
  * )

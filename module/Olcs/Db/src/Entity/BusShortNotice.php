@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_short_notice",
  *    indexes={
- *        @ORM\Index(name="IDX_9C4781CE65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_9C4781CEDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_9C4781CEDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_9C4781CE65CF370E", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="bus_reg_id_UNIQUE", columns={"bus_reg_id"})

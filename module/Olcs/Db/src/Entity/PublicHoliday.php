@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="public_holiday",
  *    indexes={
- *        @ORM\Index(name="IDX_8744ED8665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_8744ED86DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_8744ED86DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_8744ED8665CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class PublicHoliday implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

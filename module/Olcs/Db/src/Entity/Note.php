@@ -16,13 +16,13 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_CFBDFA142CA44671", columns={"note_type"}),
  *        @ORM\Index(name="IDX_CFBDFA1465CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_CFBDFA145327B2E3", columns={"bus_reg_id"}),
- *        @ORM\Index(name="IDX_CFBDFA14DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_CFBDFA144425C407", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="IDX_CFBDFA1426EF07C9", columns={"licence_id"}),
  *        @ORM\Index(name="IDX_CFBDFA14CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA14DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_CFBDFA145B05B235", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="IDX_CFBDFA143E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="IDX_CFBDFA145327B2E3", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA143E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA144425C407", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="IDX_CFBDFA1426EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -35,9 +35,9 @@ class Note implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\LicenceManyToOneAlt1,
-        Traits\IrfoPsvAuthManyToOne,
         Traits\ApplicationManyToOneAlt1,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

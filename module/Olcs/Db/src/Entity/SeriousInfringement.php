@@ -16,13 +16,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
- *        @ORM\Index(name="IDX_106EA68C7CE276A9", columns={"si_category_type_id"}),
  *        @ORM\Index(name="IDX_106EA68CE71044B9", columns={"erru_response_user_id"}),
+ *        @ORM\Index(name="IDX_106EA68C7CE276A9", columns={"si_category_type_id"}),
  *        @ORM\Index(name="IDX_106EA68C8B8A7B7", columns={"member_state_code"}),
- *        @ORM\Index(name="IDX_106EA68CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_106EA68C65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_106EA68CF9FDD69C", columns={"si_category_id"}),
- *        @ORM\Index(name="IDX_106EA68CCF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_106EA68CDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_106EA68CCF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_106EA68C65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -32,8 +32,8 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\SiCategoryManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -50,16 +50,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $erruResponseUser;
 
     /**
-     * Member state code
-     *
-     * @var \Olcs\Db\Entity\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
-     */
-    protected $memberStateCode;
-
-    /**
      * Si category type
      *
      * @var \Olcs\Db\Entity\SiCategoryType
@@ -68,6 +58,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategoryType;
+
+    /**
+     * Member state code
+     *
+     * @var \Olcs\Db\Entity\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
+     */
+    protected $memberStateCode;
 
     /**
      * Check date
@@ -147,29 +147,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the member state code
-     *
-     * @param \Olcs\Db\Entity\Country $memberStateCode
-     * @return SeriousInfringement
-     */
-    public function setMemberStateCode($memberStateCode)
-    {
-        $this->memberStateCode = $memberStateCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the member state code
-     *
-     * @return \Olcs\Db\Entity\Country
-     */
-    public function getMemberStateCode()
-    {
-        return $this->memberStateCode;
-    }
-
-    /**
      * Set the si category type
      *
      * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
@@ -190,6 +167,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getSiCategoryType()
     {
         return $this->siCategoryType;
+    }
+
+    /**
+     * Set the member state code
+     *
+     * @param \Olcs\Db\Entity\Country $memberStateCode
+     * @return SeriousInfringement
+     */
+    public function setMemberStateCode($memberStateCode)
+    {
+        $this->memberStateCode = $memberStateCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the member state code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getMemberStateCode()
+    {
+        return $this->memberStateCode;
     }
 
     /**

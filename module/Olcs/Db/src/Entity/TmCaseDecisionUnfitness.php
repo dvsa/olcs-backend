@@ -17,8 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="tm_case_decision_unfitness",
  *    indexes={
  *        @ORM\Index(name="IDX_659D1A274942EB41", columns={"unfitness_reason_id"}),
- *        @ORM\Index(name="IDX_659D1A2765CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_659D1A27DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_659D1A2765CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_659D1A272543F459", columns={"tm_case_decision_id"})
  *    }
  * )

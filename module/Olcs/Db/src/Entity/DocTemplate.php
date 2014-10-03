@@ -17,10 +17,10 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_F6D402D8FE73E9A2", columns={"document_sub_category_id"}),
  *        @ORM\Index(name="IDX_F6D402D8448B7C86", columns={"doc_process_id"}),
- *        @ORM\Index(name="IDX_F6D402D865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_F6D402D812469DE2", columns={"category_id"}),
  *        @ORM\Index(name="IDX_F6D402D8DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_F6D402D8C33F7837", columns={"document_id"})
+ *        @ORM\Index(name="IDX_F6D402D8C33F7837", columns={"document_id"}),
+ *        @ORM\Index(name="IDX_F6D402D865CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_F6D402D812469DE2", columns={"category_id"})
  *    }
  * )
  */
@@ -29,9 +29,9 @@ class DocTemplate implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
+        Traits\DocumentManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
-        Traits\DocumentManyToOne,
         Traits\IsNiFieldAlt1,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,

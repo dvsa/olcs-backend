@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="previous_licence",
  *    indexes={
  *        @ORM\Index(name="IDX_2C318C9BCC3ADCB9", columns={"previous_licence_type"}),
- *        @ORM\Index(name="IDX_2C318C9B65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_2C318C9BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_2C318C9B65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_2C318C9B3E030ACD", columns={"application_id"})
  *    }
  * )

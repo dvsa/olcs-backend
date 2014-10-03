@@ -17,13 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="tm_pi_hearing",
  *    indexes={
  *        @ORM\Index(name="IDX_48A7AF65C54C8C93", columns={"type_id"}),
- *        @ORM\Index(name="IDX_48A7AF65221D9101", columns={"presided_by"}),
  *        @ORM\Index(name="IDX_48A7AF6559BB1592", columns={"reason_id"}),
+ *        @ORM\Index(name="IDX_48A7AF65221D9101", columns={"presided_by"}),
+ *        @ORM\Index(name="IDX_48A7AF65CF10D4F5", columns={"case_id"}),
  *        @ORM\Index(name="IDX_48A7AF65DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_48A7AF6565CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_48A7AF6540A73EBA", columns={"venue_id"}),
- *        @ORM\Index(name="IDX_48A7AF6553BAD7A2", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="IDX_48A7AF65CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_48A7AF6553BAD7A2", columns={"presiding_tc_id"})
  *    }
  * )
  */
@@ -31,11 +31,11 @@ class TmPiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOne,
-        Traits\VenueManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\VenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

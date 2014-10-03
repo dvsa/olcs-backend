@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="community_lic_suspension",
  *    indexes={
- *        @ORM\Index(name="IDX_1839BF6365CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_1839BF63DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_1839BF639B8FCA82", columns={"community_lic_id"})
+ *        @ORM\Index(name="IDX_1839BF639B8FCA82", columns={"community_lic_id"}),
+ *        @ORM\Index(name="IDX_1839BF6365CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CommunityLicManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\StartDateField,
         Traits\EndDateFieldAlt1,
         Traits\CustomCreatedOnField,

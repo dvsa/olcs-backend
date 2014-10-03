@@ -16,8 +16,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trailer",
  *    indexes={
- *        @ORM\Index(name="IDX_C691DC4E65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C691DC4EDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_C691DC4E65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C691DC4E26EF07C9", columns={"licence_id"})
  *    }
  * )

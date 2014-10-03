@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="correspondence_inbox",
  *    indexes={
- *        @ORM\Index(name="IDX_C8A620F65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C8A620FDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C8A620F26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_C8A620FC33F7837", columns={"document_id"})
+ *        @ORM\Index(name="IDX_C8A620FC33F7837", columns={"document_id"}),
+ *        @ORM\Index(name="IDX_C8A620F65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_C8A620F26EF07C9", columns={"licence_id"})
  *    }
  * )
  */
@@ -26,9 +26,9 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
+        Traits\DocumentManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
-        Traits\DocumentManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

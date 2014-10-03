@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="opposition_grounds",
  *    indexes={
  *        @ORM\Index(name="IDX_3591EE4258C0D9E2", columns={"grounds"}),
- *        @ORM\Index(name="IDX_3591EE4265CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_3591EE42DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_3591EE42B4BE57B7", columns={"opposition_id"})
+ *        @ORM\Index(name="IDX_3591EE42B4BE57B7", columns={"opposition_id"}),
+ *        @ORM\Index(name="IDX_3591EE4265CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,8 +26,8 @@ class OppositionGrounds implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\OppositionManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\IsRepresentationField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

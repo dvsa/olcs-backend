@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_gv_permit",
  *    indexes={
- *        @ORM\Index(name="IDX_DAFAFBC58A75AA28", columns={"irfo_permit_status"}),
  *        @ORM\Index(name="IDX_DAFAFBC592771719", columns={"irfo_gv_permit_type_id"}),
+ *        @ORM\Index(name="IDX_DAFAFBC58A75AA28", columns={"irfo_permit_status"}),
+ *        @ORM\Index(name="IDX_DAFAFBC5DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_DAFAFBC5E02018B7", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="IDX_DAFAFBC59E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_DAFAFBC565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_DAFAFBC5DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_DAFAFBC565CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,10 +27,10 @@ class IrfoGvPermit implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OrganisationManyToOneAlt1,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\OrganisationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
         Traits\InForceDateField,

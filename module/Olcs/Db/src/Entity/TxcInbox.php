@@ -18,8 +18,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_CB46E42CFD5F7826", columns={"route_document_id"}),
  *        @ORM\Index(name="IDX_CB46E42CC8A8A416", columns={"zip_document_id"}),
  *        @ORM\Index(name="IDX_CB46E42CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_CB46E42C65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_CB46E42CB0E901C6", columns={"local_authority_id"}),
+ *        @ORM\Index(name="IDX_CB46E42C65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_CB46E42C9E6B1585", columns={"organisation_id"}),
  *        @ORM\Index(name="IDX_CB46E42C5327B2E3", columns={"bus_reg_id"})
  *    }

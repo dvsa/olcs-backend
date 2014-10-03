@@ -17,11 +17,11 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_A0461B4CF10D4F5", columns={"case_id"}),
  *        @ORM\Index(name="IDX_A0461B43FF90F24", columns={"defendant_type"}),
  *        @ORM\Index(name="IDX_A0461B4368C2E9B", columns={"conviction_category_id"}),
- *        @ORM\Index(name="IDX_A0461B465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_A0461B49E6B1585", columns={"organisation_id"}),
  *        @ORM\Index(name="IDX_A0461B4DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_A0461B41F75BD29", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="IDX_A0461B465CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_A0461B4217BBB47", columns={"person_id"}),
- *        @ORM\Index(name="IDX_A0461B49E6B1585", columns={"organisation_id"})
+ *        @ORM\Index(name="IDX_A0461B41F75BD29", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -29,11 +29,11 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOne,
-        Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\PersonManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\CategoryText1024Field,
         Traits\Penalty255Field,
         Traits\BirthDateField,

@@ -16,14 +16,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="bus_reg",
  *    indexes={
  *        @ORM\Index(name="IDX_6B9F4C0CAD64EA09", columns={"revert_status"}),
- *        @ORM\Index(name="IDX_6B9F4C0C4A22916B", columns={"bus_notice_period_id"}),
  *        @ORM\Index(name="IDX_6B9F4C0CA0B663B", columns={"subsidised"}),
- *        @ORM\Index(name="IDX_6B9F4C0CE02018B7", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="IDX_6B9F4C0C7B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_6B9F4C0C26EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_6B9F4C0C65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_6B9F4C0C4A22916B", columns={"bus_notice_period_id"}),
  *        @ORM\Index(name="IDX_6B9F4C0CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6B9F4C0C35382CCB", columns={"operating_centre_id"})
+ *        @ORM\Index(name="IDX_6B9F4C0CE02018B7", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="IDX_6B9F4C0C26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_6B9F4C0C35382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_6B9F4C0C7B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_6B9F4C0C65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -33,10 +33,10 @@ class BusReg implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\StatusManyToOne,
-        Traits\LastModifiedByManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
         Traits\RouteSeqField,
         Traits\ReceivedDateFieldAlt1,

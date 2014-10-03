@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disqualification",
  *    indexes={
- *        @ORM\Index(name="IDX_1BEFF80B65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_1BEFF80BDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_1BEFF80B1F75BD29", columns={"transport_manager_id"}),
  *        @ORM\Index(name="IDX_1BEFF80B9E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_1BEFF80B217BBB47", columns={"person_id"})
+ *        @ORM\Index(name="IDX_1BEFF80B65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_1BEFF80B217BBB47", columns={"person_id"}),
+ *        @ORM\Index(name="IDX_1BEFF80B1F75BD29", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -29,8 +29,8 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\OrganisationManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

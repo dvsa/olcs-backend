@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="psv_disc",
  *    indexes={
  *        @ORM\Index(name="IDX_5021B8A5FC21D85", columns={"removal_explanation"}),
+ *        @ORM\Index(name="IDX_5021B8A5DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_5021B8A5D45B0D47", columns={"removal_reason"}),
  *        @ORM\Index(name="IDX_5021B8A565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5021B8A5DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_5021B8A526EF07C9", columns={"licence_id"})
  *    }
  * )

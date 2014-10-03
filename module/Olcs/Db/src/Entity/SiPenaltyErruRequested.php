@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="si_penalty_erru_requested",
  *    indexes={
  *        @ORM\Index(name="IDX_6E063F799031E693", columns={"si_penalty_requested_type_id"}),
- *        @ORM\Index(name="IDX_6E063F7965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_6E063F79DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6E063F79DC3970F4", columns={"serious_infringement_id"})
+ *        @ORM\Index(name="IDX_6E063F79DC3970F4", columns={"serious_infringement_id"}),
+ *        @ORM\Index(name="IDX_6E063F7965CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,8 +28,8 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\SeriousInfringementManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

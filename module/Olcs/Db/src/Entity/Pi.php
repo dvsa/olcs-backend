@@ -17,15 +17,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="IDX_5A88B2F5D34341AA", columns={"agreed_by_tc_role"}),
- *        @ORM\Index(name="IDX_5A88B2F53174D383", columns={"decided_by_tc_role"}),
  *        @ORM\Index(name="IDX_5A88B2F523E72C21", columns={"written_outcome"}),
- *        @ORM\Index(name="IDX_5A88B2F5511CF0D9", columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F5D34341AA", columns={"agreed_by_tc_role"}),
  *        @ORM\Index(name="IDX_5A88B2F5DCBFC605", columns={"decided_by_tc_id"}),
- *        @ORM\Index(name="IDX_5A88B2F589EEAF91", columns={"assigned_to"}),
  *        @ORM\Index(name="IDX_5A88B2F5C651310A", columns={"pi_status"}),
- *        @ORM\Index(name="IDX_5A88B2F5CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F589EEAF91", columns={"assigned_to"}),
+ *        @ORM\Index(name="IDX_5A88B2F5511CF0D9", columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="IDX_5A88B2F53174D383", columns={"decided_by_tc_role"}),
  *        @ORM\Index(name="IDX_5A88B2F5DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_5A88B2F5CF10D4F5", columns={"case_id"}),
  *        @ORM\Index(name="IDX_5A88B2F565CF370E", columns={"last_modified_by"})
  *    }
  * )

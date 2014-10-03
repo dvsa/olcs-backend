@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="hearing",
  *    indexes={
- *        @ORM\Index(name="IDX_77C6378253BAD7A2", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="IDX_77C6378265CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_77C63782DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_77C6378240A73EBA", columns={"venue_id"}),
- *        @ORM\Index(name="IDX_77C63782CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_77C63782CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_77C6378265CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_77C6378253BAD7A2", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="IDX_77C6378240A73EBA", columns={"venue_id"})
  *    }
  * )
  */
@@ -29,10 +29,10 @@ class Hearing implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
         Traits\VenueManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

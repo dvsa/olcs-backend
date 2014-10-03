@@ -20,9 +20,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="IDX_D5372E35545317D1", columns={"vehicle_id"}),
  *        @ORM\Index(name="IDX_D5372E3526EF07C9", columns={"licence_id"}),
  *        @ORM\Index(name="IDX_D5372E35D45B0D47", columns={"removal_reason"}),
- *        @ORM\Index(name="IDX_D5372E353E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_D5372E35DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_D5372E3565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_D5372E35DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_D5372E353E030ACD", columns={"application_id"})
  *    }
  * )
  */
@@ -30,10 +30,10 @@ class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\RemovalReasonManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\ReceivedDateFieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,

@@ -15,10 +15,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="stay",
  *    indexes={
  *        @ORM\Index(name="IDX_5E09839C1108BFA3", columns={"stay_type"}),
- *        @ORM\Index(name="IDX_5E09839C30BC6DC2", columns={"outcome"}),
- *        @ORM\Index(name="IDX_5E09839C65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_5E09839CDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5E09839CCF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_5E09839CCF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_5E09839C65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_5E09839C30BC6DC2", columns={"outcome"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class Stay implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\OutcomeManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

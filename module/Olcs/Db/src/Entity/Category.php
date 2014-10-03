@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="category",
  *    indexes={
- *        @ORM\Index(name="IDX_64C19C165CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_64C19C1DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_64C19C1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_64C19C165CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class Category implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

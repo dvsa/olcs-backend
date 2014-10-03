@@ -670,6 +670,7 @@ CREATE TABLE IF NOT EXISTS `application` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `licence_id` INT NOT NULL,
   `status` VARCHAR(32) NOT NULL,
+  `is_variation` TINYINT(1) NOT NULL,
   `has_entered_reg` TINYINT(1) NULL,
   `tot_auth_trailers` INT NULL,
   `tot_auth_vehicles` INT NULL,

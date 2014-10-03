@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_bookmark",
  *    indexes={
- *        @ORM\Index(name="IDX_BBD68F4665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_BBD68F46DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_BBD68F46DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_BBD68F4665CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class DocBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

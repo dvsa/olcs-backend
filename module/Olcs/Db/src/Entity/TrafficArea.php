@@ -15,18 +15,18 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="traffic_area",
  *    indexes={
+ *        @ORM\Index(name="IDX_21D26726DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_21D267267CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_21D2672665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_21D26726DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_21D2672665CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
 class TrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

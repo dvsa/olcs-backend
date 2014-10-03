@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="si_penalty_imposed_type",
  *    indexes={
- *        @ORM\Index(name="IDX_D196C69865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_D196C698DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_D196C698DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_D196C69865CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Id8Identity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

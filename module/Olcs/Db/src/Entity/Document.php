@@ -17,18 +17,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="IDX_D8698A7635382CCB", columns={"operating_centre_id"}),
  *        @ORM\Index(name="IDX_D8698A76B4BE57B7", columns={"opposition_id"}),
- *        @ORM\Index(name="IDX_D8698A765327B2E3", columns={"bus_reg_id"}),
- *        @ORM\Index(name="IDX_D8698A761F75BD29", columns={"transport_manager_id"}),
  *        @ORM\Index(name="IDX_D8698A76CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_D8698A76FE73E9A2", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="IDX_D8698A765327B2E3", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="IDX_D8698A763E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_D8698A7618E0B1DB", columns={"traffic_area_id"}),
  *        @ORM\Index(name="IDX_D8698A7611B88201", columns={"file_extension"}),
- *        @ORM\Index(name="IDX_D8698A76FE73E9A2", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="IDX_D8698A761F75BD29", columns={"transport_manager_id"}),
  *        @ORM\Index(name="IDX_D8698A7626EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_D8698A763E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_D8698A76DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_D8698A7635382CCB", columns={"operating_centre_id"}),
  *        @ORM\Index(name="IDX_D8698A7665CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_D8698A76DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_D8698A7612469DE2", columns={"category_id"})
  *    }
  * )

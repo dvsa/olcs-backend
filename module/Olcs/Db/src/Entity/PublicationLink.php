@@ -17,14 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="publication_link",
  *    indexes={
  *        @ORM\Index(name="IDX_3D54183CB654A69B", columns={"publication_section_id"}),
- *        @ORM\Index(name="IDX_3D54183C49705ADE", columns={"tm_pi_hearing_id"}),
  *        @ORM\Index(name="IDX_3D54183CE0DEB379", columns={"pi_id"}),
+ *        @ORM\Index(name="IDX_3D54183C49705ADE", columns={"tm_pi_hearing_id"}),
  *        @ORM\Index(name="IDX_3D54183C38B217A7", columns={"publication_id"}),
- *        @ORM\Index(name="IDX_3D54183CDE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_3D54183C65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_3D54183CDE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_3D54183C5327B2E3", columns={"bus_reg_id"}),
- *        @ORM\Index(name="IDX_3D54183C3E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_3D54183C26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_3D54183C3E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_3D54183C18E0B1DB", columns={"traffic_area_id"})
  *    }
  * )

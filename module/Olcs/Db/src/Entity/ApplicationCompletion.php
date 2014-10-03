@@ -14,16 +14,16 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application_completion",
  *    indexes={
- *        @ORM\Index(name="IDX_4F55069265CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_4F550692DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_4F550692DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_4F55069265CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
 class ApplicationCompletion implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

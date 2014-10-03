@@ -16,16 +16,16 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_964964B5CF63AA2F", columns={"waive_reason_id"}),
  *        @ORM\Index(name="IDX_964964B5D557506A", columns={"waive_approver_user_id"}),
- *        @ORM\Index(name="IDX_964964B51F9832D8", columns={"waive_recommender_user_id"}),
  *        @ORM\Index(name="IDX_964964B5E4566D0C", columns={"parent_fee_id"}),
  *        @ORM\Index(name="IDX_964964B526FA54CF", columns={"fee_type_id"}),
+ *        @ORM\Index(name="IDX_964964B51F9832D8", columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="IDX_964964B58DB60186", columns={"task_id"}),
  *        @ORM\Index(name="IDX_964964B5DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_964964B565CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_964964B55B05B235", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="IDX_964964B55327B2E3", columns={"bus_reg_id"}),
  *        @ORM\Index(name="IDX_964964B526EF07C9", columns={"licence_id"}),
- *        @ORM\Index(name="IDX_964964B58DB60186", columns={"task_id"}),
- *        @ORM\Index(name="IDX_964964B53E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="IDX_964964B53E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_964964B55327B2E3", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -38,8 +38,8 @@ class Fee implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\LicenceManyToOneAlt1,
-        Traits\BusRegManyToOneAlt1,
         Traits\ApplicationManyToOneAlt1,
+        Traits\BusRegManyToOneAlt1,
         Traits\ReceivedDateField,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,

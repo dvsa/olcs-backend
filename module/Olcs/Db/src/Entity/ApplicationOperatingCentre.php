@@ -16,11 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application_operating_centre",
  *    indexes={
+ *        @ORM\Index(name="IDX_E08171B0DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_E08171B09E191ED6", columns={"s4_id"}),
  *        @ORM\Index(name="IDX_E08171B065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_E08171B0DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_E08171B035382CCB", columns={"operating_centre_id"}),
- *        @ORM\Index(name="IDX_E08171B03E030ACD", columns={"application_id"})
+ *        @ORM\Index(name="IDX_E08171B03E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_E08171B035382CCB", columns={"operating_centre_id"})
  *    }
  * )
  */
@@ -31,8 +31,8 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\OperatingCentreManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\OperatingCentreManyToOne,
         Traits\SufficientParkingField,
         Traits\AdPlacedField,
         Traits\AdPlacedIn70Field,

@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_type",
  *    indexes={
- *        @ORM\Index(name="IDX_E5C85BD165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_E5C85BD1DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_E5C85BD1324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_E5C85BD165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_E5C85BD161EF9EF4", columns={"licence_type"}),
+ *        @ORM\Index(name="IDX_E5C85BD1324926D6", columns={"goods_or_psv"}),
  *        @ORM\Index(name="IDX_E5C85BD118E0B1DB", columns={"traffic_area_id"})
  *    }
  * )

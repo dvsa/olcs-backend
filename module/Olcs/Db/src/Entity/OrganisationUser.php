@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="organisation_user",
  *    indexes={
  *        @ORM\Index(name="IDX_CFD7D651A76ED395", columns={"user_id"}),
- *        @ORM\Index(name="IDX_CFD7D65165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_CFD7D651DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_CFD7D6519E6B1585", columns={"organisation_id"})
+ *        @ORM\Index(name="IDX_CFD7D6519E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_CFD7D65165CF370E", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="organisation_user_unique", columns={"organisation_id","user_id"})
@@ -29,8 +29,8 @@ class OrganisationUser implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\OrganisationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\AddedDateField,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,

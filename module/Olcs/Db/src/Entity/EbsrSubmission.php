@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
- *        @ORM\Index(name="IDX_D75FA74D43D8A8CA", columns={"ebsr_submission_result_id"}),
  *        @ORM\Index(name="IDX_D75FA74DC33F7837", columns={"document_id"}),
  *        @ORM\Index(name="IDX_D75FA74D479D4E59", columns={"ebsr_submission_type_id"}),
+ *        @ORM\Index(name="IDX_D75FA74D43D8A8CA", columns={"ebsr_submission_result_id"}),
  *        @ORM\Index(name="IDX_D75FA74D2F881E34", columns={"ebsr_submission_status_id"}),
  *        @ORM\Index(name="IDX_D75FA74D5327B2E3", columns={"bus_reg_id"})
  *    }

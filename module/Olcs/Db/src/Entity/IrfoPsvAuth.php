@@ -16,11 +16,11 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_B47786DBF2D54BC1", columns={"irfo_psv_auth_type_id"}),
  *        @ORM\Index(name="IDX_B47786DB48B55060", columns={"journey_frequency"}),
- *        @ORM\Index(name="IDX_B47786DB7B00651C", columns={"status"}),
  *        @ORM\Index(name="IDX_B47786DBE02018B7", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="IDX_B47786DB65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B47786DBDE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_B47786DB9E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_B47786DBDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_B47786DB65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B47786DB7B00651C", columns={"status"})
  *    }
  * )
  */
@@ -29,10 +29,10 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\WithdrawnReasonManyToOne,
-        Traits\OrganisationManyToOneAlt1,
-        Traits\StatusManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OrganisationManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
+        Traits\StatusManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
         Traits\InForceDateField,
