@@ -70,6 +70,42 @@ class DiscSequence implements Interfaces\EntityInterface
     protected $standardInternational;
 
     /**
+     * R prefix
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="r_prefix", length=3, nullable=true)
+     */
+    protected $rPrefix;
+
+    /**
+     * Sn prefix
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="sn_prefix", length=3, nullable=true)
+     */
+    protected $snPrefix;
+
+    /**
+     * Si prefix
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="si_prefix", length=3, nullable=true)
+     */
+    protected $siPrefix;
+
+    /**
+     * Sr prefix
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="sr_prefix", length=3, nullable=true)
+     */
+    protected $srPrefix;
+
+    /**
      * Is self serve
      *
      * @var string
@@ -177,6 +213,98 @@ class DiscSequence implements Interfaces\EntityInterface
     public function getStandardInternational()
     {
         return $this->standardInternational;
+    }
+
+    /**
+     * Set the r prefix
+     *
+     * @param string $rPrefix
+     * @return DiscSequence
+     */
+    public function setRPrefix($rPrefix)
+    {
+        $this->rPrefix = $rPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Get the r prefix
+     *
+     * @return string
+     */
+    public function getRPrefix()
+    {
+        return $this->rPrefix;
+    }
+
+    /**
+     * Set the sn prefix
+     *
+     * @param string $snPrefix
+     * @return DiscSequence
+     */
+    public function setSnPrefix($snPrefix)
+    {
+        $this->snPrefix = $snPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Get the sn prefix
+     *
+     * @return string
+     */
+    public function getSnPrefix()
+    {
+        return $this->snPrefix;
+    }
+
+    /**
+     * Set the si prefix
+     *
+     * @param string $siPrefix
+     * @return DiscSequence
+     */
+    public function setSiPrefix($siPrefix)
+    {
+        $this->siPrefix = $siPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Get the si prefix
+     *
+     * @return string
+     */
+    public function getSiPrefix()
+    {
+        return $this->siPrefix;
+    }
+
+    /**
+     * Set the sr prefix
+     *
+     * @param string $srPrefix
+     * @return DiscSequence
+     */
+    public function setSrPrefix($srPrefix)
+    {
+        $this->srPrefix = $srPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Get the sr prefix
+     *
+     * @return string
+     */
+    public function getSrPrefix()
+    {
+        return $this->srPrefix;
     }
 
     /**
