@@ -16,8 +16,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_851FEE73C1FDC79C", columns={"doc_bookmark_id"}),
  *        @ORM\Index(name="IDX_851FEE735653D501", columns={"doc_template_id"}),
- *        @ORM\Index(name="IDX_851FEE7365CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_851FEE73DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_851FEE73DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_851FEE7365CF370E", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="doc_template_bookmark_unique", columns={"doc_template_id","doc_bookmark_id"})
@@ -28,8 +28,8 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

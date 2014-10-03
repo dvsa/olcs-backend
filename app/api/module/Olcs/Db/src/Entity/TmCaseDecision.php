@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="tm_case_decision",
  *    indexes={
  *        @ORM\Index(name="IDX_34E67EF884ACBE48", columns={"decision"}),
+ *        @ORM\Index(name="IDX_34E67EF8DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_34E67EF8CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_34E67EF865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_34E67EF8DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_34E67EF865CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

@@ -19,11 +19,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="IDX_8D93D649FC6A2D51", columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="IDX_8D93D6497CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_8D93D6491F75BD29", columns={"transport_manager_id"}),
- *        @ORM\Index(name="IDX_8D93D64965CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_8D93D649B0E901C6", columns={"local_authority_id"}),
  *        @ORM\Index(name="IDX_8D93D649DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_8D93D649296CD8AE", columns={"team_id"})
+ *        @ORM\Index(name="IDX_8D93D649B0E901C6", columns={"local_authority_id"}),
+ *        @ORM\Index(name="IDX_8D93D649296CD8AE", columns={"team_id"}),
+ *        @ORM\Index(name="IDX_8D93D64965CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_8D93D6491F75BD29", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -33,9 +33,9 @@ class User implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LocalAuthorityManyToOne,
-        Traits\TransportManagerManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\TeamManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\EmailAddress45Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

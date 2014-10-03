@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="recipient",
  *    indexes={
- *        @ORM\Index(name="IDX_6804FB4965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_6804FB49DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6804FB497CA35EB5", columns={"contact_details_id"})
+ *        @ORM\Index(name="IDX_6804FB497CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_6804FB4965CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,8 +28,8 @@ class Recipient implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

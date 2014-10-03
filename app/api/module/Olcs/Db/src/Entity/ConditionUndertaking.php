@@ -16,16 +16,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="condition_undertaking",
  *    indexes={
+ *        @ORM\Index(name="IDX_41813C5ECF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_41813C5EFEA0059A", columns={"attached_to"}),
+ *        @ORM\Index(name="IDX_41813C5EFF5A82AC", columns={"added_via"}),
  *        @ORM\Index(name="IDX_41813C5EB2EF47D6", columns={"lic_condition_variation_id"}),
  *        @ORM\Index(name="IDX_41813C5E332E6CD3", columns={"approval_user_id"}),
- *        @ORM\Index(name="IDX_41813C5EFEA0059A", columns={"attached_to"}),
  *        @ORM\Index(name="IDX_41813C5E3E2A0208", columns={"condition_type"}),
- *        @ORM\Index(name="IDX_41813C5ECF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_41813C5EFF5A82AC", columns={"added_via"}),
  *        @ORM\Index(name="IDX_41813C5EDE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_41813C5E65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_41813C5E3E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_41813C5E35382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_41813C5E3E030ACD", columns={"application_id"}),
  *        @ORM\Index(name="IDX_41813C5E26EF07C9", columns={"licence_id"})
  *    }
  * )

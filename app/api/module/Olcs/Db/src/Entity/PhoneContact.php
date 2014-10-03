@@ -16,8 +16,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_DC206A0ADA10E407", columns={"phone_contact_type"}),
  *        @ORM\Index(name="IDX_DC206A0A7CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_DC206A0A65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_DC206A0ADE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_DC206A0ADE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_DC206A0A65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class PhoneContact implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

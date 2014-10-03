@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="conviction_category",
  *    indexes={
  *        @ORM\Index(name="IDX_74916A60727ACA70", columns={"parent_id"}),
- *        @ORM\Index(name="IDX_74916A6065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_74916A60DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_74916A60DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_74916A6065CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class ConvictionCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description1024Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

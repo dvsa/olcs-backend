@@ -17,8 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="trading_name",
  *    indexes={
  *        @ORM\Index(name="IDX_18562FA9E6B1585", columns={"organisation_id"}),
- *        @ORM\Index(name="IDX_18562FA65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_18562FADE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_18562FA65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_18562FA26EF07C9", columns={"licence_id"})
  *    }
  * )

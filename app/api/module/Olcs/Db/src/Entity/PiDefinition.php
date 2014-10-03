@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_definition",
  *    indexes={
- *        @ORM\Index(name="IDX_608702D365CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_608702D3DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_608702D365CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_608702D3324926D6", columns={"goods_or_psv"})
  *    }
  * )

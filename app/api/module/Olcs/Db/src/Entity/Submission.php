@@ -16,9 +16,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="IDX_DB055AF31ED83C46", columns={"submission_type"}),
- *        @ORM\Index(name="IDX_DB055AF365CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_DB055AF3DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_DB055AF3CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_DB055AF3CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_DB055AF365CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class Submission implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

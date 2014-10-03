@@ -18,8 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="IDX_B6C70B6B9E6B1585", columns={"organisation_id"}),
  *        @ORM\Index(name="IDX_B6C70B6B217BBB47", columns={"person_id"}),
- *        @ORM\Index(name="IDX_B6C70B6B65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B6C70B6BDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_B6C70B6BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B6C70B6B65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class OrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

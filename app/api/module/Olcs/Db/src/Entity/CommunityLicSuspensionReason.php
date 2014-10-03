@@ -18,8 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="IDX_AAD53DD059BB1592", columns={"reason_id"}),
  *        @ORM\Index(name="IDX_AAD53DD010888A2E", columns={"community_lic_suspension_id"}),
- *        @ORM\Index(name="IDX_AAD53DD065CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_AAD53DD0DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_AAD53DD0DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_AAD53DD065CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

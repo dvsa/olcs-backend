@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="tm_grace_period",
  *    indexes={
  *        @ORM\Index(name="IDX_D68D956811578D11", columns={"assigned_to_user_id"}),
- *        @ORM\Index(name="IDX_D68D956865CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_D68D9568DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_D68D956865CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_D68D956826EF07C9", columns={"licence_id"})
  *    }
  * )

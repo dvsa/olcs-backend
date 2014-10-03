@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="task_note",
  *    indexes={
  *        @ORM\Index(name="IDX_BC0E6E6F8DB60186", columns={"task_id"}),
- *        @ORM\Index(name="IDX_BC0E6E6F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_BC0E6E6FDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_BC0E6E6FDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_BC0E6E6F65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class TaskNote implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

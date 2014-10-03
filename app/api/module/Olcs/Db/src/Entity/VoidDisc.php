@@ -15,10 +15,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="void_disc",
  *    indexes={
  *        @ORM\Index(name="IDX_78988AAA61EF9EF4", columns={"licence_type"}),
- *        @ORM\Index(name="IDX_78988AAA65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_78988AAADE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_78988AAA18E0B1DB", columns={"traffic_area_id"}),
- *        @ORM\Index(name="IDX_78988AAA324926D6", columns={"goods_or_psv"})
+ *        @ORM\Index(name="IDX_78988AAA65CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_78988AAA324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_78988AAA18E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -28,8 +28,8 @@ class VoidDisc implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOne,
         Traits\GoodsOrPsvManyToOne,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -15,13 +15,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="impounding",
  *    indexes={
- *        @ORM\Index(name="IDX_14FDFBD43039A3D1", columns={"pi_venue_id"}),
  *        @ORM\Index(name="IDX_14FDFBD46F5B58DB", columns={"impounding_type"}),
+ *        @ORM\Index(name="IDX_14FDFBD43039A3D1", columns={"pi_venue_id"}),
  *        @ORM\Index(name="IDX_14FDFBD4CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_14FDFBD430BC6DC2", columns={"outcome"}),
+ *        @ORM\Index(name="IDX_14FDFBD4DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_14FDFBD465CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_14FDFBD453BAD7A2", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="IDX_14FDFBD4DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_14FDFBD430BC6DC2", columns={"outcome"}),
+ *        @ORM\Index(name="IDX_14FDFBD453BAD7A2", columns={"presiding_tc_id"})
  *    }
  * )
  */
@@ -30,10 +30,10 @@ class Impounding implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
-        Traits\PresidingTcManyToOneAlt1,
-        Traits\OutcomeManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\OutcomeManyToOne,
+        Traits\PresidingTcManyToOneAlt1,
         Traits\HearingDateField,
         Traits\Notes4000Field,
         Traits\Vrm20Field,

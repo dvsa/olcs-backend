@@ -18,8 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="IDX_C7ACB34F59BB1592", columns={"reason_id"}),
  *        @ORM\Index(name="IDX_C7ACB34F24AA3C9B", columns={"community_lic_withdrawal_id"}),
- *        @ORM\Index(name="IDX_C7ACB34F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_C7ACB34FDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_C7ACB34FDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_C7ACB34F65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

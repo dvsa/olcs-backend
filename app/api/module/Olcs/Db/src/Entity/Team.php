@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="team",
  *    indexes={
  *        @ORM\Index(name="IDX_C4E0A61FF508DBD2", columns={"override_ta_contact_id"}),
- *        @ORM\Index(name="IDX_C4E0A61F65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C4E0A61FDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_C4E0A61F65CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C4E0A61F18E0B1DB", columns={"traffic_area_id"})
  *    }
  * )

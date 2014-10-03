@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="bus_reg_local_auth",
  *    indexes={
  *        @ORM\Index(name="IDX_B1BB6E19B0E901C6", columns={"local_authority_id"}),
- *        @ORM\Index(name="IDX_B1BB6E1965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B1BB6E19DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B1BB6E1965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B1BB6E195327B2E3", columns={"bus_reg_id"})
  *    },
  *    uniqueConstraints={

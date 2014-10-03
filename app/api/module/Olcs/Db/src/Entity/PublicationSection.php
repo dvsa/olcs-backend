@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="publication_section",
  *    indexes={
- *        @ORM\Index(name="IDX_25FAACD365CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_25FAACD3DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_25FAACD3DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_25FAACD365CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class PublicationSection implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

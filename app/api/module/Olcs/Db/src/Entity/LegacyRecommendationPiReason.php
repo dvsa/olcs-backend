@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_recommendation_pi_reason",
  *    indexes={
- *        @ORM\Index(name="IDX_B015BA4B57DCA9BB", columns={"legacy_pi_reason_id"}),
  *        @ORM\Index(name="IDX_B015BA4BDBD63A88", columns={"legacy_recommendation_id"}),
- *        @ORM\Index(name="IDX_B015BA4B65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B015BA4BDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_B015BA4B57DCA9BB", columns={"legacy_pi_reason_id"}),
+ *        @ORM\Index(name="IDX_B015BA4BDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B015BA4B65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

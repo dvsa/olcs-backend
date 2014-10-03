@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="document_sub_category",
  *    indexes={
- *        @ORM\Index(name="IDX_1106D6E965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_1106D6E9DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_1106D6E965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_1106D6E912469DE2", columns={"category_id"})
  *    }
  * )

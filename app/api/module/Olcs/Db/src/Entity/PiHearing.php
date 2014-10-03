@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_hearing",
  *    indexes={
- *        @ORM\Index(name="IDX_83AFD387819C2303", columns={"presided_by_role"}),
  *        @ORM\Index(name="IDX_83AFD387E0DEB379", columns={"pi_id"}),
- *        @ORM\Index(name="IDX_83AFD38765CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_83AFD387819C2303", columns={"presided_by_role"}),
  *        @ORM\Index(name="IDX_83AFD387DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_83AFD38765CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_83AFD38753BAD7A2", columns={"presiding_tc_id"})
  *    }
  * )

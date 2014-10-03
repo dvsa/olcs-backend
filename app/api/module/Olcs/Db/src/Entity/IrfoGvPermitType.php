@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="irfo_gv_permit_type",
  *    indexes={
  *        @ORM\Index(name="IDX_62ED0AACEDADAF9D", columns={"irfo_country_id"}),
- *        @ORM\Index(name="IDX_62ED0AAC65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_62ED0AACDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_62ED0AACDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_62ED0AAC65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Description100Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="country",
  *    indexes={
- *        @ORM\Index(name="IDX_5373C96665CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5373C966DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_5373C966DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_5373C96665CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -23,8 +23,8 @@ class Country implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Id8Identity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

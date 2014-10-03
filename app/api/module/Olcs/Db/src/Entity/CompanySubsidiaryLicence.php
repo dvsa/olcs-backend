@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="company_subsidiary_licence",
  *    indexes={
  *        @ORM\Index(name="IDX_A4097CA1A8859FDF", columns={"company_subsidiary_id"}),
- *        @ORM\Index(name="IDX_A4097CA165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_A4097CA1DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_A4097CA165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_A4097CA126EF07C9", columns={"licence_id"})
  *    },
  *    uniqueConstraints={

@@ -15,11 +15,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="IDX_C0DB5176A421D5D6", columns={"contact_type"}),
- *        @ORM\Index(name="IDX_C0DB517658B606A3", columns={"requestors_address_id"}),
  *        @ORM\Index(name="IDX_C0DB51769EFE5705", columns={"statement_type"}),
- *        @ORM\Index(name="IDX_C0DB517665CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_C0DB517658B606A3", columns={"requestors_address_id"}),
+ *        @ORM\Index(name="IDX_C0DB5176CF10D4F5", columns={"case_id"}),
  *        @ORM\Index(name="IDX_C0DB5176DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C0DB5176CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_C0DB517665CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -27,9 +27,9 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\IssuedDateField,
         Traits\CustomCreatedOnField,

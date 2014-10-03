@@ -14,17 +14,17 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_request",
  *    indexes={
- *        @ORM\Index(name="IDX_93C29C8D1CE54C67", columns={"result_type"}),
- *        @ORM\Index(name="IDX_93C29C8DAD5A61E3", columns={"requestor_user_id"}),
  *        @ORM\Index(name="IDX_93C29C8DF37970D3", columns={"request_type"}),
  *        @ORM\Index(name="IDX_93C29C8DFFF2BAD2", columns={"report_type"}),
- *        @ORM\Index(name="IDX_93C29C8DDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_93C29C8D65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_93C29C8D3E030ACD", columns={"application_id"}),
- *        @ORM\Index(name="IDX_93C29C8D35382CCB", columns={"operating_centre_id"}),
- *        @ORM\Index(name="IDX_93C29C8D8DB60186", columns={"task_id"}),
+ *        @ORM\Index(name="IDX_93C29C8DAD5A61E3", columns={"requestor_user_id"}),
+ *        @ORM\Index(name="IDX_93C29C8D1CE54C67", columns={"result_type"}),
  *        @ORM\Index(name="IDX_93C29C8DCF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_93C29C8D26EF07C9", columns={"licence_id"})
+ *        @ORM\Index(name="IDX_93C29C8DDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_93C29C8D8DB60186", columns={"task_id"}),
+ *        @ORM\Index(name="IDX_93C29C8D26EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_93C29C8D35382CCB", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="IDX_93C29C8D3E030ACD", columns={"application_id"}),
+ *        @ORM\Index(name="IDX_93C29C8D65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -35,10 +35,10 @@ class InspectionRequest implements Interfaces\EntityInterface
         Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TaskManyToOne,
+        Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\ApplicationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

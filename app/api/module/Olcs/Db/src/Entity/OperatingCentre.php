@@ -16,8 +16,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="operating_centre",
  *    indexes={
  *        @ORM\Index(name="IDX_B3145C7FF5B7AF75", columns={"address_id"}),
- *        @ORM\Index(name="IDX_B3145C7F65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_B3145C7FDE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_B3145C7FDE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B3145C7F65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class OperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

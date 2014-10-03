@@ -16,10 +16,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="organisation",
  *    indexes={
  *        @ORM\Index(name="IDX_E6E132B4FD3895E1", columns={"lead_tc_area_id"}),
- *        @ORM\Index(name="IDX_E6E132B43BA18A46", columns={"sic_code"}),
  *        @ORM\Index(name="IDX_E6E132B48CDE5729", columns={"type"}),
- *        @ORM\Index(name="IDX_E6E132B465CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_E6E132B43BA18A46", columns={"sic_code"}),
  *        @ORM\Index(name="IDX_E6E132B4DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_E6E132B465CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="organisation_name_idx", columns={"name"})
  *    }
  * )
@@ -28,8 +28,8 @@ class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\ViAction1Field,
         Traits\IsIrfoField,
         Traits\CustomLastModifiedOnField,

@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcode_enforcement_area",
  *    indexes={
- *        @ORM\Index(name="IDX_B5D9462565CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B5D94625DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_B5D9462565CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B5D946256522907", columns={"enforcement_area_id"})
  *    },
  *    uniqueConstraints={

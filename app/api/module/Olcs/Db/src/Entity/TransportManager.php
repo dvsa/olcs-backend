@@ -19,9 +19,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="IDX_6EF3E54826F8E7ED", columns={"tm_type"}),
  *        @ORM\Index(name="IDX_6EF3E5481FF76EFC", columns={"tm_status"}),
- *        @ORM\Index(name="IDX_6EF3E54865CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_6EF3E548DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6EF3E5487CA35EB5", columns={"contact_details_id"})
+ *        @ORM\Index(name="IDX_6EF3E5487CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_6EF3E54865CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -30,8 +30,8 @@ class TransportManager implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\Notes4000Field,
         Traits\CustomCreatedOnField,

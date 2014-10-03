@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="publication",
  *    indexes={
  *        @ORM\Index(name="IDX_AF3C677922669153", columns={"pub_status"}),
- *        @ORM\Index(name="IDX_AF3C677965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_AF3C6779DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_AF3C677965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_AF3C677918E0B1DB", columns={"traffic_area_id"})
  *    }
  * )

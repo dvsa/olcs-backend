@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="prohibition",
  *    indexes={
  *        @ORM\Index(name="IDX_C3C90DC9B93D5C07", columns={"prohibition_type"}),
- *        @ORM\Index(name="IDX_C3C90DC965CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_C3C90DC9DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_C3C90DC9CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_C3C90DC9CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_C3C90DC965CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,8 +26,8 @@ class Prohibition implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

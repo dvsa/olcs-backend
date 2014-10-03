@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="irfo_permit_stock",
  *    indexes={
  *        @ORM\Index(name="IDX_EA1B20B1EDADAF9D", columns={"irfo_country_id"}),
- *        @ORM\Index(name="IDX_EA1B20B165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_EA1B20B1DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_EA1B20B17B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_EA1B20B165CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_EA1B20B15B05B235", columns={"irfo_gv_permit_id"})
  *    }
  * )

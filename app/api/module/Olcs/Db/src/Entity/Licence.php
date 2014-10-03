@@ -15,15 +15,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence",
  *    indexes={
- *        @ORM\Index(name="IDX_1DAAE648DBE65552", columns={"tachograph_ins"}),
  *        @ORM\Index(name="IDX_1DAAE6489E6B1585", columns={"organisation_id"}),
+ *        @ORM\Index(name="IDX_1DAAE648DBE65552", columns={"tachograph_ins"}),
  *        @ORM\Index(name="IDX_1DAAE6486522907", columns={"enforcement_area_id"}),
- *        @ORM\Index(name="IDX_1DAAE64861EF9EF4", columns={"licence_type"}),
+ *        @ORM\Index(name="IDX_1DAAE648DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_1DAAE6487B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_1DAAE648324926D6", columns={"goods_or_psv"}),
  *        @ORM\Index(name="IDX_1DAAE64865CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_1DAAE64818E0B1DB", columns={"traffic_area_id"}),
- *        @ORM\Index(name="IDX_1DAAE648DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_1DAAE648324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_1DAAE64861EF9EF4", columns={"licence_type"}),
+ *        @ORM\Index(name="IDX_1DAAE64818E0B1DB", columns={"traffic_area_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
@@ -34,12 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\StatusManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LicenceTypeManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\LicNo18Field,
         Traits\ViAction1Field,
         Traits\ExpiryDateField,

@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="irfo_vehicle",
  *    indexes={
  *        @ORM\Index(name="IDX_3DA99B145B05B235", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="IDX_3DA99B1465CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_3DA99B14DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_3DA99B1465CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_3DA99B144425C407", columns={"irfo_psv_auth_id"})
  *    }
  * )

@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disc_sequence",
  *    indexes={
- *        @ORM\Index(name="IDX_B39AADB765CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_B39AADB7DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_B39AADB718E0B1DB", columns={"traffic_area_id"}),
- *        @ORM\Index(name="IDX_B39AADB7324926D6", columns={"goods_or_psv"})
+ *        @ORM\Index(name="IDX_B39AADB765CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_B39AADB7324926D6", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="IDX_B39AADB718E0B1DB", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class DiscSequence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

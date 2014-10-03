@@ -15,8 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="irfo_transit_country",
  *    indexes={
  *        @ORM\Index(name="IDX_FE3794FA4425C407", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="IDX_FE3794FA65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_FE3794FADE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_FE3794FADE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_FE3794FA65CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,8 +24,8 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

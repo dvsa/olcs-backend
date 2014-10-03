@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="penalty",
  *    indexes={
- *        @ORM\Index(name="IDX_AFE28FD865CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_AFE28FD8DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_AFE28FD8CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="IDX_AFE28FD8CF10D4F5", columns={"case_id"}),
+ *        @ORM\Index(name="IDX_AFE28FD865CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class Penalty implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

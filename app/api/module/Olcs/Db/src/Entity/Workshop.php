@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="workshop",
  *    indexes={
  *        @ORM\Index(name="IDX_9B6F02C426EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_9B6F02C4DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_9B6F02C47CA35EB5", columns={"contact_details_id"}),
- *        @ORM\Index(name="IDX_9B6F02C465CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_9B6F02C4DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_9B6F02C465CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,9 +25,9 @@ class Workshop implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
         Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

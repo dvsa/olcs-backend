@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="opposer",
  *    indexes={
  *        @ORM\Index(name="IDX_8111B0D2C025DC", columns={"opposer_type"}),
- *        @ORM\Index(name="IDX_8111B0D265CF370E", columns={"last_modified_by"}),
  *        @ORM\Index(name="IDX_8111B0D2DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_8111B0D27CA35EB5", columns={"contact_details_id"})
+ *        @ORM\Index(name="IDX_8111B0D27CA35EB5", columns={"contact_details_id"}),
+ *        @ORM\Index(name="IDX_8111B0D265CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,8 +26,8 @@ class Opposer implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

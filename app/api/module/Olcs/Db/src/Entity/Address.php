@@ -17,8 +17,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_D4E6F81F78DBF88", columns={"admin_area"}),
  *        @ORM\Index(name="IDX_D4E6F81F026BB7C", columns={"country_code"}),
- *        @ORM\Index(name="IDX_D4E6F8165CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_D4E6F81DE12AB56", columns={"created_by"})
+ *        @ORM\Index(name="IDX_D4E6F81DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_D4E6F8165CF370E", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,8 +26,8 @@ class Address implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

@@ -17,11 +17,11 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="IDX_A45BDDC15727D560", columns={"interim_status"}),
  *        @ORM\Index(name="IDX_A45BDDC126EF07C9", columns={"licence_id"}),
+ *        @ORM\Index(name="IDX_A45BDDC1DE12AB56", columns={"created_by"}),
  *        @ORM\Index(name="IDX_A45BDDC1E02018B7", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="IDX_A45BDDC17B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_A45BDDC161EF9EF4", columns={"licence_type"}),
- *        @ORM\Index(name="IDX_A45BDDC1DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_A45BDDC165CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_A45BDDC165CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_A45BDDC161EF9EF4", columns={"licence_type"})
  *    }
  * )
  */
@@ -32,8 +32,8 @@ class Application implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\LicenceTypeManyToOne,
         Traits\ReceivedDateField,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
