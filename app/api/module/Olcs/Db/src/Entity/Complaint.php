@@ -17,8 +17,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
  *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
  *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"}),
- *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"})
  *    }
  * )
  */

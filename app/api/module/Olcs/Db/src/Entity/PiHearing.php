@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_hearing",
  *    indexes={
- *        @ORM\Index(name="IDX_83AFD387E0DEB379", columns={"pi_id"}),
- *        @ORM\Index(name="IDX_83AFD387819C2303", columns={"presided_by_role"}),
- *        @ORM\Index(name="IDX_83AFD387DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_83AFD38765CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_83AFD38753BAD7A2", columns={"presiding_tc_id"})
+ *        @ORM\Index(name="fk_pi_reschedule_dates_pi_detail1_idx", columns={"pi_id"}),
+ *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_reschedule_date_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by_role"})
  *    }
  * )
  */
@@ -26,23 +26,13 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\PresidingTcManyToOneAlt1,
+        Traits\CreatedByManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pi
-     *
-     * @var \Olcs\Db\Entity\Pi
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
-     */
-    protected $pi;
 
     /**
      * Presided by role
@@ -53,6 +43,16 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
      */
     protected $presidedByRole;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pi;
 
     /**
      * Presiding tc other
@@ -71,29 +71,6 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="venue", length=255, nullable=true)
      */
     protected $venue;
-
-    /**
-     * Set the pi
-     *
-     * @param \Olcs\Db\Entity\Pi $pi
-     * @return PiHearing
-     */
-    public function setPi($pi)
-    {
-        $this->pi = $pi;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi
-     *
-     * @return \Olcs\Db\Entity\Pi
-     */
-    public function getPi()
-    {
-        return $this->pi;
-    }
 
     /**
      * Set the presided by role
@@ -116,6 +93,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidedByRole()
     {
         return $this->presidedByRole;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PiHearing
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
     }
 
     /**

@@ -16,8 +16,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal_reason_type",
  *    indexes={
- *        @ORM\Index(name="IDX_5046EC53DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5046EC5365CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_community_lic_withdrawal_reason_type_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_community_lic_withdrawal_reason_type_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,8 +25,8 @@ class CommunityLicWithdrawalReasonType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\Description255FieldAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

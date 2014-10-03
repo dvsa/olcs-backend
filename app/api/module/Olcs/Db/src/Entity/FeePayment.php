@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_payment",
  *    indexes={
- *        @ORM\Index(name="IDX_8E9E5C514C3A3BB", columns={"payment_id"}),
- *        @ORM\Index(name="IDX_8E9E5C51DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_8E9E5C51AB45AECA", columns={"fee_id"}),
- *        @ORM\Index(name="IDX_8E9E5C5165CF370E", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_fee_has_payment_payment1_idx", columns={"payment_id"}),
+ *        @ORM\Index(name="fk_fee_has_payment_fee1_idx", columns={"fee_id"}),
+ *        @ORM\Index(name="fk_fee_payment_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_fee_payment_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="fee_payment_unique", columns={"fee_id","payment_id"})
@@ -28,9 +28,9 @@ class FeePayment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\FeeManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

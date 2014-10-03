@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="s4_condition",
  *    indexes={
- *        @ORM\Index(name="IDX_A372ECDD9E191ED6", columns={"s4_id"}),
- *        @ORM\Index(name="IDX_A372ECDD682540E7", columns={"target_condition_id"}),
- *        @ORM\Index(name="IDX_A372ECDD5E9D4F0E", columns={"source_condition_id"})
+ *        @ORM\Index(name="fk_s4_condition_Condition1_idx", columns={"source_condition_id"}),
+ *        @ORM\Index(name="fk_s4_condition_Condition2_idx", columns={"target_condition_id"}),
+ *        @ORM\Index(name="fk_s4_condition_s41_idx", columns={"s4_id"})
  *    }
  * )
  */

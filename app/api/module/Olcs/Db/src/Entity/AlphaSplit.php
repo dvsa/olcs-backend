@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="alpha_split",
  *    indexes={
- *        @ORM\Index(name="IDX_6565F44EDE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_6565F44EA76ED395", columns={"user_id"}),
- *        @ORM\Index(name="IDX_6565F44E65CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_6565F44E18E0B1DB", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_alpha_split_user1_idx", columns={"user_id"}),
+ *        @ORM\Index(name="fk_alpha_split_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_alpha_split_user2_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_alpha_split_user3_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,10 +25,10 @@ class AlphaSplit implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\UserManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOne,
+        Traits\UserManyToOne,
         Traits\IsDeletedField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
