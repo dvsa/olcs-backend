@@ -26,10 +26,10 @@ class PsvDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\RemovalExplanationManyToOne,
+        Traits\RemovalReasonManyToOne,
         Traits\LicenceManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
