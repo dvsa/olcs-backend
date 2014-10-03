@@ -352,15 +352,23 @@ abstract class ServiceAbstract
      */
     private function doUpdate($id, $data)
     {
-        if (!isset($data['version'])) {
+        // @NOTE if force is true, we should be able to force the update without a version number
+        //  This should only be used in exception circumstances
+        $force = (isset($data['_OPTIONS_']['force']) && $data['_OPTIONS_']['force']);
+
+        if (!$force && !isset($data['version'])) {
             throw new NoVersionException('A version number must be specified to update an entity');
         }
 
         $data = $this->processAddressEntity($data);
 
-        $entity = $this->getEntityManager()->find(
-            $this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']
-        );
+        if ($force) {
+            $entity = $this->getEntityManager()->find($this->getEntityName(), (int) $id);
+        } else {
+            $entity = $this->getEntityManager()->find(
+                $this->getEntityName(), (int) $id, LockMode::OPTIMISTIC, $data['version']
+            );
+        }
 
         if (empty($entity)) {
             return false;
@@ -372,7 +380,9 @@ abstract class ServiceAbstract
 
         $entity = $hydrator->hydrate($data, $entity);
 
-        $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
+        if (!$force) {
+            $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $data['version']);
+        }
 
         $this->dbPersist($entity);
         $this->dbFlush();

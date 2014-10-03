@@ -29,27 +29,17 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
+        Traits\CaseManyToOneAlt1,
+        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\OutcomeManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\HearingDateField,
         Traits\Notes4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Impounding type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
-     */
-    protected $impoundingType;
 
     /**
      * Pi venue
@@ -60,6 +50,16 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
      */
     protected $piVenue;
+
+    /**
+     * Impounding type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
+     */
+    protected $impoundingType;
 
     /**
      * Impounding legislation type
@@ -123,29 +123,6 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the impounding type
-     *
-     * @param \Olcs\Db\Entity\RefData $impoundingType
-     * @return Impounding
-     */
-    public function setImpoundingType($impoundingType)
-    {
-        $this->impoundingType = $impoundingType;
-
-        return $this;
-    }
-
-    /**
-     * Get the impounding type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getImpoundingType()
-    {
-        return $this->impoundingType;
-    }
-
-    /**
      * Set the pi venue
      *
      * @param \Olcs\Db\Entity\PiVenue $piVenue
@@ -166,6 +143,29 @@ class Impounding implements Interfaces\EntityInterface
     public function getPiVenue()
     {
         return $this->piVenue;
+    }
+
+    /**
+     * Set the impounding type
+     *
+     * @param \Olcs\Db\Entity\RefData $impoundingType
+     * @return Impounding
+     */
+    public function setImpoundingType($impoundingType)
+    {
+        $this->impoundingType = $impoundingType;
+
+        return $this;
+    }
+
+    /**
+     * Get the impounding type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getImpoundingType()
+    {
+        return $this->impoundingType;
     }
 
     /**
