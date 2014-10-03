@@ -90,6 +90,33 @@ class User implements Interfaces\EntityInterface
     protected $accountDisabled = 0;
 
     /**
+     * Job title
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="job_title", length=100, nullable=true)
+     */
+    protected $jobTitle;
+
+    /**
+     * Division group
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
+     */
+    protected $divisionGroup;
+
+    /**
+     * Department name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="department_name", length=100, nullable=true)
+     */
+    protected $departmentName;
+
+    /**
      * Organisation user
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -219,6 +246,75 @@ class User implements Interfaces\EntityInterface
     public function getAccountDisabled()
     {
         return $this->accountDisabled;
+    }
+
+    /**
+     * Set the job title
+     *
+     * @param string $jobTitle
+     * @return User
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    /**
+     * Get the job title
+     *
+     * @return string
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * Set the division group
+     *
+     * @param string $divisionGroup
+     * @return User
+     */
+    public function setDivisionGroup($divisionGroup)
+    {
+        $this->divisionGroup = $divisionGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get the division group
+     *
+     * @return string
+     */
+    public function getDivisionGroup()
+    {
+        return $this->divisionGroup;
+    }
+
+    /**
+     * Set the department name
+     *
+     * @param string $departmentName
+     * @return User
+     */
+    public function setDepartmentName($departmentName)
+    {
+        $this->departmentName = $departmentName;
+
+        return $this;
+    }
+
+    /**
+     * Get the department name
+     *
+     * @return string
+     */
+    public function getDepartmentName()
+    {
+        return $this->departmentName;
     }
 
     /**
