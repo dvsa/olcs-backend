@@ -58,6 +58,15 @@ class GoodsDisc implements Interfaces\EntityInterface
     protected $isCopy = 0;
 
     /**
+     * Is printing
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_printing", nullable=false)
+     */
+    protected $isPrinting = 0;
+
+    /**
      * Reprint required
      *
      * @var string
@@ -110,6 +119,29 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the is printing
+     *
+     * @param string $isPrinting
+     * @return GoodsDisc
+     */
+    public function setIsPrinting($isPrinting)
+    {
+        $this->isPrinting = $isPrinting;
+
+        return $this;
+    }
+
+    /**
+     * Get the is printing
+     *
+     * @return string
+     */
+    public function getIsPrinting()
+    {
+        return $this->isPrinting;
     }
 
     /**
