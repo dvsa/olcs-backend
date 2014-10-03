@@ -470,6 +470,15 @@ return array(
         ),
         'reprint_required' => array(
             'type' => 'yesnonull'
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'psvDisc',
+                'orderBy' => array(
+                    'discNo' => 'ASC'
+                )
+            )
         )
     ),
     'organisation_person' => array(
