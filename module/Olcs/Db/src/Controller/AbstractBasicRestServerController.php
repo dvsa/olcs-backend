@@ -50,12 +50,29 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
-
             return $data;
         }
 
         try {
-            $id = $this->getService()->create($data);
+
+            $multiple = (isset($data['_OPTIONS_']['multiple']) && $data['_OPTIONS_']['multiple']);
+
+            if ($multiple) {
+                $postData = $data;
+                unset($postData['_OPTIONS_']);
+            } else {
+                $postData = array($data);
+            }
+
+            $id = array();
+
+            foreach ($postData as $data) {
+                $id[] = $this->getService()->create($data);
+            }
+
+            if (!$multiple) {
+                $id = $id[0];
+            }
 
             if ((is_numeric($id) && $id > 0) || is_array($id)) {
 
@@ -169,7 +186,29 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         }
 
         try {
-            if ($this->getService()->$method($id, $data)) {
+
+            $success = true;
+
+            $multiple = (isset($data['_OPTIONS_']['multiple']) && $data['_OPTIONS_']['multiple']);
+
+            if ($multiple) {
+                $postData = $data;
+                unset($postData['_OPTIONS_']);
+
+                foreach ($postData as $data) {
+                    $id = $data['id'];
+                    unset($data['id']);
+                    $response = $this->getService()->$method($id, $data);
+
+                    if (!$response) {
+                        $success = false;
+                    }
+                }
+            } else {
+                $success = $this->getService()->$method($id, $data);
+            }
+
+            if ($success) {
 
                 return $this->respond(Response::STATUS_CODE_200, 'Entity updated');
             }

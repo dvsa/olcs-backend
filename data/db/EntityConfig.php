@@ -445,6 +445,9 @@ return array(
         'is_interim' => array(
             'type' => 'yesno'
         ),
+        'is_printing' => array(
+            'type' => 'yesno'
+        ),
         'requested_by_self_service_user' => array(
             'type' => 'yesno'
         ),
@@ -467,6 +470,15 @@ return array(
         ),
         'reprint_required' => array(
             'type' => 'yesnonull'
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'psvDisc',
+                'orderBy' => array(
+                    'discNo' => 'ASC'
+                )
+            )
         )
     ),
     'organisation_person' => array(
