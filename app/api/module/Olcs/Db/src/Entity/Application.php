@@ -67,6 +67,15 @@ class Application implements Interfaces\EntityInterface
     protected $licence;
 
     /**
+     * Is variation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_variation", nullable=false)
+     */
+    protected $isVariation;
+
+    /**
      * Has entered reg
      *
      * @var string
@@ -433,6 +442,29 @@ class Application implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the is variation
+     *
+     * @param boolean $isVariation
+     * @return Application
+     */
+    public function setIsVariation($isVariation)
+    {
+        $this->isVariation = $isVariation;
+
+        return $this;
+    }
+
+    /**
+     * Get the is variation
+     *
+     * @return boolean
+     */
+    public function getIsVariation()
+    {
+        return $this->isVariation;
     }
 
     /**

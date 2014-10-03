@@ -30,7 +30,6 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
@@ -38,6 +37,16 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="psvDiscs")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Is copy
@@ -56,6 +65,29 @@ class PsvDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=true)
      */
     protected $reprintRequired;
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return PsvDisc
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
 
     /**
      * Set the is copy

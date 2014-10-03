@@ -13,8 +13,10 @@ class RefData extends EntityRepository
     public function findAllByCategoryAndLanguage($category, $language)
     {
         $qb = $this->createQueryBuilder('r');
+        $qb->select(['r', 'p']);
         $qb->where('r.refDataCategoryId = ?0');
         $qb->orderBy('r.displayOrder');
+        $qb->leftJoin('r.parent', 'p');
 
         $qb->setParameters([$category]);
 
