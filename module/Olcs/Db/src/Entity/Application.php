@@ -382,6 +382,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
+     * Application completion
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationCompletion", mappedBy="application")
+     */
+    protected $applicationCompletions;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -395,6 +404,7 @@ class Application implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->applicationCompletions = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -1247,6 +1257,72 @@ class Application implements Interfaces\EntityInterface
     public function getInterimAuthTrailers()
     {
         return $this->interimAuthTrailers;
+    }
+
+    /**
+     * Set the application completion
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function setApplicationCompletions($applicationCompletions)
+    {
+        $this->applicationCompletions = $applicationCompletions;
+
+        return $this;
+    }
+
+    /**
+     * Get the application completions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationCompletions()
+    {
+        return $this->applicationCompletions;
+    }
+
+    /**
+     * Add a application completions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function addApplicationCompletions($applicationCompletions)
+    {
+        if ($applicationCompletions instanceof ArrayCollection) {
+            $this->applicationCompletions = new ArrayCollection(
+                array_merge(
+                    $this->applicationCompletions->toArray(),
+                    $applicationCompletions->toArray()
+                )
+            );
+        } elseif (!$this->applicationCompletions->contains($applicationCompletions)) {
+            $this->applicationCompletions->add($applicationCompletions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application completions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function removeApplicationCompletions($applicationCompletions)
+    {
+        if ($this->applicationCompletions->contains($applicationCompletions)) {
+            $this->applicationCompletions->removeElement($applicationCompletions);
+        }
+
+        return $this;
     }
 
     /**
