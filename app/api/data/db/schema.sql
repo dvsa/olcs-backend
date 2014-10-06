@@ -2804,12 +2804,13 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `costs` VARCHAR(255) NULL COMMENT 'New olcs field?',
   `msi` TINYINT(1) NULL,
   `is_dealt_with` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_declared` TINYINT(1) NOT NULL DEFAULT 0,
   `operator_name` VARCHAR(70) NULL,
   `birth_date` DATE NULL,
   `notes` VARCHAR(4000) NULL,
   `taken_into_consideration` VARCHAR(4000) NULL,
   `category_text` VARCHAR(1024) NULL COMMENT 'user entered category for non act',
-  `conviction_category_id` INT NOT NULL,
+  `conviction_category` VARCHAR(32) NULL,
   `person_id` INT NULL,
   `organisation_id` INT NULL,
   `transport_manager_id` INT NULL,
@@ -2822,7 +2823,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_conviction_conviction_category1_idx` (`conviction_category_id` ASC),
+  INDEX `fk_conviction_conviction_category1_idx` (`conviction_category` ASC),
   INDEX `fk_conviction_person1_idx` (`person_id` ASC),
   INDEX `fk_conviction_organisation1_idx` (`organisation_id` ASC),
   INDEX `fk_conviction_transport_manager1_idx` (`transport_manager_id` ASC),
@@ -2831,8 +2832,8 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   INDEX `fk_conviction_operator_case1_idx` (`case_id` ASC),
   INDEX `fk_conviction_ref_data1_idx` (`defendant_type` ASC),
   CONSTRAINT `fk_conviction_conviction_category1`
-    FOREIGN KEY (`conviction_category_id`)
-    REFERENCES `conviction_category` (`id`)
+    FOREIGN KEY (`conviction_category`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_person1`

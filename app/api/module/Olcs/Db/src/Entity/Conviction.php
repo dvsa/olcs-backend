@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="conviction",
  *    indexes={
- *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category_id"}),
+ *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category"}),
  *        @ORM\Index(name="fk_conviction_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_conviction_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_conviction_transport_manager1_idx", columns={"transport_manager_id"}),
@@ -64,10 +64,10 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Conviction category
      *
-     * @var \Olcs\Db\Entity\ConvictionCategory
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="conviction_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="conviction_category", referencedColumnName="id", nullable=true)
      */
     protected $convictionCategory;
 
@@ -124,6 +124,15 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
      */
     protected $isDealtWith = 0;
+
+    /**
+     * Is declared
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_declared", nullable=false)
+     */
+    protected $isDeclared = 0;
 
     /**
      * Operator name
@@ -219,7 +228,7 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Set the conviction category
      *
-     * @param \Olcs\Db\Entity\ConvictionCategory $convictionCategory
+     * @param \Olcs\Db\Entity\RefData $convictionCategory
      * @return Conviction
      */
     public function setConvictionCategory($convictionCategory)
@@ -232,7 +241,7 @@ class Conviction implements Interfaces\EntityInterface
     /**
      * Get the conviction category
      *
-     * @return \Olcs\Db\Entity\ConvictionCategory
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getConvictionCategory()
     {
@@ -375,6 +384,29 @@ class Conviction implements Interfaces\EntityInterface
     public function getIsDealtWith()
     {
         return $this->isDealtWith;
+    }
+
+    /**
+     * Set the is declared
+     *
+     * @param string $isDeclared
+     * @return Conviction
+     */
+    public function setIsDeclared($isDeclared)
+    {
+        $this->isDeclared = $isDeclared;
+
+        return $this;
+    }
+
+    /**
+     * Get the is declared
+     *
+     * @return string
+     */
+    public function getIsDeclared()
+    {
+        return $this->isDeclared;
     }
 
     /**
