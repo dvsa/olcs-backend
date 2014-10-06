@@ -1689,14 +1689,6 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
     (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
 
-INSERT INTO `submission` (`id`, `last_modified_by`, `created_by`, `case_id`, `text`, `closed_date`, `created_on`, `last_modified_on`, `version`)
-VALUES
-	(2, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:36', NULL, 1),
-	(5, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:47', NULL, 1),
-	(7, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:49', NULL, 1),
-	(8, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:52', NULL, 1),
-	(9, NULL, NULL, 24, NULL, NULL, '2014-09-08 14:55:59', NULL, 1);
-
 INSERT INTO `pi_definition`
 (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
