@@ -630,6 +630,22 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
 ;
 
+-- Now the conviction categories
+
+INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
+VALUES
+    ('conv_p_cat_1', NULL, 'Conviction Parent Category 1', 'conv_category', NULL, NULL),
+    ('conv_p_cat_2', NULL, 'Conviction Parent Category 2', 'conv_category', NULL, NULL),
+    ('conv_c_cat_1', 'conv_p_cat_1', 'Conviction Chid Category 1', 'conv_category', NULL, NULL),
+    ('conv_c_cat_2', 'conv_p_cat_1', 'Conviction Chid Category 2', 'conv_category', NULL, NULL),
+    ('conv_c_cat_3', 'conv_p_cat_1', 'Conviction Chid Category 3', 'conv_category', NULL, NULL),
+    ('conv_c_cat_4', 'conv_p_cat_1', 'Conviction Chid Category 4', 'conv_category', NULL, NULL),
+    ('conv_c_cat_5', 'conv_p_cat_2', 'Conviction Chid Category 1', 'conv_category', NULL, NULL),
+    ('conv_c_cat_6', 'conv_p_cat_2', 'Conviction Chid Category 2', 'conv_category', NULL, NULL),
+    ('conv_c_cat_7', 'conv_p_cat_2', 'Conviction Chid Category 3', 'conv_category', NULL, NULL),
+    ('conv_c_cat_8', 'conv_p_cat_2', 'Conviction Chid Category 4', 'conv_category', NULL, NULL);
+
+
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
     (2,'Compliance',1,1,NULL,NULL,NULL,NULL,1),
