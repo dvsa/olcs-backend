@@ -319,23 +319,15 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
-    (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NOW(),NULL,1,0),
     (2,110,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,1,0),
-    (6,114,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0);
 
-INSERT INTO `application_completion` (`id`, `created_by`, `last_modified_by`, `section_tol_status`,
-    `section_tol_ol_status`, `section_tol_ot_status`, `section_tol_lt_status`, `section_yb_status`,
-    `section_yb_bt_status`, `section_yb_bd_status`, `section_yb_add_status`, `section_yb_peo_status`,
-    `section_tp_status`, `section_tp_lic_status`, `section_ocs_status`, `section_ocs_auth_status`,
-    `section_ocs_fe_status`, `section_tms_status`, `section_veh_status`, `section_veh_v_status`,
-    `section_veh_vpsv_status`, `section_veh_s_status`, `section_ph_status`, `section_ph_fh_status`,
-    `section_ph_lh_status`, `section_ph_cp_status`, `section_rd_status`, `section_pay_status`, `section_pay_pay_status`,
-    `section_pay_summary_status`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
-(1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
+(1,NULL,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
