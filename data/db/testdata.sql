@@ -16,6 +16,7 @@ TRUNCATE TABLE `complaint_oc_licence`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
+TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `document`;
 TRUNCATE TABLE `doc_template`;
