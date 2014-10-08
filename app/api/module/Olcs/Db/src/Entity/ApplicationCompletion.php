@@ -52,6 +52,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $typeOfLicenceStatus;
 
     /**
+     * Business type status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="business_type_status", nullable=true)
+     */
+    protected $businessTypeStatus;
+
+    /**
      * Business details status
      *
      * @var int
@@ -257,6 +266,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getTypeOfLicenceStatus()
     {
         return $this->typeOfLicenceStatus;
+    }
+
+    /**
+     * Set the business type status
+     *
+     * @param int $businessTypeStatus
+     * @return ApplicationCompletion
+     */
+    public function setBusinessTypeStatus($businessTypeStatus)
+    {
+        $this->businessTypeStatus = $businessTypeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the business type status
+     *
+     * @return int
+     */
+    public function getBusinessTypeStatus()
+    {
+        return $this->businessTypeStatus;
     }
 
     /**
