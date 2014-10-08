@@ -511,7 +511,7 @@ INSERT INTO `licence` (
     `ni_flag`, `licence_type`, `in_force_date`, `review_date`, `surrendered_date`, `fabs_reference`,
     `tot_auth_trailers`, `tot_auth_vehicles`, `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',1,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,
+    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
