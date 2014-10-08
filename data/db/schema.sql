@@ -3316,6 +3316,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `application_id` INT NOT NULL,
   `type_of_licence_status` INT NULL,
+  `business_type_status` INT NULL,
   `business_details_status` INT NULL,
   `addresses_status` INT NULL,
   `people_status` INT NULL,
