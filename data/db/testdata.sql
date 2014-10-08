@@ -16,6 +16,7 @@ TRUNCATE TABLE `complaint_oc_licence`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
+TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `document`;
 TRUNCATE TABLE `doc_template`;
@@ -339,7 +340,7 @@ INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_b
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
+(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
@@ -659,46 +660,46 @@ INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by
     `version`, `name`, `address_id`) VALUES
     (1,'B',NULL,NULL,NULL,NULL,1,'venue_1',21),
     (2,'B',NULL,NULL,NULL,NULL,1,'venue_2',22),
-    (3,0,NULL,NULL,NULL,NULL,1,'venue_3',23),
-    (4,0,NULL,NULL,NULL,NULL,1,'venue_4',24),
-    (5,0,NULL,NULL,NULL,NULL,1,'venue_5',25),
-    (6,0,NULL,NULL,NULL,NULL,1,'venue_6',26),
-    (7,0,NULL,NULL,NULL,NULL,1,'venue_7',27),
-    (8,0,NULL,NULL,NULL,NULL,1,'venue_8',28),
-    (9,0,NULL,NULL,NULL,NULL,1,'venue_9',29),
-    (10,0,NULL,NULL,NULL,NULL,1,'venue_10',30),
-    (11,0,NULL,NULL,NULL,NULL,1,'venue_11',31),
-    (12,0,NULL,NULL,NULL,NULL,1,'venue_12',32),
-    (13,0,NULL,NULL,NULL,NULL,1,'venue_13',33),
-    (14,0,NULL,NULL,NULL,NULL,1,'venue_14',34),
-    (15,0,NULL,NULL,NULL,NULL,1,'venue_15',35),
-    (16,0,NULL,NULL,NULL,NULL,1,'venue_16',36),
-    (17,0,NULL,NULL,NULL,NULL,1,'venue_17',37),
-    (18,0,NULL,NULL,NULL,NULL,1,'venue_18',38),
-    (19,0,NULL,NULL,NULL,NULL,1,'venue_19',39),
-    (20,0,NULL,NULL,NULL,NULL,1,'venue_20',40),
-    (21,0,NULL,NULL,NULL,NULL,1,'venue_21',41),
-    (22,0,NULL,NULL,NULL,NULL,1,'venue_22',42),
-    (23,0,NULL,NULL,NULL,NULL,1,'venue_23',43),
-    (24,0,NULL,NULL,NULL,NULL,1,'venue_24',44),
-    (25,0,NULL,NULL,NULL,NULL,1,'venue_25',45),
-    (26,0,NULL,NULL,NULL,NULL,1,'venue_26',46),
-    (27,0,NULL,NULL,NULL,NULL,1,'venue_27',47),
-    (28,0,NULL,NULL,NULL,NULL,1,'venue_28',48),
-    (29,0,NULL,NULL,NULL,NULL,1,'venue_29',49),
-    (32,0,NULL,NULL,NULL,NULL,1,'venue_32',52),
-    (33,0,NULL,NULL,NULL,NULL,1,'venue_33',53),
-    (34,0,NULL,NULL,NULL,NULL,1,'venue_34',54),
-    (35,0,NULL,NULL,NULL,NULL,1,'venue_35',55),
-    (36,0,NULL,NULL,NULL,NULL,1,'venue_36',56),
-    (37,0,NULL,NULL,NULL,NULL,1,'venue_37',57),
-    (38,0,NULL,NULL,NULL,NULL,1,'venue_38',58),
-    (39,0,NULL,NULL,NULL,NULL,1,'venue_39',59),
-    (40,0,NULL,NULL,NULL,NULL,1,'venue_40',60),
-    (41,0,NULL,NULL,NULL,NULL,1,'venue_41',61),
-    (42,0,NULL,NULL,NULL,NULL,1,'venue_42',62),
-    (43,0,NULL,NULL,NULL,NULL,1,'venue_43',63),
-    (44,0,NULL,NULL,NULL,NULL,1,'venue_44',64);
+    (3,'B',NULL,NULL,NULL,NULL,1,'venue_3',23),
+    (4,'B',NULL,NULL,NULL,NULL,1,'venue_4',24),
+    (5,'B',NULL,NULL,NULL,NULL,1,'venue_5',25),
+    (6,'C',NULL,NULL,NULL,NULL,1,'venue_6',26),
+    (7,'C',NULL,NULL,NULL,NULL,1,'venue_7',27),
+    (8,'C',NULL,NULL,NULL,NULL,1,'venue_8',28),
+    (9,'C',NULL,NULL,NULL,NULL,1,'venue_9',29),
+    (10,'C',NULL,NULL,NULL,NULL,1,'venue_10',30),
+    (11,'C',NULL,NULL,NULL,NULL,1,'venue_11',31),
+    (12,'D',NULL,NULL,NULL,NULL,1,'venue_12',32),
+    (13,'D',NULL,NULL,NULL,NULL,1,'venue_13',33),
+    (14,'D',NULL,NULL,NULL,NULL,1,'venue_14',34),
+    (15,'D',NULL,NULL,NULL,NULL,1,'venue_15',35),
+    (16,'D',NULL,NULL,NULL,NULL,1,'venue_16',36),
+    (17,'F',NULL,NULL,NULL,NULL,1,'venue_17',37),
+    (18,'F',NULL,NULL,NULL,NULL,1,'venue_18',38),
+    (19,'F',NULL,NULL,NULL,NULL,1,'venue_19',39),
+    (20,'F',NULL,NULL,NULL,NULL,1,'venue_20',40),
+    (21,'F',NULL,NULL,NULL,NULL,1,'venue_21',41),
+    (22,'F',NULL,NULL,NULL,NULL,1,'venue_22',42),
+    (23,'G',NULL,NULL,NULL,NULL,1,'venue_23',43),
+    (24,'G',NULL,NULL,NULL,NULL,1,'venue_24',44),
+    (25,'G',NULL,NULL,NULL,NULL,1,'venue_25',45),
+    (26,'G',NULL,NULL,NULL,NULL,1,'venue_26',46),
+    (27,'G',NULL,NULL,NULL,NULL,1,'venue_27',47),
+    (28,'G',NULL,NULL,NULL,NULL,1,'venue_28',48),
+    (29,'H',NULL,NULL,NULL,NULL,1,'venue_29',49),
+    (32,'H',NULL,NULL,NULL,NULL,1,'venue_32',52),
+    (33,'H',NULL,NULL,NULL,NULL,1,'venue_33',53),
+    (34,'H',NULL,NULL,NULL,NULL,1,'venue_34',54),
+    (35,'K',NULL,NULL,NULL,NULL,1,'venue_35',55),
+    (36,'K',NULL,NULL,NULL,NULL,1,'venue_36',56),
+    (37,'K',NULL,NULL,NULL,NULL,1,'venue_37',57),
+    (38,'M',NULL,NULL,NULL,NULL,1,'venue_38',58),
+    (39,'M',NULL,NULL,NULL,NULL,1,'venue_39',59),
+    (40,'M',NULL,NULL,NULL,NULL,1,'venue_40',60),
+    (41,'N',NULL,NULL,NULL,NULL,1,'venue_41',61),
+    (42,'N',NULL,NULL,NULL,NULL,1,'venue_42',62),
+    (43,'N',NULL,NULL,NULL,NULL,1,'venue_43',63),
+    (44,'N',NULL,NULL,NULL,NULL,1,'venue_44',64);
 
 INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
