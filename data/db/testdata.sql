@@ -348,7 +348,7 @@ INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_b
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
+(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
