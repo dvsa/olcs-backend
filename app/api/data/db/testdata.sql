@@ -28,6 +28,7 @@ TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
+TRUNCATE TABLE `licence_operating_centre`;
 TRUNCATE TABLE `legacy_case_offence`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
@@ -330,10 +331,15 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
 (1,NULL,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
-    `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
+INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
+    `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,1,16);
+
+INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
+    `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
+    `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
+(1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
