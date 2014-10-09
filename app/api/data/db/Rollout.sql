@@ -2205,7 +2205,7 @@ CREATE VIEW vehicle_history_view AS
         v.vrm,
         l.lic_no,
         vl.specified_date,
-        vl.deleted_date,
+        vl.removal_date,
         d.disc_no,
         d.issued_date,
         d.ceased_date

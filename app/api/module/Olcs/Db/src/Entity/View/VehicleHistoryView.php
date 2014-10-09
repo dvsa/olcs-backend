@@ -62,13 +62,13 @@ class VehicleHistoryView implements Interfaces\EntityInterface
     protected $specifiedDate;
 
     /**
-     * Deleted date
+     * Removal date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="deleted_date")
+     * @ORM\Column(type="datetime", name="removal_date")
      */
-    protected $deletedDate;
+    protected $removalDate;
 
     /**
      * Issued date
@@ -87,6 +87,17 @@ class VehicleHistoryView implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="ceased_date")
      */
     protected $ceasedDate;
+
+    /**
+     * Disc No
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="disc_no", length=20, nullable=true)
+     */
+    protected $discNo;
+
+
 
     /**
      * Get the id
@@ -113,9 +124,9 @@ class VehicleHistoryView implements Interfaces\EntityInterface
      *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getRemovalDate()
     {
-        return $this->deletedDate;
+        return $this->removalDate;
     }
 
     /**
