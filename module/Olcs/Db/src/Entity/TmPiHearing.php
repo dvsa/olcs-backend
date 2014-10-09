@@ -37,6 +37,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\AgreedDateField,
+        Traits\CancelledDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -89,15 +90,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="adjourned_date", nullable=true)
      */
     protected $adjournedDate;
-
-    /**
-     * Cancelled date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="cancelled_date", nullable=true)
-     */
-    protected $cancelledDate;
 
     /**
      * Scheduled on
@@ -230,29 +222,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getAdjournedDate()
     {
         return $this->adjournedDate;
-    }
-
-    /**
-     * Set the cancelled date
-     *
-     * @param \DateTime $cancelledDate
-     * @return TmPiHearing
-     */
-    public function setCancelledDate($cancelledDate)
-    {
-        $this->cancelledDate = $cancelledDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the cancelled date
-     *
-     * @return \DateTime
-     */
-    public function getCancelledDate()
-    {
-        return $this->cancelledDate;
     }
 
     /**
