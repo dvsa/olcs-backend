@@ -2200,6 +2200,8 @@ DROP VIEW IF EXISTS vehicle_history_view;
 
 CREATE VIEW vehicle_history_view AS
     SELECT
+        d.id,
+        v.id as vehicle_id,
         v.vrm,
         l.lic_no,
         vl.specified_date,
