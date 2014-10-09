@@ -772,6 +772,14 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'pi_hearing' => array(
+        'is_cancelled' => array(
+            'type' => 'yesno'
+        ),
+        'is_adjourned' => array(
+            'type' => 'yesno'
+        )
+    ),
     'legacy_case_action' => array(
         'is_driver' => array(
             'type' => 'yesno'
