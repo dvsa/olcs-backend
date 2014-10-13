@@ -1944,6 +1944,7 @@ CREATE TABLE IF NOT EXISTS `licence_vehicle` (
   `removal_reason` VARCHAR(32) NULL,
   `removal` TINYINT(1) NULL,
   `removal_letter_seed_date` DATETIME NULL,
+  `removal_date` DATETIME NULL,
   `is_interim` INT NULL,
   `vi_action` VARCHAR(1) NULL,
   `warning_letter_seed_date` DATETIME NULL,
