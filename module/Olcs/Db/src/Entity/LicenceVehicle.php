@@ -81,6 +81,15 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $removalLetterSeedDate;
 
     /**
+     * Removal date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="removal_date", nullable=true)
+     */
+    protected $removalDate;
+
+    /**
      * Is interim
      *
      * @var int
