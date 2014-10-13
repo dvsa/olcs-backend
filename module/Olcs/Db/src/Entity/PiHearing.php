@@ -33,7 +33,11 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
+        Traits\WitnessesField,
+        Traits\IsCancelledField,
         Traits\CancelledDateField,
+        Traits\IsAdjournedField,
+        Traits\AdjournedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -68,15 +72,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $presidingTcOther;
 
     /**
-     * Is cancelled
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_cancelled", nullable=false)
-     */
-    protected $isCancelled = 0;
-
-    /**
      * Cancelled reason
      *
      * @var string
@@ -86,31 +81,13 @@ class PiHearing implements Interfaces\EntityInterface
     protected $cancelledReason;
 
     /**
-     * Is ajourned
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_ajourned", nullable=false)
-     */
-    protected $isAjourned = 0;
-
-    /**
-     * Ajourned reason
+     * Adjourned reason
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="ajourned_reason", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="adjourned_reason", length=4000, nullable=true)
      */
-    protected $ajournedReason;
-
-    /**
-     * Ajourned date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="ajourned_date", nullable=true)
-     */
-    protected $ajournedDate;
+    protected $adjournedReason;
 
     /**
      * Details
@@ -191,29 +168,6 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is cancelled
-     *
-     * @param boolean $isCancelled
-     * @return PiHearing
-     */
-    public function setIsCancelled($isCancelled)
-    {
-        $this->isCancelled = $isCancelled;
-
-        return $this;
-    }
-
-    /**
-     * Get the is cancelled
-     *
-     * @return boolean
-     */
-    public function getIsCancelled()
-    {
-        return $this->isCancelled;
-    }
-
-    /**
      * Set the cancelled reason
      *
      * @param string $cancelledReason
@@ -237,72 +191,26 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is ajourned
+     * Set the adjourned reason
      *
-     * @param boolean $isAjourned
+     * @param string $adjournedReason
      * @return PiHearing
      */
-    public function setIsAjourned($isAjourned)
+    public function setAdjournedReason($adjournedReason)
     {
-        $this->isAjourned = $isAjourned;
+        $this->adjournedReason = $adjournedReason;
 
         return $this;
     }
 
     /**
-     * Get the is ajourned
-     *
-     * @return boolean
-     */
-    public function getIsAjourned()
-    {
-        return $this->isAjourned;
-    }
-
-    /**
-     * Set the ajourned reason
-     *
-     * @param string $ajournedReason
-     * @return PiHearing
-     */
-    public function setAjournedReason($ajournedReason)
-    {
-        $this->ajournedReason = $ajournedReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the ajourned reason
+     * Get the adjourned reason
      *
      * @return string
      */
-    public function getAjournedReason()
+    public function getAdjournedReason()
     {
-        return $this->ajournedReason;
-    }
-
-    /**
-     * Set the ajourned date
-     *
-     * @param \DateTime $ajournedDate
-     * @return PiHearing
-     */
-    public function setAjournedDate($ajournedDate)
-    {
-        $this->ajournedDate = $ajournedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the ajourned date
-     *
-     * @return \DateTime
-     */
-    public function getAjournedDate()
-    {
-        return $this->ajournedDate;
+        return $this->adjournedReason;
     }
 
     /**
