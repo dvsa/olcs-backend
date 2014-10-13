@@ -18,7 +18,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_pi_reschedule_date_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by_role"})
+ *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by_role"}),
+ *        @ORM\Index(name="fk_pi_hearing_pi_venue1_idx", columns={"pi_venue_id"})
  *    }
  * )
  */
@@ -26,10 +27,17 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\PiVenueManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
+        Traits\PiVenueOther255Field,
+        Traits\WitnessesField,
+        Traits\IsCancelledField,
+        Traits\CancelledDateField,
+        Traits\IsAdjournedField,
+        Traits\AdjournedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -64,13 +72,31 @@ class PiHearing implements Interfaces\EntityInterface
     protected $presidingTcOther;
 
     /**
-     * Venue
+     * Cancelled reason
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="venue", length=255, nullable=true)
+     * @ORM\Column(type="string", name="cancelled_reason", length=4000, nullable=true)
      */
-    protected $venue;
+    protected $cancelledReason;
+
+    /**
+     * Adjourned reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="adjourned_reason", length=4000, nullable=true)
+     */
+    protected $adjournedReason;
+
+    /**
+     * Details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="details", length=4000, nullable=true)
+     */
+    protected $details;
 
     /**
      * Set the presided by role
@@ -142,25 +168,71 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the venue
+     * Set the cancelled reason
      *
-     * @param string $venue
+     * @param string $cancelledReason
      * @return PiHearing
      */
-    public function setVenue($venue)
+    public function setCancelledReason($cancelledReason)
     {
-        $this->venue = $venue;
+        $this->cancelledReason = $cancelledReason;
 
         return $this;
     }
 
     /**
-     * Get the venue
+     * Get the cancelled reason
      *
      * @return string
      */
-    public function getVenue()
+    public function getCancelledReason()
     {
-        return $this->venue;
+        return $this->cancelledReason;
+    }
+
+    /**
+     * Set the adjourned reason
+     *
+     * @param string $adjournedReason
+     * @return PiHearing
+     */
+    public function setAdjournedReason($adjournedReason)
+    {
+        $this->adjournedReason = $adjournedReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the adjourned reason
+     *
+     * @return string
+     */
+    public function getAdjournedReason()
+    {
+        return $this->adjournedReason;
+    }
+
+    /**
+     * Set the details
+     *
+     * @param string $details
+     * @return PiHearing
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    /**
+     * Get the details
+     *
+     * @return string
+     */
+    public function getDetails()
+    {
+        return $this->details;
     }
 }

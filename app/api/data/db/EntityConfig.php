@@ -1028,6 +1028,12 @@ return array(
                 'entity' => 'Pi',
                 'property' => 'piHearing'
             )
+        ),
+        'is_cancelled' => array(
+            'type' => 'yesno'
+        ),
+        'is_adjourned' => array(
+            'type' => 'yesno'
         )
     ),
     'pi_reason' => array(

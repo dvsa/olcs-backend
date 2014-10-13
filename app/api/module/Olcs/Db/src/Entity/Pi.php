@@ -38,6 +38,8 @@ class Pi implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\AgreedDateField,
+        Traits\IsCancelledField,
+        Traits\IsAdjournedField,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\Comment4000Field,
@@ -174,24 +176,6 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="witnesses", nullable=true)
      */
     protected $witnesses;
-
-    /**
-     * Is cancelled
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
-     */
-    protected $isCancelled = 0;
-
-    /**
-     * Is adjourned
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
-     */
-    protected $isAdjourned = 0;
 
     /**
      * Section code text
@@ -710,52 +694,6 @@ class Pi implements Interfaces\EntityInterface
     public function getWitnesses()
     {
         return $this->witnesses;
-    }
-
-    /**
-     * Set the is cancelled
-     *
-     * @param string $isCancelled
-     * @return Pi
-     */
-    public function setIsCancelled($isCancelled)
-    {
-        $this->isCancelled = $isCancelled;
-
-        return $this;
-    }
-
-    /**
-     * Get the is cancelled
-     *
-     * @return string
-     */
-    public function getIsCancelled()
-    {
-        return $this->isCancelled;
-    }
-
-    /**
-     * Set the is adjourned
-     *
-     * @param string $isAdjourned
-     * @return Pi
-     */
-    public function setIsAdjourned($isAdjourned)
-    {
-        $this->isAdjourned = $isAdjourned;
-
-        return $this;
-    }
-
-    /**
-     * Get the is adjourned
-     *
-     * @return string
-     */
-    public function getIsAdjourned()
-    {
-        return $this->isAdjourned;
     }
 
     /**

@@ -30,26 +30,18 @@ class Impounding implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CaseManyToOneAlt1,
+        Traits\PiVenueManyToOne,
         Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
         Traits\CreatedByManyToOne,
         Traits\HearingDateField,
         Traits\Notes4000Field,
+        Traits\PiVenueOther255Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pi venue
-     *
-     * @var \Olcs\Db\Entity\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
-     */
-    protected $piVenue;
 
     /**
      * Impounding type
@@ -106,43 +98,11 @@ class Impounding implements Interfaces\EntityInterface
     protected $closeDate;
 
     /**
-     * Pi venue other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="pi_venue_other", length=255, nullable=true)
-     */
-    protected $piVenueOther;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->impoundingLegislationTypes = new ArrayCollection();
-    }
-
-    /**
-     * Set the pi venue
-     *
-     * @param \Olcs\Db\Entity\PiVenue $piVenue
-     * @return Impounding
-     */
-    public function setPiVenue($piVenue)
-    {
-        $this->piVenue = $piVenue;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue
-     *
-     * @return \Olcs\Db\Entity\PiVenue
-     */
-    public function getPiVenue()
-    {
-        return $this->piVenue;
     }
 
     /**
@@ -301,28 +261,5 @@ class Impounding implements Interfaces\EntityInterface
     public function getCloseDate()
     {
         return $this->closeDate;
-    }
-
-    /**
-     * Set the pi venue other
-     *
-     * @param string $piVenueOther
-     * @return Impounding
-     */
-    public function setPiVenueOther($piVenueOther)
-    {
-        $this->piVenueOther = $piVenueOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue other
-     *
-     * @return string
-     */
-    public function getPiVenueOther()
-    {
-        return $this->piVenueOther;
     }
 }
