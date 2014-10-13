@@ -36,7 +36,10 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\VenueManyToOne,
         Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
+        Traits\WitnessesField,
+        Traits\AdjournedDateField,
         Traits\AgreedDateField,
+        Traits\CancelledDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -71,33 +74,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
     protected $reason;
-
-    /**
-     * Witnesses
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="witnesses", nullable=false)
-     */
-    protected $witnesses = 0;
-
-    /**
-     * Adjourned date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="adjourned_date", nullable=true)
-     */
-    protected $adjournedDate;
-
-    /**
-     * Cancelled date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="cancelled_date", nullable=true)
-     */
-    protected $cancelledDate;
 
     /**
      * Scheduled on
@@ -184,75 +160,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getReason()
     {
         return $this->reason;
-    }
-
-    /**
-     * Set the witnesses
-     *
-     * @param int $witnesses
-     * @return TmPiHearing
-     */
-    public function setWitnesses($witnesses)
-    {
-        $this->witnesses = $witnesses;
-
-        return $this;
-    }
-
-    /**
-     * Get the witnesses
-     *
-     * @return int
-     */
-    public function getWitnesses()
-    {
-        return $this->witnesses;
-    }
-
-    /**
-     * Set the adjourned date
-     *
-     * @param \DateTime $adjournedDate
-     * @return TmPiHearing
-     */
-    public function setAdjournedDate($adjournedDate)
-    {
-        $this->adjournedDate = $adjournedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the adjourned date
-     *
-     * @return \DateTime
-     */
-    public function getAdjournedDate()
-    {
-        return $this->adjournedDate;
-    }
-
-    /**
-     * Set the cancelled date
-     *
-     * @param \DateTime $cancelledDate
-     * @return TmPiHearing
-     */
-    public function setCancelledDate($cancelledDate)
-    {
-        $this->cancelledDate = $cancelledDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the cancelled date
-     *
-     * @return \DateTime
-     */
-    public function getCancelledDate()
-    {
-        return $this->cancelledDate;
     }
 
     /**
