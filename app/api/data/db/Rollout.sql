@@ -2195,3 +2195,23 @@ CREATE VIEW document_search_view AS
     LEFT JOIN cases c ON d.case_id = c.id
 
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id;
+
+DROP TABLE IF EXISTS vehicle_history_view;
+DROP VIEW IF EXISTS vehicle_history_view;
+
+CREATE VIEW vehicle_history_view AS
+    SELECT
+        d.id,
+        v.id as vehicle_id,
+        v.vrm,
+        l.lic_no,
+        vl.specified_date,
+        vl.removal_date,
+        d.disc_no,
+        d.issued_date,
+        d.ceased_date
+    from
+        vehicle v
+    inner join licence_vehicle vl on vl.vehicle_id = v.id
+    left outer join goods_disc d on vl.id = d.licence_vehicle_id
+    inner join licence l on vl.licence_id = l.id;
