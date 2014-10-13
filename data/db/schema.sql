@@ -4036,7 +4036,16 @@ CREATE TABLE IF NOT EXISTS `pi_hearing` (
   `presiding_tc_id` INT NULL,
   `presiding_tc_other` VARCHAR(45) NULL,
   `presided_by_role` VARCHAR(32) NULL,
-  `venue` VARCHAR(255) NULL,
+  `pi_venue_id` INT NULL,
+  `pi_venue_other` VARCHAR(255) NULL,
+  `witnesses` INT NOT NULL DEFAULT 0,
+  `is_cancelled` TINYINT(1) NOT NULL DEFAULT 0,
+  `cancelled_reason` VARCHAR(4000) NULL,
+  `cancelled_date` DATE NULL,
+  `is_adjourned` TINYINT(1) NOT NULL DEFAULT 0,
+  `adjourned_reason` VARCHAR(4000) NULL,
+  `adjourned_date` DATE NULL,
+  `details` VARCHAR(4000) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -4048,6 +4057,7 @@ CREATE TABLE IF NOT EXISTS `pi_hearing` (
   INDEX `fk_pi_reschedule_date_user1_idx` (`created_by` ASC),
   INDEX `fk_pi_reschedule_date_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_pi_hearing_ref_data1_idx` (`presided_by_role` ASC),
+  INDEX `fk_pi_hearing_pi_venue1_idx` (`pi_venue_id` ASC),
   CONSTRAINT `fk_pi_reschedule_dates_pi_detail1`
     FOREIGN KEY (`pi_id`)
     REFERENCES `pi` (`id`)
@@ -4071,6 +4081,11 @@ CREATE TABLE IF NOT EXISTS `pi_hearing` (
   CONSTRAINT `fk_pi_hearing_ref_data1`
     FOREIGN KEY (`presided_by_role`)
     REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_hearing_pi_venue1`
+    FOREIGN KEY (`pi_venue_id`)
+    REFERENCES `pi_venue` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
