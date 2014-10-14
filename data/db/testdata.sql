@@ -324,13 +324,14 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
     (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-25 10:06:53',NULL,
     NULL,NOW(),NULL,1,0),
-    (2,110,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,1,0),
+    (2,110,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    NULL,1,1),
     (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0);
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
-(1,NULL,NULL,NULL,NULL,NULL,1);
+(1,NULL,NULL,NULL,NULL,NULL,1),
+(2,NULL,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -516,7 +517,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
-    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
+    (110,1,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
     (114,104,'B',NULL,NULL,'lcat_psv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
