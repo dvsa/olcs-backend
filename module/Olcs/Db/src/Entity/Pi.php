@@ -286,13 +286,13 @@ class Pi implements Interfaces\EntityInterface
     protected $writtenReasonLetterDate;
 
     /**
-     * Decision letter sent after written decision date
+     * Dec sent after written dec date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="decision_letter_sent_after_written_decision_date", nullable=true)
+     * @ORM\Column(type="date", name="dec_sent_after_written_dec_date", nullable=true)
      */
-    protected $decisionLetterSentAfterWrittenDecisionDate;
+    protected $decSentAfterWrittenDecDate;
 
     /**
      * Pi hearing
@@ -973,26 +973,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the decision letter sent after written decision date
+     * Set the dec sent after written dec date
      *
-     * @param \DateTime $input
+     * @param \DateTime $decSentAfterWrittenDecDate
      * @return Pi
      */
-    public function setDecisionLetterSentAfterWrittenDecisionDate($input)
+    public function setDecSentAfterWrittenDecDate($decSentAfterWrittenDecDate)
     {
-        $this->decisionLetterSentAfterWrittenDecisionDate = $input;
+        $this->decSentAfterWrittenDecDate = $decSentAfterWrittenDecDate;
 
         return $this;
     }
 
     /**
-     * Get the decision letter sent after written decision date
+     * Get the dec sent after written dec date
      *
      * @return \DateTime
      */
-    public function getDecisionLetterSentAfterWrittenDecisionDate()
+    public function getDecSentAfterWrittenDecDate()
     {
-        return $this->decisionLetterSentAfterWrittenDecisionDate;
+        return $this->decSentAfterWrittenDecDate;
     }
 
     /**
