@@ -1186,6 +1186,26 @@ CREATE TABLE IF NOT EXISTS `cases` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `cases_category`
+-- -----------------------------------------------------
+CREATE TABLE `case_category` (
+  `case_id` INT(11) NOT NULL,
+  `category_id` VARCHAR(32) NOT NULL,
+  INDEX `fk_case_category_cases1_idx` (`case_id` ASC),
+  INDEX `fk_case_category_ref_data1_idx` (`category_id` ASC),
+  PRIMARY KEY (`case_id`, `category_id`),
+  CONSTRAINT `fk_case_category_cases1`
+    FOREIGN KEY (`case_id`)
+    REFERENCES `olcs`.`cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_case_category_ref_data1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `olcs`.`ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `opposer`
