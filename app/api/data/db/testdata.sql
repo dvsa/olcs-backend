@@ -537,7 +537,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
     (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,'lcat_psv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
     (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
