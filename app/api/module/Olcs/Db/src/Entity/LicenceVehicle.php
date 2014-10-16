@@ -227,6 +227,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the removal date
+     *
+     * @param \DateTime $removalDate
+     * @return LicenceVehicle
+     */
+    public function setRemovalDate($removalDate)
+    {
+        $this->removalDate = $removalDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the removal date
+     *
+     * @return \DateTime
+     */
+    public function getRemovalDate()
+    {
+        return $this->removalDate;
+    }
+
+    /**
      * Set the is interim
      *
      * @param int $isInterim
