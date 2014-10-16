@@ -28,12 +28,13 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\WithdrawnReasonManyToOne,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
         Traits\InForceDateField,
+        Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -66,15 +67,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_fee_exempt", nullable=false)
      */
     protected $isFeeExempt = 0;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=true)
-     */
-    protected $irfoFeeId;
 
     /**
      * No of copies
@@ -179,29 +171,6 @@ class IrfoGvPermit implements Interfaces\EntityInterface
     public function getIsFeeExempt()
     {
         return $this->isFeeExempt;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return IrfoGvPermit
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
     }
 
     /**

@@ -32,6 +32,9 @@ class Conviction implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\PersonManyToOne,
+        Traits\OrganisationManyToOne,
+        Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
         Traits\CustomCreatedOnField,
@@ -57,26 +60,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=true)
      */
     protected $defendantType;
-
-    /**
-     * Person
-     *
-     * @var \Olcs\Db\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
-     */
-    protected $person;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $organisation;
 
     /**
      * Conviction category
@@ -114,15 +97,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="court", length=70, nullable=true)
      */
     protected $court;
-
-    /**
-     * Penalty
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="penalty", length=255, nullable=true)
-     */
-    protected $penalty;
 
     /**
      * Costs
@@ -252,52 +226,6 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the person
-     *
-     * @param \Olcs\Db\Entity\Person $person
-     * @return Conviction
-     */
-    public function setPerson($person)
-    {
-        $this->person = $person;
-
-        return $this;
-    }
-
-    /**
-     * Get the person
-     *
-     * @return \Olcs\Db\Entity\Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return Conviction
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * Set the conviction category
      *
      * @param \Olcs\Db\Entity\RefData $convictionCategory
@@ -387,29 +315,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getCourt()
     {
         return $this->court;
-    }
-
-    /**
-     * Set the penalty
-     *
-     * @param string $penalty
-     * @return Conviction
-     */
-    public function setPenalty($penalty)
-    {
-        $this->penalty = $penalty;
-
-        return $this;
-    }
-
-    /**
-     * Get the penalty
-     *
-     * @return string
-     */
-    public function getPenalty()
-    {
-        return $this->penalty;
     }
 
     /**

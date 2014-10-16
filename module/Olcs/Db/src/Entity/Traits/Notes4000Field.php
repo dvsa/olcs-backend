@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Notes4000 field trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 7 entities)
  */
 trait Notes4000Field
 {

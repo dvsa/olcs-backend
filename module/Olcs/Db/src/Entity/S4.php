@@ -29,6 +29,7 @@ class S4 implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
         Traits\ApplicationManyToOneAlt1,
+        Traits\ReceivedDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,15 +42,6 @@ class S4 implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="agreed_date", nullable=true)
      */
     protected $agreedDate;
-
-    /**
-     * Received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="received_date", nullable=false)
-     */
-    protected $receivedDate;
 
     /**
      * Outcome
@@ -99,29 +91,6 @@ class S4 implements Interfaces\EntityInterface
     public function getAgreedDate()
     {
         return $this->agreedDate;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $receivedDate
-     * @return S4
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @return \DateTime
-     */
-    public function getReceivedDate()
-    {
-        return $this->receivedDate;
     }
 
     /**

@@ -3223,7 +3223,7 @@ CREATE TABLE IF NOT EXISTS `submission_section_comments` (
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `submission`

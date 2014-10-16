@@ -31,9 +31,12 @@ class Note implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
+        Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\IrfoPsvAuthManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CaseManyToOne,
+        Traits\IrfoGvPermitManyToOne,
         Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -48,36 +51,6 @@ class Note implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="note_type", referencedColumnName="id", nullable=false)
      */
     protected $noteType;
-
-    /**
-     * Bus reg
-     *
-     * @var \Olcs\Db\Entity\BusReg
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
-     */
-    protected $busReg;
-
-    /**
-     * Irfo psv auth
-     *
-     * @var \Olcs\Db\Entity\IrfoPsvAuth
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoPsvAuth;
-
-    /**
-     * Irfo gv permit
-     *
-     * @var \Olcs\Db\Entity\IrfoGvPermit
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoGvPermit;
 
     /**
      * Comment
@@ -118,75 +91,6 @@ class Note implements Interfaces\EntityInterface
     public function getNoteType()
     {
         return $this->noteType;
-    }
-
-    /**
-     * Set the bus reg
-     *
-     * @param \Olcs\Db\Entity\BusReg $busReg
-     * @return Note
-     */
-    public function setBusReg($busReg)
-    {
-        $this->busReg = $busReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus reg
-     *
-     * @return \Olcs\Db\Entity\BusReg
-     */
-    public function getBusReg()
-    {
-        return $this->busReg;
-    }
-
-    /**
-     * Set the irfo psv auth
-     *
-     * @param \Olcs\Db\Entity\IrfoPsvAuth $irfoPsvAuth
-     * @return Note
-     */
-    public function setIrfoPsvAuth($irfoPsvAuth)
-    {
-        $this->irfoPsvAuth = $irfoPsvAuth;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo psv auth
-     *
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
-     */
-    public function getIrfoPsvAuth()
-    {
-        return $this->irfoPsvAuth;
-    }
-
-    /**
-     * Set the irfo gv permit
-     *
-     * @param \Olcs\Db\Entity\IrfoGvPermit $irfoGvPermit
-     * @return Note
-     */
-    public function setIrfoGvPermit($irfoGvPermit)
-    {
-        $this->irfoGvPermit = $irfoGvPermit;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo gv permit
-     *
-     * @return \Olcs\Db\Entity\IrfoGvPermit
-     */
-    public function getIrfoGvPermit()
-    {
-        return $this->irfoGvPermit;
     }
 
     /**

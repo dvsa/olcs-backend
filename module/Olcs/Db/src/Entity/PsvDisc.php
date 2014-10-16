@@ -33,6 +33,7 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
+        Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -64,15 +65,6 @@ class PsvDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=true)
      */
     protected $reprintRequired;
-
-    /**
-     * Start date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="start_date", nullable=true)
-     */
-    protected $startDate;
 
     /**
      * Set the licence
@@ -141,28 +133,5 @@ class PsvDisc implements Interfaces\EntityInterface
     public function getReprintRequired()
     {
         return $this->reprintRequired;
-    }
-
-    /**
-     * Set the start date
-     *
-     * @param \DateTime $startDate
-     * @return PsvDisc
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the start date
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
     }
 }

@@ -29,6 +29,7 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\Description4000Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -98,15 +99,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="driver_family_name", length=40, nullable=true)
      */
     protected $driverFamilyName;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=4000, nullable=true)
-     */
-    protected $description;
 
     /**
      * Set the status
@@ -267,28 +259,5 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriverFamilyName()
     {
         return $this->driverFamilyName;
-    }
-
-    /**
-     * Set the description
-     *
-     * @param string $description
-     * @return Complaint
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

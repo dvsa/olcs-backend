@@ -31,6 +31,7 @@ class Organisation implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ViAction1Field,
+        Traits\IsIrfoField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomCreatedOnField,
         Traits\CustomVersionField;
@@ -118,15 +119,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="irfo_nationality", length=45, nullable=true)
      */
     protected $irfoNationality;
-
-    /**
-     * Is irfo
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
-     */
-    protected $isIrfo = 0;
 
     /**
      * Allow email
@@ -389,29 +381,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getIrfoNationality()
     {
         return $this->irfoNationality;
-    }
-
-    /**
-     * Set the is irfo
-     *
-     * @param string $isIrfo
-     * @return Organisation
-     */
-    public function setIsIrfo($isIrfo)
-    {
-        $this->isIrfo = $isIrfo;
-
-        return $this;
-    }
-
-    /**
-     * Get the is irfo
-     *
-     * @return string
-     */
-    public function getIsIrfo()
-    {
-        return $this->isIrfo;
     }
 
     /**
