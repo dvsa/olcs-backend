@@ -1197,12 +1197,12 @@ CREATE TABLE `case_category` (
   PRIMARY KEY (`case_id`, `category_id`),
   CONSTRAINT `fk_case_category_cases1`
     FOREIGN KEY (`case_id`)
-    REFERENCES `olcs`.`cases` (`id`)
+    REFERENCES `cases` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_category_ref_data1`
     FOREIGN KEY (`category_id`)
-    REFERENCES `olcs`.`ref_data` (`id`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -3202,39 +3202,21 @@ CREATE TABLE IF NOT EXISTS `note` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `submission_section`
+-- Table `submission_section_comments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `submission_section` (
+CREATE TABLE IF NOT EXISTS `submission_section_comments` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `group` VARCHAR(45) NULL,
-  `description` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `case_submission_section`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `case_submission_section` (
-  `case_id` INT NOT NULL,
-  `submission_section_id` INT NOT NULL,
-  INDEX `fk_case_submission_category_case1_idx` (`case_id` ASC),
-  INDEX `fk_case_submission_category_submission_category1_idx` (`submission_section_id` ASC),
-  PRIMARY KEY (`case_id`, `submission_section_id`),
-  CONSTRAINT `fk_case_submission_category_case1`
-    FOREIGN KEY (`case_id`)
-    REFERENCES `cases` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_case_submission_category_submission_category1`
-    FOREIGN KEY (`submission_section_id`)
-    REFERENCES `submission_section` (`id`)
+  `comments` TEXT NULL,
+  `submission_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_submission_section_submission1_idx` (`submission_id` ASC),
+  CONSTRAINT `fk_submission_section_submission1`
+    FOREIGN KEY (`submission_id`)
+    REFERENCES `submission` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `submission`
@@ -3243,7 +3225,7 @@ CREATE TABLE IF NOT EXISTS `submission` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `case_id` INT NOT NULL,
   `submission_type` VARCHAR(32) NOT NULL,
-  `text` TEXT NULL,
+  `data_snapshot` TEXT NULL COMMENT 'Contains data for each submission section concatenated togather as a JSon string.',
   `closed_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
@@ -3276,7 +3258,6 @@ CREATE TABLE IF NOT EXISTS `submission` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `submission_action`
