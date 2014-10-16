@@ -22,12 +22,21 @@ use Olcs\Db\Entity\Traits;
 class Country implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Identifier - Id
+     *
+     * @var string
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string", name="id", length=8)
+     */
+    protected $id;
 
     /**
      * Country desc
@@ -46,6 +55,29 @@ class Country implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_member_state", nullable=false)
      */
     protected $isMemberState = 0;
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return Country
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set the country desc

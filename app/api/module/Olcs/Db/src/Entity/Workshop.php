@@ -28,7 +28,6 @@ class Workshop implements Interfaces\EntityInterface
         Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -69,6 +68,15 @@ class Workshop implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="safety_inspection", nullable=false)
      */
     protected $safetyInspection = 0;
+
+    /**
+     * Removed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="removed_date", nullable=true)
+     */
+    protected $removedDate;
 
     /**
      * Set the licence
@@ -160,5 +168,28 @@ class Workshop implements Interfaces\EntityInterface
     public function getSafetyInspection()
     {
         return $this->safetyInspection;
+    }
+
+    /**
+     * Set the removed date
+     *
+     * @param \DateTime $removedDate
+     * @return Workshop
+     */
+    public function setRemovedDate($removedDate)
+    {
+        $this->removedDate = $removedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the removed date
+     *
+     * @return \DateTime
+     */
+    public function getRemovedDate()
+    {
+        return $this->removedDate;
     }
 }

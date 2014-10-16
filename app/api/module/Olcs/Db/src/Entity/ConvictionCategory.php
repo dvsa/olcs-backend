@@ -26,7 +26,6 @@ class ConvictionCategory implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Description1024Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -40,6 +39,15 @@ class ConvictionCategory implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     protected $parent;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=1024, nullable=false)
+     */
+    protected $description;
 
     /**
      * Set the parent
@@ -62,5 +70,28 @@ class ConvictionCategory implements Interfaces\EntityInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return ConvictionCategory
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -3207,16 +3207,23 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submission_section_comments` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `comments` TEXT NULL,
+  `comment` TEXT NULL,
   `submission_id` INT NOT NULL,
+  `submission_section` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_submission_section_submission1_idx` (`submission_id` ASC),
+  INDEX `fk_submission_section_comments_ref_data1_idx` (`submission_section` ASC),
   CONSTRAINT `fk_submission_section_submission1`
     FOREIGN KEY (`submission_id`)
     REFERENCES `submission` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_submission_section_comments_ref_data1`
+    FOREIGN KEY (`submission_section`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
 
 -- -----------------------------------------------------
 -- Table `submission`

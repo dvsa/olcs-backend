@@ -31,7 +31,6 @@ class Person implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\BirthDateField,
-        Traits\Title32Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -72,6 +71,15 @@ class Person implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_name", length=35, nullable=true)
      */
     protected $otherName;
+
+    /**
+     * Title
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="title", length=32, nullable=true)
+     */
+    protected $title;
 
     /**
      * Title other
@@ -189,6 +197,29 @@ class Person implements Interfaces\EntityInterface
     public function getOtherName()
     {
         return $this->otherName;
+    }
+
+    /**
+     * Set the title
+     *
+     * @param string $title
+     * @return Person
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**

@@ -33,8 +33,6 @@ class Appeal implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
-        Traits\HearingDateField,
-        Traits\DecisionDateField,
         Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -96,6 +94,15 @@ class Appeal implements Interfaces\EntityInterface
     protected $outlineGround;
 
     /**
+     * Hearing date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="hearing_date", nullable=true)
+     */
+    protected $hearingDate;
+
+    /**
      * Papers due date
      *
      * @var \DateTime
@@ -121,6 +128,15 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="papers_sent_date", nullable=true)
      */
     protected $papersSentDate;
+
+    /**
+     * Decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="decision_date", nullable=true)
+     */
+    protected $decisionDate;
 
     /**
      * Set the reason
@@ -261,6 +277,29 @@ class Appeal implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the hearing date
+     *
+     * @param \DateTime $hearingDate
+     * @return Appeal
+     */
+    public function setHearingDate($hearingDate)
+    {
+        $this->hearingDate = $hearingDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the hearing date
+     *
+     * @return \DateTime
+     */
+    public function getHearingDate()
+    {
+        return $this->hearingDate;
+    }
+
+    /**
      * Set the papers due date
      *
      * @param \DateTime $papersDueDate
@@ -327,5 +366,28 @@ class Appeal implements Interfaces\EntityInterface
     public function getPapersSentDate()
     {
         return $this->papersSentDate;
+    }
+
+    /**
+     * Set the decision date
+     *
+     * @param \DateTime $decisionDate
+     * @return Appeal
+     */
+    public function setDecisionDate($decisionDate)
+    {
+        $this->decisionDate = $decisionDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the decision date
+     *
+     * @return \DateTime
+     */
+    public function getDecisionDate()
+    {
+        return $this->decisionDate;
     }
 }
