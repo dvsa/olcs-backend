@@ -31,20 +31,11 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\DocumentManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
-     */
-    protected $document;
 
     /**
      * Document sub category
@@ -99,29 +90,6 @@ class DocTemplate implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->docTemplateBookmarks = new ArrayCollection();
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return DocTemplate
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * Get the document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
     }
 
     /**

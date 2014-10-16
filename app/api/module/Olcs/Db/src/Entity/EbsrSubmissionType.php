@@ -1,0 +1,22 @@
+<?php
+
+namespace Olcs\Db\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
+
+/**
+ * EbsrSubmissionType Entity
+ *
+ * Auto-Generated
+ *
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="ebsr_submission_type")
+ */
+class EbsrSubmissionType implements Interfaces\EntityInterface
+{
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\Description45Field;
+}

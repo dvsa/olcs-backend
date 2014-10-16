@@ -22,17 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class RefData implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity;
-
-    /**
-     * Identifier - Id
-     *
-     * @var string
-     *
-     * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=32)
-     */
-    protected $id;
+    use Traits\CustomBaseEntity,
+        Traits\Id32Identity;
 
     /**
      * Parent
@@ -45,6 +36,15 @@ class RefData implements Interfaces\EntityInterface
     protected $parent;
 
     /**
+     * Pi
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="piTypes", fetch="LAZY")
+     */
+    protected $pis;
+
+    /**
      * Case
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -52,6 +52,15 @@ class RefData implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="categorys", fetch="LAZY")
      */
     protected $cases;
+
+    /**
+     * Impounding
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Impounding", mappedBy="impoundingLegislationTypes", fetch="LAZY")
+     */
+    protected $impoundings;
 
     /**
      * Description
@@ -95,30 +104,9 @@ class RefData implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->pis = new ArrayCollection();
         $this->cases = new ArrayCollection();
-    }
-
-    /**
-     * Set the id
-     *
-     * @param string $id
-     * @return RefData
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->impoundings = new ArrayCollection();
     }
 
     /**
@@ -142,6 +130,72 @@ class RefData implements Interfaces\EntityInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function setPis($pis)
+    {
+        $this->pis = $pis;
+
+        return $this;
+    }
+
+    /**
+     * Get the pis
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPis()
+    {
+        return $this->pis;
+    }
+
+    /**
+     * Add a pis
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function addPis($pis)
+    {
+        if ($pis instanceof ArrayCollection) {
+            $this->pis = new ArrayCollection(
+                array_merge(
+                    $this->pis->toArray(),
+                    $pis->toArray()
+                )
+            );
+        } elseif (!$this->pis->contains($pis)) {
+            $this->pis->add($pis);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a pis
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @return RefData
+     */
+    public function removePis($pis)
+    {
+        if ($this->pis->contains($pis)) {
+            $this->pis->removeElement($pis);
+        }
+
+        return $this;
     }
 
     /**
@@ -205,6 +259,72 @@ class RefData implements Interfaces\EntityInterface
     {
         if ($this->cases->contains($cases)) {
             $this->cases->removeElement($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the impounding
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function setImpoundings($impoundings)
+    {
+        $this->impoundings = $impoundings;
+
+        return $this;
+    }
+
+    /**
+     * Get the impoundings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getImpoundings()
+    {
+        return $this->impoundings;
+    }
+
+    /**
+     * Add a impoundings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function addImpoundings($impoundings)
+    {
+        if ($impoundings instanceof ArrayCollection) {
+            $this->impoundings = new ArrayCollection(
+                array_merge(
+                    $this->impoundings->toArray(),
+                    $impoundings->toArray()
+                )
+            );
+        } elseif (!$this->impoundings->contains($impoundings)) {
+            $this->impoundings->add($impoundings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a impoundings
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function removeImpoundings($impoundings)
+    {
+        if ($this->impoundings->contains($impoundings)) {
+            $this->impoundings->removeElement($impoundings);
         }
 
         return $this;

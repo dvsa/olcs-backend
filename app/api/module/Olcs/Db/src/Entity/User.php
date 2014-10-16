@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -32,7 +33,9 @@ class User implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\LocalAuthorityManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\TeamManyToOne,
         Traits\EmailAddress45Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -58,26 +61,6 @@ class User implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $contactDetails;
-
-    /**
-     * Local authority
-     *
-     * @var \Olcs\Db\Entity\LocalAuthority
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LocalAuthority", fetch="LAZY")
-     * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=true)
-     */
-    protected $localAuthority;
-
-    /**
-     * Team
-     *
-     * @var \Olcs\Db\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
-     */
-    protected $team;
 
     /**
      * Pid
@@ -134,6 +117,23 @@ class User implements Interfaces\EntityInterface
     protected $departmentName;
 
     /**
+     * Organisation user
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationUser", mappedBy="user")
+     */
+    protected $organisationUsers;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->organisationUsers = new ArrayCollection();
+    }
+
+    /**
      * Set the partner contact details
      *
      * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
@@ -177,52 +177,6 @@ class User implements Interfaces\EntityInterface
     public function getContactDetails()
     {
         return $this->contactDetails;
-    }
-
-    /**
-     * Set the local authority
-     *
-     * @param \Olcs\Db\Entity\LocalAuthority $localAuthority
-     * @return User
-     */
-    public function setLocalAuthority($localAuthority)
-    {
-        $this->localAuthority = $localAuthority;
-
-        return $this;
-    }
-
-    /**
-     * Get the local authority
-     *
-     * @return \Olcs\Db\Entity\LocalAuthority
-     */
-    public function getLocalAuthority()
-    {
-        return $this->localAuthority;
-    }
-
-    /**
-     * Set the team
-     *
-     * @param \Olcs\Db\Entity\Team $team
-     * @return User
-     */
-    public function setTeam($team)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * Get the team
-     *
-     * @return \Olcs\Db\Entity\Team
-     */
-    public function getTeam()
-    {
-        return $this->team;
     }
 
     /**
@@ -361,5 +315,71 @@ class User implements Interfaces\EntityInterface
     public function getDepartmentName()
     {
         return $this->departmentName;
+    }
+
+    /**
+     * Set the organisation user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function setOrganisationUsers($organisationUsers)
+    {
+        $this->organisationUsers = $organisationUsers;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisationUsers()
+    {
+        return $this->organisationUsers;
+    }
+
+    /**
+     * Add a organisation users
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function addOrganisationUsers($organisationUsers)
+    {
+        if ($organisationUsers instanceof ArrayCollection) {
+            $this->organisationUsers = new ArrayCollection(
+                array_merge(
+                    $this->organisationUsers->toArray(),
+                    $organisationUsers->toArray()
+                )
+            );
+        } elseif (!$this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->add($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation users
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return User
+     */
+    public function removeOrganisationUsers($organisationUsers)
+    {
+        if ($this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->removeElement($organisationUsers);
+        }
+
+        return $this;
     }
 }

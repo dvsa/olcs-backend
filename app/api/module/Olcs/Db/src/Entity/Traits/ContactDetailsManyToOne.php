@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Contact details many to one trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 6 entities)
  */
 trait ContactDetailsManyToOne
 {
