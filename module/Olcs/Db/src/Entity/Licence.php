@@ -36,7 +36,6 @@ class Licence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
@@ -61,6 +60,16 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
      */
     protected $tachographIns;
+
+    /**
+     * Goods or psv
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
+     */
+    protected $goodsOrPsv;
 
     /**
      * Organisation
@@ -324,6 +333,29 @@ class Licence implements Interfaces\EntityInterface
     public function getTachographIns()
     {
         return $this->tachographIns;
+    }
+
+    /**
+     * Set the goods or psv
+     *
+     * @param \Olcs\Db\Entity\RefData $goodsOrPsv
+     * @return Licence
+     */
+    public function setGoodsOrPsv($goodsOrPsv)
+    {
+        $this->goodsOrPsv = $goodsOrPsv;
+
+        return $this;
+    }
+
+    /**
+     * Get the goods or psv
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getGoodsOrPsv()
+    {
+        return $this->goodsOrPsv;
     }
 
     /**

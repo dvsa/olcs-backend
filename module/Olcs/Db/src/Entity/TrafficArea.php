@@ -43,15 +43,6 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $id;
 
     /**
-     * Recipient
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas", fetch="LAZY")
-     */
-    protected $recipients;
-
-    /**
      * Txc name
      *
      * @var string
@@ -83,7 +74,6 @@ class TrafficArea implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->recipients = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -108,72 +98,6 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the recipient
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-     * @return TrafficArea
-     */
-    public function setRecipients($recipients)
-    {
-        $this->recipients = $recipients;
-
-        return $this;
-    }
-
-    /**
-     * Get the recipients
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getRecipients()
-    {
-        return $this->recipients;
-    }
-
-    /**
-     * Add a recipients
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-     * @return TrafficArea
-     */
-    public function addRecipients($recipients)
-    {
-        if ($recipients instanceof ArrayCollection) {
-            $this->recipients = new ArrayCollection(
-                array_merge(
-                    $this->recipients->toArray(),
-                    $recipients->toArray()
-                )
-            );
-        } elseif (!$this->recipients->contains($recipients)) {
-            $this->recipients->add($recipients);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a recipients
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
-     * @return TrafficArea
-     */
-    public function removeRecipients($recipients)
-    {
-        if ($this->recipients->contains($recipients)) {
-            $this->recipients->removeElement($recipients);
-        }
-
-        return $this;
     }
 
     /**

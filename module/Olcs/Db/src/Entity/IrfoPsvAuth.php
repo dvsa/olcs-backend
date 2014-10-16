@@ -31,7 +31,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\StatusManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,

@@ -33,13 +33,10 @@ class BusReg implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\WithdrawnReasonManyToOne,
         Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\ReceivedDateField,
-        Traits\EffectiveDateField,
-        Traits\EndDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -75,38 +72,14 @@ class BusReg implements Interfaces\EntityInterface
     protected $subsidised;
 
     /**
-     * Variation reason
+     * Operating centre
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\OperatingCentre
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs", fetch="LAZY")
-     * @ORM\JoinTable(name="bus_reg_variation_reason",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="variation_reason_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
-    protected $variationReasons;
-
-    /**
-     * Bus service type
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", inversedBy="busRegs", fetch="LAZY")
-     * @ORM\JoinTable(name="bus_reg_bus_service_type",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="bus_service_type_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $busServiceTypes;
+    protected $operatingCentre;
 
     /**
      * Route no
@@ -170,6 +143,24 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
     protected $otherDetails;
+
+    /**
+     * Effective date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="effective_date", nullable=true)
+     */
+    protected $effectiveDate;
+
+    /**
+     * End date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="end_date", nullable=true)
+     */
+    protected $endDate;
 
     /**
      * Is short notice
@@ -469,15 +460,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $qualityContractDetails;
 
     /**
-     * Other service
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusRegOtherService", mappedBy="busReg")
-     */
-    protected $otherServices;
-
-    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -491,9 +473,6 @@ class BusReg implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->variationReasons = new ArrayCollection();
-        $this->busServiceTypes = new ArrayCollection();
-        $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -567,135 +546,26 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the variation reason
+     * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
      * @return BusReg
      */
-    public function setVariationReasons($variationReasons)
+    public function setOperatingCentre($operatingCentre)
     {
-        $this->variationReasons = $variationReasons;
+        $this->operatingCentre = $operatingCentre;
 
         return $this;
     }
 
     /**
-     * Get the variation reasons
+     * Get the operating centre
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Olcs\Db\Entity\OperatingCentre
      */
-    public function getVariationReasons()
+    public function getOperatingCentre()
     {
-        return $this->variationReasons;
-    }
-
-    /**
-     * Add a variation reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function addVariationReasons($variationReasons)
-    {
-        if ($variationReasons instanceof ArrayCollection) {
-            $this->variationReasons = new ArrayCollection(
-                array_merge(
-                    $this->variationReasons->toArray(),
-                    $variationReasons->toArray()
-                )
-            );
-        } elseif (!$this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->add($variationReasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a variation reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function removeVariationReasons($variationReasons)
-    {
-        if ($this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->removeElement($variationReasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the bus service type
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-     * @return BusReg
-     */
-    public function setBusServiceTypes($busServiceTypes)
-    {
-        $this->busServiceTypes = $busServiceTypes;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus service types
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getBusServiceTypes()
-    {
-        return $this->busServiceTypes;
-    }
-
-    /**
-     * Add a bus service types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-     * @return BusReg
-     */
-    public function addBusServiceTypes($busServiceTypes)
-    {
-        if ($busServiceTypes instanceof ArrayCollection) {
-            $this->busServiceTypes = new ArrayCollection(
-                array_merge(
-                    $this->busServiceTypes->toArray(),
-                    $busServiceTypes->toArray()
-                )
-            );
-        } elseif (!$this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->add($busServiceTypes);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a bus service types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
-     * @return BusReg
-     */
-    public function removeBusServiceTypes($busServiceTypes)
-    {
-        if ($this->busServiceTypes->contains($busServiceTypes)) {
-            $this->busServiceTypes->removeElement($busServiceTypes);
-        }
-
-        return $this;
+        return $this->operatingCentre;
     }
 
     /**
@@ -857,6 +727,52 @@ class BusReg implements Interfaces\EntityInterface
     public function getOtherDetails()
     {
         return $this->otherDetails;
+    }
+
+    /**
+     * Set the effective date
+     *
+     * @param \DateTime $effectiveDate
+     * @return BusReg
+     */
+    public function setEffectiveDate($effectiveDate)
+    {
+        $this->effectiveDate = $effectiveDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the effective date
+     *
+     * @return \DateTime
+     */
+    public function getEffectiveDate()
+    {
+        return $this->effectiveDate;
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTime $endDate
+     * @return BusReg
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the end date
+     *
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
     }
 
     /**
@@ -1616,72 +1532,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getQualityContractDetails()
     {
         return $this->qualityContractDetails;
-    }
-
-    /**
-     * Set the other service
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
-     * @return BusReg
-     */
-    public function setOtherServices($otherServices)
-    {
-        $this->otherServices = $otherServices;
-
-        return $this;
-    }
-
-    /**
-     * Get the other services
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOtherServices()
-    {
-        return $this->otherServices;
-    }
-
-    /**
-     * Add a other services
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
-     * @return BusReg
-     */
-    public function addOtherServices($otherServices)
-    {
-        if ($otherServices instanceof ArrayCollection) {
-            $this->otherServices = new ArrayCollection(
-                array_merge(
-                    $this->otherServices->toArray(),
-                    $otherServices->toArray()
-                )
-            );
-        } elseif (!$this->otherServices->contains($otherServices)) {
-            $this->otherServices->add($otherServices);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a other services
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
-     * @return BusReg
-     */
-    public function removeOtherServices($otherServices)
-    {
-        if ($this->otherServices->contains($otherServices)) {
-            $this->otherServices->removeElement($otherServices);
-        }
-
-        return $this;
     }
 
     /**
