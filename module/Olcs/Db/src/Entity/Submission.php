@@ -45,13 +45,13 @@ class Submission implements Interfaces\EntityInterface
     protected $submissionType;
 
     /**
-     * Text
+     * Data snapshot
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
      */
-    protected $text;
+    protected $dataSnapshot;
 
     /**
      * Submission action
@@ -94,26 +94,26 @@ class Submission implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the text
+     * Set the data snapshot
      *
-     * @param string $text
+     * @param string $dataSnapshot
      * @return Submission
      */
-    public function setText($text)
+    public function setDataSnapshot($dataSnapshot)
     {
-        $this->text = $text;
+        $this->dataSnapshot = $dataSnapshot;
 
         return $this;
     }
 
     /**
-     * Get the text
+     * Get the data snapshot
      *
      * @return string
      */
-    public function getText()
+    public function getDataSnapshot()
     {
-        return $this->text;
+        return $this->dataSnapshot;
     }
 
     /**
