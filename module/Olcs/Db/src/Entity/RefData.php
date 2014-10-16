@@ -45,6 +45,15 @@ class RefData implements Interfaces\EntityInterface
     protected $pis;
 
     /**
+     * Case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="categorys", fetch="LAZY")
+     */
+    protected $cases;
+
+    /**
      * Impounding
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -96,6 +105,7 @@ class RefData implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->pis = new ArrayCollection();
+        $this->cases = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
     }
 
@@ -183,6 +193,72 @@ class RefData implements Interfaces\EntityInterface
     {
         if ($this->pis->contains($pis)) {
             $this->pis->removeElement($pis);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function setCases($cases)
+    {
+        $this->cases = $cases;
+
+        return $this;
+    }
+
+    /**
+     * Get the cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCases()
+    {
+        return $this->cases;
+    }
+
+    /**
+     * Add a cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->removeElement($cases);
         }
 
         return $this;

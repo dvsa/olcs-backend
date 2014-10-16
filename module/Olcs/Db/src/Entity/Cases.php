@@ -79,6 +79,23 @@ class Cases implements Interfaces\EntityInterface
     protected $legacyOffences;
 
     /**
+     * Category
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="cases", fetch="LAZY")
+     * @ORM\JoinTable(name="case_category",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $categorys;
+
+    /**
      * Submission section
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -236,6 +253,7 @@ class Cases implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->legacyOffences = new ArrayCollection();
+        $this->categorys = new ArrayCollection();
         $this->submissionSections = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
@@ -349,6 +367,72 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->legacyOffences->contains($legacyOffences)) {
             $this->legacyOffences->removeElement($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the category
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $categorys
+     * @return Cases
+     */
+    public function setCategorys($categorys)
+    {
+        $this->categorys = $categorys;
+
+        return $this;
+    }
+
+    /**
+     * Get the categorys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCategorys()
+    {
+        return $this->categorys;
+    }
+
+    /**
+     * Add a categorys
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $categorys
+     * @return Cases
+     */
+    public function addCategorys($categorys)
+    {
+        if ($categorys instanceof ArrayCollection) {
+            $this->categorys = new ArrayCollection(
+                array_merge(
+                    $this->categorys->toArray(),
+                    $categorys->toArray()
+                )
+            );
+        } elseif (!$this->categorys->contains($categorys)) {
+            $this->categorys->add($categorys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a categorys
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $categorys
+     * @return Cases
+     */
+    public function removeCategorys($categorys)
+    {
+        if ($this->categorys->contains($categorys)) {
+            $this->categorys->removeElement($categorys);
         }
 
         return $this;

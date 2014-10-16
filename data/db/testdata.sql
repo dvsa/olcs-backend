@@ -58,6 +58,7 @@ TRUNCATE TABLE `user`;
 TRUNCATE TABLE `organisation_user`;
 TRUNCATE TABLE `vehicle`;
 TRUNCATE TABLE `cases`;
+TRUNCATE TABLE `case_category`;
 TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
@@ -954,6 +955,11 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (3,1,'Infrastructure',''),
     (4,1,'Support','');
 
+INSERT INTO `case_category` (`case_id`, `category_id`)
+VALUES
+    (29, 'case_cat_7');
+
+    
 /**
  * NOTE: These inserts can't be grouped into one as they insert different columns
  */
