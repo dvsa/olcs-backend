@@ -530,7 +530,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
     (110,1,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,'lcat_psv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
     (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
@@ -825,7 +825,7 @@ INSERT INTO `cases` (`id`, `licence_id`, `application_id`, `transport_manager_id
     `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`, `is_impounding`) VALUES
     (24,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2012-03-21 00:00:00',
     'case_t_lic',NULL,NULL,'2013-11-12 12:27:33',   NULL,1,0),
-    (28,7,NULL,NULL,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','case_t_lic',NULL,NULL,
+    (28,7,1,NULL,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','case_t_app',NULL,NULL,
     '2014-01-01 11:11:11',NULL,1,0),
     (29,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
     '2014-02-22 12:22:22',1,0),
@@ -965,7 +965,7 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,2,110,9,32,1,2,'A test task','2014-08-12',1);
+    (1,1,110,9,32,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,69,1,2,'Another test task','2013-02-11',1);
