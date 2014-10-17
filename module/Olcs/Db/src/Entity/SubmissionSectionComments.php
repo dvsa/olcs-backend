@@ -46,7 +46,7 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionSectionComments")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;

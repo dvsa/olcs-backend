@@ -611,6 +611,14 @@ return array(
             )
         )
     ),
+    'submission_section_comments' => array(
+        'submission_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Submission',
+                'property' => 'submissionSectionComment'
+            )
+        )
+    ),
     'application_completion' => array(
         'section_yb_status' => array(
             'property' => 'sectionYourBusinessStatus'
