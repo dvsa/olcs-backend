@@ -833,7 +833,7 @@ INSERT INTO `cases` (`id`, `licence_id`, `application_id`, `transport_manager_id
     `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`, `is_impounding`) VALUES
     (24,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2012-03-21 00:00:00',
     'case_t_lic',NULL,NULL,'2013-11-12 12:27:33',   NULL,1,0),
-    (28,7,NULL,NULL,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','case_t_lic',NULL,NULL,
+    (28,7,1,NULL,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','case_t_app',NULL,NULL,
     '2014-01-01 11:11:11',NULL,1,0),
     (29,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
     '2014-02-22 12:22:22',1,0),
