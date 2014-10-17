@@ -1197,12 +1197,12 @@ CREATE TABLE `case_category` (
   PRIMARY KEY (`case_id`, `category_id`),
   CONSTRAINT `fk_case_category_cases1`
     FOREIGN KEY (`case_id`)
-    REFERENCES `olcs`.`cases` (`id`)
+    REFERENCES `cases` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_category_ref_data1`
     FOREIGN KEY (`category_id`)
-    REFERENCES `olcs`.`ref_data` (`id`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
