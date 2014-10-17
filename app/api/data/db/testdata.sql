@@ -973,7 +973,7 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,2,110,9,32,1,2,'A test task','2014-08-12',1);
+    (1,1,110,9,32,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,69,1,2,'Another test task','2013-02-11',1);
