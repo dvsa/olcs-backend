@@ -33,6 +33,7 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
+        Traits\IsPrintingField,
         Traits\StartDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
