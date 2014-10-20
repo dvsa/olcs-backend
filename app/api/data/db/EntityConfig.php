@@ -468,6 +468,9 @@ return array(
         'is_copy' => array(
             'type' => 'yesnonull'
         ),
+        'is_printing' => array(
+            'type' => 'yesno'
+        ),
         'reprint_required' => array(
             'type' => 'yesnonull'
         ),
