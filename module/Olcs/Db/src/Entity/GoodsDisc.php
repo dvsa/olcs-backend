@@ -34,6 +34,7 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\IssuedDateField,
         Traits\CeasedDateField,
         Traits\IsInterimField,
+        Traits\IsPrintingField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -56,15 +57,6 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
     protected $isCopy = 0;
-
-    /**
-     * Is printing
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_printing", nullable=false)
-     */
-    protected $isPrinting = 0;
 
     /**
      * Reprint required
@@ -119,29 +111,6 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
-    }
-
-    /**
-     * Set the is printing
-     *
-     * @param string $isPrinting
-     * @return GoodsDisc
-     */
-    public function setIsPrinting($isPrinting)
-    {
-        $this->isPrinting = $isPrinting;
-
-        return $this;
-    }
-
-    /**
-     * Get the is printing
-     *
-     * @return string
-     */
-    public function getIsPrinting()
-    {
-        return $this->isPrinting;
     }
 
     /**
