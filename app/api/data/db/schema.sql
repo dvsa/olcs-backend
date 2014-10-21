@@ -2078,6 +2078,7 @@ CREATE TABLE IF NOT EXISTS `psv_disc` (
   `issued_date` DATETIME NULL,
   `ceased_date` DATETIME NULL,
   `is_copy` TINYINT(1) NULL,
+  `is_printing` TINYINT(1) NOT NULL DEFAULT 0,
   `reprint_required` TINYINT(1) NULL,
   `start_date` DATE NULL,
   `removal_reason` VARCHAR(32) NULL,
