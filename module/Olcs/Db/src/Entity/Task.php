@@ -40,7 +40,7 @@ class Task implements Interfaces\EntityInterface
         Traits\CaseManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\LicenceManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\Description4000Field,
         Traits\CustomCreatedOnField,

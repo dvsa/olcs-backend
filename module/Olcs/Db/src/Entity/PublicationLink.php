@@ -36,7 +36,7 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,

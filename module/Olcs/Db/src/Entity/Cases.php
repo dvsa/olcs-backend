@@ -31,7 +31,7 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOneAlt1,
