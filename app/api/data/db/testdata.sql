@@ -68,6 +68,7 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
+TRUNCATE TABLE `sla`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -1165,4 +1166,18 @@ INSERT INTO submission_section_comments(submission_section,submission_id,comment
     ('persons',10,'Test persons comment','2014-10-16 15:03:19'),
     ('persons',11,'Test persons comment','2014-10-16 15:03:19');
 
+-- test business rules
+INSERT INTO `sla` (`category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
+VALUES
+    ('pi', 'callUpLetterDate', 'agreedDate', 21, '1900-01-01', NULL),
+    ('pi', 'briefToTcDate', 'agreedDate', 22, '1900-01-01', NULL),
+    ('pi', 'writtenReasonDate', 'agreedDate', 23, '1900-01-01', NULL),
+    ('pi', 'decisionLetterSentDate', 'agreedDate', 24, '1900-01-01', NULL),
+    ('pi', 'tcWrittenDecisionDate', 'agreedDate', 25, '1900-01-01', NULL),
+    ('pi', 'tcWrittenReasonDate', 'agreedDate', 26, '1900-01-01', NULL),
+    ('pi', 'writtenReasonLetterDate', 'agreedDate', 27, '1900-01-01', NULL),
+    ('pi', 'decSentAfterWrittenDecDate', 'agreedDate', 28, '1900-01-01', NULL)
+    ;
+
+    
 SET foreign_key_checks = 1;

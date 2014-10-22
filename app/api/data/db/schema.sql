@@ -7527,6 +7527,17 @@ CREATE TABLE IF NOT EXISTS `pi_reason` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE `sla` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT '',
+  `field` varchar(32) DEFAULT '',
+  `compare_to` varchar(32) DEFAULT NULL,
+  `days` int(5) DEFAULT NULL,
+  `effective_from` date DEFAULT NULL,
+  `effective_to` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
