@@ -350,7 +350,8 @@ INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_b
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
+(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16),
+(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
@@ -520,27 +521,28 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `created_by`, `last_mod
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `last_modified_by`, `goods_or_psv`, `lic_no`, `status`,
     `ni_flag`, `licence_type`, `in_force_date`, `review_date`, `surrendered_date`, `fabs_reference`,
-    `tot_auth_trailers`, `tot_auth_vehicles`, `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
+    `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
+    `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,
+    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_si','2007-01-12','2007-01-12','2007-01-12','',1,
-    21,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,
+    21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
     NULL,NULL, NULL,NOW(),NOW(),1),
-    (63,63,'D',4,0,'lcat_psv','PD1234589','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,
+    (63,63,'D',4,0,'lcat_psv','PD1234589','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (75,75,'D',4,4,'lcat_psv','PD2737289','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,
+    (75,75,'D',4,4,'lcat_psv','PD2737289','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,
+    (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
-    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
+    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,10,5,5,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
-    (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
