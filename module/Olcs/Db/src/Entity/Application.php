@@ -382,6 +382,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
+     * Operating centre
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationOperatingCentre", mappedBy="application")
+     */
+    protected $operatingCentres;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -391,11 +400,22 @@ class Application implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Opposition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Opposition", mappedBy="application")
+     */
+    protected $oppositions;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
+        $this->operatingCentres = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
     }
 
     /**
@@ -1250,6 +1270,72 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the operating centre
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Application
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
+     * Add a operating centres
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Application
+     */
+    public function addOperatingCentres($operatingCentres)
+    {
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
+                array_merge(
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
+                )
+            );
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a operating centres
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Application
+     */
+    public function removeOperatingCentres($operatingCentres)
+    {
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
@@ -1310,6 +1396,72 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Application
+     */
+    public function setOppositions($oppositions)
+    {
+        $this->oppositions = $oppositions;
+
+        return $this;
+    }
+
+    /**
+     * Get the oppositions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOppositions()
+    {
+        return $this->oppositions;
+    }
+
+    /**
+     * Add a oppositions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Application
+     */
+    public function addOppositions($oppositions)
+    {
+        if ($oppositions instanceof ArrayCollection) {
+            $this->oppositions = new ArrayCollection(
+                array_merge(
+                    $this->oppositions->toArray(),
+                    $oppositions->toArray()
+                )
+            );
+        } elseif (!$this->oppositions->contains($oppositions)) {
+            $this->oppositions->add($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oppositions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Application
+     */
+    public function removeOppositions($oppositions)
+    {
+        if ($this->oppositions->contains($oppositions)) {
+            $this->oppositions->removeElement($oppositions);
         }
 
         return $this;

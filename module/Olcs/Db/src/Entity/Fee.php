@@ -41,6 +41,7 @@ class Fee implements Interfaces\EntityInterface
         Traits\ApplicationManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
         Traits\TaskManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
