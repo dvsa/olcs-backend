@@ -96,23 +96,6 @@ class Cases implements Interfaces\EntityInterface
     protected $categorys;
 
     /**
-     * Submission section
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionSection", inversedBy="cases", fetch="LAZY")
-     * @ORM\JoinTable(name="case_submission_section",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="submission_section_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $submissionSections;
-
-    /**
      * Ecms no
      *
      * @var string
@@ -254,7 +237,6 @@ class Cases implements Interfaces\EntityInterface
     {
         $this->legacyOffences = new ArrayCollection();
         $this->categorys = new ArrayCollection();
-        $this->submissionSections = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -433,72 +415,6 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->categorys->contains($categorys)) {
             $this->categorys->removeElement($categorys);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the submission section
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-     * @return Cases
-     */
-    public function setSubmissionSections($submissionSections)
-    {
-        $this->submissionSections = $submissionSections;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission sections
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getSubmissionSections()
-    {
-        return $this->submissionSections;
-    }
-
-    /**
-     * Add a submission sections
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-     * @return Cases
-     */
-    public function addSubmissionSections($submissionSections)
-    {
-        if ($submissionSections instanceof ArrayCollection) {
-            $this->submissionSections = new ArrayCollection(
-                array_merge(
-                    $this->submissionSections->toArray(),
-                    $submissionSections->toArray()
-                )
-            );
-        } elseif (!$this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->add($submissionSections);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a submission sections
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSections
-     * @return Cases
-     */
-    public function removeSubmissionSections($submissionSections)
-    {
-        if ($this->submissionSections->contains($submissionSections)) {
-            $this->submissionSections->removeElement($submissionSections);
         }
 
         return $this;

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description45 field trait
  *
- * Auto-Generated (Shared between 6 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait Description45Field
 {
