@@ -457,6 +457,7 @@ INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id
     (72,NULL,63,NULL,72,4,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (75,NULL,75,NULL,75,3,4,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (76,46,75,NULL,76,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (77,46,1,NULL,72,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (101,NULL,NULL,NULL,26,1,4,NULL,NULL,'ct_team_user','loggedin@user.com',NOW(),NOW(),1,NULL, 'Logged in', 'User');
 
