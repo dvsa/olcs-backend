@@ -34,6 +34,9 @@ TRUNCATE TABLE `legacy_case_offence`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
 TRUNCATE TABLE `operating_centre`;
+TRUNCATE TABLE `opposer`;
+TRUNCATE TABLE `opposition`;
+TRUNCATE TABLE `opposition_grounds`;
 TRUNCATE TABLE `organisation`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
@@ -48,6 +51,7 @@ TRUNCATE TABLE `pi_venue`;
 TRUNCATE TABLE `prohibition`;
 TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
+TRUNCATE TABLE `psv_disc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
 TRUNCATE TABLE `tm_qualification`;
@@ -323,7 +327,7 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
-    (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-19 09:06:53',
     '2014-12-25 10:06:53',NULL,
     NULL,NOW(),NULL,1,0),
     (2,110,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
@@ -345,12 +349,15 @@ INSERT INTO `application_completion` (`id`, `created_by`, `last_modified_by`, `s
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,1,16);
+(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16),
+(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16),
+(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16);
 
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16);
+(1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16),
+(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
@@ -524,27 +531,28 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `last_modified_by`, `goods_or_psv`, `lic_no`, `status`,
     `ni_flag`, `licence_type`, `in_force_date`, `review_date`, `surrendered_date`, `fabs_reference`,
-    `tot_auth_trailers`, `tot_auth_vehicles`, `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
+    `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
+    `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,
+    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_si','2007-01-12','2007-01-12','2007-01-12','',1,
-    21,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,
+    21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
     NULL,NULL, NULL,NOW(),NOW(),1),
-    (63,63,'D',4,0,'lcat_psv','PD1234589','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,
+    (63,63,'D',4,0,'lcat_psv','PD1234589','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (75,75,'D',4,4,'lcat_psv','PD2737289','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,
+    (75,75,'D',4,4,'lcat_psv','PD2737289','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,
+    (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
-    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
+    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_new',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,10,5,5,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_new',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
-    (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_new',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
@@ -628,6 +636,33 @@ INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created
     (48,1,3,NOW(),NOW(),1,29),
     (67,0,1,NOW(),NOW(),1,67),
     (72,1,4,NOW(),NOW(),1,72);
+
+INSERT INTO `opposer`
+(`id`, `opposer_type`, `last_modified_by`, `created_by`, `contact_details_id`, `created_on`, `last_modified_on`,
+ `version`)
+VALUES
+  (1, 'obj_t_local_auth', 1, 1, 7, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
+
+INSERT INTO `opposition`
+(`id`, `opposition_type`, `application_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+ `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
+ `last_modified_on`, `version`)
+VALUES
+  (1, 'otf_eob', 1, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+   '2014-02-20 00:00:00', 1),
+  (2, 'otf_rep', 1, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+   '2014-02-20 00:00:00', 1);
+
+INSERT INTO `opposition_grounds`
+(`id`, `grounds`, `last_modified_by`, `created_by`, `opposition_id`, `is_representation`, `created_on`,
+ `last_modified_on`, `version`)
+VALUES
+  (1, 'ogf_env', 1, 1, 1, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (2, 'ogf_parking', 1, 1, 1, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1),
+  (3, 'ogf_safety', 1, 1, 2, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
+
 
 INSERT INTO `organisation` (`id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`, `is_mlh`, `type`,
     `sic_code`, `created_on`, `last_modified_on`, `version`) VALUES
