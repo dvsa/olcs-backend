@@ -34,6 +34,9 @@ TRUNCATE TABLE `legacy_case_offence`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
 TRUNCATE TABLE `operating_centre`;
+TRUNCATE TABLE `opposer`;
+TRUNCATE TABLE `opposition`;
+TRUNCATE TABLE `opposition_grounds`;
 TRUNCATE TABLE `organisation`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
@@ -323,7 +326,7 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
-    (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (1,7,NULL,NULL,'apsts_new',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-19 09:06:53',
     '2014-12-25 10:06:53',NULL,
     NULL,NOW(),NULL,1,0),
     (2,110,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
@@ -345,7 +348,9 @@ INSERT INTO `application_completion` (`id`, `created_by`, `last_modified_by`, `s
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,NULL,1,NULL,NULL,1,1,16);
+(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16),
+(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16),
+(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16);
 
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_possessed`,
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -616,6 +621,33 @@ INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created
     (48,1,3,NOW(),NOW(),1,29),
     (67,0,1,NOW(),NOW(),1,67),
     (72,1,4,NOW(),NOW(),1,72);
+
+INSERT INTO `opposer`
+(`id`, `opposer_type`, `last_modified_by`, `created_by`, `contact_details_id`, `created_on`, `last_modified_on`,
+ `version`)
+VALUES
+  (1, 'obj_t_local_auth', 1, 1, 7, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
+
+INSERT INTO `opposition`
+(`id`, `opposition_type`, `application_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+ `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
+ `last_modified_on`, `version`)
+VALUES
+  (1, 'otf_eob', 1, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+   '2014-02-20 00:00:00', 1),
+  (2, 'otf_rep', 1, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+   '2014-02-20 00:00:00', 1);
+
+INSERT INTO `opposition_grounds`
+(`id`, `grounds`, `last_modified_by`, `created_by`, `opposition_id`, `is_representation`, `created_on`,
+ `last_modified_on`, `version`)
+VALUES
+  (1, 'ogf_env', 1, 1, 1, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (2, 'ogf_parking', 1, 1, 1, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1),
+  (3, 'ogf_safety', 1, 1, 2, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
+
 
 INSERT INTO `organisation` (`id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`, `is_mlh`, `type`,
     `sic_code`, `created_on`, `last_modified_on`, `version`) VALUES
