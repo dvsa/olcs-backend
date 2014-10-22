@@ -20,7 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_opposition_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_opposition_opposer1_idx", columns={"opposer_id"}),
  *        @ORM\Index(name="fk_opposition_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_opposition_ref_data1", columns={"opposition_type"})
  *    }
  * )
  */
@@ -30,7 +31,6 @@ class Opposition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\Notes4000Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -48,13 +48,24 @@ class Opposition implements Interfaces\EntityInterface
     protected $opposer;
 
     /**
-     * Is representation
+     * Application
      *
-     * @var string
+     * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\Column(type="yesno", name="is_representation", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="oppositions")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
-    protected $isRepresentation;
+    protected $application;
+
+    /**
+     * Opposition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $oppositionType;
 
     /**
      * Is copied
@@ -102,6 +113,15 @@ class Opposition implements Interfaces\EntityInterface
     protected $isValid;
 
     /**
+     * Is withdrawn
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_withdrawn", nullable=false)
+     */
+    protected $isWithdrawn;
+
+    /**
      * Valid notes
      *
      * @var string
@@ -120,11 +140,21 @@ class Opposition implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Ground
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OppositionGrounds", mappedBy="opposition")
+     */
+    protected $grounds;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+        $this->grounds = new ArrayCollection();
     }
 
     /**
@@ -151,26 +181,49 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is representation
+     * Set the application
      *
-     * @param string $isRepresentation
+     * @param \Olcs\Db\Entity\Application $application
      * @return Opposition
      */
-    public function setIsRepresentation($isRepresentation)
+    public function setApplication($application)
     {
-        $this->isRepresentation = $isRepresentation;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * Get the is representation
+     * Get the application
      *
-     * @return string
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getIsRepresentation()
+    public function getApplication()
     {
-        return $this->isRepresentation;
+        return $this->application;
+    }
+
+    /**
+     * Set the opposition type
+     *
+     * @param \Olcs\Db\Entity\RefData $oppositionType
+     * @return Opposition
+     */
+    public function setOppositionType($oppositionType)
+    {
+        $this->oppositionType = $oppositionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getOppositionType()
+    {
+        return $this->oppositionType;
     }
 
     /**
@@ -289,6 +342,29 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is withdrawn
+     *
+     * @param string $isWithdrawn
+     * @return Opposition
+     */
+    public function setIsWithdrawn($isWithdrawn)
+    {
+        $this->isWithdrawn = $isWithdrawn;
+
+        return $this;
+    }
+
+    /**
+     * Get the is withdrawn
+     *
+     * @return string
+     */
+    public function getIsWithdrawn()
+    {
+        return $this->isWithdrawn;
+    }
+
+    /**
      * Set the valid notes
      *
      * @param string $validNotes
@@ -372,6 +448,72 @@ class Opposition implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the ground
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function setGrounds($grounds)
+    {
+        $this->grounds = $grounds;
+
+        return $this;
+    }
+
+    /**
+     * Get the grounds
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGrounds()
+    {
+        return $this->grounds;
+    }
+
+    /**
+     * Add a grounds
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function addGrounds($grounds)
+    {
+        if ($grounds instanceof ArrayCollection) {
+            $this->grounds = new ArrayCollection(
+                array_merge(
+                    $this->grounds->toArray(),
+                    $grounds->toArray()
+                )
+            );
+        } elseif (!$this->grounds->contains($grounds)) {
+            $this->grounds->add($grounds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a grounds
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function removeGrounds($grounds)
+    {
+        if ($this->grounds->contains($grounds)) {
+            $this->grounds->removeElement($grounds);
         }
 
         return $this;

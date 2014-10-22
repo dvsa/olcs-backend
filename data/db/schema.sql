@@ -1252,7 +1252,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `opposition` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `is_representation` TINYINT(1) NOT NULL,
+  `opposition_type` VARCHAR(32) NOT NULL,
   `application_id` INT NOT NULL,
   `notes` VARCHAR(4000) NULL,
   `is_copied` TINYINT(1) NOT NULL DEFAULT 0,
@@ -1262,6 +1262,7 @@ CREATE TABLE IF NOT EXISTS `opposition` (
   `is_public_inquiry` TINYINT(1) NOT NULL DEFAULT 0,
   `deleted_date` DATETIME NULL,
   `is_valid` TINYINT(1) NOT NULL,
+  `is_withdrawn` TINYINT(1) NOT NULL,
   `valid_notes` VARCHAR(4000) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
@@ -1273,6 +1274,11 @@ CREATE TABLE IF NOT EXISTS `opposition` (
   INDEX `fk_opposition_opposer1_idx` (`opposer_id` ASC),
   INDEX `fk_opposition_user1_idx` (`created_by` ASC),
   INDEX `fk_opposition_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_opposition_ref_data1`
+  FOREIGN KEY (`opposition_type`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_application1`
     FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`)
