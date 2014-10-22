@@ -620,10 +620,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
 
     ('statement_type', 'statement_type.1', 'Section 43', null),
     ('statement_type', 'statement_type.2', 'Section 9', null),
-    ('statement_type', 'statement_type.3', 'NI Section 43', null),
-    ('statement_type', 'statement_type.4', 'NI Section 9', null),
-    ('statement_type', 'statement_type.5', 'NI Section 36', null),
-    ('statement_type', 'statement_type.6', 'NI Section 38', null),
+    ('statement_type', 'statement_type.3', 'NI Section 36', null),
+    ('statement_type', 'statement_type.4', 'NI Section 38', null),
 
     ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
     ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
