@@ -8,7 +8,7 @@ TRUNCATE TABLE `decision`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `submission`;
-TRUNCATE TABLE `submission_section`;
+TRUNCATE TABLE `submission_section_comments`;
 TRUNCATE TABLE `conviction_category`;
 TRUNCATE TABLE `document_sub_category`;
 
@@ -826,37 +826,6 @@ INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_descri
     (78, 'TM Removed from this licence', 'TM Declared Unfit', 5, 0),
     (79, 'TM1 Application', 'TM1 Assisted Digital', 5, 0),
     (80, 'TM1 Application', 'TM1 Digital', 5, 0);
-
-INSERT INTO `submission_section` (`id`, `description`, `group`) VALUES
-    (1,'Offences (inc. driver hours)','Compliance'),
-    (2,'Prohibitions','Compliance'),
-    (3,'Convictions','Compliance'),
-    (4,'Penalties','Compliance'),
-    (5,'ERRU MSI','Compliance'),
-    (6,'Bus compliance','Compliance'),
-    (7,'Section 9','Compliance'),
-    (8,'Section 43','Compliance'),
-    (9,'Impounding','Compliance'),
-    (10,'Duplicate TM','TM'),
-    (11,'Repute / professional competence of TM','TM'),
-    (12,'TM Hours','TM'),
-    (13,'Interim with / without submission','Licensing application'),
-    (14,'Representation','Licensing application'),
-    (15,'Objection','Licensing application'),
-    (16,'Non-chargeable variation','Licensing application'),
-    (17,'Regulation 31/29','Licensing application'),
-    (18,'Schedule 4/1','Licensing application'),
-    (19,'Chargeable variation','Licensing application'),
-    (20,'New application','Licensing application'),
-    (21,'Surrender','Licence referral'),
-    (22,'Non application related maintenance issue','Licence referral'),
-    (23,'Review complaint','Licence referral'),
-    (24,'Late fee','Licence referral'),
-    (25,'Financial standing issue (continuation)','Licence referral'),
-    (26,'Repute fitness of director','Licence referral'),
-    (27,'Period of grace','Licence referral'),
-    (28,'Proposal to revoke','Licence referral'),
-    (29,'Yes','Bus registration');
 
 INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `description`, `created_on`,
     `last_modified_on`, `version`, `parent_id`) VALUES
