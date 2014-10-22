@@ -22,7 +22,7 @@ class PreviousConviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\Title32Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
