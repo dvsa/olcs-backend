@@ -1675,7 +1675,8 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
     (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
     (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
-    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1);
+    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1),
+    (6,1,NULL,NULL,'Vehicle List',0,NULL,NULL,1);
 
 INSERT INTO `pi_definition`
 (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
