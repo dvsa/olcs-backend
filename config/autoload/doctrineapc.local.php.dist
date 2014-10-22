@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * To enable apc in Vagrant:
+ *
+ * yum install php55w-devel
+ * pecl install -f apcu
+ * Enable apc in php.ini
+ * Restart httpd
+ */
+
+return array(
+    'doctrine' => array(
+        'driver' => array(
+            'EntityDriver' => array(
+                'cache' => 'apc',
+            ),
+            'translatable_metadata_driver' => array(
+                'cache' => 'apc',
+            )
+        )
+    )
+);
