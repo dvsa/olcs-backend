@@ -48,6 +48,7 @@ TRUNCATE TABLE `pi_venue`;
 TRUNCATE TABLE `prohibition`;
 TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
+TRUNCATE TABLE `psv_disc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
 TRUNCATE TABLE `tm_qualification`;
