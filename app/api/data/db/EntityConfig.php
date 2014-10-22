@@ -217,6 +217,12 @@ return array(
         ),
         'is_interim' => array(
             'type' => 'yesno'
+        ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'operatingCentre'
+            )
         )
     ),
     'document_sub_category' => array(
@@ -247,6 +253,15 @@ return array(
         ),
         'is_valid' => array(
             'type' => 'yesno'
+        ),
+        'is_withdrawn' => array(
+            'type' => 'yesno'
+        ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'opposition'
+            )
         )
     ),
     'bus_reg' => array(
@@ -981,6 +996,12 @@ return array(
     'opposition_grounds' => array(
         'is_representation' => array(
             'type' => 'yesno'
+        ),
+        'opposition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Opposition',
+                'property' => 'ground'
+            )
         )
     ),
     'tm_case_decision' => array(
