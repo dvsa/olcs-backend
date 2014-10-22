@@ -34,7 +34,7 @@ class InspectionRequest implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\TaskManyToOne,
         Traits\CaseManyToOne,
