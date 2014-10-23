@@ -224,6 +224,9 @@ abstract class ServiceAbstract
             } elseif ($value === 'NULL') {
                 $qb->$whereMethod("a.{$field} IS NULL");
                 $whereMethod = 'andWhere';
+            } elseif (substr($value, 0, 4) == 'IN (') {
+                $qb->$whereMethod("a.{$field} IN " . substr($value, 3));
+                $whereMethod = 'andWhere';
             } elseif ($this->isFieldForeignKey($entityName, $field)) {
                 $qb->$whereMethod("a.{$field} = :{$key}");
                 $whereMethod = 'andWhere';
