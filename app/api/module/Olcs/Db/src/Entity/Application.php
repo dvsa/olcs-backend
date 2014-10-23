@@ -29,11 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -400,12 +400,22 @@ class Application implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Previous licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousLicence", mappedBy="application")
+     */
+    protected $previousLicences;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->applicationCompletions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->previousLicences = new ArrayCollection();
     }
 
     /**
@@ -1386,6 +1396,72 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the previous licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function setPreviousLicences($previousLicences)
+    {
+        $this->previousLicences = $previousLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousLicences()
+    {
+        return $this->previousLicences;
+    }
+
+    /**
+     * Add a previous licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function addPreviousLicences($previousLicences)
+    {
+        if ($previousLicences instanceof ArrayCollection) {
+            $this->previousLicences = new ArrayCollection(
+                array_merge(
+                    $this->previousLicences->toArray(),
+                    $previousLicences->toArray()
+                )
+            );
+        } elseif (!$this->previousLicences->contains($previousLicences)) {
+            $this->previousLicences->add($previousLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function removePreviousLicences($previousLicences)
+    {
+        if ($this->previousLicences->contains($previousLicences)) {
+            $this->previousLicences->removeElement($previousLicences);
         }
 
         return $this;
