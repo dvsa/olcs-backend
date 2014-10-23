@@ -743,6 +743,13 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (10, 'submission_type_title', 'submission_type_t_schedule_41', 'Schedule 4/1 Submission', NULL),
     (11, 'submission_type_title', 'submission_type_t_impounding', 'Impounding Submission', NULL);
 
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'licence_fee_status', 'lfs_ot', 'Outstanding', NULL),
+    (2, 'licence_fee_status', 'lfs_pd', 'Paid', NULL),
+    (3, 'licence_fee_status', 'lfs_wr', 'Waive Recommended', NULL),
+    (4, 'licence_fee_status', 'lfs_w', 'Waived', NULL),
+    (5, 'licence_fee_status', 'lfs_cn', 'Cancelled', NULL);
+
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
     (2, 'Address Change ', 'Address Change Digital', 9, 0),
