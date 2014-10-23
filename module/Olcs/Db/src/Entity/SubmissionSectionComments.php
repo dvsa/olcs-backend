@@ -32,16 +32,6 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Submission section
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionSection;
-
-    /**
      * Submission
      *
      * @var \Olcs\Db\Entity\Submission
@@ -52,6 +42,16 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
     protected $submission;
 
     /**
+     * Submission section
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
+     */
+    protected $submissionSection;
+
+    /**
      * Comment
      *
      * @var string
@@ -59,29 +59,6 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
      */
     protected $comment;
-
-    /**
-     * Set the submission section
-     *
-     * @param \Olcs\Db\Entity\RefData $submissionSection
-     * @return SubmissionSectionComments
-     */
-    public function setSubmissionSection($submissionSection)
-    {
-        $this->submissionSection = $submissionSection;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission section
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubmissionSection()
-    {
-        return $this->submissionSection;
-    }
 
     /**
      * Set the submission
@@ -104,6 +81,29 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the submission section
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionSection
+     * @return SubmissionSectionComments
+     */
+    public function setSubmissionSection($submissionSection)
+    {
+        $this->submissionSection = $submissionSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission section
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionSection()
+    {
+        return $this->submissionSection;
     }
 
     /**

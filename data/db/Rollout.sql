@@ -546,7 +546,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('prev_licence_type', 'prev_been_revoked', 'Named person on licence has had a previous licence revoked, curtailed or suspended', null),
     ('prev_licence_type', 'prev_been_at_pi', 'Named person on licence has been to a PI', null),
     ('prev_licence_type', 'prev_been_disqualified_tc', 'Named person on licence has been disqualified by a TC', null),
-    ('prev_licence_type', 'prev_has_purchased_assets', 'Named person or company has purchased a company with a licence in the last 12 months', null),
+    ('prev_licence_type', 'prev_purchased_assets', 'Named person or company has purchased a company with a licence in the last 12 months', null),
 
     ('prohibition_type', 'pro_t_si', 'Immediate (S)', 'SI'),
     ('prohibition_type', 'pro_t_sd', 'Delayed (S)', 'SD'),

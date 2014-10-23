@@ -653,6 +653,12 @@ return array(
         )
     ),
     'previous_licence' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'previousLicence'
+            )
+        ),
         'will_surrender' => array(
             'type' => 'yesnonull'
         )
