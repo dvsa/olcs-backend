@@ -5228,7 +5228,8 @@ CREATE TABLE IF NOT EXISTS `fee` (
   `received_date` DATETIME NULL,
   `fee_type_id` INT NOT NULL,
   `description` VARCHAR(255) NULL,
-  `fee_status` VARCHAR(20) NULL,
+  `fee_status` VARCHAR(32) NULL,
+  `receipt_no` VARCHAR(40) NULL,
   `parent_fee_id` INT NULL,
   `waive_approval_date` DATETIME NULL,
   `waive_reason` VARCHAR(255) NULL,
@@ -5258,6 +5259,12 @@ CREATE TABLE IF NOT EXISTS `fee` (
   INDEX `fk_fee_user3_idx` (`created_by` ASC),
   INDEX `fk_fee_user4_idx` (`last_modified_by` ASC),
   INDEX `fk_fee_irfo_gv_permit1_idx` (`irfo_gv_permit_id` ASC),
+  INDEX `fk_fee_ref_data1_idx` (`fee_status` ASC),
+  CONSTRAINT `fk_fee_ref_data1_idx`
+    FOREIGN KEY (`fee_status`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_application1`
     FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`)
@@ -7526,6 +7533,17 @@ CREATE TABLE IF NOT EXISTS `pi_reason` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE TABLE `sla` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT '',
+  `field` varchar(32) DEFAULT '',
+  `compare_to` varchar(32) DEFAULT NULL,
+  `days` int(5) DEFAULT NULL,
+  `effective_from` date DEFAULT NULL,
+  `effective_to` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

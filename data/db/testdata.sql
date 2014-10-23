@@ -68,6 +68,7 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
+TRUNCATE TABLE `sla`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -508,21 +509,25 @@ INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`,
   (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
    null, 0, null);
 
-INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `created_by`, `last_modified_by`, `description`,
-    `invoiced_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,NULL,7,NULL,NULL,'Application fee','2013-11-25 00:00:00',250.00,0.00,NULL,NULL,1),
-    (30,NULL,30,NULL,NULL,'Application fee','2013-11-22 00:00:00',251.00,0.00,NULL,NULL,1),
-    (41,NULL,41,NULL,NULL,'Grant fee','2013-11-21 00:00:00',150.00,0.00,NULL,NULL,1),
-    (54,NULL,54,NULL,NULL,'Application fee','2013-11-12 00:00:00',250.00,0.00,NULL,NULL,1),
-    (63,NULL,63,NULL,NULL,'Application fee','2013-11-10 00:00:00',250.00,0.00,NULL,NULL,1),
-    (75,NULL,75,NULL,NULL,'Application fee','2013-11-10 00:00:00',250.00,0.00,NULL,NULL,1),
-    (76,1,7,NULL,NULL,'Application fee 1','2013-11-25 00:00:00',250.50,0.50,NULL,NULL,2),
-    (77,1,7,NULL,NULL,'Application fee 2','2013-11-22 00:00:00',251.75,0.00,NULL,NULL,2),
-    (78,1,7,NULL,NULL,'Grant fee','2013-11-21 00:00:00',150.00,0.00,NULL,NULL,3),
-    (79,1,7,NULL,NULL,'Application fee 3','2013-11-12 00:00:00',250.00,0.00,NULL,NULL,2),
-    (80,1,7,NULL,NULL,'Application fee 4','2013-11-10 00:00:00',250.00,0.00,NULL,NULL,1),
-    (81,1,7,NULL,NULL,'Application fee 5','2013-11-10 00:00:00',1250.00,0.00,NULL,NULL,2),
-    (82,1,30,NULL,NULL,'Bus route 1','2013-10-23 00:00:00',500.00,0.00,NULL,NULL,2);
+INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `invoice_no`, `created_by`, `last_modified_by`, `description`,
+    `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`) VALUES
+    (7,NULL,7,'lfs_ot',NULL,'123456',NULL,NULL,'Application fee','2013-11-25 00:00:00','2014-01-01 00:00:00',250.00,0.00,NULL,NULL,1),
+    (30,NULL,110,'lfs_pd','234242','654321',NULL,NULL,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,0.00,NULL,NULL,1),
+    (41,NULL,110,'lfs_wr','77852','345253',NULL,NULL,'Grant fee','2013-11-21 00:00:00','2014-01-12 00:00:00',150.00,0.00,NULL,NULL,1),
+    (54,NULL,110,'lfs_ot','908798','829485',NULL,NULL,'Application fee','2013-11-12 00:00:00','2014-01-11 00:00:00',250.00,0.00,NULL,NULL,1),
+    (63,NULL,110,'lfs_ot','3434343','481024',NULL,NULL,'Application fee','2013-11-10 00:00:00','2014-01-10 00:00:00',250.00,0.00,NULL,NULL,1),
+    (75,NULL,110,'lfs_ot','24522','964732',NULL,NULL,'Application fee','2013-11-10 00:00:00','2014-01-09 00:00:00',250.00,0.00,NULL,NULL,1),
+    (76,1,110,'lfs_wr',NULL,'129402',NULL,NULL,'Application fee 1','2013-11-25 00:00:00','2014-01-08 00:00:00',250.50,0.50,NULL,NULL,2),
+    (77,1,110,'lfs_wr','9877868','836724',NULL,NULL,'Application fee 2','2013-11-22 00:00:00','2014-01-07 00:00:00',251.75,0.00,NULL,NULL,2),
+    (78,1,110,'lfs_wr','7674','561023',NULL,NULL,'Grant fee','2013-11-21 00:00:00','2014-01-06 00:00:00',150.00,0.00,NULL,NULL,3),
+    (79,1,110,'lfs_wr','454545','634820',NULL,NULL,'Application fee 3','2013-11-12 00:00:00','2014-01-05 00:00:00',250.00,0.00,NULL,NULL,2),
+    (80,1,110,'lfs_pd','98897','458750',NULL,NULL,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,0.00,NULL,NULL,1),
+    (81,1,110,'lfs_ot',NULL,'837495',NULL,NULL,'Application fee 5','2013-11-10 00:00:00','2014-01-03 00:00:00',1250.00,0.00,NULL,NULL,2),
+    (82,1,30,'lfs_ot',NULL,'354784',NULL,NULL,'Bus route 1','2013-10-23 00:00:00','2014-01-02 00:00:00',500.00,0.00,NULL,NULL,2),
+    (83,1,110,'lfs_wr','564253','435235',NULL,NULL,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,0.00,NULL,NULL,1),
+    (84,1,110,'lfs_ot',NULL,'435563',NULL,NULL,'Application fee 5','2013-11-10 00:00:00','2014-01-03 00:00:00',1250.00,0.00,NULL,NULL,2),
+    (85,1,110,'lfs_wr','674564','534633',NULL,NULL,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,0.00,NULL,NULL,1),
+    (86,1,110,'lfs_ot',NULL,'426786',NULL,NULL,'Application fee 5','2013-11-10 00:00:00','2014-01-03 00:00:00',1250.00,0.00,NULL,NULL,2);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `last_modified_by`, `goods_or_psv`, `lic_no`, `status`,
@@ -1165,4 +1170,18 @@ INSERT INTO submission_section_comments(submission_section,submission_id,comment
     ('persons',10,'Test persons comment','2014-10-16 15:03:19'),
     ('persons',11,'Test persons comment','2014-10-16 15:03:19');
 
+-- test business rules
+INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
+VALUES
+    (1, 'pi', 'callUpLetterDate', 'agreedDate', 35, '1900-01-01', NULL),
+    (2, 'pi', 'briefToTcDate', 'agreedDate', 7, '1900-01-01', NULL),
+    (3, 'pi', 'writtenReasonDate', 'agreedDate', 23, '1900-01-01', NULL),
+    (4, 'pi', 'decisionLetterSentDate', 'agreedDate', 5, '1900-01-01', NULL),
+    (5, 'pi', 'tcWrittenDecisionDate', 'agreedDate', 28, '1900-01-01', NULL),
+    (6, 'pi', 'tcWrittenReasonDate', 'writtenReasonDate', 5, '1900-01-01', NULL),
+    (7, 'pi', 'writtenReasonLetterDate', 'agreedDate', 27, '1900-01-01', NULL),
+    (8, 'pi', 'decSentAfterWrittenDecDate1', 'agreedDate', 5, '1900-01-01', NULL);
+
+
+    
 SET foreign_key_checks = 1;

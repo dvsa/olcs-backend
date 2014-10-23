@@ -759,13 +759,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $data = array(
             'fooBar' => 'bar',
             'cakeBar' => 'bar',
+            'inBar' => "IN ('in1', 'in2')",
             'barFor' => 'NULL',
             'numberOfStuff' => 1,
             'page' => $page,
             'limit' => $resultLimit
         );
 
-        $searchableFields = array('fooBar', 'barFor', 'numberOfStuff', 'somethingElse');
+        $searchableFields = array('fooBar', 'barFor', 'inBar', 'numberOfStuff', 'somethingElse');
 
         $expectedParams = array(
             'fooBar' => 'bar',
@@ -822,7 +823,15 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('where')
             ->with('a.fooBar = :fooBar');
 
+        $mockQueryBuilder->expects($this->at(3))
+            ->method('andWhere')
+            ->with("a.inBar IN ('in1', 'in2')");
+
         $mockQueryBuilder->expects($this->at(4))
+            ->method('andWhere')
+            ->with('a.barFor IS NULL');
+
+        $mockQueryBuilder->expects($this->at(5))
             ->method('andWhere')
             ->with('a.numberOfStuff = :numberOfStuff');
 
