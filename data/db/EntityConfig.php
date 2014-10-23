@@ -533,8 +533,22 @@ return array(
         ),
     ),
     'stay' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'stay'
+            )
+        ),
         'is_tc' => array(
             'type' => 'yesno'
+        )
+    ),
+    'appeal' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'appeal'
+            )
         )
     ),
     'complaint' => array(
