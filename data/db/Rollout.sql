@@ -495,6 +495,9 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('obj_grounds', 'ogf_pollution', 'Pollution', 'Pollut'),
     ('obj_grounds', 'ogf_vib', 'Vibration', 'Vibrat'),
     ('obj_grounds', 'ogf_vis', 'Visual Intrusion', 'Vis Int'),
+    ('obj_type', 'otf_eob', 'Environmental objection', null),
+    ('obj_type', 'otf_obj', 'Objection', null),
+    ('obj_type', 'otf_rep', 'Representation', null),
     ('opposer_type', 'obj_t_local_auth', 'Local Authority', '1'),
     ('opposer_type', 'obj_t_police', 'Police', '2'),
     ('opposer_type', 'obj_t_rta', 'RTA', '3'),
@@ -620,10 +623,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
 
     ('statement_type', 'statement_type.1', 'Section 43', null),
     ('statement_type', 'statement_type.2', 'Section 9', null),
-    ('statement_type', 'statement_type.3', 'NI Section 43', null),
-    ('statement_type', 'statement_type.4', 'NI Section 9', null),
-    ('statement_type', 'statement_type.5', 'NI Section 36', null),
-    ('statement_type', 'statement_type.6', 'NI Section 38', null),
+    ('statement_type', 'statement_type.3', 'NI Section 36', null),
+    ('statement_type', 'statement_type.4', 'NI Section 38', null),
 
     ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
     ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
@@ -741,6 +742,13 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (9, 'submission_type_title', 'submission_type_t_tm', 'TM Only Submission', NULL),
     (10, 'submission_type_title', 'submission_type_t_schedule_41', 'Schedule 4/1 Submission', NULL),
     (11, 'submission_type_title', 'submission_type_t_impounding', 'Impounding Submission', NULL);
+
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'licence_fee_status', 'lfs_ot', 'Outstanding', NULL),
+    (2, 'licence_fee_status', 'lfs_pd', 'Paid', NULL),
+    (3, 'licence_fee_status', 'lfs_wr', 'Waive Recommended', NULL),
+    (4, 'licence_fee_status', 'lfs_w', 'Waived', NULL),
+    (5, 'licence_fee_status', 'lfs_cn', 'Cancelled', NULL);
 
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
