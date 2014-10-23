@@ -29,7 +29,6 @@ class Stay implements Interfaces\EntityInterface
         Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -44,6 +43,16 @@ class Stay implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="stay_type", referencedColumnName="id", nullable=false)
      */
     protected $stayType;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="stays")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Request date
@@ -93,6 +102,29 @@ class Stay implements Interfaces\EntityInterface
     public function getStayType()
     {
         return $this->stayType;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Stay
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
