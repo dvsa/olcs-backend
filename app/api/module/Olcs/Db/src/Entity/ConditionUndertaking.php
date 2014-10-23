@@ -36,7 +36,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
