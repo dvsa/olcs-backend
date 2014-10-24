@@ -1171,17 +1171,15 @@ INSERT INTO submission_section_comments(submission_section,submission_id,comment
     ('persons',11,'Test persons comment','2014-10-16 15:03:19');
 
 -- test business rules
-INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
+INSERT INTO `sla` (`category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
 VALUES
-    (1, 'pi', 'callUpLetterDate', 'agreedDate', 35, '1900-01-01', NULL),
-    (2, 'pi', 'briefToTcDate', 'agreedDate', 7, '1900-01-01', NULL),
-    (3, 'pi', 'writtenReasonDate', 'agreedDate', 23, '1900-01-01', NULL),
-    (4, 'pi', 'decisionLetterSentDate', 'agreedDate', 5, '1900-01-01', NULL),
-    (5, 'pi', 'tcWrittenDecisionDate', 'agreedDate', 28, '1900-01-01', NULL),
-    (6, 'pi', 'tcWrittenReasonDate', 'writtenReasonDate', 5, '1900-01-01', NULL),
-    (7, 'pi', 'writtenReasonLetterDate', 'agreedDate', 27, '1900-01-01', NULL),
-    (8, 'pi', 'decSentAfterWrittenDecDate1', 'agreedDate', 5, '1900-01-01', NULL);
-
+    ('pi', 'callUpLetterDate', 'hearingDate', -35, '1900-01-01', NULL),
+    ('pi', 'briefToTcDate', 'hearingDate', -7, '1900-01-01', NULL),
+    ('pi', 'decisionLetterSentDate', 'hearingDate', 28, '1900-01-01', NULL),
+    ('pi', 'tcWrittenDecisionDate', 'hearingDate', 28, '1900-01-01', NULL),
+    ('pi', 'tcWrittenReasonDate', 'writtenReasonDate', 5, '1900-01-01', NULL),
+    ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
+    ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
 
     
 SET foreign_key_checks = 1;
