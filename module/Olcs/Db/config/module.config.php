@@ -23,6 +23,15 @@ return [
                     ]
                 ]
             ],
+            'search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/search/:query[/:index]',
+                    'defaults' => [
+                        'controller' => 'Search'
+                    ]
+                ]
+            ],
             'ref-data' => [
                 'type' => 'segment',
                 'options' => [
@@ -142,6 +151,7 @@ return [
     'controllers' => [
         'invokables' => [
             'Generic' => 'Olcs\Db\Controller\GenericController',
+            'Search' => 'Olcs\Db\Controller\SearchController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
