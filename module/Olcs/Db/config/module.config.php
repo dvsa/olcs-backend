@@ -134,7 +134,9 @@ return [
             'Zend\Log\LoggerAbstractServiceFactory'
         ],
         'factories' => [
-            'serviceFactory' => '\Olcs\Db\Service\Factory'
+            'serviceFactory' => '\Olcs\Db\Service\Factory',
+            'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
+            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
         ]
     ],
     'controllers' => [

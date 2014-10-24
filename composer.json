@@ -26,7 +26,8 @@
         "doctrine/orm": "dev-master",
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "~2.3.9",
-        "olcs/companies-house": "dev-develop"
+        "olcs/companies-house": "dev-develop",
+        "ruflin/Elastica": "dev-master"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1.5.3",
