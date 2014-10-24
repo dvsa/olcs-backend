@@ -400,6 +400,15 @@ class Application implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Previous conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousConviction", mappedBy="application")
+     */
+    protected $previousConvictions;
+
+    /**
      * Previous licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -415,6 +424,7 @@ class Application implements Interfaces\EntityInterface
     {
         $this->applicationCompletions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->previousConvictions = new ArrayCollection();
         $this->previousLicences = new ArrayCollection();
     }
 
@@ -1396,6 +1406,72 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the previous conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function setPreviousConvictions($previousConvictions)
+    {
+        $this->previousConvictions = $previousConvictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousConvictions()
+    {
+        return $this->previousConvictions;
+    }
+
+    /**
+     * Add a previous convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function addPreviousConvictions($previousConvictions)
+    {
+        if ($previousConvictions instanceof ArrayCollection) {
+            $this->previousConvictions = new ArrayCollection(
+                array_merge(
+                    $this->previousConvictions->toArray(),
+                    $previousConvictions->toArray()
+                )
+            );
+        } elseif (!$this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->add($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function removePreviousConvictions($previousConvictions)
+    {
+        if ($this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->removeElement($previousConvictions);
         }
 
         return $this;

@@ -22,12 +22,21 @@ class PreviousConviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
         Traits\Title32Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
         Traits\Penalty255Field,
         Traits\CustomVersionField;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="previousConvictions")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $application;
 
     /**
      * Conviction date
@@ -73,6 +82,29 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
     protected $courtFpn;
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return PreviousConviction
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
     /**
      * Set the conviction date
