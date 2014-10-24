@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Case many to one alt1 trait
  *
- * Auto-Generated (Shared between 13 entities)
+ * Auto-Generated (Shared between 12 entities)
  */
 trait CaseManyToOneAlt1
 {
