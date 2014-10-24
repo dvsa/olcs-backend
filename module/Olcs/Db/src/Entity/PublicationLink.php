@@ -38,7 +38,7 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
         Traits\CustomDeletedDateField,

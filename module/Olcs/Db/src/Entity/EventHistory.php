@@ -31,7 +31,7 @@ class EventHistory implements Interfaces\EntityInterface
         Traits\TransportManagerManyToOne,
         Traits\UserManyToOne,
         Traits\LicenceManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1;
+        Traits\ApplicationManyToOne;
 
     /**
      * Team

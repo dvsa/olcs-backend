@@ -25,7 +25,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_waive_reason1_idx", columns={"waive_reason_id"}),
  *        @ORM\Index(name="fk_fee_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_fee_user4_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_fee_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"})
+ *        @ORM\Index(name="fk_fee_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="fk_fee_ref_data1_idx", columns={"fee_status"})
  *    }
  * )
  */
@@ -36,10 +37,10 @@ class Fee implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TaskManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\BusRegManyToOneAlt1,
         Traits\IrfoGvPermitManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
@@ -75,6 +76,16 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveReason2;
+
+    /**
+     * Fee status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
+     */
+    protected $feeStatus;
 
     /**
      * Parent fee
@@ -151,13 +162,13 @@ class Fee implements Interfaces\EntityInterface
     protected $receivedDate;
 
     /**
-     * Fee status
+     * Receipt no
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="fee_status", length=20, nullable=true)
+     * @ORM\Column(type="string", name="receipt_no", length=40, nullable=true)
      */
-    protected $feeStatus;
+    protected $receiptNo;
 
     /**
      * Waive approval date
@@ -271,6 +282,29 @@ class Fee implements Interfaces\EntityInterface
     public function getWaiveReason2()
     {
         return $this->waiveReason2;
+    }
+
+    /**
+     * Set the fee status
+     *
+     * @param \Olcs\Db\Entity\RefData $feeStatus
+     * @return Fee
+     */
+    public function setFeeStatus($feeStatus)
+    {
+        $this->feeStatus = $feeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getFeeStatus()
+    {
+        return $this->feeStatus;
     }
 
     /**
@@ -458,26 +492,26 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the fee status
+     * Set the receipt no
      *
-     * @param string $feeStatus
+     * @param string $receiptNo
      * @return Fee
      */
-    public function setFeeStatus($feeStatus)
+    public function setReceiptNo($receiptNo)
     {
-        $this->feeStatus = $feeStatus;
+        $this->receiptNo = $receiptNo;
 
         return $this;
     }
 
     /**
-     * Get the fee status
+     * Get the receipt no
      *
      * @return string
      */
-    public function getFeeStatus()
+    public function getReceiptNo()
     {
-        return $this->feeStatus;
+        return $this->receiptNo;
     }
 
     /**

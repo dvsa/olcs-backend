@@ -32,7 +32,7 @@ class Cases implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
@@ -204,6 +204,15 @@ class Cases implements Interfaces\EntityInterface
     protected $penaltiesNote;
 
     /**
+     * Appeal
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Appeal", mappedBy="case")
+     */
+    protected $appeals;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -231,15 +240,26 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Stay
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Stay", mappedBy="case")
+     */
+    protected $stays;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->legacyOffences = new ArrayCollection();
         $this->categorys = new ArrayCollection();
+        $this->appeals = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->stays = new ArrayCollection();
     }
 
     /**
@@ -697,6 +717,72 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the appeal
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
+     * @return Cases
+     */
+    public function setAppeals($appeals)
+    {
+        $this->appeals = $appeals;
+
+        return $this;
+    }
+
+    /**
+     * Get the appeals
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAppeals()
+    {
+        return $this->appeals;
+    }
+
+    /**
+     * Add a appeals
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
+     * @return Cases
+     */
+    public function addAppeals($appeals)
+    {
+        if ($appeals instanceof ArrayCollection) {
+            $this->appeals = new ArrayCollection(
+                array_merge(
+                    $this->appeals->toArray(),
+                    $appeals->toArray()
+                )
+            );
+        } elseif (!$this->appeals->contains($appeals)) {
+            $this->appeals->add($appeals);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a appeals
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
+     * @return Cases
+     */
+    public function removeAppeals($appeals)
+    {
+        if ($this->appeals->contains($appeals)) {
+            $this->appeals->removeElement($appeals);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the condition undertaking
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
@@ -889,6 +975,72 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the stay
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $stays
+     * @return Cases
+     */
+    public function setStays($stays)
+    {
+        $this->stays = $stays;
+
+        return $this;
+    }
+
+    /**
+     * Get the stays
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getStays()
+    {
+        return $this->stays;
+    }
+
+    /**
+     * Add a stays
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $stays
+     * @return Cases
+     */
+    public function addStays($stays)
+    {
+        if ($stays instanceof ArrayCollection) {
+            $this->stays = new ArrayCollection(
+                array_merge(
+                    $this->stays->toArray(),
+                    $stays->toArray()
+                )
+            );
+        } elseif (!$this->stays->contains($stays)) {
+            $this->stays->add($stays);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a stays
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $stays
+     * @return Cases
+     */
+    public function removeStays($stays)
+    {
+        if ($this->stays->contains($stays)) {
+            $this->stays->removeElement($stays);
         }
 
         return $this;

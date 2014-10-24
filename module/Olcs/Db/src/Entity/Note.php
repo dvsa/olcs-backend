@@ -37,7 +37,7 @@ class Note implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOne,
         Traits\IrfoGvPermitManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

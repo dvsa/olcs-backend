@@ -25,11 +25,43 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OppositionManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Opposition
+     *
+     * @var \Olcs\Db\Entity\Opposition
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
+     */
+    protected $opposition;
+
+    /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return OperatingCentreOpposition
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
+    }
 }
