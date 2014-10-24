@@ -12,6 +12,10 @@
  * credentials from accidentally being committed into version control.
  */
 return array(
+    'elastic_search' => array(
+        'host'=> 'scdv-db02.sc.npm',
+        'port'=> '9200'
+    ),
     'doctrine' => array(
         'connection' => array(
             'orm_default' => array(

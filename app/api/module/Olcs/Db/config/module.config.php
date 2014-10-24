@@ -23,6 +23,15 @@ return [
                     ]
                 ]
             ],
+            'search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/search/:query[/:index]',
+                    'defaults' => [
+                        'controller' => 'Search'
+                    ]
+                ]
+            ],
             'ref-data' => [
                 'type' => 'segment',
                 'options' => [
@@ -134,12 +143,15 @@ return [
             'Zend\Log\LoggerAbstractServiceFactory'
         ],
         'factories' => [
-            'serviceFactory' => '\Olcs\Db\Service\Factory'
+            'serviceFactory' => '\Olcs\Db\Service\Factory',
+            'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
+            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
         ]
     ],
     'controllers' => [
         'invokables' => [
             'Generic' => 'Olcs\Db\Controller\GenericController',
+            'Search' => 'Olcs\Db\Controller\SearchController',
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
