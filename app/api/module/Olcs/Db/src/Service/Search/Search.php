@@ -6,8 +6,15 @@ use Elastica\Query\QueryString;
 use Elastica\Query;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
+/**
+ * Class Search
+ * @package Olcs\Db\Service\Search
+ */
 class Search
 {
+    /**
+     * @var
+     */
     protected $client;
 
     /**
@@ -26,6 +33,13 @@ class Search
         return $this->client;
     }
 
+    /**
+     * @param $query
+     * @param array $indexes
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
         $elasticaQueryString  = new QueryString($query);

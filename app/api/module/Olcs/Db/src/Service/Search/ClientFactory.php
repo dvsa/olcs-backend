@@ -7,6 +7,10 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\Exception;
 
+/**
+ * Class ClientFactory
+ * @package Olcs\Db\Service\Search
+ */
 class ClientFactory implements FactoryInterface
 {
     /**
