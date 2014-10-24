@@ -1015,5 +1015,13 @@ return array(
                 'property' => 'phoneContact'
             )
         )
+    ),
+    'previous_conviction' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'previousConviction'
+            )
+        )
     )
 );
