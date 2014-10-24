@@ -38,7 +38,7 @@ class InspectionRequest implements Interfaces\EntityInterface
         Traits\CaseManyToOne,
         Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

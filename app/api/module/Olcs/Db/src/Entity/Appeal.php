@@ -32,7 +32,6 @@ class Appeal implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OutcomeManyToOne,
-        Traits\CaseManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,
@@ -49,6 +48,16 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      */
     protected $reason;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="appeals")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
 
     /**
      * Appeal no
@@ -143,6 +152,29 @@ class Appeal implements Interfaces\EntityInterface
     public function getReason()
     {
         return $this->reason;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Appeal
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**

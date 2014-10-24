@@ -33,7 +33,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\RemovalReasonManyToOne,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\ReceivedDateField,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,

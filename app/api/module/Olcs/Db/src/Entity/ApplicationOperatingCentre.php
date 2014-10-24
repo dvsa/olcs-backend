@@ -32,7 +32,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\S4ManyToOne,
         Traits\OperatingCentreManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\AdPlacedField,
         Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
@@ -48,6 +47,16 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="operatingCentres")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $application;
 
     /**
      * Action
@@ -75,6 +84,29 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking = 0;
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return ApplicationOperatingCentre
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
     /**
      * Set the action

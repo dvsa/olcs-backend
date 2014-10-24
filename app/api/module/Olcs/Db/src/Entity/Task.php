@@ -41,7 +41,7 @@ class Task implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1,
         Traits\CategoryManyToOne,
         Traits\LicenceManyToOneAlt1,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\Description4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
