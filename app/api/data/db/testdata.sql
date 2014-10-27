@@ -1178,9 +1178,10 @@ VALUES
     ('pi', 'briefToTcDate', 'hearingDate', -7, '1900-01-01', NULL),
     ('pi', 'decisionLetterSentDate', 'hearingDate', 28, '1900-01-01', NULL),
     ('pi', 'tcWrittenDecisionDate', 'hearingDate', 28, '1900-01-01', NULL),
-    ('pi', 'tcWrittenReasonDate', 'writtenReasonDate', 5, '1900-01-01', NULL),
+    ('pi', 'tcWrittenReasonDate', 'hearingDate', 5, '1900-01-01', NULL),
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
+
 
     
 SET foreign_key_checks = 1;
