@@ -321,27 +321,27 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv limousines
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_limousines", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_limousines", nullable=false)
      */
     protected $psvLimousines = 0;
 
     /**
      * Psv no limousine confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_no_limousine_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_no_limousine_confirmation", nullable=false)
      */
     protected $psvNoLimousineConfirmation = 0;
 
     /**
      * Psv only limousines confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_only_limousines_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_only_limousines_confirmation", nullable=false)
      */
     protected $psvOnlyLimousinesConfirmation = 0;
 
@@ -1141,7 +1141,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv limousines
      *
-     * @param boolean $psvLimousines
+     * @param string $psvLimousines
      * @return Application
      */
     public function setPsvLimousines($psvLimousines)
@@ -1154,7 +1154,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv limousines
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvLimousines()
     {
@@ -1164,7 +1164,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv no limousine confirmation
      *
-     * @param boolean $psvNoLimousineConfirmation
+     * @param string $psvNoLimousineConfirmation
      * @return Application
      */
     public function setPsvNoLimousineConfirmation($psvNoLimousineConfirmation)
@@ -1177,7 +1177,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv no limousine confirmation
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvNoLimousineConfirmation()
     {
@@ -1187,7 +1187,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv only limousines confirmation
      *
-     * @param boolean $psvOnlyLimousinesConfirmation
+     * @param string $psvOnlyLimousinesConfirmation
      * @return Application
      */
     public function setPsvOnlyLimousinesConfirmation($psvOnlyLimousinesConfirmation)
@@ -1200,7 +1200,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv only limousines confirmation
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvOnlyLimousinesConfirmation()
     {

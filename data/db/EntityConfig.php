@@ -164,13 +164,13 @@ return array(
         'psv_no_small_vhl_confirmation' => array(
             'type' => 'yesno'
         ),
-        'psv_limosines' => array(
+        'psv_limousines' => array(
             'type' => 'yesno'
         ),
-        'psv_no_limosine_confirmation' => array(
+        'psv_no_limousine_confirmation' => array(
             'type' => 'yesno'
         ),
-        'psv_only_limosines_confirmation' => array(
+        'psv_only_limousines_confirmation' => array(
             'type' => 'yesno'
         ),
         'is_maintenance_suitable' => array(
