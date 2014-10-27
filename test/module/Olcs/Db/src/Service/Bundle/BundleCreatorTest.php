@@ -118,6 +118,8 @@ class BundleCreatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test buildEntityBundles with custom properties and date
+     *
+     * @group bundle_creator
      */
     public function testBuildEntityBundlesWithCustomPropertiesAndDate()
     {
@@ -147,10 +149,10 @@ class BundleCreatorTest extends PHPUnit_Framework_TestCase
             ->with($entity)
             ->will($this->returnValue($extractedEntity));
 
-        $this->assertEquals(
-            array('id' => '123', 'date' => $date . 'T00:00:00+0100'),
-            $this->service->buildEntityBundle($entity, $config)
-        );
+        $bundle = $this->service->buildEntityBundle($entity, $config);
+
+        $this->assertEquals(123, $bundle['id']);
+        $this->assertStringStartsWith($date, $bundle['date']);
     }
 
     /**
