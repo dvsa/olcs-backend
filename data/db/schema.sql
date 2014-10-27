@@ -4364,12 +4364,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `licence_no_gen` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `application_id` INT NOT NULL,
+  `licence_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_licence_no_gen_application1_idx` (`application_id` ASC),
-  CONSTRAINT `fk_licence_no_gen_application1`
-    FOREIGN KEY (`application_id`)
-    REFERENCES `application` (`id`)
+  INDEX `fk_licence_no_gen_licence1_idx` (`licence_id` ASC),
+  CONSTRAINT `fk_licence_no_gen_licence1`
+    FOREIGN KEY (`licence_id`)
+    REFERENCES `licence` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
