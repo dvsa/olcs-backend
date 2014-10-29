@@ -193,7 +193,14 @@ class BundleCreator
         try {
 
             $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->eq($field, $value));
+
+            if ($value === null) {
+                $criteriaExpression = Criteria::expr()->isNull($field);
+            } else {
+                $criteriaExpression = Criteria::expr()->eq($field, $value);
+            }
+
+            $criteria->where($criteriaExpression);
             $children = $children->matching($criteria);
 
         } catch (\Exception $ex) {
