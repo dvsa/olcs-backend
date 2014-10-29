@@ -34,7 +34,6 @@ class Cases implements Interfaces\EntityInterface
         Traits\TransportManagerManyToOne,
         Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -60,6 +59,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
      */
     protected $caseType;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="cases")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
 
     /**
      * Legacy offence
@@ -306,6 +315,29 @@ class Cases implements Interfaces\EntityInterface
     public function getCaseType()
     {
         return $this->caseType;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Cases
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

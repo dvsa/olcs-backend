@@ -234,6 +234,12 @@ return array(
         )
     ),
     'cases' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'case'
+            )
+        ),
         'is_impounding' => array(
             'type' => 'yesno'
         )
