@@ -23,6 +23,8 @@ class Bootstrap
 
         $loader->addPsr4('OlcsTest\\Db\\', __DIR__ . '/module/Olcs/Db/src/');
 
+        self::getServiceManager();
+
         // Grab the application config
         $config = include dirname(__DIR__) . '/config/application.config.php';
 
