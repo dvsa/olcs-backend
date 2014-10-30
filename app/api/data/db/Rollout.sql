@@ -681,7 +681,7 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (6, 'submission_section', 'operating-centres', 'Operating centres', NULL),
 
     (8, 'submission_section', 'conditions-and-undertakings', 'Conditions and undertakings', NULL),
-    (9, 'submission_section', 'intelligent-unit-check', 'Intelligence unit check', NULL),
+    (9, 'submission_section', 'intelligence-unit-check', 'Intelligence unit check', NULL),
     (10, 'submission_section', 'interim', 'Interim', NULL),
     (11, 'submission_section', 'advertisement', 'Advertisement', NULL),
     (12, 'submission_section', 'linked-licences-app-numbers', 'Linked licences & application numbers', NULL),
