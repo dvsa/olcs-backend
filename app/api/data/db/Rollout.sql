@@ -298,11 +298,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('case_type', 'case_t_app', 'Application', null),
     ('case_type', 'case_t_lic', 'Licence', null),
     ('case_type', 'case_t_tm', 'Transport Manager', null),
+    ('case_type', 'case_t_tm', 'Impounding', null),
 
-    ('case_type', 'case_t_msi', 'MSI', 'MSI'),
-    ('case_type', 'case_t_msinre', 'MSI - No response entered', 'MSINRE'),
-    ('case_type', 'case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
-    ('case_type', 'case_t_nmsi', 'Non-MSI', 'NMSI'),
 
     ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
     ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
