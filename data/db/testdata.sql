@@ -350,7 +350,8 @@ INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, 
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16),
-(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16);
+(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16),
+(3,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,41,17);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
@@ -532,7 +533,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_si','2007-01-12','2007-01-12','2007-01-12','',1,
+    (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
     21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
     NULL,NULL, NULL,NOW(),NOW(),1),
