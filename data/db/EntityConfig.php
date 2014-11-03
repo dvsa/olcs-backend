@@ -649,7 +649,7 @@ return array(
             )
         )
     ),
-    'submission_section_comments' => array(
+    'submission_section_comment' => array(
         'submission_id' => array(
             'inversedBy' => array(
                 'entity' => 'Submission',
