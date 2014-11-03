@@ -3210,9 +3210,9 @@ CREATE TABLE IF NOT EXISTS `note` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `submission_section_comments`
+-- Table `submission_section_comment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `submission_section_comments` (
+CREATE TABLE IF NOT EXISTS `submission_section_comment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `comment` TEXT NULL,
   `submission_id` INT NOT NULL,
@@ -3224,25 +3224,25 @@ CREATE TABLE IF NOT EXISTS `submission_section_comments` (
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_submission_section_submission1_idx` (`submission_id` ASC),
-  INDEX `fk_submission_section_comments_ref_data1_idx` (`submission_section` ASC),
-  INDEX `fk_submission_section_comments_user1_idx` (`created_by` ASC),
-  INDEX `fk_submission_section_comments_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_submission_section_comment_ref_data1_idx` (`submission_section` ASC),
+  INDEX `fk_submission_section_comment_user1_idx` (`created_by` ASC),
+  INDEX `fk_submission_section_comment_user2_idx` (`last_modified_by` ASC),
   CONSTRAINT `fk_submission_section_submission1`
     FOREIGN KEY (`submission_id`)
     REFERENCES `submission` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_submission_section_comments_ref_data1`
+  CONSTRAINT `fk_submission_section_comment_ref_data1`
     FOREIGN KEY (`submission_section`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_submission_section_comments_user1`
+  CONSTRAINT `fk_submission_section_comment_user1`
     FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_submission_section_comments_user2`
+  CONSTRAINT `fk_submission_section_comment_user2`
     FOREIGN KEY (`last_modified_by`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION

@@ -8,7 +8,7 @@ TRUNCATE TABLE `decision`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `submission`;
-TRUNCATE TABLE `submission_section_comments`;
+TRUNCATE TABLE `submission_section_comment`;
 TRUNCATE TABLE `conviction_category`;
 TRUNCATE TABLE `document_sub_category`;
 
