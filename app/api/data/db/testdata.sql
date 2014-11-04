@@ -358,7 +358,8 @@ INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, 
     `no_of_trailers_possessed`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16),
-(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16);
+(2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16),
+(3,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,41,17);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
@@ -540,7 +541,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_si','2007-01-12','2007-01-12','2007-01-12','',1,
+    (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_new',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
     21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_new',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
     NULL,NULL, NULL,NOW(),NOW(),1),
@@ -588,9 +589,9 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     '2014-02-20 00:00:00',1);
 
 INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1, 0, '1231', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-    (2, 0, '1232', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-    (3, 0, '1233', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (1, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (2, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (3, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
     (4, 0, '1234', '2014-02-20 00:00:00', 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
     (5, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
     (6, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
@@ -1178,9 +1179,10 @@ VALUES
     ('pi', 'briefToTcDate', 'hearingDate', -7, '1900-01-01', NULL),
     ('pi', 'decisionLetterSentDate', 'hearingDate', 28, '1900-01-01', NULL),
     ('pi', 'tcWrittenDecisionDate', 'hearingDate', 28, '1900-01-01', NULL),
-    ('pi', 'tcWrittenReasonDate', 'writtenReasonDate', 5, '1900-01-01', NULL),
+    ('pi', 'tcWrittenReasonDate', 'hearingDate', 5, '1900-01-01', NULL),
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
+
 
     
 SET foreign_key_checks = 1;
