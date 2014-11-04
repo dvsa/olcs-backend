@@ -128,7 +128,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getNewEntity',
                 'getDoctrineHydrator',
                 'dbPersist',
@@ -155,8 +155,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with($data, $firstEntity)
             ->will($this->returnValue($firstEntity));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getNewEntity')
@@ -190,7 +192,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getNewEntity',
                 'getDoctrineHydrator',
                 'dbPersist',
@@ -238,8 +240,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with('Address')
             ->will($this->returnValue($mockAddressService));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getNewEntity')
@@ -273,7 +277,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getNewEntity',
                 'getDoctrineHydrator',
                 'dbPersist',
@@ -321,8 +325,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->with('Address')
             ->will($this->returnValue($mockAddressService));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getNewEntity')
@@ -356,7 +362,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getNewEntity',
                 'getDoctrineHydrator',
                 'dbPersist',
@@ -398,8 +404,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getService')
             ->with('Address');
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getNewEntity')
@@ -433,7 +441,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getNewEntity',
                 'getDoctrineHydrator',
                 'dbPersist',
@@ -476,8 +484,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getService')
             ->with('Address');
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getNewEntity')
@@ -509,7 +519,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $this->getMockService(array('log', 'getEntityById', 'getBundleCreator'));
+        $this->getMockService(array('getLogger', 'getEntityById', 'getBundleCreator'));
 
         $id = 7;
 
@@ -529,8 +539,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('getBundleCreator')
             ->will($this->returnValue($mockBundleCreator));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getEntityById')
@@ -549,14 +561,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithoutEntity()
     {
-        $this->getMockService(array('log', 'getEntityById'));
+        $this->getMockService(array('getLogger', 'getEntityById'));
 
         $id = 7;
 
         $mockEntity = null;
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getEntityById')
@@ -577,7 +591,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getValidSearchFields',
                 'getEntityManager',
                 'getEntityName',
@@ -705,8 +719,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('createQueryBuilder')
             ->will($this->returnValue($mockQueryBuilder));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getValidSearchFields')
@@ -744,7 +760,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log',
+                'getLogger',
                 'getValidSearchFields',
                 'getEntityManager', 'getEntityName',
                 'getDoctrineHydrator',
@@ -862,8 +878,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('createQueryBuilder')
             ->will($this->returnValue($mockQueryBuilder));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getValidSearchFields')
@@ -945,15 +963,17 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateWithoutVersion()
     {
-        $this->getMockService(array('log'));
+        $this->getMockService(array('getLogger'));
 
         $id = 7;
 
         $data = array(
         );
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->update($id, $data);
     }
@@ -970,7 +990,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     public function testUpdateWithVersionEntityNotFound()
     {
         $this->getMockService(
-            array('log', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+            array('getLogger', 'getEntityManager', 'getEntityName', 'processAddressEntity')
         );
 
         $id = 7;
@@ -987,8 +1007,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('processAddressEntity')
@@ -1013,7 +1035,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getDoctrineHydrator',
+                'getLogger', 'getDoctrineHydrator',
                 'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
             )
         );
@@ -1045,8 +1067,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getDoctrineHydrator')
@@ -1083,7 +1107,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockService(
             array(
-                'log', 'getDoctrineHydrator',
+                'getLogger', 'getDoctrineHydrator',
                 'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
             )
         );
@@ -1115,8 +1139,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getDoctrineHydrator')
@@ -1151,15 +1177,17 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithoutVersion()
     {
-        $this->getMockService(array('log'));
+        $this->getMockService(array('getLogger'));
 
         $id = 7;
 
         $data = array(
         );
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->patch($id, $data);
     }
@@ -1176,7 +1204,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
     public function testPatchWithVersionEntityNotFound()
     {
         $this->getMockService(
-            array('log', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+            array('getLogger', 'getEntityManager', 'getEntityName', 'processAddressEntity')
         );
 
         $id = 7;
@@ -1193,8 +1221,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('processAddressEntity')
@@ -1216,14 +1246,16 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteWithoutEntity()
     {
-        $this->getMockService(array('log', 'getEntityById'));
+        $this->getMockService(array('getLogger', 'getEntityById'));
 
         $id = 7;
 
         $mockEntity = null;
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getEntityById')
@@ -1243,7 +1275,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteWithEntity()
     {
-        $this->getMockService(array('log', 'getEntityById', 'getEntityManager', 'dbFlush'));
+        $this->getMockService(array('getLogger', 'getEntityById', 'getEntityManager', 'dbFlush'));
 
         $id = 7;
 
@@ -1255,8 +1287,10 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             ->method('remove')
             ->with($mockEntity);
 
+        $mockLog = $this->getMock('stdClass', ['info']);
+
         $this->service->expects($this->once())
-            ->method('log');
+            ->method('getLogger')->willReturn($mockLog);
 
         $this->service->expects($this->once())
             ->method('getEntityById')
