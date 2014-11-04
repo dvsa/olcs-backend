@@ -44,6 +44,8 @@ if ($profile) {
 
     $uri = strtok($_SERVER['REQUEST_URI'], "?");
     $request = $_SERVER['REQUEST_METHOD'] . " " . $uri;
-    fwrite($fp, "[olcs-backend] " . date("Y-m-d H:i:s") . " " . $request . " " . "http://192.168.149.2/xhprof/xhprof_html/index.php?run=" . $run_id . "&source=olcs-backend\n");
+    $content = "[olcs-backend] " . date("Y-m-d H:i:s") . " " . $request
+        . " http://192.168.149.2/xhprof/xhprof_html/index.php?run=" . $run_id . "&source=olcs-backend\n";
+    fwrite($fp, $content);
     fclose($fp);
 }
