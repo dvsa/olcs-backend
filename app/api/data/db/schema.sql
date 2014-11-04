@@ -2827,7 +2827,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `conviction` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `defendant_type` VARCHAR(32) NULL,
+  `defendant_type` VARCHAR(32) NOT NULL,
   `offence_date` DATETIME NULL,
   `conviction_date` DATETIME NULL,
   `court` VARCHAR(70) NULL,
