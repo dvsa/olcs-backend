@@ -67,10 +67,6 @@ class GenericControllerTest extends PHPUnit_Framework_TestCase
             ->with('FooBar');
 
         $controller->expects($this->once())
-            ->method('logRequest')
-            ->with($mockEvent);
-
-        $controller->expects($this->once())
             ->method('doDispatch');
 
         $controller->onDispatch($mockEvent);
