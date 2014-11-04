@@ -61,10 +61,6 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
             ->method('getRouteMatch')
             ->will($this->returnValue(false));
 
-        $this->controller->expects($this->once())
-            ->method('logRequest')
-            ->with($mockEvent);
-
         $this->controller->onDispatch($mockEvent);
     }
 
@@ -95,13 +91,6 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
             ->method('getRouteMatch')
             ->will($this->returnValue($mockRouteMatch));
 
-        $this->controller->expects($this->once())
-            ->method('logRequest')
-            ->with($mockEvent);
-
-        $this->controller->expects($this->once())
-            ->method('log');
-
         // We are expecting this method to be called as the action doesn't exist
         $this->controller->expects($this->once())
             ->method('notFoundAction');
@@ -124,17 +113,7 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
 
         $mockRouteMatch = $this->getMock('\stdClass', array('getParam', 'setParam'));
 
-        $mockRouteMatch->expects($this->at(0))
-            ->method('getParam')
-            ->with('action')
-            ->will($this->returnValue(false));
-
         $mockRouteMatch->expects($this->at(1))
-            ->method('getParam')
-            ->with('action')
-            ->will($this->returnValue(false));
-
-        $mockRouteMatch->expects($this->at(2))
             ->method('getParam')
             ->with('id')
             ->will($this->returnValue(123));
@@ -160,13 +139,6 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
         $mockEvent->expects($this->any())
             ->method('getRequest')
             ->will($this->returnValue($mockRequest));
-
-        $this->controller->expects($this->once())
-            ->method('logRequest')
-            ->with($mockEvent);
-
-        $this->controller->expects($this->once())
-            ->method('log');
 
         // We are expecting this method to be called as the method was get without an id
         $this->controller->expects($this->once())
@@ -198,11 +170,6 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
 
         $mockRouteMatch->expects($this->at(1))
             ->method('getParam')
-            ->with('action')
-            ->will($this->returnValue(false));
-
-        $mockRouteMatch->expects($this->at(2))
-            ->method('getParam')
             ->with('id')
             ->will($this->returnValue(123));
 
@@ -227,13 +194,6 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
         $mockEvent->expects($this->any())
             ->method('getRequest')
             ->will($this->returnValue($mockRequest));
-
-        $this->controller->expects($this->once())
-            ->method('logRequest')
-            ->with($mockEvent);
-
-        $this->controller->expects($this->once())
-            ->method('log');
 
         $this->controller->expects($this->once())
             ->method('get')
@@ -285,59 +245,5 @@ class AbstractControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($paramsMock));
 
         $this->assertEquals('SomeController', $this->controller->getControllerName());
-    }
-
-    /**
-     * Test logRequest
-     *
-     * @group Controller
-     * @group AbstractController
-     */
-    public function testLogRequest()
-    {
-        $this->getMockController(array('log', 'plugin'));
-
-        $mockHeaders = $this->getMock('\stdClass', array('toString'));
-
-        $mockHeaders->expects($this->once())
-            ->method('toString')
-            ->will($this->returnValue('Headers'));
-
-        $mockRequest = $this->getMock('\stdClass', array('getHeaders'));
-
-        $mockRequest->expects($this->once())
-            ->method('getHeaders')
-            ->will($this->returnValue($mockHeaders));
-
-        $mockEvent = $this->getMockBuilder(
-            '\Zend\Mvc\MvcEvent',
-            array(
-                'getRequest'
-            )
-        )->disableOriginalConstructor()->getMock();
-
-        $mockEvent->expects($this->once())
-            ->method('getRequest')
-            ->will($this->returnValue($mockRequest));
-
-        $mockPlugin = $this->getMock('\stdClass', array('fromRoute', 'fromQuery', 'fromPost'));
-
-        $mockPlugin->expects($this->once())
-            ->method('fromRoute')
-            ->will($this->returnValue(array()));
-
-        $mockPlugin->expects($this->once())
-            ->method('fromQuery')
-            ->will($this->returnValue(array()));
-
-        $mockPlugin->expects($this->once())
-            ->method('fromPost')
-            ->will($this->returnValue(array()));
-
-        $this->controller->expects($this->any())
-            ->method('plugin')
-            ->will($this->returnValue($mockPlugin));
-
-        $this->controller->logRequest($mockEvent);
     }
 }
