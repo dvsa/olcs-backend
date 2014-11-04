@@ -76,7 +76,7 @@ abstract class ServiceAbstract
      */
     public function create($data)
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $data = $this->processAddressEntity($data);
 
@@ -130,7 +130,7 @@ abstract class ServiceAbstract
      */
     public function get($id, array $data = array())
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $entity = $this->getEntityById($id);
 
@@ -184,7 +184,7 @@ abstract class ServiceAbstract
      */
     public function getList($data)
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->getEntityList($data);
     }
@@ -325,7 +325,7 @@ abstract class ServiceAbstract
      */
     public function update($id, $data)
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }
@@ -340,7 +340,7 @@ abstract class ServiceAbstract
      */
     public function patch($id, $data)
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }
@@ -402,7 +402,7 @@ abstract class ServiceAbstract
      */
     public function delete($id)
     {
-        $this->log(sprintf('Service Executing: \'%1$s\' with \'%2$s\'', __METHOD__, print_r(func_get_args(), true)));
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $entity = $this->getEntityById($id);
 
