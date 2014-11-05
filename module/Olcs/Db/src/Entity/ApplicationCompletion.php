@@ -16,12 +16,16 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_application_completion_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_application_completion_user2_idx", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="fk_application_completion_application_id_udx", columns={"application_id"})
  *    }
  * )
  */
 class ApplicationCompletion implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
@@ -29,294 +33,185 @@ class ApplicationCompletion implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Identifier - Id
+     * Application
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="applicationCompletions")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
-    protected $id;
+    protected $application;
 
     /**
-     * Section your business status
+     * Type of licence status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_status", nullable=true)
+     * @ORM\Column(type="integer", name="type_of_licence_status", nullable=true)
      */
-    protected $sectionYourBusinessStatus;
+    protected $typeOfLicenceStatus;
 
     /**
-     * Section your business business type status
+     * Business type status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_bt_status", nullable=true)
+     * @ORM\Column(type="integer", name="business_type_status", nullable=true)
      */
-    protected $sectionYourBusinessBusinessTypeStatus;
+    protected $businessTypeStatus;
 
     /**
-     * Section your business business details status
+     * Business details status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_bd_status", nullable=true)
+     * @ORM\Column(type="integer", name="business_details_status", nullable=true)
      */
-    protected $sectionYourBusinessBusinessDetailsStatus;
+    protected $businessDetailsStatus;
 
     /**
-     * Section your business addresses status
+     * Addresses status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_add_status", nullable=true)
+     * @ORM\Column(type="integer", name="addresses_status", nullable=true)
      */
-    protected $sectionYourBusinessAddressesStatus;
+    protected $addressesStatus;
 
     /**
-     * Section your business people status
+     * People status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_peo_status", nullable=true)
+     * @ORM\Column(type="integer", name="people_status", nullable=true)
      */
-    protected $sectionYourBusinessPeopleStatus;
+    protected $peopleStatus;
 
     /**
-     * Section your business sole trader status
+     * Taxi phv status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_yb_st_status", nullable=true)
+     * @ORM\Column(type="integer", name="taxi_phv_status", nullable=true)
      */
-    protected $sectionYourBusinessSoleTraderStatus;
+    protected $taxiPhvStatus;
 
     /**
-     * Section type of licence status
+     * Operating centres status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tol_status", nullable=true)
+     * @ORM\Column(type="integer", name="operating_centres_status", nullable=true)
      */
-    protected $sectionTypeOfLicenceStatus;
+    protected $operatingCentresStatus;
 
     /**
-     * Section type of licence operator location status
+     * Financial evidence status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tol_ol_status", nullable=true)
+     * @ORM\Column(type="integer", name="financial_evidence_status", nullable=true)
      */
-    protected $sectionTypeOfLicenceOperatorLocationStatus;
+    protected $financialEvidenceStatus;
 
     /**
-     * Section type of licence operator type status
+     * Transport managers status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tol_ot_status", nullable=true)
+     * @ORM\Column(type="integer", name="transport_managers_status", nullable=true)
      */
-    protected $sectionTypeOfLicenceOperatorTypeStatus;
+    protected $transportManagersStatus;
 
     /**
-     * Section type of licence licence type status
+     * Vehicles status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tol_lt_status", nullable=true)
+     * @ORM\Column(type="integer", name="vehicles_status", nullable=true)
      */
-    protected $sectionTypeOfLicenceLicenceTypeStatus;
+    protected $vehiclesStatus;
 
     /**
-     * Section operating centres status
+     * Vehicles psv status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_ocs_status", nullable=true)
+     * @ORM\Column(type="integer", name="vehicles_psv_status", nullable=true)
      */
-    protected $sectionOperatingCentresStatus;
+    protected $vehiclesPsvStatus;
 
     /**
-     * Section operating centres authorisation status
+     * Vehicles declarations status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_ocs_auth_status", nullable=true)
+     * @ORM\Column(type="integer", name="vehicles_declarations_status", nullable=true)
      */
-    protected $sectionOperatingCentresAuthorisationStatus;
+    protected $vehiclesDeclarationsStatus;
 
     /**
-     * Section operating centres financial evidence status
+     * Discs status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_ocs_fe_status", nullable=true)
+     * @ORM\Column(type="integer", name="discs_status", nullable=true)
      */
-    protected $sectionOperatingCentresFinancialEvidenceStatus;
+    protected $discsStatus;
 
     /**
-     * Section transport managers status
+     * Community licences status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tms_status", nullable=true)
+     * @ORM\Column(type="integer", name="community_licences_status", nullable=true)
      */
-    protected $sectionTransportManagersStatus;
+    protected $communityLicencesStatus;
 
     /**
-     * Section transport managers placeholder status
+     * Safety status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_tms_p_status", nullable=true)
+     * @ORM\Column(type="integer", name="safety_status", nullable=true)
      */
-    protected $sectionTransportManagersPlaceholderStatus;
+    protected $safetyStatus;
 
     /**
-     * Section vehicle safety status
+     * Conditions undertakings status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_veh_status", nullable=true)
+     * @ORM\Column(type="integer", name="conditions_undertakings_status", nullable=true)
      */
-    protected $sectionVehicleSafetyStatus;
+    protected $conditionsUndertakingsStatus;
 
     /**
-     * Section vehicle safety undertakings status
+     * Financial history status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_veh_und_status", nullable=true)
+     * @ORM\Column(type="integer", name="financial_history_status", nullable=true)
      */
-    protected $sectionVehicleSafetyUndertakingsStatus;
+    protected $financialHistoryStatus;
 
     /**
-     * Section vehicle safety vehicle status
+     * Licence history status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_veh_v_status", nullable=true)
+     * @ORM\Column(type="integer", name="licence_history_status", nullable=true)
      */
-    protected $sectionVehicleSafetyVehicleStatus;
+    protected $licenceHistoryStatus;
 
     /**
-     * Section vehicle safety vehicle psv status
+     * Convictions penalties status
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="section_veh_vpsv_status", nullable=true)
+     * @ORM\Column(type="integer", name="convictions_penalties_status", nullable=true)
      */
-    protected $sectionVehicleSafetyVehiclePsvStatus;
-
-    /**
-     * Section vehicle safety safety status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_veh_s_status", nullable=true)
-     */
-    protected $sectionVehicleSafetySafetyStatus;
-
-    /**
-     * Section previous history status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_ph_status", nullable=true)
-     */
-    protected $sectionPreviousHistoryStatus;
-
-    /**
-     * Section previous history financial history status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_ph_fh_status", nullable=true)
-     */
-    protected $sectionPreviousHistoryFinancialHistoryStatus;
-
-    /**
-     * Section previous history licence history status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_ph_lh_status", nullable=true)
-     */
-    protected $sectionPreviousHistoryLicenceHistoryStatus;
-
-    /**
-     * Section previous history convictions penalties status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_ph_cp_status", nullable=true)
-     */
-    protected $sectionPreviousHistoryConvictionsPenaltiesStatus;
-
-    /**
-     * Section review declarations status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_rd_status", nullable=true)
-     */
-    protected $sectionReviewDeclarationsStatus;
-
-    /**
-     * Section review declarations summary status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_rd_sum_status", nullable=true)
-     */
-    protected $sectionReviewDeclarationsSummaryStatus;
-
-    /**
-     * Section payment submission status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_pay_status", nullable=true)
-     */
-    protected $sectionPaymentSubmissionStatus;
-
-    /**
-     * Section payment submission payment status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_pay_pay_status", nullable=true)
-     */
-    protected $sectionPaymentSubmissionPaymentStatus;
-
-    /**
-     * Section payment submission summary status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_pay_summary_status", nullable=true)
-     */
-    protected $sectionPaymentSubmissionSummaryStatus;
-
-    /**
-     * Section taxi phv status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_tp_status", nullable=true)
-     */
-    protected $sectionTaxiPhvStatus;
-
-    /**
-     * Section taxi phv licence status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_tp_lic_status", nullable=true)
-     */
-    protected $sectionTaxiPhvLicenceStatus;
+    protected $convictionsPenaltiesStatus;
 
     /**
      * Last section
@@ -328,739 +223,463 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $lastSection;
 
     /**
-     * Set the id
+     * Set the application
      *
-     * @param \Olcs\Db\Entity\Application $id
+     * @param \Olcs\Db\Entity\Application $application
      * @return ApplicationCompletion
      */
-    public function setId($id)
+    public function setApplication($application)
     {
-        $this->id = $id;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * Get the id
+     * Get the application
      *
      * @return \Olcs\Db\Entity\Application
      */
-    public function getId()
+    public function getApplication()
     {
-        return $this->id;
+        return $this->application;
     }
 
     /**
-     * Set the section your business status
+     * Set the type of licence status
      *
-     * @param int $sectionYourBusinessStatus
+     * @param int $typeOfLicenceStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessStatus($sectionYourBusinessStatus)
+    public function setTypeOfLicenceStatus($typeOfLicenceStatus)
     {
-        $this->sectionYourBusinessStatus = $sectionYourBusinessStatus;
+        $this->typeOfLicenceStatus = $typeOfLicenceStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business status
+     * Get the type of licence status
      *
      * @return int
      */
-    public function getSectionYourBusinessStatus()
+    public function getTypeOfLicenceStatus()
     {
-        return $this->sectionYourBusinessStatus;
+        return $this->typeOfLicenceStatus;
     }
 
     /**
-     * Set the section your business business type status
+     * Set the business type status
      *
-     * @param int $sectionYourBusinessBusinessTypeStatus
+     * @param int $businessTypeStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessBusinessTypeStatus($sectionYourBusinessBusinessTypeStatus)
+    public function setBusinessTypeStatus($businessTypeStatus)
     {
-        $this->sectionYourBusinessBusinessTypeStatus = $sectionYourBusinessBusinessTypeStatus;
+        $this->businessTypeStatus = $businessTypeStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business business type status
+     * Get the business type status
      *
      * @return int
      */
-    public function getSectionYourBusinessBusinessTypeStatus()
+    public function getBusinessTypeStatus()
     {
-        return $this->sectionYourBusinessBusinessTypeStatus;
+        return $this->businessTypeStatus;
     }
 
     /**
-     * Set the section your business business details status
+     * Set the business details status
      *
-     * @param int $input
+     * @param int $businessDetailsStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessBusinessDetailsStatus($input)
+    public function setBusinessDetailsStatus($businessDetailsStatus)
     {
-        $this->sectionYourBusinessBusinessDetailsStatus = $input;
+        $this->businessDetailsStatus = $businessDetailsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business business details status
+     * Get the business details status
      *
      * @return int
      */
-    public function getSectionYourBusinessBusinessDetailsStatus()
+    public function getBusinessDetailsStatus()
     {
-        return $this->sectionYourBusinessBusinessDetailsStatus;
+        return $this->businessDetailsStatus;
     }
 
     /**
-     * Set the section your business addresses status
+     * Set the addresses status
      *
-     * @param int $sectionYourBusinessAddressesStatus
+     * @param int $addressesStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessAddressesStatus($sectionYourBusinessAddressesStatus)
+    public function setAddressesStatus($addressesStatus)
     {
-        $this->sectionYourBusinessAddressesStatus = $sectionYourBusinessAddressesStatus;
+        $this->addressesStatus = $addressesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business addresses status
+     * Get the addresses status
      *
      * @return int
      */
-    public function getSectionYourBusinessAddressesStatus()
+    public function getAddressesStatus()
     {
-        return $this->sectionYourBusinessAddressesStatus;
+        return $this->addressesStatus;
     }
 
     /**
-     * Set the section your business people status
+     * Set the people status
      *
-     * @param int $sectionYourBusinessPeopleStatus
+     * @param int $peopleStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessPeopleStatus($sectionYourBusinessPeopleStatus)
+    public function setPeopleStatus($peopleStatus)
     {
-        $this->sectionYourBusinessPeopleStatus = $sectionYourBusinessPeopleStatus;
+        $this->peopleStatus = $peopleStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business people status
+     * Get the people status
      *
      * @return int
      */
-    public function getSectionYourBusinessPeopleStatus()
+    public function getPeopleStatus()
     {
-        return $this->sectionYourBusinessPeopleStatus;
+        return $this->peopleStatus;
     }
 
     /**
-     * Set the section your business sole trader status
+     * Set the taxi phv status
      *
-     * @param int $sectionYourBusinessSoleTraderStatus
+     * @param int $taxiPhvStatus
      * @return ApplicationCompletion
      */
-    public function setSectionYourBusinessSoleTraderStatus($sectionYourBusinessSoleTraderStatus)
+    public function setTaxiPhvStatus($taxiPhvStatus)
     {
-        $this->sectionYourBusinessSoleTraderStatus = $sectionYourBusinessSoleTraderStatus;
+        $this->taxiPhvStatus = $taxiPhvStatus;
 
         return $this;
     }
 
     /**
-     * Get the section your business sole trader status
+     * Get the taxi phv status
      *
      * @return int
      */
-    public function getSectionYourBusinessSoleTraderStatus()
+    public function getTaxiPhvStatus()
     {
-        return $this->sectionYourBusinessSoleTraderStatus;
+        return $this->taxiPhvStatus;
     }
 
     /**
-     * Set the section type of licence status
+     * Set the operating centres status
      *
-     * @param int $sectionTypeOfLicenceStatus
+     * @param int $operatingCentresStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceStatus($sectionTypeOfLicenceStatus)
+    public function setOperatingCentresStatus($operatingCentresStatus)
     {
-        $this->sectionTypeOfLicenceStatus = $sectionTypeOfLicenceStatus;
+        $this->operatingCentresStatus = $operatingCentresStatus;
 
         return $this;
     }
 
     /**
-     * Get the section type of licence status
+     * Get the operating centres status
      *
      * @return int
      */
-    public function getSectionTypeOfLicenceStatus()
+    public function getOperatingCentresStatus()
     {
-        return $this->sectionTypeOfLicenceStatus;
+        return $this->operatingCentresStatus;
     }
 
     /**
-     * Set the section type of licence operator location status
+     * Set the financial evidence status
      *
-     * @param int $input
+     * @param int $financialEvidenceStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceOperatorLocationStatus($input)
+    public function setFinancialEvidenceStatus($financialEvidenceStatus)
     {
-        $this->sectionTypeOfLicenceOperatorLocationStatus = $input;
+        $this->financialEvidenceStatus = $financialEvidenceStatus;
 
         return $this;
     }
 
     /**
-     * Get the section type of licence operator location status
+     * Get the financial evidence status
      *
      * @return int
      */
-    public function getSectionTypeOfLicenceOperatorLocationStatus()
+    public function getFinancialEvidenceStatus()
     {
-        return $this->sectionTypeOfLicenceOperatorLocationStatus;
+        return $this->financialEvidenceStatus;
     }
 
     /**
-     * Set the section type of licence operator type status
+     * Set the transport managers status
      *
-     * @param int $sectionTypeOfLicenceOperatorTypeStatus
+     * @param int $transportManagersStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceOperatorTypeStatus($sectionTypeOfLicenceOperatorTypeStatus)
+    public function setTransportManagersStatus($transportManagersStatus)
     {
-        $this->sectionTypeOfLicenceOperatorTypeStatus = $sectionTypeOfLicenceOperatorTypeStatus;
+        $this->transportManagersStatus = $transportManagersStatus;
 
         return $this;
     }
 
     /**
-     * Get the section type of licence operator type status
+     * Get the transport managers status
      *
      * @return int
      */
-    public function getSectionTypeOfLicenceOperatorTypeStatus()
+    public function getTransportManagersStatus()
     {
-        return $this->sectionTypeOfLicenceOperatorTypeStatus;
+        return $this->transportManagersStatus;
     }
 
     /**
-     * Set the section type of licence licence type status
+     * Set the vehicles status
      *
-     * @param int $sectionTypeOfLicenceLicenceTypeStatus
+     * @param int $vehiclesStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTypeOfLicenceLicenceTypeStatus($sectionTypeOfLicenceLicenceTypeStatus)
+    public function setVehiclesStatus($vehiclesStatus)
     {
-        $this->sectionTypeOfLicenceLicenceTypeStatus = $sectionTypeOfLicenceLicenceTypeStatus;
+        $this->vehiclesStatus = $vehiclesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section type of licence licence type status
+     * Get the vehicles status
      *
      * @return int
      */
-    public function getSectionTypeOfLicenceLicenceTypeStatus()
+    public function getVehiclesStatus()
     {
-        return $this->sectionTypeOfLicenceLicenceTypeStatus;
+        return $this->vehiclesStatus;
     }
 
     /**
-     * Set the section operating centres status
+     * Set the vehicles psv status
      *
-     * @param int $sectionOperatingCentresStatus
+     * @param int $vehiclesPsvStatus
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresStatus($sectionOperatingCentresStatus)
+    public function setVehiclesPsvStatus($vehiclesPsvStatus)
     {
-        $this->sectionOperatingCentresStatus = $sectionOperatingCentresStatus;
+        $this->vehiclesPsvStatus = $vehiclesPsvStatus;
 
         return $this;
     }
 
     /**
-     * Get the section operating centres status
+     * Get the vehicles psv status
      *
      * @return int
      */
-    public function getSectionOperatingCentresStatus()
+    public function getVehiclesPsvStatus()
     {
-        return $this->sectionOperatingCentresStatus;
+        return $this->vehiclesPsvStatus;
     }
 
     /**
-     * Set the section operating centres authorisation status
+     * Set the vehicles declarations status
      *
-     * @param int $input
+     * @param int $vehiclesDeclarationsStatus
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresAuthorisationStatus($input)
+    public function setVehiclesDeclarationsStatus($vehiclesDeclarationsStatus)
     {
-        $this->sectionOperatingCentresAuthorisationStatus = $input;
+        $this->vehiclesDeclarationsStatus = $vehiclesDeclarationsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section operating centres authorisation status
+     * Get the vehicles declarations status
      *
      * @return int
      */
-    public function getSectionOperatingCentresAuthorisationStatus()
+    public function getVehiclesDeclarationsStatus()
     {
-        return $this->sectionOperatingCentresAuthorisationStatus;
+        return $this->vehiclesDeclarationsStatus;
     }
 
     /**
-     * Set the section operating centres financial evidence status
+     * Set the discs status
      *
-     * @param int $input
+     * @param int $discsStatus
      * @return ApplicationCompletion
      */
-    public function setSectionOperatingCentresFinancialEvidenceStatus($input)
+    public function setDiscsStatus($discsStatus)
     {
-        $this->sectionOperatingCentresFinancialEvidenceStatus = $input;
+        $this->discsStatus = $discsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section operating centres financial evidence status
+     * Get the discs status
      *
      * @return int
      */
-    public function getSectionOperatingCentresFinancialEvidenceStatus()
+    public function getDiscsStatus()
     {
-        return $this->sectionOperatingCentresFinancialEvidenceStatus;
+        return $this->discsStatus;
     }
 
     /**
-     * Set the section transport managers status
+     * Set the community licences status
      *
-     * @param int $sectionTransportManagersStatus
+     * @param int $communityLicencesStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTransportManagersStatus($sectionTransportManagersStatus)
+    public function setCommunityLicencesStatus($communityLicencesStatus)
     {
-        $this->sectionTransportManagersStatus = $sectionTransportManagersStatus;
+        $this->communityLicencesStatus = $communityLicencesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section transport managers status
+     * Get the community licences status
      *
      * @return int
      */
-    public function getSectionTransportManagersStatus()
+    public function getCommunityLicencesStatus()
     {
-        return $this->sectionTransportManagersStatus;
+        return $this->communityLicencesStatus;
     }
 
     /**
-     * Set the section transport managers placeholder status
+     * Set the safety status
      *
-     * @param int $input
+     * @param int $safetyStatus
      * @return ApplicationCompletion
      */
-    public function setSectionTransportManagersPlaceholderStatus($input)
+    public function setSafetyStatus($safetyStatus)
     {
-        $this->sectionTransportManagersPlaceholderStatus = $input;
+        $this->safetyStatus = $safetyStatus;
 
         return $this;
     }
 
     /**
-     * Get the section transport managers placeholder status
+     * Get the safety status
      *
      * @return int
      */
-    public function getSectionTransportManagersPlaceholderStatus()
+    public function getSafetyStatus()
     {
-        return $this->sectionTransportManagersPlaceholderStatus;
+        return $this->safetyStatus;
     }
 
     /**
-     * Set the section vehicle safety status
+     * Set the conditions undertakings status
      *
-     * @param int $sectionVehicleSafetyStatus
+     * @param int $conditionsUndertakingsStatus
      * @return ApplicationCompletion
      */
-    public function setSectionVehicleSafetyStatus($sectionVehicleSafetyStatus)
+    public function setConditionsUndertakingsStatus($conditionsUndertakingsStatus)
     {
-        $this->sectionVehicleSafetyStatus = $sectionVehicleSafetyStatus;
+        $this->conditionsUndertakingsStatus = $conditionsUndertakingsStatus;
 
         return $this;
     }
 
     /**
-     * Get the section vehicle safety status
+     * Get the conditions undertakings status
      *
      * @return int
      */
-    public function getSectionVehicleSafetyStatus()
+    public function getConditionsUndertakingsStatus()
     {
-        return $this->sectionVehicleSafetyStatus;
+        return $this->conditionsUndertakingsStatus;
     }
 
     /**
-     * Set the section vehicle safety undertakings status
+     * Set the financial history status
      *
-     * @param int $sectionVehicleSafetyUndertakingsStatus
+     * @param int $financialHistoryStatus
      * @return ApplicationCompletion
      */
-    public function setSectionVehicleSafetyUndertakingsStatus($sectionVehicleSafetyUndertakingsStatus)
+    public function setFinancialHistoryStatus($financialHistoryStatus)
     {
-        $this->sectionVehicleSafetyUndertakingsStatus = $sectionVehicleSafetyUndertakingsStatus;
+        $this->financialHistoryStatus = $financialHistoryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section vehicle safety undertakings status
+     * Get the financial history status
      *
      * @return int
      */
-    public function getSectionVehicleSafetyUndertakingsStatus()
+    public function getFinancialHistoryStatus()
     {
-        return $this->sectionVehicleSafetyUndertakingsStatus;
+        return $this->financialHistoryStatus;
     }
 
     /**
-     * Set the section vehicle safety vehicle status
+     * Set the licence history status
      *
-     * @param int $sectionVehicleSafetyVehicleStatus
+     * @param int $licenceHistoryStatus
      * @return ApplicationCompletion
      */
-    public function setSectionVehicleSafetyVehicleStatus($sectionVehicleSafetyVehicleStatus)
+    public function setLicenceHistoryStatus($licenceHistoryStatus)
     {
-        $this->sectionVehicleSafetyVehicleStatus = $sectionVehicleSafetyVehicleStatus;
+        $this->licenceHistoryStatus = $licenceHistoryStatus;
 
         return $this;
     }
 
     /**
-     * Get the section vehicle safety vehicle status
+     * Get the licence history status
      *
      * @return int
      */
-    public function getSectionVehicleSafetyVehicleStatus()
+    public function getLicenceHistoryStatus()
     {
-        return $this->sectionVehicleSafetyVehicleStatus;
+        return $this->licenceHistoryStatus;
     }
 
     /**
-     * Set the section vehicle safety vehicle psv status
+     * Set the convictions penalties status
      *
-     * @param int $sectionVehicleSafetyVehiclePsvStatus
+     * @param int $convictionsPenaltiesStatus
      * @return ApplicationCompletion
      */
-    public function setSectionVehicleSafetyVehiclePsvStatus($sectionVehicleSafetyVehiclePsvStatus)
+    public function setConvictionsPenaltiesStatus($convictionsPenaltiesStatus)
     {
-        $this->sectionVehicleSafetyVehiclePsvStatus = $sectionVehicleSafetyVehiclePsvStatus;
+        $this->convictionsPenaltiesStatus = $convictionsPenaltiesStatus;
 
         return $this;
     }
 
     /**
-     * Get the section vehicle safety vehicle psv status
+     * Get the convictions penalties status
      *
      * @return int
      */
-    public function getSectionVehicleSafetyVehiclePsvStatus()
+    public function getConvictionsPenaltiesStatus()
     {
-        return $this->sectionVehicleSafetyVehiclePsvStatus;
-    }
-
-    /**
-     * Set the section vehicle safety safety status
-     *
-     * @param int $sectionVehicleSafetySafetyStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionVehicleSafetySafetyStatus($sectionVehicleSafetySafetyStatus)
-    {
-        $this->sectionVehicleSafetySafetyStatus = $sectionVehicleSafetySafetyStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section vehicle safety safety status
-     *
-     * @return int
-     */
-    public function getSectionVehicleSafetySafetyStatus()
-    {
-        return $this->sectionVehicleSafetySafetyStatus;
-    }
-
-    /**
-     * Set the section previous history status
-     *
-     * @param int $sectionPreviousHistoryStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionPreviousHistoryStatus($sectionPreviousHistoryStatus)
-    {
-        $this->sectionPreviousHistoryStatus = $sectionPreviousHistoryStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section previous history status
-     *
-     * @return int
-     */
-    public function getSectionPreviousHistoryStatus()
-    {
-        return $this->sectionPreviousHistoryStatus;
-    }
-
-    /**
-     * Set the section previous history financial history status
-     *
-     * @param int $input
-     * @return ApplicationCompletion
-     */
-    public function setSectionPreviousHistoryFinancialHistoryStatus($input)
-    {
-        $this->sectionPreviousHistoryFinancialHistoryStatus = $input;
-
-        return $this;
-    }
-
-    /**
-     * Get the section previous history financial history status
-     *
-     * @return int
-     */
-    public function getSectionPreviousHistoryFinancialHistoryStatus()
-    {
-        return $this->sectionPreviousHistoryFinancialHistoryStatus;
-    }
-
-    /**
-     * Set the section previous history licence history status
-     *
-     * @param int $input
-     * @return ApplicationCompletion
-     */
-    public function setSectionPreviousHistoryLicenceHistoryStatus($input)
-    {
-        $this->sectionPreviousHistoryLicenceHistoryStatus = $input;
-
-        return $this;
-    }
-
-    /**
-     * Get the section previous history licence history status
-     *
-     * @return int
-     */
-    public function getSectionPreviousHistoryLicenceHistoryStatus()
-    {
-        return $this->sectionPreviousHistoryLicenceHistoryStatus;
-    }
-
-    /**
-     * Set the section previous history convictions penalties status
-     *
-     * @param int $input
-     * @return ApplicationCompletion
-     */
-    public function setSectionPreviousHistoryConvictionsPenaltiesStatus($input)
-    {
-        $this->sectionPreviousHistoryConvictionsPenaltiesStatus = $input;
-
-        return $this;
-    }
-
-    /**
-     * Get the section previous history convictions penalties status
-     *
-     * @return int
-     */
-    public function getSectionPreviousHistoryConvictionsPenaltiesStatus()
-    {
-        return $this->sectionPreviousHistoryConvictionsPenaltiesStatus;
-    }
-
-    /**
-     * Set the section review declarations status
-     *
-     * @param int $sectionReviewDeclarationsStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionReviewDeclarationsStatus($sectionReviewDeclarationsStatus)
-    {
-        $this->sectionReviewDeclarationsStatus = $sectionReviewDeclarationsStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section review declarations status
-     *
-     * @return int
-     */
-    public function getSectionReviewDeclarationsStatus()
-    {
-        return $this->sectionReviewDeclarationsStatus;
-    }
-
-    /**
-     * Set the section review declarations summary status
-     *
-     * @param int $sectionReviewDeclarationsSummaryStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionReviewDeclarationsSummaryStatus($sectionReviewDeclarationsSummaryStatus)
-    {
-        $this->sectionReviewDeclarationsSummaryStatus = $sectionReviewDeclarationsSummaryStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section review declarations summary status
-     *
-     * @return int
-     */
-    public function getSectionReviewDeclarationsSummaryStatus()
-    {
-        return $this->sectionReviewDeclarationsSummaryStatus;
-    }
-
-    /**
-     * Set the section payment submission status
-     *
-     * @param int $sectionPaymentSubmissionStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionPaymentSubmissionStatus($sectionPaymentSubmissionStatus)
-    {
-        $this->sectionPaymentSubmissionStatus = $sectionPaymentSubmissionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section payment submission status
-     *
-     * @return int
-     */
-    public function getSectionPaymentSubmissionStatus()
-    {
-        return $this->sectionPaymentSubmissionStatus;
-    }
-
-    /**
-     * Set the section payment submission payment status
-     *
-     * @param int $sectionPaymentSubmissionPaymentStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionPaymentSubmissionPaymentStatus($sectionPaymentSubmissionPaymentStatus)
-    {
-        $this->sectionPaymentSubmissionPaymentStatus = $sectionPaymentSubmissionPaymentStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section payment submission payment status
-     *
-     * @return int
-     */
-    public function getSectionPaymentSubmissionPaymentStatus()
-    {
-        return $this->sectionPaymentSubmissionPaymentStatus;
-    }
-
-    /**
-     * Set the section payment submission summary status
-     *
-     * @param int $sectionPaymentSubmissionSummaryStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionPaymentSubmissionSummaryStatus($sectionPaymentSubmissionSummaryStatus)
-    {
-        $this->sectionPaymentSubmissionSummaryStatus = $sectionPaymentSubmissionSummaryStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section payment submission summary status
-     *
-     * @return int
-     */
-    public function getSectionPaymentSubmissionSummaryStatus()
-    {
-        return $this->sectionPaymentSubmissionSummaryStatus;
-    }
-
-    /**
-     * Set the section taxi phv status
-     *
-     * @param int $sectionTaxiPhvStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionTaxiPhvStatus($sectionTaxiPhvStatus)
-    {
-        $this->sectionTaxiPhvStatus = $sectionTaxiPhvStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section taxi phv status
-     *
-     * @return int
-     */
-    public function getSectionTaxiPhvStatus()
-    {
-        return $this->sectionTaxiPhvStatus;
-    }
-
-    /**
-     * Set the section taxi phv licence status
-     *
-     * @param int $sectionTaxiPhvLicenceStatus
-     * @return ApplicationCompletion
-     */
-    public function setSectionTaxiPhvLicenceStatus($sectionTaxiPhvLicenceStatus)
-    {
-        $this->sectionTaxiPhvLicenceStatus = $sectionTaxiPhvLicenceStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the section taxi phv licence status
-     *
-     * @return int
-     */
-    public function getSectionTaxiPhvLicenceStatus()
-    {
-        return $this->sectionTaxiPhvLicenceStatus;
+        return $this->convictionsPenaltiesStatus;
     }
 
     /**

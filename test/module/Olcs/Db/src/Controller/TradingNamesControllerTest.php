@@ -5,7 +5,6 @@
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
-
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
@@ -45,9 +44,6 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->create([]);
     }
 
-    /**
-     * @group current
-     */
     public function testCreateWithData()
     {
         $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
@@ -71,9 +67,6 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->create([]);
     }
 
-    /**
-     * @group current
-     */
     public function testCreateWithExc()
     {
         $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
@@ -90,9 +83,7 @@ class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
             ->method('formatDataFromJson')
             ->will(
                 $this->returnValue(
-                    array(
-                        array('name' => 'name', 'licence' => 1)
-                    )
+                    array('name' => 'name', 'licence' => 1)
                 )
             );
 

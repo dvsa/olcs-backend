@@ -57,7 +57,7 @@ class Conviction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=false)
      */
     protected $defendantType;
 
