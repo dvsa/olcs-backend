@@ -14,7 +14,7 @@ chdir(dirname(__DIR__));
  */
 class Bootstrap
 {
-    protected static $serviceManager;
+    protected static $config = array();
 
     public static function init()
     {
@@ -26,15 +26,18 @@ class Bootstrap
         // Grab the application config
         $config = include dirname(__DIR__) . '/config/application.config.php';
 
-        $serviceManager = new ServiceManager(new ServiceManagerConfig());
-        $serviceManager->setService('ApplicationConfig', $config);
-        $serviceManager->get('ModuleManager')->loadModules();
-        static::$serviceManager = $serviceManager;
+        self::$config = $config;
+
+        self::getServiceManager();
     }
 
     public static function getServiceManager()
     {
-        return static::$serviceManager;
+        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+        $serviceManager->setService('ApplicationConfig', self::$config);
+        $serviceManager->get('ModuleManager')->loadModules();
+
+        return $serviceManager;
     }
 
     protected static function initAutoloader()

@@ -164,13 +164,13 @@ return array(
         'psv_no_small_vhl_confirmation' => array(
             'type' => 'yesno'
         ),
-        'psv_limosines' => array(
+        'psv_limousines' => array(
             'type' => 'yesno'
         ),
-        'psv_no_limosine_confirmation' => array(
+        'psv_no_limousine_confirmation' => array(
             'type' => 'yesno'
         ),
-        'psv_only_limosines_confirmation' => array(
+        'psv_only_limousines_confirmation' => array(
             'type' => 'yesno'
         ),
         'is_maintenance_suitable' => array(
@@ -658,98 +658,11 @@ return array(
         )
     ),
     'application_completion' => array(
-        'section_yb_status' => array(
-            'property' => 'sectionYourBusinessStatus'
-        ),
-        'section_yb_bt_status' => array(
-            'property' => 'sectionYourBusinessBusinessTypeStatus'
-        ),
-        'section_yb_bd_status' => array(
-            'property' => 'sectionYourBusinessBusinessDetailsStatus'
-        ),
-        'section_yb_add_status' => array(
-            'property' => 'sectionYourBusinessAddressesStatus'
-        ),
-        'section_yb_peo_status' => array(
-            'property' => 'sectionYourBusinessPeopleStatus'
-        ),
-        'section_yb_st_status' => array(
-            'property' => 'sectionYourBusinessSoleTraderStatus'
-        ),
-        'section_tol_status' => array(
-            'property' => 'sectionTypeOfLicenceStatus'
-        ),
-        'section_tol_ol_status' => array(
-            'property' => 'sectionTypeOfLicenceOperatorLocationStatus'
-        ),
-        'section_tol_ot_status' => array(
-            'property' => 'sectionTypeOfLicenceOperatorTypeStatus'
-        ),
-        'section_tol_lt_status' => array(
-            'property' => 'sectionTypeOfLicenceLicenceTypeStatus'
-        ),
-        'section_ocs_status' => array(
-            'property' => 'sectionOperatingCentresStatus'
-        ),
-        'section_ocs_auth_status' => array(
-            'property' => 'sectionOperatingCentresAuthorisationStatus'
-        ),
-        'section_ocs_fe_status' => array(
-            'property' => 'sectionOperatingCentresFinancialEvidenceStatus'
-        ),
-        'section_tms_status' => array(
-            'property' => 'sectionTransportManagersStatus'
-        ),
-        'section_tms_p_status' => array(
-            'property' => 'sectionTransportManagersPlaceholderStatus'
-        ),
-        'section_veh_status' => array(
-            'property' => 'sectionVehicleSafetyStatus'
-        ),
-        'section_veh_v_status' => array(
-            'property' => 'sectionVehicleSafetyVehicleStatus'
-        ),
-        'section_veh_vpsv_status' => array(
-            'property' => 'sectionVehicleSafetyVehiclePsvStatus'
-        ),
-        'section_veh_s_status' => array(
-            'property' => 'sectionVehicleSafetySafetyStatus'
-        ),
-        'section_veh_und_status' => array(
-            'property' => 'sectionVehicleSafetyUndertakingsStatus'
-        ),
-        'section_ph_status' => array(
-            'property' => 'sectionPreviousHistoryStatus'
-        ),
-        'section_ph_fh_status' => array(
-            'property' => 'sectionPreviousHistoryFinancialHistoryStatus'
-        ),
-        'section_ph_lh_status' => array(
-            'property' => 'sectionPreviousHistoryLicenceHistoryStatus'
-        ),
-        'section_ph_cp_status' => array(
-            'property' => 'sectionPreviousHistoryConvictionsPenaltiesStatus'
-        ),
-        'section_rd_status' => array(
-            'property' => 'sectionReviewDeclarationsStatus'
-        ),
-        'section_rd_sum_status' => array(
-            'property' => 'sectionReviewDeclarationsSummaryStatus'
-        ),
-        'section_pay_status' => array(
-            'property' => 'sectionPaymentSubmissionStatus'
-        ),
-        'section_pay_pay_status' => array(
-            'property' => 'sectionPaymentSubmissionPaymentStatus'
-        ),
-        'section_pay_summary_status' => array(
-            'property' => 'sectionPaymentSubmissionSummaryStatus'
-        ),
-        'section_tp_status' => array(
-            'property' => 'sectionTaxiPhvStatus'
-        ),
-        'section_tp_lic_status' => array(
-            'property' => 'sectionTaxiPhvLicenceStatus'
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'applicationCompletion'
+            )
         )
     ),
     'presiding_tc' => array(
@@ -775,6 +688,12 @@ return array(
         )
     ),
     'previous_licence' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'previousLicence'
+            )
+        ),
         'will_surrender' => array(
             'type' => 'yesnonull'
         )
@@ -1135,6 +1054,22 @@ return array(
             'inversedBy' => array(
                 'entity' => 'ContactDetails',
                 'property' => 'phoneContact'
+            )
+        )
+    ),
+    'previous_conviction' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'previousConviction'
+            )
+        )
+    ),
+    'private_hire_licence' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'privateHireLicence'
             )
         )
     )
