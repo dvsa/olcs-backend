@@ -2529,7 +2529,6 @@ CREATE TABLE IF NOT EXISTS `appeal` (
   PRIMARY KEY (`id`),
   INDEX `fk_appeal_user1_idx` (`created_by` ASC),
   INDEX `fk_appeal_user2_idx` (`last_modified_by` ASC),
-  UNIQUE INDEX `appeal_no_UNIQUE` (`appeal_no` ASC),
   INDEX `fk_appeal_ref_data1_idx` (`reason` ASC),
   INDEX `fk_appeal_ref_data2_idx` (`outcome` ASC),
   CONSTRAINT `fk_appeal_case1`
