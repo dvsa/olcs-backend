@@ -2506,7 +2506,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `appeal` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `appeal_no` VARCHAR(20) NOT NULL,
+  `appeal_no` VARCHAR(20) NULL,
   `case_id` INT NULL,
   `tm_case_id` INT NULL,
   `deadline_date` DATETIME NULL,
