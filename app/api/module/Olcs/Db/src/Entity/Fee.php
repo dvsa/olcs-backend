@@ -36,26 +36,16 @@ class Fee implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\IrfoGvPermitManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\TaskManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\IrfoGvPermitManyToOne,
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Waive reason2
-     *
-     * @var \Olcs\Db\Entity\WaiveReason
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveReason2;
 
     /**
      * Waive approver user
@@ -78,6 +68,26 @@ class Fee implements Interfaces\EntityInterface
     protected $waiveRecommenderUser;
 
     /**
+     * Waive reason2
+     *
+     * @var \Olcs\Db\Entity\WaiveReason
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
+     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
+     */
+    protected $waiveReason2;
+
+    /**
+     * Fee status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
+     */
+    protected $feeStatus;
+
+    /**
      * Parent fee
      *
      * @var \Olcs\Db\Entity\Fee
@@ -96,16 +106,6 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
-
-    /**
-     * Fee status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
-     */
-    protected $feeStatus;
 
     /**
      * Amount
@@ -216,29 +216,6 @@ class Fee implements Interfaces\EntityInterface
     protected $irfoFileNo;
 
     /**
-     * Set the waive reason2
-     *
-     * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
-     * @return Fee
-     */
-    public function setWaiveReason2($waiveReason2)
-    {
-        $this->waiveReason2 = $waiveReason2;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive reason2
-     *
-     * @return \Olcs\Db\Entity\WaiveReason
-     */
-    public function getWaiveReason2()
-    {
-        return $this->waiveReason2;
-    }
-
-    /**
      * Set the waive approver user
      *
      * @param \Olcs\Db\Entity\User $waiveApproverUser
@@ -285,6 +262,52 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the waive reason2
+     *
+     * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
+     * @return Fee
+     */
+    public function setWaiveReason2($waiveReason2)
+    {
+        $this->waiveReason2 = $waiveReason2;
+
+        return $this;
+    }
+
+    /**
+     * Get the waive reason2
+     *
+     * @return \Olcs\Db\Entity\WaiveReason
+     */
+    public function getWaiveReason2()
+    {
+        return $this->waiveReason2;
+    }
+
+    /**
+     * Set the fee status
+     *
+     * @param \Olcs\Db\Entity\RefData $feeStatus
+     * @return Fee
+     */
+    public function setFeeStatus($feeStatus)
+    {
+        $this->feeStatus = $feeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getFeeStatus()
+    {
+        return $this->feeStatus;
+    }
+
+    /**
      * Set the parent fee
      *
      * @param \Olcs\Db\Entity\Fee $parentFee
@@ -328,29 +351,6 @@ class Fee implements Interfaces\EntityInterface
     public function getFeeType()
     {
         return $this->feeType;
-    }
-
-    /**
-     * Set the fee status
-     *
-     * @param \Olcs\Db\Entity\RefData $feeStatus
-     * @return Fee
-     */
-    public function setFeeStatus($feeStatus)
-    {
-        $this->feeStatus = $feeStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getFeeStatus()
-    {
-        return $this->feeStatus;
     }
 
     /**

@@ -27,7 +27,6 @@ class PreviousLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,6 +40,16 @@ class PreviousLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=false)
      */
     protected $previousLicenceType;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="previousLicences")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $application;
 
     /**
      * Lic no
@@ -117,6 +126,29 @@ class PreviousLicence implements Interfaces\EntityInterface
     public function getPreviousLicenceType()
     {
         return $this->previousLicenceType;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return PreviousLicence
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**
