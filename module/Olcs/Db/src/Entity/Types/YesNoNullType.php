@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Custom type to turn boolean stored Y/N data back into (with null allowance)
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
-
 namespace Olcs\Db\Entity\Types;
 
 use Doctrine\DBAL\Types\Type;

@@ -27,10 +27,10 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PiVenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\PiVenueManyToOne,
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
@@ -43,16 +43,6 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Presided by role
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
-     */
-    protected $presidedByRole;
-
-    /**
      * Pi
      *
      * @var \Olcs\Db\Entity\Pi
@@ -61,6 +51,16 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
+
+    /**
+     * Presided by role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedByRole;
 
     /**
      * Presiding tc other
@@ -99,29 +99,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $details;
 
     /**
-     * Set the presided by role
-     *
-     * @param \Olcs\Db\Entity\RefData $presidedByRole
-     * @return PiHearing
-     */
-    public function setPresidedByRole($presidedByRole)
-    {
-        $this->presidedByRole = $presidedByRole;
-
-        return $this;
-    }
-
-    /**
-     * Get the presided by role
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPresidedByRole()
-    {
-        return $this->presidedByRole;
-    }
-
-    /**
      * Set the pi
      *
      * @param \Olcs\Db\Entity\Pi $pi
@@ -142,6 +119,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPi()
     {
         return $this->pi;
+    }
+
+    /**
+     * Set the presided by role
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedByRole
+     * @return PiHearing
+     */
+    public function setPresidedByRole($presidedByRole)
+    {
+        $this->presidedByRole = $presidedByRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedByRole()
+    {
+        return $this->presidedByRole;
     }
 
     /**

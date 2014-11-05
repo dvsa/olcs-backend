@@ -29,11 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -321,27 +321,27 @@ class Application implements Interfaces\EntityInterface
     /**
      * Psv limousines
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_limousines", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_limousines", nullable=false)
      */
     protected $psvLimousines = 0;
 
     /**
      * Psv no limousine confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_no_limousine_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_no_limousine_confirmation", nullable=false)
      */
     protected $psvNoLimousineConfirmation = 0;
 
     /**
      * Psv only limousines confirmation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="psv_only_limousines_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="psv_only_limousines_confirmation", nullable=false)
      */
     protected $psvOnlyLimousinesConfirmation = 0;
 
@@ -382,6 +382,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
+     * Application completion
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationCompletion", mappedBy="application")
+     */
+    protected $applicationCompletions;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -409,13 +418,34 @@ class Application implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Previous conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousConviction", mappedBy="application")
+     */
+    protected $previousConvictions;
+
+    /**
+     * Previous licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousLicence", mappedBy="application")
+     */
+    protected $previousLicences;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
+        $this->applicationCompletions = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
+        $this->previousConvictions = new ArrayCollection();
+        $this->previousLicences = new ArrayCollection();
     }
 
     /**
@@ -1111,7 +1141,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv limousines
      *
-     * @param boolean $psvLimousines
+     * @param string $psvLimousines
      * @return Application
      */
     public function setPsvLimousines($psvLimousines)
@@ -1124,7 +1154,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv limousines
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvLimousines()
     {
@@ -1134,7 +1164,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv no limousine confirmation
      *
-     * @param boolean $psvNoLimousineConfirmation
+     * @param string $psvNoLimousineConfirmation
      * @return Application
      */
     public function setPsvNoLimousineConfirmation($psvNoLimousineConfirmation)
@@ -1147,7 +1177,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv no limousine confirmation
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvNoLimousineConfirmation()
     {
@@ -1157,7 +1187,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the psv only limousines confirmation
      *
-     * @param boolean $psvOnlyLimousinesConfirmation
+     * @param string $psvOnlyLimousinesConfirmation
      * @return Application
      */
     public function setPsvOnlyLimousinesConfirmation($psvOnlyLimousinesConfirmation)
@@ -1170,7 +1200,7 @@ class Application implements Interfaces\EntityInterface
     /**
      * Get the psv only limousines confirmation
      *
-     * @return boolean
+     * @return string
      */
     public function getPsvOnlyLimousinesConfirmation()
     {
@@ -1267,6 +1297,72 @@ class Application implements Interfaces\EntityInterface
     public function getInterimAuthTrailers()
     {
         return $this->interimAuthTrailers;
+    }
+
+    /**
+     * Set the application completion
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function setApplicationCompletions($applicationCompletions)
+    {
+        $this->applicationCompletions = $applicationCompletions;
+
+        return $this;
+    }
+
+    /**
+     * Get the application completions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationCompletions()
+    {
+        return $this->applicationCompletions;
+    }
+
+    /**
+     * Add a application completions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function addApplicationCompletions($applicationCompletions)
+    {
+        if ($applicationCompletions instanceof ArrayCollection) {
+            $this->applicationCompletions = new ArrayCollection(
+                array_merge(
+                    $this->applicationCompletions->toArray(),
+                    $applicationCompletions->toArray()
+                )
+            );
+        } elseif (!$this->applicationCompletions->contains($applicationCompletions)) {
+            $this->applicationCompletions->add($applicationCompletions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application completions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @return Application
+     */
+    public function removeApplicationCompletions($applicationCompletions)
+    {
+        if ($this->applicationCompletions->contains($applicationCompletions)) {
+            $this->applicationCompletions->removeElement($applicationCompletions);
+        }
+
+        return $this;
     }
 
     /**
@@ -1462,6 +1558,138 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the previous conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function setPreviousConvictions($previousConvictions)
+    {
+        $this->previousConvictions = $previousConvictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousConvictions()
+    {
+        return $this->previousConvictions;
+    }
+
+    /**
+     * Add a previous convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function addPreviousConvictions($previousConvictions)
+    {
+        if ($previousConvictions instanceof ArrayCollection) {
+            $this->previousConvictions = new ArrayCollection(
+                array_merge(
+                    $this->previousConvictions->toArray(),
+                    $previousConvictions->toArray()
+                )
+            );
+        } elseif (!$this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->add($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous convictions
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return Application
+     */
+    public function removePreviousConvictions($previousConvictions)
+    {
+        if ($this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->removeElement($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the previous licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function setPreviousLicences($previousLicences)
+    {
+        $this->previousLicences = $previousLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousLicences()
+    {
+        return $this->previousLicences;
+    }
+
+    /**
+     * Add a previous licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function addPreviousLicences($previousLicences)
+    {
+        if ($previousLicences instanceof ArrayCollection) {
+            $this->previousLicences = new ArrayCollection(
+                array_merge(
+                    $this->previousLicences->toArray(),
+                    $previousLicences->toArray()
+                )
+            );
+        } elseif (!$this->previousLicences->contains($previousLicences)) {
+            $this->previousLicences->add($previousLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
+     * @return Application
+     */
+    public function removePreviousLicences($previousLicences)
+    {
+        if ($this->previousLicences->contains($previousLicences)) {
+            $this->previousLicences->removeElement($previousLicences);
         }
 
         return $this;

@@ -34,12 +34,12 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -51,6 +51,16 @@ class Licence implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Tachograph ins
@@ -71,16 +81,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
-
-    /**
-     * Enforcement area
-     *
-     * @var \Olcs\Db\Entity\EnforcementArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $enforcementArea;
 
     /**
      * Lic no
@@ -281,6 +281,15 @@ class Licence implements Interfaces\EntityInterface
     protected $licenceVehicles;
 
     /**
+     * Private hire licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PrivateHireLicence", mappedBy="licence")
+     */
+    protected $privateHireLicences;
+
+    /**
      * Psv disc
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -309,8 +318,32 @@ class Licence implements Interfaces\EntityInterface
         $this->contactDetails = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
+        $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
         $this->workshops = new ArrayCollection();
+    }
+
+    /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
     }
 
     /**
@@ -357,29 +390,6 @@ class Licence implements Interfaces\EntityInterface
     public function getOrganisation()
     {
         return $this->organisation;
-    }
-
-    /**
-     * Set the enforcement area
-     *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return Licence
-     */
-    public function setEnforcementArea($enforcementArea)
-    {
-        $this->enforcementArea = $enforcementArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the enforcement area
-     *
-     * @return \Olcs\Db\Entity\EnforcementArea
-     */
-    public function getEnforcementArea()
-    {
-        return $this->enforcementArea;
     }
 
     /**
@@ -1098,6 +1108,72 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
             $this->licenceVehicles->removeElement($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the private hire licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $privateHireLicences
+     * @return Licence
+     */
+    public function setPrivateHireLicences($privateHireLicences)
+    {
+        $this->privateHireLicences = $privateHireLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the private hire licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPrivateHireLicences()
+    {
+        return $this->privateHireLicences;
+    }
+
+    /**
+     * Add a private hire licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $privateHireLicences
+     * @return Licence
+     */
+    public function addPrivateHireLicences($privateHireLicences)
+    {
+        if ($privateHireLicences instanceof ArrayCollection) {
+            $this->privateHireLicences = new ArrayCollection(
+                array_merge(
+                    $this->privateHireLicences->toArray(),
+                    $privateHireLicences->toArray()
+                )
+            );
+        } elseif (!$this->privateHireLicences->contains($privateHireLicences)) {
+            $this->privateHireLicences->add($privateHireLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a private hire licences
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $privateHireLicences
+     * @return Licence
+     */
+    public function removePrivateHireLicences($privateHireLicences)
+    {
+        if ($this->privateHireLicences->contains($privateHireLicences)) {
+            $this->privateHireLicences->removeElement($privateHireLicences);
         }
 
         return $this;
