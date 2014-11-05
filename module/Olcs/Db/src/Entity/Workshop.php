@@ -25,9 +25,9 @@ class Workshop implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

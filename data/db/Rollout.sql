@@ -983,11 +983,20 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (11, 'submission_type_title', 'submission_type_t_impounding', 'Impounding Submission', NULL);
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
-    (1, 'licence_fee_status', 'lfs_ot', 'Outstanding', NULL),
-    (2, 'licence_fee_status', 'lfs_pd', 'Paid', NULL),
-    (3, 'licence_fee_status', 'lfs_wr', 'Waive Recommended', NULL),
-    (4, 'licence_fee_status', 'lfs_w', 'Waived', NULL),
-    (5, 'licence_fee_status', 'lfs_cn', 'Cancelled', NULL);
+    (1, 'fee_status', 'lfs_ot', 'Outstanding', NULL),
+    (2, 'fee_status', 'lfs_pd', 'Paid', NULL),
+    (3, 'fee_status', 'lfs_wr', 'Waive Recommended', NULL),
+    (4, 'fee_status', 'lfs_w', 'Waived', NULL),
+    (5, 'fee_status', 'lfs_cn', 'Cancelled', NULL);
+
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'fee_pay_method', 'fpm_cash', 'Cash', NULL),
+    (2, 'fee_pay_method', 'fpm_cheque', 'Cheque', NULL),
+    (3, 'fee_pay_method', 'fpm_po', 'Postal Order', NULL),
+    (4, 'fee_pay_method', 'fpm_card_offline', 'Card Payment (Assisted Digital)', NULL),
+    (5, 'fee_pay_method', 'fpm_card_online', 'Card Payment (Digital)', NULL),
+    (6, 'fee_pay_method', 'fpm_waive', 'Waived', NULL),
+    (7, 'fee_pay_method', 'fpm_rcpt', 'Receipt', NULL);
 
 INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
     (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
