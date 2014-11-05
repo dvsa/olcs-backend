@@ -33,16 +33,6 @@ class Address implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Country code
-     *
-     * @var \Olcs\Db\Entity\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
-     */
-    protected $countryCode;
-
-    /**
      * Admin area
      *
      * @var \Olcs\Db\Entity\AdminAreaTrafficArea
@@ -51,6 +41,16 @@ class Address implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
      */
     protected $adminArea;
+
+    /**
+     * Country code
+     *
+     * @var \Olcs\Db\Entity\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
+     */
+    protected $countryCode;
 
     /**
      * Uprn
@@ -169,29 +169,6 @@ class Address implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the country code
-     *
-     * @param \Olcs\Db\Entity\Country $countryCode
-     * @return Address
-     */
-    public function setCountryCode($countryCode)
-    {
-        $this->countryCode = $countryCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the country code
-     *
-     * @return \Olcs\Db\Entity\Country
-     */
-    public function getCountryCode()
-    {
-        return $this->countryCode;
-    }
-
-    /**
      * Set the admin area
      *
      * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
@@ -212,6 +189,29 @@ class Address implements Interfaces\EntityInterface
     public function getAdminArea()
     {
         return $this->adminArea;
+    }
+
+    /**
+     * Set the country code
+     *
+     * @param \Olcs\Db\Entity\Country $countryCode
+     * @return Address
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the country code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
     }
 
     /**

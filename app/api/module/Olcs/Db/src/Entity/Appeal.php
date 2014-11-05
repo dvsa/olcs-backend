@@ -19,9 +19,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_appeal_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_appeal_ref_data1_idx", columns={"reason"}),
  *        @ORM\Index(name="fk_appeal_ref_data2_idx", columns={"outcome"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="appeal_no_UNIQUE", columns={"appeal_no"})
  *    }
  * )
  */
@@ -29,9 +26,9 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OutcomeManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,
@@ -64,7 +61,7 @@ class Appeal implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=false)
+     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=true)
      */
     protected $appealNo;
 
