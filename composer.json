@@ -7,6 +7,10 @@
             "url": "https://github.com/MajorCaiger/doctrine2.git"
         },
         {
+            "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
+            "type": "vcs"
+        },
+        {
             "type": "package",
             "package": {
                 "name": "olcs/companies-house",
@@ -31,7 +35,8 @@
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "~2.3.9",
         "olcs/companies-house": "dev-develop",
-        "ruflin/Elastica": "dev-master"
+        "ruflin/Elastica": "dev-master",
+        "olcs/olcs-logging": "dev-master"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1.5.3",
@@ -51,4 +56,5 @@
           "github.com": "5cdf40f8d81a7675fdaa5fc92e9381526ef4db7f"
       }
     }
+
 }
