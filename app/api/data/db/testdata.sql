@@ -101,7 +101,7 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
     (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-19 09:06:53', '2014-12-25 10:06:53',NULL,
     NULL,NOW(),NULL,1,0),
-    (2,110,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,1,1),
     (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0);
@@ -302,7 +302,7 @@ INSERT INTO `licence` (
     `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
     `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_new',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
+    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_new',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
