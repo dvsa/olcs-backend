@@ -29,53 +29,10 @@ abstract class AbstractController extends ZendAbstractRestfulController
      */
     public function onDispatch(MvcEvent $e)
     {
-        $this->logRequest($e);
-
-        $routeMatch = $e->getRouteMatch();
-
-        if (!$routeMatch) {
-
-            return $this->doDispatch($e);
-        }
-
-        $action = $routeMatch->getParam('action', false);
-
-        if ($action) {
-
-            $this->log(sprintf('Dispatching Incomming Action Request: \'%1$s\'', $action));
-
-            return $this->doDispatch($e);
-        }
-
-        $method = $e->getRequest()->getMethod();
-
-        $this->log(sprintf('Dispatching Incomming Method Request: \'%1$s\' ', $method));
-        return $this->doDispatch($e);
+        $this->doDispatch($e);
     }
 
-    /**
-     * Log request
-     */
-    public function logRequest($e)
-    {
-        $this->log('Request Headers: ' . $e->getRequest()->getHeaders()->toString());
-
-        $routeParams = $this->plugin('params')->fromRoute();
-        $queryParams = $this->plugin('params')->fromQuery();
-        $postParams = $this->plugin('params')->fromPost();
-
-        $this->log(sprintf('Input Route Params: %1$s', print_r($routeParams, true)));
-        $this->log(sprintf('Input Get Params: %1$s', print_r($queryParams, true)));
-        $this->log(sprintf('Input Post Params: %1$s', print_r($postParams, true)));
-    }
-
-    /**
-     * Wrap the parent dispatch method
-     *
-     * @param MvcEvent $e
-     * @return Response
-     */
-    public function doDispatch($e)
+    public function doDispatch(MvcEvent $e)
     {
         try {
 
