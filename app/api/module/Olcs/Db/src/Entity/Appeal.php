@@ -61,7 +61,7 @@ class Appeal implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=false)
+     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=true)
      */
     protected $appealNo;
 
