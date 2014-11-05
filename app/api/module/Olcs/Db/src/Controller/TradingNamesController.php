@@ -38,8 +38,12 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
 
-            $this->getService('TradingName')->deleteList(array('licence' => $data['licence']));
-            $this->getService('TradingName')->deleteList(array('organisation' => $data['organisation']));
+            if (!empty($data['licence'])) {
+                $this->getService('TradingName')->deleteList(array('licence' => $data['licence']));
+            }
+            if (!empty($data['organisation'])) {
+                $this->getService('TradingName')->deleteList(array('organisation' => $data['organisation']));
+            }
 
             foreach ($data['tradingNames'] as $tradingName) {
                 $tradingName['licence'] = $data['licence'];

@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence_no_gen",
  *    indexes={
- *        @ORM\Index(name="fk_licence_no_gen_application1_idx", columns={"application_id"})
+ *        @ORM\Index(name="fk_licence_no_gen_licence1_idx", columns={"licence_id"})
  *    }
  * )
  */
@@ -22,5 +22,5 @@ class LicenceNoGen implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOneAlt1;
+        Traits\LicenceManyToOne;
 }

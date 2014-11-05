@@ -155,9 +155,16 @@ class BundleCreator
 
         if (isset($details['criteria']) && is_array($details['criteria'])) {
 
+            if (isset($details['criteria']['_OPTIONS_'])) {
+                $options = $details['criteria']['_OPTIONS_'];
+                unset($details['criteria']['_OPTIONS_']);
+            } else {
+                $options = array();
+            }
+
             foreach ($details['criteria'] as $field => $value) {
 
-                $children = $this->applyCriteria($children, $field, $value);
+                $children = $this->applyCriteria($children, $field, $value, $options);
             }
         }
 
@@ -170,35 +177,63 @@ class BundleCreator
      * @param array $children
      * @param string $field
      * @param string $value
+     * @param array $options
      * @return array
      */
-    private function applyCriteria($children, $field, $value)
+    private function applyCriteria($children, $field, $value, $options)
     {
+        if (isset($options['manualSearch'])) {
+            return $this->manuallyApplyCriteria($children, $field, $value);
+        }
+
         // Here we try to filter the children using doctrine's Criteria class
         // this can fail if the field is a foreign key and the value is not an object
-        // so we need to fallback to iteration
+        // so we need to fallback to iteration anyway
+
         try {
 
             $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->eq($field, $value));
+
+            if ($value === null) {
+                $criteriaExpression = Criteria::expr()->isNull($field);
+            } else {
+                $criteriaExpression = Criteria::expr()->eq($field, $value);
+            }
+
+            $criteria->where($criteriaExpression);
             $children = $children->matching($criteria);
 
         } catch (\Exception $ex) {
 
-            foreach ($children as $child) {
+            $children = $this->manuallyApplyCriteria($children, $field, $value);
+        }
 
-                // If the method doesn't exist just break
-                if (!method_exists($child, 'get' . ucfirst($field))) {
-                    break;
-                }
+        return $children;
+    }
 
-                $entity = $child->{'get' . ucfirst($field)}();
+    /**
+     * Apply a single criteria item manualy, bypassing doctrine
+     *
+     * @param array $children
+     * @param string $field
+     * @param string $value
+     * @return array
+     */
+    private function manuallyApplyCriteria($children, $field, $value)
+    {
+        foreach ($children as $child) {
 
-                if ($entity instanceof EntityInterface
-                    && method_exists($entity, 'getId')
-                    && $entity->getId() != $value) {
-                    $children->removeElement($child);
-                }
+            // If the method doesn't exist just break
+            if (!method_exists($child, 'get' . ucfirst($field))) {
+                break;
+            }
+
+            $entity = $child->{'get' . ucfirst($field)}();
+
+            if ($entity instanceof EntityInterface
+                && method_exists($entity, 'getId')
+                && $entity->getId() != $value) {
+                $children->removeElement($child);
             }
         }
 

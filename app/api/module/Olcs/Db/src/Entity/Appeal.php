@@ -19,9 +19,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_appeal_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_appeal_ref_data1_idx", columns={"reason"}),
  *        @ORM\Index(name="fk_appeal_ref_data2_idx", columns={"outcome"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="appeal_no_UNIQUE", columns={"appeal_no"})
  *    }
  * )
  */
