@@ -2506,7 +2506,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `appeal` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `appeal_no` VARCHAR(20) NOT NULL,
+  `appeal_no` VARCHAR(20) NULL,
   `case_id` INT NULL,
   `tm_case_id` INT NULL,
   `deadline_date` DATETIME NULL,
@@ -2529,7 +2529,6 @@ CREATE TABLE IF NOT EXISTS `appeal` (
   PRIMARY KEY (`id`),
   INDEX `fk_appeal_user1_idx` (`created_by` ASC),
   INDEX `fk_appeal_user2_idx` (`last_modified_by` ASC),
-  UNIQUE INDEX `appeal_no_UNIQUE` (`appeal_no` ASC),
   INDEX `fk_appeal_ref_data1_idx` (`reason` ASC),
   INDEX `fk_appeal_ref_data2_idx` (`outcome` ASC),
   CONSTRAINT `fk_appeal_case1`
@@ -5219,7 +5218,8 @@ CREATE TABLE IF NOT EXISTS `fee` (
   `fee_type_id` INT NOT NULL,
   `description` VARCHAR(255) NULL,
   `fee_status` VARCHAR(32) NULL,
-  `receipt_no` VARCHAR(40) NULL,
+  `payment_method` VARCHAR(32) NULL COMMENT 'The method of the successful payment. There could have been several attempts to pay with differing methods, but only one successful.',
+  `receipt_no` VARCHAR(45) NULL,
   `parent_fee_id` INT NULL,
   `waive_approval_date` DATETIME NULL,
   `waive_reason` VARCHAR(255) NULL,
@@ -5250,8 +5250,14 @@ CREATE TABLE IF NOT EXISTS `fee` (
   INDEX `fk_fee_user4_idx` (`last_modified_by` ASC),
   INDEX `fk_fee_irfo_gv_permit1_idx` (`irfo_gv_permit_id` ASC),
   INDEX `fk_fee_ref_data1_idx` (`fee_status` ASC),
+  INDEX `fk_fee_ref_data2_idx` (`payment_method` ASC),
   CONSTRAINT `fk_fee_ref_data1_idx`
     FOREIGN KEY (`fee_status`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_ref_data2_idx`
+    FOREIGN KEY (`payment_method`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

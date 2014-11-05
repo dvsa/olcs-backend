@@ -26,7 +26,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_fee_user4_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_fee_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="fk_fee_ref_data1_idx", columns={"fee_status"})
+ *        @ORM\Index(name="fk_fee_ref_data1_idx", columns={"fee_status"}),
+ *        @ORM\Index(name="fk_fee_ref_data2_idx", columns={"payment_method"})
  *    }
  * )
  */
@@ -35,12 +36,12 @@ class Fee implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\TaskManyToOne,
-        Traits\BusRegManyToOneAlt1,
         Traits\IrfoGvPermitManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TaskManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
@@ -78,16 +79,6 @@ class Fee implements Interfaces\EntityInterface
     protected $waiveReason2;
 
     /**
-     * Fee status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
-     */
-    protected $feeStatus;
-
-    /**
      * Parent fee
      *
      * @var \Olcs\Db\Entity\Fee
@@ -106,6 +97,26 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
+
+    /**
+     * Payment method
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
+     */
+    protected $paymentMethod;
+
+    /**
+     * Fee status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
+     */
+    protected $feeStatus;
 
     /**
      * Amount
@@ -166,7 +177,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="receipt_no", length=40, nullable=true)
+     * @ORM\Column(type="string", name="receipt_no", length=45, nullable=true)
      */
     protected $receiptNo;
 
@@ -285,29 +296,6 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the fee status
-     *
-     * @param \Olcs\Db\Entity\RefData $feeStatus
-     * @return Fee
-     */
-    public function setFeeStatus($feeStatus)
-    {
-        $this->feeStatus = $feeStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getFeeStatus()
-    {
-        return $this->feeStatus;
-    }
-
-    /**
      * Set the parent fee
      *
      * @param \Olcs\Db\Entity\Fee $parentFee
@@ -351,6 +339,52 @@ class Fee implements Interfaces\EntityInterface
     public function getFeeType()
     {
         return $this->feeType;
+    }
+
+    /**
+     * Set the payment method
+     *
+     * @param \Olcs\Db\Entity\RefData $paymentMethod
+     * @return Fee
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    /**
+     * Get the payment method
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * Set the fee status
+     *
+     * @param \Olcs\Db\Entity\RefData $feeStatus
+     * @return Fee
+     */
+    public function setFeeStatus($feeStatus)
+    {
+        $this->feeStatus = $feeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getFeeStatus()
+    {
+        return $this->feeStatus;
     }
 
     /**
