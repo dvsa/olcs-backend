@@ -836,7 +836,8 @@ INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_descri
     (77, 'Close TM Case', 'Close TM Case', 5, 0),
     (78, 'TM Removed from this licence', 'TM Declared Unfit', 5, 0),
     (79, 'TM1 Application', 'TM1 Assisted Digital', 5, 0),
-    (80, 'TM1 Application', 'TM1 Digital', 5, 0);
+    (80, 'TM1 Application', 'TM1 Digital', 5, 0),
+    (81, 'Public Inquiry', 'Public Inquiry', 2, 0);
 
 INSERT INTO `conviction_category` (`id`, `created_by`, `last_modified_by`, `description`, `created_on`,
     `last_modified_on`, `version`, `parent_id`) VALUES
