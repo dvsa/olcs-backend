@@ -2529,7 +2529,6 @@ CREATE TABLE IF NOT EXISTS `appeal` (
   PRIMARY KEY (`id`),
   INDEX `fk_appeal_user1_idx` (`created_by` ASC),
   INDEX `fk_appeal_user2_idx` (`last_modified_by` ASC),
-  UNIQUE INDEX `appeal_no_UNIQUE` (`appeal_no` ASC),
   INDEX `fk_appeal_ref_data1_idx` (`reason` ASC),
   INDEX `fk_appeal_ref_data2_idx` (`outcome` ASC),
   CONSTRAINT `fk_appeal_case1`
@@ -3347,37 +3346,26 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application_completion` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `section_yb_status` INT NULL,
-  `section_yb_bt_status` INT NULL,
-  `section_yb_bd_status` INT NULL,
-  `section_yb_add_status` INT NULL,
-  `section_yb_peo_status` INT NULL,
-  `section_yb_st_status` INT NULL,
-  `section_tol_status` INT NULL,
-  `section_tol_ol_status` INT NULL,
-  `section_tol_ot_status` INT NULL,
-  `section_tol_lt_status` INT NULL,
-  `section_ocs_status` INT NULL,
-  `section_ocs_auth_status` INT NULL,
-  `section_ocs_fe_status` INT NULL,
-  `section_tms_status` INT NULL,
-  `section_tms_p_status` INT NULL,
-  `section_veh_status` INT NULL,
-  `section_veh_und_status` INT NULL,
-  `section_veh_v_status` INT NULL,
-  `section_veh_vpsv_status` INT NULL,
-  `section_veh_s_status` INT NULL,
-  `section_ph_status` INT NULL,
-  `section_ph_fh_status` INT NULL,
-  `section_ph_lh_status` INT NULL,
-  `section_ph_cp_status` INT NULL,
-  `section_rd_status` INT NULL,
-  `section_rd_sum_status` INT NULL,
-  `section_pay_status` INT NULL,
-  `section_pay_pay_status` INT NULL,
-  `section_pay_summary_status` INT NULL,
-  `section_tp_status` INT NULL,
-  `section_tp_lic_status` INT NULL,
+  `application_id` INT NOT NULL,
+  `type_of_licence_status` INT NULL,
+  `business_type_status` INT NULL,
+  `business_details_status` INT NULL,
+  `addresses_status` INT NULL,
+  `people_status` INT NULL,
+  `taxi_phv_status` INT NULL,
+  `operating_centres_status` INT NULL,
+  `financial_evidence_status` INT NULL,
+  `transport_managers_status` INT NULL,
+  `vehicles_status` INT NULL,
+  `vehicles_psv_status` INT NULL,
+  `vehicles_declarations_status` INT NULL,
+  `discs_status` INT NULL,
+  `community_licences_status` INT NULL,
+  `safety_status` INT NULL,
+  `conditions_undertakings_status` INT NULL,
+  `financial_history_status` INT NULL,
+  `licence_history_status` INT NULL,
+  `convictions_penalties_status` INT NULL,
   `last_section` VARCHAR(255) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
@@ -3385,10 +3373,11 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `fk_application_completion_application_id_udx` (`application_id` ASC),
   INDEX `fk_application_completion_user1_idx` (`created_by` ASC),
   INDEX `fk_application_completion_user2_idx` (`last_modified_by` ASC),
   CONSTRAINT `fk_application_completion_application1`
-    FOREIGN KEY (`id`)
+    FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -4374,12 +4363,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `licence_no_gen` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `application_id` INT NOT NULL,
+  `licence_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_licence_no_gen_application1_idx` (`application_id` ASC),
-  CONSTRAINT `fk_licence_no_gen_application1`
-    FOREIGN KEY (`application_id`)
-    REFERENCES `application` (`id`)
+  INDEX `fk_licence_no_gen_licence1_idx` (`licence_id` ASC),
+  CONSTRAINT `fk_licence_no_gen_licence1`
+    FOREIGN KEY (`licence_id`)
+    REFERENCES `licence` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -5229,7 +5218,8 @@ CREATE TABLE IF NOT EXISTS `fee` (
   `fee_type_id` INT NOT NULL,
   `description` VARCHAR(255) NULL,
   `fee_status` VARCHAR(32) NULL,
-  `receipt_no` VARCHAR(40) NULL,
+  `payment_method` VARCHAR(32) NULL COMMENT 'The method of the successful payment. There could have been several attempts to pay with differing methods, but only one successful.',
+  `receipt_no` VARCHAR(45) NULL,
   `parent_fee_id` INT NULL,
   `waive_approval_date` DATETIME NULL,
   `waive_reason` VARCHAR(255) NULL,
@@ -5260,8 +5250,14 @@ CREATE TABLE IF NOT EXISTS `fee` (
   INDEX `fk_fee_user4_idx` (`last_modified_by` ASC),
   INDEX `fk_fee_irfo_gv_permit1_idx` (`irfo_gv_permit_id` ASC),
   INDEX `fk_fee_ref_data1_idx` (`fee_status` ASC),
+  INDEX `fk_fee_ref_data2_idx` (`payment_method` ASC),
   CONSTRAINT `fk_fee_ref_data1_idx`
     FOREIGN KEY (`fee_status`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_ref_data2_idx`
+    FOREIGN KEY (`payment_method`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
