@@ -67,7 +67,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SubmissionSectionComments", mappedBy="submission")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SubmissionSectionComment", mappedBy="submission")
      */
     protected $submissionSectionComments;
 
