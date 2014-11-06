@@ -965,7 +965,9 @@ INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_u
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
     `created_on`, `last_modified_on`)
 VALUES
-    (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', NULL, NOW(), NOW());
+    (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
+    
+    (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
 
     
     
