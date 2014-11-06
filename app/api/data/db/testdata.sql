@@ -26,6 +26,7 @@ TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
+TRUNCATE TABLE `fee_type`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_operating_centre`;
@@ -935,6 +936,14 @@ VALUES
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
 
+INSERT INTO `fee_type` (`id`, `last_modified_by`, `created_by`, `goods_or_psv`, `licence_type`, `traffic_area_id`, `fee_type`, `effective_from`, `fixed_value`, `annual_value`, `five_year_value`, `expire_fee_with_licence`, `description`, `created_on`, `last_modified_on`, `version`)
+VALUES
+	(1, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2014-01-01', 100.00, 1200.00, 500.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(2, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(3, 2, 2, 'lcat_psv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(4, 2, 2, 'lcat_gv', 'ltyp_si', 'K', 'LIC', '2013-01-01', 100.00, 1200.00, NULL, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(5, 2, 2, 'lcat_gv', 'ltyp_sn', 'N', 'APP', '2014-01-01', 80.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(6, 2, 2, 'lcat_gv', NULL, 'K', 'APP', '2014-10-10', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1);
 
     
 SET foreign_key_checks = 1;
