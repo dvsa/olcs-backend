@@ -6007,7 +6007,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `si_penalty_imposed_type` (
   `id` VARCHAR(8) NOT NULL,
   `description` VARCHAR(255) NULL,
-  `removed_date` DATE NULL,
+  `deleted_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
