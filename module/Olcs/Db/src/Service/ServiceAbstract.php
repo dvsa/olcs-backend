@@ -258,7 +258,7 @@ abstract class ServiceAbstract
         if ($paginate) {
             $paginator = $this->getPaginator($query, false);
 
-            return array(
+            $results = array(
                 'Count' => count($paginator),
                 'Results' => $results
             );
