@@ -775,7 +775,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $data = array(
             'fooBar' => 'bar',
             'cakeBar' => 'bar',
-            'inBar' => "IN ('in1', 'in2')",
+            'inBar' => 'IN ["in1","in2"]',
             'barFor' => 'NULL',
             'numberOfStuff' => 1,
             'page' => $page,
