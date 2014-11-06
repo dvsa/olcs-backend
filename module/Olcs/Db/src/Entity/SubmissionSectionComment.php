@@ -6,22 +6,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * SubmissionSectionComments Entity
+ * SubmissionSectionComment Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="submission_section_comments",
+ * @ORM\Table(name="submission_section_comment",
  *    indexes={
  *        @ORM\Index(name="fk_submission_section_submission1_idx", columns={"submission_id"}),
- *        @ORM\Index(name="fk_submission_section_comments_ref_data1_idx", columns={"submission_section"}),
- *        @ORM\Index(name="fk_submission_section_comments_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_section_comments_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_submission_section_comment_ref_data1_idx", columns={"submission_section"}),
+ *        @ORM\Index(name="fk_submission_section_comment_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_submission_section_comment_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
-class SubmissionSectionComments implements Interfaces\EntityInterface
+class SubmissionSectionComment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
@@ -64,7 +64,7 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
      * Set the submission section
      *
      * @param \Olcs\Db\Entity\RefData $submissionSection
-     * @return SubmissionSectionComments
+     * @return SubmissionSectionComment
      */
     public function setSubmissionSection($submissionSection)
     {
@@ -87,7 +87,7 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
      * Set the submission
      *
      * @param \Olcs\Db\Entity\Submission $submission
-     * @return SubmissionSectionComments
+     * @return SubmissionSectionComment
      */
     public function setSubmission($submission)
     {
@@ -110,7 +110,7 @@ class SubmissionSectionComments implements Interfaces\EntityInterface
      * Set the comment
      *
      * @param string $comment
-     * @return SubmissionSectionComments
+     * @return SubmissionSectionComment
      */
     public function setComment($comment)
     {
