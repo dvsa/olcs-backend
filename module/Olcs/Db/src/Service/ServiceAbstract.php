@@ -9,13 +9,12 @@
 namespace Olcs\Db\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
-use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
+use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Olcs\Db\Utility\ExpressionBuilder;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
@@ -25,7 +24,7 @@ use Olcs\Db\Utility\ExpressionBuilder;
 abstract class ServiceAbstract
 {
     use ZendServiceLocatorAwareTrait,
-        OlcsEntityManagerAwareTrait,
+        EntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
 
     /**
@@ -209,7 +208,12 @@ abstract class ServiceAbstract
 
         $qb->select('a')->from($entityName, 'a');
 
-        $eb = new ExpressionBuilder($qb, $this->getEntityManager(), $entityName);
+        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
+
+        $eb->setQueryBuilder($qb);
+        $eb->setEntityManager($this->getEntityManager());
+        $eb->setEntity($entityName);
+
         $expression = $eb->buildWhereExpression($searchFields);
 
         if ($expression !== null) {

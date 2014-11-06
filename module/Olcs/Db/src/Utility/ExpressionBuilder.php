@@ -7,7 +7,7 @@
  */
 namespace Olcs\Db\Utility;
 
-use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -25,15 +25,32 @@ class ExpressionBuilder
 
     protected $params = array();
 
-    public function __construct(QueryBuilder $qb, EntityManagerInterface $em, $entity)
+    public function setQueryBuilder(QueryBuilder $qb)
     {
         $this->qb = $qb;
+    }
+
+    public function setEntityManager(EntityManagerInterface $em)
+    {
         $this->em = $em;
+    }
+
+    public function setEntity($entity)
+    {
         $this->entity = $entity;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
     }
 
     public function buildWhereExpression($query)
     {
+        if (empty($query)) {
+            return null;
+        }
+
         $this->params = array();
 
         $queries = array();
@@ -42,18 +59,18 @@ class ExpressionBuilder
             $queries[] = $this->buildExpression($field, $value);
         }
 
-        return call_user_func_array(array($this->qb->expr(), 'andX'), $queries);
+        $expression = $this->qb->expr();
+
+        return call_user_func_array(array($expression, 'andX'), $queries);
     }
 
     private function buildExpression($field, $values, $or = true)
     {
         if (is_array($values)) {
-
             $queries = array();
 
             foreach ($values as $value) {
-
-                $queries[] = $this->formatExpression($field, $value, !$or);
+                $queries[] = $this->buildExpression($field, $value, !$or);
             }
 
             return call_user_func_array(array($this->qb->expr(), $or ? 'orX' : 'andX'), $queries);
@@ -71,13 +88,12 @@ class ExpressionBuilder
         }
 
         if (is_numeric($values) || $this->isFieldForeignKey($field)) {
-
             $paramIndex = $this->getNextParamIndex();
             $this->params[$paramIndex] = $values;
             return $this->qb->expr()->eq($field, '?' . $paramIndex);
         }
 
-        list($operator, $values) = $this->getOperator($field, $values);
+        list($operator, $values) = $this->getOperator($values);
 
         $paramIndex = $this->getNextParamIndex();
         $this->params[$paramIndex] = $values;
@@ -89,12 +105,18 @@ class ExpressionBuilder
                 return $exp->lt($field, '?' . $paramIndex);
             case '<=':
                 return $exp->lte($field, '?' . $paramIndex);
-            case '=':
-                return $exp->eq($field, '?' . $paramIndex);
-            case '=>':
+            case '>=':
                 return $exp->gte($field, '?' . $paramIndex);
             case '>':
                 return $exp->gt($field, '?' . $paramIndex);
+            case '~':
+                return $exp->like($field, '?' . $paramIndex);
+            case '!~':
+                return $exp->notLike($field, '?' . $paramIndex);
+            case '!=':
+                return $exp->neq($field, '?' . $paramIndex);
+            default:
+                return $exp->eq($field, '?' . $paramIndex);
         }
     }
 
@@ -112,7 +134,7 @@ class ExpressionBuilder
 
     private function getOperator($value)
     {
-        if (preg_match('/^(<=|<|~|>=|>)(\s*)(.+)$/', $value, $matches)) {
+        if (preg_match('/^(<=|=|<|~|\!~|\!=|>=|>)(\s*)(.+)$/', $value, $matches)) {
             $operator = $matches[1];
             $value = $matches[3];
         } else {
