@@ -67,6 +67,7 @@ TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `sla`;
+TRUNCATE TABLE `submission_action`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -958,7 +959,18 @@ INSERT INTO submission_section_comment (submission_section,submission_id,comment
     
     ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
     ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
+    
+    
+INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
+    `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
+    `created_on`, `last_modified_on`)
+VALUES
+    (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
+    
+    (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
 
+    
+    
 -- test business rules
 INSERT INTO `sla` (`category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
 VALUES
