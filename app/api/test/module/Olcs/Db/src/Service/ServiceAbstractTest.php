@@ -1191,4 +1191,287 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         // Test again, so we know it's been cached
         $this->assertEquals($expected, $this->service->getValidSearchFields());
     }
+
+    /**
+     * @group Service
+     * @group ServiceAbstract
+     * @group ServiceAbstractCurrent
+     */
+    public function testGetList()
+    {
+        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator']);
+
+        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
+
+        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
+        $className = get_class($mockEntity);
+        $this->service->expects($this->any())
+            ->method('getEntityName')
+            ->will($this->returnValue($className));
+
+        $mockQuery = $this->getMock('\stdClass', ['getResult']);
+        $mockQuery->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue(array()));
+
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
+            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery']
+        );
+        $mockQueryBuilder->expects($this->once())
+            ->method('select')
+            ->with('a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('from')
+            ->with($className, 'a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('setFirstResult')
+            ->with(0);
+        $mockQueryBuilder->expects($this->once())
+            ->method('setMaxResults')
+            ->with(10);
+        $mockQueryBuilder->expects($this->once())
+            ->method('getQuery')
+            ->will($this->returnValue($mockQuery));
+
+        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
+        $mockEntityManager->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
+
+        $this->service->expects($this->any())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager));
+
+        $mockExpressionBuilder = $this->getMock(
+            '\stdClass',
+            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression']
+        );
+
+        $mockExpressionBuilder->expects($this->once())
+            ->method('buildWhereExpression')
+            ->willReturn(null);
+
+        $sm = \OlcsTest\Bootstrap::getServiceManager();
+        $sm->setAllowOverride(true);
+        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $this->service->setServiceLocator($sm);
+
+        $this->service->expects($this->once())
+            ->method('getPaginator')
+            ->with($mockQuery)
+            ->will($this->returnValue(array()));
+
+        $data = array(
+
+        );
+
+        $results = $this->service->getList($data);
+
+        $this->assertEquals(
+            array('Count' => 0, 'Results' => array()),
+            $results
+        );
+    }
+
+    /**
+     * @group Service
+     * @group ServiceAbstract
+     * @group ServiceAbstractCurrent
+     */
+    public function testGetListWithConditions()
+    {
+        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator']);
+
+        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
+
+        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
+        $className = get_class($mockEntity);
+        $this->service->expects($this->any())
+            ->method('getEntityName')
+            ->will($this->returnValue($className));
+
+        $mockQuery = $this->getMock('\stdClass', ['getResult']);
+        $mockQuery->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue(array()));
+
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
+            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery', 'where', 'setParameters']
+        );
+        $mockQueryBuilder->expects($this->once())
+            ->method('select')
+            ->with('a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('from')
+            ->with($className, 'a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('where')
+            ->with('EXPRESSION');
+        $mockQueryBuilder->expects($this->once())
+            ->method('setFirstResult')
+            ->with(0);
+        $mockQueryBuilder->expects($this->once())
+            ->method('setMaxResults')
+            ->with(10);
+        $mockQueryBuilder->expects($this->once())
+            ->method('getQuery')
+            ->will($this->returnValue($mockQuery));
+        $mockQueryBuilder->expects($this->once())
+            ->method('setParameters')
+            ->will($this->returnValue(array(1)));
+
+        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
+        $mockEntityManager->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
+
+        $this->service->expects($this->any())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager));
+
+        $mockExpressionBuilder = $this->getMock(
+            '\stdClass',
+            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression', 'getParams']
+        );
+        $mockExpressionBuilder->expects($this->once())
+            ->method('buildWhereExpression')
+            ->willReturn('EXPRESSION');
+        $mockExpressionBuilder->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array(1));
+
+        $sm = \OlcsTest\Bootstrap::getServiceManager();
+        $sm->setAllowOverride(true);
+        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $this->service->setServiceLocator($sm);
+
+        $this->service->expects($this->once())
+            ->method('getPaginator')
+            ->with($mockQuery)
+            ->will($this->returnValue(array()));
+
+        $data = array(
+
+        );
+
+        $results = $this->service->getList($data);
+
+        $this->assertEquals(
+            array('Count' => 0, 'Results' => array()),
+            $results
+        );
+    }
+
+    /**
+     * @group Service
+     * @group ServiceAbstract
+     * @group ServiceAbstractCurrent
+     */
+    public function testGetListWithResults()
+    {
+        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator', 'getBundleCreator']);
+
+        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
+
+        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
+        $className = get_class($mockEntity);
+        $this->service->expects($this->any())
+            ->method('getEntityName')
+            ->will($this->returnValue($className));
+
+        $mockQuery = $this->getMock('\stdClass', ['getResult']);
+        $mockQuery->expects($this->once())
+            ->method('getResult')
+            ->will($this->returnValue(array('foo')));
+
+        $mockQueryBuilder = $this->getMock(
+            '\stdClass',
+            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery', 'where', 'setParameters']
+        );
+        $mockQueryBuilder->expects($this->once())
+            ->method('select')
+            ->with('a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('from')
+            ->with($className, 'a')
+            ->willReturnSelf();
+        $mockQueryBuilder->expects($this->once())
+            ->method('where')
+            ->with('EXPRESSION');
+        $mockQueryBuilder->expects($this->once())
+            ->method('setFirstResult')
+            ->with(0);
+        $mockQueryBuilder->expects($this->once())
+            ->method('setMaxResults')
+            ->with(10);
+        $mockQueryBuilder->expects($this->once())
+            ->method('getQuery')
+            ->will($this->returnValue($mockQuery));
+        $mockQueryBuilder->expects($this->once())
+            ->method('setParameters')
+            ->will($this->returnValue(array(1)));
+
+        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
+        $mockEntityManager->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
+
+        $this->service->expects($this->any())
+            ->method('getEntityManager')
+            ->will($this->returnValue($mockEntityManager));
+
+        $mockExpressionBuilder = $this->getMock(
+            '\stdClass',
+            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression', 'getParams']
+        );
+        $mockExpressionBuilder->expects($this->once())
+            ->method('buildWhereExpression')
+            ->willReturn('EXPRESSION');
+        $mockExpressionBuilder->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array(1));
+
+        $sm = \OlcsTest\Bootstrap::getServiceManager();
+        $sm->setAllowOverride(true);
+        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $this->service->setServiceLocator($sm);
+
+        $this->service->expects($this->once())
+            ->method('getPaginator')
+            ->with($mockQuery)
+            ->will($this->returnValue(array('foo')));
+
+        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
+        $mockBundleCreator->expects($this->once())
+            ->method('buildEntityBundle')
+            ->will($this->returnValue(array('foo')));
+
+        $this->service->expects($this->once())
+            ->method('getBundleCreator')
+            ->will($this->returnValue($mockBundleCreator));
+
+        $data = array(
+
+        );
+
+        $results = $this->service->getList($data);
+
+        $this->assertEquals(
+            array('Count' => 1, 'Results' => array(array('foo'))),
+            $results
+        );
+    }
 }
