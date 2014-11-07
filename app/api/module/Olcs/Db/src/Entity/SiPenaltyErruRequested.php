@@ -29,7 +29,6 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\SeriousInfringementManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -44,6 +43,16 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siPenaltyRequestedType;
+
+    /**
+     * Serious infringement
+     *
+     * @var \Olcs\Db\Entity\SeriousInfringement
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY", inversedBy="erruRequestedPenalties")
+     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
+     */
+    protected $seriousInfringement;
 
     /**
      * Duration
@@ -75,6 +84,29 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     public function getSiPenaltyRequestedType()
     {
         return $this->siPenaltyRequestedType;
+    }
+
+    /**
+     * Set the serious infringement
+     *
+     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
+     * @return SiPenaltyErruRequested
+     */
+    public function setSeriousInfringement($seriousInfringement)
+    {
+        $this->seriousInfringement = $seriousInfringement;
+
+        return $this;
+    }
+
+    /**
+     * Get the serious infringement
+     *
+     * @return \Olcs\Db\Entity\SeriousInfringement
+     */
+    public function getSeriousInfringement()
+    {
+        return $this->seriousInfringement;
     }
 
     /**
