@@ -695,10 +695,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('lic_cat', 'lcat_permit', 'Permit', 'Permit'),
     ('lic_cat', 'lcat_psv', 'Public Service Vehicle', 'PSV'),
 
+    ('lic_status', 'lsts_not_submitted', 'Not Yet Submissed', null),
+    ('lic_status', 'lsts_consideration', 'Under Consideration', 'New'),
+
     ('lic_status', 'lsts_cns', 'Continuation Not Sought', 'CNS'),
     ('lic_status', 'lsts_curtailed', 'Curtailed', 'Curtailed'),
     ('lic_status', 'lsts_granted', 'Granted', 'Granted'),
-    ('lic_status', 'lsts_new', 'New', 'New'),
     ('lic_status', 'lsts_ntu', 'Not Taken Up', 'NTU'),
     ('lic_status', 'lsts_refused', 'Refused', 'Refused'),
     ('lic_status', 'lsts_revoked', 'Revoked', 'Revoked'),
