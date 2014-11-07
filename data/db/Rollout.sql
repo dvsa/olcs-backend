@@ -990,6 +990,23 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (4, 'fee_status', 'lfs_w', 'Waived', NULL),
     (5, 'fee_status', 'lfs_cn', 'Cancelled', NULL);
 
+-- Submission status
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'sub_st_dec', 'sub_st_dec_agree', 'Agree', NULL),
+    (2, 'sub_st_dec', 'sub_st_dec_paid', 'Paid', NULL),
+    (3, 'sub_st_dec', 'sub_st_dec_part_agree', 'Partially agree', NULL),
+    (4, 'sub_st_dec', 'sub_st_dec_disagree', 'Disagree', NULL),
+    (5, 'sub_st_dec', 'sub_st_dec_further_info', 'Further information required', NULL);
+
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'sub_st_rec', 'sub_st_rec_pi', 'Public inquiry', NULL),
+    (2, 'sub_st_rec', 'sub_st_rec_uc', 'Undertakings & conditions', NULL),
+    (3, 'sub_st_rec', 'sub_st_rec_nfa', 'NFA', NULL),
+    (4, 'sub_st_rec', 'sub_st_rec_wl', 'Warning letter', NULL),
+    (5, 'sub_st_rec', 'sub_st_rec_ptr', 'Propose to revoke', NULL),
+    (6, 'sub_st_rec', 'sub_st_rec_other', 'Other', NULL);
+
+
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'fee_pay_method', 'fpm_cash', 'Cash', NULL),
     (2, 'fee_pay_method', 'fpm_cheque', 'Cheque', NULL),
