@@ -26,6 +26,7 @@ TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
+TRUNCATE TABLE `fee_type`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_operating_centre`;
@@ -67,6 +68,7 @@ TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `sla`;
+TRUNCATE TABLE `submission_action`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -208,27 +210,27 @@ INSERT INTO `contact_details` (`id`, `person_id`, `organisation_id`, `licence_id
     `version`, `deleted_date`, `forename`, `family_name`) VALUES
     (1,NULL,NULL,NULL,26,0,2,NULL,NULL,'ct_ta',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (7,9,7,NULL,7,0,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (8,10,7,NULL,8,3,2,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (8,10,NULL,NULL,8,3,2,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (21,NULL,1,NULL,21,2,0,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (25,NULL,1,NULL,25,4,4,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (26,NULL,1,NULL,26,3,0,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (27,NULL,1,NULL,27,4,2,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (29,NULL,7,NULL,29,1,3,NULL,NULL,'ct_def',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (30,NULL,30,NULL,30,3,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (31,NULL,30,NULL,31,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (31,NULL,NULL,NULL,31,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (37,NULL,30,NULL,37,2,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (39,NULL,30,NULL,39,2,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (41,NULL,41,NULL,41,1,2,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (42,NULL,41,NULL,42,4,1,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (42,NULL,NULL,NULL,42,4,1,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (54,NULL,54,NULL,54,2,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (55,NULL,54,NULL,55,3,3,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (55,NULL,NULL,NULL,55,3,3,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (63,NULL,63,NULL,63,4,3,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (64,NULL,63,NULL,64,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (64,NULL,NULL,NULL,64,1,0,NULL,NULL,'ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (67,NULL,63,NULL,67,4,4,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (72,NULL,63,NULL,72,4,2,NULL,NULL,'ct_oc',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (75,NULL,75,NULL,75,3,4,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (76,46,75,NULL,76,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
-    (77,46,1,NULL,72,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (76,46,NULL,NULL,76,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
+    (77,46,NULL,NULL,72,1,4,NULL,'Important Person','ct_corr',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (100,44,100,NULL,100,1,4,NULL,NULL,'ct_reg',NULL,NOW(),NOW(),1,NULL,NULL,NULL),
     (101,NULL,NULL,NULL,26,1,4,NULL,NULL,'ct_team_user','loggedin@user.com',NOW(),NOW(),1,NULL, 'Logged in', 'User');
 
@@ -958,7 +960,18 @@ INSERT INTO submission_section_comment (submission_section,submission_id,comment
     
     ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
     ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
+    
+    
+INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
+    `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
+    `created_on`, `last_modified_on`)
+VALUES
+    (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
+    
+    (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
 
+    
+    
 -- test business rules
 INSERT INTO `sla` (`category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
 VALUES
@@ -970,6 +983,14 @@ VALUES
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
 
+INSERT INTO `fee_type` (`id`, `last_modified_by`, `created_by`, `goods_or_psv`, `licence_type`, `traffic_area_id`, `fee_type`, `effective_from`, `fixed_value`, `annual_value`, `five_year_value`, `expire_fee_with_licence`, `description`, `created_on`, `last_modified_on`, `version`)
+VALUES
+	(1, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2014-01-01', 100.00, 1200.00, 500.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(2, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(3, 2, 2, 'lcat_psv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(4, 2, 2, 'lcat_gv', 'ltyp_si', 'K', 'LIC', '2013-01-01', 100.00, 1200.00, NULL, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(5, 2, 2, 'lcat_gv', 'ltyp_sn', 'N', 'APP', '2014-01-01', 80.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
+	(6, 2, 2, 'lcat_gv', NULL, 'K', 'APP', '2014-10-10', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1);
 
     
 SET foreign_key_checks = 1;
