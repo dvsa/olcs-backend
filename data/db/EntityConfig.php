@@ -879,6 +879,31 @@ return array(
     'si_penalty' => array(
         'imposed' => array(
             'type' => 'yesnonull'
+        ),
+        'serious_infringement_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SeriousInfringement',
+                'property' => 'appliedPenaltie'
+            )
+        )
+    ),
+    'si_penalty_erru_imposed' => array(
+        'serious_infringement_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SeriousInfringement',
+                'property' => 'erruImposedPenaltie'
+            )
+        ),
+        'executed' => array(
+            'yesno'
+        )
+    ),
+    'si_penalty_erru_requested' => array(
+        'serious_infringement_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SeriousInfringement',
+                'property' => 'erruRequestedPenaltie'
+            )
         )
     ),
     'correspondence_inbox' => array(

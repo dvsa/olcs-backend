@@ -6125,7 +6125,7 @@ CREATE TABLE IF NOT EXISTS `si_penalty_erru_imposed` (
   `start_date` DATE NULL,
   `end_date` DATE NULL,
   `deleted_date` DATETIME NULL,
-  `executed` INT NULL,
+  `executed` TINYINT(1) NULL,
   `serious_infringement_id` INT NOT NULL,
   `si_penalty_imposed_type_id` VARCHAR(8) NOT NULL,
   `created_by` INT NULL,
