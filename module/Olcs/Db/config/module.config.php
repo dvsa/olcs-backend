@@ -146,6 +146,9 @@ return [
             'serviceFactory' => '\Olcs\Db\Service\Factory',
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
             'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
+        ],
+        'services' => [
+            'ExpressionBuilder' => new \Olcs\Db\Utility\ExpressionBuilder
         ]
     ],
     'controllers' => [

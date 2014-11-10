@@ -26,7 +26,6 @@ TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
-TRUNCATE TABLE `fee_type`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_operating_centre`;
@@ -904,14 +903,12 @@ INSERT INTO submission_section_comment (submission_section,submission_id,comment
     
     ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
     ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
-    
-    
+
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
     `created_on`, `last_modified_on`)
 VALUES
     (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
-    
     (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
 
 -- test business rules
@@ -924,17 +921,6 @@ VALUES
     ('pi', 'tcWrittenReasonDate', 'hearingDate', 5, '1900-01-01', NULL),
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
-
-INSERT INTO `fee_type` (`id`, `last_modified_by`, `created_by`, `goods_or_psv`, `licence_type`, `traffic_area_id`, `fee_type`, `effective_from`, `fixed_value`, `annual_value`, `five_year_value`, `expire_fee_with_licence`, `description`, `created_on`, `last_modified_on`, `version`)
-VALUES
-	(1, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2014-01-01', 100.00, 1200.00, 500.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(2, 2, 2, 'lcat_gv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(3, 2, 2, 'lcat_psv', 'ltyp_sn', 'K', 'APP', '2013-01-01', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(4, 2, 2, 'lcat_gv', 'ltyp_si', 'K', 'LIC', '2013-01-01', 100.00, 1200.00, NULL, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(5, 2, 2, 'lcat_gv', 'ltyp_sn', 'N', 'APP', '2014-01-01', 80.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(6, 2, 2, 'lcat_gv', NULL, 'K', 'APP', '2014-10-10', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(7, 2, 2, 'lcat_psv', NULL, 'K', 'APP', '2014-10-10', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1),
-	(8, 2, 2, 'lcat_gv', NULL, 'N', 'APP', '2014-10-10', 50.00, 600.00, 250.00, 0, 'some description', '2014-01-01 10:10:10', '2014-01-01 10:10:10', 1);
 
 INSERT INTO `serious_infringement`
 (`id`, `si_category_type_id`, `erru_response_user_id`, `member_state_code`, `created_by`,`last_modified_by`,

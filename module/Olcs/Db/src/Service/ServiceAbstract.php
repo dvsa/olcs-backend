@@ -9,7 +9,7 @@
 namespace Olcs\Db\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
-use Olcs\Db\Traits\EntityManagerAwareTrait as OlcsEntityManagerAwareTrait;
+use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
@@ -24,7 +24,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 abstract class ServiceAbstract
 {
     use ZendServiceLocatorAwareTrait,
-        OlcsEntityManagerAwareTrait,
+        EntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
 
     /**
@@ -206,41 +206,24 @@ abstract class ServiceAbstract
         $qb = $this->getEntityManager()->createQueryBuilder();
         $entityName = $this->getEntityName();
 
-        $qb->select('a');
-        $qb->from($entityName, 'a');
+        $qb->select('a')->from($entityName, 'a');
 
-        $params = array();
+        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
 
-        $whereMethod = 'where';
+        $eb->setQueryBuilder($qb);
+        $eb->setEntityManager($this->getEntityManager());
+        $eb->setEntity($entityName);
 
-        foreach ($searchFields as $key => $value) {
+        $expression = $eb->buildWhereExpression($searchFields);
 
-            $field = $key;
+        if ($expression !== null) {
+            $qb->where($expression);
 
-            if (is_numeric($value)) {
-                $qb->$whereMethod("a.{$field} = :{$key}");
-                $whereMethod = 'andWhere';
-                $params[$key] = $value;
-            } elseif ($value === 'NULL') {
-                $qb->$whereMethod("a.{$field} IS NULL");
-                $whereMethod = 'andWhere';
-            } elseif (substr($value, 0, 4) == 'IN (') {
-                $qb->$whereMethod("a.{$field} IN " . substr($value, 3));
-                $whereMethod = 'andWhere';
-            } elseif ($this->isFieldForeignKey($entityName, $field)) {
-                $qb->$whereMethod("a.{$field} = :{$key}");
-                $whereMethod = 'andWhere';
-                $params[$key] = $value;
-            } else {
-                list($operator, $value) = $this->getOperator($key, $value);
-                $qb->$whereMethod("a.{$field} " . $operator);
-                $whereMethod = 'andWhere';
-                $params[$key] = $value;
+            $params = $eb->getParams();
+
+            if (!empty($params)) {
+                $qb->setParameters($params);
             }
-        }
-
-        if (!empty($params)) {
-            $qb->setParameters($params);
         }
 
         if ($filter) {
@@ -275,44 +258,13 @@ abstract class ServiceAbstract
         if ($paginate) {
             $paginator = $this->getPaginator($query, false);
 
-            return array(
+            $results = array(
                 'Count' => count($paginator),
                 'Results' => $results
             );
         }
 
         return $results;
-    }
-
-    /**
-     * Check if a field is a foreign key
-     *
-     * @param string $entity
-     * @param string $field
-     */
-    private function isFieldForeignKey($entity, $field)
-    {
-        $metaData = (array)$this->getClassMetadata($entity);
-
-        return isset($metaData['associationMappings'][$field]);
-    }
-
-    /**
-     * Get class metadata from entity
-     *
-     * @param string $entity
-     */
-    private function getClassMetadata($entity)
-    {
-        if (is_object($entity)) {
-            $entity = get_class($entity);
-        }
-
-        if (!isset($this->classMetadata[$entity])) {
-            $this->classMetadata[$entity] = $this->getEntityManager()->getClassMetadata($entity);
-        }
-
-        return $this->classMetadata[$entity];
     }
 
     /**
@@ -457,7 +409,7 @@ abstract class ServiceAbstract
      */
     public function getOrderByValues(array $data)
     {
-        return array_intersect_key($data, array_flip(['sort', 'order']));
+        return array_intersect_key($data, ['sort' => '', 'order' => '']);
     }
 
     /**
@@ -650,21 +602,5 @@ abstract class ServiceAbstract
         }
 
         return $data;
-    }
-
-    private function getOperator($key, $value)
-    {
-        if (preg_match("/^(<=|<|~|>=|>)(\s*)(.+)$/", $value, $matches)) {
-            $operator = $matches[1];
-            $value = $matches[3];
-        } else {
-            $operator = "=";
-        }
-
-        if ($operator === "~") {
-            $operator = "LIKE";
-        }
-
-        return array($operator . " :" . $key, $value);
     }
 }
