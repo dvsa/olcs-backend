@@ -51,8 +51,6 @@ TRUNCATE TABLE `prohibition`;
 TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `psv_disc`;
-TRUNCATE TABLE `publication`;
-TRUNCATE TABLE `public_holiday`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
 TRUNCATE TABLE `tm_qualification`;
@@ -80,6 +78,8 @@ TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
+TRUNCATE TABLE `publication`;
+TRUNCATE TABLE `public_holiday`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
