@@ -891,7 +891,7 @@ return array(
         'serious_infringement_id' => array(
             'inversedBy' => array(
                 'entity' => 'SeriousInfringement',
-                'property' => 'erruImposedPenaltie'
+                'property' => 'imposedErru'
             )
         ),
         'executed' => array(
@@ -902,7 +902,7 @@ return array(
         'serious_infringement_id' => array(
             'inversedBy' => array(
                 'entity' => 'SeriousInfringement',
-                'property' => 'erruRequestedPenaltie'
+                'property' => 'requestedErru'
             )
         )
     ),
