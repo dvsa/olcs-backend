@@ -66,6 +66,16 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
+TRUNCATE TABLE `serious_infringement`;
+TRUNCATE TABLE `si_category`;
+TRUNCATE TABLE `si_category_type`;
+TRUNCATE TABLE `si_penalty`;
+TRUNCATE TABLE `si_penalty_erru_requested`;
+TRUNCATE TABLE `si_penalty_erru_imposed`;
+TRUNCATE TABLE `si_penalty_imposed_type`;
+TRUNCATE TABLE `si_penalty_requested_type`;
+TRUNCATE TABLE `si_penalty_type`;
+TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
 
@@ -630,135 +640,69 @@ INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_we
     (7,NULL,5,'VRM3',3800,'CERT10007',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
     (8,NULL,1,'VRM4',6800,'CERT10008',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1);
 
-INSERT INTO `cases` (`id`, `licence_id`, `application_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
-`description`, `ecms_no`,
-`open_date`,
-    `case_type`, `close_date`, `annual_test_history`, `created_on`, `last_modified_on`, `version`, `is_impounding`) VALUES
-    (24,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2012-03-21 00:00:00',
-    'case_t_lic',NULL,NULL,'2013-11-12 12:27:33',   NULL,1,0),
-    (28,7,1,NULL,NULL,NULL,'Convictions against operator','E123444','2012-06-13 00:00:00','case_t_app',NULL,NULL,
-    '2014-01-01 11:11:11',NULL,1,0),
-    (29,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (30,7,NULL,NULL,NULL,NULL,'werwrew','','2014-02-11 12:27:47','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (31,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:07','case_t_lic','2014-05-25 12:27:33',NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (32,7,NULL,NULL,NULL,NULL,'weewrerwerw','','2014-02-11 12:28:25','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (33,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:38','case_t_lic','2014-03-29 12:27:33',NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (34,7,NULL,NULL,NULL,NULL,'7656567567','','2014-02-11 12:29:01','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (35,7,NULL,NULL,NULL,NULL,'45645645645','','2014-02-11 12:29:17','case_t_lic','2014-04-15 12:27:33',NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (36,7,NULL,NULL,NULL,NULL,'56756757','','2014-02-11 12:29:40','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (37,7,NULL,NULL,NULL,NULL,'3453g345','','2014-02-11 12:29:59','case_t_lic','2014-04-23 12:27:33',NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (38,7,NULL,NULL,NULL,NULL,'MWC test case 1','2345678','2014-02-13 23:43:58','case_t_lic','2014-05-25 12:27:33',
-    NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (39,7,NULL,NULL,NULL,NULL,'new test case 2','coops12345','2014-02-14 02:37:39','case_t_lic',
-    '2014-05-25 12:27:33',NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (40,7,NULL,NULL,NULL,NULL,'MWC test case 3','coops4321','2014-02-14 02:39:38','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',2,0),
-    (41,7,NULL,NULL,NULL,NULL,'MWC test case 4','E647654','2014-02-14 16:29:03','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (42,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2013-06-01 00:00:00',
-    'case_t_lic',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (43,7,NULL,NULL,NULL,NULL,'Convictions against operator Fred','E123444','2013-06-02 00:00:00','case_t_lic',NULL,
-    NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14,0),
-    (44,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (45,7,NULL,NULL,NULL,NULL,'werwrew','','2014-02-11 12:27:47','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (46,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:07','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (47,7,NULL,NULL,NULL,NULL,'weewrerwerw','','2014-02-11 12:28:25','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (48,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:38','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (49,7,NULL,NULL,NULL,NULL,'7656567567','','2014-02-11 12:29:01','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (50,7,NULL,NULL,NULL,NULL,'45645645645','','2014-02-11 12:29:17','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (51,7,NULL,NULL,NULL,NULL,'56756757','','2014-02-11 12:29:40','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (52,7,NULL,NULL,NULL,NULL,'3453g345','','2014-02-11 12:29:59','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (53,7,NULL,NULL,NULL,NULL,'MWC test case 1','2345678','2014-02-13 23:43:58','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (54,7,NULL,NULL,NULL,NULL,'new test case 2','coops12345','2014-02-14 02:37:39','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (55,7,NULL,NULL,NULL,NULL,'MWC test case 3','coops4321','2014-02-14 02:39:38','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',2,0),
-    (56,7,NULL,NULL,NULL,NULL,'MWC test case 4','E647654','2014-02-14 16:29:03','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (57,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-01 00:00:00',
-    'case_t_lic',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (58,7,NULL,NULL,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-02 00:00:00','case_t_lic',NULL,
-    NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14,0),
-    (59,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (60,7,NULL,NULL,NULL,NULL,'werwrew','','2014-02-11 12:27:47','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (61,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:07','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (62,7,NULL,NULL,NULL,NULL,'weewrerwerw','','2014-02-11 12:28:25','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (63,7,NULL,NULL,NULL,NULL,'345345345','','2014-02-11 12:28:38','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (64,7,NULL,NULL,NULL,NULL,'7656567567','','2014-02-11 12:29:01','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (65,7,NULL,NULL,NULL,NULL,'45645645645','','2014-02-11 12:29:17','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (66,7,NULL,NULL,NULL,NULL,'56756757','','2014-02-11 12:29:40','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (67,7,NULL,NULL,NULL,NULL,'3453g345','','2014-02-11 12:29:59','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (68,7,NULL,NULL,NULL,NULL,'MWC test case 1','2345678','2014-02-13 23:43:58','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (69,7,NULL,NULL,NULL,NULL,'new test case 2','coops12345','2014-02-14 02:37:39','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (70,7,NULL,NULL,NULL,NULL,'MWC test case 3','coops4321','2014-02-14 02:39:38','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',2,0),
-    (71,7,NULL,NULL,NULL,NULL,'MWC test case 4','E647654','2014-02-14 16:29:03','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (72,7,NULL,NULL,NULL,NULL,'Case for convictions against company directors','E123456','2013-11-02 00:00:00','case_t_lic',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (73,7,NULL,NULL,NULL,NULL,'Convictions against operator Fred','E123444','2013-11-03 00:00:00','case_t_lic',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14,0),
-    (74,7,NULL,NULL,NULL,NULL,'1213213','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1,0),
-    (75,110,NULL,NULL,NULL,NULL,'PSV licence case','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,'2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (76,110,1,NULL,NULL,NULL,'Case linked to an application','','2014-02-11 12:27:33','case_t_app',NULL,NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (77,110,NULL,NULL,NULL,NULL,'Case linked to a licence','','2014-02-11 12:27:33','case_t_lic',NULL,NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (78,110,NULL,NULL,NULL,NULL,'Case linked to MSI','','2014-02-11 12:27:33','case_t_msi',NULL,NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (79,110,NULL,NULL,NULL,NULL,'Case linked to MSI with no response entered','','2014-02-11 12:27:33','case_t_msinre',
-    NULL,
-    NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (80,110,NULL,NULL,NULL,NULL,'Case linked to MSI with response not sent','','2014-02-11 12:27:33','case_t_msirnys',
-    NULL,NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (81,110,NULL,NULL,NULL,NULL,'Case linked to Non-MSI','','2014-02-11 12:27:33','case_t_nmsi',NULL,NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (82,110,NULL,1,NULL,NULL,'Case linked to an internal Transport manager','','2014-02-11 12:27:33','case_t_tm',
-    NULL,
-    NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0),
-    (83,110,NULL,2,NULL,NULL,'Case linked to an external Transport manager','','2014-02-11 12:27:33','case_t_tm',NULL,
-    NULL,
-    '2014-01-11 11:11:11',
-    '2014-02-22 12:22:22',1,0);
+-- Cases
+INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application_id`,`transport_manager_id`,
+   `last_modified_by`,`created_by`,`ecms_no`,`open_date`,`close_date`,`description`,`is_impounding`,
+   `erru_originating_authority`,`erru_transport_undertaking_name`,`erru_vrm`,`annual_test_history`,`prohibition_note`,
+   `conviction_note`,`penalties_note`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
+VALUES
+  (24,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123456','2012-03-21',NULL,'Case for convictions against company directors',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2013-11-12 12:27:33',NULL,1),
+  (28,'case_t_app',NULL,7,1,NULL,NULL,NULL,'E123444','2012-06-13',NULL,'Convictions against operator',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-01 11:11:11',NULL,1),
+  (29,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,'Polish Transport Authority','Polish Transport Authority','GH52 ABC',NULL,NULL,NULL,'comment',NULL,'2014-01-11 11:11:11','2014-11-07 12:47:07',3),
+  (30,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'werwrew',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (31,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11','2014-05-25','345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (32,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'weewrerwerw',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (33,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11','2014-03-29','345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (34,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'7656567567',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (35,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11','2014-04-15','45645645645',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (36,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'56756757',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (37,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11','2014-04-23','3453g345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (38,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'2345678','2014-02-13','2014-05-25','MWC test case 1',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (39,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops12345','2014-02-14','2014-05-25','new test case 2',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (40,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops4321','2014-02-14',NULL,'MWC test case 3',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',2),
+  (41,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E647654','2014-02-14',NULL,'MWC test case 4',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (42,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123456','2013-06-01',NULL,'Case for convictions against company directors',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (43,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123444','2013-06-02',NULL,'Convictions against operator Fred',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
+  (44,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (45,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'werwrew',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (46,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (47,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'weewrerwerw',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (48,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (49,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'7656567567',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (50,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'45645645645',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (51,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'56756757',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (52,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'3453g345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (53,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'2345678','2014-02-13',NULL,'MWC test case 1',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (54,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops12345','2014-02-14',NULL,'new test case 2',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (55,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops4321','2014-02-14',NULL,'MWC test case 3',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',2),
+  (56,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E647654','2014-02-14',NULL,'MWC test case 4',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (57,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123456','2013-11-01',NULL,'Case for convictions against company directors',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (58,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123444','2013-11-02',NULL,'Convictions against operator Fred',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
+  (59,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (60,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'werwrew',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (61,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (62,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'weewrerwerw',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (63,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (64,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'7656567567',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (65,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'45645645645',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (66,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'56756757',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (67,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'3453g345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (68,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'2345678','2014-02-13',NULL,'MWC test case 1',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (69,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops12345','2014-02-14',NULL,'new test case 2',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (70,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'coops4321','2014-02-14',NULL,'MWC test case 3',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',2),
+  (71,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E647654','2014-02-14',NULL,'MWC test case 4',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (72,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123456','2013-11-02',NULL,'Case for convictions against company directors',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (73,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123444','2013-11-03',NULL,'Convictions against operator Fred',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',14),
+  (74,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (75,'case_t_lic',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'PSV licence case',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (76,'case_t_app',NULL,110,1,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to an application',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (77,'case_t_lic',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to a licence',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (78,'case_t_msi',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to MSI',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (79,'case_t_msinre',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to MSI with no response entered',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (80,'case_t_msirnys',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to MSI with response not sent',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (81,'case_t_nmsi',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to Non-MSI',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (82,'case_t_tm',NULL,110,NULL,1,NULL,NULL,'','2014-02-11',NULL,'Case linked to an internal Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (83,'case_t_tm',NULL,110,NULL,2,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
 
 INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (1,1,'Marketing',''),
@@ -977,5 +921,97 @@ VALUES
     ('pi', 'tcWrittenReasonDate', 'hearingDate', 5, '1900-01-01', NULL),
     ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
     ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
+
+INSERT INTO `serious_infringement`
+(`id`, `si_category_type_id`, `erru_response_user_id`, `member_state_code`, `created_by`,`last_modified_by`,
+`si_category_id`, `case_id`, `check_date`, `erru_response_sent`,`erru_response_time`, `infringement_date`,
+`notification_number`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 123456, null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1);
+
+INSERT INTO `si_penalty`
+(`id`, `si_penalty_type_id`, `last_modified_by`, `created_by`, `serious_infringement_id`, `imposed`,
+ `reason_not_imposed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, '101', 1, 1, 1, 1, null, '2014-06-01', '2015-01-31', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (2, '306', 1, 1, 1, 0, 'Reason the penalty was not imposed', '2014-06-01', '2015-01-31', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+
+-- si_category
+INSERT INTO `si_category` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
+VALUES ('MSI','MSI',NULL,1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1);
+
+-- si_category_type
+INSERT INTO `si_category_type` (`id`,`description`,`deleted_date`,`si_category_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+VALUES
+  ('101','Exceeding the maximum six-day or fortnightly driving time limits by margins of 25 % or more',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('102','Exceeding, during a daily working period, the maximum daily driving time limit by a margin of 50 % or more without taking a break or without an uninterrupted rest period of at least 4,5 hours',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('201','Not having a tachograph although required by Community law',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('202','Using a fraudulent device able to modify the records of the recording equipment',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('203','Not having a speed limiter although required by Community law',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('204','Using a fraudulent device able to modify the speed limiter',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('205','Falsifying record sheets of the tachograph',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('206','Falsifying data downloaded from the tachograph and/or the driver card',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('301','Driving without a valid roadworthiness certificate if such a document is required under Community law',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('302','Driving with a very serious deficiency of, inter alia, the braking system, the steering linkages, the wheels/tyres, the suspension or chassis that would create such an immediate risk to road safety that it leads to a decision to immobilise the vehicle',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('401','Transporting dangerous goods that are prohibited for transport',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('402','Transporting dangerous goods in a prohibited or non-approved means of containment, thus endangering lives or the environment to such extent that it leads to a decision to immobilise the vehicle',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('403','Transporting dangerous goods without identifying them on the vehicle as dangerous goods, thus endangering lives or the environment to such extent that it leads to a decision to immobilise the vehicle',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('501','Carrying passengers without holding a valid driving licence',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('502','Carrying goods without holding a valid driving licence',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('503','Carrying passengers by an undertaking not holding a valid Community licence',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('504','Carrying goods by an undertaking not holding a valid Community licence',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('601','Driving with a driver card that has been falsified',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('602','Driving with a driver card of which the driver is not the holder',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('603','Driving with a driver card which has been obtained on the basis of false declarations and/or forged documents',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('701','Carrying goods exceeding the maximum permissible laden mass by 20 % or more for vehicles the permissible laden weight of which exceeds 12 tonnes',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
+  ('702','Carrying goods exceeding the maximum permissible laden mass by 25 % or more for vehicles the permissible laden weight of which does not exceed 12 tonnes',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1);
+
+INSERT INTO `si_penalty_imposed_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+VALUES
+  ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('102','Other',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('201','Temporary ban on cabotage operations',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('202','Fine',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('203','Prohibition',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('204','Immobilisation',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
+
+INSERT INTO `si_penalty_requested_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+VALUES
+  ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('301','Temporary withdrawl of some or all of the certified true copies of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('302','Permanent withdrawl of some or all of the certified true copies of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('303','Temporary withdrawl of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('304','Permanent withdrawl of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('305','Suspension of the issue of driver attestations',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('306','Withdrawl of driver attestations ',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('307','Issue of driver attestations subject to additional conditions in order to prevent misuse',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
+
+INSERT INTO `si_penalty_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+VALUES
+  ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('102','Other',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('301','Temporary withdrawal of some or all of the certified true copies of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('302','Permanent withdrawal of some or all of the certified true copies of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('303','Temporary withdrawal of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('304','Permanent withdrawal of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('305','Suspension of the issue of driver attestations',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('306','Withdrawal of driver attestations ',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
+  ('307','Issue of driver attestations subject to additional conditions in order to prevent misuse',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
+
+INSERT INTO `si_penalty_erru_imposed`
+(`id`, `si_penalty_imposed_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `final_decision_date`,
+ `executed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, '204', 1, 1, 1, '2014-10-02', 1, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (2, '202', 1, 1, 1, '2014-10-02', 1, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (3, '201', 1, 1, 1, '2014-10-02', 0, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+
+INSERT INTO `si_penalty_erru_requested`
+(`id`, `si_penalty_requested_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `duration`,
+ `deleted_date`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, '305', 1, 1, 1, 12, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (2, '302', 1, 1, 1, 36, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (3, '303', 1, 1, 1, 60, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
 
 SET foreign_key_checks = 1;
