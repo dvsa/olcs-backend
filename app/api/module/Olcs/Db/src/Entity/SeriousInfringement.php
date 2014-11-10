@@ -134,22 +134,22 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $appliedPenalties;
 
     /**
-     * Erru imposed penaltie
+     * Imposed erru
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SiPenaltyErruImposed", mappedBy="seriousInfringement")
      */
-    protected $erruImposedPenalties;
+    protected $imposedErrus;
 
     /**
-     * Erru requested penaltie
+     * Requested erru
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SiPenaltyErruRequested", mappedBy="seriousInfringement")
      */
-    protected $erruRequestedPenalties;
+    protected $requestedErrus;
 
     /**
      * Initialise the collections
@@ -157,8 +157,8 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->appliedPenalties = new ArrayCollection();
-        $this->erruImposedPenalties = new ArrayCollection();
-        $this->erruRequestedPenalties = new ArrayCollection();
+        $this->imposedErrus = new ArrayCollection();
+        $this->requestedErrus = new ArrayCollection();
     }
 
     /**
@@ -435,132 +435,132 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the erru imposed penaltie
+     * Set the imposed erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruImposedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
      * @return SeriousInfringement
      */
-    public function setErruImposedPenalties($erruImposedPenalties)
+    public function setImposedErrus($imposedErrus)
     {
-        $this->erruImposedPenalties = $erruImposedPenalties;
+        $this->imposedErrus = $imposedErrus;
 
         return $this;
     }
 
     /**
-     * Get the erru imposed penalties
+     * Get the imposed errus
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getErruImposedPenalties()
+    public function getImposedErrus()
     {
-        return $this->erruImposedPenalties;
+        return $this->imposedErrus;
     }
 
     /**
-     * Add a erru imposed penalties
+     * Add a imposed errus
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
      * will save database calls when updating an entity
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruImposedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
      * @return SeriousInfringement
      */
-    public function addErruImposedPenalties($erruImposedPenalties)
+    public function addImposedErrus($imposedErrus)
     {
-        if ($erruImposedPenalties instanceof ArrayCollection) {
-            $this->erruImposedPenalties = new ArrayCollection(
+        if ($imposedErrus instanceof ArrayCollection) {
+            $this->imposedErrus = new ArrayCollection(
                 array_merge(
-                    $this->erruImposedPenalties->toArray(),
-                    $erruImposedPenalties->toArray()
+                    $this->imposedErrus->toArray(),
+                    $imposedErrus->toArray()
                 )
             );
-        } elseif (!$this->erruImposedPenalties->contains($erruImposedPenalties)) {
-            $this->erruImposedPenalties->add($erruImposedPenalties);
+        } elseif (!$this->imposedErrus->contains($imposedErrus)) {
+            $this->imposedErrus->add($imposedErrus);
         }
 
         return $this;
     }
 
     /**
-     * Remove a erru imposed penalties
+     * Remove a imposed errus
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
      * should use remove or removeElement to remove the object (use is_scalar)
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruImposedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
      * @return SeriousInfringement
      */
-    public function removeErruImposedPenalties($erruImposedPenalties)
+    public function removeImposedErrus($imposedErrus)
     {
-        if ($this->erruImposedPenalties->contains($erruImposedPenalties)) {
-            $this->erruImposedPenalties->removeElement($erruImposedPenalties);
+        if ($this->imposedErrus->contains($imposedErrus)) {
+            $this->imposedErrus->removeElement($imposedErrus);
         }
 
         return $this;
     }
 
     /**
-     * Set the erru requested penaltie
+     * Set the requested erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruRequestedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
      * @return SeriousInfringement
      */
-    public function setErruRequestedPenalties($erruRequestedPenalties)
+    public function setRequestedErrus($requestedErrus)
     {
-        $this->erruRequestedPenalties = $erruRequestedPenalties;
+        $this->requestedErrus = $requestedErrus;
 
         return $this;
     }
 
     /**
-     * Get the erru requested penalties
+     * Get the requested errus
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getErruRequestedPenalties()
+    public function getRequestedErrus()
     {
-        return $this->erruRequestedPenalties;
+        return $this->requestedErrus;
     }
 
     /**
-     * Add a erru requested penalties
+     * Add a requested errus
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
      * will save database calls when updating an entity
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruRequestedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
      * @return SeriousInfringement
      */
-    public function addErruRequestedPenalties($erruRequestedPenalties)
+    public function addRequestedErrus($requestedErrus)
     {
-        if ($erruRequestedPenalties instanceof ArrayCollection) {
-            $this->erruRequestedPenalties = new ArrayCollection(
+        if ($requestedErrus instanceof ArrayCollection) {
+            $this->requestedErrus = new ArrayCollection(
                 array_merge(
-                    $this->erruRequestedPenalties->toArray(),
-                    $erruRequestedPenalties->toArray()
+                    $this->requestedErrus->toArray(),
+                    $requestedErrus->toArray()
                 )
             );
-        } elseif (!$this->erruRequestedPenalties->contains($erruRequestedPenalties)) {
-            $this->erruRequestedPenalties->add($erruRequestedPenalties);
+        } elseif (!$this->requestedErrus->contains($requestedErrus)) {
+            $this->requestedErrus->add($requestedErrus);
         }
 
         return $this;
     }
 
     /**
-     * Remove a erru requested penalties
+     * Remove a requested errus
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
      * should use remove or removeElement to remove the object (use is_scalar)
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $erruRequestedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
      * @return SeriousInfringement
      */
-    public function removeErruRequestedPenalties($erruRequestedPenalties)
+    public function removeRequestedErrus($requestedErrus)
     {
-        if ($this->erruRequestedPenalties->contains($erruRequestedPenalties)) {
-            $this->erruRequestedPenalties->removeElement($erruRequestedPenalties);
+        if ($this->requestedErrus->contains($requestedErrus)) {
+            $this->requestedErrus->removeElement($requestedErrus);
         }
 
         return $this;
