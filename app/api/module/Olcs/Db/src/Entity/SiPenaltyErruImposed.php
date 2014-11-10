@@ -27,7 +27,6 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\SeriousInfringementManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\StartDateFieldAlt1,
@@ -48,6 +47,16 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     protected $siPenaltyImposedType;
 
     /**
+     * Serious infringement
+     *
+     * @var \Olcs\Db\Entity\SeriousInfringement
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY", inversedBy="imposedErrus")
+     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
+     */
+    protected $seriousInfringement;
+
+    /**
      * Final decision date
      *
      * @var \DateTime
@@ -59,9 +68,9 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Executed
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="executed", nullable=true)
+     * @ORM\Column(type="boolean", name="executed", nullable=true)
      */
     protected $executed;
 
@@ -86,6 +95,29 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     public function getSiPenaltyImposedType()
     {
         return $this->siPenaltyImposedType;
+    }
+
+    /**
+     * Set the serious infringement
+     *
+     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
+     * @return SiPenaltyErruImposed
+     */
+    public function setSeriousInfringement($seriousInfringement)
+    {
+        $this->seriousInfringement = $seriousInfringement;
+
+        return $this;
+    }
+
+    /**
+     * Get the serious infringement
+     *
+     * @return \Olcs\Db\Entity\SeriousInfringement
+     */
+    public function getSeriousInfringement()
+    {
+        return $this->seriousInfringement;
     }
 
     /**
@@ -114,7 +146,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Set the executed
      *
-     * @param int $executed
+     * @param boolean $executed
      * @return SiPenaltyErruImposed
      */
     public function setExecuted($executed)
@@ -127,7 +159,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Get the executed
      *
-     * @return int
+     * @return boolean
      */
     public function getExecuted()
     {
