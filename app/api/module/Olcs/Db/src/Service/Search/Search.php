@@ -2,7 +2,6 @@
 
 namespace Olcs\Db\Service\Search;
 
-use Elastica\Query\QueryString;
 use Elastica\Query;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -42,12 +41,18 @@ class Search
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
-        $elasticaQueryString  = new QueryString($query);
+        $elasticaQueryString  = new Query\QueryString($query);
+
+        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $query, 2.0);
+
+        $elasticaQueryBool = new Query\Bool();
+        $elasticaQueryBool->addShould($elasticaQueryString);
+        $elasticaQueryBool->addShould($elasticaQueryWildcard);
 
         $elasticaQuery        = new Query();
-        $elasticaQuery->setQuery($elasticaQueryString);
+        $elasticaQuery->setQuery($elasticaQueryBool);
         $elasticaQuery->setSize($limit);
-        $elasticaQuery->setFrom($limit*($page -1));
+        $elasticaQuery->setFrom($limit * ($page - 1));
 
         //Search on the index.
         $es    = new \Elastica\Search($this->getClient());
