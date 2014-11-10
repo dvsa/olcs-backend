@@ -3300,8 +3300,7 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
   `submission_id` INT NOT NULL,
   `sender_user_id` INT NOT NULL,
   `recipient_user_id` INT NOT NULL,
-  `submission_action_status` VARCHAR(100) NOT NULL,
-  `submission_action_type` VARCHAR(45) NOT NULL,
+  `submission_action_status` VARCHAR(35) NOT NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -3313,6 +3312,7 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
   INDEX `fk_submission_action_user3_idx` (`created_by` ASC),
   INDEX `fk_submission_action_user4_idx` (`last_modified_by` ASC),
   INDEX `fk_submission_action_submission1_idx` (`submission_id` ASC),
+  INDEX `fk_submission_action_status1_idx` (`submission_action_status` ASC),
   CONSTRAINT `fk_submission_action_user1`
     FOREIGN KEY (`sender_user_id`)
     REFERENCES `user` (`id`)
@@ -3336,6 +3336,11 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
   CONSTRAINT `fk_submission_action_submission1`
     FOREIGN KEY (`submission_id`)
     REFERENCES `submission` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_submission_action_status_ref_data1`
+    FOREIGN KEY (`submission_action_status`)
+    REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

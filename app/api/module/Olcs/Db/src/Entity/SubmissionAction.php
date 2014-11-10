@@ -18,7 +18,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_submission_action_user2_idx", columns={"recipient_user_id"}),
  *        @ORM\Index(name="fk_submission_action_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_submission_action_user4_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_submission_action_submission1_idx", columns={"submission_id"})
+ *        @ORM\Index(name="fk_submission_action_submission1_idx", columns={"submission_id"}),
+ *        @ORM\Index(name="fk_submission_action_status1_idx", columns={"submission_action_status"})
  *    }
  * )
  */
@@ -42,6 +43,16 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
+
+    /**
+     * Submission action status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
+     */
+    protected $submissionActionStatus;
 
     /**
      * Recipient user
@@ -82,24 +93,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $urgent;
 
     /**
-     * Submission action status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="submission_action_status", length=100, nullable=false)
-     */
-    protected $submissionActionStatus;
-
-    /**
-     * Submission action type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="submission_action_type", length=45, nullable=false)
-     */
-    protected $submissionActionType;
-
-    /**
      * Set the submission
      *
      * @param \Olcs\Db\Entity\Submission $submission
@@ -120,6 +113,29 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the submission action status
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
+     * @return SubmissionAction
+     */
+    public function setSubmissionActionStatus($submissionActionStatus)
+    {
+        $this->submissionActionStatus = $submissionActionStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission action status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionActionStatus()
+    {
+        return $this->submissionActionStatus;
     }
 
     /**
@@ -212,51 +228,5 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getUrgent()
     {
         return $this->urgent;
-    }
-
-    /**
-     * Set the submission action status
-     *
-     * @param string $submissionActionStatus
-     * @return SubmissionAction
-     */
-    public function setSubmissionActionStatus($submissionActionStatus)
-    {
-        $this->submissionActionStatus = $submissionActionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission action status
-     *
-     * @return string
-     */
-    public function getSubmissionActionStatus()
-    {
-        return $this->submissionActionStatus;
-    }
-
-    /**
-     * Set the submission action type
-     *
-     * @param string $submissionActionType
-     * @return SubmissionAction
-     */
-    public function setSubmissionActionType($submissionActionType)
-    {
-        $this->submissionActionType = $submissionActionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission action type
-     *
-     * @return string
-     */
-    public function getSubmissionActionType()
-    {
-        return $this->submissionActionType;
     }
 }
