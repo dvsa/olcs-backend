@@ -41,9 +41,6 @@
     /**
      * Add a <?php echo strtolower($this->getReadableStringFromName($this->formatPropertyName($item))); ?>
 
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
      * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
@@ -75,9 +72,6 @@
     /**
      * Remove a <?php echo strtolower($this->getReadableStringFromName($this->formatPropertyName($item))); ?>
 
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
      * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
