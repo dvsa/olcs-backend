@@ -35,28 +35,18 @@ class Fee implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TaskManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
         Traits\IrfoGvPermitManyToOne,
-        Traits\LicenceManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TaskManyToOne,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Waive recommender user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveRecommenderUser;
 
     /**
      * Waive approver user
@@ -69,6 +59,16 @@ class Fee implements Interfaces\EntityInterface
     protected $waiveApproverUser;
 
     /**
+     * Waive recommender user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $waiveRecommenderUser;
+
+    /**
      * Waive reason2
      *
      * @var \Olcs\Db\Entity\WaiveReason
@@ -77,26 +77,6 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveReason2;
-
-    /**
-     * Payment method
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
-     */
-    protected $paymentMethod;
-
-    /**
-     * Fee status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
-     */
-    protected $feeStatus;
 
     /**
      * Parent fee
@@ -117,6 +97,26 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
+
+    /**
+     * Payment method
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
+     */
+    protected $paymentMethod;
+
+    /**
+     * Fee status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
+     */
+    protected $feeStatus;
 
     /**
      * Amount
@@ -227,29 +227,6 @@ class Fee implements Interfaces\EntityInterface
     protected $irfoFileNo;
 
     /**
-     * Set the waive recommender user
-     *
-     * @param \Olcs\Db\Entity\User $waiveRecommenderUser
-     * @return Fee
-     */
-    public function setWaiveRecommenderUser($waiveRecommenderUser)
-    {
-        $this->waiveRecommenderUser = $waiveRecommenderUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive recommender user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getWaiveRecommenderUser()
-    {
-        return $this->waiveRecommenderUser;
-    }
-
-    /**
      * Set the waive approver user
      *
      * @param \Olcs\Db\Entity\User $waiveApproverUser
@@ -273,6 +250,29 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the waive recommender user
+     *
+     * @param \Olcs\Db\Entity\User $waiveRecommenderUser
+     * @return Fee
+     */
+    public function setWaiveRecommenderUser($waiveRecommenderUser)
+    {
+        $this->waiveRecommenderUser = $waiveRecommenderUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the waive recommender user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getWaiveRecommenderUser()
+    {
+        return $this->waiveRecommenderUser;
+    }
+
+    /**
      * Set the waive reason2
      *
      * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
@@ -293,52 +293,6 @@ class Fee implements Interfaces\EntityInterface
     public function getWaiveReason2()
     {
         return $this->waiveReason2;
-    }
-
-    /**
-     * Set the payment method
-     *
-     * @param \Olcs\Db\Entity\RefData $paymentMethod
-     * @return Fee
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-
-        return $this;
-    }
-
-    /**
-     * Get the payment method
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * Set the fee status
-     *
-     * @param \Olcs\Db\Entity\RefData $feeStatus
-     * @return Fee
-     */
-    public function setFeeStatus($feeStatus)
-    {
-        $this->feeStatus = $feeStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getFeeStatus()
-    {
-        return $this->feeStatus;
     }
 
     /**
@@ -385,6 +339,52 @@ class Fee implements Interfaces\EntityInterface
     public function getFeeType()
     {
         return $this->feeType;
+    }
+
+    /**
+     * Set the payment method
+     *
+     * @param \Olcs\Db\Entity\RefData $paymentMethod
+     * @return Fee
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    /**
+     * Get the payment method
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * Set the fee status
+     *
+     * @param \Olcs\Db\Entity\RefData $feeStatus
+     * @return Fee
+     */
+    public function setFeeStatus($feeStatus)
+    {
+        $this->feeStatus = $feeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getFeeStatus()
+    {
+        return $this->feeStatus;
     }
 
     /**
