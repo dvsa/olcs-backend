@@ -214,6 +214,15 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $convictionsPenaltiesStatus;
 
     /**
+     * Undertakings status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="undertakings_status", nullable=true)
+     */
+    protected $undertakingsStatus;
+
+    /**
      * Last section
      *
      * @var string
@@ -680,6 +689,29 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getConvictionsPenaltiesStatus()
     {
         return $this->convictionsPenaltiesStatus;
+    }
+
+    /**
+     * Set the undertakings status
+     *
+     * @param int $undertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setUndertakingsStatus($undertakingsStatus)
+    {
+        $this->undertakingsStatus = $undertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the undertakings status
+     *
+     * @return int
+     */
+    public function getUndertakingsStatus()
+    {
+        return $this->undertakingsStatus;
     }
 
     /**

@@ -27,32 +27,12 @@ class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Submission
-     *
-     * @var \Olcs\Db\Entity\Submission
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
-     */
-    protected $submission;
-
-    /**
-     * Submission action status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionActionStatus;
 
     /**
      * Recipient user
@@ -75,6 +55,26 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $senderUser;
 
     /**
+     * Submission
+     *
+     * @var \Olcs\Db\Entity\Submission
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
+     */
+    protected $submission;
+
+    /**
+     * Submission action status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
+     */
+    protected $submissionActionStatus;
+
+    /**
      * Is decision
      *
      * @var string
@@ -91,52 +91,6 @@ class SubmissionAction implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="urgent", nullable=true)
      */
     protected $urgent;
-
-    /**
-     * Set the submission
-     *
-     * @param \Olcs\Db\Entity\Submission $submission
-     * @return SubmissionAction
-     */
-    public function setSubmission($submission)
-    {
-        $this->submission = $submission;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission
-     *
-     * @return \Olcs\Db\Entity\Submission
-     */
-    public function getSubmission()
-    {
-        return $this->submission;
-    }
-
-    /**
-     * Set the submission action status
-     *
-     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
-     * @return SubmissionAction
-     */
-    public function setSubmissionActionStatus($submissionActionStatus)
-    {
-        $this->submissionActionStatus = $submissionActionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission action status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubmissionActionStatus()
-    {
-        return $this->submissionActionStatus;
-    }
 
     /**
      * Set the recipient user
@@ -182,6 +136,52 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSenderUser()
     {
         return $this->senderUser;
+    }
+
+    /**
+     * Set the submission
+     *
+     * @param \Olcs\Db\Entity\Submission $submission
+     * @return SubmissionAction
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Olcs\Db\Entity\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
+
+    /**
+     * Set the submission action status
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
+     * @return SubmissionAction
+     */
+    public function setSubmissionActionStatus($submissionActionStatus)
+    {
+        $this->submissionActionStatus = $submissionActionStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission action status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionActionStatus()
+    {
+        return $this->submissionActionStatus;
     }
 
     /**

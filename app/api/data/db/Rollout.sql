@@ -513,7 +513,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('appeal_reason', 'appeal_r_tm_pi', 'Regulatory PI', '1'),
     ('appeal_reason', 'appeal_r_tm_non_pi', 'Regulatory Non-PI', '2'),
 
-    ('app_status', 'apsts_not_submitted', 'Not Yet Submissed', null),
+    ('app_status', 'apsts_not_submitted', 'Not Yet Submitted', null),
     ('app_status', 'apsts_curtailed', 'Curtailed', 'Curtailed'),
     ('app_status', 'apsts_granted', 'Granted', 'Granted'),
     ('app_status', 'apsts_ntu', 'Not Taken Up', 'NTU'),
@@ -695,7 +695,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('lic_cat', 'lcat_permit', 'Permit', 'Permit'),
     ('lic_cat', 'lcat_psv', 'Public Service Vehicle', 'PSV'),
 
-    ('lic_status', 'lsts_not_submitted', 'Not Yet Submissed', null),
+    ('lic_status', 'lsts_not_submitted', 'Not Yet Submitted', null),
     ('lic_status', 'lsts_consideration', 'Under Consideration', 'New'),
 
     ('lic_status', 'lsts_cns', 'Continuation Not Sought', 'CNS'),
