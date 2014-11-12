@@ -26,9 +26,9 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OutcomeManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,
