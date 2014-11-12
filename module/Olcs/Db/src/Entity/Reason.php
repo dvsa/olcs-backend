@@ -35,13 +35,13 @@ class Reason implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Propose to revoke
+     * Submission action
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="reasons", fetch="LAZY")
      */
-    protected $proposeToRevokes;
+    protected $submissionActions;
 
     /**
      * Pi
@@ -51,6 +51,15 @@ class Reason implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="reasons", fetch="LAZY")
      */
     protected $pis;
+
+    /**
+     * Propose to revoke
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
+     */
+    protected $proposeToRevokes;
 
     /**
      * Is read only
@@ -84,71 +93,72 @@ class Reason implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->proposeToRevokes = new ArrayCollection();
+        $this->submissionActions = new ArrayCollection();
         $this->pis = new ArrayCollection();
+        $this->proposeToRevokes = new ArrayCollection();
     }
 
     /**
-     * Set the propose to revoke
+     * Set the submission action
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
      * @return Reason
      */
-    public function setProposeToRevokes($proposeToRevokes)
+    public function setSubmissionActions($submissionActions)
     {
-        $this->proposeToRevokes = $proposeToRevokes;
+        $this->submissionActions = $submissionActions;
 
         return $this;
     }
 
     /**
-     * Get the propose to revokes
+     * Get the submission actions
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProposeToRevokes()
+    public function getSubmissionActions()
     {
-        return $this->proposeToRevokes;
+        return $this->submissionActions;
     }
 
     /**
-     * Add a propose to revokes
+     * Add a submission actions
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
      * will save database calls when updating an entity
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
      * @return Reason
      */
-    public function addProposeToRevokes($proposeToRevokes)
+    public function addSubmissionActions($submissionActions)
     {
-        if ($proposeToRevokes instanceof ArrayCollection) {
-            $this->proposeToRevokes = new ArrayCollection(
+        if ($submissionActions instanceof ArrayCollection) {
+            $this->submissionActions = new ArrayCollection(
                 array_merge(
-                    $this->proposeToRevokes->toArray(),
-                    $proposeToRevokes->toArray()
+                    $this->submissionActions->toArray(),
+                    $submissionActions->toArray()
                 )
             );
-        } elseif (!$this->proposeToRevokes->contains($proposeToRevokes)) {
-            $this->proposeToRevokes->add($proposeToRevokes);
+        } elseif (!$this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->add($submissionActions);
         }
 
         return $this;
     }
 
     /**
-     * Remove a propose to revokes
+     * Remove a submission actions
      * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
      * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
      * should use remove or removeElement to remove the object (use is_scalar)
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
      * @return Reason
      */
-    public function removeProposeToRevokes($proposeToRevokes)
+    public function removeSubmissionActions($submissionActions)
     {
-        if ($this->proposeToRevokes->contains($proposeToRevokes)) {
-            $this->proposeToRevokes->removeElement($proposeToRevokes);
+        if ($this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->removeElement($submissionActions);
         }
 
         return $this;
@@ -215,6 +225,72 @@ class Reason implements Interfaces\EntityInterface
     {
         if ($this->pis->contains($pis)) {
             $this->pis->removeElement($pis);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the propose to revoke
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @return Reason
+     */
+    public function setProposeToRevokes($proposeToRevokes)
+    {
+        $this->proposeToRevokes = $proposeToRevokes;
+
+        return $this;
+    }
+
+    /**
+     * Get the propose to revokes
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProposeToRevokes()
+    {
+        return $this->proposeToRevokes;
+    }
+
+    /**
+     * Add a propose to revokes
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @return Reason
+     */
+    public function addProposeToRevokes($proposeToRevokes)
+    {
+        if ($proposeToRevokes instanceof ArrayCollection) {
+            $this->proposeToRevokes = new ArrayCollection(
+                array_merge(
+                    $this->proposeToRevokes->toArray(),
+                    $proposeToRevokes->toArray()
+                )
+            );
+        } elseif (!$this->proposeToRevokes->contains($proposeToRevokes)) {
+            $this->proposeToRevokes->add($proposeToRevokes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a propose to revokes
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @return Reason
+     */
+    public function removeProposeToRevokes($proposeToRevokes)
+    {
+        if ($this->proposeToRevokes->contains($proposeToRevokes)) {
+            $this->proposeToRevokes->removeElement($proposeToRevokes);
         }
 
         return $this;
