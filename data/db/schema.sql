@@ -3371,6 +3371,7 @@ CREATE TABLE IF NOT EXISTS `application_completion` (
   `financial_history_status` INT NULL,
   `licence_history_status` INT NULL,
   `convictions_penalties_status` INT NULL,
+  `undertakings_status` INT NULL,
   `last_section` VARCHAR(255) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
