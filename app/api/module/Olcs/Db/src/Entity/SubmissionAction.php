@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -27,32 +28,12 @@ class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Recipient user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $recipientUser;
-
-    /**
-     * Sender user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $senderUser;
 
     /**
      * Submission
@@ -75,6 +56,43 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $submissionActionStatus;
 
     /**
+     * Sender user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $senderUser;
+
+    /**
+     * Recipient user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $recipientUser;
+
+    /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions", fetch="LAZY")
+     * @ORM\JoinTable(name="submission_action_reason",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $reasons;
+
+    /**
      * Is decision
      *
      * @var string
@@ -93,49 +111,11 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $urgent;
 
     /**
-     * Set the recipient user
-     *
-     * @param \Olcs\Db\Entity\User $recipientUser
-     * @return SubmissionAction
+     * Initialise the collections
      */
-    public function setRecipientUser($recipientUser)
+    public function __construct()
     {
-        $this->recipientUser = $recipientUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the recipient user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getRecipientUser()
-    {
-        return $this->recipientUser;
-    }
-
-    /**
-     * Set the sender user
-     *
-     * @param \Olcs\Db\Entity\User $senderUser
-     * @return SubmissionAction
-     */
-    public function setSenderUser($senderUser)
-    {
-        $this->senderUser = $senderUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the sender user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getSenderUser()
-    {
-        return $this->senderUser;
+        $this->reasons = new ArrayCollection();
     }
 
     /**
@@ -182,6 +162,118 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSubmissionActionStatus()
     {
         return $this->submissionActionStatus;
+    }
+
+    /**
+     * Set the sender user
+     *
+     * @param \Olcs\Db\Entity\User $senderUser
+     * @return SubmissionAction
+     */
+    public function setSenderUser($senderUser)
+    {
+        $this->senderUser = $senderUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the sender user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getSenderUser()
+    {
+        return $this->senderUser;
+    }
+
+    /**
+     * Set the recipient user
+     *
+     * @param \Olcs\Db\Entity\User $recipientUser
+     * @return SubmissionAction
+     */
+    public function setRecipientUser($recipientUser)
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the recipient user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRecipientUser()
+    {
+        return $this->recipientUser;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
+    }
+
+    /**
+     * Add a reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
+     * will save database calls when updating an entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
+     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
+     * should use remove or removeElement to remove the object (use is_scalar)
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->removeElement($reasons);
+        }
+
+        return $this;
     }
 
     /**

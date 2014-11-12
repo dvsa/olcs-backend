@@ -3346,6 +3346,16 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
 ENGINE = InnoDB;
 
 
+CREATE TABLE `submission_action_reason` (
+  `submission_action_id` int(11) NOT NULL,
+  `reason_id` int(11) NOT NULL,
+  PRIMARY KEY (`submission_action_id`,`reason_id`),
+  KEY `submission_action_reason_k1` (`reason_id`),
+  KEY `submission_action_reason_k2` (`submission_action_id`),
+  CONSTRAINT `FK_submission_action_reason1` FOREIGN KEY (`reason_id`) REFERENCES `reason` (`id`),
+  CONSTRAINT `FK_submission_action_reason2` FOREIGN KEY (`submission_action_id`) REFERENCES `submission_action` (`id`)
+) ENGINE=InnoDB;
+
 -- -----------------------------------------------------
 -- Table `application_completion`
 -- -----------------------------------------------------
