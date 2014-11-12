@@ -16,8 +16,10 @@
  * most users, however, feel free to configure autoloading however you'd like.
  */
 
-// Composer autoloading
-if (file_exists('vendor/autoload.php')) {
+if (file_exists('loader/autoload.php')) {
+    $loader = include 'loader/autoload.php';
+} elseif (file_exists('vendor/autoload.php')) {
+    // Composer autoloading
     $loader = include 'vendor/autoload.php';
 }
 
