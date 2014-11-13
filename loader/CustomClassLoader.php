@@ -88,7 +88,9 @@ $rootPath = realpath(dirname(__DIR__));
 return array(';
             foreach ($this->dynamicClassMap as $class => $path) {
 
-                if (strstr($path, $rootPath)) {
+                if (!$path) {
+                    $path = 'false';
+                } elseif (strstr($path, $rootPath)) {
                     $path = '$rootPath . \'' . str_replace($rootPath, '', $path) . '\'';
                 } else {
                     $path = '\'' . $path . '\'';
