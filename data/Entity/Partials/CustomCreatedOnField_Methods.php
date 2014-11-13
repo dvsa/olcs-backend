@@ -1,25 +1,3 @@
-<?php
-
-namespace Olcs\Db\Entity\Traits;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Created on field trait
- *
- * @Note: Auto-generated (Shared between 134 entities)
- */
-trait CustomCreatedOnField
-{
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Set the created on
@@ -53,4 +31,3 @@ trait CustomCreatedOnField
     {
         $this->setCreatedOn(new \DateTime('NOW'));
     }
-}

@@ -65,6 +65,7 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
 <?php include('property.phtml'); ?>
 
 <?php endforeach; ?>
+<?php echo $details['propertyContent']; ?>
 <?php if ($details['hasCollections']): ?>
 
     /**
@@ -82,5 +83,6 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
 
 <?php include('methods.phtml'); ?>
 <?php endforeach; ?>
+<?php echo $details['methodContent']; ?>
 <?php endif;?>
 }

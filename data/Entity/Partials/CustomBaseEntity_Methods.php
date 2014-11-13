@@ -1,22 +1,4 @@
-<?php
 
-/**
- * CustomBaseEntity
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
-namespace Olcs\Db\Entity\Traits;
-
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
-/**
- * CustomBaseEntity
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
-trait CustomBaseEntity
-{
     /**
      * Clear properties
      *
@@ -38,4 +20,3 @@ trait CustomBaseEntity
             }
         }
     }
-}

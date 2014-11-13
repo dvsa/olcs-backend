@@ -1,25 +1,3 @@
-<?php
-
-namespace Olcs\Db\Entity\Traits;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Last modified on field trait
- *
- * @Note: Auto-generated (Shared between 134 entities)
- */
-trait CustomLastModifiedOnField
-{
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Set the last modified on
@@ -53,4 +31,3 @@ trait CustomLastModifiedOnField
     {
         $this->setLastModifiedOn(new \DateTime('NOW'));
     }
-}
