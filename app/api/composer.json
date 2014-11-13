@@ -25,6 +25,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/MajorCaiger/phpcov.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git"
         }
     ],
     "minimum-stability": "dev",
@@ -36,7 +40,8 @@
         "gedmo/doctrine-extensions": "~2.3.9",
         "olcs/companies-house": "dev-develop",
         "ruflin/Elastica": "dev-master",
-        "olcs/olcs-logging": "dev-develop"
+        "olcs/olcs-logging": "dev-develop",
+        "olcs/autoload": "dev-develop"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1.5.3",
