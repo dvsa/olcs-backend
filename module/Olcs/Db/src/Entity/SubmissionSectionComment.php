@@ -27,6 +27,7 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CommentField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -50,15 +51,6 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
-
-    /**
-     * Comment
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
-     */
-    protected $comment;
 
     /**
      * Set the submission section
@@ -104,28 +96,5 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
-    }
-
-    /**
-     * Set the comment
-     *
-     * @param string $comment
-     * @return SubmissionSectionComment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get the comment
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
     }
 }
