@@ -5,18 +5,18 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment4000 field trait
+ * Comment field trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
-trait Comment4000Field
+trait CommentField
 {
     /**
      * Comment
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="comment", length=4000, nullable=true)
+     * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
      */
     protected $comment;
 
