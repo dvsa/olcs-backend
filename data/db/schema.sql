@@ -3295,7 +3295,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `submission_action` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `is_decision` TINYINT(1) NOT NULL,
-  `comment` VARCHAR(4000) NULL,
+  `comment` TEXT NULL,
   `urgent` TINYINT(1) NULL,
   `submission_id` INT NOT NULL,
   `sender_user_id` INT NOT NULL,
