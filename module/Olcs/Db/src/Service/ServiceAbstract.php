@@ -68,6 +68,69 @@ abstract class ServiceAbstract
     protected $classMetadata = array();
 
     /**
+     * Gets a matching record by identifying value.
+     *
+     * @param string|int $id
+     *
+     * @return array
+     */
+    public function get($id, array $data = array())
+    {
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+
+        $bundleConfig = $this->getBundleCreator()->getBundleConfig($data);
+
+        // If we have no bundle, we can just return the entity data
+        if (empty($bundleConfig)) {
+            $response = $this->getById($id);
+        } else {
+            $response = $this->getBundleData($id, $bundleConfig);
+        }
+
+        if (!$response) {
+            return null;
+        }
+
+        return $response;
+    }
+
+    protected function getBundleData($id, $bundleConfig)
+    {
+        $id = is_numeric($id) ? (int)$id : $id;
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->from($this->getEntityName(), 'm');
+
+        $bundleQuery = new \Olcs\Db\Utility\BundleQuery($qb);
+        $bundleQuery->build($bundleConfig);
+
+        // Add conditions
+        $qb->where($qb->expr()->eq('m.id', $id));
+
+        $query = $qb->getQuery();
+
+        print '<pre>';
+        print_r($query->getArrayResult());
+        exit;
+    }
+
+    protected function getById($id)
+    {
+        $id = is_numeric($id) ? (int)$id : $id;
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select(array('e'))
+            ->from($this->getEntityName(), 'e')
+            ->where($qb->expr()->eq('e.id', $id));
+
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+
+    }
+
+    /**
      * Should enter a value into the database and return the
      * identifier for the record that has been created.
      *
@@ -119,28 +182,6 @@ abstract class ServiceAbstract
         }
 
         return $flatIds;
-    }
-
-    /**
-     * Gets a matching record by identifying value.
-     *
-     * @param string|int $id
-     *
-     * @return array
-     */
-    public function get($id, array $data = array())
-    {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
-
-        $entity = $this->getEntityById($id);
-
-        if (!$entity) {
-            return null;
-        }
-
-        $data = $this->getBundleCreator()->buildEntityBundle($entity, $data);
-
-        return $data;
     }
 
     /**
@@ -247,9 +288,11 @@ abstract class ServiceAbstract
 
             $rows = array();
 
+            $bundleConfig = $this->getBundleCreator()->getBundleConfig($data);
+
             foreach ($results as $row) {
 
-                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $data);
+                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $bundleConfig);
             }
 
             $results = $rows;
@@ -506,6 +549,7 @@ abstract class ServiceAbstract
     public function getEntityById($id)
     {
         $id = is_numeric($id) ? (int) $id : $id;
+
         return $this->getEntityManager()->find($this->getEntityName(), $id);
     }
 

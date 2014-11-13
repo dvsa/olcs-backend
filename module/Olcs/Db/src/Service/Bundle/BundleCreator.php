@@ -38,6 +38,34 @@ class BundleCreator
     }
 
     /**
+     * Build an entity bundle, this is to reduce rest calls and reduce payload
+     *
+     * @param mixed $entity
+     * @param array $bundleConfig
+     * @return mixed
+     */
+    public function buildEntityBundle($entity, array $bundleConfig)
+    {
+        $entity = $this->formatBundleForEntity($entity, $bundleConfig);
+
+        return $entity;
+    }
+
+    public function getBundleConfig($data)
+    {
+        $bundleConfig = null;
+
+        if (isset($data['bundle'])) {
+            $bundleConfig = json_decode($data['bundle'], true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Invalid bundle configuration: Expected JSON');
+            }
+        }
+
+        return $bundleConfig;
+    }
+
+    /**
      * Get Hydrator
      *
      * @return type
@@ -45,37 +73,6 @@ class BundleCreator
     private function getHydrator()
     {
         return $this->hydrator;
-    }
-
-    /**
-     * Build an entity bundle, this is to reduce rest calls and reduce payload
-     *
-     * @param mixed $entity
-     * @param array $data
-     * @return mixed
-     */
-    public function buildEntityBundle($entity, $data)
-    {
-        $bundleConfig = null;
-
-        if (isset($data['bundle'])) {
-
-            $bundleConfig = json_decode($data['bundle'], true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-
-                throw new \Exception('Invalid bundle configuration: Expected JSON');
-            }
-        }
-
-        if (empty($bundleConfig)) {
-
-            $bundleConfig = array('properties' => 'ALL');
-        }
-
-        $entity = $this->formatBundleForEntity($entity, $bundleConfig);
-
-        return $entity;
     }
 
     /**
