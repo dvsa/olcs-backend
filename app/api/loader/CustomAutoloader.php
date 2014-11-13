@@ -32,14 +32,14 @@ class CustomAutoloader
             $loader->setPsr4($namespace, $path);
         }
 
-        $classMap = require __DIR__ . '/../vendor/composer/autoload_classmap.php';
-        if ($classMap) {
-            $loader->addClassMap($classMap);
-        }
-
         $dynamicClassMap = require __DIR__ . '/classmap.php';
         if ($dynamicClassMap) {
             $loader->addDynamicClassMap($dynamicClassMap);
+        }
+
+        $classMap = require __DIR__ . '/../vendor/composer/autoload_classmap.php';
+        if ($classMap) {
+            $loader->addClassMap($classMap);
         }
 
         $loader->register(true);
