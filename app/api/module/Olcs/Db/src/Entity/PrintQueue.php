@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Olcs\Db\Entity\Traits;
 
 /**
  * PrintQueue Entity
@@ -14,16 +13,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="print_queue",
  *    indexes={
- *        @ORM\Index(name="fk_print_queue_team_printer1_idx", columns={"team_printer_id"}),
- *        @ORM\Index(name="fk_print_queue_document1_idx", columns={"document_id"})
+ *        @ORM\Index(name="fk_print_queue_team_printer1_idx", 
+ *            columns={"team_printer_id"}),
+ *        @ORM\Index(name="fk_print_queue_document1_idx", 
+ *            columns={"document_id"})
  *    }
  * )
  */
 class PrintQueue implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\DocumentManyToOne;
 
     /**
      * Team printer
@@ -43,6 +41,27 @@ class PrintQueue implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="added_datetime", nullable=true)
      */
     protected $addedDatetime;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
+     */
+    protected $document;
 
     /**
      * Set the team printer
@@ -88,5 +107,73 @@ class PrintQueue implements Interfaces\EntityInterface
     public function getAddedDatetime()
     {
         return $this->addedDatetime;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Olcs\Db\Entity\Document $document
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 }

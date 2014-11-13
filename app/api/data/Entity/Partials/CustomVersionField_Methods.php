@@ -1,26 +1,3 @@
-<?php
-
-namespace Olcs\Db\Entity\Traits;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Version field trait
- *
- * @Note: Auto-generated (Shared between 133 entities)
- */
-trait CustomVersionField
-{
-
-    /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="version", nullable=false)
-     * @ORM\Version
-     */
-    protected $version;
 
     /**
      * Set the version
@@ -54,4 +31,3 @@ trait CustomVersionField
     {
         $this->setVersion(1);
     }
-}

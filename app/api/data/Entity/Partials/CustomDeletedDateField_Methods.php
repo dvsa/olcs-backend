@@ -1,24 +1,3 @@
-<?php
-
-namespace Olcs\Db\Entity\Traits;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Deleted date field trait
- *
- * Auto-Generated (Shared between 27 entities)
- */
-trait CustomDeletedDateField
-{
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
 
     /**
      * Set the deleted date
@@ -50,4 +29,3 @@ trait CustomDeletedDateField
     {
         return !is_null($this->deletedDate);
     }
-}
