@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -16,45 +15,41 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="publication_link",
  *    indexes={
- *        @ORM\Index(name="fk_publication_has_licence_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_publication_has_licence_publication1_idx", columns={"publication_id"}),
- *        @ORM\Index(name="fk_licence_publication_pi_detail1_idx", columns={"pi_id"}),
- *        @ORM\Index(name="fk_licence_publication_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_licence_publication_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_licence_publication_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_licence_publication_publication_section1_idx", columns={"publication_section_id"}),
- *        @ORM\Index(name="fk_licence_publication_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_publication_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_publication_tm_pi_hearing1_idx", columns={"tm_pi_hearing_id"})
+ *        @ORM\Index(name="fk_publication_has_licence_licence1_idx", 
+ *            columns={"licence_id"}),
+ *        @ORM\Index(name="fk_publication_has_licence_publication1_idx", 
+ *            columns={"publication_id"}),
+ *        @ORM\Index(name="fk_licence_publication_pi_detail1_idx", 
+ *            columns={"pi_id"}),
+ *        @ORM\Index(name="fk_licence_publication_traffic_area1_idx", 
+ *            columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_licence_publication_application1_idx", 
+ *            columns={"application_id"}),
+ *        @ORM\Index(name="fk_licence_publication_bus_reg1_idx", 
+ *            columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_licence_publication_publication_section1_idx", 
+ *            columns={"publication_section_id"}),
+ *        @ORM\Index(name="fk_licence_publication_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_licence_publication_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_licence_publication_tm_pi_hearing1_idx", 
+ *            columns={"tm_pi_hearing_id"})
  *    }
  * )
  */
 class PublicationLink implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOneAlt1,
-        Traits\TrafficAreaManyToOne,
-        Traits\PublicationNoField,
-        Traits\PubType3Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
 
     /**
-     * Publication section
+     * Publication
      *
-     * @var \Olcs\Db\Entity\PublicationSection
+     * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
+     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
-    protected $publicationSection;
+    protected $publication;
 
     /**
      * Tm pi hearing
@@ -77,14 +72,14 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $pi;
 
     /**
-     * Publication
+     * Publication section
      *
-     * @var \Olcs\Db\Entity\Publication
+     * @var \Olcs\Db\Entity\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
+     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
-    protected $publication;
+    protected $publicationSection;
 
     /**
      * Section id
@@ -132,26 +127,152 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $origPubDate;
 
     /**
-     * Set the publication section
+     * Identifier - Id
      *
-     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
+
+    /**
+     * Traffic area
+     *
+     * @var \Olcs\Db\Entity\TrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $trafficArea;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
+
+    /**
+     * Publication no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="publication_no", nullable=false)
+     */
+    protected $publicationNo;
+
+    /**
+     * Pub type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="pub_type", length=3, nullable=false)
+     */
+    protected $pubType;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
+
+    /**
+     * Set the publication
+     *
+     * @param \Olcs\Db\Entity\Publication $publication
      * @return PublicationLink
      */
-    public function setPublicationSection($publicationSection)
+    public function setPublication($publication)
     {
-        $this->publicationSection = $publicationSection;
+        $this->publication = $publication;
 
         return $this;
     }
 
     /**
-     * Get the publication section
+     * Get the publication
      *
-     * @return \Olcs\Db\Entity\PublicationSection
+     * @return \Olcs\Db\Entity\Publication
      */
-    public function getPublicationSection()
+    public function getPublication()
     {
-        return $this->publicationSection;
+        return $this->publication;
     }
 
     /**
@@ -201,26 +322,26 @@ class PublicationLink implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the publication
+     * Set the publication section
      *
-     * @param \Olcs\Db\Entity\Publication $publication
+     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
      * @return PublicationLink
      */
-    public function setPublication($publication)
+    public function setPublicationSection($publicationSection)
     {
-        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
 
         return $this;
     }
 
     /**
-     * Get the publication
+     * Get the publication section
      *
-     * @return \Olcs\Db\Entity\Publication
+     * @return \Olcs\Db\Entity\PublicationSection
      */
-    public function getPublication()
+    public function getPublicationSection()
     {
-        return $this->publication;
+        return $this->publicationSection;
     }
 
     /**
@@ -336,5 +457,364 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getOrigPubDate()
     {
         return $this->origPubDate;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set the traffic area
+     *
+     * @param \Olcs\Db\Entity\TrafficArea $trafficArea
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTrafficArea($trafficArea)
+    {
+        $this->trafficArea = $trafficArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the traffic area
+     *
+     * @return \Olcs\Db\Entity\TrafficArea
+     */
+    public function getTrafficArea()
+    {
+        return $this->trafficArea;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Set the publication no
+     *
+     * @param int $publicationNo
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication no
+     *
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
+    }
+
+    /**
+     * Set the pub type
+     *
+     * @param string $pubType
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setPubType($pubType)
+    {
+        $this->pubType = $pubType;
+
+        return $this;
+    }
+
+    /**
+     * Get the pub type
+     *
+     * @return string
+     */
+    public function getPubType()
+    {
+        return $this->pubType;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return !is_null($this->deletedDate);
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }

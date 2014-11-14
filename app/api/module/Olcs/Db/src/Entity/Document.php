@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -17,85 +16,37 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
- *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
- *        @ORM\Index(name="fk_document_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_document_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_document_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_document_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_document_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_document_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_document_opposition1_idx", columns={"opposition_id"}),
- *        @ORM\Index(name="fk_document_bus_reg1_idx", columns={"bus_reg_id"})
+ *        @ORM\Index(name="fk_document_ref_data1_idx", 
+ *            columns={"file_extension"}),
+ *        @ORM\Index(name="fk_document_traffic_area1_idx", 
+ *            columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_document_document_category1_idx", 
+ *            columns={"category_id"}),
+ *        @ORM\Index(name="fk_document_document_sub_category1_idx", 
+ *            columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_document_licence1_idx", 
+ *            columns={"licence_id"}),
+ *        @ORM\Index(name="fk_document_application1_idx", 
+ *            columns={"application_id"}),
+ *        @ORM\Index(name="fk_document_cases1_idx", 
+ *            columns={"case_id"}),
+ *        @ORM\Index(name="fk_document_transport_manager1_idx", 
+ *            columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_document_operating_centre1_idx", 
+ *            columns={"operating_centre_id"}),
+ *        @ORM\Index(name="fk_document_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_document_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_document_opposition1_idx", 
+ *            columns={"opposition_id"}),
+ *        @ORM\Index(name="fk_document_bus_reg1_idx", 
+ *            columns={"bus_reg_id"})
  *    }
  * )
  */
 class Document implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CategoryManyToOne,
-        Traits\Description255FieldAlt1,
-        Traits\IssuedDateField,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Operating centre
-     *
-     * @var \Olcs\Db\Entity\OperatingCentre
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
-     */
-    protected $operatingCentre;
-
-    /**
-     * Opposition
-     *
-     * @var \Olcs\Db\Entity\Opposition
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
-     */
-    protected $opposition;
-
-    /**
-     * Bus reg
-     *
-     * @var \Olcs\Db\Entity\BusReg
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
-     */
-    protected $busReg;
-
-    /**
-     * Transport manager
-     *
-     * @var \Olcs\Db\Entity\TransportManager
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
-     */
-    protected $transportManager;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
 
     /**
      * Traffic area
@@ -118,6 +69,66 @@ class Document implements Interfaces\EntityInterface
     protected $fileExtension;
 
     /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManager;
+
+    /**
+     * Opposition
+     *
+     * @var \Olcs\Db\Entity\Opposition
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
+     */
+    protected $opposition;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
+
+    /**
      * Document sub category
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
@@ -136,16 +147,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
-
-    /**
-     * Application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Email
@@ -202,126 +203,107 @@ class Document implements Interfaces\EntityInterface
     protected $size;
 
     /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Category
+     *
+     * @var \Olcs\Db\Entity\Category
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Category", fetch="LAZY")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
+     */
+    protected $category;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=255, nullable=true)
+     */
+    protected $description;
+
+    /**
+     * Issued date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="issued_date", nullable=true)
+     */
+    protected $issuedDate;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->emails = new ArrayCollection();
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
-     * @return Document
-     */
-    public function setOperatingCentre($operatingCentre)
-    {
-        $this->operatingCentre = $operatingCentre;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centre
-     *
-     * @return \Olcs\Db\Entity\OperatingCentre
-     */
-    public function getOperatingCentre()
-    {
-        return $this->operatingCentre;
-    }
-
-    /**
-     * Set the opposition
-     *
-     * @param \Olcs\Db\Entity\Opposition $opposition
-     * @return Document
-     */
-    public function setOpposition($opposition)
-    {
-        $this->opposition = $opposition;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition
-     *
-     * @return \Olcs\Db\Entity\Opposition
-     */
-    public function getOpposition()
-    {
-        return $this->opposition;
-    }
-
-    /**
-     * Set the bus reg
-     *
-     * @param \Olcs\Db\Entity\BusReg $busReg
-     * @return Document
-     */
-    public function setBusReg($busReg)
-    {
-        $this->busReg = $busReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus reg
-     *
-     * @return \Olcs\Db\Entity\BusReg
-     */
-    public function getBusReg()
-    {
-        return $this->busReg;
-    }
-
-    /**
-     * Set the transport manager
-     *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
-     * @return Document
-     */
-    public function setTransportManager($transportManager)
-    {
-        $this->transportManager = $transportManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager
-     *
-     * @return \Olcs\Db\Entity\TransportManager
-     */
-    public function getTransportManager()
-    {
-        return $this->transportManager;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Document
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
     }
 
     /**
@@ -371,6 +353,144 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return Document
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return Document
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return Document
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return Document
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return Document
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
      * Set the document sub category
      *
      * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
@@ -417,29 +537,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application
-     *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return Document
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
-    }
-
-    /**
      * Set the email
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $emails
@@ -464,9 +561,6 @@ class Document implements Interfaces\EntityInterface
 
     /**
      * Add a emails
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $emails
      * @return Document
@@ -489,9 +583,6 @@ class Document implements Interfaces\EntityInterface
 
     /**
      * Remove a emails
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $emails
      * @return Document
@@ -618,5 +709,295 @@ class Document implements Interfaces\EntityInterface
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the category
+     *
+     * @param \Olcs\Db\Entity\Category $category
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get the category
+     *
+     * @return \Olcs\Db\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the issued date
+     *
+     * @param \DateTime $issuedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setIssuedDate($issuedDate)
+    {
+        $this->issuedDate = $issuedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the issued date
+     *
+     * @return \DateTime
+     */
+    public function getIssuedDate()
+    {
+        return $this->issuedDate;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return !is_null($this->deletedDate);
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }
