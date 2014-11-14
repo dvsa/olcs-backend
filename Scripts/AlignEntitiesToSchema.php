@@ -20,6 +20,8 @@ class AlignEntitiesToSchema
 {
     const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
 
+    private $useTraits = false;
+
     /**
      * Store the cli options
      *
@@ -76,7 +78,8 @@ class AlignEntitiesToSchema
             'unique-constraints' => 'name="%s"'
         ),
         'fetch' => 'fetch="%s"',
-        'columns' => 'columns={"%s"}',
+        'columns' => '
+ *            columns={"%s"}',
         'field' => '',
         'type' => 'type="%s"',
         'column' => 'name="%s"',
@@ -158,7 +161,14 @@ class AlignEntitiesToSchema
 
         $this->options = getopt(
             'u:p:d:',
-            array('help', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
+            array(
+                'help',
+                'import-schema:',
+                'mapping-files:',
+                'entity-files:',
+                'test-files:',
+                'entity-config:'
+            )
         );
 
         if (isset($this->options['help'])) {
@@ -387,6 +397,15 @@ class AlignEntitiesToSchema
         }
     }
 
+    private function getTraitLocation()
+    {
+        if ($this->useTraits) {
+            return $this->options['entity-files'] . 'Traits/';
+        } else {
+            return __DIR__ . '/../data/Entity/Partials/';
+        }
+    }
+
     /**
      * Remove old traits
      */
@@ -394,7 +413,7 @@ class AlignEntitiesToSchema
     {
         $this->respond('Removing non-custom old traits ...', 'info');
 
-        $entityDirectory = $this->options['entity-files'] . 'Traits/';
+        $entityDirectory = $this->getTraitLocation();
 
         $error = false;
 
@@ -659,15 +678,38 @@ class AlignEntitiesToSchema
             $trait =
                 ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
 
-            $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
-            $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
+            $traitDirectory = $this->getTraitLocation();
 
-            // If we have a custom trait that already exists, skip it
-            if (file_exists($customFileName)) {
-                $details['trait'] = 'Custom' . $trait;
-                $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
-                continue;
+            if ($this->useTraits) {
+                $customFileName = sprintf('%s%s.php', $traitDirectory . 'Custom', $trait);
+
+                // If we have a custom trait that already exists, skip it
+                if (file_exists($customFileName)) {
+                    $details['trait'] = 'Custom' . $trait;
+                    $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
+                    continue;
+                }
+            } else {
+                $customFileName = sprintf('%s%s_Methods.php', $traitDirectory . 'Custom', $trait);
+
+                // If we have a custom trait that already exists, skip it
+                if (file_exists($customFileName)) {
+                    $details['trait'] = 'Custom' . $trait;
+                    $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
+                    continue;
+                }
+
+                $customFileName = sprintf('%s%s_Properties.php', $traitDirectory . 'Custom', $trait);
+
+                // If we have a custom trait that already exists, skip it
+                if (file_exists($customFileName)) {
+                    $details['trait'] = 'Custom' . $trait;
+                    $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
+                    continue;
+                }
             }
+
+            $fileName = sprintf('%s%s', $traitDirectory, $trait);
 
             // If the trait file exists, we need to rename this one
             if (file_exists($fileName)) {
@@ -681,7 +723,7 @@ class AlignEntitiesToSchema
                     $i++;
 
                     $trait = $oldTrait . 'Alt' . $i;
-                    $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
+                    $fileName = sprintf('%s%s', $traitDirectory, $trait);
                 }
 
             }
@@ -690,18 +732,47 @@ class AlignEntitiesToSchema
 
             $fluidReturn = '\\Olcs\\Db\\Entity\\Interfaces\\EntityInterface';
 
-            ob_start();
-                include(__DIR__ . '/templates/trait.phtml');
-                $content = ob_get_contents();
-            ob_end_clean();
+            if ($this->useTraits) {
 
-            file_put_contents($fileName, $content);
+                ob_start();
+                    include(__DIR__ . '/templates/trait.phtml');
+                    $content = ob_get_contents();
+                ob_end_clean();
 
-            if (file_exists($fileName)) {
-                $this->respond('Trait created: ' . $trait);
+                file_put_contents($fileName . '.php', $content);
+
+                if (file_exists($fileName . '.php')) {
+                    $this->respond('Trait created: ' . $trait);
+                } else {
+                    $error = true;
+                    $this->respond('Trait creation failed: ' . $trait, 'error');
+                }
+
             } else {
-                $error = true;
-                $this->respond('Trait creation failed: ' . $trait, 'error');
+
+                ob_start();
+                    echo "\n";
+                    include(__DIR__ . '/templates/property.phtml');
+                    echo "\n";
+                    $content = ob_get_contents();
+                ob_end_clean();
+
+                file_put_contents($fileName . '_Properties.php', $content);
+
+                ob_start();
+                    echo "\n";
+                    include(__DIR__ . '/templates/methods.phtml');
+                    $content = ob_get_contents();
+                ob_end_clean();
+
+                file_put_contents($fileName . '_Methods.php', $content);
+
+                if (file_exists($fileName . '_Properties.php') && file_exists($fileName . '_Methods.php')) {
+                    $this->respond('Partial created: ' . $trait);
+                } else {
+                    $error = true;
+                    $this->respond('Partial creation failed: ' . $trait, 'error');
+                }
             }
         }
 
@@ -754,7 +825,26 @@ class AlignEntitiesToSchema
 
         $error = false;
 
+        $traitDirectory = $this->getTraitLocation();
+
         foreach ($this->entities as $className => $details) {
+
+            $details['propertyContent'] = '';
+            $details['methodContent'] = '';
+
+            if (!$this->useTraits) {
+                foreach ($details['traits'] as $traitName) {
+                    if (file_exists($traitDirectory . $traitName . '_Properties.php')) {
+                        $details['propertyContent'] .= file_get_contents($traitDirectory . $traitName . '_Properties.php');
+                    }
+
+                    if (file_exists($traitDirectory . $traitName . '_Methods.php')) {
+                        $details['methodContent'] .= file_get_contents($traitDirectory . $traitName . '_Methods.php');
+                    }
+                }
+
+                $details['traits'] = array();
+            }
 
             ob_start();
                 include(__DIR__ . '/templates/entity.phtml');

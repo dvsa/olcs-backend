@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -16,14 +15,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ref_data",
  *    indexes={
- *        @ORM\Index(name="fk_ref_data_ref_data1_idx", columns={"parent_id"})
+ *        @ORM\Index(name="fk_ref_data_ref_data1_idx", 
+ *            columns={"parent_id"})
  *    }
  * )
  */
 class RefData implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\Id32Identity;
 
     /**
      * Parent
@@ -98,6 +96,16 @@ class RefData implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="display_order", nullable=true)
      */
     protected $displayOrder;
+
+    /**
+     * Identifier - Id
+     *
+     * @var string
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string", name="id", length=32)
+     */
+    protected $id;
 
     /**
      * Initialise the collections
@@ -402,5 +410,50 @@ class RefData implements Interfaces\EntityInterface
     public function getDisplayOrder()
     {
         return $this->displayOrder;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

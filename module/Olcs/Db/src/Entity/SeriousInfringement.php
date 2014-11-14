@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -17,28 +16,25 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
- *        @ORM\Index(name="fk_serious_infringement_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user1_idx", columns={"erru_response_user_id"}),
- *        @ORM\Index(name="fk_serious_infringement_country1_idx", columns={"member_state_code"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category1_idx", columns={"si_category_id"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category_type1_idx", columns={"si_category_type_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_serious_infringement_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_serious_infringement_cases1_idx", 
+ *            columns={"case_id"}),
+ *        @ORM\Index(name="fk_serious_infringement_user1_idx", 
+ *            columns={"erru_response_user_id"}),
+ *        @ORM\Index(name="fk_serious_infringement_country1_idx", 
+ *            columns={"member_state_code"}),
+ *        @ORM\Index(name="fk_serious_infringement_si_category1_idx", 
+ *            columns={"si_category_id"}),
+ *        @ORM\Index(name="fk_serious_infringement_si_category_type1_idx", 
+ *            columns={"si_category_type_id"}),
+ *        @ORM\Index(name="fk_serious_infringement_user2_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_serious_infringement_user3_idx", 
+ *            columns={"last_modified_by"})
  *    }
  * )
  */
 class SeriousInfringement implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\SiCategoryManyToOne,
-        Traits\CaseManyToOneAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
 
     /**
      * Erru response user
@@ -150,6 +146,94 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SiPenaltyErruRequested", mappedBy="seriousInfringement")
      */
     protected $requestedErrus;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Si category
+     *
+     * @var \Olcs\Db\Entity\SiCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="si_category_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siCategory;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
 
     /**
      * Initialise the collections
@@ -546,5 +630,272 @@ class SeriousInfringement implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the si category
+     *
+     * @param \Olcs\Db\Entity\SiCategory $siCategory
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setSiCategory($siCategory)
+    {
+        $this->siCategory = $siCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the si category
+     *
+     * @return \Olcs\Db\Entity\SiCategory
+     */
+    public function getSiCategory()
+    {
+        return $this->siCategory;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return !is_null($this->deletedDate);
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }
