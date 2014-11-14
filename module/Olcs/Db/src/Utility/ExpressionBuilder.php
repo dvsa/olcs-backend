@@ -40,23 +40,26 @@ class ExpressionBuilder
         $this->entity = $entity;
     }
 
+    public function setParams($params)
+    {
+        $this->params = $params;
+    }
+
     public function getParams()
     {
         return $this->params;
     }
 
-    public function buildWhereExpression($query)
+    public function buildWhereExpression($query, $prefix = 'a')
     {
         if (empty($query)) {
             return null;
         }
 
-        $this->params = array();
-
         $queries = array();
 
         foreach ($query as $field => $value) {
-            $queries[] = $this->buildExpression($field, $value);
+            $queries[] = $this->buildExpression($field, $value, $prefix);
         }
 
         $expression = $this->qb->expr();
@@ -64,19 +67,19 @@ class ExpressionBuilder
         return call_user_func_array(array($expression, 'andX'), $queries);
     }
 
-    private function buildExpression($field, $values, $or = true)
+    private function buildExpression($field, $values, $prefix, $or = true)
     {
         if (is_array($values)) {
             $queries = array();
 
             foreach ($values as $value) {
-                $queries[] = $this->buildExpression($field, $value, !$or);
+                $queries[] = $this->buildExpression($field, $value, $prefix, !$or);
             }
 
             return call_user_func_array(array($this->qb->expr(), $or ? 'orX' : 'andX'), $queries);
         }
 
-        $field = 'a.' . $field;
+        $field = $prefix . '.' . $field;
 
         if ($values === 'NULL') {
             return $this->qb->expr()->isNull($field);
@@ -84,7 +87,16 @@ class ExpressionBuilder
 
         if (substr($values, 0, 4) == 'IN [') {
             $values = json_decode(substr($values, 3));
-            return $this->qb->expr()->in($field, $values);
+
+            $newValues = array();
+
+            foreach ($values as $value) {
+                $paramIndex = $this->getNextParamIndex();
+                $this->params[$paramIndex] = $values;
+                $newValues[] = '?' . $paramIndex;
+            }
+
+            return $this->qb->expr()->in($field, $newValues);
         }
 
         if (is_numeric($values) || $this->isFieldForeignKey($field)) {
@@ -127,9 +139,13 @@ class ExpressionBuilder
 
     private function isFieldForeignKey($field)
     {
-        $metaData = (array)$this->em->getClassMetadata($this->entity);
+        if ($this->entity !== null) {
+            $metaData = (array)$this->em->getClassMetadata($this->entity);
 
-        return isset($metaData['associationMappings'][$field]);
+            return isset($metaData['associationMappings'][$field]);
+        }
+
+        return false;
     }
 
     private function getOperator($value)

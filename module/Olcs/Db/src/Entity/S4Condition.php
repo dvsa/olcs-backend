@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Olcs\Db\Entity\Traits;
 
 /**
  * S4Condition Entity
@@ -14,16 +13,17 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="s4_condition",
  *    indexes={
- *        @ORM\Index(name="fk_s4_condition_Condition1_idx", columns={"source_condition_id"}),
- *        @ORM\Index(name="fk_s4_condition_Condition2_idx", columns={"target_condition_id"}),
- *        @ORM\Index(name="fk_s4_condition_s41_idx", columns={"s4_id"})
+ *        @ORM\Index(name="fk_s4_condition_Condition1_idx", 
+ *            columns={"source_condition_id"}),
+ *        @ORM\Index(name="fk_s4_condition_Condition2_idx", 
+ *            columns={"target_condition_id"}),
+ *        @ORM\Index(name="fk_s4_condition_s41_idx", 
+ *            columns={"s4_id"})
  *    }
  * )
  */
 class S4Condition implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity;
 
     /**
      * S4
@@ -54,6 +54,17 @@ class S4Condition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="source_condition_id", referencedColumnName="id", nullable=false)
      */
     protected $sourceCondition;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
 
     /**
      * Set the s4
@@ -122,5 +133,50 @@ class S4Condition implements Interfaces\EntityInterface
     public function getSourceCondition()
     {
         return $this->sourceCondition;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

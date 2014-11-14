@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 
 /**
  * History Entity
@@ -15,14 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="history",
  *    indexes={
- *        @ORM\Index(name="fk_history_entity1_idx", columns={"entity_type_id"})
+ *        @ORM\Index(name="fk_history_entity1_idx", 
+ *            columns={"entity_type_id"})
  *    }
  * )
  */
 class History implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity;
 
     /**
      * Entity type
@@ -77,6 +75,17 @@ class History implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="entity_version", nullable=false)
      */
     protected $entityVersion;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
 
     /**
      * Initialise the collections
@@ -134,9 +143,6 @@ class History implements Interfaces\EntityInterface
 
     /**
      * Add a templates
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $templates
      * @return History
@@ -159,9 +165,6 @@ class History implements Interfaces\EntityInterface
 
     /**
      * Remove a templates
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $templates
      * @return History
@@ -242,5 +245,50 @@ class History implements Interfaces\EntityInterface
     public function getEntityVersion()
     {
         return $this->entityVersion;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

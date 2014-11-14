@@ -17,17 +17,6 @@ namespace Olcs\Db\Service;
  */
 class Licence extends ServiceAbstract
 {
-
-    /**
-     * Returns an indexed array of valid search terms for this service / entity.
-     *
-     * @return array
-     */
-    public function getValidSearchFields()
-    {
-        return array();
-    }
-
     /**
      * Find licences from a given search
      *
@@ -388,7 +377,7 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
     /**
      * Generate individual where clauses from the data passed in
      *
-     * @param array $optionsToFields
+     * @param array $optionConditions
      * @param array $options
      * @return array
      */

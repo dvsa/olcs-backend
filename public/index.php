@@ -3,6 +3,7 @@ $profile = getenv("XHPROF_ENABLE") == 1;
 
 if ($profile) {
     xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+    $start = microtime(true);
 }
 
 error_reporting(E_ALL | E_STRICT);
@@ -31,6 +32,7 @@ require 'init_autoloader.php';
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
 
 if ($profile) {
+    $end = microtime(true);
     $xhprof_data = xhprof_disable();
 
     require_once "/workspace/xhprof/xhprof_lib/utils/xhprof_lib.php";
@@ -44,8 +46,15 @@ if ($profile) {
 
     $uri = strtok($_SERVER['REQUEST_URI'], "?");
     $request = $_SERVER['REQUEST_METHOD'] . " " . $uri;
-    $content = "[olcs-backend] " . date("Y-m-d H:i:s") . " " . $request
-        . " http://192.168.149.2/xhprof/xhprof_html/index.php?run=" . $run_id . "&source=olcs-backend\n";
+
+    $content = sprintf(
+        "[olcs-backend] - %s(ms) - %s %s http://192.168.149.2/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n",
+        round(($end - $start) * 1000),
+        date("Y-m-d H:i:s"),
+        $request,
+        $run_id
+    );
+
     fwrite($fp, $content);
     fclose($fp);
 }

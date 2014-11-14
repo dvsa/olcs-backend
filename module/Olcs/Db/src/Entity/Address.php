@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 
 /**
  * Address Entity
@@ -15,32 +14,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="address",
  *    indexes={
- *        @ORM\Index(name="fk_address_country1_idx", columns={"country_code"}),
- *        @ORM\Index(name="fk_address_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_address_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_address_admin_area_traffic_area1_idx", columns={"admin_area"})
+ *        @ORM\Index(name="fk_address_country1_idx", 
+ *            columns={"country_code"}),
+ *        @ORM\Index(name="fk_address_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_address_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_address_admin_area_traffic_area1_idx", 
+ *            columns={"admin_area"})
  *    }
  * )
  */
 class Address implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Admin area
-     *
-     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
-     */
-    protected $adminArea;
 
     /**
      * Country code
@@ -51,6 +37,16 @@ class Address implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
+
+    /**
+     * Admin area
+     *
+     * @var \Olcs\Db\Entity\AdminAreaTrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
+     */
+    protected $adminArea;
 
     /**
      * Uprn
@@ -161,34 +157,70 @@ class Address implements Interfaces\EntityInterface
     protected $contactDetails;
 
     /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->contactDetails = new ArrayCollection();
-    }
-
-    /**
-     * Set the admin area
-     *
-     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
-     * @return Address
-     */
-    public function setAdminArea($adminArea)
-    {
-        $this->adminArea = $adminArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the admin area
-     *
-     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
-     */
-    public function getAdminArea()
-    {
-        return $this->adminArea;
     }
 
     /**
@@ -212,6 +244,29 @@ class Address implements Interfaces\EntityInterface
     public function getCountryCode()
     {
         return $this->countryCode;
+    }
+
+    /**
+     * Set the admin area
+     *
+     * @param \Olcs\Db\Entity\AdminAreaTrafficArea $adminArea
+     * @return Address
+     */
+    public function setAdminArea($adminArea)
+    {
+        $this->adminArea = $adminArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the admin area
+     *
+     * @return \Olcs\Db\Entity\AdminAreaTrafficArea
+     */
+    public function getAdminArea()
+    {
+        return $this->adminArea;
     }
 
     /**
@@ -492,9 +547,6 @@ class Address implements Interfaces\EntityInterface
 
     /**
      * Add a contact details
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Address
@@ -517,9 +569,6 @@ class Address implements Interfaces\EntityInterface
 
     /**
      * Remove a contact details
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Address
@@ -531,5 +580,195 @@ class Address implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }
