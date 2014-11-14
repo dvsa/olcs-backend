@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * TeamPrinter Entity
@@ -13,15 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="team_printer",
  *    indexes={
- *        @ORM\Index(name="fk_team_has_printer_printer1_idx", 
- *            columns={"printer_id"}),
- *        @ORM\Index(name="fk_team_has_printer_team1_idx", 
- *            columns={"team_id"})
+ *        @ORM\Index(name="fk_team_has_printer_printer1_idx", columns={"printer_id"}),
+ *        @ORM\Index(name="fk_team_has_printer_team1_idx", columns={"team_id"})
  *    }
  * )
  */
 class TeamPrinter implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\TeamManyToOne;
 
     /**
      * Printer
@@ -41,27 +43,6 @@ class TeamPrinter implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="document_type", length=45, nullable=true)
      */
     protected $documentType;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Team
-     *
-     * @var \Olcs\Db\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
-     */
-    protected $team;
 
     /**
      * Set the printer
@@ -107,73 +88,5 @@ class TeamPrinter implements Interfaces\EntityInterface
     public function getDocumentType()
     {
         return $this->documentType;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the team
-     *
-     * @param \Olcs\Db\Entity\Team $team
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setTeam($team)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * Get the team
-     *
-     * @return \Olcs\Db\Entity\Team
-     */
-    public function getTeam()
-    {
-        return $this->team;
     }
 }
