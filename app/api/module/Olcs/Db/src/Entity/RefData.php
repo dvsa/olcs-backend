@@ -165,9 +165,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Add a pis
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $pis
      * @return RefData
@@ -190,9 +187,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Remove a pis
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $pis
      * @return RefData
@@ -231,9 +225,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Add a cases
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
      * @return RefData
@@ -256,9 +247,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Remove a cases
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
      * @return RefData
@@ -297,9 +285,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Add a impoundings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
      * @return RefData
@@ -322,9 +307,6 @@ class RefData implements Interfaces\EntityInterface
 
     /**
      * Remove a impoundings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
      * @return RefData

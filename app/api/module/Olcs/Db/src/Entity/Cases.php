@@ -449,9 +449,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a legacy offences
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
      * @return Cases
@@ -474,9 +471,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a legacy offences
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
      * @return Cases
@@ -515,9 +509,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a categorys
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $categorys
      * @return Cases
@@ -540,9 +531,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a categorys
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $categorys
      * @return Cases
@@ -857,9 +845,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a appeals
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $appeals
      * @return Cases
@@ -882,9 +867,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a appeals
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $appeals
      * @return Cases
@@ -923,9 +905,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a condition undertakings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
      * @return Cases
@@ -948,9 +927,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a condition undertakings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
      * @return Cases
@@ -989,9 +965,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a convictions
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $convictions
      * @return Cases
@@ -1014,9 +987,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a convictions
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $convictions
      * @return Cases
@@ -1055,9 +1025,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Cases
@@ -1080,9 +1047,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Cases
@@ -1121,9 +1085,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Add a stays
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $stays
      * @return Cases
@@ -1146,9 +1107,6 @@ class Cases implements Interfaces\EntityInterface
 
     /**
      * Remove a stays
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $stays
      * @return Cases

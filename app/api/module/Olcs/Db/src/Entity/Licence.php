@@ -969,9 +969,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a applications
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $applications
      * @return Licence
@@ -994,9 +991,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a applications
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $applications
      * @return Licence
@@ -1035,9 +1029,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a cases
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
      * @return Licence
@@ -1060,9 +1051,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a cases
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $cases
      * @return Licence
@@ -1101,9 +1089,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a contact details
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Licence
@@ -1126,9 +1111,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a contact details
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
      * @return Licence
@@ -1167,9 +1149,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Licence
@@ -1192,9 +1171,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Licence
@@ -1233,9 +1209,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a licence vehicles
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
      * @return Licence
@@ -1258,9 +1231,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a licence vehicles
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
      * @return Licence
@@ -1299,9 +1269,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a private hire licences
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $privateHireLicences
      * @return Licence
@@ -1324,9 +1291,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a private hire licences
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $privateHireLicences
      * @return Licence
@@ -1365,9 +1329,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a psv discs
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $psvDiscs
      * @return Licence
@@ -1390,9 +1351,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a psv discs
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $psvDiscs
      * @return Licence
@@ -1431,9 +1389,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Add a workshops
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $workshops
      * @return Licence
@@ -1456,9 +1411,6 @@ class Licence implements Interfaces\EntityInterface
 
     /**
      * Remove a workshops
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $workshops
      * @return Licence
