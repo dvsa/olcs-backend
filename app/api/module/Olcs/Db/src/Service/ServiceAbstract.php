@@ -15,6 +15,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Query;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
@@ -68,71 +69,39 @@ abstract class ServiceAbstract
     protected $classMetadata = array();
 
     /**
-     * Gets a matching record by identifying value.
+     * Set the entity name
      *
-     * @param string|int $id
-     *
-     * @return array
+     * @param string $entityName
      */
-    public function get($id, array $data = array())
+    public function setEntityName($entityName)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->entityName = $entityName;
 
-        $bundleConfig = $this->getBundleCreator()->getBundleConfig($data);
-
-        // If we have no bundle, we can just return the entity data
-        if (empty($bundleConfig)) {
-            $response = $this->getById($id);
-        } else {
-            $response = $this->getBundleData($id, $bundleConfig);
-        }
-
-        if (!$response) {
-            return null;
-        }
-
-        return $response;
-    }
-
-    protected function getBundleData($id, $bundleConfig)
-    {
-        $id = is_numeric($id) ? (int)$id : $id;
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->from($this->getEntityName(), 'm');
-
-        $bundleQuery = new \Olcs\Db\Utility\BundleQuery($qb);
-        $bundleQuery->build($bundleConfig);
-
-        // Add conditions
-        $qb->where($qb->expr()->eq('m.id', $id));
-
-        $query = $qb->getQuery();
-
-        print '<pre>';
-        print_r($query->getArrayResult());
-        exit;
-    }
-
-    protected function getById($id)
-    {
-        $id = is_numeric($id) ? (int)$id : $id;
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-
-        $qb->select(array('e'))
-            ->from($this->getEntityName(), 'e')
-            ->where($qb->expr()->eq('e.id', $id));
-
-        $query = $qb->getQuery();
-
-        return $query->getArrayResult();
-
+        return $this;
     }
 
     /**
-     * Should enter a value into the database and return the
-     * identifier for the record that has been created.
+     * Returns the value of the entityName property.
+     *
+     * @return string
+     */
+    public function getEntityName()
+    {
+        if (!isset($this->entityName)) {
+            $entityPrefix = '\Olcs\Db\Entity\\';
+
+            $class = get_called_class();
+
+            $parts = explode('\\', $class);
+
+            return $entityPrefix . array_pop($parts);
+        }
+
+        return $this->entityName;
+    }
+
+    /**
+     * Should enter a value into the database and return the identifier for the record that has been created.
      *
      * @param array $data
      * @return mixed
@@ -156,66 +125,30 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Get entity id(s)
+     * Gets a matching record by identifying value.
      *
-     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
-     * difference
-     *
-     * @param EntityInterface $entity
-     * @return mixed
-     */
-    public function getId($entity)
-    {
-        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
-
-        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
-
-        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierFlattener(
-            $this->getEntityManager()->getUnitOfWork(),
-            $this->getEntityManager()->getMetadataFactory()
-        );
-
-        $flatIds = $identifierConverter->flattenIdentifier($class, $id);
-
-        if (count($flatIds) == 1) {
-            return array_values($flatIds)[0];
-        }
-
-        return $flatIds;
-    }
-
-    /**
-     * Return an instance of BundleCreator
-     *
-     * @return \Olcs\Db\Service\Bundle\BundleCreator
-     */
-    public function getBundleCreator()
-    {
-        return new Bundle\BundleCreator($this->getDoctrineHydrator());
-    }
-
-    /**
-     * Returns valid pagination values where they exist in the array given.
-     *
+     * @param string|int $id
      * @param array $data
      *
      * @return array
      */
-    public function getPaginationValues(array $data)
+    public function get($id, array $data = array())
     {
-        return array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']));
-    }
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
-    /**
-     * Get the result offset
-     *
-     * @param int $page
-     * @param int $limit
-     * @return int
-     */
-    protected function getOffset($page, $limit)
-    {
-        return ($page * $limit) - $limit;
+        $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
+
+        $qb = $this->getBundleQuery($criteria, $data);
+
+        $query = $qb->getQuery();
+
+        $response = $query->getArrayResult();
+
+        if (!$response) {
+            return null;
+        }
+
+        return $response[0];
     }
 
     /**
@@ -227,87 +160,74 @@ abstract class ServiceAbstract
     {
         $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
-        return $this->getEntityList($data);
+        $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
+
+        $qb = $this->getBundleQuery($criteria, $data);
+
+        // Paginate
+        $paginateQuery = new \Olcs\Db\Utility\PaginateQuery($qb);
+        $paginateQuery->setOptions(
+            array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']))
+        );
+        $paginateQuery->filterQuery();
+
+        $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
+
+        $paginator = new Paginator($query);
+
+        return array(
+            'Count' => $paginator->count(),
+            'Results' => (array)$paginator->getIterator()
+        );
     }
 
     /**
-     * Returns a list of entities
-     *  Abstracted this logic away and added extra flags to maintain backwards compat
+     * Deletes record based on identifying value.
+     *
+     * @param mixed $id
+     *
+     * @return boolean success or failure
+     */
+    public function delete($id)
+    {
+        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+
+        $entity = $this->getEntityById($id);
+
+        if (!$entity) {
+            return false;
+        }
+
+        $this->getEntityManager()->remove($entity);
+        $this->dbFlush();
+
+        return true;
+    }
+
+    /**
+     * Delete a list of entities
      *
      * @param array $data
-     * @param boolean $filter
-     * @param boolean $bundle
-     * @param boolean $paginate
-     * @return array
      */
-    private function getEntityList($data, $filter = true, $bundle = true, $paginate = true)
+    public function deleteList($data)
     {
-        $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
+        $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $entityName = $this->getEntityName();
-
-        $qb->select('a')->from($entityName, 'a');
-
-        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
-
-        $eb->setQueryBuilder($qb);
-        $eb->setEntityManager($this->getEntityManager());
-        $eb->setEntity($entityName);
-
-        $expression = $eb->buildWhereExpression($searchFields);
-
-        if ($expression !== null) {
-            $qb->where($expression);
-
-            $params = $eb->getParams();
-
-            if (!empty($params)) {
-                $qb->setParameters($params);
-            }
-        }
-
-        if ($filter) {
-            $pag = $this->getPaginationValues($data);
-            $page = isset($pag['page']) ? $pag['page'] : 1;
-
-            if (!isset($pag['limit']) || $pag['limit'] != 'all') {
-                $limit = isset($pag['limit']) ? $pag['limit'] : 10;
-                $qb->setFirstResult($this->getOffset($page, $limit));
-                $qb->setMaxResults($limit);
-            }
-
-            $this->setOrderBy($qb, $data);
-        }
+        $qb = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
 
         $results = $query->getResult();
 
-        if ($bundle && !empty($results)) {
-
-            $rows = array();
-
-            $bundleConfig = $this->getBundleCreator()->getBundleConfig($data);
-
-            foreach ($results as $row) {
-
-                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $bundleConfig);
-            }
-
-            $results = $rows;
+        foreach ($results as $row) {
+            $this->getEntityManager()->remove($row);
         }
 
-        if ($paginate) {
-            $paginator = $this->getPaginator($query, false);
-
-            $results = array(
-                'Count' => count($paginator),
-                'Results' => $results
-            );
+        if (count($results) > 0) {
+            $this->dbFlush();
         }
 
-        return $results;
+        return true;
     }
 
     /**
@@ -341,6 +261,92 @@ abstract class ServiceAbstract
     }
 
     /**
+     * Create a query builder object from the given bundle
+     *
+     * @param array $criteria
+     * @param array $data
+     * @param string $entityName
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function getBundleQuery($criteria, $data = array(), $entityName = null)
+    {
+        $params = array();
+
+        $bundleConfig = $this->getBundleConfig($data);
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select(array('m'))->from($this->getEntityName(), 'm');
+
+        if (!empty($bundleConfig)) {
+            // @todo Create factory for this
+            $bundleQuery = new \Olcs\Db\Utility\BundleQuery($qb);
+            $bundleQuery->setServiceLocator($this->getServiceLocator());
+
+            $bundleQuery->build($bundleConfig);
+            $params = $bundleQuery->getParams();
+        }
+
+        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
+
+        $eb->setQueryBuilder($qb);
+        $eb->setEntityManager($this->getEntityManager());
+        $eb->setEntity($entityName);
+        $eb->setParams($params);
+
+        $expression = $eb->buildWhereExpression($criteria, 'm');
+
+        if ($expression !== null) {
+            $qb->where($expression);
+        }
+
+        return $qb->setParameters($eb->getParams());
+    }
+
+    /**
+     * Get entity id(s)
+     *
+     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
+     * difference
+     *
+     * @param EntityInterface $entity
+     * @return mixed
+     */
+    protected function getId($entity)
+    {
+        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
+
+        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
+
+        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierFlattener(
+            $this->getEntityManager()->getUnitOfWork(),
+            $this->getEntityManager()->getMetadataFactory()
+        );
+
+        $flatIds = $identifierConverter->flattenIdentifier($class, $id);
+
+        if (count($flatIds) == 1) {
+            return array_values($flatIds)[0];
+        }
+
+        return $flatIds;
+    }
+
+    protected function getBundleConfig($data)
+    {
+        $bundleConfig = null;
+
+        if (isset($data['bundle'])) {
+            $bundleConfig = json_decode($data['bundle'], true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Invalid bundle configuration: Expected JSON');
+            }
+        }
+
+        return $bundleConfig;
+    }
+
+    /**
      * Separated the update logic, as this is used by patch
      *
      * @param int $id
@@ -348,7 +354,7 @@ abstract class ServiceAbstract
      * @return boolean
      * @throws NoVersionException
      */
-    private function doUpdate($id, $data)
+    protected function doUpdate($id, $data)
     {
         // @NOTE if force is true, we should be able to force the update without a version number
         //  This should only be used in exception circumstances
@@ -389,96 +395,11 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Deletes record based on identifying value.
-     *
-     * @param mixed $id
-     *
-     * @return boolean success or failure
-     */
-    public function delete($id)
-    {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
-
-        $entity = $this->getEntityById($id);
-
-        if (!$entity) {
-            return false;
-        }
-
-        $this->getEntityManager()->remove($entity);
-        $this->dbFlush();
-
-        return true;
-    }
-
-    /**
-     * Delete a list of entities
-     *
-     * @param array $data
-     */
-    public function deleteList($data)
-    {
-        $results = $this->getEntityList($data, false, false, false);
-
-        foreach ($results as $row) {
-            $this->getEntityManager()->remove($row);
-        }
-
-        if (count($results) > 0) {
-            $this->dbFlush();
-        }
-
-        return true;
-    }
-
-    /**
-     * Method to allow easier testing
-     *
-     * @param \Doctrine\ORM\Query $query
-     * @param boolean $fetchJoinColumns
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function getPaginator($query, $fetchJoinColumns = false)
-    {
-        return new Paginator($query, $fetchJoinColumns);
-    }
-
-    /**
-     * Returns valid order by values where they exist in the array given.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function getOrderByValues(array $data)
-    {
-        return array_intersect_key($data, ['sort' => '', 'order' => '']);
-    }
-
-    /**
-     * Sets the sort by columns.
-     *
-     * @param unknown_type $qb
-     * @param unknown_type $data
-     */
-    public function setOrderBy($qb, $data)
-    {
-        $orderByValues = $this->getOrderByValues($data);
-        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
-        if ($sort) {
-            $sortString = 'a.' . $sort;
-            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
-
-            $qb->orderBy($sortString, $orderString);
-        }
-    }
-
-    /**
      * Return a new instance of DoctrineHydrator
      *
      * @return DoctrineObject
      */
-    public function getDoctrineHydrator()
+    protected function getDoctrineHydrator()
     {
         return new DoctrineHydrator($this->getEntityManager());
     }
@@ -501,43 +422,11 @@ abstract class ServiceAbstract
      *
      * @return \Olcs\Db\Entity\EntityInterface
      */
-    public function getNewEntity()
+    protected function getNewEntity()
     {
         $entityName = $this->getEntityName();
 
         return new $entityName();
-    }
-
-    /**
-     * Returns the value of the entityName property.
-     *
-     * @return string
-     */
-    public function getEntityName()
-    {
-        if (!isset($this->entityName)) {
-            $entityPrefix = '\Olcs\Db\Entity\\';
-
-            $class = get_called_class();
-
-            $parts = explode('\\', $class);
-
-            return $entityPrefix . array_pop($parts);
-        }
-
-        return $this->entityName;
-    }
-
-    /**
-     * Set the entity name
-     *
-     * @param string $entityName
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-
-        return $this;
     }
 
     /**
@@ -546,7 +435,7 @@ abstract class ServiceAbstract
      * @param int $id
      * @return object
      */
-    public function getEntityById($id)
+    protected function getEntityById($id)
     {
         $id = is_numeric($id) ? (int) $id : $id;
 
@@ -559,7 +448,7 @@ abstract class ServiceAbstract
      * @param string $name
      * @return object
      */
-    public function getService($name)
+    protected function getService($name)
     {
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
@@ -574,7 +463,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function getValidSearchFields()
+    protected function getValidSearchFields()
     {
         if (empty($this->validSearchFields)) {
             $this->validSearchFields = $this->getEntityPropertyNames();
@@ -588,7 +477,7 @@ abstract class ServiceAbstract
      *
      * @return \ReflectionClass
      */
-    public function getReflectedEntity()
+    protected function getReflectedEntity()
     {
         return new \ReflectionClass($this->getEntityName());
     }
@@ -598,7 +487,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function getEntityPropertyNames()
+    protected function getEntityPropertyNames()
     {
         if (empty($this->entityProperties)) {
             $this->entityProperties = array_map(
@@ -619,7 +508,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function processAddressEntity($data)
+    protected function processAddressEntity($data)
     {
         $properties = $this->getEntityPropertyNames();
 
