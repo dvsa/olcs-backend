@@ -8,74 +8,81 @@
 
 namespace Olcs\Db\Utility;
 
+use Doctrine\ORM\Query\Expr\Join;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+
 /**
  * Bundle Query
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleQuery
+class BundleQuery implements ServiceLocatorAwareInterface
 {
-    protected $qb;
+    use ServiceLocatorAwareTrait;
 
+    protected $qb;
     protected $selects = array();
     protected $joins = array();
+    protected $params = array();
 
     public function __construct($qb)
     {
         $this->qb = $qb;
     }
 
+    public function getParams()
+    {
+        return $this->params;
+    }
+
     public function build($bundleConfig)
     {
         $this->buildQueryFromBundle($bundleConfig);
-
-        $selects = array('m');
-
-        foreach ($this->selects as $alias => $properties) {
-            if ($properties === null) {
-                $selects[] = $alias;
-            } else {
-                foreach ($properties as $property) {
-                    $selects[] = $alias . '.' . $property;
-                }
-            }
-        }
-
-        $this->qb->select($selects);
-
-        foreach ($this->joins as $alias => $details) {
-            // @todo criteria
-            $this->qb->leftJoin($details['relationship'], $alias);
-        }
     }
 
-    protected function buildQueryFromBundle($config, $name = 'main', $prefix = '')
+    protected function buildQueryFromBundle($config, $name = 'main', $alias = 'm')
     {
-        if ($prefix == '' || !isset($config['properties']) || !is_array($config['properties'])) {
-            $config['properties'] = null;
-        }
-
-        $alias = $this->getSelectAlias($name, $prefix);
-        $this->addSelect($alias, $config['properties']);
+        $this->addSelect($alias);
 
         if (isset($config['children'])) {
             foreach ($config['children'] as $childName => $childConfig) {
 
-                $childAlias = $this->buildQueryFromBundle($childConfig, $childName, $alias);
+                $childAlias = $this->getSelectAlias($childName, $alias);
 
                 $this->addJoin($alias, $childName, $childAlias, $childConfig);
+
+                $this->buildQueryFromBundle($childConfig, $childName, $childAlias);
             }
         }
-
-        return $alias;
     }
 
     protected function addJoin($alias, $childName, $childAlias, $childConfig)
     {
-        $this->joins[$childAlias] = array(
-            'relationship' => $alias . '.' . $childName,
-            'criteria' => null // @todo this
-        );
+        $conditionType = null;
+        $condition = null;
+
+        if (isset($childConfig['criteria'])) {
+            $conditionType = Join::WITH;
+            $condition = $this->buildCriteria($childAlias, $childConfig['criteria']);
+        }
+
+        $this->qb->leftJoin($alias . '.' . $childName, $childAlias, $conditionType, $condition);
+    }
+
+    protected function buildCriteria($alias, $criteria)
+    {
+        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
+
+        $eb->setQueryBuilder($this->qb);
+        $eb->setEntityManager($this->qb->getEntityManager());
+        $eb->setParams($this->params);
+
+        $expression = $eb->buildWhereExpression($criteria, $alias);
+
+        $this->params = $eb->getParams();
+
+        return $expression;
     }
 
     protected function getSelectAlias($name, $prefix)
@@ -93,8 +100,9 @@ class BundleQuery
         return $alias;
     }
 
-    protected function addSelect($alias, $properties = null)
+    protected function addSelect($alias)
     {
-        $this->selects[$alias] = $properties;
+        $this->selects[$alias] = $alias;
+        $this->qb->addSelect($alias);
     }
 }
