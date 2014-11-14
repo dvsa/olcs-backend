@@ -654,4 +654,5 @@ return array(
     'Doctrine\DBAL\Types\BinaryType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BinaryType.php',
     'Doctrine\DBAL\Types\BlobType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BlobType.php',
     'Doctrine\DBAL\Types\GuidType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/GuidType.php',
+    'Zend\Filter\Word\CamelCaseToSeparator' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter/Word/CamelCaseToSeparator.php',
 );

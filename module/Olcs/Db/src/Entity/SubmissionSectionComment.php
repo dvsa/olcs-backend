@@ -48,15 +48,6 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     protected $submissionSection;
 
     /**
-     * Comment
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
-     */
-    protected $comment;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -86,6 +77,15 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
+
+    /**
+     * Comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
+     */
+    protected $comment;
 
     /**
      * Created on
@@ -159,29 +159,6 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getSubmissionSection()
     {
         return $this->submissionSection;
-    }
-
-    /**
-     * Set the comment
-     *
-     * @param string $comment
-     * @return SubmissionSectionComment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get the comment
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
     }
 
     /**
@@ -273,6 +250,29 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set the comment
+     *
+     * @param string $comment
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get the comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 
     /**
