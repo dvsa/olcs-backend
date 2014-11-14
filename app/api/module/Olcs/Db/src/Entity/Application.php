@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 
 /**
  * Application Entity
@@ -15,36 +14,25 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application",
  *    indexes={
- *        @ORM\Index(name="fk_application_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_application_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
- *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_application_licence1_idx", 
+ *            columns={"licence_id"}),
+ *        @ORM\Index(name="fk_application_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_application_ref_data1_idx", 
+ *            columns={"licence_type"}),
+ *        @ORM\Index(name="fk_application_ref_data2_idx", 
+ *            columns={"status"}),
+ *        @ORM\Index(name="fk_application_ref_data3_idx", 
+ *            columns={"interim_status"}),
+ *        @ORM\Index(name="fk_application_ref_data4_idx", 
+ *            columns={"withdrawn_reason"})
  *    }
  * )
  */
 class Application implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\TotAuthTrailersField,
-        Traits\TotAuthVehiclesField,
-        Traits\TotAuthSmallVehiclesField,
-        Traits\TotAuthMediumVehiclesField,
-        Traits\TotAuthLargeVehiclesField,
-        Traits\TotCommunityLicencesField,
-        Traits\WithdrawnDateField,
-        Traits\IsMaintenanceSuitableField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
 
     /**
      * Interim status
@@ -434,6 +422,167 @@ class Application implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousLicence", mappedBy="application")
      */
     protected $previousLicences;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Withdrawn reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
+     */
+    protected $withdrawnReason;
+
+    /**
+     * Licence type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=true)
+     */
+    protected $licenceType;
+
+    /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     */
+    protected $status;
+
+    /**
+     * Tot auth trailers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_trailers", nullable=true)
+     */
+    protected $totAuthTrailers;
+
+    /**
+     * Tot auth vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_vehicles", nullable=true)
+     */
+    protected $totAuthVehicles;
+
+    /**
+     * Tot auth small vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_small_vehicles", nullable=true)
+     */
+    protected $totAuthSmallVehicles;
+
+    /**
+     * Tot auth medium vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_medium_vehicles", nullable=true)
+     */
+    protected $totAuthMediumVehicles;
+
+    /**
+     * Tot auth large vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_large_vehicles", nullable=true)
+     */
+    protected $totAuthLargeVehicles;
+
+    /**
+     * Tot community licences
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
+     */
+    protected $totCommunityLicences;
+
+    /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
+
+    /**
+     * Is maintenance suitable
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_maintenance_suitable", nullable=true)
+     */
+    protected $isMaintenanceSuitable;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
 
     /**
      * Initialise the collections
@@ -1657,5 +1806,448 @@ class Application implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the withdrawn reason
+     *
+     * @param \Olcs\Db\Entity\RefData $withdrawnReason
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setWithdrawnReason($withdrawnReason)
+    {
+        $this->withdrawnReason = $withdrawnReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getWithdrawnReason()
+    {
+        return $this->withdrawnReason;
+    }
+
+    /**
+     * Set the licence type
+     *
+     * @param \Olcs\Db\Entity\RefData $licenceType
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLicenceType($licenceType)
+    {
+        $this->licenceType = $licenceType;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getLicenceType()
+    {
+        return $this->licenceType;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the tot auth trailers
+     *
+     * @param int $totAuthTrailers
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotAuthTrailers($totAuthTrailers)
+    {
+        $this->totAuthTrailers = $totAuthTrailers;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth trailers
+     *
+     * @return int
+     */
+    public function getTotAuthTrailers()
+    {
+        return $this->totAuthTrailers;
+    }
+
+    /**
+     * Set the tot auth vehicles
+     *
+     * @param int $totAuthVehicles
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotAuthVehicles($totAuthVehicles)
+    {
+        $this->totAuthVehicles = $totAuthVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthVehicles()
+    {
+        return $this->totAuthVehicles;
+    }
+
+    /**
+     * Set the tot auth small vehicles
+     *
+     * @param int $totAuthSmallVehicles
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
+    {
+        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth small vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthSmallVehicles()
+    {
+        return $this->totAuthSmallVehicles;
+    }
+
+    /**
+     * Set the tot auth medium vehicles
+     *
+     * @param int $totAuthMediumVehicles
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
+    {
+        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth medium vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthMediumVehicles()
+    {
+        return $this->totAuthMediumVehicles;
+    }
+
+    /**
+     * Set the tot auth large vehicles
+     *
+     * @param int $totAuthLargeVehicles
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
+    {
+        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth large vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthLargeVehicles()
+    {
+        return $this->totAuthLargeVehicles;
+    }
+
+    /**
+     * Set the tot community licences
+     *
+     * @param int $totCommunityLicences
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setTotCommunityLicences($totCommunityLicences)
+    {
+        $this->totCommunityLicences = $totCommunityLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot community licences
+     *
+     * @return int
+     */
+    public function getTotCommunityLicences()
+    {
+        return $this->totCommunityLicences;
+    }
+
+    /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate()
+    {
+        return $this->withdrawnDate;
+    }
+
+    /**
+     * Set the is maintenance suitable
+     *
+     * @param string $isMaintenanceSuitable
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setIsMaintenanceSuitable($isMaintenanceSuitable)
+    {
+        $this->isMaintenanceSuitable = $isMaintenanceSuitable;
+
+        return $this;
+    }
+
+    /**
+     * Get the is maintenance suitable
+     *
+     * @return string
+     */
+    public function getIsMaintenanceSuitable()
+    {
+        return $this->isMaintenanceSuitable;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }

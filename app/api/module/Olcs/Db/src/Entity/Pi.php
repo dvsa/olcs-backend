@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -17,35 +16,31 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="fk_pi_detail_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", columns={"pi_status"}),
- *        @ORM\Index(name="fk_pi_detail_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_detail_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_user1_idx", columns={"assigned_to"}),
- *        @ORM\Index(name="fk_pi_presiding_tc1_idx", columns={"agreed_by_tc_id"}),
- *        @ORM\Index(name="fk_pi_presiding_tc2_idx", columns={"decided_by_tc_id"}),
- *        @ORM\Index(name="fk_pi_ref_data1_idx", columns={"agreed_by_tc_role"}),
- *        @ORM\Index(name="fk_pi_ref_data2_idx", columns={"decided_by_tc_role"}),
- *        @ORM\Index(name="fk_pi_ref_data3_idx", columns={"written_outcome"})
+ *        @ORM\Index(name="fk_pi_detail_cases1_idx", 
+ *            columns={"case_id"}),
+ *        @ORM\Index(name="fk_pi_detail_ref_data2_idx", 
+ *            columns={"pi_status"}),
+ *        @ORM\Index(name="fk_pi_detail_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_pi_detail_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_pi_user1_idx", 
+ *            columns={"assigned_to"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc1_idx", 
+ *            columns={"agreed_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_presiding_tc2_idx", 
+ *            columns={"decided_by_tc_id"}),
+ *        @ORM\Index(name="fk_pi_ref_data1_idx", 
+ *            columns={"agreed_by_tc_role"}),
+ *        @ORM\Index(name="fk_pi_ref_data2_idx", 
+ *            columns={"decided_by_tc_role"}),
+ *        @ORM\Index(name="fk_pi_ref_data3_idx", 
+ *            columns={"written_outcome"})
  *    }
  * )
  */
 class Pi implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\AgreedDateField,
-        Traits\IsCancelledField,
-        Traits\IsAdjournedField,
-        Traits\DecisionDateField,
-        Traits\CustomDeletedDateField,
-        Traits\Comment4000Field,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
 
     /**
      * Decided by tc role
@@ -302,6 +297,129 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PiHearing", mappedBy="pi")
      */
     protected $piHearings;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Agreed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="agreed_date", nullable=true)
+     */
+    protected $agreedDate;
+
+    /**
+     * Is cancelled
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
+     */
+    protected $isCancelled = 0;
+
+    /**
+     * Is adjourned
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
+     */
+    protected $isAdjourned = 0;
+
+    /**
+     * Decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="decision_date", nullable=true)
+     */
+    protected $decisionDate;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
+     * Comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="comment", length=4000, nullable=true)
+     */
+    protected $comment;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
 
     /**
      * Initialise the collections
@@ -1035,5 +1153,364 @@ class Pi implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the agreed date
+     *
+     * @param \DateTime $agreedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setAgreedDate($agreedDate)
+    {
+        $this->agreedDate = $agreedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed date
+     *
+     * @return \DateTime
+     */
+    public function getAgreedDate()
+    {
+        return $this->agreedDate;
+    }
+
+    /**
+     * Set the is cancelled
+     *
+     * @param string $isCancelled
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setIsCancelled($isCancelled)
+    {
+        $this->isCancelled = $isCancelled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is cancelled
+     *
+     * @return string
+     */
+    public function getIsCancelled()
+    {
+        return $this->isCancelled;
+    }
+
+    /**
+     * Set the is adjourned
+     *
+     * @param string $isAdjourned
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setIsAdjourned($isAdjourned)
+    {
+        $this->isAdjourned = $isAdjourned;
+
+        return $this;
+    }
+
+    /**
+     * Get the is adjourned
+     *
+     * @return string
+     */
+    public function getIsAdjourned()
+    {
+        return $this->isAdjourned;
+    }
+
+    /**
+     * Set the decision date
+     *
+     * @param \DateTime $decisionDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDecisionDate($decisionDate)
+    {
+        $this->decisionDate = $decisionDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the decision date
+     *
+     * @return \DateTime
+     */
+    public function getDecisionDate()
+    {
+        return $this->decisionDate;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return !is_null($this->deletedDate);
+    }
+
+    /**
+     * Set the comment
+     *
+     * @param string $comment
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get the comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }

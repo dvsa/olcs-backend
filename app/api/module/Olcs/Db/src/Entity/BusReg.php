@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Olcs\Db\Entity\Traits;
 
 /**
  * BusReg Entity
@@ -15,34 +14,29 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_reg",
  *    indexes={
- *        @ORM\Index(name="fk_bus_reg_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_bus_reg_bus_notice_period1_idx", columns={"bus_notice_period_id"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data1_idx", columns={"subsidised"}),
- *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
+ *        @ORM\Index(name="fk_bus_reg_licence1_idx", 
+ *            columns={"licence_id"}),
+ *        @ORM\Index(name="fk_bus_reg_bus_notice_period1_idx", 
+ *            columns={"bus_notice_period_id"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data1_idx", 
+ *            columns={"subsidised"}),
+ *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", 
+ *            columns={"operating_centre_id"}),
+ *        @ORM\Index(name="fk_bus_reg_user1_idx", 
+ *            columns={"created_by"}),
+ *        @ORM\Index(name="fk_bus_reg_user2_idx", 
+ *            columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", 
+ *            columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", 
+ *            columns={"status"}),
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", 
+ *            columns={"revert_status"})
  *    }
  * )
  */
 class BusReg implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
-        Traits\ReceivedDateField,
-        Traits\EffectiveDateField,
-        Traits\EndDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
 
     /**
      * Revert status
@@ -485,6 +479,132 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="busReg")
      */
     protected $documents;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     */
+    protected $status;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
+
+    /**
+     * Withdrawn reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
+     */
+    protected $withdrawnReason;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="received_date", nullable=false)
+     */
+    protected $receivedDate;
+
+    /**
+     * Effective date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="effective_date", nullable=true)
+     */
+    protected $effectiveDate;
+
+    /**
+     * End date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="end_date", nullable=true)
+     */
+    protected $endDate;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false)
+     * @ORM\Version
+     */
+    protected $version;
 
     /**
      * Initialise the collections
@@ -1724,5 +1844,356 @@ class BusReg implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set the withdrawn reason
+     *
+     * @param \Olcs\Db\Entity\RefData $withdrawnReason
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setWithdrawnReason($withdrawnReason)
+    {
+        $this->withdrawnReason = $withdrawnReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getWithdrawnReason()
+    {
+        return $this->withdrawnReason;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
+    }
+
+    /**
+     * Set the effective date
+     *
+     * @param \DateTime $effectiveDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setEffectiveDate($effectiveDate)
+    {
+        $this->effectiveDate = $effectiveDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the effective date
+     *
+     * @return \DateTime
+     */
+    public function getEffectiveDate()
+    {
+        return $this->effectiveDate;
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTime $endDate
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the end date
+     *
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->setCreatedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->setLastModifiedOn(new \DateTime('NOW'));
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the version field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersionBeforePersist()
+    {
+        $this->setVersion(1);
     }
 }

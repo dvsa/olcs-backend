@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Olcs\Db\Entity\Traits;
 
 /**
  * EbsrRouteReprint Entity
@@ -14,16 +13,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_route_reprint",
  *    indexes={
- *        @ORM\Index(name="fk_ebsr_route_reprint_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_ebsr_route_reprint_user1_idx", columns={"requested_user_id"})
+ *        @ORM\Index(name="fk_ebsr_route_reprint_bus_reg1_idx", 
+ *            columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_ebsr_route_reprint_user1_idx", 
+ *            columns={"requested_user_id"})
  *    }
  * )
  */
 class EbsrRouteReprint implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\BusRegManyToOne;
 
     /**
      * Requested user
@@ -70,6 +68,27 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="requested_timestamp", nullable=false)
      */
     protected $requestedTimestamp;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
 
     /**
      * Set the requested user
@@ -184,5 +203,73 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     public function getRequestedTimestamp()
     {
         return $this->requestedTimestamp;
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 }
