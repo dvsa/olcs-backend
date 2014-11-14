@@ -43,6 +43,7 @@ class Pi implements Interfaces\EntityInterface
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\Comment4000Field,
+        Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -500,9 +501,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Add a pi types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
      * @return Pi
@@ -525,9 +523,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Remove a pi types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
      * @return Pi
@@ -566,9 +561,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Add a decisions
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $decisions
      * @return Pi
@@ -591,9 +583,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Remove a decisions
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $decisions
      * @return Pi
@@ -632,9 +621,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Add a reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $reasons
      * @return Pi
@@ -657,9 +643,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Remove a reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $reasons
      * @return Pi
@@ -1020,9 +1003,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Add a pi hearings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
      * @return Pi
@@ -1045,9 +1025,6 @@ class Pi implements Interfaces\EntityInterface
 
     /**
      * Remove a pi hearings
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
      * @return Pi
