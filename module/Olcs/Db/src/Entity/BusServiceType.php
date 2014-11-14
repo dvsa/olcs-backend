@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Olcs\Db\Entity\Traits;
 
 /**
  * BusServiceType Entity
@@ -16,6 +17,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class BusServiceType implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\Description70Field;
 
     /**
      * Bus reg
@@ -34,26 +38,6 @@ class BusServiceType implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="txc_service_type_name", length=70, nullable=true)
      */
     protected $txcServiceTypeName;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=70, nullable=true)
-     */
-    protected $description;
 
     /**
      * Initialise the collections
@@ -144,73 +128,5 @@ class BusServiceType implements Interfaces\EntityInterface
     public function getTxcServiceTypeName()
     {
         return $this->txcServiceTypeName;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the description
-     *
-     * @param string $description
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

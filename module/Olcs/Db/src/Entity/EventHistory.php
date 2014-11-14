@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * EventHistory Entity
@@ -13,25 +14,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="event_history",
  *    indexes={
- *        @ORM\Index(name="fk_event_history_event_history_type1_idx", 
- *            columns={"event_history_type_id"}),
- *        @ORM\Index(name="fk_event_history_user1_idx", 
- *            columns={"user_id"}),
- *        @ORM\Index(name="fk_event_history_licence1_idx", 
- *            columns={"licence_id"}),
- *        @ORM\Index(name="fk_event_history_application1_idx", 
- *            columns={"application_id"}),
- *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", 
- *            columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="fk_event_history_team1_idx", 
- *            columns={"team_id"}),
- *        @ORM\Index(name="fk_event_history_transport_manager1_idx", 
- *            columns={"transport_manager_id"})
+ *        @ORM\Index(name="fk_event_history_event_history_type1_idx", columns={"event_history_type_id"}),
+ *        @ORM\Index(name="fk_event_history_user1_idx", columns={"user_id"}),
+ *        @ORM\Index(name="fk_event_history_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_event_history_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
+ *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"}),
+ *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"})
  *    }
  * )
  */
 class EventHistory implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\TransportManagerManyToOne,
+        Traits\UserManyToOne,
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOne;
 
     /**
      * Team
@@ -125,57 +125,6 @@ class EventHistory implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="operation", length=1, nullable=true)
      */
     protected $operation;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Transport manager
-     *
-     * @var \Olcs\Db\Entity\TransportManager
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
-     */
-    protected $transportManager;
-
-    /**
-     * User
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $user;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
-     */
-    protected $licence;
-
-    /**
-     * Application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Set the team
@@ -405,142 +354,5 @@ class EventHistory implements Interfaces\EntityInterface
     public function getOperation()
     {
         return $this->operation;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the transport manager
-     *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setTransportManager($transportManager)
-    {
-        $this->transportManager = $transportManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager
-     *
-     * @return \Olcs\Db\Entity\TransportManager
-     */
-    public function getTransportManager()
-    {
-        return $this->transportManager;
-    }
-
-    /**
-     * Set the user
-     *
-     * @param \Olcs\Db\Entity\User $user
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get the user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
-
-    /**
-     * Set the application
-     *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
     }
 }

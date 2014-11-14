@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * InspectionEmail Entity
@@ -13,13 +14,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_email",
  *    indexes={
- *        @ORM\Index(name="fk_ea_inspection_email_inspection_request1_idx", 
- *            columns={"inspection_request_id"})
+ *        @ORM\Index(name="fk_ea_inspection_email_inspection_request1_idx", columns={"inspection_request_id"})
  *    }
  * )
  */
 class InspectionEmail implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\ReceivedDateFieldAlt1;
 
     /**
      * Inspection request
@@ -75,26 +78,6 @@ class InspectionEmail implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="sender_email_address", length=200, nullable=true)
      */
     protected $senderEmailAddress;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="received_date", nullable=false)
-     */
-    protected $receivedDate;
 
     /**
      * Set the inspection request
@@ -232,73 +215,5 @@ class InspectionEmail implements Interfaces\EntityInterface
     public function getSenderEmailAddress()
     {
         return $this->senderEmailAddress;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $receivedDate
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @return \DateTime
-     */
-    public function getReceivedDate()
-    {
-        return $this->receivedDate;
     }
 }
