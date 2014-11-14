@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * EbsrSubmissionType Entity
@@ -15,24 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EbsrSubmissionType implements Interfaces\EntityInterface
 {
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=45, nullable=true)
-     */
-    protected $description;
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\Description45Field;
 }

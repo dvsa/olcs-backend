@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Olcs\Db\Entity\Traits;
 
 /**
  * VariationReason Entity
@@ -16,6 +17,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class VariationReason implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\Description45Field;
 
     /**
      * Bus reg
@@ -25,26 +29,6 @@ class VariationReason implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="variationReasons", fetch="LAZY")
      */
     protected $busRegs;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=45, nullable=true)
-     */
-    protected $description;
 
     /**
      * Initialise the collections
@@ -112,73 +96,5 @@ class VariationReason implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the description
-     *
-     * @param string $description
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * EbsrSubmission Entity
@@ -13,21 +14,19 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", 
- *            columns={"ebsr_submission_status_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", 
- *            columns={"ebsr_submission_type_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_document1_idx", 
- *            columns={"document_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_bus_reg1_idx", 
- *            columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_result1_idx", 
- *            columns={"ebsr_submission_result_id"})
+ *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", columns={"ebsr_submission_status_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", columns={"ebsr_submission_type_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_document1_idx", columns={"document_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_result1_idx", columns={"ebsr_submission_result_id"})
  *    }
  * )
  */
 class EbsrSubmission implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\BusRegManyToOneAlt1;
 
     /**
      * Ebsr submission type
@@ -230,27 +229,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="organisation_id", nullable=true)
      */
     protected $organisationId;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Bus reg
-     *
-     * @var \Olcs\Db\Entity\BusReg
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
-     */
-    protected $busReg;
 
     /**
      * Set the ebsr submission type
@@ -756,73 +734,5 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getOrganisationId()
     {
         return $this->organisationId;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the bus reg
-     *
-     * @param \Olcs\Db\Entity\BusReg $busReg
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setBusReg($busReg)
-    {
-        $this->busReg = $busReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus reg
-     *
-     * @return \Olcs\Db\Entity\BusReg
-     */
-    public function getBusReg()
-    {
-        return $this->busReg;
     }
 }

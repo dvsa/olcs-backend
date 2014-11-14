@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * IrfoPsvAuth Entity
@@ -13,25 +14,31 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_psv_auth_user1_idx", 
- *            columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_user2_idx", 
- *            columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_organisation1_idx", 
- *            columns={"organisation_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data1_idx", 
- *            columns={"journey_frequency"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_irfo_psv_auth_type1_idx", 
- *            columns={"irfo_psv_auth_type_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data2_idx", 
- *            columns={"status"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data3_idx", 
- *            columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_irfo_psv_auth_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_ref_data1_idx", columns={"journey_frequency"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_irfo_psv_auth_type1_idx", columns={"irfo_psv_auth_type_id"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_ref_data2_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_ref_data3_idx", columns={"withdrawn_reason"})
  *    }
  * )
  */
 class IrfoPsvAuth implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\StatusManyToOne,
+        Traits\OrganisationManyToOneAlt1,
+        Traits\ExemptionDetails255Field,
+        Traits\ExpiryDateField,
+        Traits\InForceDateField,
+        Traits\CustomCreatedOnField,
+        Traits\CustomLastModifiedOnField,
+        Traits\CustomVersionField;
 
     /**
      * Journey frequency
@@ -169,122 +176,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="validity_period", nullable=false)
      */
     protected $validityPeriod;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Created by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
-     */
-    protected $createdBy;
-
-    /**
-     * Last modified by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
-     */
-    protected $lastModifiedBy;
-
-    /**
-     * Withdrawn reason
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
-     */
-    protected $withdrawnReason;
-
-    /**
-     * Status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
-     */
-    protected $status;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
-     * Exemption details
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="exemption_details", length=255, nullable=true)
-     */
-    protected $exemptionDetails;
-
-    /**
-     * Expiry date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="expiry_date", nullable=true)
-     */
-    protected $expiryDate;
-
-    /**
-     * In force date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="in_force_date", nullable=true)
-     */
-    protected $inForceDate;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="version", nullable=false)
-     * @ORM\Version
-     */
-    protected $version;
 
     /**
      * Set the journey frequency
@@ -629,333 +520,5 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getValidityPeriod()
     {
         return $this->validityPeriod;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the created by
-     *
-     * @param \Olcs\Db\Entity\User $createdBy
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param \Olcs\Db\Entity\User $lastModifiedBy
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the withdrawn reason
-     *
-     * @param \Olcs\Db\Entity\RefData $withdrawnReason
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setWithdrawnReason($withdrawnReason)
-    {
-        $this->withdrawnReason = $withdrawnReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the withdrawn reason
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getWithdrawnReason()
-    {
-        return $this->withdrawnReason;
-    }
-
-    /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * Set the exemption details
-     *
-     * @param string $exemptionDetails
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setExemptionDetails($exemptionDetails)
-    {
-        $this->exemptionDetails = $exemptionDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the exemption details
-     *
-     * @return string
-     */
-    public function getExemptionDetails()
-    {
-        return $this->exemptionDetails;
-    }
-
-    /**
-     * Set the expiry date
-     *
-     * @param \DateTime $expiryDate
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setExpiryDate($expiryDate)
-    {
-        $this->expiryDate = $expiryDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the expiry date
-     *
-     * @return \DateTime
-     */
-    public function getExpiryDate()
-    {
-        return $this->expiryDate;
-    }
-
-    /**
-     * Set the in force date
-     *
-     * @param \DateTime $inForceDate
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setInForceDate($inForceDate)
-    {
-        $this->inForceDate = $inForceDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the in force date
-     *
-     * @return \DateTime
-     */
-    public function getInForceDate()
-    {
-        return $this->inForceDate;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn()
-    {
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->setCreatedOn(new \DateTime('NOW'));
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn()
-    {
-        return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->setLastModifiedOn(new \DateTime('NOW'));
-    }
-
-    /**
-     * Set the version
-     *
-     * @param int $version
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the version
-     *
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the version field on persist
-     *
-     * @ORM\PrePersist
-     */
-    public function setVersionBeforePersist()
-    {
-        $this->setVersion(1);
     }
 }
