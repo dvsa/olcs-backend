@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * CompaniesHouseRequest Entity
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CompaniesHouseRequest implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity;
 
     /**
      * Requested on
@@ -51,17 +54,6 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="ip_address", length=255, nullable=true)
      */
     protected $ipAddress;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
 
     /**
      * Set the requested on
@@ -153,50 +145,5 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     public function getIpAddress()
     {
         return $this->ipAddress;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }

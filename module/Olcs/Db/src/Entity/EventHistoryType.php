@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * EventHistoryType Entity
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventHistoryType implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity;
 
     /**
      * Description
@@ -33,17 +36,6 @@ class EventHistoryType implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="event_type", length=3, nullable=false)
      */
     protected $eventType;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
 
     /**
      * Set the description
@@ -89,50 +81,5 @@ class EventHistoryType implements Interfaces\EntityInterface
     public function getEventType()
     {
         return $this->eventType;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }

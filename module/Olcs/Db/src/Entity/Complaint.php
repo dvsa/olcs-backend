@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Db\Entity\Traits;
 
 /**
  * Complaint Entity
@@ -13,21 +14,26 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="IDX_5F2732B57B00651C", 
- *            columns={"status"}),
- *        @ORM\Index(name="IDX_5F2732B553DF8182", 
- *            columns={"complaint_type"}),
- *        @ORM\Index(name="IDX_5F2732B5DE12AB56", 
- *            columns={"created_by"}),
- *        @ORM\Index(name="IDX_5F2732B565CF370E", 
- *            columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", 
- *            columns={"case_id"})
+ *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
+ *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
+ *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
+ *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"})
  *    }
  * )
  */
 class Complaint implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\IdIdentity,
+        Traits\CreatedByManyToOne,
+        Traits\CaseManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\Description4000Field,
+        Traits\Vrm20Field,
+        Traits\CustomCreatedOnField,
+        Traits\CustomLastModifiedOnField,
+        Traits\CustomVersionField;
 
     /**
      * Status
@@ -93,93 +99,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="driver_family_name", length=40, nullable=true)
      */
     protected $driverFamilyName;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * Created by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
-     */
-    protected $createdBy;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
-     */
-    protected $case;
-
-    /**
-     * Last modified by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
-     */
-    protected $lastModifiedBy;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=4000, nullable=true)
-     */
-    protected $description;
-
-    /**
-     * Vrm
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vrm", length=20, nullable=true)
-     */
-    protected $vrm;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="version", nullable=false)
-     * @ORM\Version
-     */
-    protected $version;
 
     /**
      * Set the status
@@ -340,264 +259,5 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriverFamilyName()
     {
         return $this->driverFamilyName;
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the created by
-     *
-     * @param \Olcs\Db\Entity\User $createdBy
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param \Olcs\Db\Entity\User $lastModifiedBy
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the description
-     *
-     * @param string $description
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set the vrm
-     *
-     * @param string $vrm
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setVrm($vrm)
-    {
-        $this->vrm = $vrm;
-
-        return $this;
-    }
-
-    /**
-     * Get the vrm
-     *
-     * @return string
-     */
-    public function getVrm()
-    {
-        return $this->vrm;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn()
-    {
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->setCreatedOn(new \DateTime('NOW'));
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn()
-    {
-        return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->setLastModifiedOn(new \DateTime('NOW'));
-    }
-
-    /**
-     * Set the version
-     *
-     * @param int $version
-     * @return \Olcs\Db\Entity\Interfaces\EntityInterface
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the version
-     *
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the version field on persist
-     *
-     * @ORM\PrePersist
-     */
-    public function setVersionBeforePersist()
-    {
-        $this->setVersion(1);
     }
 }
