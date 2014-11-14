@@ -214,6 +214,8 @@ return [
                 'types' => [
                     'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
                     'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
+                    'date' => 'Olcs\Db\Entity\Types\DateType',
+                    'datetime' => 'Olcs\Db\Entity\Types\DateTimeType',
                 ]
             ]
         ]
