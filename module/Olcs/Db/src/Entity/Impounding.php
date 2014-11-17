@@ -29,12 +29,12 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
-        Traits\PiVenueManyToOne,
-        Traits\OutcomeManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\PiVenueManyToOne,
+        Traits\OutcomeManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\Notes4000Field,
         Traits\PiVenueOther255Field,
@@ -153,9 +153,6 @@ class Impounding implements Interfaces\EntityInterface
 
     /**
      * Add a impounding legislation types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
      * @return Impounding
@@ -178,9 +175,6 @@ class Impounding implements Interfaces\EntityInterface
 
     /**
      * Remove a impounding legislation types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
      * @return Impounding

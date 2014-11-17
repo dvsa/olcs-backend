@@ -38,6 +38,16 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Opposition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $oppositionType;
+
+    /**
      * Opposer
      *
      * @var \Olcs\Db\Entity\Opposer
@@ -56,16 +66,6 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Opposition type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
-     */
-    protected $oppositionType;
 
     /**
      * Is copied
@@ -158,6 +158,29 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the opposition type
+     *
+     * @param \Olcs\Db\Entity\RefData $oppositionType
+     * @return Opposition
+     */
+    public function setOppositionType($oppositionType)
+    {
+        $this->oppositionType = $oppositionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getOppositionType()
+    {
+        return $this->oppositionType;
+    }
+
+    /**
      * Set the opposer
      *
      * @param \Olcs\Db\Entity\Opposer $opposer
@@ -201,29 +224,6 @@ class Opposition implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the opposition type
-     *
-     * @param \Olcs\Db\Entity\RefData $oppositionType
-     * @return Opposition
-     */
-    public function setOppositionType($oppositionType)
-    {
-        $this->oppositionType = $oppositionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getOppositionType()
-    {
-        return $this->oppositionType;
     }
 
     /**
@@ -412,9 +412,6 @@ class Opposition implements Interfaces\EntityInterface
 
     /**
      * Add a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Opposition
@@ -437,9 +434,6 @@ class Opposition implements Interfaces\EntityInterface
 
     /**
      * Remove a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return Opposition
@@ -478,9 +472,6 @@ class Opposition implements Interfaces\EntityInterface
 
     /**
      * Add a grounds
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $grounds
      * @return Opposition
@@ -503,9 +494,6 @@ class Opposition implements Interfaces\EntityInterface
 
     /**
      * Remove a grounds
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $grounds
      * @return Opposition

@@ -41,16 +41,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Si category type
-     *
-     * @var \Olcs\Db\Entity\SiCategoryType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siCategoryType;
-
-    /**
      * Erru response user
      *
      * @var \Olcs\Db\Entity\User
@@ -59,6 +49,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
      */
     protected $erruResponseUser;
+
+    /**
+     * Si category type
+     *
+     * @var \Olcs\Db\Entity\SiCategoryType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
+     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siCategoryType;
 
     /**
      * Member state code
@@ -162,29 +162,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the si category type
-     *
-     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
-     * @return SeriousInfringement
-     */
-    public function setSiCategoryType($siCategoryType)
-    {
-        $this->siCategoryType = $siCategoryType;
-
-        return $this;
-    }
-
-    /**
-     * Get the si category type
-     *
-     * @return \Olcs\Db\Entity\SiCategoryType
-     */
-    public function getSiCategoryType()
-    {
-        return $this->siCategoryType;
-    }
-
-    /**
      * Set the erru response user
      *
      * @param \Olcs\Db\Entity\User $erruResponseUser
@@ -205,6 +182,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getErruResponseUser()
     {
         return $this->erruResponseUser;
+    }
+
+    /**
+     * Set the si category type
+     *
+     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
+     * @return SeriousInfringement
+     */
+    public function setSiCategoryType($siCategoryType)
+    {
+        $this->siCategoryType = $siCategoryType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si category type
+     *
+     * @return \Olcs\Db\Entity\SiCategoryType
+     */
+    public function getSiCategoryType()
+    {
+        return $this->siCategoryType;
     }
 
     /**
@@ -393,9 +393,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Add a applied penalties
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties
      * @return SeriousInfringement
@@ -418,9 +415,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Remove a applied penalties
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties
      * @return SeriousInfringement
@@ -459,9 +453,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Add a imposed errus
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
      * @return SeriousInfringement
@@ -484,9 +475,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Remove a imposed errus
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
      * @return SeriousInfringement
@@ -525,9 +513,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Add a requested errus
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
      * @return SeriousInfringement
@@ -550,9 +535,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
 
     /**
      * Remove a requested errus
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
      * @return SeriousInfringement

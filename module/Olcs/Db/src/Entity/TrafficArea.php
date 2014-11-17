@@ -24,9 +24,9 @@ use Olcs\Db\Entity\Traits;
 class TrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ContactDetailsManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -135,9 +135,6 @@ class TrafficArea implements Interfaces\EntityInterface
 
     /**
      * Add a recipients
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $recipients
      * @return TrafficArea
@@ -160,9 +157,6 @@ class TrafficArea implements Interfaces\EntityInterface
 
     /**
      * Remove a recipients
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $recipients
      * @return TrafficArea
@@ -247,9 +241,6 @@ class TrafficArea implements Interfaces\EntityInterface
 
     /**
      * Add a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return TrafficArea
@@ -272,9 +263,6 @@ class TrafficArea implements Interfaces\EntityInterface
 
     /**
      * Remove a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return TrafficArea
