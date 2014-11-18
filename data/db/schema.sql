@@ -7584,9 +7584,9 @@ ENGINE = InnoDB;
 
 CREATE TABLE `sla` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `field` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `compare_to` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `category` varchar(32) DEFAULT NULL,
+  `field` varchar(32) DEFAULT NULL,
+  `compare_to` varchar(32) DEFAULT NULL,
   `days` int(11) DEFAULT NULL,
   `weekend` tinyint(1) NOT NULL DEFAULT '0',
   `public_holiday` tinyint(1) NOT NULL DEFAULT '0',
