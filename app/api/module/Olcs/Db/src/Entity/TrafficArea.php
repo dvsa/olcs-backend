@@ -70,6 +70,42 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $isScottishRules = 0;
 
     /**
+     * Is england
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_england", nullable=false)
+     */
+    protected $isEngland = 0;
+
+    /**
+     * Is wales
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_wales", nullable=false)
+     */
+    protected $isWales = 0;
+
+    /**
+     * Is scotland
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_scotland", nullable=false)
+     */
+    protected $isScotland = 0;
+
+    /**
+     * Is ni
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     */
+    protected $isNi = 0;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -214,6 +250,98 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getIsScottishRules()
     {
         return $this->isScottishRules;
+    }
+
+    /**
+     * Set the is england
+     *
+     * @param boolean $isEngland
+     * @return TrafficArea
+     */
+    public function setIsEngland($isEngland)
+    {
+        $this->isEngland = $isEngland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is england
+     *
+     * @return boolean
+     */
+    public function getIsEngland()
+    {
+        return $this->isEngland;
+    }
+
+    /**
+     * Set the is wales
+     *
+     * @param boolean $isWales
+     * @return TrafficArea
+     */
+    public function setIsWales($isWales)
+    {
+        $this->isWales = $isWales;
+
+        return $this;
+    }
+
+    /**
+     * Get the is wales
+     *
+     * @return boolean
+     */
+    public function getIsWales()
+    {
+        return $this->isWales;
+    }
+
+    /**
+     * Set the is scotland
+     *
+     * @param boolean $isScotland
+     * @return TrafficArea
+     */
+    public function setIsScotland($isScotland)
+    {
+        $this->isScotland = $isScotland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scotland
+     *
+     * @return boolean
+     */
+    public function getIsScotland()
+    {
+        return $this->isScotland;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param boolean $isNi
+     * @return TrafficArea
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return boolean
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 
     /**
