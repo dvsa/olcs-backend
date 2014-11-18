@@ -31,24 +31,14 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
-     */
-    protected $caseType;
 
     /**
      * Erru case type
@@ -59,6 +49,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
      */
     protected $erruCaseType;
+
+    /**
+     * Case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
+     */
+    protected $caseType;
 
     /**
      * Licence
@@ -272,29 +272,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case type
-     *
-     * @param \Olcs\Db\Entity\RefData $caseType
-     * @return Cases
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
-    }
-
-    /**
      * Set the erru case type
      *
      * @param \Olcs\Db\Entity\RefData $erruCaseType
@@ -315,6 +292,29 @@ class Cases implements Interfaces\EntityInterface
     public function getErruCaseType()
     {
         return $this->erruCaseType;
+    }
+
+    /**
+     * Set the case type
+     *
+     * @param \Olcs\Db\Entity\RefData $caseType
+     * @return Cases
+     */
+    public function setCaseType($caseType)
+    {
+        $this->caseType = $caseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getCaseType()
+    {
+        return $this->caseType;
     }
 
     /**
