@@ -2847,6 +2847,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `case_id` INT NOT NULL,
   `person_firstname` VARCHAR(70) NULL,
   `person_lastname` VARCHAR(70) NULL,
+  `deleted_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,

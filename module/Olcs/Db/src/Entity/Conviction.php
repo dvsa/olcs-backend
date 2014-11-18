@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Conviction Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="conviction",
  *    indexes={
  *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category"}),
@@ -37,6 +39,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
