@@ -3866,6 +3866,7 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `tc_written_reason_date` DATE NULL,
   `written_reason_letter_date` DATE NULL,
   `dec_sent_after_written_dec_date` DATE NULL,
+  `closed_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
