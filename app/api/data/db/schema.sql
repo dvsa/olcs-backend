@@ -1884,6 +1884,7 @@ CREATE TABLE IF NOT EXISTS `vehicle` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `is_novelty` TINYINT(1) NULL,
   `vrm` VARCHAR(20) NULL COMMENT 'Nullable for PSVs',
+  `make_model` VARCHAR(100) NULL COMMENT 'small PSV only',
   `plated_weight` INT NULL,
   `certificate_no` VARCHAR(50) NULL COMMENT 'psv only',
   `vi_action` VARCHAR(1) NULL,
