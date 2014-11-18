@@ -591,9 +591,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Add a variation reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
      * @return BusReg
@@ -616,9 +613,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Remove a variation reasons
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
      * @return BusReg
@@ -657,9 +651,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Add a bus service types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
      * @return BusReg
@@ -682,9 +673,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Remove a bus service types
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
      * @return BusReg
@@ -1643,9 +1631,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Add a other services
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
      * @return BusReg
@@ -1668,9 +1653,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Remove a other services
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
      * @return BusReg
@@ -1709,9 +1691,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Add a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be changed to use doctrine colelction add/remove directly inside a loop as this
-     * will save database calls when updating an entity
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return BusReg
@@ -1734,9 +1713,6 @@ class BusReg implements Interfaces\EntityInterface
 
     /**
      * Remove a documents
-     * This method exists to make doctrine hydrator happy, it is not currently in use anywhere in the app and probably
-     * doesn't work, if needed it should be updated to take either an iterable or a single object and to determine if it
-     * should use remove or removeElement to remove the object (use is_scalar)
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
      * @return BusReg
