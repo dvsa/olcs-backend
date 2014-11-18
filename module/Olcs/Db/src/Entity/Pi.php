@@ -43,6 +43,7 @@ class Pi implements Interfaces\EntityInterface
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\Comment4000Field,
+        Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
