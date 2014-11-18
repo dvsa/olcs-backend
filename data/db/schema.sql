@@ -304,34 +304,29 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `traffic_area`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `traffic_area` (
-  `id` CHAR(1) NOT NULL,
-  `name` VARCHAR(70) NOT NULL,
-  `txc_name` VARCHAR(70) NULL,
-  `contact_details_id` INT NOT NULL,
-  `is_scottish_rules` TINYINT(1) NOT NULL DEFAULT 0,
+CREATE TABLE IF NOT EXISTS `olcs`.`public_holiday` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `public_holiday_date` DATE NOT NULL,
+  `is_england` TINYINT(1) NULL,
+  `is_wales` TINYINT(1) NULL,
+  `is_scotland` TINYINT(1) NULL,
+  `is_ni` TINYINT(1) NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
   `last_modified_on` DATETIME NULL,
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `fk_traffic_area_user1_idx` (`created_by` ASC),
-  INDEX `fk_traffic_area_user2_idx` (`last_modified_by` ASC),
-  INDEX `fk_traffic_area_contact_details1_idx` (`contact_details_id` ASC),
-  CONSTRAINT `fk_traffic_area_user1`
+  INDEX `fk_public_holiday_user1_idx` (`created_by` ASC),
+  INDEX `fk_public_holiday_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_public_holiday_user1`
     FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
+    REFERENCES `olcs`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_traffic_area_user2`
+  CONSTRAINT `fk_public_holiday_user2`
     FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_traffic_area_contact_details1`
-    FOREIGN KEY (`contact_details_id`)
-    REFERENCES `contact_details` (`id`)
+    REFERENCES `olcs`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
