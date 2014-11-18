@@ -26,7 +26,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="category", length=32, nullable=true)
      */
-    protected $category = '';
+    protected $category;
 
     /**
      * Field
@@ -35,7 +35,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="string", name="field", length=32, nullable=true)
      */
-    protected $field = '';
+    protected $field;
 
     /**
      * Compare to
@@ -54,6 +54,24 @@ class Sla implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="days", nullable=true)
      */
     protected $days;
+
+    /**
+     * Weekend
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="weekend", nullable=false)
+     */
+    protected $weekend = 0;
+
+    /**
+     * Public holiday
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="public_holiday", nullable=false)
+     */
+    protected $publicHoliday = 0;
 
     /**
      * Effective from
@@ -163,6 +181,52 @@ class Sla implements Interfaces\EntityInterface
     public function getDays()
     {
         return $this->days;
+    }
+
+    /**
+     * Set the weekend
+     *
+     * @param boolean $weekend
+     * @return Sla
+     */
+    public function setWeekend($weekend)
+    {
+        $this->weekend = $weekend;
+
+        return $this;
+    }
+
+    /**
+     * Get the weekend
+     *
+     * @return boolean
+     */
+    public function getWeekend()
+    {
+        return $this->weekend;
+    }
+
+    /**
+     * Set the public holiday
+     *
+     * @param boolean $publicHoliday
+     * @return Sla
+     */
+    public function setPublicHoliday($publicHoliday)
+    {
+        $this->publicHoliday = $publicHoliday;
+
+        return $this;
+    }
+
+    /**
+     * Get the public holiday
+     *
+     * @return boolean
+     */
+    public function getPublicHoliday()
+    {
+        return $this->publicHoliday;
     }
 
     /**
