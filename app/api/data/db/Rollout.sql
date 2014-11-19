@@ -637,6 +637,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('impound_type', 'impt_paper', 'Paperwork', null),
     ('impound_outcome', 'impo_returned', 'Vehicle Returned', null),
     ('impound_outcome', 'impo_not', 'Vehicle Not Returned', null),
+    ('impound_outcome', 'impo_wd', 'Application Withdrawn', null),
 
     -- impound_legislation
 
