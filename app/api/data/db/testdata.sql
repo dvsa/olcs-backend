@@ -80,6 +80,7 @@ TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
+TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `public_holiday`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
