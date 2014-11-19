@@ -4334,7 +4334,6 @@ CREATE TABLE IF NOT EXISTS `publication_link` (
   `application_id` INT NULL,
   `pi_id` INT NULL,
   `tm_pi_hearing_id` INT NULL,
-  `section_id` INT NULL,
   `bus_reg_id` INT NULL,
   `text1` TEXT NULL,
   `text2` TEXT NULL,
