@@ -79,6 +79,7 @@ TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `publication`;
+TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `public_holiday`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
@@ -1056,6 +1057,11 @@ VALUES
   (36,1,1,'2016-08-29 00:00:00',1,1,1,1,now(),now(),1),
   (37,1,1,'2016-12-26 00:00:00',1,1,1,1,now(),now(),1),
   (38,1,1,'2016-12-27 00:00:00',1,1,0,0,now(),now(),1);
+
+INSERT INTO `publication_section` (`id`, `last_modified_by`, `created_by`, `description`, `created_on`,
+   `last_modified_on`, `version`)
+VALUES
+  (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
 
 INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
