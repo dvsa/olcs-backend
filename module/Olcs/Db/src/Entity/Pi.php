@@ -208,18 +208,18 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Licence suspended at pi
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="licence_suspended_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false)
      */
     protected $licenceSuspendedAtPi = 0;
 
     /**
      * Licence curtailed at pi
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="licence_curtailed_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false)
      */
     protected $licenceCurtailedAtPi = 0;
 
@@ -769,7 +769,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Set the licence suspended at pi
      *
-     * @param boolean $licenceSuspendedAtPi
+     * @param string $licenceSuspendedAtPi
      * @return Pi
      */
     public function setLicenceSuspendedAtPi($licenceSuspendedAtPi)
@@ -782,7 +782,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the licence suspended at pi
      *
-     * @return boolean
+     * @return string
      */
     public function getLicenceSuspendedAtPi()
     {
@@ -792,7 +792,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Set the licence curtailed at pi
      *
-     * @param boolean $licenceCurtailedAtPi
+     * @param string $licenceCurtailedAtPi
      * @return Pi
      */
     public function setLicenceCurtailedAtPi($licenceCurtailedAtPi)
@@ -805,7 +805,7 @@ class Pi implements Interfaces\EntityInterface
     /**
      * Get the licence curtailed at pi
      *
-     * @return boolean
+     * @return string
      */
     public function getLicenceCurtailedAtPi()
     {
