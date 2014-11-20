@@ -3894,6 +3894,8 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `reschedule_datetime` DATETIME NULL COMMENT 'Entered if is_adjourned.  Holds last reschedule date',
   `decision_date` DATE NULL,
   `licence_revoked_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
+  `licence_suspended_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
+  `licence_curtailed_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
   `notification_date` DATE NULL,
   `decision_notes` TEXT NULL,
   `deleted_date` DATETIME NULL,
