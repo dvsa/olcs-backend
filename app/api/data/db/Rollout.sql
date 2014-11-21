@@ -7,6 +7,7 @@ TRUNCATE TABLE `task_sub_category`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
+TRUNCATE TABLE `organisation_type`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `submission`;
@@ -747,12 +748,17 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposer_type', 'obj_t_rta', 'RTA', '3'),
     ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4'),
     ('opposer_type', 'obj_t_other', 'Other', '5'),
-    ('org_type', 'org_t_irfo', 'IRFO Operator', 'IRFO'),
+
     ('org_type', 'org_t_p', 'Partnership', 'P'),
-    ('org_type', 'org_t_pa', 'Public Authority', 'PA'),
+    ('org_type', 'org_t_pa', 'Other (e.g. public authority, charity, trust, university)', 'PA'),
     ('org_type', 'org_t_rc', 'Registered Company', 'RC'),
     ('org_type', 'org_t_st', 'Sole Trader', 'ST'),
     ('org_type', 'org_t_llp', 'LLP', 'LLP'),
+
+    ('org_person_type', 'org_pt_p', 'Partner', null),
+    ('org_person_type', 'org_pt_d', 'Director', null),
+    ('org_person_type', 'org_pt_st', 'Sole Trader', null),
+
     ('phone_contact_type', 'phone_t_tel', 'Business', 'Business'),
     ('phone_contact_type', 'phone_t_fax', 'Fax', 'Fax'),
     ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null),
@@ -1956,6 +1962,15 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
     (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1),
     (6,1,NULL,NULL,'Vehicle List',0,NULL,NULL,1);
+
+INSERT INTO `organisation_type`
+(id, org_type_id, org_person_type_id)
+VALUES
+  (1, 'org_t_p','org_pt_p'),
+  (2, 'org_t_pa', 'org_pt_d'),
+  (3, 'org_t_rc', 'org_pt_d'),
+  (4, 'org_t_st', 'org_pt_st'),
+  (5, 'org_t_llp', 'org_pt_p');
 
 INSERT INTO `pi_definition`
 (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)

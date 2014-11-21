@@ -84,6 +84,27 @@ CREATE TABLE IF NOT EXISTS `organisation` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `organisation_type`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `organisation_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `org_type_id` VARCHAR(32) NULL COMMENT 'LTD, Partnership etc.',
+  `org_person_type_id` VARCHAR(32) NULL COMMENT 'Type if officers in org. Partners, directors etc.',
+  INDEX `fk_organisation_type_ref_data1_idx` (`org_type_id` ASC),
+  INDEX `fk_organisation_type_ref_data2_idx` (`org_person_type_id` ASC),
+  CONSTRAINT `fk_organisation_type_ref_data1`
+  FOREIGN KEY (`org_type_id`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_type_ref_data2`
+  FOREIGN KEY (`org_person_type_id`)
+  REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB
+  COMMENT = 'Organisation meta info.';
 
 -- -----------------------------------------------------
 -- Table `person`
