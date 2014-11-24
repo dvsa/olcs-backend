@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `organisation` (
   `name` VARCHAR(160) NULL,
   `irfo_name` VARCHAR(160) NULL COMMENT 'Hold irfo company name separate from normal name.  Dont want changes to one affecting other on licences.',
   `type` VARCHAR(32) NOT NULL,
-  `sic_code` VARCHAR(32) NULL,
   `vi_action` VARCHAR(1) NULL,
   `is_mlh` TINYINT(1) NOT NULL DEFAULT 0,
   `company_cert_seen` TINYINT(1) NOT NULL DEFAULT 0,
@@ -54,7 +53,6 @@ CREATE TABLE IF NOT EXISTS `organisation` (
   INDEX `fk_organisation_user1_idx` (`created_by` ASC),
   INDEX `fk_organisation_user2_idx` (`last_modified_by` ASC),
   INDEX `fk_organisation_ref_data1_idx` (`type` ASC),
-  INDEX `fk_organisation_ref_data2_idx` (`sic_code` ASC),
   INDEX `fk_organisation_traffic_area1_idx` (`lead_tc_area_id` ASC),
   INDEX `organisation_name_idx` (`name` ASC),
   CONSTRAINT `fk_organisation_user1`
@@ -69,11 +67,6 @@ CREATE TABLE IF NOT EXISTS `organisation` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_ref_data1`
     FOREIGN KEY (`type`)
-    REFERENCES `ref_data` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_ref_data2`
-    FOREIGN KEY (`sic_code`)
     REFERENCES `ref_data` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -7599,6 +7592,46 @@ CREATE TABLE `sla` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `organisation_nature_of_business`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `organisation_nature_of_business` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ref_data_id` VARCHAR(32) NOT NULL,
+  `organisation_id` INT NOT NULL,
+  `deleted_date` DATETIME NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_org_nob_ref_data1_idx` (`ref_data_id` ASC),
+  INDEX `fk_org_nob_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_org_nob_user1_idx` (`created_by` ASC),
+  INDEX `fk_org_nob_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_org_nob_ref_data1`
+    FOREIGN KEY (`ref_data_id`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_org_nob_organisation1`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_org_nob_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_org_nob_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
