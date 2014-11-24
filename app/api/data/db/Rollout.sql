@@ -747,12 +747,17 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposer_type', 'obj_t_rta', 'RTA', '3'),
     ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4'),
     ('opposer_type', 'obj_t_other', 'Other', '5'),
-    ('org_type', 'org_t_irfo', 'IRFO Operator', 'IRFO'),
+
     ('org_type', 'org_t_p', 'Partnership', 'P'),
-    ('org_type', 'org_t_pa', 'Public Authority', 'PA'),
+    ('org_type', 'org_t_pa', 'Other (e.g. public authority, charity, trust, university)', 'PA'),
     ('org_type', 'org_t_rc', 'Registered Company', 'RC'),
     ('org_type', 'org_t_st', 'Sole Trader', 'ST'),
     ('org_type', 'org_t_llp', 'LLP', 'LLP'),
+
+    ('org_person_type', 'org_pt_p', 'Partner', null),
+    ('org_person_type', 'org_pt_d', 'Director', null),
+    ('org_person_type', 'org_pt_st', 'Sole Trader', null),
+
     ('phone_contact_type', 'phone_t_tel', 'Business', 'Business'),
     ('phone_contact_type', 'phone_t_fax', 'Fax', 'Fax'),
     ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null),
