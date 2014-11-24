@@ -87,15 +87,6 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $publication;
 
     /**
-     * Section id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="section_id", nullable=true)
-     */
-    protected $sectionId;
-
-    /**
      * Text1
      *
      * @var string
@@ -221,29 +212,6 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getPublication()
     {
         return $this->publication;
-    }
-
-    /**
-     * Set the section id
-     *
-     * @param int $sectionId
-     * @return PublicationLink
-     */
-    public function setSectionId($sectionId)
-    {
-        $this->sectionId = $sectionId;
-
-        return $this;
-    }
-
-    /**
-     * Get the section id
-     *
-     * @return int
-     */
-    public function getSectionId()
-    {
-        return $this->sectionId;
     }
 
     /**
