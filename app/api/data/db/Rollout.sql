@@ -7,7 +7,6 @@ TRUNCATE TABLE `task_sub_category`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
-TRUNCATE TABLE `organisation_type`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `submission`;
@@ -2017,15 +2016,6 @@ INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_mo
     (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
     (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1),
     (6,1,NULL,NULL,'Vehicle List',0,NULL,NULL,1);
-
-INSERT INTO `organisation_type`
-(id, org_type_id, org_person_type_id)
-VALUES
-  (1, 'org_t_p','org_pt_p'),
-  (2, 'org_t_pa', 'org_pt_d'),
-  (3, 'org_t_rc', 'org_pt_d'),
-  (4, 'org_t_st', 'org_pt_st'),
-  (5, 'org_t_llp', 'org_pt_p');
 
 INSERT INTO `pi_definition`
 (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
