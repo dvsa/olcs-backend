@@ -1068,7 +1068,8 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (3, 'sub_st_rec', 'sub_st_rec_nfa', 'NFA', NULL),
     (4, 'sub_st_rec', 'sub_st_rec_wl', 'Warning letter', NULL),
     (5, 'sub_st_rec', 'sub_st_rec_ptr', 'Propose to revoke', NULL),
-    (6, 'sub_st_rec', 'sub_st_rec_other', 'Other', NULL);
+    (6, 'sub_st_rec', 'sub_st_rec_non_pi', 'Non PI hearing', NULL),
+    (99, 'sub_st_rec', 'sub_st_rec_other', 'Other', NULL);
 
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
