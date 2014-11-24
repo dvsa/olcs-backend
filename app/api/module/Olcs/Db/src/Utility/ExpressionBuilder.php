@@ -88,15 +88,7 @@ class ExpressionBuilder
         if (substr($values, 0, 4) == 'IN [') {
             $values = json_decode(substr($values, 3));
 
-            $newValues = array();
-
-            foreach ($values as $value) {
-                $paramIndex = $this->getNextParamIndex();
-                $this->params[$paramIndex] = $values;
-                $newValues[] = '?' . $paramIndex;
-            }
-
-            return $this->qb->expr()->in($field, $newValues);
+            return $this->qb->expr()->in($field, $values);
         }
 
         if (is_numeric($values) || $this->isFieldForeignKey($field)) {
