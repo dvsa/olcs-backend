@@ -48,6 +48,11 @@ class BundleQuery implements ServiceLocatorAwareInterface
         if (isset($config['children'])) {
             foreach ($config['children'] as $childName => $childConfig) {
 
+                if (is_numeric($childName) && is_string($childConfig)) {
+                    $childName = $childConfig;
+                    $childConfig = array('properties' => 'ALL');
+                }
+
                 $childAlias = $this->getSelectAlias($childName, $alias);
 
                 $this->addJoin($alias, $childName, $childAlias, $childConfig);
