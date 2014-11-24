@@ -892,71 +892,71 @@ VALUES
 
     
 -- Case categories
-INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`)
+INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
 VALUES
-    ('case_cat_compl',              NULL,               'Compliance',                   'case_category', NULL),
-    ('case_cat_compl_off',          'case_cat_compl',   'Offences (inc. driver hours)', 'case_category', NULL),
-    ('case_cat_compl_proh',         'case_cat_compl',   'Prohibitions',                 'case_category', NULL),
-    ('case_cat_compl_conv',         'case_cat_compl',   'Convictions',                  'case_category', NULL),
-    ('case_cat_compl_penal',        'case_cat_compl',   'Penalties',                    'case_category', NULL),
-    ('case_cat_compl_erru_msi',     'case_cat_compl',   'ERRU MSI',                     'case_category', NULL),
-    ('case_cat_compl_bus_compl',    'case_cat_compl',   'Bus compliance',               'case_category', NULL),
-    ('case_cat_compl_sec9',         'case_cat_compl',   'Section 9',                    'case_category', NULL),
-    ('case_cat_compl_sec43',        'case_cat_compl',   'Section 43',                   'case_category', NULL),
-    ('case_cat_compl_imp',          'case_cat_compl',   'Impounding',                   'case_category', NULL),
-    ('case_cat_compl_comp_comp',    'case_cat_compl',   'Compliance Complaints',        'case_category', NULL),
-    ('case_cat_compl_ior',          'case_cat_compl',   'In-Office revocation',         'case_category', NULL),
-    ('case_cat_compl_ath',          'case_cat_compl',   'Annual test history',          'case_category', NULL),
+    ('case_cat_compl',              NULL,               'Compliance',                   'case_category', NULL, '1'),
+    ('case_cat_compl_off',          'case_cat_compl',   'Offences (inc. driver hours)', 'case_category', NULL, '2'),
+    ('case_cat_compl_proh',         'case_cat_compl',   'Prohibitions',                 'case_category', NULL, '3'),
+    ('case_cat_compl_conv',         'case_cat_compl',   'Convictions',                  'case_category', NULL, '4'),
+    ('case_cat_compl_penal',        'case_cat_compl',   'Penalties',                    'case_category', NULL, '5'),
+    ('case_cat_compl_erru_msi',     'case_cat_compl',   'ERRU MSI',                     'case_category', NULL, '6'),
+    ('case_cat_compl_bus_compl',    'case_cat_compl',   'Bus compliance',               'case_category', NULL, '7'),
+    ('case_cat_compl_sec9',         'case_cat_compl',   'Section 9',                    'case_category', NULL, '8'),
+    ('case_cat_compl_sec43',        'case_cat_compl',   'Section 43',                   'case_category', NULL, '9'),
+    ('case_cat_compl_imp',          'case_cat_compl',   'Impounding',                   'case_category', NULL, '10'),
+    ('case_cat_compl_comp_comp',    'case_cat_compl',   'Compliance Complaints',        'case_category', NULL, '11'),
+    ('case_cat_compl_ior',          'case_cat_compl',   'In-Office revocation',         'case_category', NULL, '12'),
+    ('case_cat_compl_ath',          'case_cat_compl',   'Annual test history',          'case_category', NULL, '13'),
     
     
-    ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL),
-    ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL),
-    ('case_cat_trans_compet_tm','case_cat_trans',   'Professional competence of TM',    'case_category', NULL),
-    ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL),
+    ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL, '20'),
+    ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL, '21'),
+    ('case_cat_trans_compet_tm','case_cat_trans',   'Professional competence of TM',    'case_category', NULL, '22'),
+    ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL, '23'),
     
     
-    ('case_cat_lic_app',        NULL,               'Licensing application',            'case_category', NULL),
-    ('case_cat_lic_app_interim','case_cat_lic_app', 'Interim with / without submission','case_category', NULL),
-    ('case_cat_lic_app_non_env','case_cat_lic_app', 'Non-ENV Objection',                'case_category', NULL),
-    ('case_cat_lic_app_non_cha','case_cat_lic_app', 'Non-chargeable variation',         'case_category', NULL),
-    ('case_cat_lic_app_31_29',  'case_cat_lic_app', 'Regulation 31/29',                 'case_category', NULL),
-    ('case_cat_lic_app_4_1',    'case_cat_lic_app', 'Schedule 4/1',                     'case_category', NULL),
-    ('case_cat_lic_app_cv',     'case_cat_lic_app', 'Chargeable variation',             'case_category', NULL),
-    ('case_cat_lic_app_na',     'case_cat_lic_app', 'New application',                  'case_category', NULL),
+    ('case_cat_lic_app',        NULL,               'Licensing application',            'case_category', NULL, '40'),
+    ('case_cat_lic_app_interim','case_cat_lic_app', 'Interim with / without submission','case_category', NULL, '41'),
+    ('case_cat_lic_app_non_env','case_cat_lic_app', 'Non-ENV Objection',                'case_category', NULL, '42'),
+    ('case_cat_lic_app_non_cha','case_cat_lic_app', 'Non-chargeable variation',         'case_category', NULL, '43'),
+    ('case_cat_lic_app_31_29',  'case_cat_lic_app', 'Regulation 31/29',                 'case_category', NULL, '44'),
+    ('case_cat_lic_app_4_1',    'case_cat_lic_app', 'Schedule 4/1',                     'case_category', NULL, '45'),
+    ('case_cat_lic_app_cv',     'case_cat_lic_app', 'Chargeable variation',             'case_category', NULL, '46'),
+    ('case_cat_lic_app_na',     'case_cat_lic_app', 'New application',                  'case_category', NULL, '47'),
     
     
-    ('case_cat_lic_ref',        NULL,               'Licence referral',                 'case_category', NULL),
-    ('case_cat_lic_ref_sur',    'case_cat_lic_ref', 'Surrender',                        'case_category', NULL),
-    ('case_cat_lic_ref_narm',   'case_cat_lic_ref', 'Non application related maintenance issue',    'case_category', NULL),
-    ('case_cat_lic_ref_lf',     'case_cat_lic_ref', 'Late fee',                         'case_category', NULL),
-    ('case_cat_lic_ref_fs',     'case_cat_lic_ref', 'Financial standing',               'case_category', NULL),
-    ('case_cat_lic_ref_rep',    'case_cat_lic_ref', 'Repute/fitness',                   'case_category', NULL),
-    ('case_cat_lic_ref_grace',  'case_cat_lic_ref', 'Period of grace',                  'case_category', NULL),
-    ('case_cat_lic_ref_conduct','case_cat_lic_ref', 'Driver Conduct',                   'case_category', NULL),
-    ('case_cat_lic_ref_proj_co','case_cat_lic_ref', 'Professional Competence',          'case_category', NULL),
+    ('case_cat_lic_ref',        NULL,               'Licence referral',                 'case_category', NULL, '60'),
+    ('case_cat_lic_ref_sur',    'case_cat_lic_ref', 'Surrender',                        'case_category', NULL, '61'),
+    ('case_cat_lic_ref_narm',   'case_cat_lic_ref', 'Non application related maintenance issue',    'case_category', NULL, '62'),
+    ('case_cat_lic_ref_lf',     'case_cat_lic_ref', 'Late fee',                         'case_category', NULL, '63'),
+    ('case_cat_lic_ref_fs',     'case_cat_lic_ref', 'Financial standing',               'case_category', NULL, '64'),
+    ('case_cat_lic_ref_rep',    'case_cat_lic_ref', 'Repute/fitness',                   'case_category', NULL, '65'),
+    ('case_cat_lic_ref_grace',  'case_cat_lic_ref', 'Period of grace',                  'case_category', NULL, '66'),
+    ('case_cat_lic_ref_conduct','case_cat_lic_ref', 'Driver Conduct',                   'case_category', NULL, '67'),
+    ('case_cat_lic_ref_proj_co','case_cat_lic_ref', 'Professional Competence',          'case_category', NULL, '68'),
     
     
-    ('case_cat_bus_reg',        NULL,               'Bus Registration',                 'case_category', NULL),
-    ('case_cat_bus_reg_sht_n',  'case_cat_bus_reg', 'Short Notice',                     'case_category', NULL),
-    ('case_cat_bus_reg_rt_rv',  'case_cat_bus_reg', 'Route Review',                     'case_category', NULL),
-    ('case_cat_bus_reg_ebsr',   'case_cat_bus_reg', 'EBSR',                             'case_category', NULL),
-    ('case_cat_bus_reg_ncom',   'case_cat_bus_reg', 'Non-compliance',                   'case_category', NULL),
+    ('case_cat_bus_reg',        NULL,               'Bus Registration',                 'case_category', NULL, '75'),
+    ('case_cat_bus_reg_sht_n',  'case_cat_bus_reg', 'Short Notice',                     'case_category', NULL, '76'),
+    ('case_cat_bus_reg_rt_rv',  'case_cat_bus_reg', 'Route Review',                     'case_category', NULL, '77'),
+    ('case_cat_bus_reg_ebsr',   'case_cat_bus_reg', 'EBSR',                             'case_category', NULL, '78'),
+    ('case_cat_bus_reg_ncom',   'case_cat_bus_reg', 'Non-compliance',                   'case_category', NULL, '79'),
     
     
-    ('case_cat_irfo',           NULL,               'IRFO',                             'case_category', NULL),
-    ('case_cat_irfo_girfo',     'case_cat_irfo',    'General IRFO',                     'case_category', NULL),
+    ('case_cat_irfo',           NULL,               'IRFO',                             'case_category', NULL, '84'),
+    ('case_cat_irfo_girfo',     'case_cat_irfo',    'General IRFO',                     'case_category', NULL, '85'),
     
     
-    ('case_cat_env',            NULL,               'Environmental',                    'case_category', NULL),
-    ('case_cat_env_repr',       'case_cat_env',     'Representation',                   'case_category', NULL),
-    ('case_cat_env_obj',        'case_cat_env',     'Objection',                        'case_category', NULL),
-    ('case_cat_env_compl',      'case_cat_env',     'Complaint',                        'case_category', NULL),
-    ('case_cat_env_revw',       'case_cat_env',     'Review',                           'case_category', NULL),
-    ('case_cat_env_prev',       'case_cat_env',     'Previous History',                 'case_category', NULL),
+    ('case_cat_env',            NULL,               'Environmental',                    'case_category', NULL, '91'),
+    ('case_cat_env_repr',       'case_cat_env',     'Representation',                   'case_category', NULL, '92'),
+    ('case_cat_env_obj',        'case_cat_env',     'Objection',                        'case_category', NULL, '93'),
+    ('case_cat_env_compl',      'case_cat_env',     'Complaint',                        'case_category', NULL, '94'),
+    ('case_cat_env_revw',       'case_cat_env',     'Review',                           'case_category', NULL, '95'),
+    ('case_cat_env_prev',       'case_cat_env',     'Previous History',                 'case_category', NULL, '96'),
     
     
-    ('case_cat_other',          NULL,               'Other',                            'case_category', NULL),
-    ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL);
+    ('case_cat_other',          NULL,               'Other',                            'case_category', NULL, '98'),
+    ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL, '99');
 -- Case categories
     
     
