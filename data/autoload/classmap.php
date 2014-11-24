@@ -803,4 +803,6 @@ return array(
     'Olcs\Db\Entity\View\PreviousLicence' => false,
     'Olcs\Db\Service\PreviousConviction' => false,
     'Olcs\Db\Entity\View\PreviousConviction' => false,
+    'Olcs\Db\Service\AdminAreaTrafficArea' => false,
+    'Olcs\Db\Entity\View\AdminAreaTrafficArea' => false,
 );
