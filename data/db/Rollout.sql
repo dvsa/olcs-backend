@@ -243,17 +243,18 @@ INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('ABERDEEN C ITY','M');
 
 INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, `created_on`, `last_modified_on`,
-    `version`, `name`, `contact_details_id`, `is_scottish_rules`) VALUES
-    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0),
-    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0),
-    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0),
-    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0),
-    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0),
-    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0),
+    `version`, `name`, `contact_details_id`, `is_scottish_rules`,
+    `is_scotland`, `is_wales`, `is_england`, `is_ni`) VALUES
+    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0, 0,0,1,0),
+    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0, 0,0,1,0),
+    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0, 0,0,1,0),
+    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0, 0,0,1,0),
+    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0, 0,1,0,0),
+    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0, 0,0,1,0),
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
-    'London and the South East of England',7,0),
-    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,1);
+    'London and the South East of England',7,0, 0,0,1,0),
+    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1, 1,0,0,0),
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,1, 0,0,0,1);
 
 INSERT INTO `country` (`id`,`country_desc`) VALUES
     ('GB', 'United Kingdom'),
@@ -637,6 +638,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('impound_type', 'impt_paper', 'Paperwork', null),
     ('impound_outcome', 'impo_returned', 'Vehicle Returned', null),
     ('impound_outcome', 'impo_not', 'Vehicle Not Returned', null),
+    ('impound_outcome', 'impo_wd', 'Application Withdrawn', null),
 
     -- impound_legislation
 
@@ -890,19 +892,74 @@ VALUES
 
     
 -- Case categories
-INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
+INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`)
 VALUES
-    ('case_cat_1', NULL, 'Case Parent Category 1', 'case_category', NULL, NULL),
-    ('case_cat_2', NULL, 'Case Parent Category 2', 'case_category', NULL, NULL),
-    ('case_cat_3', 'case_cat_1', 'Case Chid Category 1', 'case_category', NULL, NULL),
-    ('case_cat_4', 'case_cat_1', 'Case Chid Category 2', 'case_category', NULL, NULL),
-    ('case_cat_5', 'case_cat_1', 'Case Chid Category 3', 'case_category', NULL, NULL),
-    ('case_cat_6', 'case_cat_1', 'Case Chid Category 4', 'case_category', NULL, NULL),
-    ('case_cat_7', 'case_cat_2', 'Case Chid Category 1', 'case_category', NULL, NULL),
-    ('case_cat_8', 'case_cat_2', 'Case Chid Category 2', 'case_category', NULL, NULL),
-    ('case_cat_9', 'case_cat_2', 'Case Chid Category 3', 'case_category', NULL, NULL),
-    ('case_cat_10', 'case_cat_2', 'Case Chid Category 4', 'case_category', NULL, NULL);
-
+    ('case_cat_compl',              NULL,               'Compliance',                   'case_category', NULL),
+    ('case_cat_compl_off',          'case_cat_compl',   'Offences (inc. driver hours)', 'case_category', NULL),
+    ('case_cat_compl_proh',         'case_cat_compl',   'Prohibitions',                 'case_category', NULL),
+    ('case_cat_compl_conv',         'case_cat_compl',   'Convictions',                  'case_category', NULL),
+    ('case_cat_compl_penal',        'case_cat_compl',   'Penalties',                    'case_category', NULL),
+    ('case_cat_compl_erru_msi',     'case_cat_compl',   'ERRU MSI',                     'case_category', NULL),
+    ('case_cat_compl_bus_compl',    'case_cat_compl',   'Bus compliance',               'case_category', NULL),
+    ('case_cat_compl_sec9',         'case_cat_compl',   'Section 9',                    'case_category', NULL),
+    ('case_cat_compl_sec43',        'case_cat_compl',   'Section 43',                   'case_category', NULL),
+    ('case_cat_compl_imp',          'case_cat_compl',   'Impounding',                   'case_category', NULL),
+    ('case_cat_compl_comp_comp',    'case_cat_compl',   'Compliance Complaints',        'case_category', NULL),
+    ('case_cat_compl_ior',          'case_cat_compl',   'In-Office revocation',         'case_category', NULL),
+    ('case_cat_compl_ath',          'case_cat_compl',   'Annual test history',          'case_category', NULL),
+    
+    
+    ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL),
+    ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL),
+    ('case_cat_trans_compet_tm','case_cat_trans',   'Professional competence of TM',    'case_category', NULL),
+    ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL),
+    
+    
+    ('case_cat_lic_app',        NULL,               'Licensing application',            'case_category', NULL),
+    ('case_cat_lic_app_interim','case_cat_lic_app', 'Interim with / without submission','case_category', NULL),
+    ('case_cat_lic_app_non_env','case_cat_lic_app', 'Non-ENV Objection',                'case_category', NULL),
+    ('case_cat_lic_app_non_cha','case_cat_lic_app', 'Non-chargeable variation',         'case_category', NULL),
+    ('case_cat_lic_app_31_29',  'case_cat_lic_app', 'Regulation 31/29',                 'case_category', NULL),
+    ('case_cat_lic_app_4_1',    'case_cat_lic_app', 'Schedule 4/1',                     'case_category', NULL),
+    ('case_cat_lic_app_cv',     'case_cat_lic_app', 'Chargeable variation',             'case_category', NULL),
+    ('case_cat_lic_app_na',     'case_cat_lic_app', 'New application',                  'case_category', NULL),
+    
+    
+    ('case_cat_lic_ref',        NULL,               'Licence referral',                 'case_category', NULL),
+    ('case_cat_lic_ref_sur',    'case_cat_lic_ref', 'Surrender',                        'case_category', NULL),
+    ('case_cat_lic_ref_narm',   'case_cat_lic_ref', 'Non application related maintenance issue',    'case_category', NULL),
+    ('case_cat_lic_ref_lf',     'case_cat_lic_ref', 'Late fee',                         'case_category', NULL),
+    ('case_cat_lic_ref_fs',     'case_cat_lic_ref', 'Financial standing',               'case_category', NULL),
+    ('case_cat_lic_ref_rep',    'case_cat_lic_ref', 'Repute/fitness',                   'case_category', NULL),
+    ('case_cat_lic_ref_grace',  'case_cat_lic_ref', 'Period of grace',                  'case_category', NULL),
+    ('case_cat_lic_ref_conduct','case_cat_lic_ref', 'Driver Conduct',                   'case_category', NULL),
+    ('case_cat_lic_ref_proj_co','case_cat_lic_ref', 'Professional Competence',          'case_category', NULL),
+    
+    
+    ('case_cat_bus_reg',        NULL,               'Bus Registration',                 'case_category', NULL),
+    ('case_cat_bus_reg_sht_n',  'case_cat_bus_reg', 'Short Notice',                     'case_category', NULL),
+    ('case_cat_bus_reg_rt_rv',  'case_cat_bus_reg', 'Route Review',                     'case_category', NULL),
+    ('case_cat_bus_reg_ebsr',   'case_cat_bus_reg', 'EBSR',                             'case_category', NULL),
+    ('case_cat_bus_reg_ncom',   'case_cat_bus_reg', 'Non-compliance',                   'case_category', NULL),
+    
+    
+    ('case_cat_irfo',           NULL,               'IRFO',                             'case_category', NULL),
+    ('case_cat_irfo_girfo',     'case_cat_irfo',    'General IRFO',                     'case_category', NULL),
+    
+    
+    ('case_cat_env',            NULL,               'Environmental',                    'case_category', NULL),
+    ('case_cat_env_repr',       'case_cat_env',     'Representation',                   'case_category', NULL),
+    ('case_cat_env_obj',        'case_cat_env',     'Objection',                        'case_category', NULL),
+    ('case_cat_env_compl',      'case_cat_env',     'Complaint',                        'case_category', NULL),
+    ('case_cat_env_revw',       'case_cat_env',     'Review',                           'case_category', NULL),
+    ('case_cat_env_prev',       'case_cat_env',     'Previous History',                 'case_category', NULL),
+    
+    
+    ('case_cat_other',          NULL,               'Other',                            'case_category', NULL),
+    ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL);
+-- Case categories
+    
+    
 INSERT INTO `category` (`id`,`description`,`is_doc_category`,`is_task_category`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'Licensing',1,1,NULL,NULL,NULL,NULL,1),
     (2,'Compliance',1,1,NULL,NULL,NULL,NULL,1),

@@ -735,6 +735,12 @@ return array(
         ),
         'licence_revoked_at_pi' => array(
             'type' => 'yesno'
+        ),
+        'licence_suspended_at_pi' => array(
+            'type' => 'yesno'
+        ),
+        'licence_curtailed_at_pi' => array(
+            'type' => 'yesno'
         )
     ),
     'legacy_case_action' => array(
