@@ -914,15 +914,17 @@ VALUES
     (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
 
 -- test business rules
-INSERT INTO `sla` (`category`, `field`, `compare_to`, `days`, `effective_from`, `effective_to`)
+INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `weekend`, `public_holiday`, `effective_from`, `effective_to`)
 VALUES
-    ('pi', 'callUpLetterDate', 'hearingDate', -35, '1900-01-01', NULL),
-    ('pi', 'briefToTcDate', 'hearingDate', -7, '1900-01-01', NULL),
-    ('pi', 'decisionLetterSentDate', 'hearingDate', 28, '1900-01-01', NULL),
-    ('pi', 'tcWrittenDecisionDate', 'hearingDate', 28, '1900-01-01', NULL),
-    ('pi', 'tcWrittenReasonDate', 'hearingDate', 5, '1900-01-01', NULL),
-    ('pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, '1900-01-01', NULL),
-    ('pi', 'decSentAfterWrittenDecDate', 'hearingDate', 5, '1900-01-01', NULL);
+    (1, 'pi', 'callUpLetterDate', 'hearingDate', -35, 0, 0, '1900-01-01', NULL),
+    (2, 'pi', 'briefToTcDate', 'hearingDate', -14, 1, 1, '1900-01-01', NULL),
+    (3, 'pi', 'decisionLetterSentDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
+    (4, 'pi', 'tcWrittenDecisionDate', 'hearingDate', 20, 1, 1, '1900-01-01', NULL),
+    (5, 'pi', 'tcWrittenReasonDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
+    (6, 'pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, 1, 1, '1900-01-01', NULL),
+    (7, 'pi', 'decSentAfterWrittenDecDate', 'hearingDate', 2, 1, 1, '1900-01-01', NULL),
+    (8, 'pi_hearing', 'hearingDate', 'agreedDate', 60, 1, 1, '1900-01-01', NULL);
+
 
 INSERT INTO `serious_infringement`
 (`id`, `si_category_type_id`, `erru_response_user_id`, `member_state_code`, `created_by`,`last_modified_by`,

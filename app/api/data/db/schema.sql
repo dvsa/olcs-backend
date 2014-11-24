@@ -310,6 +310,10 @@ CREATE TABLE IF NOT EXISTS `traffic_area` (
   `txc_name` VARCHAR(70) NULL,
   `contact_details_id` INT NOT NULL,
   `is_scottish_rules` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_england` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_wales` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_scotland` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_ni` TINYINT(1) NOT NULL DEFAULT 0,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -332,6 +336,37 @@ CREATE TABLE IF NOT EXISTS `traffic_area` (
   CONSTRAINT `fk_traffic_area_contact_details1`
     FOREIGN KEY (`contact_details_id`)
     REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `public_holiday`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `public_holiday` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `public_holiday_date` DATE NOT NULL,
+  `is_england` TINYINT(1) NULL,
+  `is_wales` TINYINT(1) NULL,
+  `is_scotland` TINYINT(1) NULL,
+  `is_ni` TINYINT(1) NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_public_holiday_user1_idx` (`created_by` ASC),
+  INDEX `fk_public_holiday_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_public_holiday_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_public_holiday_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1884,6 +1919,7 @@ CREATE TABLE IF NOT EXISTS `vehicle` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `is_novelty` TINYINT(1) NULL,
   `vrm` VARCHAR(20) NULL COMMENT 'Nullable for PSVs',
+  `make_model` VARCHAR(100) NULL COMMENT 'small PSV only',
   `plated_weight` INT NULL,
   `certificate_no` VARCHAR(50) NULL COMMENT 'psv only',
   `vi_action` VARCHAR(1) NULL,
@@ -2847,6 +2883,7 @@ CREATE TABLE IF NOT EXISTS `conviction` (
   `case_id` INT NOT NULL,
   `person_firstname` VARCHAR(70) NULL,
   `person_lastname` VARCHAR(70) NULL,
+  `deleted_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -3857,6 +3894,8 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `reschedule_datetime` DATETIME NULL COMMENT 'Entered if is_adjourned.  Holds last reschedule date',
   `decision_date` DATE NULL,
   `licence_revoked_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
+  `licence_suspended_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
+  `licence_curtailed_at_pi` TINYINT(1) NOT NULL DEFAULT 0,
   `notification_date` DATE NULL,
   `decision_notes` TEXT NULL,
   `deleted_date` DATETIME NULL,
@@ -3871,6 +3910,7 @@ CREATE TABLE IF NOT EXISTS `pi` (
   `tc_written_reason_date` DATE NULL,
   `written_reason_letter_date` DATE NULL,
   `dec_sent_after_written_dec_date` DATE NULL,
+  `closed_date` DATETIME NULL,
   `created_by` INT NULL,
   `last_modified_by` INT NULL,
   `created_on` DATETIME NULL,
@@ -7547,15 +7587,17 @@ CREATE TABLE IF NOT EXISTS `pi_reason` (
 ENGINE = InnoDB;
 
 CREATE TABLE `sla` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `category` varchar(32) DEFAULT '',
-  `field` varchar(32) DEFAULT '',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(32) DEFAULT NULL,
+  `field` varchar(32) DEFAULT NULL,
   `compare_to` varchar(32) DEFAULT NULL,
-  `days` int(5) DEFAULT NULL,
+  `days` int(11) DEFAULT NULL,
+  `weekend` tinyint(1) NOT NULL DEFAULT '0',
+  `public_holiday` tinyint(1) NOT NULL DEFAULT '0',
   `effective_from` date DEFAULT NULL,
   `effective_to` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

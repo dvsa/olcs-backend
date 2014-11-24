@@ -43,6 +43,7 @@ class Pi implements Interfaces\EntityInterface
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\Comment4000Field,
+        Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -203,6 +204,24 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
      */
     protected $licenceRevokedAtPi = 0;
+
+    /**
+     * Licence suspended at pi
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false)
+     */
+    protected $licenceSuspendedAtPi = 0;
+
+    /**
+     * Licence curtailed at pi
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false)
+     */
+    protected $licenceCurtailedAtPi = 0;
 
     /**
      * Notification date
@@ -745,6 +764,52 @@ class Pi implements Interfaces\EntityInterface
     public function getLicenceRevokedAtPi()
     {
         return $this->licenceRevokedAtPi;
+    }
+
+    /**
+     * Set the licence suspended at pi
+     *
+     * @param string $licenceSuspendedAtPi
+     * @return Pi
+     */
+    public function setLicenceSuspendedAtPi($licenceSuspendedAtPi)
+    {
+        $this->licenceSuspendedAtPi = $licenceSuspendedAtPi;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence suspended at pi
+     *
+     * @return string
+     */
+    public function getLicenceSuspendedAtPi()
+    {
+        return $this->licenceSuspendedAtPi;
+    }
+
+    /**
+     * Set the licence curtailed at pi
+     *
+     * @param string $licenceCurtailedAtPi
+     * @return Pi
+     */
+    public function setLicenceCurtailedAtPi($licenceCurtailedAtPi)
+    {
+        $this->licenceCurtailedAtPi = $licenceCurtailedAtPi;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence curtailed at pi
+     *
+     * @return string
+     */
+    public function getLicenceCurtailedAtPi()
+    {
+        return $this->licenceCurtailedAtPi;
     }
 
     /**
