@@ -8,10 +8,10 @@
 
 namespace Olcs\Db\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -22,9 +22,9 @@ use Doctrine\ORM\Query;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class ServiceAbstract
+abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 {
-    use ZendServiceLocatorAwareTrait,
+    use ServiceLocatorAwareTrait,
         EntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
 
@@ -34,6 +34,8 @@ abstract class ServiceAbstract
      * @var string
      */
     protected $entityName;
+
+    protected $services = array();
 
     /**
      * Holds the control keys
@@ -121,7 +123,7 @@ abstract class ServiceAbstract
         $this->dbPersist($entity);
         $this->dbFlush();
 
-        return $this->getId($entity);
+        return $entity->getId();
     }
 
     /**
@@ -303,35 +305,6 @@ abstract class ServiceAbstract
         return $qb->setParameters($eb->getParams());
     }
 
-    /**
-     * Get entity id(s)
-     *
-     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
-     * difference
-     *
-     * @param EntityInterface $entity
-     * @return mixed
-     */
-    protected function getId($entity)
-    {
-        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
-
-        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
-
-        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierFlattener(
-            $this->getEntityManager()->getUnitOfWork(),
-            $this->getEntityManager()->getMetadataFactory()
-        );
-
-        $flatIds = $identifierConverter->flattenIdentifier($class, $id);
-
-        if (count($flatIds) == 1) {
-            return array_values($flatIds)[0];
-        }
-
-        return $flatIds;
-    }
-
     protected function getBundleConfig($data)
     {
         $bundleConfig = null;
@@ -401,7 +374,9 @@ abstract class ServiceAbstract
      */
     protected function getDoctrineHydrator()
     {
-        return new DoctrineHydrator($this->getEntityManager());
+        return $this->getServiceLocator()
+            ->get('HydratorManager')
+            ->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
     }
 
     /**
@@ -450,9 +425,12 @@ abstract class ServiceAbstract
      */
     protected function getService($name)
     {
-        $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+        if (!isset($this->services[$name])) {
+            $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+            $this->services[$name] = $serviceFactory->getService($name);
+        }
 
-        return $serviceFactory->getService($name);
+        return $this->services[$name];
     }
 
     /**
@@ -510,9 +488,9 @@ abstract class ServiceAbstract
      */
     protected function processAddressEntity($data)
     {
-        $properties = $this->getEntityPropertyNames();
-
         if (isset($data['addresses']) && is_array($data['addresses'])) {
+
+            $properties = $this->getEntityPropertyNames();
 
             foreach ($data['addresses'] as $key => $addressDetails) {
                 if (!in_array($key, $properties)) {
