@@ -5,7 +5,6 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
@@ -17,5 +16,5 @@ use PHPUnit_Framework_TestCase;
  */
 class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 {
-    
+
 }
