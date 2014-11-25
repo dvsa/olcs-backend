@@ -156,6 +156,18 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $licenceCount;
 
     /**
+     * Licence ID
+     *
+     * This may not be the same as the link_id ,e.g. for application tasks
+     * this will be the 'parent' licence id
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="lic_id")
+     */
+    protected $licenceId;
+
+    /**
      * Name
      *
      * @var int
@@ -320,6 +332,16 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getLicenceCount()
     {
         return $this->licenceCount;
+    }
+
+    /**
+     * Get the licence id
+     *
+     * @return int
+     */
+    public function getLicenceId()
+    {
+        return $this->licenceId;
     }
 
     /**

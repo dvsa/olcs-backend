@@ -3685,8 +3685,10 @@ DROP VIEW IF EXISTS task_search_view;
 CREATE VIEW task_search_view AS
    SELECT t.id,
        t.assigned_to_team_id,
+       t.application_id,
        t.assigned_to_user_id,
        cat.description category_name,
+       tsc.description task_sub_type,
        t.task_sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
@@ -3699,36 +3701,32 @@ CREATE VIEW task_search_view AS
             when t.transport_manager_id is not null then 'Transport Manager'
             else 'Unlinked' end link_type,
       coalesce(o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
+      l.lic_no,
+      l.id lic_id,
+      tm.id tm_id,
+      irfo.name irfo_op_name,
+      o.name op_name,
+      tmp.family_name,
+      c.id case_id,
+      br.id bus_reg_id,
       t.action_date action_date,
       t.urgent urgent,
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.name task_sub_category_name,
-      u.name user_name,
-      count(ll.id) licence_count
-
+      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
+     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
-
-    INNER JOIN (category cat, task_sub_category tsc) ON (cat.id = t.category_id AND tsc.id = t.task_sub_category_id)
-
-    LEFT JOIN licence l ON t.licence_id = l.id
-
-    LEFT JOIN organisation irfo ON t.irfo_organisation_id = irfo.id
-
-    LEFT JOIN organisation o ON l.organisation_id = o.id
-
-    LEFT JOIN licence ll ON (ll.organisation_id = o.id AND (ll.status = 'Valid'))
-
-    LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
-        ON (t.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.contact_details_id)
-
-    LEFT JOIN cases c ON t.case_id = c.id
-
-    LEFT JOIN bus_reg br ON t.bus_reg_id = br.id
-
-    LEFT JOIN user u ON t.assigned_to_user_id = u.id
-
-    GROUP BY (t.id);
+   inner join (category cat, task_sub_category tsc) on (cat.id = t.category_id and tsc.id = t.task_sub_category_id)
+   left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
+   left join organisation irfo on (t.irfo_organisation_id = irfo.id)
+   left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
+     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.contact_details_id)
+   left join cases c on (t.case_id = c.id)
+   left join bus_reg br on (t.bus_reg_id = br.id)
+   left join user u on (t.assigned_to_user_id = u.id)
+   left join contact_details cd on (u.contact_details_id = cd.id)
+;
 
 DROP TABLE IF EXISTS document_search_view;
 DROP VIEW IF EXISTS document_search_view;
