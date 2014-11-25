@@ -6,7 +6,6 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace Olcs\Db\Service;
 
 /**
@@ -397,5 +396,17 @@ LEFT JOIN licence l ON (l.id = tll.licence_id OR l.operatorId = o.id) ' . $where
         }
 
         return array($conditions, $params);
+    }
+
+    /**
+     * Get the result offset
+     *
+     * @param int $page
+     * @param int $limit
+     * @return int
+     */
+    protected function getOffset($page, $limit)
+    {
+        return ($page * $limit) - $limit;
     }
 }
