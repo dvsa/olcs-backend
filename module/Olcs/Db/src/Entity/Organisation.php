@@ -18,7 +18,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
- *        @ORM\Index(name="fk_organisation_ref_data2_idx", columns={"sic_code"}),
  *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
  *        @ORM\Index(name="organisation_name_idx", columns={"name"})
  *    }
@@ -45,16 +44,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
      */
     protected $leadTcArea;
-
-    /**
-     * Sic code
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="sic_code", referencedColumnName="id", nullable=true)
-     */
-    protected $sicCode;
 
     /**
      * Type
@@ -197,29 +186,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getLeadTcArea()
     {
         return $this->leadTcArea;
-    }
-
-    /**
-     * Set the sic code
-     *
-     * @param \Olcs\Db\Entity\RefData $sicCode
-     * @return Organisation
-     */
-    public function setSicCode($sicCode)
-    {
-        $this->sicCode = $sicCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the sic code
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSicCode()
-    {
-        return $this->sicCode;
     }
 
     /**
