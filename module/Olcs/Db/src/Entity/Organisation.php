@@ -137,6 +137,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
+     * Organisation nature of business
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationNatureOfBusiness", mappedBy="organisation")
+     */
+    protected $organisationNatureOfBusinesss;
+
+    /**
      * Organisation person
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -161,6 +170,7 @@ class Organisation implements Interfaces\EntityInterface
     {
         $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
+        $this->organisationNatureOfBusinesss = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
@@ -487,6 +497,66 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->licences->contains($licences)) {
             $this->licences->removeElement($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the organisation nature of business
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @return Organisation
+     */
+    public function setOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    {
+        $this->organisationNatureOfBusinesss = $organisationNatureOfBusinesss;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation nature of businesss
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisationNatureOfBusinesss()
+    {
+        return $this->organisationNatureOfBusinesss;
+    }
+
+    /**
+     * Add a organisation nature of businesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @return Organisation
+     */
+    public function addOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    {
+        if ($organisationNatureOfBusinesss instanceof ArrayCollection) {
+            $this->organisationNatureOfBusinesss = new ArrayCollection(
+                array_merge(
+                    $this->organisationNatureOfBusinesss->toArray(),
+                    $organisationNatureOfBusinesss->toArray()
+                )
+            );
+        } elseif (!$this->organisationNatureOfBusinesss->contains($organisationNatureOfBusinesss)) {
+            $this->organisationNatureOfBusinesss->add($organisationNatureOfBusinesss);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation nature of businesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @return Organisation
+     */
+    public function removeOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    {
+        if ($this->organisationNatureOfBusinesss->contains($organisationNatureOfBusinesss)) {
+            $this->organisationNatureOfBusinesss->removeElement($organisationNatureOfBusinesss);
         }
 
         return $this;

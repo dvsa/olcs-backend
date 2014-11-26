@@ -13,6 +13,20 @@ return array(
         ),
         'allow_email' => array(
             'type' => 'yesno'
+        ),
+        'organisation_nature_of_business' => array(
+            'inversedBy' => array(
+                'entity' => 'OrganisationNatureOfBusiness',
+                'property' => 'organisation'
+            ),
+        )
+    ),
+    'organisation_nature_of_business' => array(
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'organisationNatureOfBusiness'
+            ),
         )
     ),
     'country' => array(
