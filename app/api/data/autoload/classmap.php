@@ -600,4 +600,13 @@ return array(
     'Olcs\Db\Service\Fee' => false,
     'Olcs\Db\Entity\View\Fee' => false,
     'OlcsTest\Db\Service\Stubs\EntityStub' => $rootPath . '/test/module/Olcs/Db/src//Service/Stubs/EntityStub.php',
+    'Mockery\Exception\NoMatchingExpectationException' => $rootPath . '/vendor/mockery/mockery/library/Mockery/Exception/NoMatchingExpectationException.php',
+    'Mockery\Exception' => $rootPath . '/vendor/mockery/mockery/library/Mockery/Exception.php',
+    'OlcsTest\Db\Service\Stub\EntityStub' => false,
+    'Mockery\CountValidator\Exact' => $rootPath . '/vendor/mockery/mockery/library/Mockery/CountValidator/Exact.php',
+    'Mockery\CountValidator\CountValidatorAbstract' => $rootPath . '/vendor/mockery/mockery/library/Mockery/CountValidator/CountValidatorAbstract.php',
+    'Olcs\Db\Service\Cases' => false,
+    'Olcs\Db\Entity\View\Cases' => false,
+    'Olcs\Db\Service\CompanySubsidiary' => false,
+    'Olcs\Db\Entity\View\CompanySubsidiary' => false,
 );

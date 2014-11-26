@@ -26,7 +26,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
     protected $joins = array();
     protected $params = array();
 
-    public function __construct($qb)
+    public function setQueryBuilder($qb)
     {
         $this->qb = $qb;
     }
@@ -36,12 +36,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
         return $this->params;
     }
 
-    public function build($bundleConfig)
-    {
-        $this->buildQueryFromBundle($bundleConfig);
-    }
-
-    protected function buildQueryFromBundle($config, $name = 'main', $alias = 'm')
+    public function build($config, $name = 'main', $alias = 'm')
     {
         $this->addSelect($alias);
 
@@ -57,7 +52,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
                 $this->addJoin($alias, $childName, $childAlias, $childConfig);
 
-                $this->buildQueryFromBundle($childConfig, $childName, $childAlias);
+                $this->build($childConfig, $childName, $childAlias);
             }
         }
     }

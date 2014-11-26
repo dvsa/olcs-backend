@@ -141,7 +141,9 @@ return [
             'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
         ],
         'invokables' => [
-            'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder'
+            'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',
+            'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
+            'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery'
         ]
     ],
     'controllers' => [
