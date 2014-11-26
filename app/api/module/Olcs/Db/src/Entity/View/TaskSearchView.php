@@ -84,6 +84,32 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $description;
 
     /**
+     * Operator name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="op_name")
+     */
+    protected $opName;
+
+    /**
+     * IRFO operator name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="irfo_op_name")
+     */
+    protected $irfoOpName;
+
+    /**
+     * Family name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="family_name")
+     */
+    protected $familyName;
+    /**
      * Category ID
      *
      * @var int
@@ -118,6 +144,15 @@ class TaskSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="task_sub_category_name")
      */
     protected $taskSubCategoryName;
+
+    /**
+     * Sub type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="task_sub_type")
+     */
+    protected $taskSubType;
 
     /**
      * Owner ID
@@ -166,6 +201,47 @@ class TaskSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="lic_id")
      */
     protected $licenceId;
+
+    /**
+     * Licence number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no")
+     */
+    protected $licenceNo;
+
+    /**
+     * Application ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="application_id")
+     */
+    protected $applicationId;
+
+    /**
+     * Bus Reg ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="bus_reg_id")
+     */
+    protected $busRegId;
+
+    /**
+     * Case ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="case_id")
+     */
+    protected $caseId;
+
+    /**
+     * Transport Manager ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tm_id")
+     */
+    protected $transportManagerId;
 
     /**
      * Name
@@ -255,6 +331,36 @@ class TaskSearchView implements Interfaces\EntityInterface
     }
 
     /**
+     * Get the operator(?) name
+     *
+     * @return string
+     */
+    public function getOpName()
+    {
+        return $this->opName;
+    }
+
+    /**
+     * Get the IRFO operator name
+     *
+     * @return string
+     */
+    public function getIrfoOpName()
+    {
+        return $this->irfoOpName;
+    }
+
+    /**
+     * Get the family name
+     *
+     * @return string
+     */
+    public function getFamilyName()
+    {
+        return $this->familyName;
+    }
+
+    /**
      * Get the category ID
      *
      * @return int
@@ -292,6 +398,16 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getTaskSubCategoryName()
     {
         return $this->taskSubCategoryName;
+    }
+
+    /**
+     * Get the sub type
+     *
+     * @return string
+     */
+    public function getTaskSubType()
+    {
+        return $this->taskSubType;
     }
 
     /**
@@ -342,6 +458,56 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getLicenceId()
     {
         return $this->licenceId;
+    }
+
+    /**
+     * Get the licence number
+     *
+     * @return string
+     */
+    public function getLicenceNo()
+    {
+        return $this->licenceNo;
+    }
+
+    /**
+     * Get the application id
+     *
+     * @return int
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * Get the bus reg id
+     *
+     * @return int
+     */
+    public function getBusRegId()
+    {
+        return $this->busRegId;
+    }
+
+    /**
+     * Get the case id
+     *
+     * @return int
+     */
+    public function getCaseId()
+    {
+        return $this->caseId;
+    }
+
+    /**
+     * Get the transport manager id
+     *
+     * @return int
+     */
+    public function getTransportManagerId()
+    {
+        return $this->transportManagerId;
     }
 
     /**
