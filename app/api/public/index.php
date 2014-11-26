@@ -48,7 +48,7 @@ if ($profile) {
     $request = $_SERVER['REQUEST_METHOD'] . " " . $uri;
 
     $content = "[olcs-backend] - %s(ms) - %s %s "
-        . "http://192.168.149.2/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n"
+        . "http://192.168.149.2/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n";
 
     $content = sprintf(
         $content,
