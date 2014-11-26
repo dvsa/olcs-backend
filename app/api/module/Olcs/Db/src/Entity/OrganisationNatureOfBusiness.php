@@ -29,11 +29,20 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationNatureOfBusinesss")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
 
     /**
      * Ref data
@@ -44,6 +53,29 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id", nullable=false)
      */
     protected $refData;
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return OrganisationNatureOfBusiness
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
 
     /**
      * Set the ref data
