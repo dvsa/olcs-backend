@@ -1216,7 +1216,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `cases_category`
 -- -----------------------------------------------------
-CREATE TABLE `case_category` (
+CREATE TABLE IF NOT EXISTS `case_category` (
   `case_id` INT(11) NOT NULL,
   `category_id` VARCHAR(32) NOT NULL,
   INDEX `fk_case_category_cases1_idx` (`case_id` ASC),
@@ -2674,7 +2674,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `complaint`
 -- -----------------------------------------------------
-CREATE TABLE `complaint` (
+CREATE TABLE IF NOT EXISTS `complaint` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `complainant_forename` varchar(40) DEFAULT NULL,
   `complainant_family_name` varchar(40) DEFAULT NULL,
@@ -3375,7 +3375,7 @@ CREATE TABLE IF NOT EXISTS `submission_action` (
 ENGINE = InnoDB;
 
 
-CREATE TABLE `submission_action_reason` (
+CREATE TABLE IF NOT EXISTS `submission_action_reason` (
   `submission_action_id` int(11) NOT NULL,
   `reason_id` int(11) NOT NULL,
   PRIMARY KEY (`submission_action_id`,`reason_id`),
@@ -7577,7 +7577,7 @@ CREATE TABLE IF NOT EXISTS `pi_reason` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE `sla` (
+CREATE TABLE IF NOT EXISTS `sla` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category` varchar(32) DEFAULT NULL,
   `field` varchar(32) DEFAULT NULL,
