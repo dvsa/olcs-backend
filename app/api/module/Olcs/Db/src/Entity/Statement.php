@@ -27,14 +27,24 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\IssuedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Statement type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
+     */
+    protected $statementType;
 
     /**
      * Contact type
@@ -55,16 +65,6 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
      */
     protected $requestorsAddress;
-
-    /**
-     * Statement type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
-     */
-    protected $statementType;
 
     /**
      * Stopped date
@@ -148,6 +148,29 @@ class Statement implements Interfaces\EntityInterface
     protected $requestorsForename;
 
     /**
+     * Set the statement type
+     *
+     * @param \Olcs\Db\Entity\RefData $statementType
+     * @return Statement
+     */
+    public function setStatementType($statementType)
+    {
+        $this->statementType = $statementType;
+
+        return $this;
+    }
+
+    /**
+     * Get the statement type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatementType()
+    {
+        return $this->statementType;
+    }
+
+    /**
      * Set the contact type
      *
      * @param \Olcs\Db\Entity\RefData $contactType
@@ -191,29 +214,6 @@ class Statement implements Interfaces\EntityInterface
     public function getRequestorsAddress()
     {
         return $this->requestorsAddress;
-    }
-
-    /**
-     * Set the statement type
-     *
-     * @param \Olcs\Db\Entity\RefData $statementType
-     * @return Statement
-     */
-    public function setStatementType($statementType)
-    {
-        $this->statementType = $statementType;
-
-        return $this;
-    }
-
-    /**
-     * Get the statement type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatementType()
-    {
-        return $this->statementType;
     }
 
     /**

@@ -28,16 +28,6 @@ class LicenceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getValidSearchFields
-     */
-    public function testGetValidSearchFields()
-    {
-        $expected = array();
-
-        $this->assertEquals($expected, $this->service->getValidSearchFields());
-    }
-
-    /**
      * Test findLicences
      *  without pagination stuff
      */

@@ -5,10 +5,11 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-
 namespace OlcsTest\Db\Service;
 
 use PHPUnit_Framework_TestCase;
+use OlcsTest\Bootstrap;
+use Mockery as m;
 
 /**
  * Tests ServiceAbstract
@@ -17,1461 +18,694 @@ use PHPUnit_Framework_TestCase;
  */
 class ServiceAbstractTest extends PHPUnit_Framework_TestCase
 {
-
     /**
-     * Setup the service
+     * SUT
+     *
+     * @var \Olcs\Db\Service\ServiceAbstract
      */
-    protected function getMockService($methods = array())
+    protected $sut;
+
+    protected $sm;
+
+    protected $em;
+
+    protected $mockLogger;
+
+    protected function setUp()
     {
-        $this->service = $this->getMockForAbstractClass(
-            '\Olcs\Db\Service\ServiceAbstract', array(), '', true, true, true,
-            // Mocked methods
-            $methods
+        $this->sut = $this->getMockForAbstractClass(
+            '\Olcs\Db\Service\ServiceAbstract',
+            array(),
+            'Foo'
         );
-    }
 
-    /**
-     * Helper to generate stubbed entity properties; as we use reflection
-     * these are objects themselves so need their getName method mocking
-     *
-     * @param array $properties
-     *
-     * @return array
-     */
-    protected function generateProperties($properties = array())
-    {
-        $final = [];
-        foreach ($properties as $property) {
-            $mock = $this->getMock('\stdClass', ['getName']);
-            $mock->expects($this->once())
-                ->method('getName')
-                ->will($this->returnValue($property));
-
-            $final[] = $mock;
-        }
-
-        return $final;
-    }
-
-    public function testGetPaginator()
-    {
-        $this->getMockService();
-
-        $this->assertInstanceOf('\Doctrine\ORM\Tools\Pagination\Paginator', $this->service->getPaginator('foo'));
-    }
-
-    /**
-     * Tests that the get pagination method gives us only the required fields.
-     *
-     * @dataProvider dpTestGetPaginationValues
-     */
-    public function testGetPaginationValues($input, $output)
-    {
-        $this->getMockService();
-
-        $this->assertEquals($output, $this->service->getPaginationValues($input));
-    }
-
-    public function dpTestGetPaginationValues()
-    {
-        return array(
-            array(
-                array(
-                    'page' => 1, 'limit' => 100, 'sort' => 'somecolumn', 'order' => 'asc', 'other' => 'ovalue'
-                ),
-                array(
-                    'page' => 1, 'limit' => 100, 'sort' => 'somecolumn', 'order' => 'asc'
-                ),
-                array(
-                    'page' => 1, 'limit' => 100, 'other' => 'ovalue'
-                ),
-                array(
-                    'page' => 1, 'limit' => 100
-                ),
-            ),
+        $this->mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sm->setAllowOverride(true);
+        $this->em = $this->getMock(
+            '\Doctrine\ORM\EntityManager',
+            [
+                'persist',
+                'flush',
+                'getUnitOfWork',
+                'getClassMetadata',
+                'getMetadataFactory',
+                'createQueryBuilder',
+                'find',
+                'lock',
+                'remove'
+            ],
+            array(),
+            '',
+            false
         );
+
+        $this->sut->setLogger($this->mockLogger);
+        $this->sut->setServiceLocator($this->sm);
+        $this->sut->setEntityManager($this->em);
     }
 
     /**
-     * Tests that the get order by method gives us only the required fields.
-     *
-     * @dataProvider dpTestGetOrderByValues
+     * @group service_abstract
      */
-    public function testGetOrderByValues($input, $output)
+    public function testSetEntityName()
     {
-        $this->getMockService();
+        $entityName = 'FooBar';
 
-        $this->assertEquals($output, $this->service->getOrderByValues($input));
-    }
+        $this->sut->setEntityName($entityName);
 
-    public function dpTestGetOrderByValues()
-    {
-        return array(
-            array(
-                array(
-                    'sort' => 'somecolumn', 'order' => 'asc', 'extra' => 'ignored'
-                ),
-                array(
-                    'sort' => 'somecolumn', 'order' => 'asc'
-                )
-            ),
-        );
+        $this->assertEquals($entityName, $this->sut->getEntityName());
     }
 
     /**
-     * Test create
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testCreate()
+    public function testGetEntityName()
     {
-        $this->getMockService(
-            array(
-                'getLogger',
-                'getNewEntity',
-                'getDoctrineHydrator',
-                'dbPersist',
-                'dbFlush',
-                'getEntityPropertyNames',
-                'getId'
-            )
-        );
-
-        $data = array();
-
-        $id = 7;
-
-        $this->service->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($id));
-
-        $firstEntity = $this->getMock('\stdClass');
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($data, $firstEntity)
-            ->will($this->returnValue($firstEntity));
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getNewEntity')
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($firstEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue([]));
-
-        $this->assertEquals($id, $this->service->create($data));
+        $this->assertEquals('\Olcs\Db\Entity\Foo', $this->sut->getEntityName());
     }
 
     /**
-     * Test create With new Address
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testCreateWithNewAddress()
+    public function testCreateWithoutAddressData()
     {
-        $this->getMockService(
-            array(
-                'getLogger',
-                'getNewEntity',
-                'getDoctrineHydrator',
-                'dbPersist',
-                'dbFlush',
-                'getService',
-                'getEntityPropertyNames',
-                'getId'
-            )
-        );
-
-        $data = array(
-            'addresses' => array(
-                'address' => array(
-                )
-            )
-        );
-
-        $expected = array(
-            'address' => 1
-        );
-
-        $id = 7;
-
-        $this->service->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($id));
-
-        $firstEntity = $this->getMock('\stdClass');
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($expected, $firstEntity)
-            ->will($this->returnValue($firstEntity));
-
-        $mockAddressService = $this->getMock('\stdClass', array('create'));
-
-        $mockAddressService->expects($this->once())
-            ->method('create')
-            ->will($this->returnValue(1));
-
-        $this->service->expects($this->once())
-            ->method('getService')
-            ->with('Address')
-            ->will($this->returnValue($mockAddressService));
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getNewEntity')
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($firstEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue(['address']));
-
-        $this->assertEquals($id, $this->service->create($data));
-    }
-
-    /**
-     * Test create With Existing Address
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testCreateWithExistingAddress()
-    {
-        $this->getMockService(
-            array(
-                'getLogger',
-                'getNewEntity',
-                'getDoctrineHydrator',
-                'dbPersist',
-                'dbFlush',
-                'getService',
-                'getEntityPropertyNames',
-                'getId'
-            )
-        );
-
-        $data = array(
-            'addresses' => array(
-                'address' => array(
-                    'id' => 3
-                )
-            )
-        );
-
-        $expected = array(
-            'address' => 3
-        );
-
-        $id = 7;
-
-        $this->service->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($id));
-
-        $firstEntity = $this->getMock('\stdClass');
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($expected, $firstEntity)
-            ->will($this->returnValue($firstEntity));
-
-        $mockAddressService = $this->getMock('\stdClass', array('update'));
-
-        $mockAddressService->expects($this->once())
-            ->method('update');
-
-        $this->service->expects($this->once())
-            ->method('getService')
-            ->with('Address')
-            ->will($this->returnValue($mockAddressService));
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getNewEntity')
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($firstEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue(['address']));
-
-        $this->assertEquals($id, $this->service->create($data));
-    }
-
-    /**
-     * Test create With new Address which is not an entity property
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testCreateWithNewAddressInvalidEntityProperty()
-    {
-        $this->getMockService(
-            array(
-                'getLogger',
-                'getNewEntity',
-                'getDoctrineHydrator',
-                'dbPersist',
-                'dbFlush',
-                'getService',
-                'getEntityPropertyNames',
-                'getId'
-            )
-        );
-
-        $data = array(
-            'validProperty' => 'valid',
-            'addresses' => array(
-                'address' => array(
-                )
-            )
-        );
-
-        $expected = array(
-            'validProperty' => 'valid',
-        );
-
-        $id = 7;
-
-        $this->service->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($id));
-
-        $firstEntity = $this->getMock('\stdClass');
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($expected, $firstEntity)
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->never())
-            ->method('getService')
-            ->with('Address');
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getNewEntity')
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($firstEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue(['validProperty']));
-
-        $this->assertEquals($id, $this->service->create($data));
-    }
-
-    /**
-     * Test create With Existing Address which is not an entity property
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testCreateWithExistingAddressInvalidEntityProperty()
-    {
-        $this->getMockService(
-            array(
-                'getLogger',
-                'getNewEntity',
-                'getDoctrineHydrator',
-                'dbPersist',
-                'dbFlush',
-                'getService',
-                'getEntityPropertyNames',
-                'getId'
-            )
-        );
-
-        $data = array(
-            'validProperty' => 'valid',
-            'addresses' => array(
-                'address' => array(
-                    'id' => 3
-                )
-            )
-        );
-
-        $expected = array(
-            'validProperty' => 'valid',
-        );
-
-        $id = 7;
-
-        $this->service->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($id));
-
-        $firstEntity = $this->getMock('\stdClass');
-
-        $mockDoctrineHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockDoctrineHydrator->expects($this->once())
-            ->method('hydrate')
-            ->with($expected, $firstEntity)
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->never())
-            ->method('getService')
-            ->with('Address');
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getNewEntity')
-            ->will($this->returnValue($firstEntity));
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockDoctrineHydrator));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->with($firstEntity);
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue(['validProperty']));
-
-        $this->assertEquals($id, $this->service->create($data));
-    }
-
-    /**
-     * Test get
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGet()
-    {
-        $this->getMockService(array('getLogger', 'getEntityById', 'getBundleCreator'));
-
-        $id = 7;
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
 
         $data = array(
             'foo' => 'bar'
         );
 
-        $mockEntity = $this->getMock('\stdClass');
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
+        $mockDoctrineObject = $this->mockHydrator();
 
-        $mockBundleCreator->expects($this->once())
-            ->method('buildEntityBundle')
-            ->will($this->returnValue($data));
+        $mockDoctrineObject->expects($this->once())
+            ->method('hydrate')
+            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
 
-        $this->service->expects($this->once())
-            ->method('getBundleCreator')
-            ->will($this->returnValue($mockBundleCreator));
+        $this->em->expects($this->once())
+            ->method('persist');
 
-        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->em->expects($this->once())
+            ->method('flush');
 
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertEquals($data, $this->service->get($id));
+        $this->assertNull($this->sut->create($data));
     }
 
     /**
-     * Test get with no entity
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testGetWithoutEntity()
+    public function testCreateWithAddressDataNotMatching()
     {
-        $this->getMockService(array('getLogger', 'getEntityById'));
-
-        $id = 7;
-
-        $mockEntity = null;
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertEquals(false, $this->service->get($id));
-    }
-
-    /**
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testSetOrderByWithoutOrder()
-    {
-        $data = [
-            'sort' => 'aField',
-            'some' => 'value',
-        ];
-
-        $string = 'a.aField';
-
-        $this->getMockService(array());
-
-        $mockQueryBuilder = $this->getMock('\stdClass', ['orderBy']);
-        $mockQueryBuilder->expects($this->once())
-            ->method('orderBy')
-            ->with($string);
-
-        $this->service->setOrderBy($mockQueryBuilder, $data);
-    }
-
-    /**
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testSetOrderByWithOrder()
-    {
-        $data = [
-            'sort' => 'aField',
-            'order' => 'DESC',
-            'some' => 'value',
-        ];
-
-        $fieldString = 'a.aField';
-        $orderString = 'DESC';
-        $this->getMockService(array());
-
-        $mockQueryBuilder = $this->getMock('\stdClass', ['orderBy']);
-        $mockQueryBuilder->expects($this->once())
-                         ->method('orderBy')
-                         ->with($fieldString, $orderString);
-
-        $this->service->setOrderBy($mockQueryBuilder, $data);
-    }
-
-    /**
-     * Test Update
-     *  Without version
-     *
-     * @expectedException \Olcs\Db\Exceptions\NoVersionException
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testUpdateWithoutVersion()
-    {
-        $this->getMockService(array('getLogger'));
-
-        $id = 7;
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
 
         $data = array(
-        );
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->update($id, $data);
-    }
-
-    /**
-     * Test Update
-     *  With Version
-     *  Without Soft Delete
-     *  Entity not found
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testUpdateWithVersionEntityNotFound()
-    {
-        $this->getMockService(
-            array('getLogger', 'getEntityManager', 'getEntityName', 'processAddressEntity')
-        );
-
-        $id = 7;
-
-        $data = array(
-            'version' => 1
-        );
-
-        $mockEntity = null;
-
-        $mockEntityManager = $this->getMock('\stdClass', array('find'));
-
-        $mockEntityManager->expects($this->once())
-            ->method('find')
-            ->will($this->returnValue($mockEntity));
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('processAddressEntity')
-            ->will($this->returnValue($data));
-
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->assertFalse($this->service->update($id, $data));
-    }
-
-    /**
-     * Test Update
-     *  With Version
-     *  With Entity
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testUpdateWithVersionWithEntity()
-    {
-        $this->getMockService(
-            array(
-                'getLogger', 'getDoctrineHydrator',
-                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
+            'foo' => 'bar',
+            'addresses' => array(
+                'wrongKey' => array(
+                    'addressLine1' => '123 Foo',
+                    'addressLine2' => 'Bartown',
+                    'postcode' => 'FO1BA'
+                )
             )
         );
 
-        $id = 7;
-
-        $data = array(
-            'version' => 1
+        $hydrationData = array(
+            'foo' => 'bar'
         );
 
-        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockEntity->expects($this->once())
-            ->method('clearProperties');
-
-        $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockHydrator->expects($this->once())
+        $mockDoctrineObject = $this->mockHydrator();
+        $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $mockEntity)
-            ->will($this->returnValue($mockEntity));
+            ->with($hydrationData, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
 
-        $mockEntityManager = $this->getMock('\stdClass', array('lock', 'find'));
+        $this->em->expects($this->once())
+            ->method('persist');
 
-        $mockEntityManager->expects($this->once())
-            ->method('lock')
-            ->will($this->returnValue($mockEntity));
-        $mockEntityManager->expects($this->once())
-            ->method('find')
-            ->will($this->returnValue($mockEntity));
+        $this->em->expects($this->once())
+            ->method('flush');
 
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockHydrator));
-
-        $this->service->expects($this->any())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue([]));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->assertTrue($this->service->update($id, $data));
+        $this->assertNull($this->sut->create($data));
     }
 
     /**
-     * Test Patch
-     *  With Version
-     *  With Soft Delete
-     *  With Entity
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testPatchWithVersionWithEntity()
+    public function testCreateWithAddressDataWithNewAddress()
     {
-        $this->getMockService(
-            array(
-                'getLogger', 'getDoctrineHydrator',
-                'getEntityManager', 'dbPersist', 'dbFlush', 'getEntityPropertyNames'
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+
+        $addressId = 1;
+
+        $addressData = array(
+            'addressLine1' => '123 Foo',
+            'addressLine2' => 'Bartown',
+            'postcode' => 'FO1BA'
+        );
+
+        $data = array(
+            'foo' => 'bar',
+            'addresses' => array(
+                'address' => $addressData
             )
         );
 
-        $id = 7;
-
-        $data = array(
-            'version' => 1
+        $hydrationData = array(
+            'foo' => 'bar',
+            'address' => $addressId
         );
 
-        $mockEntity = $this->getMock('\stdClass', array('clearProperties'));
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockEntity->expects($this->once())
-            ->method('clearProperties');
-
-        $mockHydrator = $this->getMock('\stdClass', array('hydrate'));
-
-        $mockHydrator->expects($this->once())
+        $mockDoctrineObject = $this->mockHydrator();
+        $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $mockEntity)
-            ->will($this->returnValue($mockEntity));
+            ->with($hydrationData, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
 
-        $mockEntityManager = $this->getMock('\stdClass', array('lock', 'find'));
+        $mockAddressService = $this->getMock('\stdClass', ['create']);
+        $mockAddressService->expects($this->once())
+            ->method('create')
+            ->with($addressData)
+            ->will($this->returnValue($addressId));
 
-        $mockEntityManager->expects($this->once())
-            ->method('lock')
-            ->will($this->returnValue($mockEntity));
-        $mockEntityManager->expects($this->once())
-            ->method('find')
-            ->will($this->returnValue($mockEntity));
+        $mockServiceFactory = $this->getMock('\stdClass', ['getService']);
+        $mockServiceFactory->expects($this->once())
+            ->method('getService')
+            ->with('Address')
+            ->will($this->returnValue($mockAddressService));
 
-        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->sm->setService('serviceFactory', $mockServiceFactory);
 
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
+        $this->em->expects($this->once())
+            ->method('persist');
 
-        $this->service->expects($this->once())
-            ->method('getDoctrineHydrator')
-            ->will($this->returnValue($mockHydrator));
+        $this->em->expects($this->once())
+            ->method('flush');
 
-        $this->service->expects($this->any())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->service->expects($this->once())
-            ->method('getEntityPropertyNames')
-            ->will($this->returnValue([]));
-
-        $this->service->expects($this->once())
-            ->method('dbPersist')
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->assertTrue($this->service->patch($id, $data));
+        $this->assertNull($this->sut->create($data));
     }
 
     /**
-     * Test Patch
-     *  Without version
-     *
-     * @expectedException \Olcs\Db\Exceptions\NoVersionException
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testPatchWithoutVersion()
+    public function testCreateWithAddressDataWithExistingAddress()
     {
-        $this->getMockService(array('getLogger'));
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
 
-        $id = 7;
+        $addressId = 7;
+
+        $addressData = array(
+            'id' => $addressId,
+            'addressLine1' => '123 Foo',
+            'addressLine2' => 'Bartown',
+            'postcode' => 'FO1BA'
+        );
 
         $data = array(
+            'foo' => 'bar',
+            'addresses' => array(
+                'address' => $addressData
+            )
         );
 
-        $mockLog = $this->getMock('stdClass', ['info']);
+        $hydrationData = array(
+            'foo' => 'bar',
+            'address' => $addressId
+        );
 
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $this->service->patch($id, $data);
+        $mockDoctrineObject = $this->mockHydrator();
+        $mockDoctrineObject->expects($this->once())
+            ->method('hydrate')
+            ->with($hydrationData, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
+
+        $mockAddressService = $this->getMock('\stdClass', ['update']);
+        $mockAddressService->expects($this->once())
+            ->method('update')
+            ->with($addressId, $addressData);
+
+        $mockServiceFactory = $this->getMock('\stdClass', ['getService']);
+        $mockServiceFactory->expects($this->once())
+            ->method('getService')
+            ->with('Address')
+            ->will($this->returnValue($mockAddressService));
+
+        $this->sm->setService('serviceFactory', $mockServiceFactory);
+
+        $this->em->expects($this->once())
+            ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertNull($this->sut->create($data));
     }
 
     /**
-     * Test Patch
-     *  With Version
-     *  Without Soft Delete
-     *  Entity not found
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testPatchWithVersionEntityNotFound()
+    public function testGetWithoutBundleWithoutResult()
     {
-        $this->getMockService(
-            array('getLogger', 'getEntityManager', 'getEntityName', 'processAddressEntity')
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $id = 7;
+        $data = array();
+        $expectedParms = array(
+            'foo' => 'bar'
         );
 
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $mockQuery = m::mock()
+            ->shouldReceive('getArrayResult')
+            ->andReturn(null)
+            ->getMock();
+
+        $mockQueryBuilder = m::mock()
+            ->shouldReceive('select')
+            ->with(array('m'))
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', 'm')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('WHERE CLAUSE')
+            ->andReturnSelf()
+            ->shouldReceive('setParameters')
+            ->with($expectedParms)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->andReturn($mockQuery)
+            ->getMock();
+
+        $this->em->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
+
+        $mockExpressionBuilder = m::mock()
+            ->shouldReceive('setQueryBuilder')
+            ->with($mockQueryBuilder)
+            ->shouldReceive('setEntityManager')
+            ->with($this->em)
+            ->shouldReceive('setEntity')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub')
+            ->shouldReceive('setParams')
+            ->with(array())
+            ->shouldReceive('buildWhereExpression')
+            ->with(array('id' => $id), 'm')
+            ->andReturn('WHERE CLAUSE')
+            ->shouldReceive('getParams')
+            ->andReturn($expectedParms)
+            ->getMock();
+
+        $this->sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $this->assertNull($this->sut->get($id, $data));
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testGetWithoutBundleWithResult()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $id = 7;
+        $data = array();
+        $expectedParms = array(
+            'foo' => 'bar'
+        );
+        $expectedResult = array(
+            'id' => 7,
+            'name' => 'foo'
+        );
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $mockQuery = m::mock()
+            ->shouldReceive('getArrayResult')
+            ->andReturn(array($expectedResult))
+            ->getMock();
+
+        $mockQueryBuilder = m::mock()
+            ->shouldReceive('select')
+            ->with(array('m'))
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', 'm')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('WHERE CLAUSE')
+            ->andReturnSelf()
+            ->shouldReceive('setParameters')
+            ->with($expectedParms)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->andReturn($mockQuery)
+            ->getMock();
+
+        $this->em->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
+
+        $mockExpressionBuilder = m::mock()
+            ->shouldReceive('setQueryBuilder')
+            ->with($mockQueryBuilder)
+            ->shouldReceive('setEntityManager')
+            ->with($this->em)
+            ->shouldReceive('setEntity')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub')
+            ->shouldReceive('setParams')
+            ->with(array())
+            ->shouldReceive('buildWhereExpression')
+            ->with(array('id' => $id), 'm')
+            ->andReturn('WHERE CLAUSE')
+            ->shouldReceive('getParams')
+            ->andReturn($expectedParms)
+            ->getMock();
+
+        $this->sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $this->assertEquals($expectedResult, $this->sut->get($id, $data));
+    }
+
+    /**
+     * @group service_abstract
+     * @expectedException \Exception
+     */
+    public function testGetWithBundleWithInvalidJson()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $id = 7;
+        $data = array(
+            'bundle' => '[INVALID JSON]'
+        );
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $this->sut->get($id, $data);
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testGetWithBundle()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $id = 7;
 
-        $data = array(
-            'version' => 1
+        $bundleConfig = array(
+            'foo' => 'cake'
         );
 
-        $mockEntity = null;
+        $data = array('bundle' => json_encode($bundleConfig));
 
-        $mockEntityManager = $this->getMock('\stdClass', array('find'));
+        $expectedParms = array(
+            'foo' => 'bar'
+        );
 
-        $mockEntityManager->expects($this->once())
-            ->method('find')
-            ->will($this->returnValue($mockEntity));
+        $expectedResult = array(
+            'id' => 7,
+            'name' => 'foo'
+        );
 
-        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
+        $mockQuery = m::mock()
+            ->shouldReceive('getArrayResult')
+            ->andReturn(array($expectedResult))
+            ->getMock();
 
-        $this->service->expects($this->once())
-            ->method('processAddressEntity')
-            ->will($this->returnValue($data));
+        $mockQueryBuilder = m::mock()
+            ->shouldReceive('select')
+            ->with(array('m'))
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', 'm')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('WHERE CLAUSE')
+            ->andReturnSelf()
+            ->shouldReceive('setParameters')
+            ->with($expectedParms)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->andReturn($mockQuery)
+            ->getMock();
 
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
+        $this->em->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($mockQueryBuilder));
 
-        $this->assertFalse($this->service->patch($id, $data));
+        $mockExpressionBuilder = m::mock()
+            ->shouldReceive('setQueryBuilder')
+            ->with($mockQueryBuilder)
+            ->shouldReceive('setEntityManager')
+            ->with($this->em)
+            ->shouldReceive('setEntity')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub')
+            ->shouldReceive('setParams')
+            ->with($expectedParms)
+            ->shouldReceive('buildWhereExpression')
+            ->with(array('id' => $id), 'm')
+            ->andReturn('WHERE CLAUSE')
+            ->shouldReceive('getParams')
+            ->andReturn($expectedParms)
+            ->getMock();
+
+        $this->sm->setService('ExpressionBuilder', $mockExpressionBuilder);
+
+        $mockBundleQuery = m::mock()
+            ->shouldReceive('setQueryBuilder')
+            ->with($mockQueryBuilder)
+            ->shouldReceive('build')
+            ->with($bundleConfig)
+            ->shouldReceive('getParams')
+            ->andReturn($expectedParms)
+            ->getMock();
+
+        $this->sm->setService('BundleQuery', $mockBundleQuery);
+
+        $this->assertEquals($expectedResult, $this->sut->get($id, $data));
     }
 
     /**
-     * Test Delete
-     *  Without entity
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
     public function testDeleteWithoutEntity()
     {
-        $this->getMockService(array('getLogger', 'getEntityById'));
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $id = 5;
 
-        $id = 7;
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockEntity = null;
+        $this->em->expects($this->once())
+            ->method('find')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', $id)
+            ->will($this->returnValue(false));
 
-        $mockLog = $this->getMock('stdClass', ['info']);
-
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->assertFalse($this->service->delete($id));
+        $this->assertFalse($this->sut->delete($id));
     }
 
     /**
-     * Test Delete
-     *  With entity
-     *  Without soft delete
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testDeleteWithEntity()
+    public function testDelete()
     {
-        $this->getMockService(array('getLogger', 'getEntityById', 'getEntityManager', 'dbFlush'));
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $id = 5;
 
-        $id = 7;
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockEntity = $this->getMock('\stdClass');
+        $mockEntity = m::mock();
 
-        $mockEntityManager = $this->getMock('\stdClass', array('remove'));
+        $this->em->expects($this->once())
+            ->method('find')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', $id)
+            ->will($this->returnValue($mockEntity));
 
-        $mockEntityManager->expects($this->once())
+        $this->em->expects($this->once())
             ->method('remove')
             ->with($mockEntity);
 
-        $mockLog = $this->getMock('stdClass', ['info']);
+        $this->em->expects($this->once())
+            ->method('flush');
 
-        $this->service->expects($this->once())
-            ->method('getLogger')->willReturn($mockLog);
-
-        $this->service->expects($this->once())
-            ->method('getEntityById')
-            ->with($id)
-            ->will($this->returnValue($mockEntity));
-
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $this->service->expects($this->once())
-            ->method('dbFlush');
-
-        $this->assertTrue($this->service->delete($id));
+        $this->assertTrue($this->sut->delete($id));
     }
 
     /**
-     * Test getDoctrineHydrator
-     *
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
+     * @expectedException \Olcs\Db\Exceptions\NoVersionException
      */
-    public function testGetDoctrineHydrator()
+    public function testUpdateWithoutVersion()
     {
-        $mockEntityManager = $this->getMockBuilder(
-            '\Doctrine\ORM\EntityManager'
-        )->disableOriginalConstructor()->getMock();
-
-        $this->getMockService();
-        $this->service->setEntityManager($mockEntityManager);
-
-        $hydrator = $this->service->getDoctrineHydrator();
-
-        $this->assertTrue($hydrator instanceof \DoctrineModule\Stdlib\Hydrator\DoctrineObject);
-    }
-
-    /**
-     * Test getNewEntity
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetNewEntity()
-    {
-        $this->getMockService(array('getEntityName'));
-
-        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
-
-        $className = get_class($mockEntity);
-
-        $this->service->expects($this->once())
-            ->method('getEntityName')
-            ->will($this->returnValue($className));
-
-        $entity = $this->service->getNewEntity();
-
-        $this->assertTrue($entity instanceof $className);
-    }
-
-    /**
-     * Test getEntityName
-     *  with entityName set
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetEntityNameWithEntityNameSet()
-    {
-        $this->getMockService();
-
-        $this->service->setEntityName('BOB');
-
-        $this->assertEquals('BOB', $this->service->getEntityName());
-    }
-
-    /**
-     * Test getEntityName
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetEntityName()
-    {
-        $this->getMockService();
-
-        $className = get_class($this->service);
-
-        $this->assertEquals('\Olcs\Db\Entity\\' . $className, $this->service->getEntityName());
-    }
-
-    /**
-     * Test getEntityById
-     *  Without soft delete
-     *
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetEntityById()
-    {
-        $this->getMockService(array('getEntityManager'));
-
         $id = 7;
 
-        $mockEntity = array('foo' => 'bar');
+        $data = array();
 
-        $mockEntityManager = $this->getMock('\stdClass', array('find'));
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $mockEntityManager->expects($this->once())
+        $this->sut->update($id, $data);
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testUpdateWithVersionEntityNotFound()
+    {
+        $id = 7;
+
+        $data = array(
+            'version' => 1
+        );
+
+        $mockEntity = null;
+
+        $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
-        $this->service->expects($this->once())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $this->assertEquals($mockEntity, $this->service->getEntityById($id));
+        $this->assertFalse($this->sut->update($id, $data));
     }
 
     /**
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testGetService()
+    public function testUpdateWithVersionWithEntity()
     {
-        $this->getMockService(array('getServiceLocator'));
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stub\EntityStub');
 
-        $name = 'Bob';
+        $id = 7;
 
-        $mockServiceFactory = $this->getMock('\stdClass', array('getService'));
+        $data = array(
+            'version' => 1
+        );
 
-        $mockServiceFactory->expects($this->once())
-            ->method('getService')
-            ->with($name);
+        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stub\EntityStub', array('clearProperties'));
+        $mockEntity->expects($this->once())->method('clearProperties');
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('serviceFactory')
-            ->will($this->returnValue($mockServiceFactory));
-
-        $this->service->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
-
-        $this->service->getService($name);
-    }
-
-    /**
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetReflectedEntity()
-    {
-        $this->getMockService(array('getEntityName'));
-
-        $this->service->expects($this->once())
-            ->method('getEntityName')
-            ->will($this->returnValue('\stdClass'));
-
-        $this->assertTrue($this->service->getReflectedEntity() instanceof \ReflectionClass);
-    }
-
-    /**
-     * @group Service
-     * @group ServiceAbstract
-     */
-    public function testGetEntityPropertyNames()
-    {
-        $this->getMockService(array('getReflectedEntity'));
-
-        $mockEntity = $this->getMock('\stdClass', ['getProperties']);
-        $mockEntity->expects($this->once())
-            ->method('getProperties')
-            ->will($this->returnValue($this->generateProperties(['foo', 'bar'])));
-
-        $this->service->expects($this->once())
-            ->method('getReflectedEntity')
+        $mockDoctrineObject = $this->mockHydrator();
+        $mockDoctrineObject->expects($this->once())
+            ->method('hydrate')
+            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stub\EntityStub'))
             ->will($this->returnValue($mockEntity));
 
-        $this->assertEquals(
-            ['foo', 'bar'],
-            $this->service->getEntityPropertyNames()
-        );
+        $this->em->expects($this->once())
+            ->method('lock')
+            ->will($this->returnValue($mockEntity));
+        $this->em->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($mockEntity));
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->will($this->returnValue($mockEntity));
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertTrue($this->sut->update($id, $data));
     }
 
     /**
-     * @group Service
-     * @group ServiceAbstract
+     * @group service_abstract
      */
-    public function testGetValidSearchFields()
+    public function testPatchWithVersionWithEntity()
     {
-        $expected = array(
-            'Bob',
-            'Foo'
-        );
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stub\EntityStub');
 
-        $property1 = $this->getMock('\stdClass', array('getName'));
-        $property1->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('Bob'));
-
-        $property2 = $this->getMock('\stdClass', array('getName'));
-        $property2->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('Foo'));
-
-        $properties = array($property1, $property2);
-
-        $this->getMockService(array('getReflectedEntity'));
-
-        $reflectedMock = $this->getMock('\stdClass', array('getProperties'));
-
-        $reflectedMock->expects($this->once())
-            ->method('getProperties')
-            ->will($this->returnValue($properties));
-
-        $this->service->expects($this->once())
-            ->method('getReflectedEntity')
-            ->will($this->returnValue($reflectedMock));
-
-        $this->assertEquals($expected, $this->service->getValidSearchFields());
-
-        // Test again, so we know it's been cached
-        $this->assertEquals($expected, $this->service->getValidSearchFields());
-    }
-
-    /**
-     * @group Service
-     * @group ServiceAbstract
-     * @group ServiceAbstractCurrent
-     */
-    public function testGetList()
-    {
-        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator']);
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
-
-        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
-        $className = get_class($mockEntity);
-        $this->service->expects($this->any())
-            ->method('getEntityName')
-            ->will($this->returnValue($className));
-
-        $mockQuery = $this->getMock('\stdClass', ['getResult']);
-        $mockQuery->expects($this->once())
-            ->method('getResult')
-            ->will($this->returnValue(array()));
-
-        $mockQueryBuilder = $this->getMock(
-            '\stdClass',
-            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery']
-        );
-        $mockQueryBuilder->expects($this->once())
-            ->method('select')
-            ->with('a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('from')
-            ->with($className, 'a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('setFirstResult')
-            ->with(0);
-        $mockQueryBuilder->expects($this->once())
-            ->method('setMaxResults')
-            ->with(10);
-        $mockQueryBuilder->expects($this->once())
-            ->method('getQuery')
-            ->will($this->returnValue($mockQuery));
-
-        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
-        $mockEntityManager->expects($this->once())
-            ->method('createQueryBuilder')
-            ->will($this->returnValue($mockQueryBuilder));
-
-        $this->service->expects($this->any())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $mockExpressionBuilder = $this->getMock(
-            '\stdClass',
-            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression']
-        );
-
-        $mockExpressionBuilder->expects($this->once())
-            ->method('buildWhereExpression')
-            ->willReturn(null);
-
-        $sm = \OlcsTest\Bootstrap::getServiceManager();
-        $sm->setAllowOverride(true);
-        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
-
-        $this->service->setServiceLocator($sm);
-
-        $this->service->expects($this->once())
-            ->method('getPaginator')
-            ->with($mockQuery)
-            ->will($this->returnValue(array()));
+        $id = 7;
 
         $data = array(
-
+            'version' => 1
         );
 
-        $results = $this->service->getList($data);
+        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stub\EntityStub', array('clearProperties'));
+        $mockEntity->expects($this->once())
+            ->method('clearProperties');
 
-        $this->assertEquals(
-            array('Count' => 0, 'Results' => array()),
-            $results
-        );
+        $mockDoctrineObject = $this->mockHydrator();
+        $mockDoctrineObject->expects($this->once())
+            ->method('hydrate')
+            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stub\EntityStub'))
+            ->will($this->returnValue($mockEntity));
+
+        $this->em->expects($this->once())
+            ->method('lock')
+            ->will($this->returnValue($mockEntity));
+        $this->em->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($mockEntity));
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->will($this->returnValue($mockEntity));
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertTrue($this->sut->patch($id, $data));
     }
 
     /**
-     * @group Service
-     * @group ServiceAbstract
-     * @group ServiceAbstractCurrent
+     * @group service_abstract
+     * @expectedException \Olcs\Db\Exceptions\NoVersionException
      */
-    public function testGetListWithConditions()
+    public function testPatchWithoutVersion()
     {
-        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator']);
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
-
-        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
-        $className = get_class($mockEntity);
-        $this->service->expects($this->any())
-            ->method('getEntityName')
-            ->will($this->returnValue($className));
-
-        $mockQuery = $this->getMock('\stdClass', ['getResult']);
-        $mockQuery->expects($this->once())
-            ->method('getResult')
-            ->will($this->returnValue(array()));
-
-        $mockQueryBuilder = $this->getMock(
-            '\stdClass',
-            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery', 'where', 'setParameters']
-        );
-        $mockQueryBuilder->expects($this->once())
-            ->method('select')
-            ->with('a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('from')
-            ->with($className, 'a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('where')
-            ->with('EXPRESSION');
-        $mockQueryBuilder->expects($this->once())
-            ->method('setFirstResult')
-            ->with(0);
-        $mockQueryBuilder->expects($this->once())
-            ->method('setMaxResults')
-            ->with(10);
-        $mockQueryBuilder->expects($this->once())
-            ->method('getQuery')
-            ->will($this->returnValue($mockQuery));
-        $mockQueryBuilder->expects($this->once())
-            ->method('setParameters')
-            ->will($this->returnValue(array(1)));
-
-        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
-        $mockEntityManager->expects($this->once())
-            ->method('createQueryBuilder')
-            ->will($this->returnValue($mockQueryBuilder));
-
-        $this->service->expects($this->any())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $mockExpressionBuilder = $this->getMock(
-            '\stdClass',
-            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression', 'getParams']
-        );
-        $mockExpressionBuilder->expects($this->once())
-            ->method('buildWhereExpression')
-            ->willReturn('EXPRESSION');
-        $mockExpressionBuilder->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array(1));
-
-        $sm = \OlcsTest\Bootstrap::getServiceManager();
-        $sm->setAllowOverride(true);
-        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
-
-        $this->service->setServiceLocator($sm);
-
-        $this->service->expects($this->once())
-            ->method('getPaginator')
-            ->with($mockQuery)
-            ->will($this->returnValue(array()));
+        $id = 7;
 
         $data = array(
-
         );
 
-        $results = $this->service->getList($data);
+        $this->mockLogger->expects($this->once())->method('info');
 
-        $this->assertEquals(
-            array('Count' => 0, 'Results' => array()),
-            $results
-        );
+        $this->sut->patch($id, $data);
     }
 
     /**
-     * @group Service
-     * @group ServiceAbstract
-     * @group ServiceAbstractCurrent
+     * @group service_abstract
      */
-    public function testGetListWithResults()
+    public function testPatchWithVersionEntityNotFound()
     {
-        $this->getMockService(['getLogger', 'getEntityName', 'getEntityManager', 'getPaginator', 'getBundleCreator']);
-
-        $mockLog = $this->getMock('stdClass', ['info']);
-        $this->service->expects($this->once())->method('getLogger')->willReturn($mockLog);
-
-        $mockEntity = $this->getMock('\stdClass', array(), array(), 'MockEntity');
-        $className = get_class($mockEntity);
-        $this->service->expects($this->any())
-            ->method('getEntityName')
-            ->will($this->returnValue($className));
-
-        $mockQuery = $this->getMock('\stdClass', ['getResult']);
-        $mockQuery->expects($this->once())
-            ->method('getResult')
-            ->will($this->returnValue(array('foo')));
-
-        $mockQueryBuilder = $this->getMock(
-            '\stdClass',
-            ['select', 'from', 'setFirstResult', 'setMaxResults', 'getQuery', 'where', 'setParameters']
-        );
-        $mockQueryBuilder->expects($this->once())
-            ->method('select')
-            ->with('a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('from')
-            ->with($className, 'a')
-            ->willReturnSelf();
-        $mockQueryBuilder->expects($this->once())
-            ->method('where')
-            ->with('EXPRESSION');
-        $mockQueryBuilder->expects($this->once())
-            ->method('setFirstResult')
-            ->with(0);
-        $mockQueryBuilder->expects($this->once())
-            ->method('setMaxResults')
-            ->with(10);
-        $mockQueryBuilder->expects($this->once())
-            ->method('getQuery')
-            ->will($this->returnValue($mockQuery));
-        $mockQueryBuilder->expects($this->once())
-            ->method('setParameters')
-            ->will($this->returnValue(array(1)));
-
-        $mockEntityManager = $this->getMock('\stdClass', ['createQueryBuilder']);
-        $mockEntityManager->expects($this->once())
-            ->method('createQueryBuilder')
-            ->will($this->returnValue($mockQueryBuilder));
-
-        $this->service->expects($this->any())
-            ->method('getEntityManager')
-            ->will($this->returnValue($mockEntityManager));
-
-        $mockExpressionBuilder = $this->getMock(
-            '\stdClass',
-            ['setEntityManager', 'setQueryBuilder', 'setEntity', 'buildWhereExpression', 'getParams']
-        );
-        $mockExpressionBuilder->expects($this->once())
-            ->method('buildWhereExpression')
-            ->willReturn('EXPRESSION');
-        $mockExpressionBuilder->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array(1));
-
-        $sm = \OlcsTest\Bootstrap::getServiceManager();
-        $sm->setAllowOverride(true);
-        $sm->setService('ExpressionBuilder', $mockExpressionBuilder);
-
-        $this->service->setServiceLocator($sm);
-
-        $this->service->expects($this->once())
-            ->method('getPaginator')
-            ->with($mockQuery)
-            ->will($this->returnValue(array('foo')));
-
-        $mockBundleCreator = $this->getMock('\stdClass', array('buildEntityBundle'));
-        $mockBundleCreator->expects($this->once())
-            ->method('buildEntityBundle')
-            ->will($this->returnValue(array('foo')));
-
-        $this->service->expects($this->once())
-            ->method('getBundleCreator')
-            ->will($this->returnValue($mockBundleCreator));
+        $id = 7;
 
         $data = array(
-
+            'version' => 1
         );
 
-        $results = $this->service->getList($data);
+        $mockEntity = null;
 
-        $this->assertEquals(
-            array('Count' => 1, 'Results' => array(array('foo'))),
-            $results
-        );
+        $this->em->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($mockEntity));
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $this->assertFalse($this->sut->patch($id, $data));
+    }
+
+    protected function mockHydrator()
+    {
+        $mockDoctrineObject = $this->getMock('\stdClass', ['hydrate']);
+
+        $mockHydratorManager = $this->getMock('\stdClass', ['get']);
+        $mockHydratorManager->expects($this->once())
+            ->method('get')
+            ->with('DoctrineModule\Stdlib\Hydrator\DoctrineObject')
+            ->will($this->returnValue($mockDoctrineObject));
+
+        $this->sm->setService('HydratorManager', $mockHydratorManager);
+
+        return $mockDoctrineObject;
     }
 }
