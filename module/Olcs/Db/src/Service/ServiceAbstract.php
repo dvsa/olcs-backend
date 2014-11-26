@@ -167,7 +167,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $qb = $this->getBundleQuery($criteria, $data);
 
         // Paginate
-        $paginateQuery = new \Olcs\Db\Utility\PaginateQuery($qb);
+        $paginateQuery = $this->getServiceLocator()->get('PaginateQuery');
+        $paginateQuery->setQueryBuilder($qb);
         $paginateQuery->setOptions(
             array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']))
         );
@@ -267,10 +268,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      *
      * @param array $criteria
      * @param array $data
-     * @param string $entityName
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function getBundleQuery($criteria, $data = array(), $entityName = null)
+    protected function getBundleQuery($criteria, $data = array())
     {
         $params = array();
 
@@ -281,10 +281,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $qb->select(array('m'))->from($this->getEntityName(), 'm');
 
         if (!empty($bundleConfig)) {
-            // @todo Create factory for this
-            $bundleQuery = new \Olcs\Db\Utility\BundleQuery($qb);
-            $bundleQuery->setServiceLocator($this->getServiceLocator());
-
+            $bundleQuery = $this->getServiceLocator()->get('BundleQuery');
+            $bundleQuery->setQueryBuilder($qb);
             $bundleQuery->build($bundleConfig);
             $params = $bundleQuery->getParams();
         }
@@ -293,7 +291,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $eb->setQueryBuilder($qb);
         $eb->setEntityManager($this->getEntityManager());
-        $eb->setEntity($entityName);
+        $eb->setEntity($this->getEntityName());
         $eb->setParams($params);
 
         $expression = $eb->buildWhereExpression($criteria, 'm');

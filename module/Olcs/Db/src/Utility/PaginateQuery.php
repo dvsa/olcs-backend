@@ -7,8 +7,6 @@
  */
 namespace Olcs\Db\Utility;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Olcs\Db\Exceptions\PaginationException;
 
 /**
@@ -16,18 +14,15 @@ use Olcs\Db\Exceptions\PaginationException;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PaginateQuery implements ServiceLocatorAwareInterface
+class PaginateQuery
 {
-    use ServiceLocatorAwareTrait;
-
     protected $qb;
     protected $page = 1;
     protected $limit = 10;
     protected $order = 'ASC';
     protected $sort;
 
-
-    public function __construct($qb)
+    public function setQueryBuilder($qb)
     {
         $this->qb = $qb;
     }
