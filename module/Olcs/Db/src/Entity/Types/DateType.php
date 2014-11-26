@@ -31,8 +31,12 @@ class DateType extends DoctrineDateType
         }
 
         $val = \DateTime::createFromFormat('!'.$platform->getDateFormatString(), $value);
-        if ( ! $val) {
-            throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateFormatString());
+        if (!$val) {
+            throw ConversionException::conversionFailedFormat(
+                $value,
+                $this->getName(),
+                $platform->getDateFormatString()
+            );
         }
 
         if ($val instanceof \DateTime) {
