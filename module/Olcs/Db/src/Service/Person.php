@@ -15,17 +15,6 @@ namespace Olcs\Db\Service;
  */
 class Person extends ServiceAbstract
 {
-
-    /**
-     * Returns an indexed array of valid search terms for this service / entity.
-     *
-     * @return array
-     */
-    public function getValidSearchFields()
-    {
-        return array('forename', 'familyName', 'birthDate');
-    }
-
     /**
      * Find licences from a given search
      *
