@@ -1116,9 +1116,10 @@ INSERT INTO `publication_link` (`id`,`publication_section_id`,`tm_pi_hearing_id`
   `last_modified_by`,`bus_reg_id`,`application_id`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,
   `orig_pub_date`,`publication_no`,`pub_type`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-  (1,13,NULL,1,1,NULL,NULL,NULL,NULL,7,'B',
-   'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJohn Smith Haulage Ltd.\nT/A JSH Logistics \nDirector(s): Tom Jones, Keith Winnard','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
-   NULL,'2014-09-30',6129,'A&D',NULL,'2014-11-24 10:22:26',NULL,1);
+  (1,13,NULL,1,3,NULL,NULL,NULL,NULL,7,'B',
+   'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY',
+   'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
+   NULL,'2014-10-30',6128,'A&D',NULL,'2014-11-25 15:47:03',NULL,1);
 
 INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
 VALUES

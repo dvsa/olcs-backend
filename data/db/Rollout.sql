@@ -1057,7 +1057,6 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
 -- Submission status
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'sub_st_dec', 'sub_st_dec_agree', 'Agree', NULL),
-    (2, 'sub_st_dec', 'sub_st_dec_paid', 'Paid', NULL),
     (3, 'sub_st_dec', 'sub_st_dec_part_agree', 'Partially agree', NULL),
     (4, 'sub_st_dec', 'sub_st_dec_disagree', 'Disagree', NULL),
     (5, 'sub_st_dec', 'sub_st_dec_further_info', 'Further information required', NULL);
