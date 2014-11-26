@@ -29,26 +29,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
         Traits\BusRegManyToOneAlt1;
 
     /**
-     * Ebsr submission result
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionResult
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
-     */
-    protected $ebsrSubmissionResult;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $document;
-
-    /**
      * Ebsr submission type
      *
      * @var \Olcs\Db\Entity\EbsrSubmissionType
@@ -67,6 +47,26 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionStatus;
+
+    /**
+     * Ebsr submission result
+     *
+     * @var \Olcs\Db\Entity\EbsrSubmissionResult
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
+     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ebsrSubmissionResult;
+
+    /**
+     * Document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $document;
 
     /**
      * Submitted date
@@ -231,52 +231,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $organisationId;
 
     /**
-     * Set the ebsr submission result
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission result
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
-     */
-    public function getEbsrSubmissionResult()
-    {
-        return $this->ebsrSubmissionResult;
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return EbsrSubmission
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * Get the document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    /**
      * Set the ebsr submission type
      *
      * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
@@ -320,6 +274,52 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getEbsrSubmissionStatus()
     {
         return $this->ebsrSubmissionStatus;
+    }
+
+    /**
+     * Set the ebsr submission result
+     *
+     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionResult($ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission result
+     *
+     * @return \Olcs\Db\Entity\EbsrSubmissionResult
+     */
+    public function getEbsrSubmissionResult()
+    {
+        return $this->ebsrSubmissionResult;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Olcs\Db\Entity\Document $document
+     * @return EbsrSubmission
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 
     /**
