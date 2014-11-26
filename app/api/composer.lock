@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "01faad61ef63f93a4f65e2c12bccaebd",
+    "hash": "0dbe9570f214740174da682faa1b45ff",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "fd67b417bdc901dd13383bfd4148c04d58cbfebd"
+                "reference": "7b625bf42f08ceb3e7dc7852095ef5e1a5756884"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/fd67b417bdc901dd13383bfd4148c04d58cbfebd",
-                "reference": "fd67b417bdc901dd13383bfd4148c04d58cbfebd",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/7b625bf42f08ceb3e7dc7852095ef5e1a5756884",
+                "reference": "7b625bf42f08ceb3e7dc7852095ef5e1a5756884",
                 "shasum": ""
             },
             "require": {
@@ -182,7 +182,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2014-11-21 11:16:32"
+            "time": "2014-11-24 16:07:53"
         },
         {
             "name": "doctrine/collections",
@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "e35ce0486a1d161e739bed38fde27b7cc921f5f0"
+                "reference": "40fd004725b4aa902aea170cd15152b06a6faba0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/e35ce0486a1d161e739bed38fde27b7cc921f5f0",
-                "reference": "e35ce0486a1d161e739bed38fde27b7cc921f5f0",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/40fd004725b4aa902aea170cd15152b06a6faba0",
+                "reference": "40fd004725b4aa902aea170cd15152b06a6faba0",
                 "shasum": ""
             },
             "require": {
@@ -392,7 +392,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-11-11 11:37:53"
+            "time": "2014-11-24 15:49:52"
         },
         {
             "name": "doctrine/doctrine-module",
@@ -893,6 +893,21 @@
             "time": "2014-10-05 20:50:56"
         },
         {
+            "name": "olcs/autoload",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git",
+                "reference": "9901365c4e447572eb6c8dd40c7763b0628079ac"
+            },
+            "bin": [
+                "bin/autoload"
+            ],
+            "type": "library",
+            "description": "OLCS optimised autoloader",
+            "time": "2014-11-13 14:15:48"
+        },
+        {
             "name": "olcs/companies-house",
             "version": "dev-develop",
             "source": {
@@ -901,7 +916,7 @@
                 "reference": "origin/develop"
             },
             "type": "library",
-            "time": "2014-09-30 07:55:08"
+            "time": "2014-09-10 14:47:09"
         },
         {
             "name": "olcs/olcs-logging",
@@ -940,12 +955,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "c10b04777c94147de5dbf2e0616502e185bbc507"
+                "reference": "f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/c10b04777c94147de5dbf2e0616502e185bbc507",
-                "reference": "c10b04777c94147de5dbf2e0616502e185bbc507",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548",
+                "reference": "f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548",
                 "shasum": ""
             },
             "require": {
@@ -991,7 +1006,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-11-20 21:07:56"
+            "time": "2014-11-24 19:33:02"
         },
         {
             "name": "symfony/console",
@@ -2282,6 +2297,7 @@
         "olcs/companies-house": 20,
         "ruflin/elastica": 20,
         "olcs/olcs-logging": 20,
+        "olcs/autoload": 20,
         "sebastian/diff": 20,
         "phpunit/phpcov": 20
     },

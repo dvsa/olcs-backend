@@ -49,6 +49,18 @@ class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
     /**
      * @group expression_builder
      */
+    public function testSetParams()
+    {
+        $params = array('foo' => 'bar');
+
+        $this->sut->setParams($params);
+
+        $this->assertEquals($params, $this->sut->getParams());
+    }
+
+    /**
+     * @group expression_builder
+     */
     public function testBuildWhereExpressionWithEmptyQuery()
     {
         $query = array();
