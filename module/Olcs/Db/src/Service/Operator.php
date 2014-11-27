@@ -15,17 +15,6 @@ namespace Olcs\Db\Service;
  */
 class Operator extends ServiceAbstract
 {
-
-    /**
-     * Returns an indexed array of valid search terms for this service / entity.
-     *
-     * @return array
-     */
-    public function getValidSearchFields()
-    {
-        return array('name');
-    }
-
     /**
      * Find operators from a given search
      *
