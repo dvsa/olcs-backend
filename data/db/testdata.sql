@@ -284,12 +284,12 @@ INSERT INTO `legacy_case_offence` (`case_id`, `legacy_offence_id`)
 VALUES
     (24, 1);
 
-INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`, `ebsr_submission_type_id`,
+INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
     `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
     `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
     `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
     `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
+  (1, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
    null, 0, null);
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
@@ -389,7 +389,7 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     '2014-02-20 00:00:00',1),
     (12,114,4,NULL,4,'2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (13,115,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (13,115,4,NULL,4,'2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
     (14,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
