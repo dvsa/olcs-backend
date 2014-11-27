@@ -327,6 +327,27 @@ INSERT INTO `licence` (
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
     (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+
+    -- extra licence for application 1
+    (201,1,'B',0,1,'lcat_gv','OB4234560','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (202,1,'B',0,1,'lcat_gv','OB4234561','lsts_consideration',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (203,1,'B',0,1,'lcat_psv','OB4234562','lsts_surrendered',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (204,1,'B',0,1,'lcat_gv','OB4234563','lsts_unlicenced',1,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (205,1,'B',0,1,'lcat_psv','OB4234564','lsts_terminated',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (206,1,'B',0,1,'lcat_psv','OB4234565','lsts_withdrawn',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (207,1,'B',0,1,'lcat_psv','OB4234566','lsts_suspended',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (208,1,'B',0,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (209,1,'B',0,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_not_submitted',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
