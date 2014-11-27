@@ -137,13 +137,13 @@ class Organisation implements Interfaces\EntityInterface
     protected $licences;
 
     /**
-     * Organisation nature of business
+     * Nature of business
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationNatureOfBusiness", mappedBy="organisation")
      */
-    protected $organisationNatureOfBusinesss;
+    protected $natureOfBusinesss;
 
     /**
      * Organisation person
@@ -170,7 +170,7 @@ class Organisation implements Interfaces\EntityInterface
     {
         $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
-        $this->organisationNatureOfBusinesss = new ArrayCollection();
+        $this->natureOfBusinesss = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
@@ -503,60 +503,60 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the organisation nature of business
+     * Set the nature of business
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
      * @return Organisation
      */
-    public function setOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    public function setNatureOfBusinesss($natureOfBusinesss)
     {
-        $this->organisationNatureOfBusinesss = $organisationNatureOfBusinesss;
+        $this->natureOfBusinesss = $natureOfBusinesss;
 
         return $this;
     }
 
     /**
-     * Get the organisation nature of businesss
+     * Get the nature of businesss
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getOrganisationNatureOfBusinesss()
+    public function getNatureOfBusinesss()
     {
-        return $this->organisationNatureOfBusinesss;
+        return $this->natureOfBusinesss;
     }
 
     /**
-     * Add a organisation nature of businesss
+     * Add a nature of businesss
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
      * @return Organisation
      */
-    public function addOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    public function addNatureOfBusinesss($natureOfBusinesss)
     {
-        if ($organisationNatureOfBusinesss instanceof ArrayCollection) {
-            $this->organisationNatureOfBusinesss = new ArrayCollection(
+        if ($natureOfBusinesss instanceof ArrayCollection) {
+            $this->natureOfBusinesss = new ArrayCollection(
                 array_merge(
-                    $this->organisationNatureOfBusinesss->toArray(),
-                    $organisationNatureOfBusinesss->toArray()
+                    $this->natureOfBusinesss->toArray(),
+                    $natureOfBusinesss->toArray()
                 )
             );
-        } elseif (!$this->organisationNatureOfBusinesss->contains($organisationNatureOfBusinesss)) {
-            $this->organisationNatureOfBusinesss->add($organisationNatureOfBusinesss);
+        } elseif (!$this->natureOfBusinesss->contains($natureOfBusinesss)) {
+            $this->natureOfBusinesss->add($natureOfBusinesss);
         }
 
         return $this;
     }
 
     /**
-     * Remove a organisation nature of businesss
+     * Remove a nature of businesss
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationNatureOfBusinesss
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
      * @return Organisation
      */
-    public function removeOrganisationNatureOfBusinesss($organisationNatureOfBusinesss)
+    public function removeNatureOfBusinesss($natureOfBusinesss)
     {
-        if ($this->organisationNatureOfBusinesss->contains($organisationNatureOfBusinesss)) {
-            $this->organisationNatureOfBusinesss->removeElement($organisationNatureOfBusinesss);
+        if ($this->natureOfBusinesss->contains($natureOfBusinesss)) {
+            $this->natureOfBusinesss->removeElement($natureOfBusinesss);
         }
 
         return $this;
