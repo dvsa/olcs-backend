@@ -49,6 +49,16 @@ class Pi implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Agreed by tc role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
+     */
+    protected $agreedByTcRole;
+
+    /**
      * Decided by tc role
      *
      * @var \Olcs\Db\Entity\RefData
@@ -69,14 +79,14 @@ class Pi implements Interfaces\EntityInterface
     protected $writtenOutcome;
 
     /**
-     * Assigned to
+     * Agreed by tc
      *
-     * @var \Olcs\Db\Entity\User
+     * @var \Olcs\Db\Entity\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="agreed_by_tc_id", referencedColumnName="id", nullable=true)
      */
-    protected $assignedTo;
+    protected $agreedByTc;
 
     /**
      * Decided by tc
@@ -89,24 +99,14 @@ class Pi implements Interfaces\EntityInterface
     protected $decidedByTc;
 
     /**
-     * Agreed by tc role
+     * Assigned to
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
      */
-    protected $agreedByTcRole;
-
-    /**
-     * Agreed by tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
-     * @ORM\JoinColumn(name="agreed_by_tc_id", referencedColumnName="id", nullable=true)
-     */
-    protected $agreedByTc;
+    protected $assignedTo;
 
     /**
      * Pi status
@@ -334,6 +334,29 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the agreed by tc role
+     *
+     * @param \Olcs\Db\Entity\RefData $agreedByTcRole
+     * @return Pi
+     */
+    public function setAgreedByTcRole($agreedByTcRole)
+    {
+        $this->agreedByTcRole = $agreedByTcRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed by tc role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAgreedByTcRole()
+    {
+        return $this->agreedByTcRole;
+    }
+
+    /**
      * Set the decided by tc role
      *
      * @param \Olcs\Db\Entity\RefData $decidedByTcRole
@@ -380,26 +403,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the assigned to
+     * Set the agreed by tc
      *
-     * @param \Olcs\Db\Entity\User $assignedTo
+     * @param \Olcs\Db\Entity\PresidingTc $agreedByTc
      * @return Pi
      */
-    public function setAssignedTo($assignedTo)
+    public function setAgreedByTc($agreedByTc)
     {
-        $this->assignedTo = $assignedTo;
+        $this->agreedByTc = $agreedByTc;
 
         return $this;
     }
 
     /**
-     * Get the assigned to
+     * Get the agreed by tc
      *
-     * @return \Olcs\Db\Entity\User
+     * @return \Olcs\Db\Entity\PresidingTc
      */
-    public function getAssignedTo()
+    public function getAgreedByTc()
     {
-        return $this->assignedTo;
+        return $this->agreedByTc;
     }
 
     /**
@@ -426,49 +449,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the agreed by tc role
+     * Set the assigned to
      *
-     * @param \Olcs\Db\Entity\RefData $agreedByTcRole
+     * @param \Olcs\Db\Entity\User $assignedTo
      * @return Pi
      */
-    public function setAgreedByTcRole($agreedByTcRole)
+    public function setAssignedTo($assignedTo)
     {
-        $this->agreedByTcRole = $agreedByTcRole;
+        $this->assignedTo = $assignedTo;
 
         return $this;
     }
 
     /**
-     * Get the agreed by tc role
+     * Get the assigned to
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Olcs\Db\Entity\User
      */
-    public function getAgreedByTcRole()
+    public function getAssignedTo()
     {
-        return $this->agreedByTcRole;
-    }
-
-    /**
-     * Set the agreed by tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $agreedByTc
-     * @return Pi
-     */
-    public function setAgreedByTc($agreedByTc)
-    {
-        $this->agreedByTc = $agreedByTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the agreed by tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getAgreedByTc()
-    {
-        return $this->agreedByTc;
+        return $this->assignedTo;
     }
 
     /**
