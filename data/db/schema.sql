@@ -507,24 +507,13 @@ DROP TABLE IF EXISTS `bus_reg_local_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bus_reg_local_auth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `bus_reg_id` int(11) NOT NULL,
   `local_authority_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`bus_reg_id`,`local_authority_id`),
   UNIQUE KEY `bus_reg_la_unique` (`local_authority_id`,`bus_reg_id`),
   KEY `fk_bus_reg_local_auth_local_authority1_idx` (`local_authority_id`),
-  KEY `fk_bus_reg_local_auth_user1_idx` (`created_by`),
-  KEY `fk_bus_reg_local_auth_user2_idx` (`last_modified_by`),
-  KEY `fk_bus_reg_local_auth_bus_reg1` (`bus_reg_id`),
   CONSTRAINT `fk_bus_reg_local_auth_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_local_auth_local_authority1` FOREIGN KEY (`local_authority_id`) REFERENCES `local_authority` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_local_auth_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_local_auth_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_bus_reg_local_auth_local_authority1` FOREIGN KEY (`local_authority_id`) REFERENCES `local_authority` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2672,10 +2661,10 @@ CREATE TABLE `tm_grace_period` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
-  `start_date` date NOT NULL,
+  `start_date` date NOT NULL COMMENT 'Period can start on a future date.',
   `end_date` date NOT NULL,
   `action_date` datetime NOT NULL,
-  `grace_period_no` int(11) NOT NULL DEFAULT '1',
+  `grace_period_no` int(11) NOT NULL DEFAULT '1' COMMENT 'Grace period number for the licence. Starts at 1.',
   `assigned_to_user_id` int(11) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -4336,7 +4325,6 @@ CREATE TABLE `payment` (
   `legacy_status` int(11) DEFAULT NULL,
   `legacy_method` int(11) DEFAULT NULL,
   `legacy_choice` int(11) DEFAULT NULL,
-  `receipt_document_id` int(11) DEFAULT NULL,
   `legacy_guid` varchar(255) DEFAULT NULL,
   `completed_date` datetime DEFAULT NULL,
   `guid` varchar(255) DEFAULT NULL,
@@ -4348,10 +4336,8 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`id`),
   KEY `fk_payment_user1_idx` (`created_by`),
   KEY `fk_payment_user2_idx` (`last_modified_by`),
-  KEY `fk_payment_document1_idx` (`receipt_document_id`),
   CONSTRAINT `fk_payment_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_document1` FOREIGN KEY (`receipt_document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -251,8 +251,8 @@ CREATE TABLE `application_completion` (
   `business_details_status` int(11) DEFAULT NULL,
   `addresses_status` int(11) DEFAULT NULL,
   `people_status` int(11) DEFAULT NULL,
-  `taxi_psv_status` int(11) DEFAULT NULL,
-  `operating_centre_status` int(11) DEFAULT NULL,
+  `taxi_phv_status` int(11) DEFAULT NULL,
+  `operating_centres_status` int(11) DEFAULT NULL,
   `financial_evidence_status` int(11) DEFAULT NULL,
   `transport_managers_status` int(11) DEFAULT NULL,
   `vehicles_status` int(11) DEFAULT NULL,
@@ -275,7 +275,7 @@ CREATE TABLE `application_completion` (
   PRIMARY KEY (`id`),
   KEY `fk_application_completion_user1_idx` (`created_by`),
   KEY `fk_application_completion_user2_idx` (`last_modified_by`),
-  KEY `fk_application_completion_application1_idx` (`application_id`),
+  UNIQUE KEY `fk_application_completion_application_id_udx` (`application_id`),
   CONSTRAINT `fk_application_completion_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_completion_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_completion_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -3508,8 +3508,8 @@ CREATE TABLE `licence_no_gen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_licence_no_gen_application1_idx` (`licence_id`),
-  CONSTRAINT `fk_licence_no_gen_application1` FOREIGN KEY (`licence_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_licence_no_gen_licence1_idx` (`licence_id`),
+  CONSTRAINT `fk_licence_no_gen_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4362,6 +4362,7 @@ CREATE TABLE `pi` (
   KEY `fk_pi_presiding_tc2_idx` (`decided_by_tc_id`),
   KEY `fk_pi_ref_data1_idx` (`agreed_by_tc_role`),
   KEY `fk_pi_ref_data2_idx` (`decided_by_tc_role`),
+  KEY `fk_pi_ref_data3_idx` (`written_outcome`),
   CONSTRAINT `fk_pi_detail_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_detail_ref_data2` FOREIGN KEY (`pi_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_detail_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -4370,7 +4371,8 @@ CREATE TABLE `pi` (
   CONSTRAINT `fk_pi_presiding_tc1` FOREIGN KEY (`agreed_by_tc_id`) REFERENCES `presiding_tc` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_presiding_tc2` FOREIGN KEY (`decided_by_tc_id`) REFERENCES `presiding_tc` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_ref_data1` FOREIGN KEY (`agreed_by_tc_role`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_ref_data2` FOREIGN KEY (`decided_by_tc_role`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_pi_ref_data2` FOREIGN KEY (`decided_by_tc_role`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pi_ref_data3` FOREIGN KEY (`written_outcome`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
