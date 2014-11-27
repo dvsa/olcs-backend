@@ -343,8 +343,8 @@ INSERT INTO `licence` (
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (207,1,'B',0,1,'lcat_psv','OB4234566','lsts_suspended',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (208,1,'B',0,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (208,1,'B',0,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',1,
+    3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (209,1,'B',0,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
 
@@ -395,6 +395,11 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     (12,114,4,NULL,4,1,'removal reason 4','2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
     (13,115,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    '2014-02-20 00:00:00',1),
+
+    (14,208,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
+    '2014-02-20 00:00:00',1),
+    (15,208,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
 INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
