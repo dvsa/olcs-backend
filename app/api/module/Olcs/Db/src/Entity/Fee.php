@@ -22,7 +22,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_fee1_idx", columns={"parent_fee_id"}),
  *        @ORM\Index(name="fk_fee_user1_idx", columns={"waive_recommender_user_id"}),
  *        @ORM\Index(name="fk_fee_user2_idx", columns={"waive_approver_user_id"}),
- *        @ORM\Index(name="fk_fee_waive_reason1_idx", columns={"waive_reason_id"}),
  *        @ORM\Index(name="fk_fee_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_fee_user4_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_fee_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
@@ -70,16 +69,6 @@ class Fee implements Interfaces\EntityInterface
     protected $waiveApproverUser;
 
     /**
-     * Waive reason2
-     *
-     * @var \Olcs\Db\Entity\WaiveReason
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\WaiveReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_reason_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveReason2;
-
-    /**
      * Payment method
      *
      * @var \Olcs\Db\Entity\RefData
@@ -95,7 +84,7 @@ class Fee implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=false)
      */
     protected $feeStatus;
 
@@ -136,15 +125,6 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="received_amount", precision=10, scale=2, nullable=true)
      */
     protected $receivedAmount;
-
-    /**
-     * Invoice no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="invoice_no", nullable=true)
-     */
-    protected $invoiceNo;
 
     /**
      * Invoice line no
@@ -262,29 +242,6 @@ class Fee implements Interfaces\EntityInterface
     public function getWaiveApproverUser()
     {
         return $this->waiveApproverUser;
-    }
-
-    /**
-     * Set the waive reason2
-     *
-     * @param \Olcs\Db\Entity\WaiveReason $waiveReason2
-     * @return Fee
-     */
-    public function setWaiveReason2($waiveReason2)
-    {
-        $this->waiveReason2 = $waiveReason2;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive reason2
-     *
-     * @return \Olcs\Db\Entity\WaiveReason
-     */
-    public function getWaiveReason2()
-    {
-        return $this->waiveReason2;
     }
 
     /**
@@ -423,29 +380,6 @@ class Fee implements Interfaces\EntityInterface
     public function getReceivedAmount()
     {
         return $this->receivedAmount;
-    }
-
-    /**
-     * Set the invoice no
-     *
-     * @param int $invoiceNo
-     * @return Fee
-     */
-    public function setInvoiceNo($invoiceNo)
-    {
-        $this->invoiceNo = $invoiceNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the invoice no
-     *
-     * @return int
-     */
-    public function getInvoiceNo()
-    {
-        return $this->invoiceNo;
     }
 
     /**

@@ -64,46 +64,6 @@ LOCK TABLES `address` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `alpha_split`
---
-
-DROP TABLE IF EXISTS `alpha_split`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `alpha_split` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_inclusive` varchar(2) DEFAULT NULL,
-  `to_inclusive` varchar(2) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  `traffic_area_id` char(1) NOT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_alpha_split_user1_idx` (`user_id`),
-  KEY `fk_alpha_split_traffic_area1_idx` (`traffic_area_id`),
-  KEY `fk_alpha_split_user2_idx` (`created_by`),
-  KEY `fk_alpha_split_user3_idx` (`last_modified_by`),
-  CONSTRAINT `fk_alpha_split_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_alpha_split_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_alpha_split_user2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_alpha_split_user3` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `alpha_split`
---
-
-LOCK TABLES `alpha_split` WRITE;
-/*!40000 ALTER TABLE `alpha_split` DISABLE KEYS */;
-/*!40000 ALTER TABLE `alpha_split` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `admin_area_traffic_area`
 --
 
@@ -148,7 +108,6 @@ CREATE TABLE `appeal` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'A case can have a single appeal.',
   `appeal_no` varchar(20) DEFAULT NULL COMMENT 'Non system generated number entered by user.',
   `case_id` int(11) DEFAULT NULL,
-  `tm_case_id` int(11) DEFAULT NULL,
   `deadline_date` datetime DEFAULT NULL,
   `appeal_date` datetime DEFAULT NULL,
   `outline_ground` varchar(1024) DEFAULT NULL COMMENT 'Grounds for the appeal.',
@@ -215,7 +174,7 @@ CREATE TABLE `application` (
   `receivership` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been involved in a company that went into receivership',
   `insolvency_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User has confirmed that any futire insolvency will be communicated to the TC',
   `insolvency_details` varchar(4000) DEFAULT NULL COMMENT 'Details of previous bankrupcy, insolvency, administration, receivership of people linked to application',
-  `safety_confirmation` tinyint(1) NOT NULL DEFAULT '1',
+  `safety_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read safety information in application and will comply',
   `received_date` datetime DEFAULT NULL COMMENT 'Submitted date.  Was date_entered in OLBS',
   `target_completion_date` datetime DEFAULT NULL COMMENT 'SLA for application to be processed.',
   `granted_date` datetime DEFAULT NULL COMMENT 'Date application granted.',
@@ -353,9 +312,6 @@ CREATE TABLE `application_operating_centre` (
   `no_of_trailers_required` int(11) DEFAULT NULL COMMENT 'Number of trailers required to be kept at op centre',
   `no_of_vehicles_required` int(11) DEFAULT NULL COMMENT 'Number of vehicles required to be kept at op centre',
   `vi_action` varchar(1) DEFAULT NULL COMMENT 'Flag used in populated the vehicle inspectorate extract sent to mobile compliance system as part of batch job',
-  `added_date` datetime DEFAULT NULL,
-  `no_of_vehicles_possessed` int(11) DEFAULT NULL,
-  `no_of_trailers_possessed` int(11) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `is_interim` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'is operating centre required to be on interim licence.',
   `s4_id` int(11) DEFAULT NULL,
@@ -857,6 +813,8 @@ CREATE TABLE `category` (
   `description` varchar(255) NOT NULL,
   `is_doc_category` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Documents can have this category',
   `is_task_category` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Tasks can have this category',
+  `is_scan_category` tinyint(1) NOT NULL DEFAULT '1',
+  `task_allocation_type` varchar(32) DEFAULT NULL COMMENT 'Tasks of this category are allocated based upon TA, a single team or complex rules for icence type, TA, MLH.',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -865,8 +823,10 @@ CREATE TABLE `category` (
   PRIMARY KEY (`id`),
   KEY `fk_document_category_user1_idx` (`created_by`),
   KEY `fk_document_category_user2_idx` (`last_modified_by`),
+  KEY `fk_category_ref_data2_idx` (`task_allocation_type`),
   CONSTRAINT `fk_document_category_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_document_category_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_document_category_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_category_ref_data2` FOREIGN KEY (`task_allocation_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Business Category, such as licencing, compliance, environmental. Used to categorise documentation and tasks. Has different sub categories for tasks ao documents.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -889,8 +849,8 @@ DROP TABLE IF EXISTS `change_of_entity`;
 CREATE TABLE `change_of_entity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL COMMENT 'The new licence',
-  `old_licence_no` varchar(45) NOT NULL COMMENT 'The old licence number for display purposes',
-  `old_organisation_name` varchar(45) NOT NULL COMMENT 'The old organisation for display purposes',
+  `old_licence_no` varchar(18) NOT NULL COMMENT 'The old licence number for display purposes',
+  `old_organisation_name` varchar(160) NOT NULL COMMENT 'The old organisation for display purposes',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -926,13 +886,13 @@ DROP TABLE IF EXISTS `community_lic`;
 CREATE TABLE `community_lic` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
+  `com_lic_status` varchar(32) NOT NULL COMMENT 'annulled, cns, expired, pending, returned, revoked, surrender, suspended, valid, void, withdrawn',
   `expired_date` datetime DEFAULT NULL COMMENT 'The date the licence expired.',
   `specified_date` datetime DEFAULT NULL COMMENT 'Activation date of com licence.',
   `licence_expired_date` date DEFAULT NULL COMMENT 'The date the community licence will expire. Typically 5 years after specified date.  Generally less for an interim licence.',
   `issue_no` int(11) DEFAULT NULL COMMENT 'Issue 0 is the office copy. 0 is the licence, all others are refered to as certified copies.',
   `serial_no` int(11) DEFAULT NULL COMMENT 'Business ID',
   `serial_no_prefix` varchar(4) DEFAULT NULL COMMENT 'UKGB or UKNI',
-  `status` varchar(10) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -942,9 +902,11 @@ CREATE TABLE `community_lic` (
   KEY `fk_community_lic_licence1_idx` (`licence_id`),
   KEY `fk_community_lic_user1_idx` (`created_by`),
   KEY `fk_community_lic_user2_idx` (`last_modified_by`),
+  KEY `fk_community_lic_ref_data1_idx` (`com_lic_status`),
   CONSTRAINT `fk_community_lic_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_ref_data1` FOREIGN KEY (`com_lic_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Community licence. A licence for travel within the EU for both goods and PSV (but not PSV SR).';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1373,8 +1335,8 @@ CREATE TABLE `condition_undertaking` (
   `lic_condition_variation_id` int(11) DEFAULT NULL COMMENT 'The condition on linked to the licence that is being changed by the application condition. Changes applied when application is granted.',
   `condition_type` varchar(32) NOT NULL COMMENT 'Condition or Undertaking',
   `added_via` varchar(32) DEFAULT NULL COMMENT 'Episode, Application or Licence',
+  `action` varchar(1) DEFAULT NULL COMMENT 'For application conditions A for add and U for update, if updating a licence condition via an app.',
   `attached_to` varchar(32) DEFAULT NULL COMMENT 'Licence or Operating Centre',
-  `condition_date` datetime DEFAULT NULL,
   `is_draft` tinyint(1) NOT NULL DEFAULT '0',
   `is_fulfilled` tinyint(1) NOT NULL DEFAULT '0',
   `is_approved` tinyint(1) NOT NULL DEFAULT '0',
@@ -1748,7 +1710,6 @@ CREATE TABLE `disqualification` (
   `period` int(11) NOT NULL,
   `person_id` int(11) DEFAULT NULL,
   `organisation_id` int(11) DEFAULT NULL,
-  `transport_manager_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -1757,12 +1718,10 @@ CREATE TABLE `disqualification` (
   PRIMARY KEY (`id`),
   KEY `fk_disqualification_person1_idx` (`person_id`),
   KEY `fk_disqualification_organisation1_idx` (`organisation_id`),
-  KEY `fk_disqualification_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_disqualification_user1_idx` (`created_by`),
   KEY `fk_disqualification_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_disqualification_person1` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_disqualification_organisation1` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_disqualification_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_disqualification_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_disqualification_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1881,41 +1840,6 @@ LOCK TABLES `doc_paragraph_bookmark` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `doc_process`
---
-
-DROP TABLE IF EXISTS `doc_process`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `doc_process` (
-  `id` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_doc_process_user1_idx` (`created_by`),
-  KEY `fk_doc_process_user2_idx` (`last_modified_by`),
-  KEY `fk_doc_process_document_category1_idx` (`category_id`),
-  CONSTRAINT `fk_doc_process_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_doc_process_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_doc_process_document_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `doc_process`
---
-
-LOCK TABLES `doc_process` WRITE;
-/*!40000 ALTER TABLE `doc_process` DISABLE KEYS */;
-/*!40000 ALTER TABLE `doc_process` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `doc_template`
 --
 
@@ -1924,7 +1848,6 @@ DROP TABLE IF EXISTS `doc_template`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `doc_process_id` int(11) NOT NULL,
   `document_sub_category_id` int(11) NOT NULL,
   `description` varchar(255) NOT NULL,
   `document_id` int(11) NOT NULL,
@@ -1937,13 +1860,11 @@ CREATE TABLE `doc_template` (
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_doc_template_doc_process1_idx` (`doc_process_id`),
   KEY `fk_doc_template_document_sub_category1_idx` (`document_sub_category_id`),
   KEY `fk_doc_template_document1_idx` (`document_id`),
   KEY `fk_doc_template_user1_idx` (`created_by`),
   KEY `fk_doc_template_user2_idx` (`last_modified_by`),
   KEY `fk_doc_template_document_category1_idx` (`category_id`),
-  CONSTRAINT `fk_doc_template_doc_process1` FOREIGN KEY (`doc_process_id`) REFERENCES `doc_process` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_document_sub_category1` FOREIGN KEY (`document_sub_category_id`) REFERENCES `document_sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_document1` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2023,7 +1944,8 @@ CREATE TABLE `document` (
   `issued_date` datetime DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
-  `is_digital` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag true if doc was received or sent digitally',
+  `is_digital` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag true if doc was received or sent via email',
+  `is_scan` tinyint(1) NOT NULL DEFAULT '0',
   `file_extension` varchar(32) NOT NULL,
   `size` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -2105,40 +2027,6 @@ CREATE TABLE `document_sub_category` (
 LOCK TABLES `document_sub_category` WRITE;
 /*!40000 ALTER TABLE `document_sub_category` DISABLE KEYS */;
 /*!40000 ALTER TABLE `document_sub_category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `driver`
---
-
-DROP TABLE IF EXISTS `driver`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `driver` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contact_details_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_driver_contact_details1_idx` (`contact_details_id`),
-  KEY `fk_driver_user1_idx` (`created_by`),
-  KEY `fk_driver_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_driver_contact_details1` FOREIGN KEY (`contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_driver_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_driver_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `driver`
---
-
-LOCK TABLES `driver` WRITE;
-/*!40000 ALTER TABLE `driver` DISABLE KEYS */;
-/*!40000 ALTER TABLE `driver` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2452,32 +2340,6 @@ LOCK TABLES `enforcement_area` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `entity_type`
---
-
-DROP TABLE IF EXISTS `entity_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `entity_type` (
-  `id` int(11) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `current_template_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_entity_type_template1_idx` (`current_template_id`),
-  CONSTRAINT `fk_entity_type_template1` FOREIGN KEY (`current_template_id`) REFERENCES `template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `entity_type`
---
-
-LOCK TABLES `entity_type` WRITE;
-/*!40000 ALTER TABLE `entity_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `entity_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `event_history`
 --
 
@@ -2561,14 +2423,13 @@ DROP TABLE IF EXISTS `fee`;
 CREATE TABLE `fee` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Also used as the invoice number.',
   `fee_type_id` int(11) NOT NULL,
-  `fee_status` varchar(32) DEFAULT NULL,
+  `fee_status` varchar(32) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `received_amount` decimal(10,2) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
   `licence_id` int(11) DEFAULT NULL,
   `task_id` int(11) DEFAULT NULL,
-  `invoice_no` int(11) DEFAULT NULL,
   `invoice_line_no` int(11) DEFAULT NULL,
   `invoiced_date` datetime DEFAULT NULL,
   `received_date` datetime DEFAULT NULL,
@@ -2580,7 +2441,6 @@ CREATE TABLE `fee` (
   `waive_recommendation_date` datetime DEFAULT NULL,
   `waive_recommender_user_id` int(11) DEFAULT NULL,
   `waive_approver_user_id` int(11) DEFAULT NULL,
-  `waive_reason_id` int(11) DEFAULT NULL,
   `irfo_fee_id` varchar(10) DEFAULT NULL,
   `irfo_fee_exempt` tinyint(1) DEFAULT NULL,
   `irfo_file_no` varchar(10) DEFAULT NULL,
@@ -2600,14 +2460,11 @@ CREATE TABLE `fee` (
   KEY `fk_fee_fee1_idx` (`parent_fee_id`),
   KEY `fk_fee_user1_idx` (`waive_recommender_user_id`),
   KEY `fk_fee_user2_idx` (`waive_approver_user_id`),
-  KEY `fk_fee_waive_reason1_idx` (`waive_reason_id`),
   KEY `fk_fee_user3_idx` (`created_by`),
   KEY `fk_fee_user4_idx` (`last_modified_by`),
   KEY `fk_fee_irfo_gv_permit1_idx` (`irfo_gv_permit_id`),
   KEY `fk_fee_ref_data1_idx` (`fee_status`),
   KEY `fk_fee_ref_data2_idx` (`payment_method`),
-  CONSTRAINT `fk_fee_ref_data1_idx` FOREIGN KEY (`fee_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_fee_ref_data2_idx` FOREIGN KEY (`payment_method`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2616,10 +2473,11 @@ CREATE TABLE `fee` (
   CONSTRAINT `fk_fee_fee1` FOREIGN KEY (`parent_fee_id`) REFERENCES `fee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_user1` FOREIGN KEY (`waive_recommender_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_user2` FOREIGN KEY (`waive_approver_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_fee_waive_reason1` FOREIGN KEY (`waive_reason_id`) REFERENCES `waive_reason` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_user3` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_user4` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_fee_irfo_gv_permit1` FOREIGN KEY (`irfo_gv_permit_id`) REFERENCES `irfo_gv_permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_fee_irfo_gv_permit1` FOREIGN KEY (`irfo_gv_permit_id`) REFERENCES `irfo_gv_permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_ref_data1` FOREIGN KEY (`fee_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_ref_data2` FOREIGN KEY (`payment_method`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2630,6 +2488,50 @@ CREATE TABLE `fee` (
 LOCK TABLES `fee` WRITE;
 /*!40000 ALTER TABLE `fee` DISABLE KEYS */;
 /*!40000 ALTER TABLE `fee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fee_manual_alteration`
+--
+
+DROP TABLE IF EXISTS `fee_manual_alteration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fee_manual_alteration` (
+  `id` int(11) NOT NULL,
+  `fee_id` int(11) NOT NULL,
+  `alteration_type` varchar(32) NOT NULL,
+  `actioned_date` datetime DEFAULT NULL,
+  `post_received_date` datetime DEFAULT NULL,
+  `post_receipt_no` varchar(45) DEFAULT NULL,
+  `post_value` decimal(10,2) DEFAULT NULL,
+  `post_fee_status` varchar(32) NOT NULL,
+  `pre_received_date` datetime DEFAULT NULL,
+  `pre_receipt_no` varchar(45) DEFAULT NULL,
+  `pre_value` decimal(10,2) DEFAULT NULL,
+  `pre_fee_status` varchar(32) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_fee_manual_alteration_fee1_idx` (`fee_id`),
+  KEY `fk_fee_manual_alteration_ref_data1_idx` (`alteration_type`),
+  KEY `fk_fee_manual_alteration_ref_data2_idx` (`post_fee_status`),
+  KEY `fk_fee_manual_alteration_ref_data3_idx` (`pre_fee_status`),
+  KEY `fk_fee_manual_alteration_user1_idx` (`user_id`),
+  CONSTRAINT `fk_fee_manual_alteration_fee1` FOREIGN KEY (`fee_id`) REFERENCES `fee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_manual_alteration_ref_data1` FOREIGN KEY (`alteration_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_manual_alteration_ref_data2` FOREIGN KEY (`post_fee_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_manual_alteration_ref_data3` FOREIGN KEY (`pre_fee_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_manual_alteration_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fee_manual_alteration`
+--
+
+LOCK TABLES `fee_manual_alteration` WRITE;
+/*!40000 ALTER TABLE `fee_manual_alteration` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fee_manual_alteration` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2688,7 +2590,7 @@ CREATE TABLE `fee_type` (
   `five_year_value` decimal(10,2) DEFAULT NULL,
   `traffic_area_id` char(1) DEFAULT NULL,
   `licence_type` varchar(32) DEFAULT NULL,
-  `goods_or_psv` varchar(32) DEFAULT NULL,
+  `goods_or_psv` varchar(32) NOT NULL,
   `expire_fee_with_licence` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Dont allow payment after licence expires',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -2735,8 +2637,6 @@ CREATE TABLE `goods_disc` (
   `is_interim` tinyint(1) NOT NULL DEFAULT '0',
   `reprint_required` tinyint(1) NOT NULL DEFAULT '0',
   `is_printing` tinyint(1) NOT NULL DEFAULT '0',
-  `removal_reason` varchar(32) DEFAULT NULL,
-  `removal_explanation` varchar(32) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -2746,13 +2646,9 @@ CREATE TABLE `goods_disc` (
   KEY `fk_goods_disc_licence_vehicle1_idx` (`licence_vehicle_id`),
   KEY `fk_goods_disc_user1_idx` (`created_by`),
   KEY `fk_goods_disc_user2_idx` (`last_modified_by`),
-  KEY `fk_goods_disc_ref_data1_idx` (`removal_reason`),
-  KEY `fk_goods_disc_ref_data2_idx` (`removal_explanation`),
   CONSTRAINT `fk_goods_disc_licence_vehicle1` FOREIGN KEY (`licence_vehicle_id`) REFERENCES `licence_vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_goods_disc_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_goods_disc_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_goods_disc_ref_data1` FOREIGN KEY (`removal_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_goods_disc_ref_data2` FOREIGN KEY (`removal_explanation`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_goods_disc_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2763,6 +2659,48 @@ CREATE TABLE `goods_disc` (
 LOCK TABLES `goods_disc` WRITE;
 /*!40000 ALTER TABLE `goods_disc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `goods_disc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tm_grace_period`
+--
+
+DROP TABLE IF EXISTS `tm_grace_period`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tm_grace_period` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `licence_id` int(11) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `action_date` datetime NOT NULL,
+  `grace_period_no` int(11) NOT NULL DEFAULT '1',
+  `assigned_to_user_id` int(11) NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `fk_transport_manager_grace_period_licence1_idx` (`licence_id`),
+  KEY `fk_transport_manager_grace_period_user1_idx` (`assigned_to_user_id`),
+  KEY `fk_transport_manager_grace_period_user2_idx` (`created_by`),
+  KEY `fk_transport_manager_grace_period_user3_idx` (`last_modified_by`),
+  CONSTRAINT `fk_transport_manager_grace_period_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_grace_period_user1` FOREIGN KEY (`assigned_to_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_grace_period_user2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_grace_period_user3` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tm_grace_period`
+--
+
+LOCK TABLES `tm_grace_period` WRITE;
+/*!40000 ALTER TABLE `tm_grace_period` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tm_grace_period` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2840,61 +2778,6 @@ CREATE TABLE `hint_question` (
 LOCK TABLES `hint_question` WRITE;
 /*!40000 ALTER TABLE `hint_question` DISABLE KEYS */;
 /*!40000 ALTER TABLE `hint_question` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `history`
---
-
-DROP TABLE IF EXISTS `history`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `history` (
-  `id` int(11) NOT NULL,
-  `data` text NOT NULL,
-  `entity_type_id` int(11) NOT NULL,
-  `entity_id` int(11) NOT NULL,
-  `entity_version` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_history_entity1_idx` (`entity_type_id`),
-  CONSTRAINT `fk_history_entity1` FOREIGN KEY (`entity_type_id`) REFERENCES `entity_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `history`
---
-
-LOCK TABLES `history` WRITE;
-/*!40000 ALTER TABLE `history` DISABLE KEYS */;
-/*!40000 ALTER TABLE `history` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `history_template`
---
-
-DROP TABLE IF EXISTS `history_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `history_template` (
-  `history_id` int(11) NOT NULL,
-  `template_id` int(11) NOT NULL,
-  PRIMARY KEY (`history_id`,`template_id`),
-  KEY `fk_history_has_template_template1_idx` (`template_id`),
-  KEY `fk_history_has_template_history1_idx` (`history_id`),
-  CONSTRAINT `fk_history_has_template_history1` FOREIGN KEY (`history_id`) REFERENCES `history` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_history_has_template_template1` FOREIGN KEY (`template_id`) REFERENCES `template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `history_template`
---
-
-LOCK TABLES `history_template` WRITE;
-/*!40000 ALTER TABLE `history_template` DISABLE KEYS */;
-/*!40000 ALTER TABLE `history_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -3797,7 +3680,6 @@ CREATE TABLE `licence_operating_centre` (
   `no_of_trailers_possessed` int(11) DEFAULT NULL,
   `vi_action` varchar(1) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
-  `added_date` date DEFAULT NULL,
   `is_interim` tinyint(1) DEFAULT NULL,
   `publication_appropriate` tinyint(1) DEFAULT NULL,
   `s4_id` int(11) DEFAULT NULL,
@@ -3830,6 +3712,48 @@ LOCK TABLES `licence_operating_centre` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `licence_status_rule`
+--
+
+DROP TABLE IF EXISTS `licence_status_rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `licence_status_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `licence_id` int(11) NOT NULL,
+  `licence_status` varchar(32) NOT NULL COMMENT 'The status the licence will inherit on the start date',
+  `start_date` datetime NOT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `start_processed_date` datetime DEFAULT NULL COMMENT 'Date processed by batch job',
+  `end_processed_date` datetime DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `fk_licence_status_rule_licence1_idx` (`licence_id`),
+  KEY `fk_licence_status_rule_ref_data1_idx` (`licence_status`),
+  KEY `fk_licence_status_rule_user1_idx` (`created_by`),
+  KEY `fk_licence_status_rule_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_licence_status_rule_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_status_rule_ref_data1` FOREIGN KEY (`licence_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_status_rule_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_status_rule_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `licence_status_rule`
+--
+
+LOCK TABLES `licence_status_rule` WRITE;
+/*!40000 ALTER TABLE `licence_status_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `licence_status_rule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `licence_vehicle`
 --
 
@@ -3841,13 +3765,11 @@ CREATE TABLE `licence_vehicle` (
   `licence_id` int(11) NOT NULL,
   `vehicle_id` int(11) NOT NULL,
   `application_id` int(11) DEFAULT NULL,
+  `interim_application_id` int(11) DEFAULT NULL,
   `received_date` datetime DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `removal_date` datetime DEFAULT NULL COMMENT 'Date vehicle removed from licence',
-  `removal_reason` varchar(32) DEFAULT NULL,
-  `removal` tinyint(1) DEFAULT NULL,
   `removal_letter_seed_date` datetime DEFAULT NULL,
-  `is_interim` int(11) DEFAULT NULL,
   `vi_action` varchar(1) DEFAULT NULL,
   `warning_letter_seed_date` datetime DEFAULT NULL,
   `warning_letter_sent_date` datetime DEFAULT NULL,
@@ -3861,15 +3783,15 @@ CREATE TABLE `licence_vehicle` (
   KEY `fk_licence_vehicle_vehicle1_idx` (`vehicle_id`),
   KEY `fk_licence_vehicle_user1_idx` (`created_by`),
   KEY `fk_licence_vehicle_user2_idx` (`last_modified_by`),
-  KEY `fk_licence_vehicle_ref_data1_idx` (`removal_reason`),
   KEY `fk_licence_vehicle_application1_idx` (`application_id`),
+  KEY `fk_licence_vehicle_application2_idx` (`interim_application_id`),
   KEY `fk_licence_vehicle_licence1` (`licence_id`),
   CONSTRAINT `fk_licence_vehicle_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_vehicle_vehicle1` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_vehicle_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_vehicle_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_vehicle_ref_data1` FOREIGN KEY (`removal_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_vehicle_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_licence_vehicle_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_vehicle_application2` FOREIGN KEY (`interim_application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4333,6 +4255,34 @@ LOCK TABLES `organisation_person` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `organisation_type`
+--
+
+DROP TABLE IF EXISTS `organisation_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `organisation_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `org_type_id` varchar(32) NOT NULL COMMENT 'LTD, Partnership etc.',
+  `org_person_type_id` varchar(32) NOT NULL COMMENT 'Type if officers in org. Partners, directors etc.',
+  PRIMARY KEY (`id`),
+  KEY `fk_organisation_type_ref_data1_idx` (`org_type_id`),
+  KEY `fk_organisation_type_ref_data2_idx` (`org_person_type_id`),
+  CONSTRAINT `fk_organisation_type_ref_data1` FOREIGN KEY (`org_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_type_ref_data2` FOREIGN KEY (`org_person_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Organisation meta info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `organisation_type`
+--
+
+LOCK TABLES `organisation_type` WRITE;
+/*!40000 ALTER TABLE `organisation_type` DISABLE KEYS */;
+/*!40000 ALTER TABLE `organisation_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `organisation_user`
 --
 
@@ -4448,41 +4398,6 @@ LOCK TABLES `permission` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `penalty`
---
-
-DROP TABLE IF EXISTS `penalty`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `penalty` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `case_id` int(11) NOT NULL,
-  `notes` longtext,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_penalty_cases1_idx` (`case_id`),
-  KEY `fk_penalty_user1_idx` (`created_by`),
-  KEY `fk_penalty_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_penalty_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_penalty_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_penalty_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `penalty`
---
-
-LOCK TABLES `penalty` WRITE;
-/*!40000 ALTER TABLE `penalty` DISABLE KEYS */;
-/*!40000 ALTER TABLE `penalty` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `person`
 --
 
@@ -4580,9 +4495,7 @@ CREATE TABLE `pi` (
   `witnesses` int(11) DEFAULT NULL COMMENT 'Witnesses for the PI decision',
   `is_cancelled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'PI is cancelled',
   `pi_status` varchar(32) NOT NULL,
-  `is_adjourned` tinyint(1) NOT NULL DEFAULT '0',
   `section_code_text` varchar(1024) DEFAULT NULL COMMENT 'Populated from definitions. Can be edited by user.',
-  `reschedule_datetime` datetime DEFAULT NULL COMMENT 'Entered if is_adjourned.  Holds last reschedule date',
   `decision_date` date DEFAULT NULL,
   `licence_revoked_at_pi` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'The licence was revoked',
   `licence_curtailed_at_pi` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'The licence was curtailed. e.g. No of vehicles decreased.',
@@ -5213,10 +5126,7 @@ CREATE TABLE `psv_disc` (
   `issued_date` datetime DEFAULT NULL,
   `ceased_date` datetime DEFAULT NULL,
   `is_copy` tinyint(1) NOT NULL DEFAULT '0',
-  `reprint_required` tinyint(1) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `removal_reason` varchar(32) DEFAULT NULL,
-  `removal_explanation` varchar(32) DEFAULT NULL,
+  `reprint_required` tinyint(1) NOT NULL DEFAULT '0',
   `is_printing` tinyint(1) NOT NULL DEFAULT '0',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -5227,13 +5137,9 @@ CREATE TABLE `psv_disc` (
   KEY `fk_psv_disc_licence1_idx` (`licence_id`),
   KEY `fk_psv_disc_user1_idx` (`created_by`),
   KEY `fk_psv_disc_user2_idx` (`last_modified_by`),
-  KEY `fk_psv_disc_ref_data1_idx` (`removal_reason`),
-  KEY `fk_psv_disc_ref_data2_idx` (`removal_explanation`),
   CONSTRAINT `fk_psv_disc_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_psv_disc_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_psv_disc_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_psv_disc_ref_data1` FOREIGN KEY (`removal_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_psv_disc_ref_data2` FOREIGN KEY (`removal_explanation`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_psv_disc_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5413,6 +5319,46 @@ LOCK TABLES `publication_link` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `publication_police_data`
+--
+
+DROP TABLE IF EXISTS `publication_police_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `publication_police_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `publication_link_id` int(11) NOT NULL,
+  `forename` varchar(35) DEFAULT NULL,
+  `family_name` varchar(35) DEFAULT NULL,
+  `birth_date` date DEFAULT NULL COMMENT 'If null, police report will replace with not given.',
+  `olbs_dob` varchar(20) DEFAULT NULL COMMENT 'Legacy DOB. Was stred as varchar and format was not consistand',
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  `olbs_id` int(11) DEFAULT NULL COMMENT 'Used in ETL for updates. No use in olcs app normal processing. Can be dropped when etl complete.',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_olbs_id` (`olbs_id`) COMMENT 'Only required when etl active',
+  KEY `fk_publication_police_data_publication_link1_idx` (`publication_link_id`),
+  KEY `fk_publication_police_data_user1_idx` (`created_by`),
+  KEY `fk_publication_police_data_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_publication_police_data_publication_link1` FOREIGN KEY (`publication_link_id`) REFERENCES `publication_link` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_police_data_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_police_data_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Police recipients of a publication get extra data. Currently this is the date of birth of people in the publication.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `publication_police_data`
+--
+
+LOCK TABLES `publication_police_data` WRITE;
+/*!40000 ALTER TABLE `publication_police_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `publication_police_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `publication_section`
 --
 
@@ -5496,18 +5442,17 @@ CREATE TABLE `recipient` (
   `send_notices_procs` tinyint(1) NOT NULL DEFAULT '0',
   `is_police` tinyint(1) NOT NULL DEFAULT '0',
   `is_objector` tinyint(1) NOT NULL DEFAULT '0',
+  `contact_name` varchar(100) DEFAULT NULL,
+  `email_address` varchar(100) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
-  `contact_details_id` int(11) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_recipient_contact_details1_idx` (`contact_details_id`),
   KEY `fk_recipient_user1_idx` (`created_by`),
   KEY `fk_recipient_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_recipient_contact_details1` FOREIGN KEY (`contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_recipient_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_recipient_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -5565,6 +5510,7 @@ CREATE TABLE `ref_data` (
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_ref_data_ref_data1_idx` (`parent_id`),
+  KEY `ref_data_category_id_idx` (`ref_data_category_id`),
   CONSTRAINT `fk_ref_data_ref_data1` FOREIGN KEY (`parent_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5698,16 +5644,12 @@ DROP TABLE IF EXISTS `s4_condition`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `s4_condition` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `source_condition_id` int(11) NOT NULL,
-  `target_condition_id` int(11) NOT NULL,
+  `condition_id` int(11) NOT NULL,
   `s4_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_s4_condition_Condition1_idx` (`source_condition_id`),
-  KEY `fk_s4_condition_Condition2_idx` (`target_condition_id`),
+  PRIMARY KEY (`condition_id`,`s4_id`),
+  KEY `fk_s4_condition_Condition1_idx` (`condition_id`),
   KEY `fk_s4_condition_s41_idx` (`s4_id`),
-  CONSTRAINT `fk_s4_condition_Condition1` FOREIGN KEY (`source_condition_id`) REFERENCES `condition_undertaking` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_s4_condition_Condition2` FOREIGN KEY (`target_condition_id`) REFERENCES `condition_undertaking` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_s4_condition_Condition1` FOREIGN KEY (`condition_id`) REFERENCES `condition_undertaking` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_s4_condition_s41` FOREIGN KEY (`s4_id`) REFERENCES `s4` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6126,17 +6068,17 @@ CREATE TABLE `statement` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_statement_case1_idx` (`case_id`),
-  KEY `fk_statement_type1_idx` (`statement_type`),
   KEY `fk_statement_address1_idx` (`requestors_address_id`),
   KEY `fk_statement_user1_idx` (`created_by`),
   KEY `fk_statement_user2_idx` (`last_modified_by`),
   KEY `fk_statement_ref_data2_idx` (`contact_type`),
-  CONSTRAINT `fk_statement_type1` FOREIGN KEY (`statement_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_statement_ref_data1_idx` (`statement_type`),
   CONSTRAINT `fk_statement_case1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_address1` FOREIGN KEY (`requestors_address_id`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_ref_data2` FOREIGN KEY (`contact_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_statement_ref_data2` FOREIGN KEY (`contact_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_statement_ref_data1` FOREIGN KEY (`statement_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6247,7 +6189,7 @@ CREATE TABLE `submission_action` (
   `submission_id` int(11) NOT NULL,
   `sender_user_id` int(11) NOT NULL,
   `recipient_user_id` int(11) NOT NULL,
-  `submission_action_status` varchar(35) NOT NULL,
+  `submission_action_status` varchar(32) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -6259,13 +6201,13 @@ CREATE TABLE `submission_action` (
   KEY `fk_submission_action_user3_idx` (`created_by`),
   KEY `fk_submission_action_user4_idx` (`last_modified_by`),
   KEY `fk_submission_action_submission1_idx` (`submission_id`),
-  KEY `fk_submission_action_status1_idx` (`submission_action_status`),
+  KEY `fk_submission_action_ref_data1_idx` (`submission_action_status`),
   CONSTRAINT `fk_submission_action_user1` FOREIGN KEY (`sender_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_submission_action_user2` FOREIGN KEY (`recipient_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_submission_action_user3` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_submission_action_user4` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_submission_action_submission1` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_submission_action_status_ref_data1` FOREIGN KEY (`submission_action_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_submission_action_ref_data1` FOREIGN KEY (`submission_action_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6289,10 +6231,10 @@ CREATE TABLE `submission_action_reason` (
   `submission_action_id` int(11) NOT NULL,
   `reason_id` int(11) NOT NULL,
   PRIMARY KEY (`submission_action_id`,`reason_id`),
-  KEY `submission_action_reason_k1` (`reason_id`),
-  KEY `submission_action_reason_k2` (`submission_action_id`),
-  CONSTRAINT `FK_submission_action_reason1` FOREIGN KEY (`reason_id`) REFERENCES `reason` (`id`),
-  CONSTRAINT `FK_submission_action_reason2` FOREIGN KEY (`submission_action_id`) REFERENCES `submission_action` (`id`)
+  KEY `fk_submission_action_has_reason_reason1_idx` (`reason_id`),
+  KEY `fk_submission_action_has_reason_submission_action1_idx` (`submission_action_id`),
+  CONSTRAINT `fk_submission_action_has_reason_submission_action1` FOREIGN KEY (`submission_action_id`) REFERENCES `submission_action` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_submission_action_has_reason_reason1` FOREIGN KEY (`reason_id`) REFERENCES `reason` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6472,6 +6414,74 @@ LOCK TABLES `task` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `task_allocation_rules`
+--
+
+DROP TABLE IF EXISTS `task_allocation_rules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task_allocation_rules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) DEFAULT NULL,
+  `team_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
+  `is_mlh` tinyint(1) DEFAULT NULL,
+  `traffic_area_id` char(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_task_allocation_rules_category1_idx` (`category_id`),
+  KEY `fk_task_allocation_rules_team1_idx` (`team_id`),
+  KEY `fk_task_allocation_rules_user1_idx` (`user_id`),
+  KEY `fk_task_allocation_rules_ref_data1_idx` (`goods_or_psv`),
+  KEY `fk_task_allocation_rules_traffic_area1_idx` (`traffic_area_id`),
+  CONSTRAINT `fk_task_allocation_rules_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rules_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rules_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rules_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rules_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `task_allocation_rules`
+--
+
+LOCK TABLES `task_allocation_rules` WRITE;
+/*!40000 ALTER TABLE `task_allocation_rules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task_allocation_rules` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `task_alpha_split`
+--
+
+DROP TABLE IF EXISTS `task_alpha_split`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task_alpha_split` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_allocation_rules_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `split_from_inclusive` varchar(2) NOT NULL,
+  `split_to_inclusive` varchar(2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_task_alpha_split_task_allocation_rules1_idx` (`task_allocation_rules_id`),
+  KEY `fk_task_alpha_split_user1_idx` (`user_id`),
+  CONSTRAINT `fk_task_alpha_split_task_allocation_rules1` FOREIGN KEY (`task_allocation_rules_id`) REFERENCES `task_allocation_rules` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_alpha_split_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `task_alpha_split`
+--
+
+LOCK TABLES `task_alpha_split` WRITE;
+/*!40000 ALTER TABLE `task_alpha_split` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task_alpha_split` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `task_note`
 --
 
@@ -6544,7 +6554,6 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` int(11) NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
-  `override_ta_contact_id` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(70) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -6554,13 +6563,11 @@ CREATE TABLE `team` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_team_traffic_area1_idx` (`traffic_area_id`),
-  KEY `fk_team_user1_idx` (`created_by`),
   KEY `fk_team_user2_idx` (`last_modified_by`),
-  KEY `fk_team_contact_details1_idx` (`override_ta_contact_id`),
+  KEY `fk_team_user1_idx` (`created_by`),
   CONSTRAINT `fk_team_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_team_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_team_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_team_contact_details1` FOREIGN KEY (`override_ta_contact_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_team_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6600,29 +6607,6 @@ CREATE TABLE `team_printer` (
 LOCK TABLES `team_printer` WRITE;
 /*!40000 ALTER TABLE `team_printer` DISABLE KEYS */;
 /*!40000 ALTER TABLE `team_printer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `template`
---
-
-DROP TABLE IF EXISTS `template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `template` (
-  `id` int(11) NOT NULL,
-  `data` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `template`
---
-
-LOCK TABLES `template` WRITE;
-/*!40000 ALTER TABLE `template` DISABLE KEYS */;
-/*!40000 ALTER TABLE `template` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6746,45 +6730,46 @@ LOCK TABLES `tm_case_decision_unfitness` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tm_grace_period`
+-- Table structure for table `tm_merge`
 --
 
-DROP TABLE IF EXISTS `tm_grace_period`;
+DROP TABLE IF EXISTS `tm_merge`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tm_grace_period` (
+CREATE TABLE `tm_merge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `licence_id` int(11) NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '0',
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `action_date` datetime NOT NULL,
-  `grace_period_no` int(11) NOT NULL DEFAULT '1',
-  `assigned_to_user_id` int(11) NOT NULL,
+  `tm_from_id` int(11) NOT NULL COMMENT 'The TM that is being merged from',
+  `tm_to_id` int(11) NOT NULL COMMENT 'The TM merging into',
+  `tm_application_id` int(11) DEFAULT NULL COMMENT 'Application being moved from TM to TM',
+  `tm_licence_id` int(11) DEFAULT NULL COMMENT 'Licence being moved from TM to TM',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_transport_manager_grace_period_licence1_idx` (`licence_id`),
-  KEY `fk_transport_manager_grace_period_user1_idx` (`assigned_to_user_id`),
-  KEY `fk_transport_manager_grace_period_user2_idx` (`created_by`),
-  KEY `fk_transport_manager_grace_period_user3_idx` (`last_modified_by`),
-  CONSTRAINT `fk_transport_manager_grace_period_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_grace_period_user1` FOREIGN KEY (`assigned_to_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_grace_period_user2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_grace_period_user3` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_tm_merge_transport_manager1_idx` (`tm_from_id`),
+  KEY `fk_tm_merge_transport_manager2_idx` (`tm_to_id`),
+  KEY `fk_tm_merge_transport_manager_application1_idx` (`tm_application_id`),
+  KEY `fk_tm_merge_transport_manager_licence1_idx` (`tm_licence_id`),
+  KEY `fk_tm_merge_user1_idx` (`created_by`),
+  KEY `fk_tm_merge_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_tm_merge_transport_manager1` FOREIGN KEY (`tm_from_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_merge_transport_manager2` FOREIGN KEY (`tm_to_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_merge_transport_manager_application1` FOREIGN KEY (`tm_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_merge_transport_manager_licence1` FOREIGN KEY (`tm_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_merge_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_merge_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tm_grace_period`
+-- Dumping data for table `tm_merge`
 --
 
-LOCK TABLES `tm_grace_period` WRITE;
-/*!40000 ALTER TABLE `tm_grace_period` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tm_grace_period` ENABLE KEYS */;
+LOCK TABLES `tm_merge` WRITE;
+/*!40000 ALTER TABLE `tm_merge` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tm_merge` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6939,7 +6924,6 @@ CREATE TABLE `traffic_area` (
   `txc_name` varchar(70) DEFAULT NULL,
   `contact_details_id` int(11) NOT NULL,
   `is_scotland` tinyint(1) NOT NULL DEFAULT '0',
-  `is_scottish_rules` tinyint(1) NOT NULL DEFAULT '0',
   `is_wales` tinyint(1) NOT NULL DEFAULT '0',
   `is_ni` tinyint(1) NOT NULL DEFAULT '0',
   `is_england` tinyint(1) NOT NULL DEFAULT '0',
@@ -7098,6 +7082,7 @@ CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
   `application_id` int(11) NOT NULL,
+  `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -7408,7 +7393,9 @@ CREATE TABLE `void_disc` (
   `licence_type` varchar(32) NOT NULL,
   `serial_start` int(11) DEFAULT NULL,
   `serial_end` int(11) DEFAULT NULL,
-  `traffic_area_id` char(3) NOT NULL,
+  `traffic_area_id` char(1) DEFAULT NULL,
+  `is_self_serve` tinyint(1) NOT NULL DEFAULT '0',
+  `is_ni_self_serve` tinyint(1) NOT NULL DEFAULT '0',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -7435,39 +7422,6 @@ CREATE TABLE `void_disc` (
 LOCK TABLES `void_disc` WRITE;
 /*!40000 ALTER TABLE `void_disc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `void_disc` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `waive_reason`
---
-
-DROP TABLE IF EXISTS `waive_reason`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `waive_reason` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_irfo` tinyint(1) NOT NULL DEFAULT '0',
-  `description` varchar(255) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_waive_reason_user1_idx` (`created_by`),
-  KEY `fk_waive_reason_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_waive_reason_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_waive_reason_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `waive_reason`
---
-
-LOCK TABLES `waive_reason` WRITE;
-/*!40000 ALTER TABLE `waive_reason` DISABLE KEYS */;
-/*!40000 ALTER TABLE `waive_reason` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

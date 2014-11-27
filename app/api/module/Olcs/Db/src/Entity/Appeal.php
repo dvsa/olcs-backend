@@ -66,15 +66,6 @@ class Appeal implements Interfaces\EntityInterface
     protected $appealNo;
 
     /**
-     * Tm case id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tm_case_id", nullable=true)
-     */
-    protected $tmCaseId;
-
-    /**
      * Deadline date
      *
      * @var \DateTime
@@ -195,29 +186,6 @@ class Appeal implements Interfaces\EntityInterface
     public function getAppealNo()
     {
         return $this->appealNo;
-    }
-
-    /**
-     * Set the tm case id
-     *
-     * @param int $tmCaseId
-     * @return Appeal
-     */
-    public function setTmCaseId($tmCaseId)
-    {
-        $this->tmCaseId = $tmCaseId;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm case id
-     *
-     * @return int
-     */
-    public function getTmCaseId()
-    {
-        return $this->tmCaseId;
     }
 
     /**

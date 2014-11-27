@@ -34,7 +34,6 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
-        Traits\IsAdjournedField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -94,6 +93,15 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="cancelled_date", nullable=true)
      */
     protected $cancelledDate;
+
+    /**
+     * Is adjourned
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
+     */
+    protected $isAdjourned = 0;
 
     /**
      * Adjourned date
@@ -258,6 +266,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getCancelledDate()
     {
         return $this->cancelledDate;
+    }
+
+    /**
+     * Set the is adjourned
+     *
+     * @param string $isAdjourned
+     * @return PiHearing
+     */
+    public function setIsAdjourned($isAdjourned)
+    {
+        $this->isAdjourned = $isAdjourned;
+
+        return $this;
+    }
+
+    /**
+     * Get the is adjourned
+     *
+     * @return string
+     */
+    public function getIsAdjourned()
+    {
+        return $this->isAdjourned;
     }
 
     /**

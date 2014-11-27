@@ -33,8 +33,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\S4ManyToOne,
         Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
-        Traits\NoOfVehiclesPossessedField,
-        Traits\NoOfTrailersPossessedField,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -105,13 +103,22 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $noOfVehiclesRequired;
 
     /**
-     * Added date
+     * No of vehicles possessed
      *
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(type="date", name="added_date", nullable=true)
+     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
      */
-    protected $addedDate;
+    protected $noOfVehiclesPossessed;
+
+    /**
+     * No of trailers possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
+     */
+    protected $noOfTrailersPossessed;
 
     /**
      * Is interim
@@ -293,26 +300,49 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the added date
+     * Set the no of vehicles possessed
      *
-     * @param \DateTime $addedDate
+     * @param int $noOfVehiclesPossessed
      * @return LicenceOperatingCentre
      */
-    public function setAddedDate($addedDate)
+    public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
     {
-        $this->addedDate = $addedDate;
+        $this->noOfVehiclesPossessed = $noOfVehiclesPossessed;
 
         return $this;
     }
 
     /**
-     * Get the added date
+     * Get the no of vehicles possessed
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getAddedDate()
+    public function getNoOfVehiclesPossessed()
     {
-        return $this->addedDate;
+        return $this->noOfVehiclesPossessed;
+    }
+
+    /**
+     * Set the no of trailers possessed
+     *
+     * @param int $noOfTrailersPossessed
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfTrailersPossessed($noOfTrailersPossessed)
+    {
+        $this->noOfTrailersPossessed = $noOfTrailersPossessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of trailers possessed
+     *
+     * @return int
+     */
+    public function getNoOfTrailersPossessed()
+    {
+        return $this->noOfTrailersPossessed;
     }
 
     /**

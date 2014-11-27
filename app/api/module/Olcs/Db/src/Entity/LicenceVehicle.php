@@ -20,8 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_licence_vehicle_vehicle1_idx", columns={"vehicle_id"}),
  *        @ORM\Index(name="fk_licence_vehicle_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_licence_vehicle_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_vehicle_ref_data1_idx", columns={"removal_reason"}),
  *        @ORM\Index(name="fk_licence_vehicle_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_licence_vehicle_application2_idx", columns={"interim_application_id"}),
  *        @ORM\Index(name="fk_licence_vehicle_licence1", columns={"licence_id"})
  *    }
  * )
@@ -32,7 +32,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\ApplicationManyToOne,
         Traits\ReceivedDateField,
         Traits\CustomDeletedDateField,
@@ -63,6 +62,16 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $licence;
 
     /**
+     * Interim application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
+     * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $interimApplication;
+
+    /**
      * Removal date
      *
      * @var \DateTime
@@ -72,15 +81,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $removalDate;
 
     /**
-     * Removal
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="removal", nullable=true)
-     */
-    protected $removal;
-
-    /**
      * Removal letter seed date
      *
      * @var \DateTime
@@ -88,15 +88,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="removal_letter_seed_date", nullable=true)
      */
     protected $removalLetterSeedDate;
-
-    /**
-     * Is interim
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="is_interim", nullable=true)
-     */
-    protected $isInterim;
 
     /**
      * Warning letter seed date
@@ -181,6 +172,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the interim application
+     *
+     * @param \Olcs\Db\Entity\Application $interimApplication
+     * @return LicenceVehicle
+     */
+    public function setInterimApplication($interimApplication)
+    {
+        $this->interimApplication = $interimApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getInterimApplication()
+    {
+        return $this->interimApplication;
+    }
+
+    /**
      * Set the removal date
      *
      * @param \DateTime $removalDate
@@ -204,29 +218,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the removal
-     *
-     * @param string $removal
-     * @return LicenceVehicle
-     */
-    public function setRemoval($removal)
-    {
-        $this->removal = $removal;
-
-        return $this;
-    }
-
-    /**
-     * Get the removal
-     *
-     * @return string
-     */
-    public function getRemoval()
-    {
-        return $this->removal;
-    }
-
-    /**
      * Set the removal letter seed date
      *
      * @param \DateTime $removalLetterSeedDate
@@ -247,29 +238,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getRemovalLetterSeedDate()
     {
         return $this->removalLetterSeedDate;
-    }
-
-    /**
-     * Set the is interim
-     *
-     * @param int $isInterim
-     * @return LicenceVehicle
-     */
-    public function setIsInterim($isInterim)
-    {
-        $this->isInterim = $isInterim;
-
-        return $this;
-    }
-
-    /**
-     * Get the is interim
-     *
-     * @return int
-     */
-    public function getIsInterim()
-    {
-        return $this->isInterim;
     }
 
     /**

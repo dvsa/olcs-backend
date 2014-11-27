@@ -16,9 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_goods_disc_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
  *        @ORM\Index(name="fk_goods_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data1_idx", columns={"removal_reason"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data2_idx", columns={"removal_explanation"})
+ *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,8 +26,6 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
