@@ -70,15 +70,6 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $isScotland = 0;
 
     /**
-     * Is scottish rules
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_scottish_rules", nullable=false)
-     */
-    protected $isScottishRules = 0;
-
-    /**
      * Is wales
      *
      * @var boolean
@@ -250,29 +241,6 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getIsScotland()
     {
         return $this->isScotland;
-    }
-
-    /**
-     * Set the is scottish rules
-     *
-     * @param boolean $isScottishRules
-     * @return TrafficArea
-     */
-    public function setIsScottishRules($isScottishRules)
-    {
-        $this->isScottishRules = $isScottishRules;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scottish rules
-     *
-     * @return boolean
-     */
-    public function getIsScottishRules()
-    {
-        return $this->isScottishRules;
     }
 
     /**

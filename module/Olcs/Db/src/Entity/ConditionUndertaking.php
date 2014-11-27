@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -85,16 +86,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $addedVia;
 
     /**
-     * Attached to
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
-     */
-    protected $attachedTo;
-
-    /**
      * Case
      *
      * @var \Olcs\Db\Entity\Cases
@@ -105,13 +96,40 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $case;
 
     /**
-     * Condition date
+     * Attached to
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="condition_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
      */
-    protected $conditionDate;
+    protected $attachedTo;
+
+    /**
+     * S4
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions", fetch="LAZY")
+     * @ORM\JoinTable(name="s4_condition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $s4s;
+
+    /**
+     * Action
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="action", length=1, nullable=true)
+     */
+    protected $action;
 
     /**
      * Is draft
@@ -148,6 +166,14 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="notes", length=8000, nullable=true)
      */
     protected $notes;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->s4s = new ArrayCollection();
+    }
 
     /**
      * Set the lic condition variation
@@ -242,29 +268,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the attached to
-     *
-     * @param \Olcs\Db\Entity\RefData $attachedTo
-     * @return ConditionUndertaking
-     */
-    public function setAttachedTo($attachedTo)
-    {
-        $this->attachedTo = $attachedTo;
-
-        return $this;
-    }
-
-    /**
-     * Get the attached to
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAttachedTo()
-    {
-        return $this->attachedTo;
-    }
-
-    /**
      * Set the case
      *
      * @param \Olcs\Db\Entity\Cases $case
@@ -288,26 +291,109 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the condition date
+     * Set the attached to
      *
-     * @param \DateTime $conditionDate
+     * @param \Olcs\Db\Entity\RefData $attachedTo
      * @return ConditionUndertaking
      */
-    public function setConditionDate($conditionDate)
+    public function setAttachedTo($attachedTo)
     {
-        $this->conditionDate = $conditionDate;
+        $this->attachedTo = $attachedTo;
 
         return $this;
     }
 
     /**
-     * Get the condition date
+     * Get the attached to
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getConditionDate()
+    public function getAttachedTo()
     {
-        return $this->conditionDate;
+        return $this->attachedTo;
+    }
+
+    /**
+     * Set the s4
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function setS4s($s4s)
+    {
+        $this->s4s = $s4s;
+
+        return $this;
+    }
+
+    /**
+     * Get the s4s
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getS4s()
+    {
+        return $this->s4s;
+    }
+
+    /**
+     * Add a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function addS4s($s4s)
+    {
+        if ($s4s instanceof ArrayCollection) {
+            $this->s4s = new ArrayCollection(
+                array_merge(
+                    $this->s4s->toArray(),
+                    $s4s->toArray()
+                )
+            );
+        } elseif (!$this->s4s->contains($s4s)) {
+            $this->s4s->add($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function removeS4s($s4s)
+    {
+        if ($this->s4s->contains($s4s)) {
+            $this->s4s->removeElement($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the action
+     *
+     * @param string $action
+     * @return ConditionUndertaking
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Get the action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 
     /**

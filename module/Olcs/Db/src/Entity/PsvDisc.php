@@ -16,9 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_psv_disc_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_psv_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_psv_disc_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_psv_disc_ref_data1_idx", columns={"removal_reason"}),
- *        @ORM\Index(name="fk_psv_disc_ref_data2_idx", columns={"removal_explanation"})
+ *        @ORM\Index(name="fk_psv_disc_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,12 +26,9 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\StartDateFieldAlt1,
         Traits\IsPrintingField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -63,9 +58,9 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=true)
+     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false)
      */
-    protected $reprintRequired;
+    protected $reprintRequired = 0;
 
     /**
      * Set the licence

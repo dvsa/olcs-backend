@@ -20,7 +20,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_submission_action_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_submission_action_user4_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_submission_action_submission1_idx", columns={"submission_id"}),
- *        @ORM\Index(name="fk_submission_action_status1_idx", columns={"submission_action_status"})
+ *        @ORM\Index(name="fk_submission_action_ref_data1_idx", columns={"submission_action_status"})
  *    }
  * )
  */

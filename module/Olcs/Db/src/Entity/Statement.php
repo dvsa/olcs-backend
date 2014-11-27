@@ -15,11 +15,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_type1_idx", columns={"statement_type"}),
  *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"})
+ *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"}),
+ *        @ORM\Index(name="fk_statement_ref_data1_idx", columns={"statement_type"})
  *    }
  * )
  */
@@ -37,16 +37,6 @@ class Statement implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Statement type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
-     */
-    protected $statementType;
-
-    /**
      * Contact type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -55,6 +45,16 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=true)
      */
     protected $contactType;
+
+    /**
+     * Statement type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
+     */
+    protected $statementType;
 
     /**
      * Requestors address
@@ -148,29 +148,6 @@ class Statement implements Interfaces\EntityInterface
     protected $requestorsForename;
 
     /**
-     * Set the statement type
-     *
-     * @param \Olcs\Db\Entity\RefData $statementType
-     * @return Statement
-     */
-    public function setStatementType($statementType)
-    {
-        $this->statementType = $statementType;
-
-        return $this;
-    }
-
-    /**
-     * Get the statement type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatementType()
-    {
-        return $this->statementType;
-    }
-
-    /**
      * Set the contact type
      *
      * @param \Olcs\Db\Entity\RefData $contactType
@@ -191,6 +168,29 @@ class Statement implements Interfaces\EntityInterface
     public function getContactType()
     {
         return $this->contactType;
+    }
+
+    /**
+     * Set the statement type
+     *
+     * @param \Olcs\Db\Entity\RefData $statementType
+     * @return Statement
+     */
+    public function setStatementType($statementType)
+    {
+        $this->statementType = $statementType;
+
+        return $this;
+    }
+
+    /**
+     * Get the statement type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatementType()
+    {
+        return $this->statementType;
     }
 
     /**

@@ -29,7 +29,7 @@ class FeeType implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\LicenceTypeManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,

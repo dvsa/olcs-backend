@@ -16,7 +16,6 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_disqualification_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_disqualification_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_disqualification_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_disqualification_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_disqualification_user2_idx", columns={"last_modified_by"})
  *    }
@@ -28,7 +27,6 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
         Traits\StartDateFieldAlt1,

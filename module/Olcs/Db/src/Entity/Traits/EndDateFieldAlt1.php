@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * End date field alt1 trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait EndDateFieldAlt1
 {

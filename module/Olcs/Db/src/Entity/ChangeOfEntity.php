@@ -38,7 +38,7 @@ class ChangeOfEntity implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="old_licence_no", length=45, nullable=false)
+     * @ORM\Column(type="string", name="old_licence_no", length=18, nullable=false)
      */
     protected $oldLicenceNo;
 
@@ -47,7 +47,7 @@ class ChangeOfEntity implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="old_organisation_name", length=45, nullable=false)
+     * @ORM\Column(type="string", name="old_organisation_name", length=160, nullable=false)
      */
     protected $oldOrganisationName;
 

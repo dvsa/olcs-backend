@@ -28,7 +28,7 @@ class VoidDisc implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -61,6 +61,24 @@ class VoidDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="serial_end", nullable=true)
      */
     protected $serialEnd;
+
+    /**
+     * Is self serve
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false)
+     */
+    protected $isSelfServe = 0;
+
+    /**
+     * Is ni self serve
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ni_self_serve", nullable=false)
+     */
+    protected $isNiSelfServe = 0;
 
     /**
      * Set the licence type
@@ -129,5 +147,51 @@ class VoidDisc implements Interfaces\EntityInterface
     public function getSerialEnd()
     {
         return $this->serialEnd;
+    }
+
+    /**
+     * Set the is self serve
+     *
+     * @param boolean $isSelfServe
+     * @return VoidDisc
+     */
+    public function setIsSelfServe($isSelfServe)
+    {
+        $this->isSelfServe = $isSelfServe;
+
+        return $this;
+    }
+
+    /**
+     * Get the is self serve
+     *
+     * @return boolean
+     */
+    public function getIsSelfServe()
+    {
+        return $this->isSelfServe;
+    }
+
+    /**
+     * Set the is ni self serve
+     *
+     * @param boolean $isNiSelfServe
+     * @return VoidDisc
+     */
+    public function setIsNiSelfServe($isNiSelfServe)
+    {
+        $this->isNiSelfServe = $isNiSelfServe;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni self serve
+     *
+     * @return boolean
+     */
+    public function getIsNiSelfServe()
+    {
+        return $this->isNiSelfServe;
     }
 }

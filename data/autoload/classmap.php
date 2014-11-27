@@ -725,4 +725,7 @@ return array(
     'Doctrine\DBAL\Schema\Visitor\NamespaceVisitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor/NamespaceVisitor.php',
     'Doctrine\DBAL\Schema\Comparator' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Comparator.php',
     'Doctrine\DBAL\Schema\SchemaDiff' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/SchemaDiff.php',
+    'Olcs\Db\Entity\Traits\Forename35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/Forename35Field.php',
+    'Olcs\Db\Entity\Traits\FamilyName35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/FamilyName35Field.php',
+    'Doctrine\Common\Persistence\Mapping\MappingException' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Persistence/Mapping/MappingException.php',
 );

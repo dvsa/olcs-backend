@@ -15,7 +15,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template",
  *    indexes={
- *        @ORM\Index(name="fk_doc_template_doc_process1_idx", columns={"doc_process_id"}),
  *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"document_sub_category_id"}),
  *        @ORM\Index(name="fk_doc_template_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_doc_template_user1_idx", columns={"created_by"}),
@@ -28,8 +27,8 @@ class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\DocumentManyToOne,
         Traits\Description255Field,
@@ -46,16 +45,6 @@ class DocTemplate implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $documentSubCategory;
-
-    /**
-     * Doc process
-     *
-     * @var \Olcs\Db\Entity\DocProcess
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocProcess", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docProcess;
 
     /**
      * Is ni
@@ -113,29 +102,6 @@ class DocTemplate implements Interfaces\EntityInterface
     public function getDocumentSubCategory()
     {
         return $this->documentSubCategory;
-    }
-
-    /**
-     * Set the doc process
-     *
-     * @param \Olcs\Db\Entity\DocProcess $docProcess
-     * @return DocTemplate
-     */
-    public function setDocProcess($docProcess)
-    {
-        $this->docProcess = $docProcess;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc process
-     *
-     * @return \Olcs\Db\Entity\DocProcess
-     */
-    public function getDocProcess()
-    {
-        return $this->docProcess;
     }
 
     /**

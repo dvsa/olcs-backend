@@ -200,7 +200,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
      */
-    protected $safetyConfirmation = 1;
+    protected $safetyConfirmation = 0;
 
     /**
      * Received date

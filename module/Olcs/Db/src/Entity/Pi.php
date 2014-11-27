@@ -38,7 +38,6 @@ class Pi implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\AgreedDateField,
-        Traits\IsAdjournedField,
         Traits\DecisionDateField,
         Traits\Comment4000Field,
         Traits\CustomCreatedOnField,
@@ -192,15 +191,6 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="section_code_text", length=1024, nullable=true)
      */
     protected $sectionCodeText;
-
-    /**
-     * Reschedule datetime
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="reschedule_datetime", nullable=true)
-     */
-    protected $rescheduleDatetime;
 
     /**
      * Licence revoked at pi
@@ -765,29 +755,6 @@ class Pi implements Interfaces\EntityInterface
     public function getSectionCodeText()
     {
         return $this->sectionCodeText;
-    }
-
-    /**
-     * Set the reschedule datetime
-     *
-     * @param \DateTime $rescheduleDatetime
-     * @return Pi
-     */
-    public function setRescheduleDatetime($rescheduleDatetime)
-    {
-        $this->rescheduleDatetime = $rescheduleDatetime;
-
-        return $this;
-    }
-
-    /**
-     * Get the reschedule datetime
-     *
-     * @return \DateTime
-     */
-    public function getRescheduleDatetime()
-    {
-        return $this->rescheduleDatetime;
     }
 
     /**
