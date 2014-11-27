@@ -37,7 +37,6 @@ class BusReg implements Interfaces\EntityInterface
         Traits\LicenceManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\ReceivedDateField,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -170,6 +169,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
     protected $otherDetails;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
 
     /**
      * Is short notice
@@ -845,6 +853,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getOtherDetails()
     {
         return $this->otherDetails;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return BusReg
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**

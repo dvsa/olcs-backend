@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", columns={"ebsr_submission_status_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", columns={"ebsr_submission_type_id"}),
  *        @ORM\Index(name="fk_ebsr_submission_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_ebsr_submission_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", columns={"ebsr_submission_status_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", columns={"ebsr_submission_type_id"}),
  *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_result1_idx", columns={"ebsr_submission_result_id"})
  *    }
  * )

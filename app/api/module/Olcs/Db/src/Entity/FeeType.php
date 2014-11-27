@@ -50,7 +50,7 @@ class FeeType implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="effective_from", nullable=false)
+     * @ORM\Column(type="datetime", name="effective_from", nullable=false)
      */
     protected $effectiveFrom;
 

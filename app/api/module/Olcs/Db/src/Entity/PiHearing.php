@@ -34,10 +34,7 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
-        Traits\IsCancelledField,
-        Traits\CancelledDateField,
         Traits\IsAdjournedField,
-        Traits\AdjournedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -72,6 +69,15 @@ class PiHearing implements Interfaces\EntityInterface
     protected $presidingTcOther;
 
     /**
+     * Is cancelled
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
+     */
+    protected $isCancelled = 0;
+
+    /**
      * Cancelled reason
      *
      * @var string
@@ -79,6 +85,24 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="cancelled_reason", length=4000, nullable=true)
      */
     protected $cancelledReason;
+
+    /**
+     * Cancelled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancelled_date", nullable=true)
+     */
+    protected $cancelledDate;
+
+    /**
+     * Adjourned date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="adjourned_date", nullable=true)
+     */
+    protected $adjournedDate;
 
     /**
      * Adjourned reason
@@ -168,6 +192,29 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is cancelled
+     *
+     * @param string $isCancelled
+     * @return PiHearing
+     */
+    public function setIsCancelled($isCancelled)
+    {
+        $this->isCancelled = $isCancelled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is cancelled
+     *
+     * @return string
+     */
+    public function getIsCancelled()
+    {
+        return $this->isCancelled;
+    }
+
+    /**
      * Set the cancelled reason
      *
      * @param string $cancelledReason
@@ -188,6 +235,52 @@ class PiHearing implements Interfaces\EntityInterface
     public function getCancelledReason()
     {
         return $this->cancelledReason;
+    }
+
+    /**
+     * Set the cancelled date
+     *
+     * @param \DateTime $cancelledDate
+     * @return PiHearing
+     */
+    public function setCancelledDate($cancelledDate)
+    {
+        $this->cancelledDate = $cancelledDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancelled date
+     *
+     * @return \DateTime
+     */
+    public function getCancelledDate()
+    {
+        return $this->cancelledDate;
+    }
+
+    /**
+     * Set the adjourned date
+     *
+     * @param \DateTime $adjournedDate
+     * @return PiHearing
+     */
+    public function setAdjournedDate($adjournedDate)
+    {
+        $this->adjournedDate = $adjournedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the adjourned date
+     *
+     * @return \DateTime
+     */
+    public function getAdjournedDate()
+    {
+        return $this->adjournedDate;
     }
 
     /**

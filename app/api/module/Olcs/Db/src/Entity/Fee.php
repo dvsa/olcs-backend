@@ -42,6 +42,7 @@ class Fee implements Interfaces\EntityInterface
         Traits\IrfoGvPermitManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOne,
+        Traits\ReceivedDateField,
         Traits\Description255FieldAlt1,
         Traits\IrfoFeeId10Field,
         Traits\CustomCreatedOnField,
@@ -162,15 +163,6 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="invoiced_date", nullable=true)
      */
     protected $invoicedDate;
-
-    /**
-     * Received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="received_date", nullable=true)
-     */
-    protected $receivedDate;
 
     /**
      * Receipt no
@@ -500,29 +492,6 @@ class Fee implements Interfaces\EntityInterface
     public function getInvoicedDate()
     {
         return $this->invoicedDate;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $receivedDate
-     * @return Fee
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @return \DateTime
-     */
-    public function getReceivedDate()
-    {
-        return $this->receivedDate;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Complaint Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="complaint",
  *    indexes={
  *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
@@ -31,6 +33,7 @@ class Complaint implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\Description4000Field,
         Traits\Vrm20Field,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -56,6 +59,15 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
+     * Complaint date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="complaint_date", nullable=true)
+     */
+    protected $complaintDate;
+
+    /**
      * Complainant forename
      *
      * @var string
@@ -72,15 +84,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="complainant_family_name", length=40, nullable=true)
      */
     protected $complainantFamilyName;
-
-    /**
-     * Complaint date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="complaint_date", nullable=true)
-     */
-    protected $complaintDate;
 
     /**
      * Driver forename
@@ -147,6 +150,29 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the complaint date
+     *
+     * @param \DateTime $complaintDate
+     * @return Complaint
+     */
+    public function setComplaintDate($complaintDate)
+    {
+        $this->complaintDate = $complaintDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaint date
+     *
+     * @return \DateTime
+     */
+    public function getComplaintDate()
+    {
+        return $this->complaintDate;
+    }
+
+    /**
      * Set the complainant forename
      *
      * @param string $complainantForename
@@ -190,29 +216,6 @@ class Complaint implements Interfaces\EntityInterface
     public function getComplainantFamilyName()
     {
         return $this->complainantFamilyName;
-    }
-
-    /**
-     * Set the complaint date
-     *
-     * @param \DateTime $complaintDate
-     * @return Complaint
-     */
-    public function setComplaintDate($complaintDate)
-    {
-        $this->complaintDate = $complaintDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the complaint date
-     *
-     * @return \DateTime
-     */
-    public function getComplaintDate()
-    {
-        return $this->complaintDate;
     }
 
     /**

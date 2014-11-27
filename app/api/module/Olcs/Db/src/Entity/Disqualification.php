@@ -32,6 +32,7 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
         Traits\StartDateFieldAlt1,
+        Traits\Notes4000Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -44,15 +45,6 @@ class Disqualification implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_disqualified", nullable=true)
      */
     protected $isDisqualified;
-
-    /**
-     * Notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="notes", length=45, nullable=true)
-     */
-    protected $notes;
 
     /**
      * Period
@@ -84,29 +76,6 @@ class Disqualification implements Interfaces\EntityInterface
     public function getIsDisqualified()
     {
         return $this->isDisqualified;
-    }
-
-    /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return Disqualification
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
     }
 
     /**

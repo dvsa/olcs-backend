@@ -33,8 +33,8 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsPrintingField,
         Traits\StartDateFieldAlt1,
+        Traits\IsPrintingField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -54,9 +54,9 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="is_copy", nullable=true)
+     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false)
      */
-    protected $isCopy;
+    protected $isCopy = 0;
 
     /**
      * Reprint required

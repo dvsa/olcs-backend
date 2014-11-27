@@ -33,18 +33,40 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\S4ManyToOne,
         Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
-        Traits\AdPlacedField,
-        Traits\AdPlacedIn70Field,
-        Traits\AdPlacedDateField,
-        Traits\PermissionField,
-        Traits\NoOfTrailersRequiredField,
-        Traits\NoOfVehiclesRequiredField,
         Traits\NoOfVehiclesPossessedField,
         Traits\NoOfTrailersPossessedField,
         Traits\ViAction1Field,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Ad placed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
+     */
+    protected $adPlaced;
+
+    /**
+     * Ad placed in
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ad_placed_in", length=70, nullable=true)
+     */
+    protected $adPlacedIn;
+
+    /**
+     * Ad placed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="ad_placed_date", nullable=true)
+     */
+    protected $adPlacedDate;
 
     /**
      * Sufficient parking
@@ -56,6 +78,33 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $sufficientParking;
 
     /**
+     * Permission
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="permission", nullable=false)
+     */
+    protected $permission;
+
+    /**
+     * No of trailers required
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_trailers_required", nullable=true)
+     */
+    protected $noOfTrailersRequired;
+
+    /**
+     * No of vehicles required
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_vehicles_required", nullable=true)
+     */
+    protected $noOfVehiclesRequired;
+
+    /**
      * Added date
      *
      * @var \DateTime
@@ -63,15 +112,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="added_date", nullable=true)
      */
     protected $addedDate;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
 
     /**
      * Is interim
@@ -90,6 +130,75 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
     protected $publicationAppropriate;
+
+    /**
+     * Set the ad placed
+     *
+     * @param string $adPlaced
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlaced($adPlaced)
+    {
+        $this->adPlaced = $adPlaced;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed
+     *
+     * @return string
+     */
+    public function getAdPlaced()
+    {
+        return $this->adPlaced;
+    }
+
+    /**
+     * Set the ad placed in
+     *
+     * @param string $adPlacedIn
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlacedIn($adPlacedIn)
+    {
+        $this->adPlacedIn = $adPlacedIn;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed in
+     *
+     * @return string
+     */
+    public function getAdPlacedIn()
+    {
+        return $this->adPlacedIn;
+    }
+
+    /**
+     * Set the ad placed date
+     *
+     * @param \DateTime $adPlacedDate
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlacedDate($adPlacedDate)
+    {
+        $this->adPlacedDate = $adPlacedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed date
+     *
+     * @return \DateTime
+     */
+    public function getAdPlacedDate()
+    {
+        return $this->adPlacedDate;
+    }
 
     /**
      * Set the sufficient parking
@@ -115,6 +224,75 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the permission
+     *
+     * @param string $permission
+     * @return LicenceOperatingCentre
+     */
+    public function setPermission($permission)
+    {
+        $this->permission = $permission;
+
+        return $this;
+    }
+
+    /**
+     * Get the permission
+     *
+     * @return string
+     */
+    public function getPermission()
+    {
+        return $this->permission;
+    }
+
+    /**
+     * Set the no of trailers required
+     *
+     * @param int $noOfTrailersRequired
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfTrailersRequired($noOfTrailersRequired)
+    {
+        $this->noOfTrailersRequired = $noOfTrailersRequired;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of trailers required
+     *
+     * @return int
+     */
+    public function getNoOfTrailersRequired()
+    {
+        return $this->noOfTrailersRequired;
+    }
+
+    /**
+     * Set the no of vehicles required
+     *
+     * @param int $noOfVehiclesRequired
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfVehiclesRequired($noOfVehiclesRequired)
+    {
+        $this->noOfVehiclesRequired = $noOfVehiclesRequired;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of vehicles required
+     *
+     * @return int
+     */
+    public function getNoOfVehiclesRequired()
+    {
+        return $this->noOfVehiclesRequired;
+    }
+
+    /**
      * Set the added date
      *
      * @param \DateTime $addedDate
@@ -135,29 +313,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getAddedDate()
     {
         return $this->addedDate;
-    }
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate
-     * @return LicenceOperatingCentre
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate()
-    {
-        return $this->deletedDate;
     }
 
     /**
