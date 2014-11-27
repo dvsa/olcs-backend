@@ -1127,4 +1127,17 @@ VALUES
    'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
    NULL,'2014-10-30',6128,'A&D',NULL,'2014-11-25 15:47:03',NULL,1);
 
+INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
+VALUES
+	(1, 1, '01120', '2014-11-26 10:39:46', 1),
+	(2, 1, '01150', '2014-11-26 10:39:47', 1),
+	(3, 30, '01150', '2014-11-26 10:39:47', 1),
+	(4, 41, '01150', '2014-11-26 10:39:47', 1),
+	(5, 54, '01150', '2014-11-26 10:39:47', 1),
+	(6, 63, '01150', '2014-11-26 10:39:47', 1),
+	(7, 75, '01150', '2014-11-26 10:39:47', 1),
+	(8, 100, '01150', '2014-11-26 10:39:47', 1),
+	(9, 104, '01150', '2014-11-26 10:39:47', 1),
+	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+
 SET foreign_key_checks = 1;
