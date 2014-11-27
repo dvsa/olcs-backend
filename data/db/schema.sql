@@ -2059,8 +2059,8 @@ DROP TABLE IF EXISTS `ebsr_submission`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ebsr_submission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ebsr_submission_status_id` int(11) NOT NULL,
-  `ebsr_submission_type_id` int(11) NOT NULL,
+  `ebsr_submission_status_id` varchar(32) NOT NULL,
+  `ebsr_submission_type_id` varchar(32) NOT NULL,
   `document_id` int(11) DEFAULT NULL,
   `submitted_date` datetime DEFAULT NULL,
   `licence_no` varchar(7) DEFAULT NULL,
@@ -2076,7 +2076,7 @@ CREATE TABLE `ebsr_submission` (
   `process_start` datetime DEFAULT NULL,
   `process_end` datetime DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
-  `ebsr_submission_result_id` varchar(64) DEFAULT NULL,
+  `ebsr_submission_result` varchar(64) DEFAULT NULL,
   `distribute_start` datetime DEFAULT NULL,
   `distribute_end` datetime DEFAULT NULL,
   `distribute_expire` datetime DEFAULT NULL,
@@ -2085,14 +2085,12 @@ CREATE TABLE `ebsr_submission` (
   PRIMARY KEY (`id`),
   KEY `fk_ebsr_submission_document1_idx` (`document_id`),
   KEY `fk_ebsr_submission_bus_reg1_idx` (`bus_reg_id`),
-  KEY `fk_ebsr_submission_ebsr_submission_status1_idx` (`ebsr_submission_status_id`),
-  KEY `fk_ebsr_submission_ebsr_submission_type1_idx` (`ebsr_submission_type_id`),
-  KEY `fk_ebsr_submission_ebsr_submission_result1_idx` (`ebsr_submission_result_id`),
+  KEY `fk_ebsr_submission_ref_data1_idx` (`ebsr_submission_status_id`),
+  KEY `fk_ebsr_submission_ref_data2_idx` (`ebsr_submission_type_id`),
   CONSTRAINT `fk_ebsr_submission_document1` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_ebsr_submission_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ebsr_submission_ebsr_submission_status1` FOREIGN KEY (`ebsr_submission_status_id`) REFERENCES `ebsr_submission_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ebsr_submission_ebsr_submission_type1` FOREIGN KEY (`ebsr_submission_type_id`) REFERENCES `ebsr_submission_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ebsr_submission_ebsr_submission_result1` FOREIGN KEY (`ebsr_submission_result_id`) REFERENCES `ebsr_submission_result` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_ebsr_submission_ref_data1` FOREIGN KEY (`ebsr_submission_status_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ebsr_submission_ref_data2` FOREIGN KEY (`ebsr_submission_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2103,78 +2101,6 @@ CREATE TABLE `ebsr_submission` (
 LOCK TABLES `ebsr_submission` WRITE;
 /*!40000 ALTER TABLE `ebsr_submission` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ebsr_submission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ebsr_submission_result`
---
-
-DROP TABLE IF EXISTS `ebsr_submission_result`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ebsr_submission_result` (
-  `id` varchar(64) NOT NULL,
-  `email_subject` varchar(45) DEFAULT NULL,
-  `email_body_template` varchar(255) DEFAULT NULL,
-  `email_authority` tinyint(1) NOT NULL DEFAULT '0',
-  `description` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ebsr_submission_result`
---
-
-LOCK TABLES `ebsr_submission_result` WRITE;
-/*!40000 ALTER TABLE `ebsr_submission_result` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ebsr_submission_result` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ebsr_submission_status`
---
-
-DROP TABLE IF EXISTS `ebsr_submission_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ebsr_submission_status` (
-  `id` int(11) NOT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ebsr_submission_status`
---
-
-LOCK TABLES `ebsr_submission_status` WRITE;
-/*!40000 ALTER TABLE `ebsr_submission_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ebsr_submission_status` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ebsr_submission_type`
---
-
-DROP TABLE IF EXISTS `ebsr_submission_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ebsr_submission_type` (
-  `id` int(11) NOT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ebsr_submission_type`
---
-
-LOCK TABLES `ebsr_submission_type` WRITE;
-/*!40000 ALTER TABLE `ebsr_submission_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ebsr_submission_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

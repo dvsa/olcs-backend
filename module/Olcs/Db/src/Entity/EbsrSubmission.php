@@ -16,9 +16,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_ebsr_submission_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_ebsr_submission_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_status1_idx", columns={"ebsr_submission_status_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_type1_idx", columns={"ebsr_submission_type_id"}),
- *        @ORM\Index(name="fk_ebsr_submission_ebsr_submission_result1_idx", columns={"ebsr_submission_result_id"})
+ *        @ORM\Index(name="fk_ebsr_submission_ref_data1_idx", columns={"ebsr_submission_status_id"}),
+ *        @ORM\Index(name="fk_ebsr_submission_ref_data2_idx", columns={"ebsr_submission_type_id"})
  *    }
  * )
  */
@@ -31,9 +30,9 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Ebsr submission type
      *
-     * @var \Olcs\Db\Entity\EbsrSubmissionType
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionType;
@@ -41,22 +40,12 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Ebsr submission status
      *
-     * @var \Olcs\Db\Entity\EbsrSubmissionStatus
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionStatus", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionStatus;
-
-    /**
-     * Ebsr submission result
-     *
-     * @var \Olcs\Db\Entity\EbsrSubmissionResult
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EbsrSubmissionResult", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_result_id", referencedColumnName="id", nullable=true)
-     */
-    protected $ebsrSubmissionResult;
 
     /**
      * Document
@@ -186,6 +175,15 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $processEnd;
 
     /**
+     * Ebsr submission result
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ebsr_submission_result", length=64, nullable=true)
+     */
+    protected $ebsrSubmissionResult;
+
+    /**
      * Distribute start
      *
      * @var \DateTime
@@ -233,7 +231,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Set the ebsr submission type
      *
-     * @param \Olcs\Db\Entity\EbsrSubmissionType $ebsrSubmissionType
+     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionType
      * @return EbsrSubmission
      */
     public function setEbsrSubmissionType($ebsrSubmissionType)
@@ -246,7 +244,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Get the ebsr submission type
      *
-     * @return \Olcs\Db\Entity\EbsrSubmissionType
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getEbsrSubmissionType()
     {
@@ -256,7 +254,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Set the ebsr submission status
      *
-     * @param \Olcs\Db\Entity\EbsrSubmissionStatus $ebsrSubmissionStatus
+     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionStatus
      * @return EbsrSubmission
      */
     public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
@@ -269,34 +267,11 @@ class EbsrSubmission implements Interfaces\EntityInterface
     /**
      * Get the ebsr submission status
      *
-     * @return \Olcs\Db\Entity\EbsrSubmissionStatus
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getEbsrSubmissionStatus()
     {
         return $this->ebsrSubmissionStatus;
-    }
-
-    /**
-     * Set the ebsr submission result
-     *
-     * @param \Olcs\Db\Entity\EbsrSubmissionResult $ebsrSubmissionResult
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission result
-     *
-     * @return \Olcs\Db\Entity\EbsrSubmissionResult
-     */
-    public function getEbsrSubmissionResult()
-    {
-        return $this->ebsrSubmissionResult;
     }
 
     /**
@@ -619,6 +594,29 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getProcessEnd()
     {
         return $this->processEnd;
+    }
+
+    /**
+     * Set the ebsr submission result
+     *
+     * @param string $ebsrSubmissionResult
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionResult($ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission result
+     *
+     * @return string
+     */
+    public function getEbsrSubmissionResult()
+    {
+        return $this->ebsrSubmissionResult;
     }
 
     /**
