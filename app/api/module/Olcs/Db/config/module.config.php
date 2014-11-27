@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 return [
     'router' => [
         'routes' => [
@@ -147,8 +140,10 @@ return [
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
             'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
         ],
-        'services' => [
-            'ExpressionBuilder' => new \Olcs\Db\Utility\ExpressionBuilder
+        'invokables' => [
+            'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',
+            'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
+            'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery'
         ]
     ],
     'controllers' => [
@@ -221,8 +216,10 @@ return [
                 'types' => [
                     'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
                     'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
+                    'date' => 'Olcs\Db\Entity\Types\DateType',
+                    'datetime' => 'Olcs\Db\Entity\Types\DateTimeType',
                 ]
-            ],
+            ]
         ]
     ]
 ];
