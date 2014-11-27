@@ -481,17 +481,18 @@ VALUES
   (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
 
 
-INSERT INTO `organisation` (`id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`, `is_mlh`, `type`,
+INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`,
+`is_mlh`, `type`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,3,'1234567','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (30,1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (41,0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (54,3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (63,1,2,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (75,1,0,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
-    (100,1,3,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
-    (104,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
-    (105,1,3,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
+    (1,'B',1,3,'1234567','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (30,'C',1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (41,'D',0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (54,'F',3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (63,'G',1,2,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (75,'H',1,0,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
+    (100,'K',1,3,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
+    (104,'M',NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
+    (105,'N',1,3,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
