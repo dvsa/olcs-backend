@@ -7,7 +7,6 @@
  * @author S Lizzio <shaun.lizzio@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-
 namespace Olcs\Db\Service;
 
 /**
