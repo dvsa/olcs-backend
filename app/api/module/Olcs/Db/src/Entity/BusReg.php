@@ -34,9 +34,9 @@ class BusReg implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOne,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -106,6 +106,23 @@ class BusReg implements Interfaces\EntityInterface
      * )
      */
     protected $busServiceTypes;
+
+    /**
+     * Local authority
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LocalAuthority", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\JoinTable(name="bus_reg_local_auth",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $localAuthoritys;
 
     /**
      * Route no
@@ -501,6 +518,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         $this->variationReasons = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
+        $this->localAuthoritys = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -689,6 +707,66 @@ class BusReg implements Interfaces\EntityInterface
     {
         if ($this->busServiceTypes->contains($busServiceTypes)) {
             $this->busServiceTypes->removeElement($busServiceTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the local authority
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function setLocalAuthoritys($localAuthoritys)
+    {
+        $this->localAuthoritys = $localAuthoritys;
+
+        return $this;
+    }
+
+    /**
+     * Get the local authoritys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLocalAuthoritys()
+    {
+        return $this->localAuthoritys;
+    }
+
+    /**
+     * Add a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function addLocalAuthoritys($localAuthoritys)
+    {
+        if ($localAuthoritys instanceof ArrayCollection) {
+            $this->localAuthoritys = new ArrayCollection(
+                array_merge(
+                    $this->localAuthoritys->toArray(),
+                    $localAuthoritys->toArray()
+                )
+            );
+        } elseif (!$this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->add($localAuthoritys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function removeLocalAuthoritys($localAuthoritys)
+    {
+        if ($this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->removeElement($localAuthoritys);
         }
 
         return $this;

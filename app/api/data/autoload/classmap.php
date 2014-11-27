@@ -728,4 +728,11 @@ return array(
     'Olcs\Db\Entity\Traits\Forename35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/Forename35Field.php',
     'Olcs\Db\Entity\Traits\FamilyName35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/FamilyName35Field.php',
     'Doctrine\Common\Persistence\Mapping\MappingException' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Persistence/Mapping/MappingException.php',
+    'Olcs\Db\Entity\HintQuestion' => $rootPath . '/module/Olcs/Db/src/Entity/HintQuestion.php',
+    'Olcs\Db\Service\Prohibition' => false,
+    'Olcs\Db\Entity\View\Prohibition' => false,
+    'Olcs\Db\Service\Complaint' => false,
+    'Olcs\Db\Entity\View\Complaint' => false,
+    'Olcs\Db\Service\ConditionUndertaking' => false,
+    'Olcs\Db\Entity\View\ConditionUndertaking' => false,
 );
