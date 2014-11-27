@@ -202,7 +202,13 @@ INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `sta
     `created_on`, `last_modified_on`, `version`)
 VALUES
     ('Complainant First Name', 'Complainant Last Name', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
-    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1);
+    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
+        ('John', 'Smith', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
+        ('Fred', 'Jones', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+    'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
+        ('Janet', 'Porter', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,
