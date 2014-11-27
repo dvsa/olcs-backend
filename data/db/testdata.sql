@@ -200,7 +200,13 @@ INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `sta
     `created_on`, `last_modified_on`, `version`)
 VALUES
     ('Complainant First Name', 'Complainant Last Name', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
-    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1);
+    'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
+        ('John', 'Smith', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
+        ('Fred', 'Jones', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+    'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
+        ('Janet', 'Porter', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -316,6 +322,27 @@ INSERT INTO `licence` (
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
     (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+
+    -- extra licence for application 1
+    (201,1,'B',0,1,'lcat_gv','OB4234560','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (202,1,'B',0,1,'lcat_gv','OB4234561','lsts_consideration',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (203,1,'B',0,1,'lcat_psv','OB4234562','lsts_surrendered',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (204,1,'B',0,1,'lcat_gv','OB4234563','lsts_unlicenced',1,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (205,1,'B',0,1,'lcat_psv','OB4234564','lsts_terminated',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (206,1,'B',0,1,'lcat_psv','OB4234565','lsts_withdrawn',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (207,1,'B',0,1,'lcat_psv','OB4234566','lsts_suspended',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (208,1,'B',0,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',1,
+    3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (209,1,'B',0,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+
     (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_not_submitted',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
@@ -362,7 +389,11 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     '2014-02-20 00:00:00',1),
     (12,114,4,NULL,4,'2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (13,115,4,NULL,4,'2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (13,115,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    '2014-02-20 00:00:00',1),
+    (14,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
+    '2014-02-20 00:00:00',1),
+    (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
 INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -444,17 +475,18 @@ VALUES
   (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
 
 
-INSERT INTO `organisation` (`id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`, `is_mlh`, `type`,
+INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`,
+`is_mlh`, `type`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,3,'1234567','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (30,1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (41,0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (54,3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (63,1,2,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (75,1,0,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
-    (100,1,3,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
-    (104,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
-    (105,1,3,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
+    (1,'B',1,3,'1234567','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (30,'C',1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (41,'D',0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (54,'F',3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (63,'G',1,2,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (75,'H',1,0,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
+    (100,'K',1,3,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
+    (104,'M',NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
+    (105,'N',1,3,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -1115,5 +1147,18 @@ VALUES
    'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY',
    'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
    NULL,'2014-10-30',6128,'A&D',NULL,'2014-11-25 15:47:03',NULL,1);
+
+INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
+VALUES
+	(1, 1, '01120', '2014-11-26 10:39:46', 1),
+	(2, 1, '01150', '2014-11-26 10:39:47', 1),
+	(3, 30, '01150', '2014-11-26 10:39:47', 1),
+	(4, 41, '01150', '2014-11-26 10:39:47', 1),
+	(5, 54, '01150', '2014-11-26 10:39:47', 1),
+	(6, 63, '01150', '2014-11-26 10:39:47', 1),
+	(7, 75, '01150', '2014-11-26 10:39:47', 1),
+	(8, 100, '01150', '2014-11-26 10:39:47', 1),
+	(9, 104, '01150', '2014-11-26 10:39:47', 1),
+	(10, 105, '01150', '2014-11-26 10:39:47', 1);
 
 SET foreign_key_checks = 1;
