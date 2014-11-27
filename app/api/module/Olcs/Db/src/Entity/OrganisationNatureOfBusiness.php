@@ -39,7 +39,7 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationNatureOfBusinesss")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="natureOfBusinesss")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
