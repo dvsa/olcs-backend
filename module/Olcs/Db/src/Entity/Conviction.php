@@ -147,24 +147,6 @@ class Conviction implements Interfaces\EntityInterface
     protected $operatorName;
 
     /**
-     * Taken into consideration
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
-     */
-    protected $takenIntoConsideration;
-
-    /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
-
-    /**
      * Person firstname
      *
      * @var string
@@ -181,6 +163,24 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="person_lastname", length=70, nullable=true)
      */
     protected $personLastname;
+
+    /**
+     * Taken into consideration
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
+     */
+    protected $takenIntoConsideration;
+
+    /**
+     * Category text
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
+     */
+    protected $categoryText;
 
     /**
      * Set the defendant type
@@ -436,52 +436,6 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the taken into consideration
-     *
-     * @param string $takenIntoConsideration
-     * @return Conviction
-     */
-    public function setTakenIntoConsideration($takenIntoConsideration)
-    {
-        $this->takenIntoConsideration = $takenIntoConsideration;
-
-        return $this;
-    }
-
-    /**
-     * Get the taken into consideration
-     *
-     * @return string
-     */
-    public function getTakenIntoConsideration()
-    {
-        return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
-    }
-
-    /**
      * Set the person firstname
      *
      * @param string $personFirstname
@@ -525,5 +479,51 @@ class Conviction implements Interfaces\EntityInterface
     public function getPersonLastname()
     {
         return $this->personLastname;
+    }
+
+    /**
+     * Set the taken into consideration
+     *
+     * @param string $takenIntoConsideration
+     * @return Conviction
+     */
+    public function setTakenIntoConsideration($takenIntoConsideration)
+    {
+        $this->takenIntoConsideration = $takenIntoConsideration;
+
+        return $this;
+    }
+
+    /**
+     * Get the taken into consideration
+     *
+     * @return string
+     */
+    public function getTakenIntoConsideration()
+    {
+        return $this->takenIntoConsideration;
+    }
+
+    /**
+     * Set the category text
+     *
+     * @param string $categoryText
+     * @return Conviction
+     */
+    public function setCategoryText($categoryText)
+    {
+        $this->categoryText = $categoryText;
+
+        return $this;
+    }
+
+    /**
+     * Get the category text
+     *
+     * @return string
+     */
+    public function getCategoryText()
+    {
+        return $this->categoryText;
     }
 }

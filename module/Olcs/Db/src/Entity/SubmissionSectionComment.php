@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="submission_section_comment",
  *    indexes={
  *        @ORM\Index(name="fk_submission_section_submission1_idx", columns={"submission_id"}),
- *        @ORM\Index(name="fk_submission_section_comment_ref_data1_idx", columns={"submission_section"}),
- *        @ORM\Index(name="fk_submission_section_comment_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_section_comment_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_submission_section_comments_ref_data1_idx", columns={"submission_section"}),
+ *        @ORM\Index(name="fk_submission_section_comments_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_submission_section_comments_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

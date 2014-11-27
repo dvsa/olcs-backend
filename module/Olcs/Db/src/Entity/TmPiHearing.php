@@ -37,9 +37,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\WitnessesField,
-        Traits\AdjournedDateField,
         Traits\AgreedDateField,
-        Traits\CancelledDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -74,6 +72,24 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
      */
     protected $presidedBy;
+
+    /**
+     * Adjourned date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="adjourned_date", nullable=true)
+     */
+    protected $adjournedDate;
+
+    /**
+     * Cancelled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cancelled_date", nullable=true)
+     */
+    protected $cancelledDate;
 
     /**
      * Scheduled on
@@ -160,6 +176,52 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getPresidedBy()
     {
         return $this->presidedBy;
+    }
+
+    /**
+     * Set the adjourned date
+     *
+     * @param \DateTime $adjournedDate
+     * @return TmPiHearing
+     */
+    public function setAdjournedDate($adjournedDate)
+    {
+        $this->adjournedDate = $adjournedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the adjourned date
+     *
+     * @return \DateTime
+     */
+    public function getAdjournedDate()
+    {
+        return $this->adjournedDate;
+    }
+
+    /**
+     * Set the cancelled date
+     *
+     * @param \DateTime $cancelledDate
+     * @return TmPiHearing
+     */
+    public function setCancelledDate($cancelledDate)
+    {
+        $this->cancelledDate = $cancelledDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancelled date
+     *
+     * @return \DateTime
+     */
+    public function getCancelledDate()
+    {
+        return $this->cancelledDate;
     }
 
     /**

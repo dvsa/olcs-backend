@@ -25,8 +25,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_task_user3_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_task_user4_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_task_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"task_sub_category_id"}),
- *        @ORM\Index(name="fk_task_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="fk_task_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"task_sub_category_id"})
  *    }
  * )
  */

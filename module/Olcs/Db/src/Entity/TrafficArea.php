@@ -61,6 +61,15 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $txcName;
 
     /**
+     * Is scotland
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_scotland", nullable=false)
+     */
+    protected $isScotland = 0;
+
+    /**
      * Is scottish rules
      *
      * @var boolean
@@ -68,15 +77,6 @@ class TrafficArea implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="is_scottish_rules", nullable=false)
      */
     protected $isScottishRules = 0;
-
-    /**
-     * Is england
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_england", nullable=false)
-     */
-    protected $isEngland = 0;
 
     /**
      * Is wales
@@ -88,15 +88,6 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $isWales = 0;
 
     /**
-     * Is scotland
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_scotland", nullable=false)
-     */
-    protected $isScotland = 0;
-
-    /**
      * Is ni
      *
      * @var boolean
@@ -104,6 +95,15 @@ class TrafficArea implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="is_ni", nullable=false)
      */
     protected $isNi = 0;
+
+    /**
+     * Is england
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_england", nullable=false)
+     */
+    protected $isEngland = 0;
 
     /**
      * Document
@@ -230,6 +230,29 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is scotland
+     *
+     * @param boolean $isScotland
+     * @return TrafficArea
+     */
+    public function setIsScotland($isScotland)
+    {
+        $this->isScotland = $isScotland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scotland
+     *
+     * @return boolean
+     */
+    public function getIsScotland()
+    {
+        return $this->isScotland;
+    }
+
+    /**
      * Set the is scottish rules
      *
      * @param boolean $isScottishRules
@@ -250,29 +273,6 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getIsScottishRules()
     {
         return $this->isScottishRules;
-    }
-
-    /**
-     * Set the is england
-     *
-     * @param boolean $isEngland
-     * @return TrafficArea
-     */
-    public function setIsEngland($isEngland)
-    {
-        $this->isEngland = $isEngland;
-
-        return $this;
-    }
-
-    /**
-     * Get the is england
-     *
-     * @return boolean
-     */
-    public function getIsEngland()
-    {
-        return $this->isEngland;
     }
 
     /**
@@ -299,29 +299,6 @@ class TrafficArea implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is scotland
-     *
-     * @param boolean $isScotland
-     * @return TrafficArea
-     */
-    public function setIsScotland($isScotland)
-    {
-        $this->isScotland = $isScotland;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scotland
-     *
-     * @return boolean
-     */
-    public function getIsScotland()
-    {
-        return $this->isScotland;
-    }
-
-    /**
      * Set the is ni
      *
      * @param boolean $isNi
@@ -342,6 +319,29 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getIsNi()
     {
         return $this->isNi;
+    }
+
+    /**
+     * Set the is england
+     *
+     * @param boolean $isEngland
+     * @return TrafficArea
+     */
+    public function setIsEngland($isEngland)
+    {
+        $this->isEngland = $isEngland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is england
+     *
+     * @return boolean
+     */
+    public function getIsEngland()
+    {
+        return $this->isEngland;
     }
 
     /**

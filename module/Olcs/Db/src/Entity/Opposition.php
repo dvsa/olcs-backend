@@ -119,7 +119,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_withdrawn", nullable=false)
      */
-    protected $isWithdrawn;
+    protected $isWithdrawn = 0;
 
     /**
      * Valid notes

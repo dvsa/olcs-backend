@@ -63,6 +63,15 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $licence;
 
     /**
+     * Removal date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="removal_date", nullable=true)
+     */
+    protected $removalDate;
+
+    /**
      * Removal
      *
      * @var string
@@ -79,15 +88,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="removal_letter_seed_date", nullable=true)
      */
     protected $removalLetterSeedDate;
-
-    /**
-     * Removal date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="removal_date", nullable=true)
-     */
-    protected $removalDate;
 
     /**
      * Is interim
@@ -181,6 +181,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the removal date
+     *
+     * @param \DateTime $removalDate
+     * @return LicenceVehicle
+     */
+    public function setRemovalDate($removalDate)
+    {
+        $this->removalDate = $removalDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the removal date
+     *
+     * @return \DateTime
+     */
+    public function getRemovalDate()
+    {
+        return $this->removalDate;
+    }
+
+    /**
      * Set the removal
      *
      * @param string $removal
@@ -224,29 +247,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getRemovalLetterSeedDate()
     {
         return $this->removalLetterSeedDate;
-    }
-
-    /**
-     * Set the removal date
-     *
-     * @param \DateTime $removalDate
-     * @return LicenceVehicle
-     */
-    public function setRemovalDate($removalDate)
-    {
-        $this->removalDate = $removalDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the removal date
-     *
-     * @return \DateTime
-     */
-    public function getRemovalDate()
-    {
-        return $this->removalDate;
     }
 
     /**

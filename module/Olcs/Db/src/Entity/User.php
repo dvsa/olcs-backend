@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_user_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_user_contact_details1_idx", columns={"contact_details_id"}),
  *        @ORM\Index(name="fk_user_contact_details2_idx", columns={"partner_contact_details_id"}),
+ *        @ORM\Index(name="fk_user_hint_questions1_idx", columns={"hint_questions_id1"}),
+ *        @ORM\Index(name="fk_user_hint_questions2_idx", columns={"hint_questions_id2"}),
  *        @ORM\Index(name="fk_user_transport_manager1_idx", columns={"transport_manager_id"})
  *    }
  * )
@@ -31,9 +33,9 @@ class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\TransportManagerManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\TransportManagerManyToOne,
         Traits\TeamManyToOne,
         Traits\LocalAuthorityManyToOne,
         Traits\EmailAddress45Field,
@@ -51,6 +53,26 @@ class User implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $partnerContactDetails;
+
+    /**
+     * Hint questions1
+     *
+     * @var \Olcs\Db\Entity\HintQuestion
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion", fetch="LAZY")
+     * @ORM\JoinColumn(name="hint_questions_id1", referencedColumnName="id", nullable=true)
+     */
+    protected $hintQuestions1;
+
+    /**
+     * Hint questions2
+     *
+     * @var \Olcs\Db\Entity\HintQuestion
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion", fetch="LAZY")
+     * @ORM\JoinColumn(name="hint_questions_id2", referencedColumnName="id", nullable=true)
+     */
+    protected $hintQuestions2;
 
     /**
      * Contact details
@@ -88,6 +110,123 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
      */
     protected $accountDisabled = 0;
+
+    /**
+     * Locked date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="locked_date", nullable=true)
+     */
+    protected $lockedDate;
+
+    /**
+     * Attempts
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="attempts", nullable=true)
+     */
+    protected $attempts;
+
+    /**
+     * Last successful login date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_successful_login_date", nullable=true)
+     */
+    protected $lastSuccessfulLoginDate;
+
+    /**
+     * Hint answer1
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hint_answer_1", length=50, nullable=true)
+     */
+    protected $hintAnswer1;
+
+    /**
+     * Hint answer2
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hint_answer_2", length=50, nullable=true)
+     */
+    protected $hintAnswer2;
+
+    /**
+     * Memorable word
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="memorable_word", length=10, nullable=true)
+     */
+    protected $memorableWord;
+
+    /**
+     * Memorable word digit1
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="memorable_word_digit1", nullable=true)
+     */
+    protected $memorableWordDigit1;
+
+    /**
+     * Memorable word digit2
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="memorable_word_digit2", nullable=true)
+     */
+    protected $memorableWordDigit2;
+
+    /**
+     * Must reset password
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="must_reset_password", nullable=false)
+     */
+    protected $mustResetPassword = 0;
+
+    /**
+     * Password expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="password_expiry_date", nullable=true)
+     */
+    protected $passwordExpiryDate;
+
+    /**
+     * Reset password expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="reset_password_expiry_date", nullable=true)
+     */
+    protected $resetPasswordExpiryDate;
+
+    /**
+     * Password reminder sent
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="password_reminder_sent", nullable=true)
+     */
+    protected $passwordReminderSent;
+
+    /**
+     * Locked datetime
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="locked_datetime", nullable=true)
+     */
+    protected $lockedDatetime;
 
     /**
      * Job title
@@ -154,6 +293,52 @@ class User implements Interfaces\EntityInterface
     public function getPartnerContactDetails()
     {
         return $this->partnerContactDetails;
+    }
+
+    /**
+     * Set the hint questions1
+     *
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions1
+     * @return User
+     */
+    public function setHintQuestions1($hintQuestions1)
+    {
+        $this->hintQuestions1 = $hintQuestions1;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint questions1
+     *
+     * @return \Olcs\Db\Entity\HintQuestion
+     */
+    public function getHintQuestions1()
+    {
+        return $this->hintQuestions1;
+    }
+
+    /**
+     * Set the hint questions2
+     *
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions2
+     * @return User
+     */
+    public function setHintQuestions2($hintQuestions2)
+    {
+        $this->hintQuestions2 = $hintQuestions2;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint questions2
+     *
+     * @return \Olcs\Db\Entity\HintQuestion
+     */
+    public function getHintQuestions2()
+    {
+        return $this->hintQuestions2;
     }
 
     /**
@@ -246,6 +431,305 @@ class User implements Interfaces\EntityInterface
     public function getAccountDisabled()
     {
         return $this->accountDisabled;
+    }
+
+    /**
+     * Set the locked date
+     *
+     * @param \DateTime $lockedDate
+     * @return User
+     */
+    public function setLockedDate($lockedDate)
+    {
+        $this->lockedDate = $lockedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the locked date
+     *
+     * @return \DateTime
+     */
+    public function getLockedDate()
+    {
+        return $this->lockedDate;
+    }
+
+    /**
+     * Set the attempts
+     *
+     * @param int $attempts
+     * @return User
+     */
+    public function setAttempts($attempts)
+    {
+        $this->attempts = $attempts;
+
+        return $this;
+    }
+
+    /**
+     * Get the attempts
+     *
+     * @return int
+     */
+    public function getAttempts()
+    {
+        return $this->attempts;
+    }
+
+    /**
+     * Set the last successful login date
+     *
+     * @param \DateTime $lastSuccessfulLoginDate
+     * @return User
+     */
+    public function setLastSuccessfulLoginDate($lastSuccessfulLoginDate)
+    {
+        $this->lastSuccessfulLoginDate = $lastSuccessfulLoginDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the last successful login date
+     *
+     * @return \DateTime
+     */
+    public function getLastSuccessfulLoginDate()
+    {
+        return $this->lastSuccessfulLoginDate;
+    }
+
+    /**
+     * Set the hint answer1
+     *
+     * @param string $hintAnswer1
+     * @return User
+     */
+    public function setHintAnswer1($hintAnswer1)
+    {
+        $this->hintAnswer1 = $hintAnswer1;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint answer1
+     *
+     * @return string
+     */
+    public function getHintAnswer1()
+    {
+        return $this->hintAnswer1;
+    }
+
+    /**
+     * Set the hint answer2
+     *
+     * @param string $hintAnswer2
+     * @return User
+     */
+    public function setHintAnswer2($hintAnswer2)
+    {
+        $this->hintAnswer2 = $hintAnswer2;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint answer2
+     *
+     * @return string
+     */
+    public function getHintAnswer2()
+    {
+        return $this->hintAnswer2;
+    }
+
+    /**
+     * Set the memorable word
+     *
+     * @param string $memorableWord
+     * @return User
+     */
+    public function setMemorableWord($memorableWord)
+    {
+        $this->memorableWord = $memorableWord;
+
+        return $this;
+    }
+
+    /**
+     * Get the memorable word
+     *
+     * @return string
+     */
+    public function getMemorableWord()
+    {
+        return $this->memorableWord;
+    }
+
+    /**
+     * Set the memorable word digit1
+     *
+     * @param int $memorableWordDigit1
+     * @return User
+     */
+    public function setMemorableWordDigit1($memorableWordDigit1)
+    {
+        $this->memorableWordDigit1 = $memorableWordDigit1;
+
+        return $this;
+    }
+
+    /**
+     * Get the memorable word digit1
+     *
+     * @return int
+     */
+    public function getMemorableWordDigit1()
+    {
+        return $this->memorableWordDigit1;
+    }
+
+    /**
+     * Set the memorable word digit2
+     *
+     * @param int $memorableWordDigit2
+     * @return User
+     */
+    public function setMemorableWordDigit2($memorableWordDigit2)
+    {
+        $this->memorableWordDigit2 = $memorableWordDigit2;
+
+        return $this;
+    }
+
+    /**
+     * Get the memorable word digit2
+     *
+     * @return int
+     */
+    public function getMemorableWordDigit2()
+    {
+        return $this->memorableWordDigit2;
+    }
+
+    /**
+     * Set the must reset password
+     *
+     * @param boolean $mustResetPassword
+     * @return User
+     */
+    public function setMustResetPassword($mustResetPassword)
+    {
+        $this->mustResetPassword = $mustResetPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get the must reset password
+     *
+     * @return boolean
+     */
+    public function getMustResetPassword()
+    {
+        return $this->mustResetPassword;
+    }
+
+    /**
+     * Set the password expiry date
+     *
+     * @param \DateTime $passwordExpiryDate
+     * @return User
+     */
+    public function setPasswordExpiryDate($passwordExpiryDate)
+    {
+        $this->passwordExpiryDate = $passwordExpiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the password expiry date
+     *
+     * @return \DateTime
+     */
+    public function getPasswordExpiryDate()
+    {
+        return $this->passwordExpiryDate;
+    }
+
+    /**
+     * Set the reset password expiry date
+     *
+     * @param \DateTime $resetPasswordExpiryDate
+     * @return User
+     */
+    public function setResetPasswordExpiryDate($resetPasswordExpiryDate)
+    {
+        $this->resetPasswordExpiryDate = $resetPasswordExpiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the reset password expiry date
+     *
+     * @return \DateTime
+     */
+    public function getResetPasswordExpiryDate()
+    {
+        return $this->resetPasswordExpiryDate;
+    }
+
+    /**
+     * Set the password reminder sent
+     *
+     * @param boolean $passwordReminderSent
+     * @return User
+     */
+    public function setPasswordReminderSent($passwordReminderSent)
+    {
+        $this->passwordReminderSent = $passwordReminderSent;
+
+        return $this;
+    }
+
+    /**
+     * Get the password reminder sent
+     *
+     * @return boolean
+     */
+    public function getPasswordReminderSent()
+    {
+        return $this->passwordReminderSent;
+    }
+
+    /**
+     * Set the locked datetime
+     *
+     * @param \DateTime $lockedDatetime
+     * @return User
+     */
+    public function setLockedDatetime($lockedDatetime)
+    {
+        $this->lockedDatetime = $lockedDatetime;
+
+        return $this;
+    }
+
+    /**
+     * Get the locked datetime
+     *
+     * @return \DateTime
+     */
+    public function getLockedDatetime()
+    {
+        return $this->lockedDatetime;
     }
 
     /**

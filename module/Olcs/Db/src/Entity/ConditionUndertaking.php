@@ -132,15 +132,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $isFulfilled = 0;
 
     /**
-     * Notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="notes", length=8000, nullable=true)
-     */
-    protected $notes;
-
-    /**
      * Is approved
      *
      * @var string
@@ -148,6 +139,15 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_approved", nullable=false)
      */
     protected $isApproved = 0;
+
+    /**
+     * Notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="notes", length=8000, nullable=true)
+     */
+    protected $notes;
 
     /**
      * Set the lic condition variation
@@ -357,29 +357,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return ConditionUndertaking
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
      * Set the is approved
      *
      * @param string $isApproved
@@ -400,5 +377,28 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getIsApproved()
     {
         return $this->isApproved;
+    }
+
+    /**
+     * Set the notes
+     *
+     * @param string $notes
+     * @return ConditionUndertaking
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }
