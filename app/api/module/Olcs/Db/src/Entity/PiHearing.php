@@ -27,10 +27,10 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
+        Traits\PiVenueManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiVenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
@@ -43,16 +43,6 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Pi
-     *
-     * @var \Olcs\Db\Entity\Pi
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
-     */
-    protected $pi;
-
-    /**
      * Presided by role
      *
      * @var \Olcs\Db\Entity\RefData
@@ -61,6 +51,16 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
      */
     protected $presidedByRole;
+
+    /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pi;
 
     /**
      * Presiding tc other
@@ -99,29 +99,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $details;
 
     /**
-     * Set the pi
-     *
-     * @param \Olcs\Db\Entity\Pi $pi
-     * @return PiHearing
-     */
-    public function setPi($pi)
-    {
-        $this->pi = $pi;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi
-     *
-     * @return \Olcs\Db\Entity\Pi
-     */
-    public function getPi()
-    {
-        return $this->pi;
-    }
-
-    /**
      * Set the presided by role
      *
      * @param \Olcs\Db\Entity\RefData $presidedByRole
@@ -142,6 +119,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidedByRole()
     {
         return $this->presidedByRole;
+    }
+
+    /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PiHearing
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
     }
 
     /**

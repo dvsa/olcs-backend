@@ -15,6 +15,14 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'organisation_nature_of_business' => array(
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'natureOfBusiness'
+            ),
+        )
+    ),
     'country' => array(
         'is_member_state' => array(
             'type' => 'yesno'
