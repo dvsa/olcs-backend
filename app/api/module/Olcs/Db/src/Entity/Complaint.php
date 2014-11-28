@@ -31,7 +31,6 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\Description4000Field,
         Traits\Vrm20Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -84,6 +83,15 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="complainant_family_name", length=40, nullable=true)
      */
     protected $complainantFamilyName;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=4000, nullable=true)
+     */
+    protected $description;
 
     /**
      * Driver forename
@@ -216,6 +224,29 @@ class Complaint implements Interfaces\EntityInterface
     public function getComplainantFamilyName()
     {
         return $this->complainantFamilyName;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return Complaint
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
