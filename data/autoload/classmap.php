@@ -735,4 +735,6 @@ return array(
     'Olcs\Db\Entity\View\Complaint' => false,
     'Olcs\Db\Service\ConditionUndertaking' => false,
     'Olcs\Db\Entity\View\ConditionUndertaking' => false,
+    'Doctrine\ORM\Query\QueryException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php',
+    'Doctrine\ORM\ORMException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php',
 );

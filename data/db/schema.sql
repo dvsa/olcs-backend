@@ -7125,7 +7125,7 @@ CREATE TABLE `user` (
   `email_address` varchar(45) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL COMMENT 'If user is also a transport manager.',
-  `login_id` varchar(40) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `team_id` int(11) NOT NULL,
   `account_disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Account locked by DVSA. Cannot be unlocked by non DVSA user.',
   `locked_date` datetime DEFAULT NULL,
