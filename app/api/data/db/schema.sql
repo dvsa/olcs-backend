@@ -2577,19 +2577,18 @@ LOCK TABLES `goods_disc` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tm_grace_period`
+-- Table structure for table `grace_period`
 --
 
-DROP TABLE IF EXISTS `tm_grace_period`;
+DROP TABLE IF EXISTS `grace_period`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tm_grace_period` (
+CREATE TABLE `grace_period` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
   `start_date` date NOT NULL COMMENT 'Period can start on a future date.',
   `end_date` date NOT NULL,
-  `action_date` datetime NOT NULL,
   `grace_period_no` int(11) NOT NULL DEFAULT '1' COMMENT 'Grace period number for the licence. Starts at 1.',
   `assigned_to_user_id` int(11) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -2597,25 +2596,28 @@ CREATE TABLE `tm_grace_period` (
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
+  `period_type` varchar(32) NOT NULL COMMENT 'Either TM, financial standing or both.',
   PRIMARY KEY (`id`),
   KEY `fk_transport_manager_grace_period_licence1_idx` (`licence_id`),
   KEY `fk_transport_manager_grace_period_user1_idx` (`assigned_to_user_id`),
   KEY `fk_transport_manager_grace_period_user2_idx` (`created_by`),
   KEY `fk_transport_manager_grace_period_user3_idx` (`last_modified_by`),
+  KEY `fk_grace_period_ref_data1_idx` (`period_type`),
   CONSTRAINT `fk_transport_manager_grace_period_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_grace_period_user1` FOREIGN KEY (`assigned_to_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_grace_period_user2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_grace_period_user3` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_transport_manager_grace_period_user3` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_grace_period_ref_data1` FOREIGN KEY (`period_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='A period when a licence has no TM or financial standing info.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tm_grace_period`
+-- Dumping data for table `grace_period`
 --
 
-LOCK TABLES `tm_grace_period` WRITE;
-/*!40000 ALTER TABLE `tm_grace_period` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tm_grace_period` ENABLE KEYS */;
+LOCK TABLES `grace_period` WRITE;
+/*!40000 ALTER TABLE `grace_period` DISABLE KEYS */;
+/*!40000 ALTER TABLE `grace_period` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6277,7 +6279,7 @@ CREATE TABLE `task` (
   `application_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
-  `description` varchar(4000) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `action_date` date DEFAULT NULL,
   `irfo_organisation_id` int(11) DEFAULT NULL,
   `urgent` tinyint(1) NOT NULL DEFAULT '0',
@@ -7123,7 +7125,7 @@ CREATE TABLE `user` (
   `email_address` varchar(45) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL COMMENT 'If user is also a transport manager.',
-  `name` varchar(100) DEFAULT NULL,
+  `login_id` varchar(40) DEFAULT NULL,
   `team_id` int(11) NOT NULL,
   `account_disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Account locked by DVSA. Cannot be unlocked by non DVSA user.',
   `locked_date` datetime DEFAULT NULL,
