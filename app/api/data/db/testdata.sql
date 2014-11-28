@@ -664,7 +664,7 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (2,NULL,NULL,'active','External',NULL,NULL,NULL,1);
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
-    `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
+    `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL,'','',''),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL,'','',''),
