@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="recipient",
  *    indexes={
- *        @ORM\Index(name="fk_recipient_contact_details1_idx", columns={"contact_details_id"}),
  *        @ORM\Index(name="fk_recipient_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_recipient_user2_idx", columns={"last_modified_by"})
  *    }
@@ -27,9 +26,8 @@ class Recipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -87,6 +85,24 @@ class Recipient implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_objector", nullable=false)
      */
     protected $isObjector = 0;
+
+    /**
+     * Contact name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="contact_name", length=100, nullable=true)
+     */
+    protected $contactName;
+
+    /**
+     * Email address
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="email_address", length=100, nullable=true)
+     */
+    protected $emailAddress;
 
     /**
      * Initialise the collections
@@ -246,5 +262,51 @@ class Recipient implements Interfaces\EntityInterface
     public function getIsObjector()
     {
         return $this->isObjector;
+    }
+
+    /**
+     * Set the contact name
+     *
+     * @param string $contactName
+     * @return Recipient
+     */
+    public function setContactName($contactName)
+    {
+        $this->contactName = $contactName;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact name
+     *
+     * @return string
+     */
+    public function getContactName()
+    {
+        return $this->contactName;
+    }
+
+    /**
+     * Set the email address
+     *
+     * @param string $emailAddress
+     * @return Recipient
+     */
+    public function setEmailAddress($emailAddress)
+    {
+        $this->emailAddress = $emailAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the email address
+     *
+     * @return string
+     */
+    public function getEmailAddress()
+    {
+        return $this->emailAddress;
     }
 }

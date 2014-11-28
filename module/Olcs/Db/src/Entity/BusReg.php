@@ -31,13 +31,12 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\StatusManyToOne,
+        Traits\WithdrawnReasonManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\ReceivedDateField,
+        Traits\LicenceManyToOne,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -109,6 +108,23 @@ class BusReg implements Interfaces\EntityInterface
     protected $busServiceTypes;
 
     /**
+     * Local authority
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LocalAuthority", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\JoinTable(name="bus_reg_local_auth",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $localAuthoritys;
+
+    /**
      * Route no
      *
      * @var int
@@ -170,6 +186,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
     protected $otherDetails;
+
+    /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
 
     /**
      * Is short notice
@@ -493,6 +518,7 @@ class BusReg implements Interfaces\EntityInterface
     {
         $this->variationReasons = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
+        $this->localAuthoritys = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -687,6 +713,66 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the local authority
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function setLocalAuthoritys($localAuthoritys)
+    {
+        $this->localAuthoritys = $localAuthoritys;
+
+        return $this;
+    }
+
+    /**
+     * Get the local authoritys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLocalAuthoritys()
+    {
+        return $this->localAuthoritys;
+    }
+
+    /**
+     * Add a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function addLocalAuthoritys($localAuthoritys)
+    {
+        if ($localAuthoritys instanceof ArrayCollection) {
+            $this->localAuthoritys = new ArrayCollection(
+                array_merge(
+                    $this->localAuthoritys->toArray(),
+                    $localAuthoritys->toArray()
+                )
+            );
+        } elseif (!$this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->add($localAuthoritys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function removeLocalAuthoritys($localAuthoritys)
+    {
+        if ($this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->removeElement($localAuthoritys);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the route no
      *
      * @param int $routeNo
@@ -845,6 +931,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getOtherDetails()
     {
         return $this->otherDetails;
+    }
+
+    /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return BusReg
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**

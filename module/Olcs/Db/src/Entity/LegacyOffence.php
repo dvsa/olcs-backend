@@ -46,7 +46,7 @@ class LegacyOffence implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="definition", length=255, nullable=true)
+     * @ORM\Column(type="string", name="definition", length=1000, nullable=true)
      */
     protected $definition;
 

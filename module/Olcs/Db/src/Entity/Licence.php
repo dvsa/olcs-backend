@@ -34,23 +34,26 @@ class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\CreatedByManyToOne,
-        Traits\TotAuthTrailersField,
-        Traits\TotAuthVehiclesField,
-        Traits\TotAuthSmallVehiclesField,
-        Traits\TotAuthMediumVehiclesField,
-        Traits\TotAuthLargeVehiclesField,
-        Traits\TotCommunityLicencesField,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\InForceDateField,
-        Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Enforcement area
+     *
+     * @var \Olcs\Db\Entity\EnforcementArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $enforcementArea;
 
     /**
      * Tachograph ins
@@ -73,16 +76,6 @@ class Licence implements Interfaces\EntityInterface
     protected $organisation;
 
     /**
-     * Enforcement area
-     *
-     * @var \Olcs\Db\Entity\EnforcementArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $enforcementArea;
-
-    /**
      * Lic no
      *
      * @var string
@@ -99,6 +92,60 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
      */
     protected $viAction;
+
+    /**
+     * Tot auth trailers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_trailers", nullable=true)
+     */
+    protected $totAuthTrailers;
+
+    /**
+     * Tot auth vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_vehicles", nullable=true)
+     */
+    protected $totAuthVehicles;
+
+    /**
+     * Tot auth small vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_small_vehicles", nullable=true)
+     */
+    protected $totAuthSmallVehicles;
+
+    /**
+     * Tot auth medium vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_medium_vehicles", nullable=true)
+     */
+    protected $totAuthMediumVehicles;
+
+    /**
+     * Tot auth large vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_large_vehicles", nullable=true)
+     */
+    protected $totAuthLargeVehicles;
+
+    /**
+     * Tot community licences
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
+     */
+    protected $totCommunityLicences;
 
     /**
      * Trailers in possession
@@ -132,7 +179,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="granted_date", nullable=true)
+     * @ORM\Column(type="datetime", name="granted_date", nullable=true)
      */
     protected $grantedDate;
 
@@ -159,7 +206,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="surrendered_date", nullable=true)
+     * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
      */
     protected $surrenderedDate;
 
@@ -234,6 +281,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
     protected $translateToWelsh = 0;
+
+    /**
+     * Is maintenance suitable
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_maintenance_suitable", nullable=true)
+     */
+    protected $isMaintenanceSuitable;
 
     /**
      * Application
@@ -324,6 +380,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the enforcement area
+     *
+     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
+     * @return Licence
+     */
+    public function setEnforcementArea($enforcementArea)
+    {
+        $this->enforcementArea = $enforcementArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the enforcement area
+     *
+     * @return \Olcs\Db\Entity\EnforcementArea
+     */
+    public function getEnforcementArea()
+    {
+        return $this->enforcementArea;
+    }
+
+    /**
      * Set the tachograph ins
      *
      * @param \Olcs\Db\Entity\RefData $tachographIns
@@ -370,29 +449,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the enforcement area
-     *
-     * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
-     * @return Licence
-     */
-    public function setEnforcementArea($enforcementArea)
-    {
-        $this->enforcementArea = $enforcementArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the enforcement area
-     *
-     * @return \Olcs\Db\Entity\EnforcementArea
-     */
-    public function getEnforcementArea()
-    {
-        return $this->enforcementArea;
-    }
-
-    /**
      * Set the lic no
      *
      * @param string $licNo
@@ -436,6 +492,144 @@ class Licence implements Interfaces\EntityInterface
     public function getViAction()
     {
         return $this->viAction;
+    }
+
+    /**
+     * Set the tot auth trailers
+     *
+     * @param int $totAuthTrailers
+     * @return Licence
+     */
+    public function setTotAuthTrailers($totAuthTrailers)
+    {
+        $this->totAuthTrailers = $totAuthTrailers;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth trailers
+     *
+     * @return int
+     */
+    public function getTotAuthTrailers()
+    {
+        return $this->totAuthTrailers;
+    }
+
+    /**
+     * Set the tot auth vehicles
+     *
+     * @param int $totAuthVehicles
+     * @return Licence
+     */
+    public function setTotAuthVehicles($totAuthVehicles)
+    {
+        $this->totAuthVehicles = $totAuthVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthVehicles()
+    {
+        return $this->totAuthVehicles;
+    }
+
+    /**
+     * Set the tot auth small vehicles
+     *
+     * @param int $totAuthSmallVehicles
+     * @return Licence
+     */
+    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
+    {
+        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth small vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthSmallVehicles()
+    {
+        return $this->totAuthSmallVehicles;
+    }
+
+    /**
+     * Set the tot auth medium vehicles
+     *
+     * @param int $totAuthMediumVehicles
+     * @return Licence
+     */
+    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
+    {
+        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth medium vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthMediumVehicles()
+    {
+        return $this->totAuthMediumVehicles;
+    }
+
+    /**
+     * Set the tot auth large vehicles
+     *
+     * @param int $totAuthLargeVehicles
+     * @return Licence
+     */
+    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
+    {
+        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth large vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthLargeVehicles()
+    {
+        return $this->totAuthLargeVehicles;
+    }
+
+    /**
+     * Set the tot community licences
+     *
+     * @param int $totCommunityLicences
+     * @return Licence
+     */
+    public function setTotCommunityLicences($totCommunityLicences)
+    {
+        $this->totCommunityLicences = $totCommunityLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot community licences
+     *
+     * @return int
+     */
+    public function getTotCommunityLicences()
+    {
+        return $this->totCommunityLicences;
     }
 
     /**
@@ -781,6 +975,29 @@ class Licence implements Interfaces\EntityInterface
     public function getTranslateToWelsh()
     {
         return $this->translateToWelsh;
+    }
+
+    /**
+     * Set the is maintenance suitable
+     *
+     * @param string $isMaintenanceSuitable
+     * @return Licence
+     */
+    public function setIsMaintenanceSuitable($isMaintenanceSuitable)
+    {
+        $this->isMaintenanceSuitable = $isMaintenanceSuitable;
+
+        return $this;
+    }
+
+    /**
+     * Get the is maintenance suitable
+     *
+     * @return string
+     */
+    public function getIsMaintenanceSuitable()
+    {
+        return $this->isMaintenanceSuitable;
     }
 
     /**

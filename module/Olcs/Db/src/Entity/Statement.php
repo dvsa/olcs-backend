@@ -15,11 +15,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_type1_idx", columns={"statement_type"}),
  *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"})
+ *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"}),
+ *        @ORM\Index(name="fk_statement_ref_data1_idx", columns={"statement_type"})
  *    }
  * )
  */
@@ -27,8 +27,8 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\IssuedDateField,
@@ -47,16 +47,6 @@ class Statement implements Interfaces\EntityInterface
     protected $contactType;
 
     /**
-     * Requestors address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
-     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $requestorsAddress;
-
-    /**
      * Statement type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -65,6 +55,16 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
      */
     protected $statementType;
+
+    /**
+     * Requestors address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
+     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
+     */
+    protected $requestorsAddress;
 
     /**
      * Stopped date
@@ -171,29 +171,6 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requestors address
-     *
-     * @param \Olcs\Db\Entity\Address $requestorsAddress
-     * @return Statement
-     */
-    public function setRequestorsAddress($requestorsAddress)
-    {
-        $this->requestorsAddress = $requestorsAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getRequestorsAddress()
-    {
-        return $this->requestorsAddress;
-    }
-
-    /**
      * Set the statement type
      *
      * @param \Olcs\Db\Entity\RefData $statementType
@@ -214,6 +191,29 @@ class Statement implements Interfaces\EntityInterface
     public function getStatementType()
     {
         return $this->statementType;
+    }
+
+    /**
+     * Set the requestors address
+     *
+     * @param \Olcs\Db\Entity\Address $requestorsAddress
+     * @return Statement
+     */
+    public function setRequestorsAddress($requestorsAddress)
+    {
+        $this->requestorsAddress = $requestorsAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestors address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getRequestorsAddress()
+    {
+        return $this->requestorsAddress;
     }
 
     /**

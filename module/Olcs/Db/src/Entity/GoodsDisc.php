@@ -16,9 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_goods_disc_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
  *        @ORM\Index(name="fk_goods_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data1_idx", columns={"removal_reason"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data2_idx", columns={"removal_explanation"})
+ *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,14 +24,11 @@ class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsInterimField,
         Traits\IsPrintingField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -57,6 +52,15 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
     protected $isCopy = 0;
+
+    /**
+     * Is interim
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_interim", nullable=false)
+     */
+    protected $isInterim = 0;
 
     /**
      * Reprint required
@@ -111,6 +115,29 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the is interim
+     *
+     * @param string $isInterim
+     * @return GoodsDisc
+     */
+    public function setIsInterim($isInterim)
+    {
+        $this->isInterim = $isInterim;
+
+        return $this;
+    }
+
+    /**
+     * Get the is interim
+     *
+     * @return string
+     */
+    public function getIsInterim()
+    {
+        return $this->isInterim;
     }
 
     /**
