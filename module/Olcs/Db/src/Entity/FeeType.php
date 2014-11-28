@@ -28,9 +28,9 @@ class FeeType implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
-        Traits\LicenceTypeManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
+        Traits\LicenceTypeManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -50,7 +50,7 @@ class FeeType implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="effective_from", nullable=false)
+     * @ORM\Column(type="datetime", name="effective_from", nullable=false)
      */
     protected $effectiveFrom;
 

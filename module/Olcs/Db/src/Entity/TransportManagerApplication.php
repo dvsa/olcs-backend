@@ -46,6 +46,15 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $application;
 
     /**
+     * Action
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="action", length=1, nullable=true)
+     */
+    protected $action;
+
+    /**
      * Set the application
      *
      * @param \Olcs\Db\Entity\Application $application
@@ -66,5 +75,28 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the action
+     *
+     * @param string $action
+     * @return TransportManagerApplication
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Get the action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 }

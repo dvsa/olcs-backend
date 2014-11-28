@@ -37,9 +37,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\WitnessesField,
-        Traits\AdjournedDateField,
         Traits\AgreedDateField,
-        Traits\CancelledDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -56,6 +54,16 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $type;
 
     /**
+     * Reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
+     */
+    protected $reason;
+
+    /**
      * Presided by
      *
      * @var \Olcs\Db\Entity\RefData
@@ -66,14 +74,22 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $presidedBy;
 
     /**
-     * Reason
+     * Adjourned date
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="datetime", name="adjourned_date", nullable=true)
      */
-    protected $reason;
+    protected $adjournedDate;
+
+    /**
+     * Cancelled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cancelled_date", nullable=true)
+     */
+    protected $cancelledDate;
 
     /**
      * Scheduled on
@@ -117,6 +133,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\RefData $reason
+     * @return TmPiHearing
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    /**
      * Set the presided by
      *
      * @param \Olcs\Db\Entity\RefData $presidedBy
@@ -140,26 +179,49 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the reason
+     * Set the adjourned date
      *
-     * @param \Olcs\Db\Entity\RefData $reason
+     * @param \DateTime $adjournedDate
      * @return TmPiHearing
      */
-    public function setReason($reason)
+    public function setAdjournedDate($adjournedDate)
     {
-        $this->reason = $reason;
+        $this->adjournedDate = $adjournedDate;
 
         return $this;
     }
 
     /**
-     * Get the reason
+     * Get the adjourned date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getReason()
+    public function getAdjournedDate()
     {
-        return $this->reason;
+        return $this->adjournedDate;
+    }
+
+    /**
+     * Set the cancelled date
+     *
+     * @param \DateTime $cancelledDate
+     * @return TmPiHearing
+     */
+    public function setCancelledDate($cancelledDate)
+    {
+        $this->cancelledDate = $cancelledDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancelled date
+     *
+     * @return \DateTime
+     */
+    public function getCancelledDate()
+    {
+        return $this->cancelledDate;
     }
 
     /**

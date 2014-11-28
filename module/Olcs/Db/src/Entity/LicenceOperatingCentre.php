@@ -28,23 +28,43 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
+        Traits\S4ManyToOne,
         Traits\LicenceManyToOne,
-        Traits\AdPlacedField,
-        Traits\AdPlacedIn70Field,
-        Traits\AdPlacedDateField,
-        Traits\PermissionField,
-        Traits\NoOfTrailersRequiredField,
-        Traits\NoOfVehiclesRequiredField,
-        Traits\NoOfVehiclesPossessedField,
-        Traits\NoOfTrailersPossessedField,
+        Traits\OperatingCentreManyToOne,
         Traits\ViAction1Field,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Ad placed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
+     */
+    protected $adPlaced;
+
+    /**
+     * Ad placed in
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ad_placed_in", length=70, nullable=true)
+     */
+    protected $adPlacedIn;
+
+    /**
+     * Ad placed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="ad_placed_date", nullable=true)
+     */
+    protected $adPlacedDate;
 
     /**
      * Sufficient parking
@@ -56,22 +76,49 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $sufficientParking;
 
     /**
-     * Added date
+     * Permission
      *
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="date", name="added_date", nullable=true)
+     * @ORM\Column(type="yesno", name="permission", nullable=false)
      */
-    protected $addedDate;
+    protected $permission;
 
     /**
-     * Deleted date
+     * No of trailers required
      *
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(type="date", name="deleted_date", nullable=true)
+     * @ORM\Column(type="integer", name="no_of_trailers_required", nullable=true)
      */
-    protected $deletedDate;
+    protected $noOfTrailersRequired;
+
+    /**
+     * No of vehicles required
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_vehicles_required", nullable=true)
+     */
+    protected $noOfVehiclesRequired;
+
+    /**
+     * No of vehicles possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
+     */
+    protected $noOfVehiclesPossessed;
+
+    /**
+     * No of trailers possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
+     */
+    protected $noOfTrailersPossessed;
 
     /**
      * Is interim
@@ -90,6 +137,75 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="publication_appropriate", nullable=true)
      */
     protected $publicationAppropriate;
+
+    /**
+     * Set the ad placed
+     *
+     * @param string $adPlaced
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlaced($adPlaced)
+    {
+        $this->adPlaced = $adPlaced;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed
+     *
+     * @return string
+     */
+    public function getAdPlaced()
+    {
+        return $this->adPlaced;
+    }
+
+    /**
+     * Set the ad placed in
+     *
+     * @param string $adPlacedIn
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlacedIn($adPlacedIn)
+    {
+        $this->adPlacedIn = $adPlacedIn;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed in
+     *
+     * @return string
+     */
+    public function getAdPlacedIn()
+    {
+        return $this->adPlacedIn;
+    }
+
+    /**
+     * Set the ad placed date
+     *
+     * @param \DateTime $adPlacedDate
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlacedDate($adPlacedDate)
+    {
+        $this->adPlacedDate = $adPlacedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed date
+     *
+     * @return \DateTime
+     */
+    public function getAdPlacedDate()
+    {
+        return $this->adPlacedDate;
+    }
 
     /**
      * Set the sufficient parking
@@ -115,49 +231,118 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the added date
+     * Set the permission
      *
-     * @param \DateTime $addedDate
+     * @param string $permission
      * @return LicenceOperatingCentre
      */
-    public function setAddedDate($addedDate)
+    public function setPermission($permission)
     {
-        $this->addedDate = $addedDate;
+        $this->permission = $permission;
 
         return $this;
     }
 
     /**
-     * Get the added date
+     * Get the permission
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getAddedDate()
+    public function getPermission()
     {
-        return $this->addedDate;
+        return $this->permission;
     }
 
     /**
-     * Set the deleted date
+     * Set the no of trailers required
      *
-     * @param \DateTime $deletedDate
+     * @param int $noOfTrailersRequired
      * @return LicenceOperatingCentre
      */
-    public function setDeletedDate($deletedDate)
+    public function setNoOfTrailersRequired($noOfTrailersRequired)
     {
-        $this->deletedDate = $deletedDate;
+        $this->noOfTrailersRequired = $noOfTrailersRequired;
 
         return $this;
     }
 
     /**
-     * Get the deleted date
+     * Get the no of trailers required
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getDeletedDate()
+    public function getNoOfTrailersRequired()
     {
-        return $this->deletedDate;
+        return $this->noOfTrailersRequired;
+    }
+
+    /**
+     * Set the no of vehicles required
+     *
+     * @param int $noOfVehiclesRequired
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfVehiclesRequired($noOfVehiclesRequired)
+    {
+        $this->noOfVehiclesRequired = $noOfVehiclesRequired;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of vehicles required
+     *
+     * @return int
+     */
+    public function getNoOfVehiclesRequired()
+    {
+        return $this->noOfVehiclesRequired;
+    }
+
+    /**
+     * Set the no of vehicles possessed
+     *
+     * @param int $noOfVehiclesPossessed
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
+    {
+        $this->noOfVehiclesPossessed = $noOfVehiclesPossessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of vehicles possessed
+     *
+     * @return int
+     */
+    public function getNoOfVehiclesPossessed()
+    {
+        return $this->noOfVehiclesPossessed;
+    }
+
+    /**
+     * Set the no of trailers possessed
+     *
+     * @param int $noOfTrailersPossessed
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfTrailersPossessed($noOfTrailersPossessed)
+    {
+        $this->noOfTrailersPossessed = $noOfTrailersPossessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of trailers possessed
+     *
+     * @return int
+     */
+    public function getNoOfTrailersPossessed()
+    {
+        return $this->noOfTrailersPossessed;
     }
 
     /**
