@@ -6,22 +6,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * TmGracePeriod Entity
+ * GracePeriod Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="tm_grace_period",
+ * @ORM\Table(name="grace_period",
  *    indexes={
  *        @ORM\Index(name="fk_transport_manager_grace_period_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_transport_manager_grace_period_user1_idx", columns={"assigned_to_user_id"}),
  *        @ORM\Index(name="fk_transport_manager_grace_period_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_transport_manager_grace_period_user3_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_grace_period_ref_data1_idx", columns={"period_type"})
  *    }
  * )
  */
-class TmGracePeriod implements Interfaces\EntityInterface
+class GracePeriod implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
@@ -43,11 +44,21 @@ class TmGracePeriod implements Interfaces\EntityInterface
     protected $assignedToUser;
 
     /**
+     * Period type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
+     */
+    protected $periodType;
+
+    /**
      * Is active
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="is_active", nullable=false)
+     * @ORM\Column(type="boolean", name="is_active", nullable=false)
      */
     protected $isActive = 0;
 
@@ -70,15 +81,6 @@ class TmGracePeriod implements Interfaces\EntityInterface
     protected $endDate;
 
     /**
-     * Action date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="action_date", nullable=false)
-     */
-    protected $actionDate;
-
-    /**
      * Grace period no
      *
      * @var int
@@ -91,7 +93,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
      * Set the assigned to user
      *
      * @param \Olcs\Db\Entity\User $assignedToUser
-     * @return TmGracePeriod
+     * @return GracePeriod
      */
     public function setAssignedToUser($assignedToUser)
     {
@@ -111,10 +113,33 @@ class TmGracePeriod implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the period type
+     *
+     * @param \Olcs\Db\Entity\RefData $periodType
+     * @return GracePeriod
+     */
+    public function setPeriodType($periodType)
+    {
+        $this->periodType = $periodType;
+
+        return $this;
+    }
+
+    /**
+     * Get the period type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPeriodType()
+    {
+        return $this->periodType;
+    }
+
+    /**
      * Set the is active
      *
-     * @param string $isActive
-     * @return TmGracePeriod
+     * @param boolean $isActive
+     * @return GracePeriod
      */
     public function setIsActive($isActive)
     {
@@ -126,7 +151,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
     /**
      * Get the is active
      *
-     * @return string
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -137,7 +162,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
      * Set the start date
      *
      * @param \DateTime $startDate
-     * @return TmGracePeriod
+     * @return GracePeriod
      */
     public function setStartDate($startDate)
     {
@@ -160,7 +185,7 @@ class TmGracePeriod implements Interfaces\EntityInterface
      * Set the end date
      *
      * @param \DateTime $endDate
-     * @return TmGracePeriod
+     * @return GracePeriod
      */
     public function setEndDate($endDate)
     {
@@ -180,33 +205,10 @@ class TmGracePeriod implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the action date
-     *
-     * @param \DateTime $actionDate
-     * @return TmGracePeriod
-     */
-    public function setActionDate($actionDate)
-    {
-        $this->actionDate = $actionDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the action date
-     *
-     * @return \DateTime
-     */
-    public function getActionDate()
-    {
-        return $this->actionDate;
-    }
-
-    /**
      * Set the grace period no
      *
      * @param int $gracePeriodNo
-     * @return TmGracePeriod
+     * @return GracePeriod
      */
     public function setGracePeriodNo($gracePeriodNo)
     {

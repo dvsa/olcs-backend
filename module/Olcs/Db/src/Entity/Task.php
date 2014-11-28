@@ -42,7 +42,7 @@ class Task implements Interfaces\EntityInterface
         Traits\CategoryManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOne,
-        Traits\Description4000Field,
+        Traits\Description255FieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
