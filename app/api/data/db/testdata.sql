@@ -662,9 +662,9 @@ VALUES
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `contact_details_id`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'active','tm_t_I',NULL,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'active','tm_t_E',NULL,NULL,NULL,NULL,1),
-    (3,NULL,NULL,'active','tm_t_I',104,NULL,NULL,NULL,1);
+    (1,NULL,NULL,'tm_st_A','tm_t_I',NULL,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_A','tm_t_E',NULL,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
