@@ -16,7 +16,6 @@ TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
-TRUNCATE TABLE `driver`;
 TRUNCATE TABLE `document`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
@@ -210,19 +209,19 @@ VALUES
     'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
-    `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `condition_date`, `deleted_date`, `is_draft`,
+    `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
     `is_fulfilled`, `notes`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 1',NOW(),NULL,1),
-    (2,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 2',NOW(),NULL,1),
-    (3,24,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 3',NOW(),NULL,1),
-    (4,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 4',NOW(),NULL,1),
-    (5,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,NULL,0,1,'Some notes 5',NOW(),NULL,1),
-    (6,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,1,'Some notes 6',NOW(),NULL,1),
-    (7,24,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,NULL,0,1,'Some notes 8',NOW(),NULL,1),
-    (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 9',NOW(),NULL,1),
-    (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,NULL,0,0,'Some notes 11',NOW(),NULL,1);
+    (1,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 1',NOW(),NULL,1),
+    (2,24,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 2',NOW(),NULL,1),
+    (3,24,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 3',NOW(),NULL,1),
+    (4,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 4',NOW(),NULL,1),
+    (5,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 5',NOW(),NULL,1),
+    (6,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,1,'Some notes 6',NOW(),NULL,1),
+    (7,24,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 7',NOW(),NULL,1),
+    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some ninvoice_nootes 8',NOW(),NULL,1),
+    (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 9',NOW(),NULL,1),
+    (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 10',NOW(),NULL,1),
+    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 11',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`organisation_id`,`person_id`,`licence_id`,
    `last_modified_by`,`created_by`,`fao`,`forename`,`family_name`,`written_permission_to_engage`,`email_address`,
@@ -285,39 +284,35 @@ INSERT INTO `legacy_case_offence` (`case_id`, `legacy_offence_id`)
 VALUES
     (24, 1);
 
-INSERT INTO `driver` (`id`, `contact_details_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-    `version`) VALUES
-(1,7,3,3,NOW(),NOW(),1);
-
-INSERT INTO `ebsr_submission` (`id`, `ebsr_submission_result_id`, `document_id`, `ebsr_submission_type_id`,
+INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
     `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
     `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
     `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
     `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
+  (1, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
    null, 0, null);
 
-INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `invoice_no`, `created_by`, `last_modified_by`, `description`,
+INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`, `payment_method`, `waive_reason`) VALUES
-    (7,NULL,7,'lfs_ot',NULL,'235552',1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (30,NULL,110,'lfs_pd','234242','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL),
-    (41,NULL,110,'lfs_wr',NULL,'345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL),
-    (54,NULL,110,'lfs_ot',NULL,'829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (63,NULL,110,'lfs_ot',NULL,'481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (75,NULL,110,'lfs_ot',NULL,'964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (76,1,110,'lfs_wr',NULL,'234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL),
-    (77,1,110,'lfs_wr',NULL,'836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL),
-    (78,1,110,'lfs_wr',NULL,'561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL),
-    (79,1,110,'lfs_wr',NULL,'634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL),
-    (80,1,110,'lfs_pd','12345','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL),
-    (81,1,110,'lfs_ot',NULL,'837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
-    (82,1,30,'lfs_ot',NULL,'354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL),
-    (83,1,110,'lfs_wr',NULL,'435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (84,1,110,'lfs_ot',NULL,'435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
-    (85,1,110,'lfs_wr',NULL,'534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
-    (86,1,110,'lfs_ot',NULL,'426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
-    (87,1,110,'lfs_w','3453','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason'),
-    (88,1,110,'lfs_cn','3455','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL);
+    (7,NULL,7,'lfs_ot',NULL,1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (30,NULL,110,'lfs_pd','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL),
+    (41,NULL,110,'lfs_wr','345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL),
+    (54,NULL,110,'lfs_ot','829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (63,NULL,110,'lfs_ot','481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (75,NULL,110,'lfs_ot','964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (76,1,110,'lfs_wr','234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL),
+    (77,1,110,'lfs_wr','836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL),
+    (78,1,110,'lfs_wr','561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL),
+    (79,1,110,'lfs_wr','634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL),
+    (80,1,110,'lfs_pd','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL),
+    (81,1,110,'lfs_ot','837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
+    (82,1,30,'lfs_ot','354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL),
+    (83,1,110,'lfs_wr','435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (84,1,110,'lfs_ot','435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
+    (85,1,110,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
+    (86,1,110,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
+    (87,1,110,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason'),
+    (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `last_modified_by`, `goods_or_psv`, `lic_no`, `status`,
@@ -368,38 +363,37 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NOW(),NULL,1);
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
-    `removal`, `removal_reason`, `specified_date`, `removal_date`, `created_on`,
+    `specified_date`, `removal_date`, `created_on`,
     `last_modified_on`, `version`) VALUES
-    (1,7,1,NULL,4,1,'removal reason 1','2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (1,7,1,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (2,7,2,NULL,4,1,'removal reason 2','2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (2,7,2,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (3,7,3,NULL,4,1,'removal reason 3','2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (3,7,3,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (4,7,4,NULL,4,1,'removal reason 4','2013-02-20 00:00:00','2013-03-20 15:40:00','2010-01-12 00:00:00',
+    (4,7,4,NULL,4,'2013-02-20 00:00:00','2013-03-20 15:40:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (5,30,4,NULL,4,1,'removal reason 4','2013-04-20 00:00:00','2013-05-20 09:00:00','2010-01-12 00:00:00',
+    (5,30,4,NULL,4,'2013-04-20 00:00:00','2013-05-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (6,41,4,NULL,4,1,'removal reason 4','2013-05-22 00:00:00','2013-06-10 09:00:00','2010-01-12 00:00:00',
+    (6,41,4,NULL,4,'2013-05-22 00:00:00','2013-06-10 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (7,54,4,NULL,4,1,'removal reason 4','2013-06-20 00:00:00','2013-07-20 09:00:00','2010-01-12 00:00:00',
+    (7,54,4,NULL,4,'2013-06-20 00:00:00','2013-07-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (8,63,4,NULL,4,1,'removal reason 4','2013-07-24 00:00:00','2013-09-20 09:00:00','2010-01-12 00:00:00',
+    (8,63,4,NULL,4,'2013-07-24 00:00:00','2013-09-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (9,75,4,NULL,4,1,'removal reason 4','2013-10-20 00:00:00','2013-11-02 09:00:00','2010-01-12 00:00:00',
+    (9,75,4,NULL,4,'2013-10-20 00:00:00','2013-11-02 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (10,100,4,NULL,4,1,'removal reason 4','2014-11-14 00:00:00','2013-11-20 09:00:00','2010-01-12 00:00:00',
+    (10,100,4,NULL,4,'2014-11-14 00:00:00','2013-11-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (11,110,4,NULL,4,1,'removal reason 4','2014-11-25 00:00:00','2013-11-26 09:00:00','2010-01-12 00:00:00',
+    (11,110,4,NULL,4,'2014-11-25 00:00:00','2013-11-26 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (12,114,4,NULL,4,1,'removal reason 4','2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
+    (12,114,4,NULL,4,'2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (13,115,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
+    (13,115,4,NULL,4,'2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-
-    (14,208,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
+    (14,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1),
-    (15,208,4,NULL,4,1,'removal reason 4','2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
+    (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
 
 INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -543,14 +537,14 @@ INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_role`,`decided_by_tc_role`,`written_outcome`,`agreed_by_tc_id`,`decided_by_tc_id`,
     `assigned_to`,`pi_status`,`case_id`,`created_by`,`last_modified_by`,`witnesses`,`section_code_text`,
-    `reschedule_datetime`,`licence_revoked_at_pi`,`licence_suspended_at_pi`,`licence_curtailed_at_pi`,
+    `licence_revoked_at_pi`,`licence_suspended_at_pi`,`licence_curtailed_at_pi`,
     `notification_date`,`decision_notes`,`call_up_letter_date`,`brief_to_tc_date`,`written_reason_date`,
     `decision_letter_sent_date`,`tc_written_decision_date`,`tc_written_reason_date`,`written_reason_letter_date`,
-    `dec_sent_after_written_dec_date`,`agreed_date`,`is_cancelled`,`is_adjourned`,`decision_date`,`deleted_date`,
+    `dec_sent_after_written_dec_date`,`agreed_date`,`is_cancelled`,`decision_date`,`deleted_date`,
     `comment`,`closed_date`,`created_on`,`last_modified_on`,`version`)
   VALUES
-    (1,'tc_r_dtc',NULL,NULL,2,NULL,NULL,'pi_s_reg',24,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,
-     NULL,NULL,NULL,NULL,'2014-11-24',0,0,NULL,NULL,'Test Pi',NULL,'2014-11-24 10:06:49',NULL,1);
+    (1,'tc_r_dtc',NULL,NULL,2,NULL,NULL,'pi_s_reg',24,NULL,NULL,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,
+     NULL,NULL,NULL,NULL,'2014-11-24',0,NULL,NULL,'Test Pi',NULL,'2014-11-24 10:06:49',NULL,1);
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
@@ -599,12 +593,12 @@ INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by
 
 INSERT INTO `pi_hearing` (`id`,`presided_by_role`,`pi_id`,`pi_venue_id`,`last_modified_by`,`created_by`,
     `presiding_tc_id`,`presiding_tc_other`,`cancelled_reason`,`adjourned_reason`,`details`,`hearing_date`,
-    `pi_venue_other`,`witnesses`,`is_cancelled`,`cancelled_date`,`is_adjourned`,`adjourned_date`,`created_on`,
+    `pi_venue_other`,`witnesses`,`is_cancelled`,`cancelled_date`,`adjourned_date`,`created_on`,
     `last_modified_on`,`version`)
   VALUES
     (1,'tc_r_htru',1,1,NULL,NULL,1,NULL,NULL,'Test adjourned reason',
      'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26','2014-03-16 14:30:00',
-     NULL,9,0,NULL,1,'2014-03-16','2014-11-24 10:22:24',NULL,1);
+     NULL,9,0,NULL,'2014-03-16','2014-11-24 10:22:24',NULL,1);
 
 INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
@@ -670,7 +664,7 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (2,NULL,NULL,'active','External',NULL,NULL,NULL,1);
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
-    `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
+    `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL,'','',''),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL,'','',''),

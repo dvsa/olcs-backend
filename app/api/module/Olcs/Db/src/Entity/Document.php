@@ -48,56 +48,6 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Operating centre
-     *
-     * @var \Olcs\Db\Entity\OperatingCentre
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
-     */
-    protected $operatingCentre;
-
-    /**
-     * Opposition
-     *
-     * @var \Olcs\Db\Entity\Opposition
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
-     */
-    protected $opposition;
-
-    /**
-     * Bus reg
-     *
-     * @var \Olcs\Db\Entity\BusReg
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
-     */
-    protected $busReg;
-
-    /**
-     * Transport manager
-     *
-     * @var \Olcs\Db\Entity\TransportManager
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
-     */
-    protected $transportManager;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
-
-    /**
      * Traffic area
      *
      * @var \Olcs\Db\Entity\TrafficArea
@@ -118,6 +68,66 @@ class Document implements Interfaces\EntityInterface
     protected $fileExtension;
 
     /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManager;
+
+    /**
+     * Opposition
+     *
+     * @var \Olcs\Db\Entity\Opposition
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
+     */
+    protected $opposition;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
+
+    /**
      * Document sub category
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
@@ -136,16 +146,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
-
-    /**
-     * Application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Email
@@ -193,6 +193,15 @@ class Document implements Interfaces\EntityInterface
     protected $isDigital = 0;
 
     /**
+     * Is scan
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_scan", nullable=false)
+     */
+    protected $isScan = 0;
+
+    /**
      * Size
      *
      * @var int
@@ -207,121 +216,6 @@ class Document implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->emails = new ArrayCollection();
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
-     * @return Document
-     */
-    public function setOperatingCentre($operatingCentre)
-    {
-        $this->operatingCentre = $operatingCentre;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centre
-     *
-     * @return \Olcs\Db\Entity\OperatingCentre
-     */
-    public function getOperatingCentre()
-    {
-        return $this->operatingCentre;
-    }
-
-    /**
-     * Set the opposition
-     *
-     * @param \Olcs\Db\Entity\Opposition $opposition
-     * @return Document
-     */
-    public function setOpposition($opposition)
-    {
-        $this->opposition = $opposition;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition
-     *
-     * @return \Olcs\Db\Entity\Opposition
-     */
-    public function getOpposition()
-    {
-        return $this->opposition;
-    }
-
-    /**
-     * Set the bus reg
-     *
-     * @param \Olcs\Db\Entity\BusReg $busReg
-     * @return Document
-     */
-    public function setBusReg($busReg)
-    {
-        $this->busReg = $busReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus reg
-     *
-     * @return \Olcs\Db\Entity\BusReg
-     */
-    public function getBusReg()
-    {
-        return $this->busReg;
-    }
-
-    /**
-     * Set the transport manager
-     *
-     * @param \Olcs\Db\Entity\TransportManager $transportManager
-     * @return Document
-     */
-    public function setTransportManager($transportManager)
-    {
-        $this->transportManager = $transportManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager
-     *
-     * @return \Olcs\Db\Entity\TransportManager
-     */
-    public function getTransportManager()
-    {
-        return $this->transportManager;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Document
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
     }
 
     /**
@@ -371,6 +265,144 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return Document
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return Document
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return Document
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Document
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return Document
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return Document
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
      * Set the document sub category
      *
      * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
@@ -414,29 +446,6 @@ class Document implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the application
-     *
-     * @param \Olcs\Db\Entity\Application $application
-     * @return Document
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
     }
 
     /**
@@ -589,6 +598,29 @@ class Document implements Interfaces\EntityInterface
     public function getIsDigital()
     {
         return $this->isDigital;
+    }
+
+    /**
+     * Set the is scan
+     *
+     * @param boolean $isScan
+     * @return Document
+     */
+    public function setIsScan($isScan)
+    {
+        $this->isScan = $isScan;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scan
+     *
+     * @return boolean
+     */
+    public function getIsScan()
+    {
+        return $this->isScan;
     }
 
     /**

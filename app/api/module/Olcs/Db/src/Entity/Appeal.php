@@ -26,9 +26,9 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OutcomeManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,
@@ -64,15 +64,6 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="appeal_no", length=20, nullable=true)
      */
     protected $appealNo;
-
-    /**
-     * Tm case id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tm_case_id", nullable=true)
-     */
-    protected $tmCaseId;
 
     /**
      * Deadline date
@@ -195,29 +186,6 @@ class Appeal implements Interfaces\EntityInterface
     public function getAppealNo()
     {
         return $this->appealNo;
-    }
-
-    /**
-     * Set the tm case id
-     *
-     * @param int $tmCaseId
-     * @return Appeal
-     */
-    public function setTmCaseId($tmCaseId)
-    {
-        $this->tmCaseId = $tmCaseId;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm case id
-     *
-     * @return int
-     */
-    public function getTmCaseId()
-    {
-        return $this->tmCaseId;
     }
 
     /**

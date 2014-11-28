@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -37,8 +38,8 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -65,16 +66,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $approvalUser;
 
     /**
-     * Attached to
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
-     */
-    protected $attachedTo;
-
-    /**
      * Condition type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -83,16 +74,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
 
     /**
      * Added via
@@ -105,13 +86,50 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $addedVia;
 
     /**
-     * Condition date
+     * Case
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\Column(type="datetime", name="condition_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
-    protected $conditionDate;
+    protected $case;
+
+    /**
+     * Attached to
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
+     */
+    protected $attachedTo;
+
+    /**
+     * S4
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions", fetch="LAZY")
+     * @ORM\JoinTable(name="s4_condition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $s4s;
+
+    /**
+     * Action
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="action", length=1, nullable=true)
+     */
+    protected $action;
 
     /**
      * Is draft
@@ -132,6 +150,15 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $isFulfilled = 0;
 
     /**
+     * Is approved
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     */
+    protected $isApproved = 0;
+
+    /**
      * Notes
      *
      * @var string
@@ -141,13 +168,12 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $notes;
 
     /**
-     * Is approved
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     * Initialise the collections
      */
-    protected $isApproved = 0;
+    public function __construct()
+    {
+        $this->s4s = new ArrayCollection();
+    }
 
     /**
      * Set the lic condition variation
@@ -196,29 +222,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the attached to
-     *
-     * @param \Olcs\Db\Entity\RefData $attachedTo
-     * @return ConditionUndertaking
-     */
-    public function setAttachedTo($attachedTo)
-    {
-        $this->attachedTo = $attachedTo;
-
-        return $this;
-    }
-
-    /**
-     * Get the attached to
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAttachedTo()
-    {
-        return $this->attachedTo;
-    }
-
-    /**
      * Set the condition type
      *
      * @param \Olcs\Db\Entity\RefData $conditionType
@@ -239,29 +242,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return ConditionUndertaking
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
     }
 
     /**
@@ -288,26 +268,132 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the condition date
+     * Set the case
      *
-     * @param \DateTime $conditionDate
+     * @param \Olcs\Db\Entity\Cases $case
      * @return ConditionUndertaking
      */
-    public function setConditionDate($conditionDate)
+    public function setCase($case)
     {
-        $this->conditionDate = $conditionDate;
+        $this->case = $case;
 
         return $this;
     }
 
     /**
-     * Get the condition date
+     * Get the case
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\Cases
      */
-    public function getConditionDate()
+    public function getCase()
     {
-        return $this->conditionDate;
+        return $this->case;
+    }
+
+    /**
+     * Set the attached to
+     *
+     * @param \Olcs\Db\Entity\RefData $attachedTo
+     * @return ConditionUndertaking
+     */
+    public function setAttachedTo($attachedTo)
+    {
+        $this->attachedTo = $attachedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the attached to
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAttachedTo()
+    {
+        return $this->attachedTo;
+    }
+
+    /**
+     * Set the s4
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function setS4s($s4s)
+    {
+        $this->s4s = $s4s;
+
+        return $this;
+    }
+
+    /**
+     * Get the s4s
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getS4s()
+    {
+        return $this->s4s;
+    }
+
+    /**
+     * Add a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function addS4s($s4s)
+    {
+        if ($s4s instanceof ArrayCollection) {
+            $this->s4s = new ArrayCollection(
+                array_merge(
+                    $this->s4s->toArray(),
+                    $s4s->toArray()
+                )
+            );
+        } elseif (!$this->s4s->contains($s4s)) {
+            $this->s4s->add($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function removeS4s($s4s)
+    {
+        if ($this->s4s->contains($s4s)) {
+            $this->s4s->removeElement($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the action
+     *
+     * @param string $action
+     * @return ConditionUndertaking
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Get the action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 
     /**
@@ -357,29 +443,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return ConditionUndertaking
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
      * Set the is approved
      *
      * @param string $isApproved
@@ -400,5 +463,28 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getIsApproved()
     {
         return $this->isApproved;
+    }
+
+    /**
+     * Set the notes
+     *
+     * @param string $notes
+     * @return ConditionUndertaking
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }
