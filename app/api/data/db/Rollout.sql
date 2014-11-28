@@ -243,18 +243,17 @@ INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('ABERDEEN C ITY','M');
 
 INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, `created_on`, `last_modified_on`,
-    `version`, `name`, `contact_details_id`, `is_scottish_rules`,
-    `is_scotland`, `is_wales`, `is_england`, `is_ni`) VALUES
-    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0, 0,0,1,0),
-    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0, 0,0,1,0),
-    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0, 0,0,1,0),
-    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0, 0,0,1,0),
-    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0, 0,1,0,0),
-    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0, 0,0,1,0),
+    `version`, `name`, `contact_details_id`, `is_scotland`, `is_wales`, `is_england`, `is_ni`) VALUES
+    (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0,0,1,0),
+    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0,0,1,0),
+    (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0,0,1,0),
+    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0,0,1,0),
+    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0,1,0,0),
+    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0,0,1,0),
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
-    'London and the South East of England',7,0, 0,0,1,0),
-    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1, 1,0,0,0),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,1, 0,0,0,1);
+    'London and the South East of England',7,0,0,1,0),
+    (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1,0,0,0),
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0,0,0,1);
 
 INSERT INTO `country` (`id`,`country_desc`) VALUES
     ('GB', 'United Kingdom'),
@@ -3701,7 +3700,7 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.name task_sub_category_name,
-      u.name user_name,
+      u.login_id user_name,
       count(ll.id) licence_count
 
     FROM `task` t

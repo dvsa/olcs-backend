@@ -31,9 +31,9 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\PersonManyToOne,
         Traits\OrganisationManyToOne,
         Traits\Penalty255Field,
@@ -43,16 +43,6 @@ class Conviction implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
-     */
-    protected $case;
 
     /**
      * Defendant type
@@ -73,6 +63,16 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="conviction_category", referencedColumnName="id", nullable=true)
      */
     protected $convictionCategory;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Offence date
@@ -147,24 +147,6 @@ class Conviction implements Interfaces\EntityInterface
     protected $operatorName;
 
     /**
-     * Taken into consideration
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
-     */
-    protected $takenIntoConsideration;
-
-    /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
-
-    /**
      * Person firstname
      *
      * @var string
@@ -183,27 +165,22 @@ class Conviction implements Interfaces\EntityInterface
     protected $personLastname;
 
     /**
-     * Set the case
+     * Taken into consideration
      *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Conviction
+     * @var string
+     *
+     * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
      */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
+    protected $takenIntoConsideration;
 
     /**
-     * Get the case
+     * Category text
      *
-     * @return \Olcs\Db\Entity\Cases
+     * @var string
+     *
+     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
      */
-    public function getCase()
-    {
-        return $this->case;
-    }
+    protected $categoryText;
 
     /**
      * Set the defendant type
@@ -249,6 +226,29 @@ class Conviction implements Interfaces\EntityInterface
     public function getConvictionCategory()
     {
         return $this->convictionCategory;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Conviction
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
@@ -436,52 +436,6 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the taken into consideration
-     *
-     * @param string $takenIntoConsideration
-     * @return Conviction
-     */
-    public function setTakenIntoConsideration($takenIntoConsideration)
-    {
-        $this->takenIntoConsideration = $takenIntoConsideration;
-
-        return $this;
-    }
-
-    /**
-     * Get the taken into consideration
-     *
-     * @return string
-     */
-    public function getTakenIntoConsideration()
-    {
-        return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
-    }
-
-    /**
      * Set the person firstname
      *
      * @param string $personFirstname
@@ -525,5 +479,51 @@ class Conviction implements Interfaces\EntityInterface
     public function getPersonLastname()
     {
         return $this->personLastname;
+    }
+
+    /**
+     * Set the taken into consideration
+     *
+     * @param string $takenIntoConsideration
+     * @return Conviction
+     */
+    public function setTakenIntoConsideration($takenIntoConsideration)
+    {
+        $this->takenIntoConsideration = $takenIntoConsideration;
+
+        return $this;
+    }
+
+    /**
+     * Get the taken into consideration
+     *
+     * @return string
+     */
+    public function getTakenIntoConsideration()
+    {
+        return $this->takenIntoConsideration;
+    }
+
+    /**
+     * Set the category text
+     *
+     * @param string $categoryText
+     * @return Conviction
+     */
+    public function setCategoryText($categoryText)
+    {
+        $this->categoryText = $categoryText;
+
+        return $this;
+    }
+
+    /**
+     * Get the category text
+     *
+     * @return string
+     */
+    public function getCategoryText()
+    {
+        return $this->categoryText;
     }
 }
