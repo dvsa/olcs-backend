@@ -3702,7 +3702,7 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.name task_sub_category_name,
-      u.login_id user_name,
+      u.name user_name,
       count(ll.id) licence_count
 
     FROM `task` t
