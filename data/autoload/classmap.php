@@ -750,4 +750,6 @@ return array(
     'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DriverException.php',
     'Olcs\Db\Service\Address' => false,
     'Olcs\Db\Entity\View\Address' => false,
+    'Olcs\Db\Service\OrganisationPerson' => false,
+    'Olcs\Db\Entity\View\OrganisationPerson' => false,
 );
