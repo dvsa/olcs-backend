@@ -36,7 +36,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\VenueManyToOne,
         Traits\PresidingTcManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
-        Traits\WitnessesField,
         Traits\AgreedDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -54,6 +53,16 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $type;
 
     /**
+     * Presided by
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedBy;
+
+    /**
      * Reason
      *
      * @var \Olcs\Db\Entity\RefData
@@ -64,14 +73,13 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $reason;
 
     /**
-     * Presided by
+     * Witnesses
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="integer", name="witnesses", nullable=false)
      */
-    protected $presidedBy;
+    protected $witnesses = 0;
 
     /**
      * Adjourned date
@@ -133,6 +141,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the presided by
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedBy
+     * @return TmPiHearing
+     */
+    public function setPresidedBy($presidedBy)
+    {
+        $this->presidedBy = $presidedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedBy()
+    {
+        return $this->presidedBy;
+    }
+
+    /**
      * Set the reason
      *
      * @param \Olcs\Db\Entity\RefData $reason
@@ -156,26 +187,26 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the presided by
+     * Set the witnesses
      *
-     * @param \Olcs\Db\Entity\RefData $presidedBy
+     * @param int $witnesses
      * @return TmPiHearing
      */
-    public function setPresidedBy($presidedBy)
+    public function setWitnesses($witnesses)
     {
-        $this->presidedBy = $presidedBy;
+        $this->witnesses = $witnesses;
 
         return $this;
     }
 
     /**
-     * Get the presided by
+     * Get the witnesses
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return int
      */
-    public function getPresidedBy()
+    public function getWitnesses()
     {
-        return $this->presidedBy;
+        return $this->witnesses;
     }
 
     /**

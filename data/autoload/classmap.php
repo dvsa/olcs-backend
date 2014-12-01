@@ -737,4 +737,12 @@ return array(
     'Olcs\Db\Entity\View\ConditionUndertaking' => false,
     'Doctrine\ORM\Query\QueryException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php',
     'Doctrine\ORM\ORMException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php',
+    'Doctrine\DBAL\Driver\PDOException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOException.php',
+    'Doctrine\DBAL\Driver\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/DriverException.php',
+    'Doctrine\DBAL\DBALException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DBALException.php',
+    'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DriverException.php',
+    'Olcs\Db\Service\Conviction' => false,
+    'Olcs\Db\Entity\View\Conviction' => false,
+    'Olcs\Db\Service\Opposition' => false,
+    'Olcs\Db\Entity\View\Opposition' => false,
 );

@@ -1230,13 +1230,12 @@ DROP TABLE IF EXISTS `complaint`;
 CREATE TABLE `complaint` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) DEFAULT NULL,
+  `complainant_contact_details_id` int(11) DEFAULT NULL,
   `complaint_date` datetime DEFAULT NULL,
-  `complainant_forename` varchar(40) DEFAULT NULL,
-  `complainant_family_name` varchar(40) DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,
   `description` varchar(4000) DEFAULT NULL,
   `complaint_type` varchar(32) DEFAULT NULL,
-  `vrm` varchar(20) DEFAULT NULL,  
+  `vrm` varchar(20) DEFAULT NULL,
   `driver_forename` varchar(40) DEFAULT NULL,
   `driver_family_name` varchar(40) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete.',
@@ -1246,16 +1245,18 @@ CREATE TABLE `complaint` (
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `IDX_5F2732B57B00651C` (`status`),
-  KEY `IDX_5F2732B553DF8182` (`complaint_type`),
-  KEY `IDX_5F2732B5DE12AB56` (`created_by`),
-  KEY `IDX_5F2732B565CF370E` (`last_modified_by`),
-  KEY `IDX_5F2732B5CF10D4F5` (`case_id`),
-  CONSTRAINT `FK_5F2732B553DF8182` FOREIGN KEY (`complaint_type`) REFERENCES `ref_data` (`id`),
-  CONSTRAINT `FK_5F2732B565CF370E` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_5F2732B57B00651C` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`),
-  CONSTRAINT `FK_5F2732B5CF10D4F5` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`),
-  CONSTRAINT `FK_5F2732B5DE12AB56` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
+  KEY `fk_complaint_contact_details1_idx` (`complainant_contact_details_id`),
+  KEY `fk_complaint_user1_idx` (`created_by`),
+  KEY `fk_complaint_user2_idx` (`last_modified_by`),
+  KEY `fk_complaint_ref_data1_idx` (`status`),
+  KEY `fk_complaint_ref_data2_idx` (`complaint_type`),
+  KEY `fk_complaint_cases1_idx` (`case_id`),
+  CONSTRAINT `fk_complaint_contact_details1` FOREIGN KEY (`complainant_contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_ref_data1` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_ref_data2` FOREIGN KEY (`complaint_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_complaint_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1462,7 +1463,6 @@ CREATE TABLE `conviction` (
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_conviction_conviction_category1_idx` (`conviction_category`),
   KEY `fk_conviction_person1_idx` (`person_id`),
   KEY `fk_conviction_organisation1_idx` (`organisation_id`),
   KEY `fk_conviction_transport_manager1_idx` (`transport_manager_id`),
@@ -1470,14 +1470,15 @@ CREATE TABLE `conviction` (
   KEY `fk_conviction_user2_idx` (`last_modified_by`),
   KEY `fk_conviction_operator_case1_idx` (`case_id`),
   KEY `fk_conviction_ref_data1_idx` (`defendant_type`),
-  CONSTRAINT `fk_conviction_conviction_category1` FOREIGN KEY (`conviction_category`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_conviction_ref_data2_idx` (`conviction_category`),
   CONSTRAINT `fk_conviction_person1` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_organisation1` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_conviction_case1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_conviction_ref_data1` FOREIGN KEY (`defendant_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_conviction_ref_data1` FOREIGN KEY (`defendant_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_conviction_ref_data2` FOREIGN KEY (`conviction_category`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1488,41 +1489,6 @@ CREATE TABLE `conviction` (
 LOCK TABLES `conviction` WRITE;
 /*!40000 ALTER TABLE `conviction` DISABLE KEYS */;
 /*!40000 ALTER TABLE `conviction` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `conviction_category`
---
-
-DROP TABLE IF EXISTS `conviction_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `conviction_category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(1024) NOT NULL,
-  `parent_id` int(11) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_conviction_category_conviction_category1_idx` (`parent_id`),
-  KEY `fk_conviction_category_user1_idx` (`created_by`),
-  KEY `fk_conviction_category_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_conviction_category_conviction_category1` FOREIGN KEY (`parent_id`) REFERENCES `conviction_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_conviction_category_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_conviction_category_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `conviction_category`
---
-
-LOCK TABLES `conviction_category` WRITE;
-/*!40000 ALTER TABLE `conviction_category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `conviction_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2326,6 +2292,35 @@ CREATE TABLE `event_history_type` (
 LOCK TABLES `event_history_type` WRITE;
 /*!40000 ALTER TABLE `event_history_type` DISABLE KEYS */;
 /*!40000 ALTER TABLE `event_history_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ext_translations`
+--
+
+DROP TABLE IF EXISTS `ext_translations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ext_translations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `locale` varchar(8) NOT NULL,
+  `object_class` varchar(255) NOT NULL,
+  `field` varchar(32) NOT NULL,
+  `foreign_key` varchar(64) NOT NULL,
+  `content` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lookup_unique_idx` (`locale`,`object_class`,`field`,`foreign_key`),
+  KEY `translations_lookup_idx` (`locale`,`object_class`,`foreign_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ext_translations`
+--
+
+LOCK TABLES `ext_translations` WRITE;
+/*!40000 ALTER TABLE `ext_translations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ext_translations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -3968,7 +3963,9 @@ DROP TABLE IF EXISTS `opposition`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `opposition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `licence_id` int(11) NOT NULL,
   `application_id` int(11) NOT NULL,
+  `case_id` int(11) DEFAULT NULL,
   `opposer_id` int(11) NOT NULL,
   `opposition_type` varchar(32) NOT NULL,
   `notes` varchar(4000) DEFAULT NULL,
@@ -3977,7 +3974,7 @@ CREATE TABLE `opposition` (
   `is_in_time` tinyint(1) NOT NULL DEFAULT '0',
   `is_public_inquiry` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
-  `is_valid` tinyint(1) NOT NULL,
+  `is_valid` tinyint(1) NOT NULL DEFAULT '0',
   `is_withdrawn` tinyint(1) NOT NULL DEFAULT '0',
   `valid_notes` varchar(4000) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -3990,12 +3987,16 @@ CREATE TABLE `opposition` (
   KEY `fk_opposition_opposer1_idx` (`opposer_id`),
   KEY `fk_opposition_user1_idx` (`created_by`),
   KEY `fk_opposition_user2_idx` (`last_modified_by`),
-  KEY `fk_opposition_ref_data1` (`opposition_type`),
-  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_opposition_cases1_idx` (`case_id`),
+  KEY `fk_opposition_licence1_idx` (`licence_id`),
+  KEY `fk_opposition_ref_data1_idx` (`opposition_type`),
   CONSTRAINT `fk_opposition_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_opposer1` FOREIGN KEY (`opposer_id`) REFERENCES `opposer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_opposition_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_opposition_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4548,7 +4549,7 @@ CREATE TABLE `pi_hearing` (
   `presided_by_role` varchar(32) DEFAULT NULL,
   `pi_venue_other` varchar(255) DEFAULT NULL,
   `pi_venue_id` int(11) DEFAULT NULL COMMENT 'The venue at the time of selection is stored in pi_venue_other. If venue data changes, other still stores data at time of selection.',
-  `witnesses` int(11) NOT NULL DEFAULT '0',
+  `witnesses` int(11) DEFAULT NULL,
   `is_cancelled` tinyint(1) NOT NULL DEFAULT '0',
   `cancelled_reason` varchar(4000) DEFAULT NULL,
   `cancelled_date` date DEFAULT NULL,
