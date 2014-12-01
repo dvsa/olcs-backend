@@ -1,8 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
     "hash": "0dbe9570f214740174da682faa1b45ff",
     "packages": [
@@ -120,12 +119,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "7b625bf42f08ceb3e7dc7852095ef5e1a5756884"
+                "reference": "85ff6118558d7b2501cd85b31bdc1ffc0cab731a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/7b625bf42f08ceb3e7dc7852095ef5e1a5756884",
-                "reference": "7b625bf42f08ceb3e7dc7852095ef5e1a5756884",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/85ff6118558d7b2501cd85b31bdc1ffc0cab731a",
+                "reference": "85ff6118558d7b2501cd85b31bdc1ffc0cab731a",
                 "shasum": ""
             },
             "require": {
@@ -182,7 +181,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2014-11-24 16:07:53"
+            "time": "2014-11-27 00:22:12"
         },
         {
             "name": "doctrine/collections",
@@ -482,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineORMModule.git",
-                "reference": "5a1a8ae86eb5ac4fa0f3acaa1a452b4ccd85f962"
+                "reference": "a284fa4a5c764b3000fe931e8d47e8b381048215"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineORMModule/zipball/5a1a8ae86eb5ac4fa0f3acaa1a452b4ccd85f962",
-                "reference": "5a1a8ae86eb5ac4fa0f3acaa1a452b4ccd85f962",
+                "url": "https://api.github.com/repos/doctrine/DoctrineORMModule/zipball/a284fa4a5c764b3000fe931e8d47e8b381048215",
+                "reference": "a284fa4a5c764b3000fe931e8d47e8b381048215",
                 "shasum": ""
             },
             "require": {
@@ -556,7 +555,7 @@
                 "orm",
                 "zf2"
             ],
-            "time": "2014-10-19 09:27:54"
+            "time": "2014-11-27 15:20:57"
         },
         {
             "name": "doctrine/inflector",
@@ -916,7 +915,7 @@
                 "reference": "origin/develop"
             },
             "type": "library",
-            "time": "2014-09-10 14:47:09"
+            "time": "2014-09-30 07:55:08"
         },
         {
             "name": "olcs/olcs-logging",
@@ -955,12 +954,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548"
+                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548",
-                "reference": "f8f1efcc720ad91ae42cd4bbc3991cbf06eaa548",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/171e86ac56c2dbb8ef328fe87f938dda9f26d460",
+                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460",
                 "shasum": ""
             },
             "require": {
@@ -973,6 +972,7 @@
                 "satooshi/php-coveralls": "dev-master"
             },
             "suggest": {
+                "egeloen/http-adapter": "Allow using httpadapter transport",
                 "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport (requires php 5.4)",
                 "monolog/monolog": "Logging request",
                 "munkie/elasticsearch-thrift-php": "Allow using thrift transport",
@@ -1006,7 +1006,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-11-24 19:33:02"
+            "time": "2014-11-30 15:17:41"
         },
         {
             "name": "symfony/console",
@@ -1015,12 +1015,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "57174fbefe6a4b35302f3ac62d5e3f0039700657"
+                "reference": "c5e1a11682f97c1330223268b2a8105f3fc3630d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/57174fbefe6a4b35302f3ac62d5e3f0039700657",
-                "reference": "57174fbefe6a4b35302f3ac62d5e3f0039700657",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/c5e1a11682f97c1330223268b2a8105f3fc3630d",
+                "reference": "c5e1a11682f97c1330223268b2a8105f3fc3630d",
                 "shasum": ""
             },
             "require": {
@@ -1063,7 +1063,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-20 13:24:30"
+            "time": "2014-11-30 15:28:47"
         },
         {
             "name": "zendframework/zendframework",
@@ -1071,12 +1071,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "6251712072af1d942a94f14a1595b139a70aaee8"
+                "reference": "5b557b2b23107e2b95d8f321293097be5a9fc591"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/6251712072af1d942a94f14a1595b139a70aaee8",
-                "reference": "6251712072af1d942a94f14a1595b139a70aaee8",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/5b557b2b23107e2b95d8f321293097be5a9fc591",
+                "reference": "5b557b2b23107e2b95d8f321293097be5a9fc591",
                 "shasum": ""
             },
             "require": {
@@ -1181,7 +1181,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2014-11-24 12:22:12"
+            "time": "2014-11-30 15:39:36"
         },
         {
             "name": "zendframework/zendxml",
@@ -2162,12 +2162,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "db265d455072fc24f21da6e8b7f94944c7aef53f"
+                "reference": "aac195e95301dd81ca873edcb06627d88d2990b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/db265d455072fc24f21da6e8b7f94944c7aef53f",
-                "reference": "db265d455072fc24f21da6e8b7f94944c7aef53f",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/aac195e95301dd81ca873edcb06627d88d2990b0",
+                "reference": "aac195e95301dd81ca873edcb06627d88d2990b0",
                 "shasum": ""
             },
             "require": {
@@ -2200,7 +2200,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-11 08:37:22"
+            "time": "2014-11-28 10:01:03"
         },
         {
             "name": "symfony/yaml",
@@ -2209,12 +2209,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "75deb1b183d2bbf12f4b54c644c0caafca338fbe"
+                "reference": "db39f8dc540b80eaf62cf60e02659e681e79d98b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/75deb1b183d2bbf12f4b54c644c0caafca338fbe",
-                "reference": "75deb1b183d2bbf12f4b54c644c0caafca338fbe",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/db39f8dc540b80eaf62cf60e02659e681e79d98b",
+                "reference": "db39f8dc540b80eaf62cf60e02659e681e79d98b",
                 "shasum": ""
             },
             "require": {
@@ -2247,7 +2247,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-20 13:24:30"
+            "time": "2014-11-29 14:04:31"
         },
         {
             "name": "theseer/fdomdocument",
@@ -2301,7 +2301,6 @@
         "sebastian/diff": 20,
         "phpunit/phpcov": 20
     },
-    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },
