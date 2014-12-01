@@ -15,7 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="payment",
  *    indexes={
  *        @ORM\Index(name="fk_payment_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_payment_ref_data1_idx", columns={"status"})
  *    }
  * )
  */
@@ -25,6 +26,7 @@ class Payment implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\StatusManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
