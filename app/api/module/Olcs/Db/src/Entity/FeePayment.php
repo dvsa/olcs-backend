@@ -30,7 +30,6 @@ class FeePayment implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\FeeManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -44,6 +43,16 @@ class FeePayment implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
      */
     protected $payment;
+
+    /**
+     * Fee
+     *
+     * @var \Olcs\Db\Entity\Fee
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY", inversedBy="feePayments")
+     * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
+     */
+    protected $fee;
 
     /**
      * Fee value
@@ -75,6 +84,29 @@ class FeePayment implements Interfaces\EntityInterface
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Olcs\Db\Entity\Fee $fee
+     * @return FeePayment
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee
+     *
+     * @return \Olcs\Db\Entity\Fee
+     */
+    public function getFee()
+    {
+        return $this->fee;
     }
 
     /**
