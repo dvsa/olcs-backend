@@ -27,7 +27,7 @@ class DateTimeType extends DoctrineDateTimeType
         }
 
         if ($value instanceof \DateTime) {
-            return $value->format('Y-m-d H:i:s');
+            return $value->format(\DateTime::ISO8601);
         }
 
         $val = \DateTime::createFromFormat($platform->getDateTimeFormatString(), $value);
@@ -45,7 +45,7 @@ class DateTimeType extends DoctrineDateTimeType
         }
 
         if ($val instanceof \DateTime) {
-            return $val->format('Y-m-d H:i:s');
+            return $val->format(\DateTime::ISO8601);
         }
 
         return $val;
