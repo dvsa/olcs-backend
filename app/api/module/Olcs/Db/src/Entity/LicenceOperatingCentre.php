@@ -28,11 +28,11 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\S4ManyToOne,
-        Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
+        Traits\LicenceManyToOne,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,

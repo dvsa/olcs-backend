@@ -27,26 +27,15 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
+        Traits\PiVenueManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiVenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
-        Traits\WitnessesField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pi
-     *
-     * @var \Olcs\Db\Entity\Pi
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
-     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
-     */
-    protected $pi;
 
     /**
      * Presided by role
@@ -59,6 +48,16 @@ class PiHearing implements Interfaces\EntityInterface
     protected $presidedByRole;
 
     /**
+     * Pi
+     *
+     * @var \Olcs\Db\Entity\Pi
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pi;
+
+    /**
      * Presiding tc other
      *
      * @var string
@@ -66,6 +65,15 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
      */
     protected $presidingTcOther;
+
+    /**
+     * Witnesses
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="witnesses", nullable=true)
+     */
+    protected $witnesses;
 
     /**
      * Is cancelled
@@ -131,29 +139,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $details;
 
     /**
-     * Set the pi
-     *
-     * @param \Olcs\Db\Entity\Pi $pi
-     * @return PiHearing
-     */
-    public function setPi($pi)
-    {
-        $this->pi = $pi;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi
-     *
-     * @return \Olcs\Db\Entity\Pi
-     */
-    public function getPi()
-    {
-        return $this->pi;
-    }
-
-    /**
      * Set the presided by role
      *
      * @param \Olcs\Db\Entity\RefData $presidedByRole
@@ -177,6 +162,29 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the pi
+     *
+     * @param \Olcs\Db\Entity\Pi $pi
+     * @return PiHearing
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Olcs\Db\Entity\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
+    }
+
+    /**
      * Set the presiding tc other
      *
      * @param string $presidingTcOther
@@ -197,6 +205,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidingTcOther()
     {
         return $this->presidingTcOther;
+    }
+
+    /**
+     * Set the witnesses
+     *
+     * @param int $witnesses
+     * @return PiHearing
+     */
+    public function setWitnesses($witnesses)
+    {
+        $this->witnesses = $witnesses;
+
+        return $this;
+    }
+
+    /**
+     * Get the witnesses
+     *
+     * @return int
+     */
+    public function getWitnesses()
+    {
+        return $this->witnesses;
     }
 
     /**

@@ -31,8 +31,8 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CloseDateField,
@@ -40,16 +40,6 @@ class Cases implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Erru case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
-     */
-    protected $erruCaseType;
 
     /**
      * Case type
@@ -60,6 +50,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
      */
     protected $caseType;
+
+    /**
+     * Erru case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
+     */
+    protected $erruCaseType;
 
     /**
      * Licence
@@ -264,29 +264,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the erru case type
-     *
-     * @param \Olcs\Db\Entity\RefData $erruCaseType
-     * @return Cases
-     */
-    public function setErruCaseType($erruCaseType)
-    {
-        $this->erruCaseType = $erruCaseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getErruCaseType()
-    {
-        return $this->erruCaseType;
-    }
-
-    /**
      * Set the case type
      *
      * @param \Olcs\Db\Entity\RefData $caseType
@@ -307,6 +284,29 @@ class Cases implements Interfaces\EntityInterface
     public function getCaseType()
     {
         return $this->caseType;
+    }
+
+    /**
+     * Set the erru case type
+     *
+     * @param \Olcs\Db\Entity\RefData $erruCaseType
+     * @return Cases
+     */
+    public function setErruCaseType($erruCaseType)
+    {
+        $this->erruCaseType = $erruCaseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getErruCaseType()
+    {
+        return $this->erruCaseType;
     }
 
     /**

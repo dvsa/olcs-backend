@@ -29,11 +29,11 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\StatusManyToOne,
+        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

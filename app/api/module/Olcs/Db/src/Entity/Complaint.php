@@ -16,11 +16,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
- *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="fk_complaint_contact_details1_idx", columns={"complainant_contact_details_id"}),
+ *        @ORM\Index(name="fk_complaint_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_complaint_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_complaint_ref_data1_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"}),
+ *        @ORM\Index(name="fk_complaint_cases1_idx", columns={"case_id"})
  *    }
  * )
  */
@@ -28,24 +29,14 @@ class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\Vrm20Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
-     */
-    protected $status;
 
     /**
      * Complaint type
@@ -58,6 +49,26 @@ class Complaint implements Interfaces\EntityInterface
     protected $complaintType;
 
     /**
+     * Status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
+
+    /**
+     * Complainant contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", cascade={"persist"})
+     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $complainantContactDetails;
+
+    /**
      * Complaint date
      *
      * @var \DateTime
@@ -65,24 +76,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="complaint_date", nullable=true)
      */
     protected $complaintDate;
-
-    /**
-     * Complainant forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="complainant_forename", length=40, nullable=true)
-     */
-    protected $complainantForename;
-
-    /**
-     * Complainant family name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="complainant_family_name", length=40, nullable=true)
-     */
-    protected $complainantFamilyName;
 
     /**
      * Description
@@ -112,29 +105,6 @@ class Complaint implements Interfaces\EntityInterface
     protected $driverFamilyName;
 
     /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return Complaint
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set the complaint type
      *
      * @param \Olcs\Db\Entity\RefData $complaintType
@@ -158,6 +128,52 @@ class Complaint implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the status
+     *
+     * @param \Olcs\Db\Entity\RefData $status
+     * @return Complaint
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the complainant contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
+     * @return Complaint
+     */
+    public function setComplainantContactDetails($complainantContactDetails)
+    {
+        $this->complainantContactDetails = $complainantContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the complainant contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getComplainantContactDetails()
+    {
+        return $this->complainantContactDetails;
+    }
+
+    /**
      * Set the complaint date
      *
      * @param \DateTime $complaintDate
@@ -178,52 +194,6 @@ class Complaint implements Interfaces\EntityInterface
     public function getComplaintDate()
     {
         return $this->complaintDate;
-    }
-
-    /**
-     * Set the complainant forename
-     *
-     * @param string $complainantForename
-     * @return Complaint
-     */
-    public function setComplainantForename($complainantForename)
-    {
-        $this->complainantForename = $complainantForename;
-
-        return $this;
-    }
-
-    /**
-     * Get the complainant forename
-     *
-     * @return string
-     */
-    public function getComplainantForename()
-    {
-        return $this->complainantForename;
-    }
-
-    /**
-     * Set the complainant family name
-     *
-     * @param string $complainantFamilyName
-     * @return Complaint
-     */
-    public function setComplainantFamilyName($complainantFamilyName)
-    {
-        $this->complainantFamilyName = $complainantFamilyName;
-
-        return $this;
-    }
-
-    /**
-     * Get the complainant family name
-     *
-     * @return string
-     */
-    public function getComplainantFamilyName()
-    {
-        return $this->complainantFamilyName;
     }
 
     /**

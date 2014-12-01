@@ -16,14 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="conviction",
  *    indexes={
- *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category"}),
  *        @ORM\Index(name="fk_conviction_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_conviction_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_conviction_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_conviction_operator_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"})
+ *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"}),
+ *        @ORM\Index(name="fk_conviction_ref_data2_idx", columns={"conviction_category"})
  *    }
  * )
  */
@@ -31,11 +31,11 @@ class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\PersonManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\OrganisationManyToOne,
+        Traits\TransportManagerManyToOne,
+        Traits\PersonManyToOne,
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
@@ -43,6 +43,16 @@ class Conviction implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Defendant type
@@ -63,16 +73,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="conviction_category", referencedColumnName="id", nullable=true)
      */
     protected $convictionCategory;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
-     */
-    protected $case;
 
     /**
      * Offence date
@@ -183,6 +183,29 @@ class Conviction implements Interfaces\EntityInterface
     protected $categoryText;
 
     /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Conviction
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
      * Set the defendant type
      *
      * @param \Olcs\Db\Entity\RefData $defendantType
@@ -226,29 +249,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getConvictionCategory()
     {
         return $this->convictionCategory;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Conviction
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
     }
 
     /**
