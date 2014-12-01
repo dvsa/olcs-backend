@@ -753,6 +753,5 @@ return array(
     'Olcs\Db\Service\ProposeToRevoke' => false,
     'Olcs\Db\Entity\View\ProposeToRevoke' => false,
     'Olcs\Db\Service\Note' => false,
-    'Olcs\Db\Entity\View\Note' => false,
->>>>>>> 61e6d10dac08e9fa44ccc9e6f66a6cd450d16c91
+    'Olcs\Db\Entity\View\Note' => false
 );
