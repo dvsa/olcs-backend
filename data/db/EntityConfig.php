@@ -1111,5 +1111,13 @@ return array(
                 'property' => 'privateHireLicence'
             )
         )
+    ),
+    'fee_payment' => array(
+        'fee_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Fee',
+                'property' => 'feePayment'
+            )
+        )
     )
 );
