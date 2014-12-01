@@ -741,4 +741,18 @@ return array(
     'Olcs\Db\Entity\View\SeriousInfringement' => false,
     'Olcs\Db\Service\Submission' => false,
     'Olcs\Db\Entity\View\Submission' => false,
+    'Olcs\Db\Service\SubmissionSectionComment' => false,
+    'Olcs\Db\Entity\View\SubmissionSectionComment' => false,
+    'Doctrine\DBAL\Driver\PDOException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOException.php',
+    'Doctrine\DBAL\Driver\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/DriverException.php',
+    'Doctrine\DBAL\DBALException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DBALException.php',
+    'Doctrine\DBAL\Exception\TableNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/TableNotFoundException.php',
+    'Doctrine\DBAL\Exception\DatabaseObjectNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DatabaseObjectNotFoundException.php',
+    'Doctrine\DBAL\Exception\ServerException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/ServerException.php',
+    'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DriverException.php',
+    'Olcs\Db\Service\ProposeToRevoke' => false,
+    'Olcs\Db\Entity\View\ProposeToRevoke' => false,
+    'Olcs\Db\Service\Note' => false,
+    'Olcs\Db\Entity\View\Note' => false,
+>>>>>>> 61e6d10dac08e9fa44ccc9e6f66a6cd450d16c91
 );
