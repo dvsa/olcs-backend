@@ -94,13 +94,13 @@ class User implements Interfaces\EntityInterface
     protected $pid;
 
     /**
-     * Login id
+     * Name
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="login_id", length=40, nullable=true)
+     * @ORM\Column(type="string", name="name", length=40, nullable=true)
      */
-    protected $loginId;
+    protected $name;
 
     /**
      * Account disabled
@@ -388,26 +388,26 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the login id
+     * Set the name
      *
-     * @param string $loginId
+     * @param string $name
      * @return User
      */
-    public function setLoginId($loginId)
+    public function setName($name)
     {
-        $this->loginId = $loginId;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get the login id
+     * Get the name
      *
      * @return string
      */
-    public function getLoginId()
+    public function getName()
     {
-        return $this->loginId;
+        return $this->name;
     }
 
     /**
