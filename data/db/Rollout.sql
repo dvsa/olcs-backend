@@ -851,6 +851,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('tm_type', 'tm_t_B', 'Both', 'B'),
     ('tm_type', 'tm_t_E', 'External', 'E'),
     ('tm_type', 'tm_t_I', 'Internal', 'I'),
+    ('tm_status', 'tm_st_A', 'Active', null),
+    ('tm_status', 'tm_st_D', 'Disabled', null),
     ('vhl_removal_reason', 'vmr_cns', 'CNS', '1'),
     ('vhl_removal_reason', 'vmr_revoke', 'Revoke', '2'),
     ('vhl_removal_reason', 'vmr_surrender', 'Surrender', '3'),
