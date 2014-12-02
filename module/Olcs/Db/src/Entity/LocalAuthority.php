@@ -39,7 +39,7 @@ class LocalAuthority implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="localAuthoritys")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="localAuthoritys", fetch="LAZY")
      */
     protected $busRegs;
 

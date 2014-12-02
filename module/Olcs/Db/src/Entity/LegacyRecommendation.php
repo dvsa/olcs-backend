@@ -41,7 +41,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LegacyCaseAction
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction", fetch="LAZY")
      * @ORM\JoinColumn(name="action_id", referencedColumnName="id", nullable=false)
      */
     protected $action;
@@ -51,7 +51,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="to_user_id", referencedColumnName="id", nullable=true)
      */
     protected $toUser;
@@ -61,7 +61,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", nullable=true)
      */
     protected $fromUser;
@@ -89,7 +89,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="notes", nullable=true)
+     * @ORM\Column(type="text", name="notes", length=65535, nullable=true)
      */
     protected $notes;
 

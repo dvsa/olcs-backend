@@ -29,7 +29,6 @@ class GoodsDisc implements Interfaces\EntityInterface
         Traits\DiscNo50Field,
         Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsInterimField,
         Traits\IsPrintingField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -40,7 +39,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LicenceVehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", inversedBy="goodsDiscs")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY", inversedBy="goodsDiscs")
      * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $licenceVehicle;
@@ -53,6 +52,15 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_copy", nullable=false)
      */
     protected $isCopy = 0;
+
+    /**
+     * Is interim
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_interim", nullable=false)
+     */
+    protected $isInterim = 0;
 
     /**
      * Reprint required
@@ -107,6 +115,29 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the is interim
+     *
+     * @param string $isInterim
+     * @return GoodsDisc
+     */
+    public function setIsInterim($isInterim)
+    {
+        $this->isInterim = $isInterim;
+
+        return $this;
+    }
+
+    /**
+     * Get the is interim
+     *
+     * @return string
+     */
+    public function getIsInterim()
+    {
+        return $this->isInterim;
     }
 
     /**

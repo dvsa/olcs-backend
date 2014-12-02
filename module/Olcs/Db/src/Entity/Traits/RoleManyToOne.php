@@ -16,7 +16,7 @@ trait RoleManyToOne
      *
      * @var \Olcs\Db\Entity\Role
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Role")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Role", fetch="LAZY")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
      */
     protected $role;

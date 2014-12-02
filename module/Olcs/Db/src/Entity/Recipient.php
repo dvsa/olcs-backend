@@ -38,7 +38,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients", fetch="LAZY")
      * @ORM\JoinTable(name="recipient_traffic_area",
      *     joinColumns={
      *         @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")

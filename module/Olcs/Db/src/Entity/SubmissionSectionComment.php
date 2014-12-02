@@ -33,47 +33,24 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Submission
-     *
-     * @var \Olcs\Db\Entity\Submission
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionSectionComments")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
-     */
-    protected $submission;
-
-    /**
      * Submission section
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
      */
     protected $submissionSection;
 
     /**
-     * Set the submission
+     * Submission
      *
-     * @param \Olcs\Db\Entity\Submission $submission
-     * @return SubmissionSectionComment
-     */
-    public function setSubmission($submission)
-    {
-        $this->submission = $submission;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission
+     * @var \Olcs\Db\Entity\Submission
      *
-     * @return \Olcs\Db\Entity\Submission
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionSectionComments")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
-    public function getSubmission()
-    {
-        return $this->submission;
-    }
+    protected $submission;
 
     /**
      * Set the submission section
@@ -96,5 +73,28 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getSubmissionSection()
     {
         return $this->submissionSection;
+    }
+
+    /**
+     * Set the submission
+     *
+     * @param \Olcs\Db\Entity\Submission $submission
+     * @return SubmissionSectionComment
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Olcs\Db\Entity\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
     }
 }

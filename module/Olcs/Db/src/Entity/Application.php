@@ -30,23 +30,13 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\WithdrawnReasonManyToOne,
         Traits\GoodsOrPsvManyToOne,
+        Traits\StatusManyToOne,
+        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\TotAuthTrailersField,
-        Traits\TotAuthVehiclesField,
-        Traits\TotAuthSmallVehiclesField,
-        Traits\TotAuthMediumVehiclesField,
-        Traits\TotAuthLargeVehiclesField,
-        Traits\TotCommunityLicencesField,
         Traits\NiFlagField,
-        Traits\ReceivedDateField,
-        Traits\GrantedDateField,
-        Traits\WithdrawnDateField,
-        Traits\IsMaintenanceSuitableField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -56,7 +46,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="interim_status", referencedColumnName="id", nullable=true)
      */
     protected $interimStatus;
@@ -66,7 +56,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="applications")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="applications")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -88,6 +78,60 @@ class Application implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="has_entered_reg", nullable=true)
      */
     protected $hasEnteredReg;
+
+    /**
+     * Tot auth trailers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_trailers", nullable=true)
+     */
+    protected $totAuthTrailers;
+
+    /**
+     * Tot auth vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_vehicles", nullable=true)
+     */
+    protected $totAuthVehicles;
+
+    /**
+     * Tot auth small vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_small_vehicles", nullable=true)
+     */
+    protected $totAuthSmallVehicles;
+
+    /**
+     * Tot auth medium vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_medium_vehicles", nullable=true)
+     */
+    protected $totAuthMediumVehicles;
+
+    /**
+     * Tot auth large vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_large_vehicles", nullable=true)
+     */
+    protected $totAuthLargeVehicles;
+
+    /**
+     * Tot community licences
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
+     */
+    protected $totCommunityLicences;
 
     /**
      * Bankrupt
@@ -162,6 +206,15 @@ class Application implements Interfaces\EntityInterface
     protected $safetyConfirmation = 0;
 
     /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
+
+    /**
      * Target completion date
      *
      * @var \DateTime
@@ -171,6 +224,15 @@ class Application implements Interfaces\EntityInterface
     protected $targetCompletionDate;
 
     /**
+     * Granted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="granted_date", nullable=true)
+     */
+    protected $grantedDate;
+
+    /**
      * Refused date
      *
      * @var \DateTime
@@ -178,6 +240,15 @@ class Application implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="refused_date", nullable=true)
      */
     protected $refusedDate;
+
+    /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
 
     /**
      * Prev has licence
@@ -369,6 +440,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimAuthTrailers;
 
     /**
+     * Is maintenance suitable
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_maintenance_suitable", nullable=true)
+     */
+    protected $isMaintenanceSuitable;
+
+    /**
      * Application completion
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -525,6 +605,144 @@ class Application implements Interfaces\EntityInterface
     public function getHasEnteredReg()
     {
         return $this->hasEnteredReg;
+    }
+
+    /**
+     * Set the tot auth trailers
+     *
+     * @param int $totAuthTrailers
+     * @return Application
+     */
+    public function setTotAuthTrailers($totAuthTrailers)
+    {
+        $this->totAuthTrailers = $totAuthTrailers;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth trailers
+     *
+     * @return int
+     */
+    public function getTotAuthTrailers()
+    {
+        return $this->totAuthTrailers;
+    }
+
+    /**
+     * Set the tot auth vehicles
+     *
+     * @param int $totAuthVehicles
+     * @return Application
+     */
+    public function setTotAuthVehicles($totAuthVehicles)
+    {
+        $this->totAuthVehicles = $totAuthVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthVehicles()
+    {
+        return $this->totAuthVehicles;
+    }
+
+    /**
+     * Set the tot auth small vehicles
+     *
+     * @param int $totAuthSmallVehicles
+     * @return Application
+     */
+    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
+    {
+        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth small vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthSmallVehicles()
+    {
+        return $this->totAuthSmallVehicles;
+    }
+
+    /**
+     * Set the tot auth medium vehicles
+     *
+     * @param int $totAuthMediumVehicles
+     * @return Application
+     */
+    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
+    {
+        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth medium vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthMediumVehicles()
+    {
+        return $this->totAuthMediumVehicles;
+    }
+
+    /**
+     * Set the tot auth large vehicles
+     *
+     * @param int $totAuthLargeVehicles
+     * @return Application
+     */
+    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
+    {
+        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth large vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthLargeVehicles()
+    {
+        return $this->totAuthLargeVehicles;
+    }
+
+    /**
+     * Set the tot community licences
+     *
+     * @param int $totCommunityLicences
+     * @return Application
+     */
+    public function setTotCommunityLicences($totCommunityLicences)
+    {
+        $this->totCommunityLicences = $totCommunityLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot community licences
+     *
+     * @return int
+     */
+    public function getTotCommunityLicences()
+    {
+        return $this->totCommunityLicences;
     }
 
     /**
@@ -712,6 +930,29 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return Application
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
+    }
+
+    /**
      * Set the target completion date
      *
      * @param \DateTime $targetCompletionDate
@@ -735,6 +976,29 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the granted date
+     *
+     * @param \DateTime $grantedDate
+     * @return Application
+     */
+    public function setGrantedDate($grantedDate)
+    {
+        $this->grantedDate = $grantedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the granted date
+     *
+     * @return \DateTime
+     */
+    public function getGrantedDate()
+    {
+        return $this->grantedDate;
+    }
+
+    /**
      * Set the refused date
      *
      * @param \DateTime $refusedDate
@@ -755,6 +1019,29 @@ class Application implements Interfaces\EntityInterface
     public function getRefusedDate()
     {
         return $this->refusedDate;
+    }
+
+    /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate
+     * @return Application
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate()
+    {
+        return $this->withdrawnDate;
     }
 
     /**
@@ -1238,6 +1525,29 @@ class Application implements Interfaces\EntityInterface
     public function getInterimAuthTrailers()
     {
         return $this->interimAuthTrailers;
+    }
+
+    /**
+     * Set the is maintenance suitable
+     *
+     * @param string $isMaintenanceSuitable
+     * @return Application
+     */
+    public function setIsMaintenanceSuitable($isMaintenanceSuitable)
+    {
+        $this->isMaintenanceSuitable = $isMaintenanceSuitable;
+
+        return $this;
+    }
+
+    /**
+     * Get the is maintenance suitable
+     *
+     * @return string
+     */
+    public function getIsMaintenanceSuitable()
+    {
+        return $this->isMaintenanceSuitable;
     }
 
     /**

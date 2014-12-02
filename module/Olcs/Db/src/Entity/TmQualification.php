@@ -41,7 +41,7 @@ class TmQualification implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
      */
     protected $qualificationType;
@@ -51,7 +51,7 @@ class TmQualification implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=false)
      */
     protected $countryCode;
