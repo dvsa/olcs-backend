@@ -30,7 +30,7 @@ class TaskAlphaSplit implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TaskAllocationRules
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskAllocationRules")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskAllocationRules", fetch="LAZY")
      * @ORM\JoinColumn(name="task_allocation_rules_id", referencedColumnName="id", nullable=false)
      */
     protected $taskAllocationRules;

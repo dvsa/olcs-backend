@@ -37,7 +37,7 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LicenceVehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY")
      * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $licenceVehicle;

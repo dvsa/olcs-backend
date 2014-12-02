@@ -35,47 +35,24 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Ref data
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id", nullable=false)
-     */
-    protected $refData;
-
-    /**
      * Organisation
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="natureOfBusinesss")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="natureOfBusinesss")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
 
     /**
-     * Set the ref data
+     * Ref data
      *
-     * @param \Olcs\Db\Entity\RefData $refData
-     * @return OrganisationNatureOfBusiness
-     */
-    public function setRefData($refData)
-    {
-        $this->refData = $refData;
-
-        return $this;
-    }
-
-    /**
-     * Get the ref data
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id", nullable=false)
      */
-    public function getRefData()
-    {
-        return $this->refData;
-    }
+    protected $refData;
 
     /**
      * Set the organisation
@@ -98,5 +75,28 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * Set the ref data
+     *
+     * @param \Olcs\Db\Entity\RefData $refData
+     * @return OrganisationNatureOfBusiness
+     */
+    public function setRefData($refData)
+    {
+        $this->refData = $refData;
+
+        return $this;
+    }
+
+    /**
+     * Get the ref data
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRefData()
+    {
+        return $this->refData;
     }
 }

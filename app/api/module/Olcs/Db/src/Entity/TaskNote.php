@@ -35,7 +35,7 @@ class TaskNote implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Task
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task", fetch="LAZY")
      * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=false)
      */
     protected $task;

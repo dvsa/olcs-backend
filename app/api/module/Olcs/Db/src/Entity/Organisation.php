@@ -39,7 +39,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
      * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
      */
     protected $leadTcArea;
@@ -49,7 +49,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
      */
     protected $type;

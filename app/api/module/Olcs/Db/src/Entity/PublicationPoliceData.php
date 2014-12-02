@@ -31,7 +31,6 @@ class PublicationPoliceData implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\Forename35Field,
         Traits\FamilyName35Field,
-        Traits\BirthDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -41,10 +40,19 @@ class PublicationPoliceData implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PublicationLink
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationLink")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationLink", fetch="LAZY")
      * @ORM\JoinColumn(name="publication_link_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationLink;
+
+    /**
+     * Birth date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="birth_date", nullable=true)
+     */
+    protected $birthDate;
 
     /**
      * Olbs dob
@@ -85,6 +93,29 @@ class PublicationPoliceData implements Interfaces\EntityInterface
     public function getPublicationLink()
     {
         return $this->publicationLink;
+    }
+
+    /**
+     * Set the birth date
+     *
+     * @param \DateTime $birthDate
+     * @return PublicationPoliceData
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the birth date
+     *
+     * @return \DateTime
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
     }
 
     /**

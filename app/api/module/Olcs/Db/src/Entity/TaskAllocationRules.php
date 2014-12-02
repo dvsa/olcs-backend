@@ -35,7 +35,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
@@ -45,7 +45,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Category
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Category")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Category", fetch="LAZY")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=true)
      */
     protected $category;

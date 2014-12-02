@@ -44,7 +44,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="irfo_permit_status", referencedColumnName="id", nullable=false)
      */
     protected $irfoPermitStatus;
@@ -54,7 +54,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\IrfoGvPermitType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermitType")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermitType", fetch="LAZY")
      * @ORM\JoinColumn(name="irfo_gv_permit_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoGvPermitType;
