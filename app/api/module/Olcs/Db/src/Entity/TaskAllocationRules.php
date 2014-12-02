@@ -28,7 +28,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\TeamManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1;
+        Traits\GoodsOrPsvManyToOne;
 
     /**
      * User
