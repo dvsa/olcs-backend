@@ -31,24 +31,15 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CloseDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
-     */
-    protected $caseType;
 
     /**
      * Erru case type
@@ -59,6 +50,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
      */
     protected $erruCaseType;
+
+    /**
+     * Case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
+     */
+    protected $caseType;
 
     /**
      * Licence
@@ -118,18 +119,9 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="open_date", nullable=false)
+     * @ORM\Column(type="datetime", name="open_date", nullable=false)
      */
     protected $openDate;
-
-    /**
-     * Close date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="close_date", nullable=true)
-     */
-    protected $closeDate;
 
     /**
      * Description
@@ -195,15 +187,6 @@ class Cases implements Interfaces\EntityInterface
     protected $prohibitionNote;
 
     /**
-     * Conviction note
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
-     */
-    protected $convictionNote;
-
-    /**
      * Penalties note
      *
      * @var string
@@ -211,6 +194,15 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="penalties_note", length=4000, nullable=true)
      */
     protected $penaltiesNote;
+
+    /**
+     * Conviction note
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
+     */
+    protected $convictionNote;
 
     /**
      * Appeal
@@ -272,29 +264,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case type
-     *
-     * @param \Olcs\Db\Entity\RefData $caseType
-     * @return Cases
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
-    }
-
-    /**
      * Set the erru case type
      *
      * @param \Olcs\Db\Entity\RefData $erruCaseType
@@ -315,6 +284,29 @@ class Cases implements Interfaces\EntityInterface
     public function getErruCaseType()
     {
         return $this->erruCaseType;
+    }
+
+    /**
+     * Set the case type
+     *
+     * @param \Olcs\Db\Entity\RefData $caseType
+     * @return Cases
+     */
+    public function setCaseType($caseType)
+    {
+        $this->caseType = $caseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getCaseType()
+    {
+        return $this->caseType;
     }
 
     /**
@@ -507,29 +499,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the close date
-     *
-     * @param \DateTime $closeDate
-     * @return Cases
-     */
-    public function setCloseDate($closeDate)
-    {
-        $this->closeDate = $closeDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the close date
-     *
-     * @return \DateTime
-     */
-    public function getCloseDate()
-    {
-        return $this->closeDate;
-    }
-
-    /**
      * Set the description
      *
      * @param string $description
@@ -691,29 +660,6 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the conviction note
-     *
-     * @param string $convictionNote
-     * @return Cases
-     */
-    public function setConvictionNote($convictionNote)
-    {
-        $this->convictionNote = $convictionNote;
-
-        return $this;
-    }
-
-    /**
-     * Get the conviction note
-     *
-     * @return string
-     */
-    public function getConvictionNote()
-    {
-        return $this->convictionNote;
-    }
-
-    /**
      * Set the penalties note
      *
      * @param string $penaltiesNote
@@ -734,6 +680,29 @@ class Cases implements Interfaces\EntityInterface
     public function getPenaltiesNote()
     {
         return $this->penaltiesNote;
+    }
+
+    /**
+     * Set the conviction note
+     *
+     * @param string $convictionNote
+     * @return Cases
+     */
+    public function setConvictionNote($convictionNote)
+    {
+        $this->convictionNote = $convictionNote;
+
+        return $this;
+    }
+
+    /**
+     * Get the conviction note
+     *
+     * @return string
+     */
+    public function getConvictionNote()
+    {
+        return $this->convictionNote;
     }
 
     /**

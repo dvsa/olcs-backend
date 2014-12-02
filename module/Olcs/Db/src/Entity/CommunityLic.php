@@ -16,7 +16,8 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_community_lic_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_community_lic_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_community_lic_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_community_lic_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_community_lic_ref_data1_idx", columns={"com_lic_status"})
  *    }
  * )
  */
@@ -27,19 +28,37 @@ class CommunityLic implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
-        Traits\SpecifiedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Com lic status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="com_lic_status", referencedColumnName="id", nullable=false)
+     */
+    protected $comLicStatus;
 
     /**
      * Expired date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="expired_date", nullable=true)
+     * @ORM\Column(type="datetime", name="expired_date", nullable=true)
      */
     protected $expiredDate;
+
+    /**
+     * Specified date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="specified_date", nullable=true)
+     */
+    protected $specifiedDate;
 
     /**
      * Licence expired date
@@ -78,13 +97,27 @@ class CommunityLic implements Interfaces\EntityInterface
     protected $serialNoPrefix;
 
     /**
-     * Status
+     * Set the com lic status
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="status", length=10, nullable=true)
+     * @param \Olcs\Db\Entity\RefData $comLicStatus
+     * @return CommunityLic
      */
-    protected $status;
+    public function setComLicStatus($comLicStatus)
+    {
+        $this->comLicStatus = $comLicStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the com lic status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getComLicStatus()
+    {
+        return $this->comLicStatus;
+    }
 
     /**
      * Set the expired date
@@ -107,6 +140,29 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getExpiredDate()
     {
         return $this->expiredDate;
+    }
+
+    /**
+     * Set the specified date
+     *
+     * @param \DateTime $specifiedDate
+     * @return CommunityLic
+     */
+    public function setSpecifiedDate($specifiedDate)
+    {
+        $this->specifiedDate = $specifiedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the specified date
+     *
+     * @return \DateTime
+     */
+    public function getSpecifiedDate()
+    {
+        return $this->specifiedDate;
     }
 
     /**
@@ -199,28 +255,5 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getSerialNoPrefix()
     {
         return $this->serialNoPrefix;
-    }
-
-    /**
-     * Set the status
-     *
-     * @param string $status
-     * @return CommunityLic
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 }

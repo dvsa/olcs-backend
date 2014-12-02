@@ -25,7 +25,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IsDeletedField,
         Traits\Description1024Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -48,6 +47,15 @@ class SystemInfoMessage implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="activate_date", nullable=false)
      */
     protected $activateDate;
+
+    /**
+     * Is deleted
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
+     */
+    protected $isDeleted = 0;
 
     /**
      * Importance
@@ -102,6 +110,29 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     public function getActivateDate()
     {
         return $this->activateDate;
+    }
+
+    /**
+     * Set the is deleted
+     *
+     * @param string $isDeleted
+     * @return SystemInfoMessage
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get the is deleted
+     *
+     * @return string
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
     }
 
     /**
