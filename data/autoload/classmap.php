@@ -155,6 +155,7 @@ return array(
         . '/EntityTester.php',
     'OlcsTest\Db\Service\Stub\EntityStub' => false,
     'OlcsTest\Db\Service\Stubs\EntityStub' => $rootPath . '/test/module/Olcs/Db/src//Service/Stubs/EntityStub.php',
+    'Olcs\Db\Entity\Traits\NiFlagField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/NiFlagField.php',
     'Olcs\Db\Module' => false,
     'Olcs\Db\Service\MISSING' => false,
     'Olcs\Logging\Module' => $rootPath . '/vendor/olcs/olcs-logging/src/Module.php',
