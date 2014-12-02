@@ -21,7 +21,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
  *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
  *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
- *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_application_ref_data5_idx", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -29,11 +30,13 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\GoodsOrPsvManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\WithdrawnReasonManyToOne,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
+        Traits\NiFlagField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
