@@ -38,8 +38,8 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -66,6 +66,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $approvalUser;
 
     /**
+     * Attached to
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
+     */
+    protected $attachedTo;
+
+    /**
      * Condition type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -74,16 +84,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
-
-    /**
-     * Added via
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
-     */
-    protected $addedVia;
 
     /**
      * Case
@@ -96,14 +96,14 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $case;
 
     /**
-     * Attached to
+     * Added via
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
-    protected $attachedTo;
+    protected $addedVia;
 
     /**
      * S4
@@ -222,6 +222,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the attached to
+     *
+     * @param \Olcs\Db\Entity\RefData $attachedTo
+     * @return ConditionUndertaking
+     */
+    public function setAttachedTo($attachedTo)
+    {
+        $this->attachedTo = $attachedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the attached to
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAttachedTo()
+    {
+        return $this->attachedTo;
+    }
+
+    /**
      * Set the condition type
      *
      * @param \Olcs\Db\Entity\RefData $conditionType
@@ -242,29 +265,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
-    }
-
-    /**
-     * Set the added via
-     *
-     * @param \Olcs\Db\Entity\RefData $addedVia
-     * @return ConditionUndertaking
-     */
-    public function setAddedVia($addedVia)
-    {
-        $this->addedVia = $addedVia;
-
-        return $this;
-    }
-
-    /**
-     * Get the added via
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAddedVia()
-    {
-        return $this->addedVia;
     }
 
     /**
@@ -291,26 +291,26 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the attached to
+     * Set the added via
      *
-     * @param \Olcs\Db\Entity\RefData $attachedTo
+     * @param \Olcs\Db\Entity\RefData $addedVia
      * @return ConditionUndertaking
      */
-    public function setAttachedTo($attachedTo)
+    public function setAddedVia($addedVia)
     {
-        $this->attachedTo = $attachedTo;
+        $this->addedVia = $addedVia;
 
         return $this;
     }
 
     /**
-     * Get the attached to
+     * Get the added via
      *
      * @return \Olcs\Db\Entity\RefData
      */
-    public function getAttachedTo()
+    public function getAddedVia()
     {
-        return $this->attachedTo;
+        return $this->addedVia;
     }
 
     /**

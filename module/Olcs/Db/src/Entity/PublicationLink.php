@@ -35,10 +35,10 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
-        Traits\TrafficAreaManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\ApplicationManyToOne,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TrafficAreaManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
         Traits\CustomDeletedDateField,
@@ -47,14 +47,14 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Publication
+     * Publication section
      *
-     * @var \Olcs\Db\Entity\Publication
+     * @var \Olcs\Db\Entity\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
+     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
-    protected $publication;
+    protected $publicationSection;
 
     /**
      * Tm pi hearing
@@ -77,14 +77,14 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $pi;
 
     /**
-     * Publication section
+     * Publication
      *
-     * @var \Olcs\Db\Entity\PublicationSection
+     * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
+     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
-    protected $publicationSection;
+    protected $publication;
 
     /**
      * Text1
@@ -123,26 +123,26 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $origPubDate;
 
     /**
-     * Set the publication
+     * Set the publication section
      *
-     * @param \Olcs\Db\Entity\Publication $publication
+     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
      * @return PublicationLink
      */
-    public function setPublication($publication)
+    public function setPublicationSection($publicationSection)
     {
-        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
 
         return $this;
     }
 
     /**
-     * Get the publication
+     * Get the publication section
      *
-     * @return \Olcs\Db\Entity\Publication
+     * @return \Olcs\Db\Entity\PublicationSection
      */
-    public function getPublication()
+    public function getPublicationSection()
     {
-        return $this->publication;
+        return $this->publicationSection;
     }
 
     /**
@@ -192,26 +192,26 @@ class PublicationLink implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the publication section
+     * Set the publication
      *
-     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
+     * @param \Olcs\Db\Entity\Publication $publication
      * @return PublicationLink
      */
-    public function setPublicationSection($publicationSection)
+    public function setPublication($publication)
     {
-        $this->publicationSection = $publicationSection;
+        $this->publication = $publication;
 
         return $this;
     }
 
     /**
-     * Get the publication section
+     * Get the publication
      *
-     * @return \Olcs\Db\Entity\PublicationSection
+     * @return \Olcs\Db\Entity\Publication
      */
-    public function getPublicationSection()
+    public function getPublication()
     {
-        return $this->publicationSection;
+        return $this->publication;
     }
 
     /**

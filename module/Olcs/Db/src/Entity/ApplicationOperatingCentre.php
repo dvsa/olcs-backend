@@ -28,9 +28,9 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\S4ManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\S4ManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
