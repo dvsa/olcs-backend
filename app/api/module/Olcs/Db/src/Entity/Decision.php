@@ -27,7 +27,7 @@ class Decision implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
