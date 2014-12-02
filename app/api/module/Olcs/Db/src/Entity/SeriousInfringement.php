@@ -45,7 +45,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
      */
     protected $erruResponseUser;
@@ -55,7 +55,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiCategoryType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType")
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategoryType;
@@ -65,7 +65,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
      * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
      */
     protected $memberStateCode;

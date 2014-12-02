@@ -46,7 +46,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Vehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $vehicle;
@@ -56,7 +56,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -66,7 +66,7 @@ class LicenceVehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
      * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
      */
     protected $interimApplication;

@@ -16,7 +16,7 @@ trait GoodsOrPsvManyToOneAlt1
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=false)
      */
     protected $goodsOrPsv;

@@ -35,7 +35,7 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\IrfoPsvAuth
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth")
      * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuth;
