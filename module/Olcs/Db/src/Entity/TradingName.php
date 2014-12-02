@@ -31,6 +31,7 @@ class TradingName implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\CustomDeletedDateField,
+        Traits\ViAction1Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -40,7 +41,7 @@ class TradingName implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="tradingNames")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="tradingNames")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
@@ -53,15 +54,6 @@ class TradingName implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=160, nullable=false)
      */
     protected $name;
-
-    /**
-     * Vi action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
-     */
-    protected $viAction;
 
     /**
      * Set the organisation
@@ -107,28 +99,5 @@ class TradingName implements Interfaces\EntityInterface
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set the vi action
-     *
-     * @param string $viAction
-     * @return TradingName
-     */
-    public function setViAction($viAction)
-    {
-        $this->viAction = $viAction;
-
-        return $this;
-    }
-
-    /**
-     * Get the vi action
-     *
-     * @return string
-     */
-    public function getViAction()
-    {
-        return $this->viAction;
     }
 }

@@ -30,7 +30,7 @@ class TeamPrinter implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Printer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer")
      * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
      */
     protected $printer;

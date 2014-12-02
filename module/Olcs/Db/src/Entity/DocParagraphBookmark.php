@@ -39,7 +39,7 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocParagraph
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph")
      * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
     protected $docParagraph;
@@ -49,7 +49,7 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", fetch="LAZY", inversedBy="docParagraphBookmarks")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", inversedBy="docParagraphBookmarks")
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
     protected $docBookmark;

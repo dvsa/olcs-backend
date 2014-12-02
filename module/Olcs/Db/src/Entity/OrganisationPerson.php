@@ -39,7 +39,7 @@ class OrganisationPerson implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
     protected $person;
@@ -49,7 +49,7 @@ class OrganisationPerson implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationPersons")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="organisationPersons")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;

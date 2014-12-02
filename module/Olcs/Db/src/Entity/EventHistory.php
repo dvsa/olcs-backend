@@ -38,7 +38,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
      */
     protected $team;
@@ -48,7 +48,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LicenceVehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle")
      * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=true)
      */
     protected $licenceVehicle;
@@ -58,7 +58,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\EventHistoryType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EventHistoryType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EventHistoryType")
      * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id", nullable=false)
      */
     protected $eventHistoryType;
@@ -113,7 +113,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="entity_data", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="entity_data", nullable=true)
      */
     protected $entityData;
 
