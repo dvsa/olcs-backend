@@ -38,7 +38,7 @@ class TmMerge implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManagerLicence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerLicence", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerLicence")
      * @ORM\JoinColumn(name="tm_licence_id", referencedColumnName="id", nullable=true)
      */
     protected $tmLicence;
@@ -48,7 +48,7 @@ class TmMerge implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManagerApplication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerApplication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerApplication")
      * @ORM\JoinColumn(name="tm_application_id", referencedColumnName="id", nullable=true)
      */
     protected $tmApplication;
@@ -58,7 +58,7 @@ class TmMerge implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
      * @ORM\JoinColumn(name="tm_to_id", referencedColumnName="id", nullable=false)
      */
     protected $tmTo;
@@ -68,7 +68,7 @@ class TmMerge implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
      * @ORM\JoinColumn(name="tm_from_id", referencedColumnName="id", nullable=false)
      */
     protected $tmFrom;

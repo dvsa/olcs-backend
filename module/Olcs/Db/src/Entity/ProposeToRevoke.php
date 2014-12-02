@@ -41,7 +41,7 @@ class ProposeToRevoke implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="proposeToRevokes", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="proposeToRevokes")
      * @ORM\JoinTable(name="ptr_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id")

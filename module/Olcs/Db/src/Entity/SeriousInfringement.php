@@ -34,50 +34,41 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\SiCategoryManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Si category type
-     *
-     * @var \Olcs\Db\Entity\SiCategoryType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siCategoryType;
-
-    /**
      * Erru response user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
      */
     protected $erruResponseUser;
+
+    /**
+     * Si category type
+     *
+     * @var \Olcs\Db\Entity\SiCategoryType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType")
+     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siCategoryType;
 
     /**
      * Member state code
      *
      * @var \Olcs\Db\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
      * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
      */
     protected $memberStateCode;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="seriousInfringements")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
-     */
-    protected $case;
 
     /**
      * Check date
@@ -171,29 +162,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the si category type
-     *
-     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
-     * @return SeriousInfringement
-     */
-    public function setSiCategoryType($siCategoryType)
-    {
-        $this->siCategoryType = $siCategoryType;
-
-        return $this;
-    }
-
-    /**
-     * Get the si category type
-     *
-     * @return \Olcs\Db\Entity\SiCategoryType
-     */
-    public function getSiCategoryType()
-    {
-        return $this->siCategoryType;
-    }
-
-    /**
      * Set the erru response user
      *
      * @param \Olcs\Db\Entity\User $erruResponseUser
@@ -217,6 +185,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the si category type
+     *
+     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
+     * @return SeriousInfringement
+     */
+    public function setSiCategoryType($siCategoryType)
+    {
+        $this->siCategoryType = $siCategoryType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si category type
+     *
+     * @return \Olcs\Db\Entity\SiCategoryType
+     */
+    public function getSiCategoryType()
+    {
+        return $this->siCategoryType;
+    }
+
+    /**
      * Set the member state code
      *
      * @param \Olcs\Db\Entity\Country $memberStateCode
@@ -237,29 +228,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getMemberStateCode()
     {
         return $this->memberStateCode;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return SeriousInfringement
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
     }
 
     /**
