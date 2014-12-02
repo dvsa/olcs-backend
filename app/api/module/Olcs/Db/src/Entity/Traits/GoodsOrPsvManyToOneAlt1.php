@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Goods or psv many to one alt1 trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 6 entities)
  */
 trait GoodsOrPsvManyToOneAlt1
 {
@@ -17,7 +17,7 @@ trait GoodsOrPsvManyToOneAlt1
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=false)
      */
     protected $goodsOrPsv;
 
