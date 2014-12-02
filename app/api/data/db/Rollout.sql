@@ -920,7 +920,7 @@ VALUES
     
     ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL, '20'),
     ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL, '21'),
-    ('case_cat_trans_compet_tm','case_cat_trans',   'Professional competence of TM',    'case_category', NULL, '22'),
+    ('case_cat_trans_compet_tm','case_cat_trans','Repute / professional competence of TM','case_category', NULL, '22'),
     ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL, '23'),
     
     
