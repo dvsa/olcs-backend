@@ -15,8 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="payment",
  *    indexes={
  *        @ORM\Index(name="fk_payment_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_payment_document1_idx", columns={"receipt_document_id"})
+ *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -29,16 +28,6 @@ class Payment implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Receipt document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="receipt_document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $receiptDocument;
 
     /**
      * Legacy status
@@ -93,29 +82,6 @@ class Payment implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="guid", length=255, nullable=true)
      */
     protected $guid;
-
-    /**
-     * Set the receipt document
-     *
-     * @param \Olcs\Db\Entity\Document $receiptDocument
-     * @return Payment
-     */
-    public function setReceiptDocument($receiptDocument)
-    {
-        $this->receiptDocument = $receiptDocument;
-
-        return $this;
-    }
-
-    /**
-     * Get the receipt document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getReceiptDocument()
-    {
-        return $this->receiptDocument;
-    }
 
     /**
      * Set the legacy status

@@ -29,14 +29,15 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CaseManyToOneAlt1,
-        Traits\PiVenueManyToOne,
-        Traits\OutcomeManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\PresidingTcManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\PiVenueManyToOne,
+        Traits\OutcomeManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\HearingDateField,
         Traits\Notes4000Field,
+        Traits\CloseDateField,
         Traits\PiVenueOther255Field,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
@@ -87,15 +88,6 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="outcome_sent_date", nullable=true)
      */
     protected $outcomeSentDate;
-
-    /**
-     * Close date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="close_date", nullable=true)
-     */
-    protected $closeDate;
 
     /**
      * Initialise the collections
@@ -232,28 +224,5 @@ class Impounding implements Interfaces\EntityInterface
     public function getOutcomeSentDate()
     {
         return $this->outcomeSentDate;
-    }
-
-    /**
-     * Set the close date
-     *
-     * @param \DateTime $closeDate
-     * @return Impounding
-     */
-    public function setCloseDate($closeDate)
-    {
-        $this->closeDate = $closeDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the close date
-     *
-     * @return \DateTime
-     */
-    public function getCloseDate()
-    {
-        return $this->closeDate;
     }
 }

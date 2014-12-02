@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -26,13 +27,22 @@ class S4 implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\ReceivedDateFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Condition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="s4s", fetch="LAZY")
+     */
+    protected $conditions;
 
     /**
      * Agreed date
@@ -69,6 +79,74 @@ class S4 implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
      */
     protected $isTrueS4 = 0;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->conditions = new ArrayCollection();
+    }
+
+    /**
+     * Set the condition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
+     * @return S4
+     */
+    public function setConditions($conditions)
+    {
+        $this->conditions = $conditions;
+
+        return $this;
+    }
+
+    /**
+     * Get the conditions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * Add a conditions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
+     * @return S4
+     */
+    public function addConditions($conditions)
+    {
+        if ($conditions instanceof ArrayCollection) {
+            $this->conditions = new ArrayCollection(
+                array_merge(
+                    $this->conditions->toArray(),
+                    $conditions->toArray()
+                )
+            );
+        } elseif (!$this->conditions->contains($conditions)) {
+            $this->conditions->add($conditions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a conditions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
+     * @return S4
+     */
+    public function removeConditions($conditions)
+    {
+        if ($this->conditions->contains($conditions)) {
+            $this->conditions->removeElement($conditions);
+        }
+
+        return $this;
+    }
 
     /**
      * Set the agreed date

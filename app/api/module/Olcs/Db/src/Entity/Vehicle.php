@@ -65,15 +65,6 @@ class Vehicle implements Interfaces\EntityInterface
     protected $vrm;
 
     /**
-     * Make model
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="make_model", length=100, nullable=true)
-     */
-    protected $makeModel;
-
-    /**
      * Plated weight
      *
      * @var int
@@ -126,6 +117,15 @@ class Vehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="section_26_suspend", nullable=false)
      */
     protected $section26Suspend;
+
+    /**
+     * Make model
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="make_model", length=100, nullable=true)
+     */
+    protected $makeModel;
 
     /**
      * Licence vehicle
@@ -211,29 +211,6 @@ class Vehicle implements Interfaces\EntityInterface
     public function getVrm()
     {
         return $this->vrm;
-    }
-
-    /**
-     * Set the make model
-     *
-     * @param string $makeModel
-     * @return Vehicle
-     */
-    public function setMakeModel($makeModel)
-    {
-        $this->makeModel = $makeModel;
-
-        return $this;
-    }
-
-    /**
-     * Get the make model
-     *
-     * @return string
-     */
-    public function getMakeModel()
-    {
-        return $this->makeModel;
     }
 
     /**
@@ -372,6 +349,29 @@ class Vehicle implements Interfaces\EntityInterface
     public function getSection26Suspend()
     {
         return $this->section26Suspend;
+    }
+
+    /**
+     * Set the make model
+     *
+     * @param string $makeModel
+     * @return Vehicle
+     */
+    public function setMakeModel($makeModel)
+    {
+        $this->makeModel = $makeModel;
+
+        return $this;
+    }
+
+    /**
+     * Get the make model
+     *
+     * @return string
+     */
+    public function getMakeModel()
+    {
+        return $this->makeModel;
     }
 
     /**

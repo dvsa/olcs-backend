@@ -79,6 +79,15 @@ class DiscSequence implements Interfaces\EntityInterface
     protected $rPrefix;
 
     /**
+     * Sr prefix
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="sr_prefix", length=3, nullable=true)
+     */
+    protected $srPrefix;
+
+    /**
      * Sn prefix
      *
      * @var string
@@ -95,15 +104,6 @@ class DiscSequence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="si_prefix", length=3, nullable=true)
      */
     protected $siPrefix;
-
-    /**
-     * Sr prefix
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="sr_prefix", length=3, nullable=true)
-     */
-    protected $srPrefix;
 
     /**
      * Is self serve
@@ -239,6 +239,29 @@ class DiscSequence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the sr prefix
+     *
+     * @param string $srPrefix
+     * @return DiscSequence
+     */
+    public function setSrPrefix($srPrefix)
+    {
+        $this->srPrefix = $srPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Get the sr prefix
+     *
+     * @return string
+     */
+    public function getSrPrefix()
+    {
+        return $this->srPrefix;
+    }
+
+    /**
      * Set the sn prefix
      *
      * @param string $snPrefix
@@ -282,29 +305,6 @@ class DiscSequence implements Interfaces\EntityInterface
     public function getSiPrefix()
     {
         return $this->siPrefix;
-    }
-
-    /**
-     * Set the sr prefix
-     *
-     * @param string $srPrefix
-     * @return DiscSequence
-     */
-    public function setSrPrefix($srPrefix)
-    {
-        $this->srPrefix = $srPrefix;
-
-        return $this;
-    }
-
-    /**
-     * Get the sr prefix
-     *
-     * @return string
-     */
-    public function getSrPrefix()
-    {
-        return $this->srPrefix;
     }
 
     /**
