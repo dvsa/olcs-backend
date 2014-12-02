@@ -39,6 +39,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\Penalty255Field,
         Traits\BirthDateField,
         Traits\Notes4000Field,
+        Traits\CategoryText1024Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -49,7 +50,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=false)
      */
     protected $defendantType;
@@ -59,7 +60,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="conviction_category", referencedColumnName="id", nullable=true)
      */
     protected $convictionCategory;
@@ -69,7 +70,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="convictions")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -172,15 +173,6 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="taken_into_consideration", length=4000, nullable=true)
      */
     protected $takenIntoConsideration;
-
-    /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
 
     /**
      * Set the defendant type
@@ -502,28 +494,5 @@ class Conviction implements Interfaces\EntityInterface
     public function getTakenIntoConsideration()
     {
         return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
     }
 }

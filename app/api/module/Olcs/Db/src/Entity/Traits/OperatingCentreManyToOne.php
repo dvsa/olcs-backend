@@ -16,7 +16,7 @@ trait OperatingCentreManyToOne
      *
      * @var \Olcs\Db\Entity\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre")
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
      */
     protected $operatingCentre;
