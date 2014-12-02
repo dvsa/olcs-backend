@@ -40,7 +40,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
      */
     protected $submissionActionStatus;
@@ -50,7 +50,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
      */
     protected $recipientUser;
@@ -60,7 +60,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
      */
     protected $senderUser;
@@ -70,7 +70,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionActions")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
@@ -80,7 +80,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions")
      * @ORM\JoinTable(name="submission_action_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")

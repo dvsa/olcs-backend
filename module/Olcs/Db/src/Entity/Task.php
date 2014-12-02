@@ -52,7 +52,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedToUser;
@@ -62,7 +62,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedByUser;
@@ -72,7 +72,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
      * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedToTeam;
@@ -82,7 +82,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TaskSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
      * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $taskSubCategory;
@@ -92,7 +92,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation")
      * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoOrganisation;

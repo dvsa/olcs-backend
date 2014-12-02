@@ -39,7 +39,7 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocTemplate
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", fetch="LAZY", inversedBy="docTemplateBookmarks")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", inversedBy="docTemplateBookmarks")
      * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
      */
     protected $docTemplate;
@@ -49,7 +49,7 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark")
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
     protected $docBookmark;

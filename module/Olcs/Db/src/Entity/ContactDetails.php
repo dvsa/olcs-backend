@@ -45,7 +45,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
      */
     protected $contactType;
@@ -55,7 +55,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", cascade={"persist"}, inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", cascade={"persist"}, inversedBy="contactDetails")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
      */
     protected $person;
@@ -65,7 +65,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -75,7 +75,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
@@ -85,7 +85,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
