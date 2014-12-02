@@ -39,7 +39,7 @@ class IrfoPermitStock implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\IrfoCountry
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoCountry", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoCountry")
      * @ORM\JoinColumn(name="irfo_country_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoCountry;

@@ -27,6 +27,7 @@ class PreviousLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LicNo18Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -36,7 +37,7 @@ class PreviousLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=false)
      */
     protected $previousLicenceType;
@@ -46,19 +47,10 @@ class PreviousLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="previousLicences")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="previousLicences")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Lic no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
-     */
-    protected $licNo;
 
     /**
      * Holder name
@@ -149,29 +141,6 @@ class PreviousLicence implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the lic no
-     *
-     * @param string $licNo
-     * @return PreviousLicence
-     */
-    public function setLicNo($licNo)
-    {
-        $this->licNo = $licNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the lic no
-     *
-     * @return string
-     */
-    public function getLicNo()
-    {
-        return $this->licNo;
     }
 
     /**

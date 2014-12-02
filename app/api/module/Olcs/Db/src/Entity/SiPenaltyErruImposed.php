@@ -41,7 +41,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SiPenaltyImposedType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType")
      * @ORM\JoinColumn(name="si_penalty_imposed_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siPenaltyImposedType;
@@ -51,7 +51,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\SeriousInfringement
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY", inversedBy="imposedErrus")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", inversedBy="imposedErrus")
      * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
      */
     protected $seriousInfringement;

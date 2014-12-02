@@ -31,8 +31,8 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ApplicationManyToOne,
         Traits\TransportManagerManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CloseDateField,
@@ -42,31 +42,31 @@ class Cases implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
-     */
-    protected $caseType;
-
-    /**
      * Erru case type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
      */
     protected $erruCaseType;
+
+    /**
+     * Case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
+     */
+    protected $caseType;
 
     /**
      * Licence
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="cases")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="cases")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -76,7 +76,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases")
      * @ORM\JoinTable(name="legacy_case_offence",
      *     joinColumns={
      *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
@@ -93,7 +93,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="cases", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="cases")
      * @ORM\JoinTable(name="case_category",
      *     joinColumns={
      *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
@@ -241,15 +241,6 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
-     * Serious infringement
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SeriousInfringement", mappedBy="case")
-     */
-    protected $seriousInfringements;
-
-    /**
      * Stay
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -269,31 +260,7 @@ class Cases implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->seriousInfringements = new ArrayCollection();
         $this->stays = new ArrayCollection();
-    }
-
-    /**
-     * Set the case type
-     *
-     * @param \Olcs\Db\Entity\RefData $caseType
-     * @return Cases
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
     }
 
     /**
@@ -317,6 +284,29 @@ class Cases implements Interfaces\EntityInterface
     public function getErruCaseType()
     {
         return $this->erruCaseType;
+    }
+
+    /**
+     * Set the case type
+     *
+     * @param \Olcs\Db\Entity\RefData $caseType
+     * @return Cases
+     */
+    public function setCaseType($caseType)
+    {
+        $this->caseType = $caseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getCaseType()
+    {
+        return $this->caseType;
     }
 
     /**
@@ -950,66 +940,6 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the serious infringement
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
-     * @return Cases
-     */
-    public function setSeriousInfringements($seriousInfringements)
-    {
-        $this->seriousInfringements = $seriousInfringements;
-
-        return $this;
-    }
-
-    /**
-     * Get the serious infringements
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getSeriousInfringements()
-    {
-        return $this->seriousInfringements;
-    }
-
-    /**
-     * Add a serious infringements
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
-     * @return Cases
-     */
-    public function addSeriousInfringements($seriousInfringements)
-    {
-        if ($seriousInfringements instanceof ArrayCollection) {
-            $this->seriousInfringements = new ArrayCollection(
-                array_merge(
-                    $this->seriousInfringements->toArray(),
-                    $seriousInfringements->toArray()
-                )
-            );
-        } elseif (!$this->seriousInfringements->contains($seriousInfringements)) {
-            $this->seriousInfringements->add($seriousInfringements);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a serious infringements
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
-     * @return Cases
-     */
-    public function removeSeriousInfringements($seriousInfringements)
-    {
-        if ($this->seriousInfringements->contains($seriousInfringements)) {
-            $this->seriousInfringements->removeElement($seriousInfringements);
         }
 
         return $this;

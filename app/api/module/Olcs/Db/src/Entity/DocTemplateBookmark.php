@@ -35,47 +35,24 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Doc bookmark
-     *
-     * @var \Olcs\Db\Entity\DocBookmark
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docBookmark;
-
-    /**
      * Doc template
      *
      * @var \Olcs\Db\Entity\DocTemplate
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", fetch="LAZY", inversedBy="docTemplateBookmarks")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", inversedBy="docTemplateBookmarks")
      * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
      */
     protected $docTemplate;
 
     /**
-     * Set the doc bookmark
+     * Doc bookmark
      *
-     * @param \Olcs\Db\Entity\DocBookmark $docBookmark
-     * @return DocTemplateBookmark
-     */
-    public function setDocBookmark($docBookmark)
-    {
-        $this->docBookmark = $docBookmark;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc bookmark
+     * @var \Olcs\Db\Entity\DocBookmark
      *
-     * @return \Olcs\Db\Entity\DocBookmark
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocBookmark")
+     * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
-    public function getDocBookmark()
-    {
-        return $this->docBookmark;
-    }
+    protected $docBookmark;
 
     /**
      * Set the doc template
@@ -98,5 +75,28 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
     public function getDocTemplate()
     {
         return $this->docTemplate;
+    }
+
+    /**
+     * Set the doc bookmark
+     *
+     * @param \Olcs\Db\Entity\DocBookmark $docBookmark
+     * @return DocTemplateBookmark
+     */
+    public function setDocBookmark($docBookmark)
+    {
+        $this->docBookmark = $docBookmark;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc bookmark
+     *
+     * @return \Olcs\Db\Entity\DocBookmark
+     */
+    public function getDocBookmark()
+    {
+        return $this->docBookmark;
     }
 }

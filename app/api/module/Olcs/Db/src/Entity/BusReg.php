@@ -31,12 +31,13 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\StatusManyToOne,
+        Traits\WithdrawnReasonManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
+        Traits\LicenceManyToOne,
+        Traits\ServiceNo70Field,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\CustomCreatedOnField,
@@ -48,37 +49,37 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
      */
     protected $revertStatus;
-
-    /**
-     * Subsidised
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
-     */
-    protected $subsidised;
 
     /**
      * Bus notice period
      *
      * @var \Olcs\Db\Entity\BusNoticePeriod
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod")
      * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
      */
     protected $busNoticePeriod;
+
+    /**
+     * Subsidised
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
+     */
+    protected $subsidised;
 
     /**
      * Variation reason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs")
      * @ORM\JoinTable(name="bus_reg_variation_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -95,7 +96,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", inversedBy="busRegs")
      * @ORM\JoinTable(name="bus_reg_bus_service_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -112,7 +113,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LocalAuthority", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LocalAuthority", inversedBy="busRegs")
      * @ORM\JoinTable(name="bus_reg_local_auth",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -141,15 +142,6 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="reg_no", length=70, nullable=false)
      */
     protected $regNo;
-
-    /**
-     * Service no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
-     */
-    protected $serviceNo;
 
     /**
      * Start point
@@ -547,29 +539,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the subsidised
-     *
-     * @param \Olcs\Db\Entity\RefData $subsidised
-     * @return BusReg
-     */
-    public function setSubsidised($subsidised)
-    {
-        $this->subsidised = $subsidised;
-
-        return $this;
-    }
-
-    /**
-     * Get the subsidised
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubsidised()
-    {
-        return $this->subsidised;
-    }
-
-    /**
      * Set the bus notice period
      *
      * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
@@ -590,6 +559,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getBusNoticePeriod()
     {
         return $this->busNoticePeriod;
+    }
+
+    /**
+     * Set the subsidised
+     *
+     * @param \Olcs\Db\Entity\RefData $subsidised
+     * @return BusReg
+     */
+    public function setSubsidised($subsidised)
+    {
+        $this->subsidised = $subsidised;
+
+        return $this;
+    }
+
+    /**
+     * Get the subsidised
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubsidised()
+    {
+        return $this->subsidised;
     }
 
     /**
@@ -816,29 +808,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getRegNo()
     {
         return $this->regNo;
-    }
-
-    /**
-     * Set the service no
-     *
-     * @param string $serviceNo
-     * @return BusReg
-     */
-    public function setServiceNo($serviceNo)
-    {
-        $this->serviceNo = $serviceNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the service no
-     *
-     * @return string
-     */
-    public function getServiceNo()
-    {
-        return $this->serviceNo;
     }
 
     /**

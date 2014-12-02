@@ -38,8 +38,9 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
+        Traits\OperatingCentreManyToOneAlt1,
+        Traits\Action1Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -50,7 +51,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
@@ -60,57 +61,57 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
      */
     protected $approvalUser;
-
-    /**
-     * Attached to
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
-     */
-    protected $attachedTo;
 
     /**
      * Condition type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
 
     /**
      * Added via
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
     protected $addedVia;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
+     * Attached to
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
+     */
+    protected $attachedTo;
 
     /**
      * S4
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions")
      * @ORM\JoinTable(name="s4_condition",
      *     joinColumns={
      *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
@@ -121,15 +122,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * )
      */
     protected $s4s;
-
-    /**
-     * Action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
-     */
-    protected $action;
 
     /**
      * Is draft
@@ -222,29 +214,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the attached to
-     *
-     * @param \Olcs\Db\Entity\RefData $attachedTo
-     * @return ConditionUndertaking
-     */
-    public function setAttachedTo($attachedTo)
-    {
-        $this->attachedTo = $attachedTo;
-
-        return $this;
-    }
-
-    /**
-     * Get the attached to
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getAttachedTo()
-    {
-        return $this->attachedTo;
-    }
-
-    /**
      * Set the condition type
      *
      * @param \Olcs\Db\Entity\RefData $conditionType
@@ -265,6 +234,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
+    }
+
+    /**
+     * Set the added via
+     *
+     * @param \Olcs\Db\Entity\RefData $addedVia
+     * @return ConditionUndertaking
+     */
+    public function setAddedVia($addedVia)
+    {
+        $this->addedVia = $addedVia;
+
+        return $this;
+    }
+
+    /**
+     * Get the added via
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAddedVia()
+    {
+        return $this->addedVia;
     }
 
     /**
@@ -291,26 +283,26 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the added via
+     * Set the attached to
      *
-     * @param \Olcs\Db\Entity\RefData $addedVia
+     * @param \Olcs\Db\Entity\RefData $attachedTo
      * @return ConditionUndertaking
      */
-    public function setAddedVia($addedVia)
+    public function setAttachedTo($attachedTo)
     {
-        $this->addedVia = $addedVia;
+        $this->attachedTo = $attachedTo;
 
         return $this;
     }
 
     /**
-     * Get the added via
+     * Get the attached to
      *
      * @return \Olcs\Db\Entity\RefData
      */
-    public function getAddedVia()
+    public function getAttachedTo()
     {
-        return $this->addedVia;
+        return $this->attachedTo;
     }
 
     /**
@@ -371,29 +363,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return ConditionUndertaking
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * Get the action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**

@@ -32,7 +32,16 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\OperatingCentreManyToOne,
+        Traits\Action1Field,
+        Traits\AdPlacedField,
+        Traits\AdPlacedIn70Field,
+        Traits\AdPlacedDateField,
+        Traits\PermissionField,
+        Traits\NoOfTrailersRequiredField,
+        Traits\NoOfVehiclesRequiredField,
+        Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
+        Traits\IsInterimField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -42,46 +51,10 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="operatingCentres")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="operatingCentres")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
-     */
-    protected $action;
-
-    /**
-     * Ad placed
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
-     */
-    protected $adPlaced;
-
-    /**
-     * Ad placed in
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="ad_placed_in", length=70, nullable=true)
-     */
-    protected $adPlacedIn;
-
-    /**
-     * Ad placed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="ad_placed_date", nullable=true)
-     */
-    protected $adPlacedDate;
 
     /**
      * Publication appropriate
@@ -93,15 +66,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     protected $publicationAppropriate = 0;
 
     /**
-     * Permission
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="permission", nullable=false)
-     */
-    protected $permission;
-
-    /**
      * Sufficient parking
      *
      * @var string
@@ -109,42 +73,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking = 0;
-
-    /**
-     * No of trailers required
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_trailers_required", nullable=true)
-     */
-    protected $noOfTrailersRequired;
-
-    /**
-     * No of vehicles required
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_vehicles_required", nullable=true)
-     */
-    protected $noOfVehiclesRequired;
-
-    /**
-     * Vi action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
-     */
-    protected $viAction;
-
-    /**
-     * Is interim
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_interim", nullable=false)
-     */
-    protected $isInterim = 0;
 
     /**
      * Set the application
@@ -167,98 +95,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return ApplicationOperatingCentre
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * Get the action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
-     * Set the ad placed
-     *
-     * @param string $adPlaced
-     * @return ApplicationOperatingCentre
-     */
-    public function setAdPlaced($adPlaced)
-    {
-        $this->adPlaced = $adPlaced;
-
-        return $this;
-    }
-
-    /**
-     * Get the ad placed
-     *
-     * @return string
-     */
-    public function getAdPlaced()
-    {
-        return $this->adPlaced;
-    }
-
-    /**
-     * Set the ad placed in
-     *
-     * @param string $adPlacedIn
-     * @return ApplicationOperatingCentre
-     */
-    public function setAdPlacedIn($adPlacedIn)
-    {
-        $this->adPlacedIn = $adPlacedIn;
-
-        return $this;
-    }
-
-    /**
-     * Get the ad placed in
-     *
-     * @return string
-     */
-    public function getAdPlacedIn()
-    {
-        return $this->adPlacedIn;
-    }
-
-    /**
-     * Set the ad placed date
-     *
-     * @param \DateTime $adPlacedDate
-     * @return ApplicationOperatingCentre
-     */
-    public function setAdPlacedDate($adPlacedDate)
-    {
-        $this->adPlacedDate = $adPlacedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the ad placed date
-     *
-     * @return \DateTime
-     */
-    public function getAdPlacedDate()
-    {
-        return $this->adPlacedDate;
     }
 
     /**
@@ -285,29 +121,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the permission
-     *
-     * @param string $permission
-     * @return ApplicationOperatingCentre
-     */
-    public function setPermission($permission)
-    {
-        $this->permission = $permission;
-
-        return $this;
-    }
-
-    /**
-     * Get the permission
-     *
-     * @return string
-     */
-    public function getPermission()
-    {
-        return $this->permission;
-    }
-
-    /**
      * Set the sufficient parking
      *
      * @param string $sufficientParking
@@ -328,97 +141,5 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     public function getSufficientParking()
     {
         return $this->sufficientParking;
-    }
-
-    /**
-     * Set the no of trailers required
-     *
-     * @param int $noOfTrailersRequired
-     * @return ApplicationOperatingCentre
-     */
-    public function setNoOfTrailersRequired($noOfTrailersRequired)
-    {
-        $this->noOfTrailersRequired = $noOfTrailersRequired;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of trailers required
-     *
-     * @return int
-     */
-    public function getNoOfTrailersRequired()
-    {
-        return $this->noOfTrailersRequired;
-    }
-
-    /**
-     * Set the no of vehicles required
-     *
-     * @param int $noOfVehiclesRequired
-     * @return ApplicationOperatingCentre
-     */
-    public function setNoOfVehiclesRequired($noOfVehiclesRequired)
-    {
-        $this->noOfVehiclesRequired = $noOfVehiclesRequired;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of vehicles required
-     *
-     * @return int
-     */
-    public function getNoOfVehiclesRequired()
-    {
-        return $this->noOfVehiclesRequired;
-    }
-
-    /**
-     * Set the vi action
-     *
-     * @param string $viAction
-     * @return ApplicationOperatingCentre
-     */
-    public function setViAction($viAction)
-    {
-        $this->viAction = $viAction;
-
-        return $this;
-    }
-
-    /**
-     * Get the vi action
-     *
-     * @return string
-     */
-    public function getViAction()
-    {
-        return $this->viAction;
-    }
-
-    /**
-     * Set the is interim
-     *
-     * @param string $isInterim
-     * @return ApplicationOperatingCentre
-     */
-    public function setIsInterim($isInterim)
-    {
-        $this->isInterim = $isInterim;
-
-        return $this;
-    }
-
-    /**
-     * Get the is interim
-     *
-     * @return string
-     */
-    public function getIsInterim()
-    {
-        return $this->isInterim;
     }
 }
