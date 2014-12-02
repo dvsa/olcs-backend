@@ -16,7 +16,7 @@ trait CreatedByManyToOne
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;

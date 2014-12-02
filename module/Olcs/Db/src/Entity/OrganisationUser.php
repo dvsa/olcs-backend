@@ -42,7 +42,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY", inversedBy="organisationUsers")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", inversedBy="organisationUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

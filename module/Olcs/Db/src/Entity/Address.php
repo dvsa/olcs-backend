@@ -37,7 +37,7 @@ class Address implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
@@ -47,7 +47,7 @@ class Address implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\AdminAreaTrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\AdminAreaTrafficArea")
      * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
      */
     protected $adminArea;
