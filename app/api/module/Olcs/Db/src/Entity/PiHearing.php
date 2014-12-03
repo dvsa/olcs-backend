@@ -34,6 +34,7 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
+        Traits\IsCancelledField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -43,7 +44,7 @@ class PiHearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
      */
     protected $presidedByRole;
@@ -53,7 +54,7 @@ class PiHearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", inversedBy="piHearings")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
@@ -66,15 +67,6 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
      */
     protected $presidingTcOther;
-
-    /**
-     * Is cancelled
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
-     */
-    protected $isCancelled = 0;
 
     /**
      * Cancelled reason
@@ -197,29 +189,6 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidingTcOther()
     {
         return $this->presidingTcOther;
-    }
-
-    /**
-     * Set the is cancelled
-     *
-     * @param string $isCancelled
-     * @return PiHearing
-     */
-    public function setIsCancelled($isCancelled)
-    {
-        $this->isCancelled = $isCancelled;
-
-        return $this;
-    }
-
-    /**
-     * Get the is cancelled
-     *
-     * @return string
-     */
-    public function getIsCancelled()
-    {
-        return $this->isCancelled;
     }
 
     /**
