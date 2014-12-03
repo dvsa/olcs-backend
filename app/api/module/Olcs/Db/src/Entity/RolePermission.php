@@ -37,7 +37,7 @@ class RolePermission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Permission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Permission")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Permission", fetch="LAZY")
      * @ORM\JoinColumn(name="permission_id", referencedColumnName="id", nullable=false)
      */
     protected $permission;

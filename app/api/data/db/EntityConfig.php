@@ -891,6 +891,12 @@ return array(
     'serious_infringement' => array(
         'erru_response_sent' => array(
             'type' => 'yesno'
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'seriousInfringement'
+            )
         )
     ),
     'si_penalty' => array(

@@ -40,7 +40,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="s4s")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="s4s", fetch="LAZY")
      */
     protected $conditions;
 

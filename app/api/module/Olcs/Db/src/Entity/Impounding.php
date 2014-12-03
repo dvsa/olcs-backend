@@ -29,12 +29,12 @@ class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\PiVenueManyToOne,
         Traits\OutcomeManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\LastModifiedByManyToOne,
+        Traits\PresidingTcManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\HearingDateField,
         Traits\Notes4000Field,
         Traits\CloseDateField,
@@ -49,7 +49,7 @@ class Impounding implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
@@ -59,7 +59,7 @@ class Impounding implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="impoundings")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="impoundings", fetch="LAZY")
      * @ORM\JoinTable(name="impounding_legislation_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="impounding_id", referencedColumnName="id")

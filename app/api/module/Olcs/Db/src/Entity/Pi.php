@@ -38,21 +38,28 @@ class Pi implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\AgreedDateField,
-        Traits\IsCancelledField,
         Traits\DecisionDateField,
-        Traits\CustomDeletedDateField,
         Traits\Comment4000Field,
-        Traits\ClosedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Agreed by tc role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
+     */
+    protected $agreedByTcRole;
 
     /**
      * Decided by tc role
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
      */
     protected $decidedByTcRole;
@@ -62,57 +69,47 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="written_outcome", referencedColumnName="id", nullable=true)
      */
     protected $writtenOutcome;
-
-    /**
-     * Assigned to
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
-     */
-    protected $assignedTo;
-
-    /**
-     * Decided by tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
-     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
-     */
-    protected $decidedByTc;
-
-    /**
-     * Agreed by tc role
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
-     */
-    protected $agreedByTcRole;
 
     /**
      * Agreed by tc
      *
      * @var \Olcs\Db\Entity\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="agreed_by_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $agreedByTc;
+
+    /**
+     * Decided by tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc", fetch="LAZY")
+     * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
+     */
+    protected $decidedByTc;
+
+    /**
+     * Assigned to
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedTo;
 
     /**
      * Pi status
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
      */
     protected $piStatus;
@@ -122,7 +119,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -139,7 +136,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Decision", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Decision", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_decision",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -156,7 +153,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -176,6 +173,15 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="witnesses", nullable=true)
      */
     protected $witnesses;
+
+    /**
+     * Is cancelled
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
+     */
+    protected $isCancelled = 0;
 
     /**
      * Section code text
@@ -227,9 +233,18 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="decision_notes", nullable=true)
+     * @ORM\Column(type="text", name="decision_notes", length=65535, nullable=true)
      */
     protected $decisionNotes;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Call up letter date
@@ -304,6 +319,15 @@ class Pi implements Interfaces\EntityInterface
     protected $decSentAfterWrittenDecDate;
 
     /**
+     * Closed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="closed_date", nullable=true)
+     */
+    protected $closedDate;
+
+    /**
      * Pi hearing
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -321,6 +345,29 @@ class Pi implements Interfaces\EntityInterface
         $this->decisions = new ArrayCollection();
         $this->reasons = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
+    }
+
+    /**
+     * Set the agreed by tc role
+     *
+     * @param \Olcs\Db\Entity\RefData $agreedByTcRole
+     * @return Pi
+     */
+    public function setAgreedByTcRole($agreedByTcRole)
+    {
+        $this->agreedByTcRole = $agreedByTcRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed by tc role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAgreedByTcRole()
+    {
+        return $this->agreedByTcRole;
     }
 
     /**
@@ -370,26 +417,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the assigned to
+     * Set the agreed by tc
      *
-     * @param \Olcs\Db\Entity\User $assignedTo
+     * @param \Olcs\Db\Entity\PresidingTc $agreedByTc
      * @return Pi
      */
-    public function setAssignedTo($assignedTo)
+    public function setAgreedByTc($agreedByTc)
     {
-        $this->assignedTo = $assignedTo;
+        $this->agreedByTc = $agreedByTc;
 
         return $this;
     }
 
     /**
-     * Get the assigned to
+     * Get the agreed by tc
      *
-     * @return \Olcs\Db\Entity\User
+     * @return \Olcs\Db\Entity\PresidingTc
      */
-    public function getAssignedTo()
+    public function getAgreedByTc()
     {
-        return $this->assignedTo;
+        return $this->agreedByTc;
     }
 
     /**
@@ -416,49 +463,26 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the agreed by tc role
+     * Set the assigned to
      *
-     * @param \Olcs\Db\Entity\RefData $agreedByTcRole
+     * @param \Olcs\Db\Entity\User $assignedTo
      * @return Pi
      */
-    public function setAgreedByTcRole($agreedByTcRole)
+    public function setAssignedTo($assignedTo)
     {
-        $this->agreedByTcRole = $agreedByTcRole;
+        $this->assignedTo = $assignedTo;
 
         return $this;
     }
 
     /**
-     * Get the agreed by tc role
+     * Get the assigned to
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Olcs\Db\Entity\User
      */
-    public function getAgreedByTcRole()
+    public function getAssignedTo()
     {
-        return $this->agreedByTcRole;
-    }
-
-    /**
-     * Set the agreed by tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $agreedByTc
-     * @return Pi
-     */
-    public function setAgreedByTc($agreedByTc)
-    {
-        $this->agreedByTc = $agreedByTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the agreed by tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getAgreedByTc()
-    {
-        return $this->agreedByTc;
+        return $this->assignedTo;
     }
 
     /**
@@ -688,6 +712,29 @@ class Pi implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is cancelled
+     *
+     * @param string $isCancelled
+     * @return Pi
+     */
+    public function setIsCancelled($isCancelled)
+    {
+        $this->isCancelled = $isCancelled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is cancelled
+     *
+     * @return string
+     */
+    public function getIsCancelled()
+    {
+        return $this->isCancelled;
+    }
+
+    /**
      * Set the section code text
      *
      * @param string $sectionCodeText
@@ -823,6 +870,29 @@ class Pi implements Interfaces\EntityInterface
     public function getDecisionNotes()
     {
         return $this->decisionNotes;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return Pi
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
@@ -1007,6 +1077,29 @@ class Pi implements Interfaces\EntityInterface
     public function getDecSentAfterWrittenDecDate()
     {
         return $this->decSentAfterWrittenDecDate;
+    }
+
+    /**
+     * Set the closed date
+     *
+     * @param \DateTime $closedDate
+     * @return Pi
+     */
+    public function setClosedDate($closedDate)
+    {
+        $this->closedDate = $closedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the closed date
+     *
+     * @return \DateTime
+     */
+    public function getClosedDate()
+    {
+        return $this->closedDate;
     }
 
     /**

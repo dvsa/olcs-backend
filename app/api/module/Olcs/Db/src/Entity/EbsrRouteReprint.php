@@ -30,7 +30,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="requested_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestedUser;

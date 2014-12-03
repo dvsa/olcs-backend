@@ -34,24 +34,24 @@ class GracePeriod implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Assigned to user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $assignedToUser;
-
-    /**
      * Period type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
      */
     protected $periodType;
+
+    /**
+     * Assigned to user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $assignedToUser;
 
     /**
      * Is active
@@ -90,29 +90,6 @@ class GracePeriod implements Interfaces\EntityInterface
     protected $gracePeriodNo = 1;
 
     /**
-     * Set the assigned to user
-     *
-     * @param \Olcs\Db\Entity\User $assignedToUser
-     * @return GracePeriod
-     */
-    public function setAssignedToUser($assignedToUser)
-    {
-        $this->assignedToUser = $assignedToUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the assigned to user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getAssignedToUser()
-    {
-        return $this->assignedToUser;
-    }
-
-    /**
      * Set the period type
      *
      * @param \Olcs\Db\Entity\RefData $periodType
@@ -133,6 +110,29 @@ class GracePeriod implements Interfaces\EntityInterface
     public function getPeriodType()
     {
         return $this->periodType;
+    }
+
+    /**
+     * Set the assigned to user
+     *
+     * @param \Olcs\Db\Entity\User $assignedToUser
+     * @return GracePeriod
+     */
+    public function setAssignedToUser($assignedToUser)
+    {
+        $this->assignedToUser = $assignedToUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned to user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getAssignedToUser()
+    {
+        return $this->assignedToUser;
     }
 
     /**
