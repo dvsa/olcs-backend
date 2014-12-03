@@ -241,6 +241,15 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Serious infringement
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SeriousInfringement", mappedBy="case")
+     */
+    protected $seriousInfringements;
+
+    /**
      * Stay
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -260,6 +269,7 @@ class Cases implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->seriousInfringements = new ArrayCollection();
         $this->stays = new ArrayCollection();
     }
 
@@ -940,6 +950,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the serious infringement
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
+     * @return Cases
+     */
+    public function setSeriousInfringements($seriousInfringements)
+    {
+        $this->seriousInfringements = $seriousInfringements;
+
+        return $this;
+    }
+
+    /**
+     * Get the serious infringements
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSeriousInfringements()
+    {
+        return $this->seriousInfringements;
+    }
+
+    /**
+     * Add a serious infringements
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
+     * @return Cases
+     */
+    public function addSeriousInfringements($seriousInfringements)
+    {
+        if ($seriousInfringements instanceof ArrayCollection) {
+            $this->seriousInfringements = new ArrayCollection(
+                array_merge(
+                    $this->seriousInfringements->toArray(),
+                    $seriousInfringements->toArray()
+                )
+            );
+        } elseif (!$this->seriousInfringements->contains($seriousInfringements)) {
+            $this->seriousInfringements->add($seriousInfringements);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a serious infringements
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements
+     * @return Cases
+     */
+    public function removeSeriousInfringements($seriousInfringements)
+    {
+        if ($this->seriousInfringements->contains($seriousInfringements)) {
+            $this->seriousInfringements->removeElement($seriousInfringements);
         }
 
         return $this;
