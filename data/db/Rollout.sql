@@ -757,10 +757,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('org_person_type', 'org_pt_d', 'Director', null),
     ('org_person_type', 'org_pt_st', 'Sole Trader', null),
 
-    ('pay_status', 'pay_s_os', 'Outstanding', NULL),
-    ('pay_status', 'pay_s_pd', 'Paid', NULL),
-    ('pay_status', 'pay_s_cn', 'Cancelled', NULL),
-    ('pay_status', 'pay_s_leg', 'Legacy', NULL)
+    ('pay_status', 'pay_s_os', 'Outstanding', null),
+    ('pay_status', 'pay_s_pd', 'Paid', null),
+    ('pay_status', 'pay_s_cn', 'Cancelled', null),
+    ('pay_status', 'pay_s_leg', 'Legacy', null),
     ('pay_status', 'pay_s_fail', 'Failed', null),
 
     ('phone_contact_type', 'phone_t_tel', 'Business', 'Business'),
