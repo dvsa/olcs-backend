@@ -27,8 +27,8 @@ class UserRole implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RoleManyToOne,
         Traits\UserManyToOne,
+        Traits\RoleManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
