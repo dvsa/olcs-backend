@@ -106,19 +106,20 @@ INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `pao
     (75,NULL,NULL,'','','','','','','GB',NOW(),NOW(),1),
     (76,NULL,NULL,'Unit 5','10 High Street','','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (100,NULL,NULL,'Test Partnership LLP','10 Partnerships street','PartnershipDistrict','Partnership Land','PA7 5IP',
-    'Leeds','GB',NOW(),NOW(),1);
+    'Leeds','GB',NOW(),NOW(),1),
+    (104,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1);
 
 INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`, `status`, `tot_auth_vehicles`,
     `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_large_vehicles`, `tot_community_licences`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
-    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`) VALUES
+    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`, `goods_or_psv`, `ni_flag`) VALUES
     (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-19 09:06:53', '2014-12-25 10:06:53',NULL,
-    NULL,NOW(),NULL,1,0),
+    NULL,NOW(),NULL,1,0,'lcat_gv',0),
     (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,1,1),
+    NULL,1,1,'lcat_gv',0),
     (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0);
+    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0,'lcat_psv',1);
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
 (1,NULL,NULL,NULL,NULL,NULL,1),
@@ -252,7 +253,8 @@ VALUES
 (77,'ct_corr',72,NULL,46,NULL,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
 (100,'ct_reg',100,100,44,NULL,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
 (101,'ct_team_user',26,NULL,NULL,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(102,'ct_corr',41,1,NULL,7,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+(102,'ct_corr',41,1,NULL,7,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+(104,'ct_tm',104,1,77,7,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -324,7 +326,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NOW(),NOW(),1),
 
     -- extra licence for application 1
-    (201,1,'B',0,1,'lcat_gv','OB4234560','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    (201,1,'B',0,1,NULL,'OB4234560','lsts_not_submitted',NULL,NULL,'2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
     (202,1,'B',0,1,'lcat_gv','OB4234561','lsts_consideration',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
@@ -357,7 +359,7 @@ INSERT INTO `licence` (
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
     (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_not_submitted',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,10,5,5,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,'lcat_gv','OB1534567','lsts_not_submitted',1,'ltyp_sn',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (114,104,'B',NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
     (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_not_submitted',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1);
@@ -498,30 +500,30 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
     (6,NULL,NULL,NULL,NULL,1,77,100);
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `title`, `birth_date`, `forename`, `family_name`,
-    `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
-    (4,NULL,NULL,'Mr','1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL),
-    (9,NULL,NULL,'Mr','1960-02-15 00:00:00','John','Smith',NULL,NULL,NULL,1,NULL),
-    (10,NULL,NULL,'Mr','1965-07-12 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL),
-    (11,NULL,NULL,'Mr','1970-04-14 00:00:00','Joe','Lambert',NULL,NULL,NULL,1,NULL),
-    (12,NULL,NULL,'Mr','1975-04-15 00:00:00','Tom','Cooper',NULL,NULL,NULL,1,NULL),
-    (13,NULL,NULL,'Mr','1973-03-03 00:00:00','Mark','Anthony',NULL,NULL,NULL,1,NULL),
-    (14,NULL,NULL,'Mr','1975-02-15 00:00:00','Mark','Cooper',NULL,NULL,NULL,1,NULL),
-    (15,NULL,NULL,'Mr','1973-12-09 00:00:00','Tom','Anthony',NULL,NULL,NULL,1,NULL),
-    (32,NULL,NULL,'Mr','1960-04-15 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL),
-    (33,NULL,NULL,'Mr','1965-04-12 00:00:00','Mark','Jones',NULL,NULL,NULL,1,NULL),
-    (34,NULL,NULL,'Mr','1970-06-14 00:00:00','Tim','Lambert',NULL,NULL,NULL,1,NULL),
-    (35,NULL,NULL,'Mr','1975-04-18 00:00:00','Joe','Cooper',NULL,NULL,NULL,1,NULL),
-    (43,NULL,NULL,'Mr','1960-02-15 00:00:00','Ted','Smith',NULL,NULL,NULL,1,NULL),
-    (44,NULL,NULL,'Mr','1970-04-14 00:00:00','Peter','Lambert',NULL,NULL,NULL,1,NULL),
-    (45,NULL,NULL,'Mr','1975-04-15 00:00:00','Mark','Cooper',NULL,NULL,NULL,1,NULL),
-    (46,NULL,NULL,'Mr','1973-03-03 00:00:00','David','Anthony',NULL,NULL,NULL,1,NULL),
-    (47,NULL,NULL,'Mr','1975-02-15 00:00:00','Lewis','Howarth',NULL,NULL,NULL,1,NULL),
-    (59,NULL,NULL,'Mr','1973-03-03 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL),
-    (60,NULL,NULL,'Mr','1975-02-15 00:00:00','Lewis','Hamilton',NULL,NULL,NULL,1,NULL),
-    (65,NULL,NULL,'Mr','1972-02-15 00:00:00','Jonathan','Smith',NULL,NULL,NULL,1,NULL),
-    (66,NULL,NULL,'Mr','1975-03-15 00:00:00','Tim','Cooper',NULL,NULL,NULL,1,NULL),
-    (77,NULL,NULL,'Mr','1972-02-15 00:00:00','Tom','Jones',NULL,NULL,NULL,1,NULL),
-    (78,NULL,NULL,'Mr','1975-03-15 00:00:00','Keith','Winnard',NULL,NULL,NULL,1,NULL);
+    `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`, `birth_place`) VALUES
+    (4,NULL,NULL,'Mr','1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL, NULL),
+    (9,NULL,NULL,'Mr','1960-02-15 00:00:00','John','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (10,NULL,NULL,'Mr','1965-07-12 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (11,NULL,NULL,'Mr','1970-04-14 00:00:00','Joe','Lambert',NULL,NULL,NULL,1,NULL, NULL),
+    (12,NULL,NULL,'Mr','1975-04-15 00:00:00','Tom','Cooper',NULL,NULL,NULL,1,NULL, NULL),
+    (13,NULL,NULL,'Mr','1973-03-03 00:00:00','Mark','Anthony',NULL,NULL,NULL,1,NULL, NULL),
+    (14,NULL,NULL,'Mr','1975-02-15 00:00:00','Mark','Cooper',NULL,NULL,NULL,1,NULL, NULL),
+    (15,NULL,NULL,'Mr','1973-12-09 00:00:00','Tom','Anthony',NULL,NULL,NULL,1,NULL, NULL),
+    (32,NULL,NULL,'Mr','1960-04-15 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (33,NULL,NULL,'Mr','1965-04-12 00:00:00','Mark','Jones',NULL,NULL,NULL,1,NULL, NULL),
+    (34,NULL,NULL,'Mr','1970-06-14 00:00:00','Tim','Lambert',NULL,NULL,NULL,1,NULL, NULL),
+    (35,NULL,NULL,'Mr','1975-04-18 00:00:00','Joe','Cooper',NULL,NULL,NULL,1,NULL, NULL),
+    (43,NULL,NULL,'Mr','1960-02-15 00:00:00','Ted','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (44,NULL,NULL,'Mr','1970-04-14 00:00:00','Peter','Lambert',NULL,NULL,NULL,1,NULL, NULL),
+    (45,NULL,NULL,'Mr','1975-04-15 00:00:00','Mark','Cooper',NULL,NULL,NULL,1,NULL, NULL),
+    (46,NULL,NULL,'Mr','1973-03-03 00:00:00','David','Anthony',NULL,NULL,NULL,1,NULL, NULL),
+    (47,NULL,NULL,'Mr','1975-02-15 00:00:00','Lewis','Howarth',NULL,NULL,NULL,1,NULL, NULL),
+    (59,NULL,NULL,'Mr','1973-03-03 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (60,NULL,NULL,'Mr','1975-02-15 00:00:00','Lewis','Hamilton',NULL,NULL,NULL,1,NULL, NULL),
+    (65,NULL,NULL,'Mr','1972-02-15 00:00:00','Jonathan','Smith',NULL,NULL,NULL,1,NULL, NULL),
+    (66,NULL,NULL,'Mr','1975-03-15 00:00:00','Tim','Cooper',NULL,NULL,NULL,1,NULL, NULL),
+    (77,NULL,NULL,'Mr','1972-02-15 00:00:00','Tom','Jones',NULL,NULL,NULL,1,NULL, 'Leeds'),
+    (78,NULL,NULL,'Mr','1975-03-15 00:00:00','Keith','Winnard',NULL,NULL,NULL,1,NULL, NULL);
 
 INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`, `notes`,
     `created_on`, `last_modified_on`, `version`, `person_id`) VALUES
@@ -658,10 +660,11 @@ VALUES
   (75,NULL,2,0,75,'LCC',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1),
   (110,NULL,2,0,110,'test',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1);
 
-INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `deleted_date`,
+INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `contact_details_id`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'active','Internal',NULL,NULL,NULL,1),
-    (2,NULL,NULL,'active','External',NULL,NULL,NULL,1);
+    (1,NULL,NULL,'tm_st_A','tm_t_I',NULL,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_A','tm_t_E',NULL,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES

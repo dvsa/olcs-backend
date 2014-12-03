@@ -37,10 +37,11 @@ class Licence implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\LicenceTypeManyToOne,
         Traits\StatusManyToOne,
         Traits\InForceDateField,
+        Traits\NiFlagField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -245,15 +246,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=true)
      */
     protected $safetyInsVaries;
-
-    /**
-     * Ni flag
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="ni_flag", nullable=true)
-     */
-    protected $niFlag;
 
     /**
      * Tachograph ins name
@@ -883,29 +875,6 @@ class Licence implements Interfaces\EntityInterface
     public function getSafetyInsVaries()
     {
         return $this->safetyInsVaries;
-    }
-
-    /**
-     * Set the ni flag
-     *
-     * @param string $niFlag
-     * @return Licence
-     */
-    public function setNiFlag($niFlag)
-    {
-        $this->niFlag = $niFlag;
-
-        return $this;
-    }
-
-    /**
-     * Get the ni flag
-     *
-     * @return string
-     */
-    public function getNiFlag()
-    {
-        return $this->niFlag;
     }
 
     /**
