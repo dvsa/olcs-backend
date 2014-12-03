@@ -27,9 +27,9 @@ class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\CaseManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
@@ -41,7 +41,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="decision", referencedColumnName="id", nullable=false)
      */
     protected $decision;

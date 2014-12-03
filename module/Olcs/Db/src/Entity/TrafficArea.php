@@ -24,9 +24,9 @@ use Olcs\Db\Entity\Traits;
 class TrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -47,7 +47,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas", fetch="LAZY")
      */
     protected $recipients;
 

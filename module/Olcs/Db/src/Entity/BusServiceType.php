@@ -26,7 +26,7 @@ class BusServiceType implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes", fetch="LAZY")
      */
     protected $busRegs;
 
