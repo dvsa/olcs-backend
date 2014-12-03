@@ -48,7 +48,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
      */
     protected $resultType;
@@ -58,7 +58,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestorUser;
@@ -68,7 +68,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="request_type", referencedColumnName="id", nullable=false)
      */
     protected $requestType;
@@ -78,7 +78,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
      */
     protected $reportType;
@@ -88,7 +88,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="requestor_notes", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="requestor_notes", nullable=true)
      */
     protected $requestorNotes;
 
@@ -97,7 +97,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="inspector_notes", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="inspector_notes", nullable=true)
      */
     protected $inspectorNotes;
 

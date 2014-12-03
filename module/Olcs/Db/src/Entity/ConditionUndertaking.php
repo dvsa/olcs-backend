@@ -40,6 +40,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\ApplicationManyToOne,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\LicenceManyToOneAlt1,
+        Traits\Action1Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -50,7 +51,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
@@ -60,7 +61,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
      */
     protected $approvalUser;
@@ -70,7 +71,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
      */
     protected $attachedTo;
@@ -80,7 +81,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
@@ -90,7 +91,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="conditionUndertakings")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
@@ -100,7 +101,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
     protected $addedVia;
@@ -110,7 +111,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions")
      * @ORM\JoinTable(name="s4_condition",
      *     joinColumns={
      *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
@@ -121,15 +122,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * )
      */
     protected $s4s;
-
-    /**
-     * Action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
-     */
-    protected $action;
 
     /**
      * Is draft
@@ -371,29 +363,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return ConditionUndertaking
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * Get the action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**

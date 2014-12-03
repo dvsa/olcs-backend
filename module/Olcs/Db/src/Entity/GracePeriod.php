@@ -38,7 +38,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
      */
     protected $periodType;
@@ -48,7 +48,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
      */
     protected $assignedToUser;
