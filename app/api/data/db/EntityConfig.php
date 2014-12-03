@@ -103,6 +103,9 @@ return array(
         )
     ),
     'application' => array(
+        'ni_flag' => array(
+            'type' => 'yesnonull'
+        ),
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',

@@ -29,7 +29,7 @@ class VoidDisc implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

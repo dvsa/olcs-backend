@@ -51,7 +51,7 @@ class PaginateQuery
 
         if (isset($options['order'])) {
 
-            if (!in_array($options['order'], ['ASC', 'DESC'])) {
+            if (!in_array(strtoupper($options['order']), ['ASC', 'DESC'])) {
                 throw new PaginationException('Order must be either ASC or DESC');
             }
 

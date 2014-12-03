@@ -166,7 +166,9 @@ CREATE TABLE `application` (
   `tot_auth_medium_vehicles` int(11) DEFAULT NULL COMMENT 'psv medium vehicles',
   `tot_auth_large_vehicles` int(11) DEFAULT NULL COMMENT 'psv large vehicles',
   `tot_community_licences` int(11) DEFAULT NULL COMMENT 'Number of EU community licences required',
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `licence_type` varchar(32) DEFAULT NULL COMMENT 'Restricted, Standard International etc.',
+  `ni_flag` tinyint(1) DEFAULT NULL,
   `bankrupt` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been declared bankrupt',
   `administration` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been involved in a company that went into administration',
   `disqualified` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been disqualified as a director or manager of a company',
@@ -217,13 +219,15 @@ CREATE TABLE `application` (
   KEY `fk_application_ref_data2_idx` (`status`),
   KEY `fk_application_ref_data3_idx` (`interim_status`),
   KEY `fk_application_ref_data4_idx` (`withdrawn_reason`),
+  KEY `fk_application_ref_data5_idx` (`goods_or_psv`),
   CONSTRAINT `fk_application_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data2` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data3` FOREIGN KEY (`interim_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_application_ref_data4` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_application_ref_data4` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_ref_data5` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Application to vary a licence or to apply for a new licence. If successful values from app will be copied into licence.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
