@@ -49,7 +49,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
      * @ORM\JoinColumn(name="hint_questions_id1", referencedColumnName="id", nullable=true)
      */
     protected $hintQuestions1;
@@ -59,7 +59,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
      * @ORM\JoinColumn(name="hint_questions_id2", referencedColumnName="id", nullable=true)
      */
     protected $hintQuestions2;
@@ -69,7 +69,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
      * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $partnerContactDetails;
@@ -79,7 +79,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $contactDetails;
