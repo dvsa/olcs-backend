@@ -176,7 +176,7 @@ return array(
             'type' => 'yesno'
         ),
         'psv_limousines' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_no_limousine_confirmation' => array(
             'type' => 'yesno'

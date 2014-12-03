@@ -30,12 +30,12 @@ class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
         Traits\GoodsOrPsvManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\WithdrawnReasonManyToOne,
+        Traits\LicenceTypeManyToOne,
+        Traits\StatusManyToOne,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
         Traits\TotAuthSmallVehiclesField,
@@ -310,9 +310,9 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_limousines", nullable=false)
+     * @ORM\Column(type="yesnonull", name="psv_limousines", nullable=true)
      */
-    protected $psvLimousines = 0;
+    protected $psvLimousines;
 
     /**
      * Psv no limousine confirmation
