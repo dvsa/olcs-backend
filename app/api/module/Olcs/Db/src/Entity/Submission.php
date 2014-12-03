@@ -5,6 +5,7 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Submission Entity
@@ -13,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="fk_submission_case1_idx", columns={"case_id"}),
@@ -30,6 +32,7 @@ class Submission implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
+        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -39,7 +42,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
@@ -49,7 +52,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="data_snapshot", nullable=true)
      */
     protected $dataSnapshot;
 

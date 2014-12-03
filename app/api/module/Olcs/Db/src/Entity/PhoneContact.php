@@ -36,7 +36,7 @@ class PhoneContact implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="phone_contact_type", referencedColumnName="id", nullable=false)
      */
     protected $phoneContactType;
@@ -46,7 +46,7 @@ class PhoneContact implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", fetch="LAZY", inversedBy="phoneContacts")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", inversedBy="phoneContacts")
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=false)
      */
     protected $contactDetails;

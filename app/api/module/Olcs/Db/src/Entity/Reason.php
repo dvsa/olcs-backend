@@ -30,6 +30,7 @@ class Reason implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\SectionCode50Field,
         Traits\Description255Field,
+        Traits\IsNiFieldAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -39,7 +40,7 @@ class Reason implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="reasons")
      */
     protected $submissionActions;
 
@@ -48,7 +49,7 @@ class Reason implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="reasons")
      */
     protected $pis;
 
@@ -57,7 +58,7 @@ class Reason implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ProposeToRevoke", mappedBy="reasons")
      */
     protected $proposeToRevokes;
 
@@ -69,15 +70,6 @@ class Reason implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
      */
     protected $isReadOnly;
-
-    /**
-     * Is ni
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
-     */
-    protected $isNi;
 
     /**
      * Is propose to revoke
@@ -299,29 +291,6 @@ class Reason implements Interfaces\EntityInterface
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
-    }
-
-    /**
-     * Set the is ni
-     *
-     * @param string $isNi
-     * @return Reason
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return string
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
     }
 
     /**

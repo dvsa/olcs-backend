@@ -29,6 +29,7 @@ class Vehicle implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\Vrm20Field,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
         Traits\SpecifiedDateField,
@@ -41,7 +42,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="psv_type", referencedColumnName="id", nullable=true)
      */
     protected $psvType;
@@ -54,15 +55,6 @@ class Vehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
      */
     protected $isNovelty;
-
-    /**
-     * Vrm
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vrm", length=20, nullable=true)
-     */
-    protected $vrm;
 
     /**
      * Plated weight
@@ -188,29 +180,6 @@ class Vehicle implements Interfaces\EntityInterface
     public function getIsNovelty()
     {
         return $this->isNovelty;
-    }
-
-    /**
-     * Set the vrm
-     *
-     * @param string $vrm
-     * @return Vehicle
-     */
-    public function setVrm($vrm)
-    {
-        $this->vrm = $vrm;
-
-        return $this;
-    }
-
-    /**
-     * Get the vrm
-     *
-     * @return string
-     */
-    public function getVrm()
-    {
-        return $this->vrm;
     }
 
     /**

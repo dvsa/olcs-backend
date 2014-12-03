@@ -45,7 +45,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\IrfoPsvAuthType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType")
      * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuthType;
@@ -55,7 +55,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
      */
     protected $journeyFrequency;

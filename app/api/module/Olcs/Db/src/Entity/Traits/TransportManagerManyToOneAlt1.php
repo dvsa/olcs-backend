@@ -16,7 +16,7 @@ trait TransportManagerManyToOneAlt1
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
      */
     protected $transportManager;

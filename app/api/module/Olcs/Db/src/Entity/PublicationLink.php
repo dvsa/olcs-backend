@@ -51,7 +51,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection")
      * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationSection;
@@ -61,7 +61,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TmPiHearing
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing")
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
@@ -71,7 +71,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
@@ -81,7 +81,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication")
      * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
     protected $publication;
@@ -91,7 +91,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text1", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="text1", nullable=true)
      */
     protected $text1;
 
@@ -100,7 +100,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text2", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="text2", nullable=true)
      */
     protected $text2;
 
@@ -109,7 +109,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text3", length=65535, nullable=true)
+     * @ORM\Column(type="text", name="text3", nullable=true)
      */
     protected $text3;
 

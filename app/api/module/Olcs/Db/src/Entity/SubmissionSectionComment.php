@@ -37,7 +37,7 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
      */
     protected $submissionSection;
@@ -47,7 +47,7 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionSectionComments")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionSectionComments")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;

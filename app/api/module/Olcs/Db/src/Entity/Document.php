@@ -52,7 +52,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", fetch="LAZY", inversedBy="adDocuments")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="adDocuments")
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
@@ -62,7 +62,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="documents")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
      */
     protected $opposition;
@@ -72,7 +72,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="documents")
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
@@ -82,7 +82,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="documents")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
@@ -92,7 +92,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="documents")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
@@ -102,7 +102,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="documents")
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
     protected $trafficArea;
@@ -112,7 +112,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="file_extension", referencedColumnName="id", nullable=false)
      */
     protected $fileExtension;
@@ -122,7 +122,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $documentSubCategory;
@@ -132,7 +132,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="documents")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -142,7 +142,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="documents")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -152,7 +152,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Email", mappedBy="documents", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Email", mappedBy="documents")
      */
     protected $emails;
 
