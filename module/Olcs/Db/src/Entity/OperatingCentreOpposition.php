@@ -25,9 +25,9 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OperatingCentreManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -37,7 +37,7 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
      */
     protected $opposition;

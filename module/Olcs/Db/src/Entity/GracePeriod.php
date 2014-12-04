@@ -34,24 +34,24 @@ class GracePeriod implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Period type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
-     */
-    protected $periodType;
-
-    /**
      * Assigned to user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
      */
     protected $assignedToUser;
+
+    /**
+     * Period type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
+     */
+    protected $periodType;
 
     /**
      * Is active
@@ -90,29 +90,6 @@ class GracePeriod implements Interfaces\EntityInterface
     protected $gracePeriodNo = 1;
 
     /**
-     * Set the period type
-     *
-     * @param \Olcs\Db\Entity\RefData $periodType
-     * @return GracePeriod
-     */
-    public function setPeriodType($periodType)
-    {
-        $this->periodType = $periodType;
-
-        return $this;
-    }
-
-    /**
-     * Get the period type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPeriodType()
-    {
-        return $this->periodType;
-    }
-
-    /**
      * Set the assigned to user
      *
      * @param \Olcs\Db\Entity\User $assignedToUser
@@ -133,6 +110,29 @@ class GracePeriod implements Interfaces\EntityInterface
     public function getAssignedToUser()
     {
         return $this->assignedToUser;
+    }
+
+    /**
+     * Set the period type
+     *
+     * @param \Olcs\Db\Entity\RefData $periodType
+     * @return GracePeriod
+     */
+    public function setPeriodType($periodType)
+    {
+        $this->periodType = $periodType;
+
+        return $this;
+    }
+
+    /**
+     * Get the period type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPeriodType()
+    {
+        return $this->periodType;
     }
 
     /**

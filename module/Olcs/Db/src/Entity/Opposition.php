@@ -38,11 +38,21 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Opposition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $oppositionType;
+
+    /**
      * Opposer
      *
      * @var \Olcs\Db\Entity\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer", fetch="LAZY")
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
      */
     protected $opposer;
@@ -52,20 +62,10 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="oppositions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="oppositions")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Opposition type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
-     */
-    protected $oppositionType;
 
     /**
      * Is copied
@@ -158,6 +158,29 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the opposition type
+     *
+     * @param \Olcs\Db\Entity\RefData $oppositionType
+     * @return Opposition
+     */
+    public function setOppositionType($oppositionType)
+    {
+        $this->oppositionType = $oppositionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getOppositionType()
+    {
+        return $this->oppositionType;
+    }
+
+    /**
      * Set the opposer
      *
      * @param \Olcs\Db\Entity\Opposer $opposer
@@ -201,29 +224,6 @@ class Opposition implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the opposition type
-     *
-     * @param \Olcs\Db\Entity\RefData $oppositionType
-     * @return Opposition
-     */
-    public function setOppositionType($oppositionType)
-    {
-        $this->oppositionType = $oppositionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getOppositionType()
-    {
-        return $this->oppositionType;
     }
 
     /**

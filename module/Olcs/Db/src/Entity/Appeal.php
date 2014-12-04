@@ -26,9 +26,9 @@ class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OutcomeManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\OutcomeManyToOne,
         Traits\HearingDateField,
         Traits\DecisionDateField,
         Traits\WithdrawnDateField,
@@ -41,7 +41,7 @@ class Appeal implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      */
     protected $reason;
@@ -51,7 +51,7 @@ class Appeal implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="appeals")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="appeals")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;

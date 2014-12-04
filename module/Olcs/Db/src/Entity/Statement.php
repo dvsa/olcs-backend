@@ -27,8 +27,8 @@ class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\IssuedDateField,
@@ -41,7 +41,7 @@ class Statement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=true)
      */
     protected $contactType;
@@ -51,7 +51,7 @@ class Statement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
      */
     protected $statementType;
@@ -61,7 +61,7 @@ class Statement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
      * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
      */
     protected $requestorsAddress;

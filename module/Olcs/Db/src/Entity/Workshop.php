@@ -25,9 +25,9 @@ class Workshop implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\ContactDetailsManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\ContactDetailsManyToOne,
         Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -38,7 +38,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="workshops")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="workshops")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;

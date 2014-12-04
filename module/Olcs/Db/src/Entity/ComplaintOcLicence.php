@@ -39,7 +39,7 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Complaint
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Complaint")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Complaint", fetch="LAZY")
      * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
      */
     protected $complaint;
