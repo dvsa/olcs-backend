@@ -489,7 +489,7 @@ VALUES
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`,
 `is_mlh`, `type`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,'B',1,3,'1234567','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (1,'B',1,3,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
     (30,'C',1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
     (41,'D',0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
     (54,'F',3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),

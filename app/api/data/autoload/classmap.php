@@ -99,6 +99,8 @@ return array(
     'Doctrine\Common\EventArgs' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/EventArgs.php',
     'Doctrine\Common\EventManager' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/EventManager.php',
     'Doctrine\Common\EventSubscriber' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/EventSubscriber.php',
+    'Doctrine\Common\Inflector\Inflector' => $rootPath . '/vendor/doctrine/inflector/lib/Doctrine/Common/Inflector'
+        . '/Inflector.php',
     'Doctrine\Common\Lexer' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Lexer.php',
     'Doctrine\Common\Lexer\AbstractLexer' => $rootPath . '/vendor/doctrine/lexer/lib/Doctrine/Common/Lexer'
         . '/AbstractLexer.php',
@@ -118,10 +120,14 @@ return array(
         . '/Common/Persistence/Mapping/Driver/MappingDriver.php',
     'Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain' => $rootPath . '/vendor/doctrine/common/lib'
         . '/Doctrine/Common/Persistence/Mapping/Driver/MappingDriverChain.php',
+    'Doctrine\Common\Persistence\Mapping\MappingException' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common'
+        . '/Persistence/Mapping/MappingException.php',
     'Doctrine\Common\Persistence\Mapping\ReflectionService' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common'
         . '/Persistence/Mapping/ReflectionService.php',
     'Doctrine\Common\Persistence\Mapping\RuntimeReflectionService' => $rootPath . '/vendor/doctrine/common/lib/Doctrine'
         . '/Common/Persistence/Mapping/RuntimeReflectionService.php',
+    'Doctrine\Common\Persistence\Mapping\StaticReflectionService' => $rootPath . '/vendor/doctrine/common/lib/Doctrine'
+        . '/Common/Persistence/Mapping/StaticReflectionService.php',
     'Doctrine\Common\Persistence\ObjectManager' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Persistence'
         . '/ObjectManager.php',
     'Doctrine\Common\Persistence\ObjectRepository' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common'
@@ -138,18 +144,24 @@ return array(
     'Doctrine\Common\Proxy\ProxyGenerator' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Proxy'
         . '/ProxyGenerator.php',
     'Doctrine\Common\Util\ClassUtils' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Util/ClassUtils.php',
+    'Doctrine\Common\Util\Inflector' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Util/Inflector.php',
     'Doctrine\Common\Version' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Version.php',
     'Doctrine\DBAL\Configuration' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Configuration.php',
     'Doctrine\DBAL\Connection' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Connection.php',
+    'Doctrine\DBAL\DBALException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DBALException.php',
     'Doctrine\DBAL\Driver' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver.php',
     'Doctrine\DBAL\DriverManager' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DriverManager.php',
     'Doctrine\DBAL\Driver\AbstractMySQLDriver' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
         . '/AbstractMySQLDriver.php',
     'Doctrine\DBAL\Driver\Connection' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/Connection.php',
+    'Doctrine\DBAL\Driver\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
+        . '/DriverException.php',
     'Doctrine\DBAL\Driver\ExceptionConverterDriver' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
         . '/ExceptionConverterDriver.php',
     'Doctrine\DBAL\Driver\PDOConnection' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
         . '/PDOConnection.php',
+    'Doctrine\DBAL\Driver\PDOException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
+        . '/PDOException.php',
     'Doctrine\DBAL\Driver\PDOMySql\Driver' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOMySql'
         . '/Driver.php',
     'Doctrine\DBAL\Driver\PDOStatement' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver'
@@ -160,6 +172,18 @@ return array(
         . '/ServerInfoAwareConnection.php',
     'Doctrine\DBAL\Driver\Statement' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/Statement.php',
     'Doctrine\DBAL\Events' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Events.php',
+    'Doctrine\DBAL\Exception\ConstraintViolationException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL'
+        . '/Exception/ConstraintViolationException.php',
+    'Doctrine\DBAL\Exception\DatabaseObjectNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL'
+        . '/Exception/DatabaseObjectNotFoundException.php',
+    'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception'
+        . '/DriverException.php',
+    'Doctrine\DBAL\Exception\NotNullConstraintViolationException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine'
+        . '/DBAL/Exception/NotNullConstraintViolationException.php',
+    'Doctrine\DBAL\Exception\ServerException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception'
+        . '/ServerException.php',
+    'Doctrine\DBAL\Exception\TableNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception'
+        . '/TableNotFoundException.php',
     'Doctrine\DBAL\LockMode' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/LockMode.php',
     'Doctrine\DBAL\Migrations\Version' => false,
     'Doctrine\DBAL\Platforms\AbstractPlatform' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms'
@@ -195,6 +219,8 @@ return array(
     'Doctrine\DBAL\Schema\TableDiff' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/TableDiff.php',
     'Doctrine\DBAL\Schema\Visitor\AbstractVisitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema'
         . '/Visitor/AbstractVisitor.php',
+    'Doctrine\DBAL\Schema\Visitor\NamespaceVisitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema'
+        . '/Visitor/NamespaceVisitor.php',
     'Doctrine\DBAL\Schema\Visitor\RemoveNamespacedAssets' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL'
         . '/Schema/Visitor/RemoveNamespacedAssets.php',
     'Doctrine\DBAL\Schema\Visitor\Visitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor'
@@ -208,6 +234,7 @@ return array(
         . '/Console/Helper/ConnectionHelper.php',
     'Doctrine\DBAL\Types\ArrayType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/ArrayType.php',
     'Doctrine\DBAL\Types\BigIntType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BigIntType.php',
+    'Doctrine\DBAL\Types\BinaryType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BinaryType.php',
     'Doctrine\DBAL\Types\BlobType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BlobType.php',
     'Doctrine\DBAL\Types\BooleanType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BooleanType.php',
     'Doctrine\DBAL\Types\DateTimeType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/DateTimeType.php',
@@ -250,6 +277,8 @@ return array(
         . '/OnFlushEventArgs.php',
     'Doctrine\ORM\Event\PreFlushEventArgs' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Event'
         . '/PreFlushEventArgs.php',
+    'Doctrine\ORM\Event\PreUpdateEventArgs' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Event'
+        . '/PreUpdateEventArgs.php',
     'Doctrine\ORM\Events' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Events.php',
     'Doctrine\ORM\Id\AbstractIdGenerator' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Id'
         . '/AbstractIdGenerator.php',
@@ -261,6 +290,8 @@ return array(
         . '/Hydration/AbstractHydrator.php',
     'Doctrine\ORM\Internal\Hydration\ArrayHydrator' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Internal'
         . '/Hydration/ArrayHydrator.php',
+    'Doctrine\ORM\Internal\Hydration\ObjectHydrator' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Internal'
+        . '/Hydration/ObjectHydrator.php',
     'Doctrine\ORM\Internal\Hydration\ScalarHydrator' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Internal'
         . '/Hydration/ScalarHydrator.php',
     'Doctrine\ORM\Internal\Hydration\SimpleObjectHydrator' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM'
@@ -281,6 +312,8 @@ return array(
         . '/DefaultQuoteStrategy.php',
     'Doctrine\ORM\Mapping\Driver\AnnotationDriver' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver'
         . '/AnnotationDriver.php',
+    'Doctrine\ORM\Mapping\Driver\DatabaseDriver' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver'
+        . '/DatabaseDriver.php',
     'Doctrine\ORM\Mapping\Driver\DriverChain' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver'
         . '/DriverChain.php',
     'Doctrine\ORM\Mapping\Entity' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Entity.php',
@@ -311,6 +344,8 @@ return array(
         . '/UniqueConstraint.php',
     'Doctrine\ORM\Mapping\Version' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Version.php',
     'Doctrine\ORM\ORMException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php',
+    'Doctrine\ORM\OptimisticLockException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM'
+        . '/OptimisticLockException.php',
     'Doctrine\ORM\PersistentCollection' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/PersistentCollection.php',
     'Doctrine\ORM\Persisters\BasicEntityPersister' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Persisters'
         . '/BasicEntityPersister.php',
@@ -342,7 +377,10 @@ return array(
         . '/JoinAssociationDeclaration.php',
     'Doctrine\ORM\Query\AST\JoinAssociationPathExpression' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query'
         . '/AST/JoinAssociationPathExpression.php',
+    'Doctrine\ORM\Query\AST\Literal' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/AST/Literal.php',
     'Doctrine\ORM\Query\AST\Node' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/AST/Node.php',
+    'Doctrine\ORM\Query\AST\NullComparisonExpression' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/AST'
+        . '/NullComparisonExpression.php',
     'Doctrine\ORM\Query\AST\OrderByClause' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/AST'
         . '/OrderByClause.php',
     'Doctrine\ORM\Query\AST\OrderByItem' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/AST'
@@ -436,6 +474,16 @@ return array(
         . '/Tools/Console/Command/ValidateSchemaCommand.php',
     'Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools'
         . '/Console/Helper/EntityManagerHelper.php',
+    'Doctrine\ORM\Tools\Console\MetadataFilter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console'
+        . '/MetadataFilter.php',
+    'Doctrine\ORM\Tools\DisconnectedClassMetadataFactory' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools'
+        . '/DisconnectedClassMetadataFactory.php',
+    'Doctrine\ORM\Tools\Export\ClassMetadataExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools'
+        . '/Export/ClassMetadataExporter.php',
+    'Doctrine\ORM\Tools\Export\Driver\AbstractExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools'
+        . '/Export/Driver/AbstractExporter.php',
+    'Doctrine\ORM\Tools\Export\Driver\XmlExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Export'
+        . '/Driver/XmlExporter.php',
     'Doctrine\ORM\Tools\Pagination\CountOutputWalker' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools'
         . '/Pagination/CountOutputWalker.php',
     'Doctrine\ORM\Tools\Pagination\CountWalker' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Pagination'
@@ -492,6 +540,7 @@ return array(
         . '/SoftDeleteable/Filter/SoftDeleteableFilter.php',
     'Gedmo\SoftDeleteable\Mapping\Driver\Annotation' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo'
         . '/SoftDeleteable/Mapping/Driver/Annotation.php',
+    'Gedmo\SoftDeleteable\Mapping\Driver\Database' => false,
     'Gedmo\SoftDeleteable\Mapping\Event\Adapter\ORM' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo'
         . '/SoftDeleteable/Mapping/Event/Adapter/ORM.php',
     'Gedmo\SoftDeleteable\Mapping\Event\SoftDeleteableAdapter' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib'
@@ -508,6 +557,7 @@ return array(
         . '/Entity/Translation.php',
     'Gedmo\Translatable\Mapping\Driver\Annotation' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo'
         . '/Translatable/Mapping/Driver/Annotation.php',
+    'Gedmo\Translatable\Mapping\Driver\Database' => false,
     'Gedmo\Translatable\Mapping\Event\Adapter\ORM' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo'
         . '/Translatable/Mapping/Event/Adapter/ORM.php',
     'Gedmo\Translatable\Mapping\Event\TranslatableAdapter' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo'
@@ -577,179 +627,17 @@ return array(
     'OlcsTest\Db\Entity\Abstracts\EntityTester' => $rootPath . '/test/module/Olcs/Db/src//Entity/Abstracts'
         . '/EntityTester.php',
     'OlcsTest\Db\Service\Stub\EntityStub' => false,
-    'Mockery\CountValidator\Exact' => $rootPath . '/vendor/mockery/mockery/library/Mockery/CountValidator/Exact.php',
-    'Mockery\CountValidator\CountValidatorAbstract' => $rootPath . '/vendor/mockery/mockery/library/Mockery/CountValidator/CountValidatorAbstract.php',
-    'Olcs\Db\Service\Cases' => false,
-    'Olcs\Db\Entity\View\Cases' => false,
-    'Olcs\Db\Service\CompanySubsidiary' => false,
-    'Olcs\Db\Entity\View\CompanySubsidiary' => false,
-    'Zend\Filter\Word\CamelCaseToSeparator' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter/Word/CamelCaseToSeparator.php',
-    'Zend\Console\Request' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Console/Request.php',
-    'Zend\Console\Response' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Console/Response.php',
-    'Zend\Mvc\Service\ConsoleViewManagerFactory' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/Service/ConsoleViewManagerFactory.php',
-    'Zend\Mvc\View\Console\ViewManager' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/ViewManager.php',
-    'Zend\Mvc\Router\Console\SimpleRouteStack' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/Router/Console/SimpleRouteStack.php',
-    'DoctrineModule\Service\SymfonyCliRouteFactory' => $rootPath . '/vendor/doctrine/doctrine-module/src/DoctrineModule/Service/SymfonyCliRouteFactory.php',
-    'DoctrineModule\Service\CliFactory' => $rootPath . '/vendor/doctrine/doctrine-module/src/DoctrineModule/Service/CliFactory.php',
-    'Symfony\Component\Console\Application' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Application.php',
-    'Symfony\Component\Console\Helper\HelperSet' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/HelperSet.php',
-    'Symfony\Component\Console\Helper\FormatterHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/FormatterHelper.php',
-    'Symfony\Component\Console\Helper\Helper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/Helper.php',
-    'Symfony\Component\Console\Helper\HelperInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/HelperInterface.php',
-    'Symfony\Component\Console\Helper\DialogHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/DialogHelper.php',
-    'Symfony\Component\Console\Helper\InputAwareHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/InputAwareHelper.php',
-    'Symfony\Component\Console\Input\InputAwareInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/InputAwareInterface.php',
-    'Symfony\Component\Console\Helper\ProgressHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/ProgressHelper.php',
-    'Symfony\Component\Console\Helper\TableHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/TableHelper.php',
-    'Symfony\Component\Console\Helper\Table' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/Table.php',
-    'Symfony\Component\Console\Output\NullOutput' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/NullOutput.php',
-    'Symfony\Component\Console\Output\OutputInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/OutputInterface.php',
-    'Symfony\Component\Console\Helper\TableStyle' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/TableStyle.php',
-    'Symfony\Component\Console\Helper\DebugFormatterHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/DebugFormatterHelper.php',
-    'Symfony\Component\Console\Helper\ProcessHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/ProcessHelper.php',
-    'Symfony\Component\Console\Helper\QuestionHelper' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Helper/QuestionHelper.php',
-    'Symfony\Component\Console\Input\InputDefinition' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/InputDefinition.php',
-    'Symfony\Component\Console\Input\InputArgument' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/InputArgument.php',
-    'Symfony\Component\Console\Input\InputOption' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/InputOption.php',
-    'Symfony\Component\Console\Command\HelpCommand' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Command/HelpCommand.php',
-    'Symfony\Component\Console\Command\Command' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Command/Command.php',
-    'Symfony\Component\Console\Command\ListCommand' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Command/ListCommand.php',
-    'DoctrineModule\Version' => $rootPath . '/vendor/doctrine/doctrine-module/src/DoctrineModule/Version.php',
-    'Doctrine\DBAL\Migrations\Version' => false,
-    'Doctrine\DBAL\Tools\Console\Command\RunSqlCommand' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Tools/Console/Command/RunSqlCommand.php',
-    'Doctrine\DBAL\Tools\Console\Command\ImportCommand' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Tools/Console/Command/ImportCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ClearCache/MetadataCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ClearCache/ResultCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ClearCache/QueryCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/SchemaTool/CreateCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\SchemaTool\AbstractCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/SchemaTool/AbstractCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/SchemaTool/UpdateCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/SchemaTool/DropCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/EnsureProductionSettingsCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ConvertDoctrine1SchemaCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/GenerateRepositoriesCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/GenerateEntitiesCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/GenerateProxiesCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ConvertMappingCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\RunDqlCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/RunDqlCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/ValidateSchemaCommand.php',
-    'Doctrine\ORM\Tools\Console\Command\InfoCommand' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/InfoCommand.php',
-    'Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Tools/Console/Helper/ConnectionHelper.php',
-    'Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Helper/EntityManagerHelper.php',
-    'DoctrineModule\Mvc\Router\Console\SymfonyCli' => $rootPath . '/vendor/doctrine/doctrine-module/src/DoctrineModule/Mvc/Router/Console/SymfonyCli.php',
-    'Zend\Mvc\Router\Console\RouteInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/Router/Console/RouteInterface.php',
-    'Zend\Mvc\View\Console\RouteNotFoundStrategy' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/RouteNotFoundStrategy.php',
-    'Zend\Mvc\View\Console\ExceptionStrategy' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/ExceptionStrategy.php',
-    'Zend\Mvc\View\Console\DefaultRenderingStrategy' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/DefaultRenderingStrategy.php',
-    'Zend\Mvc\View\Console\CreateViewModelListener' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/CreateViewModelListener.php',
-    'Zend\Mvc\View\Console\InjectViewModelListener' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/InjectViewModelListener.php',
-    'Zend\Mvc\View\Console\InjectNamedConsoleParamsListener' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/View/Console/InjectNamedConsoleParamsListener.php',
-    'Symfony\Component\Console\Input\ArgvInput' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/ArgvInput.php',
-    'Symfony\Component\Console\Input\Input' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/Input.php',
-    'Symfony\Component\Console\Input\InputInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Input/InputInterface.php',
-    'Symfony\Component\Console\Output\ConsoleOutput' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/ConsoleOutput.php',
-    'Symfony\Component\Console\Output\StreamOutput' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/StreamOutput.php',
-    'Symfony\Component\Console\Output\Output' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/Output.php',
-    'Symfony\Component\Console\Output\ConsoleOutputInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Output/ConsoleOutputInterface.php',
-    'Symfony\Component\Console\Formatter\OutputFormatter' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Formatter/OutputFormatter.php',
-    'Symfony\Component\Console\Formatter\OutputFormatterInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Formatter/OutputFormatterInterface.php',
-    'Symfony\Component\Console\Formatter\OutputFormatterStyle' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Formatter/OutputFormatterStyle.php',
-    'Symfony\Component\Console\Formatter\OutputFormatterStyleInterface' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Formatter/OutputFormatterStyleInterface.php',
-    'Symfony\Component\Console\Formatter\OutputFormatterStyleStack' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console/Formatter/OutputFormatterStyleStack.php',
-    'Doctrine\ORM\Mapping\Driver\DatabaseDriver' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DatabaseDriver.php',
-    'Doctrine\DBAL\Schema\MySqlSchemaManager' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/MySqlSchemaManager.php',
-    'Doctrine\DBAL\Schema\AbstractSchemaManager' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/AbstractSchemaManager.php',
-    'Doctrine\ORM\Tools\DisconnectedClassMetadataFactory' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/DisconnectedClassMetadataFactory.php',
-    'Doctrine\DBAL\Types\ArrayType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/ArrayType.php',
-    'Doctrine\DBAL\Types\SimpleArrayType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/SimpleArrayType.php',
-    'Doctrine\DBAL\Types\JsonArrayType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/JsonArrayType.php',
-    'Doctrine\DBAL\Types\ObjectType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/ObjectType.php',
-    'Doctrine\DBAL\Types\SmallIntType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/SmallIntType.php',
-    'Doctrine\DBAL\Types\DateTimeTzType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/DateTimeTzType.php',
-    'Doctrine\DBAL\Types\TimeType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/TimeType.php',
-    'Doctrine\DBAL\Types\FloatType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/FloatType.php',
-    'Doctrine\DBAL\Types\BinaryType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BinaryType.php',
-    'Doctrine\DBAL\Types\BlobType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/BlobType.php',
-    'Doctrine\DBAL\Types\GuidType' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/GuidType.php',
-    'Doctrine\DBAL\Schema\Column' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Column.php',
-    'Doctrine\DBAL\Platforms\Keywords\MySQLKeywords' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/Keywords/MySQLKeywords.php',
-    'Doctrine\DBAL\Platforms\Keywords\KeywordList' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/Keywords/KeywordList.php',
-    'Doctrine\DBAL\Schema\Identifier' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Identifier.php',
-    'Doctrine\Common\Util\Inflector' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Util/Inflector.php',
-    'Doctrine\Common\Inflector\Inflector' => $rootPath . '/vendor/doctrine/inflector/lib/Doctrine/Common/Inflector/Inflector.php',
-    'Doctrine\Common\Persistence\Mapping\StaticReflectionService' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Persistence/Mapping/StaticReflectionService.php',
-    'Gedmo\SoftDeleteable\Mapping\Driver\Database' => false,
-    'Gedmo\Translatable\Mapping\Driver\Database' => false,
-    'Doctrine\ORM\Tools\Console\MetadataFilter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/MetadataFilter.php',
-    'Doctrine\ORM\Tools\Export\ClassMetadataExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Export/ClassMetadataExporter.php',
-    'Doctrine\ORM\Tools\Export\Driver\XmlExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Export/Driver/XmlExporter.php',
-    'Doctrine\ORM\Tools\Export\Driver\AbstractExporter' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Export/Driver/AbstractExporter.php',
-    'Olcs\Db\Entity\Traits\CloseDateField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/CloseDateField.php',
-    'Olcs\Db\Entity\Traits\RoleManyToOne' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/RoleManyToOne.php',
-    'package' => false,
-    'author' => false,
-    'license' => false,
-    'Doctrine\ORM\Tools\SchemaTool' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/SchemaTool.php',
-    'Doctrine\DBAL\Schema\Schema' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Schema.php',
-    'Doctrine\DBAL\Schema\SchemaConfig' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/SchemaConfig.php',
-    'Doctrine\ORM\Tools\ToolEvents' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/ToolEvents.php',
-    'Doctrine\DBAL\Schema\Visitor\RemoveNamespacedAssets' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor/RemoveNamespacedAssets.php',
-    'Doctrine\DBAL\Schema\Visitor\AbstractVisitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor/AbstractVisitor.php',
-    'Doctrine\DBAL\Schema\Visitor\Visitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor/Visitor.php',
-    'Doctrine\DBAL\Schema\Visitor\NamespaceVisitor' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Visitor/NamespaceVisitor.php',
-    'Doctrine\DBAL\Schema\Comparator' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/Comparator.php',
-    'Doctrine\DBAL\Schema\SchemaDiff' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Schema/SchemaDiff.php',
-    'Olcs\Db\Entity\Traits\Forename35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/Forename35Field.php',
-    'Olcs\Db\Entity\Traits\FamilyName35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/FamilyName35Field.php',
-    'Doctrine\Common\Persistence\Mapping\MappingException' => $rootPath . '/vendor/doctrine/common/lib/Doctrine/Common/Persistence/Mapping/MappingException.php',
-    'Olcs\Db\Entity\HintQuestion' => $rootPath . '/module/Olcs/Db/src/Entity/HintQuestion.php',
-    'Olcs\Db\Service\Prohibition' => false,
-    'Olcs\Db\Entity\View\Prohibition' => false,
-    'Olcs\Db\Service\Complaint' => false,
-    'Olcs\Db\Entity\View\Complaint' => false,
-    'Olcs\Db\Service\ConditionUndertaking' => false,
-    'Olcs\Db\Entity\View\ConditionUndertaking' => false,
-    'Olcs\Db\Service\OrganisationNatureOfBusiness' => false,
-    'Olcs\Db\Entity\View\OrganisationNatureOfBusiness' => false,
-    'Olcs\Db\Service\TransportManager' => false,
-    'Olcs\Db\Entity\View\TransportManager' => false,
-    'Olcs\Db\Service\ContactDetails' => false,
-    'Olcs\Db\Entity\View\ContactDetails' => false,
-    'Doctrine\DBAL\Driver\PDOException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOException.php',
-    'Doctrine\DBAL\Driver\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/DriverException.php',
-    'Doctrine\DBAL\DBALException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DBALException.php',
-    'Doctrine\DBAL\Exception\NotNullConstraintViolationException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/NotNullConstraintViolationException.php',
-    'Doctrine\DBAL\Exception\ConstraintViolationException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/ConstraintViolationException.php',
-    'Doctrine\DBAL\Exception\ServerException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/ServerException.php',
-    'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DriverException.php',
-    'Olcs\Db\Service\Address' => false,
-    'Olcs\Db\Entity\View\Address' => false,
-    'Olcs\Db\Service\OrganisationPerson' => false,
-    'Olcs\Db\Entity\View\OrganisationPerson' => false,
-    'Doctrine\ORM\Query\QueryException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php',
-    'Doctrine\ORM\ORMException' => $rootPath . '/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php',
-    'Olcs\Db\Service\Submission' => false,
-    'Olcs\Db\Entity\View\Submission' => false,
-    'Olcs\Db\Service\SubmissionSectionComment' => false,
-    'Olcs\Db\Entity\View\SubmissionSectionComment' => false,
-    'Doctrine\DBAL\Driver\PDOException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOException.php',
-    'Doctrine\DBAL\Driver\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/DriverException.php',
-    'Doctrine\DBAL\DBALException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/DBALException.php',
-    'Doctrine\DBAL\Exception\TableNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/TableNotFoundException.php',
-    'Doctrine\DBAL\Exception\DatabaseObjectNotFoundException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DatabaseObjectNotFoundException.php',
-    'Doctrine\DBAL\Exception\ServerException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/ServerException.php',
-    'Doctrine\DBAL\Exception\DriverException' => $rootPath . '/vendor/doctrine/dbal/lib/Doctrine/DBAL/Exception/DriverException.php',
-    'Olcs\Db\Service\ProposeToRevoke' => false,
-    'Olcs\Db\Entity\View\ProposeToRevoke' => false,
-    'Olcs\Db\Service\Note' => false,
-    'Olcs\Db\Entity\View\Note' => false,
     'OlcsTest\Db\Service\Stubs\EntityStub' => $rootPath . '/test/module/Olcs/Db/src//Service/Stubs/EntityStub.php',
+    'Olcs\Db\Entity\HintQuestion' => $rootPath . '/module/Olcs/Db/src/Entity/HintQuestion.php',
     'Olcs\Db\Entity\Traits\Action1Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/Action1Field.php',
     'Olcs\Db\Entity\Traits\AdPlacedDateField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/AdPlacedDateField.php',
     'Olcs\Db\Entity\Traits\AdPlacedField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/AdPlacedField.php',
     'Olcs\Db\Entity\Traits\AdPlacedIn70Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/AdPlacedIn70Field.php',
     'Olcs\Db\Entity\Traits\CategoryText1024Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits'
         . '/CategoryText1024Field.php',
+    'Olcs\Db\Entity\Traits\CloseDateField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/CloseDateField.php',
+    'Olcs\Db\Entity\Traits\FamilyName35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/FamilyName35Field.php',
+    'Olcs\Db\Entity\Traits\Forename35Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/Forename35Field.php',
     'Olcs\Db\Entity\Traits\GrantedDateField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/GrantedDateField.php',
     'Olcs\Db\Entity\Traits\IsCancelledField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/IsCancelledField.php',
     'Olcs\Db\Entity\Traits\IsInterimField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/IsInterimField.php',
@@ -764,6 +652,7 @@ return array(
     'Olcs\Db\Entity\Traits\NoOfVehiclesRequiredField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits'
         . '/NoOfVehiclesRequiredField.php',
     'Olcs\Db\Entity\Traits\PermissionField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/PermissionField.php',
+    'Olcs\Db\Entity\Traits\RoleManyToOne' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/RoleManyToOne.php',
     'Olcs\Db\Entity\Traits\ServiceNo70Field' => $rootPath . '/module/Olcs/Db/src/Entity/Traits/ServiceNo70Field.php',
     'Olcs\Db\Entity\Traits\TotAuthLargeVehiclesField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits'
         . '/TotAuthLargeVehiclesField.php',
@@ -777,27 +666,89 @@ return array(
         . '/TotAuthVehiclesField.php',
     'Olcs\Db\Entity\Traits\TotCommunityLicencesField' => $rootPath . '/module/Olcs/Db/src/Entity/Traits'
         . '/TotCommunityLicencesField.php',
+    'Olcs\Db\Entity\View\Address' => false,
     'Olcs\Db\Entity\View\Application' => false,
     'Olcs\Db\Entity\View\ApplicationCompletion' => false,
+    'Olcs\Db\Entity\View\ApplicationOperatingCentre' => false,
+    'Olcs\Db\Entity\View\Cases' => false,
     'Olcs\Db\Entity\View\Category' => false,
+    'Olcs\Db\Entity\View\CompanySubsidiary' => false,
+    'Olcs\Db\Entity\View\Complaint' => false,
+    'Olcs\Db\Entity\View\ConditionUndertaking' => false,
+    'Olcs\Db\Entity\View\ContactDetails' => false,
+    'Olcs\Db\Entity\View\Country' => false,
+    'Olcs\Db\Entity\View\DocumentSubCategory' => false,
+    'Olcs\Db\Entity\View\Fee' => false,
+    'Olcs\Db\Entity\View\FeeType' => false,
+    'Olcs\Db\Entity\View\GoodsDisc' => false,
+    'Olcs\Db\Entity\View\LicenceNoGen' => false,
+    'Olcs\Db\Entity\View\LicenceOperatingCentre' => false,
+    'Olcs\Db\Entity\View\LicenceVehicle' => false,
+    'Olcs\Db\Entity\View\Note' => false,
+    'Olcs\Db\Entity\View\OperatingCentre' => false,
     'Olcs\Db\Entity\View\Organisation' => false,
     'Olcs\Db\Entity\View\OrganisationNatureOfBusiness' => false,
     'Olcs\Db\Entity\View\OrganisationPerson' => false,
+    'Olcs\Db\Entity\View\OrganisationUser' => false,
+    'Olcs\Db\Entity\View\PhoneContact' => false,
+    'Olcs\Db\Entity\View\PreviousConviction' => false,
+    'Olcs\Db\Entity\View\PreviousLicence' => false,
+    'Olcs\Db\Entity\View\Prohibition' => false,
+    'Olcs\Db\Entity\View\ProposeToRevoke' => false,
+    'Olcs\Db\Entity\View\Submission' => false,
+    'Olcs\Db\Entity\View\SubmissionSectionComment' => false,
+    'Olcs\Db\Entity\View\Task' => false,
     'Olcs\Db\Entity\View\TaskSubCategory' => false,
     'Olcs\Db\Entity\View\Team' => false,
+    'Olcs\Db\Entity\View\TradingName' => false,
+    'Olcs\Db\Entity\View\TrafficArea' => false,
+    'Olcs\Db\Entity\View\TransportManager' => false,
     'Olcs\Db\Entity\View\User' => false,
+    'Olcs\Db\Entity\View\Vehicle' => false,
+    'Olcs\Db\Entity\View\Workshop' => false,
     'Olcs\Db\Module' => false,
+    'Olcs\Db\Service\Address' => false,
     'Olcs\Db\Service\Application' => false,
     'Olcs\Db\Service\ApplicationCompletion' => false,
+    'Olcs\Db\Service\ApplicationOperatingCentre' => false,
+    'Olcs\Db\Service\Cases' => false,
     'Olcs\Db\Service\Category' => false,
+    'Olcs\Db\Service\CompanySubsidiary' => false,
+    'Olcs\Db\Service\Complaint' => false,
+    'Olcs\Db\Service\ConditionUndertaking' => false,
+    'Olcs\Db\Service\ContactDetails' => false,
+    'Olcs\Db\Service\Country' => false,
+    'Olcs\Db\Service\DocumentSubCategory' => false,
+    'Olcs\Db\Service\Fee' => false,
+    'Olcs\Db\Service\FeeType' => false,
+    'Olcs\Db\Service\GoodsDisc' => false,
+    'Olcs\Db\Service\LicenceNoGen' => false,
+    'Olcs\Db\Service\LicenceOperatingCentre' => false,
+    'Olcs\Db\Service\LicenceVehicle' => false,
     'Olcs\Db\Service\MISSING' => false,
+    'Olcs\Db\Service\Note' => false,
+    'Olcs\Db\Service\OperatingCentre' => false,
     'Olcs\Db\Service\Organisation' => false,
     'Olcs\Db\Service\OrganisationNatureOfBusiness' => false,
     'Olcs\Db\Service\OrganisationPerson' => false,
+    'Olcs\Db\Service\OrganisationUser' => false,
+    'Olcs\Db\Service\PhoneContact' => false,
+    'Olcs\Db\Service\PreviousConviction' => false,
+    'Olcs\Db\Service\PreviousLicence' => false,
+    'Olcs\Db\Service\Prohibition' => false,
+    'Olcs\Db\Service\ProposeToRevoke' => false,
+    'Olcs\Db\Service\Submission' => false,
+    'Olcs\Db\Service\SubmissionSectionComment' => false,
+    'Olcs\Db\Service\Task' => false,
     'Olcs\Db\Service\TaskSearchView' => false,
     'Olcs\Db\Service\TaskSubCategory' => false,
     'Olcs\Db\Service\Team' => false,
+    'Olcs\Db\Service\TradingName' => false,
+    'Olcs\Db\Service\TrafficArea' => false,
+    'Olcs\Db\Service\TransportManager' => false,
     'Olcs\Db\Service\User' => false,
+    'Olcs\Db\Service\Vehicle' => false,
+    'Olcs\Db\Service\Workshop' => false,
     'Olcs\Logging\Helper\LogError' => $rootPath . '/vendor/olcs/olcs-logging/src/Helper/LogError.php',
     'Olcs\Logging\Helper\LogException' => $rootPath . '/vendor/olcs/olcs-logging/src/Helper/LogException.php',
     'Olcs\Logging\Listener\LogError' => $rootPath . '/vendor/olcs/olcs-logging/src/Listener/LogError.php',
@@ -920,6 +871,7 @@ return array(
         . '/EventManager/StaticEventManager.php',
     'Zend\Filter\AbstractFilter' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter'
         . '/AbstractFilter.php',
+    'Zend\Filter\FilterChain' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter/FilterChain.php',
     'Zend\Filter\FilterInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter'
         . '/FilterInterface.php',
     'Zend\Filter\FilterPluginManager' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Filter'
@@ -940,7 +892,28 @@ return array(
         . '/HelperConfig.php',
     'Zend\Http\AbstractMessage' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
         . '/AbstractMessage.php',
+    'Zend\Http\Client' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Client.php',
+    'Zend\Http\Client\Adapter\AdapterInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
+        . '/Client/Adapter/AdapterInterface.php',
+    'Zend\Http\Client\Adapter\Exception\ExceptionInterface' => $rootPath . '/vendor/zendframework/zendframework/library'
+        . '/Zend/Http/Client/Adapter/Exception/ExceptionInterface.php',
+    'Zend\Http\Client\Adapter\Exception\RuntimeException' => $rootPath . '/vendor/zendframework/zendframework/library'
+        . '/Zend/Http/Client/Adapter/Exception/RuntimeException.php',
+    'Zend\Http\Client\Adapter\Socket' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Client'
+        . '/Adapter/Socket.php',
+    'Zend\Http\Client\Adapter\StreamInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
+        . '/Client/Adapter/StreamInterface.php',
+    'Zend\Http\Client\Exception\ExceptionInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend'
+        . '/Http/Client/Exception/ExceptionInterface.php',
+    'Zend\Http\Client\Exception\RuntimeException' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
+        . '/Client/Exception/RuntimeException.php',
+    'Zend\Http\Exception\ExceptionInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
+        . '/Exception/ExceptionInterface.php',
+    'Zend\Http\Exception\RuntimeException' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http'
+        . '/Exception/RuntimeException.php',
     'Zend\Http\HeaderLoader' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/HeaderLoader.php',
+    'Zend\Http\Header\Connection' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Header'
+        . '/Connection.php',
     'Zend\Http\Header\ContentType' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Header'
         . '/ContentType.php',
     'Zend\Http\Header\Cookie' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Header/Cookie.php',
@@ -958,8 +931,18 @@ return array(
         . '/PhpEnvironment/Response.php',
     'Zend\Http\Request' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Request.php',
     'Zend\Http\Response' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Http/Response.php',
+    'Zend\I18n\Translator\Translator' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/I18n/Translator'
+        . '/Translator.php',
+    'Zend\I18n\Translator\TranslatorAwareInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend'
+        . '/I18n/Translator/TranslatorAwareInterface.php',
+    'Zend\I18n\Translator\TranslatorInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/I18n'
+        . '/Translator/TranslatorInterface.php',
     'Zend\I18n\View\HelperConfig' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/I18n/View'
         . '/HelperConfig.php',
+    'Zend\I18n\View\Helper\AbstractTranslatorHelper' => $rootPath . '/vendor/zendframework/zendframework/library/Zend'
+        . '/I18n/View/Helper/AbstractTranslatorHelper.php',
+    'Zend\I18n\View\Helper\Translate' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/I18n/View/Helper'
+        . '/Translate.php',
     'Zend\InputFilter\InputFilterPluginManager' => $rootPath . '/vendor/zendframework/zendframework/library/Zend'
         . '/InputFilter/InputFilterPluginManager.php',
     'Zend\Json\Json' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Json/Json.php',
@@ -1065,6 +1048,8 @@ return array(
         . '/DomainException.php',
     'Zend\Mvc\Exception\ExceptionInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
         . '/Exception/ExceptionInterface.php',
+    'Zend\Mvc\I18n\Translator' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc/I18n'
+        . '/Translator.php',
     'Zend\Mvc\InjectApplicationEventInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
         . '/InjectApplicationEventInterface.php',
     'Zend\Mvc\ModuleRouteListener' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
@@ -1157,6 +1142,8 @@ return array(
         . '/Service/ServiceListenerFactory.php',
     'Zend\Mvc\Service\ServiceManagerConfig' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
         . '/Service/ServiceManagerConfig.php',
+    'Zend\Mvc\Service\TranslatorServiceFactory' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
+        . '/Service/TranslatorServiceFactory.php',
     'Zend\Mvc\Service\ValidatorManagerFactory' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
         . '/Service/ValidatorManagerFactory.php',
     'Zend\Mvc\Service\ViewHelperManagerFactory' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Mvc'
@@ -1322,6 +1309,8 @@ return array(
     'Zend\Validator\Ip' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Validator/Ip.php',
     'Zend\Validator\Translator\TranslatorAwareInterface' => $rootPath . '/vendor/zendframework/zendframework/library'
         . '/Zend/Validator/Translator/TranslatorAwareInterface.php',
+    'Zend\Validator\Translator\TranslatorInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend'
+        . '/Validator/Translator/TranslatorInterface.php',
     'Zend\Validator\ValidatorInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Validator'
         . '/ValidatorInterface.php',
     'Zend\Validator\ValidatorPluginManager' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/Validator'
@@ -1332,6 +1321,8 @@ return array(
         . '/AbstractHelper.php',
     'Zend\View\Helper\HelperInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/View/Helper'
         . '/HelperInterface.php',
+    'Zend\View\Helper\Placeholder' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/View/Helper'
+        . '/Placeholder.php',
     'Zend\View\Helper\ViewModel' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/View/Helper'
         . '/ViewModel.php',
     'Zend\View\Model\ClearableModelInterface' => $rootPath . '/vendor/zendframework/zendframework/library/Zend/View'

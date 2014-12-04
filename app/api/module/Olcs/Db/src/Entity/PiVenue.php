@@ -25,9 +25,9 @@ class PiVenue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\Name70Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,

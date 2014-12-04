@@ -195,11 +195,11 @@ CREATE TABLE `application` (
   `convictions_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirmation that any convictions that occur during application process will be communicated to TC.',
   `psv_operate_small_vhl` tinyint(1) DEFAULT NULL COMMENT 'The psv operator intends to operate small vehicles English and Welsh operators only.Section 15B PSV421',
   `psv_small_vhl_notes` varchar(4000) DEFAULT NULL COMMENT 'Small vehicle notes. Section 15B PSV421',
-  `psv_small_vhl_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirmation That if they operate small vehicles they agree to the conditions in the application ui form. Section 15D PSV421',
-  `psv_no_small_vhl_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Confirm vehicles with 8 passenger seats or less will not be operated on the licence. Section 15E PSV421',
-  `psv_limousines` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Are any vehicles on licence limos or novelty.Section 15F PSV421',
-  `psv_no_limousine_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'If no limos on licence user confirms they will not put any on licence. Section 15F PSV421',
-  `psv_only_limousines_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Licence is only for limos and no other vehicle types. Section 15G PSV 421',
+  `psv_small_vhl_confirmation` tinyint(1) DEFAULT NULL COMMENT 'User confirmation That if they operate small vehicles they agree to the conditions in the application ui form. Section 15D PSV421',
+  `psv_no_small_vhl_confirmation` tinyint(1) DEFAULT NULL COMMENT 'Confirm vehicles with 8 passenger seats or less will not be operated on the licence. Section 15E PSV421',
+  `psv_limousines` tinyint(1) DEFAULT NULL COMMENT 'Are any vehicles on licence limos or novelty.Section 15F PSV421',
+  `psv_no_limousine_confirmation` tinyint(1) DEFAULT NULL COMMENT 'If no limos on licence user confirms they will not put any on licence. Section 15F PSV421',
+  `psv_only_limousines_confirmation` tinyint(1) DEFAULT NULL COMMENT 'Licence is only for limos and no other vehicle types. Section 15G PSV 421',
   `interim_start` date DEFAULT NULL COMMENT 'Date interim licence is to start.',
   `interim_end` date DEFAULT NULL COMMENT 'Date interim licence is to end.',
   `interim_auth_vehicles` int(11) DEFAULT NULL COMMENT 'Number of vehicles authorised on interim licence.',
@@ -4265,11 +4265,14 @@ CREATE TABLE `payment` (
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
+  `status` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_payment_user1_idx` (`created_by`),
   KEY `fk_payment_user2_idx` (`last_modified_by`),
+  KEY `fk_payment_ref_data1_idx` (`status`),
   CONSTRAINT `fk_payment_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_payment_ref_data1` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

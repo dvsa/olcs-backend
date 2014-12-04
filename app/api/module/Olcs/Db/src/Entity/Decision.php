@@ -25,9 +25,9 @@ class Decision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\SectionCode50Field,
         Traits\Description255Field,
         Traits\IsReadOnlyField,
