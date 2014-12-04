@@ -33,16 +33,6 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Submission section
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionSection;
-
-    /**
      * Submission
      *
      * @var \Olcs\Db\Entity\Submission
@@ -53,27 +43,14 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     protected $submission;
 
     /**
-     * Set the submission section
+     * Submission section
      *
-     * @param \Olcs\Db\Entity\RefData $submissionSection
-     * @return SubmissionSectionComment
-     */
-    public function setSubmissionSection($submissionSection)
-    {
-        $this->submissionSection = $submissionSection;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission section
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
      */
-    public function getSubmissionSection()
-    {
-        return $this->submissionSection;
-    }
+    protected $submissionSection;
 
     /**
      * Set the submission
@@ -96,5 +73,28 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the submission section
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionSection
+     * @return SubmissionSectionComment
+     */
+    public function setSubmissionSection($submissionSection)
+    {
+        $this->submissionSection = $submissionSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission section
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionSection()
+    {
+        return $this->submissionSection;
     }
 }
