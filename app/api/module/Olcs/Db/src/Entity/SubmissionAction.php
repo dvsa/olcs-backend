@@ -28,59 +28,59 @@ class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CommentField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Submission
-     *
-     * @var \Olcs\Db\Entity\Submission
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionActions")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
-     */
-    protected $submission;
-
-    /**
      * Submission action status
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
      */
     protected $submissionActionStatus;
-
-    /**
-     * Sender user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $senderUser;
 
     /**
      * Recipient user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
      */
     protected $recipientUser;
+
+    /**
+     * Sender user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $senderUser;
+
+    /**
+     * Submission
+     *
+     * @var \Olcs\Db\Entity\Submission
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionActions")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
+     */
+    protected $submission;
 
     /**
      * Reason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions", fetch="LAZY")
      * @ORM\JoinTable(name="submission_action_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
@@ -119,29 +119,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission
-     *
-     * @param \Olcs\Db\Entity\Submission $submission
-     * @return SubmissionAction
-     */
-    public function setSubmission($submission)
-    {
-        $this->submission = $submission;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission
-     *
-     * @return \Olcs\Db\Entity\Submission
-     */
-    public function getSubmission()
-    {
-        return $this->submission;
-    }
-
-    /**
      * Set the submission action status
      *
      * @param \Olcs\Db\Entity\RefData $submissionActionStatus
@@ -162,6 +139,29 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSubmissionActionStatus()
     {
         return $this->submissionActionStatus;
+    }
+
+    /**
+     * Set the recipient user
+     *
+     * @param \Olcs\Db\Entity\User $recipientUser
+     * @return SubmissionAction
+     */
+    public function setRecipientUser($recipientUser)
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the recipient user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRecipientUser()
+    {
+        return $this->recipientUser;
     }
 
     /**
@@ -188,26 +188,26 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the recipient user
+     * Set the submission
      *
-     * @param \Olcs\Db\Entity\User $recipientUser
+     * @param \Olcs\Db\Entity\Submission $submission
      * @return SubmissionAction
      */
-    public function setRecipientUser($recipientUser)
+    public function setSubmission($submission)
     {
-        $this->recipientUser = $recipientUser;
+        $this->submission = $submission;
 
         return $this;
     }
 
     /**
-     * Get the recipient user
+     * Get the submission
      *
-     * @return \Olcs\Db\Entity\User
+     * @return \Olcs\Db\Entity\Submission
      */
-    public function getRecipientUser()
+    public function getSubmission()
     {
-        return $this->recipientUser;
+        return $this->submission;
     }
 
     /**

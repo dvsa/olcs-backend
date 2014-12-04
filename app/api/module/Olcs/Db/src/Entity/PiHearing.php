@@ -27,37 +27,36 @@ class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\PiVenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOne,
+        Traits\PiVenueManyToOne,
         Traits\HearingDateField,
         Traits\PiVenueOther255Field,
         Traits\WitnessesField,
-        Traits\IsCancelledField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Presided by role
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
-     */
-    protected $presidedByRole;
 
     /**
      * Pi
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", inversedBy="piHearings")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY", inversedBy="piHearings")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
+
+    /**
+     * Presided by role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
+     */
+    protected $presidedByRole;
 
     /**
      * Presiding tc other
@@ -67,6 +66,15 @@ class PiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
      */
     protected $presidingTcOther;
+
+    /**
+     * Is cancelled
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
+     */
+    protected $isCancelled = 0;
 
     /**
      * Cancelled reason
@@ -123,29 +131,6 @@ class PiHearing implements Interfaces\EntityInterface
     protected $details;
 
     /**
-     * Set the presided by role
-     *
-     * @param \Olcs\Db\Entity\RefData $presidedByRole
-     * @return PiHearing
-     */
-    public function setPresidedByRole($presidedByRole)
-    {
-        $this->presidedByRole = $presidedByRole;
-
-        return $this;
-    }
-
-    /**
-     * Get the presided by role
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPresidedByRole()
-    {
-        return $this->presidedByRole;
-    }
-
-    /**
      * Set the pi
      *
      * @param \Olcs\Db\Entity\Pi $pi
@@ -169,6 +154,29 @@ class PiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the presided by role
+     *
+     * @param \Olcs\Db\Entity\RefData $presidedByRole
+     * @return PiHearing
+     */
+    public function setPresidedByRole($presidedByRole)
+    {
+        $this->presidedByRole = $presidedByRole;
+
+        return $this;
+    }
+
+    /**
+     * Get the presided by role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPresidedByRole()
+    {
+        return $this->presidedByRole;
+    }
+
+    /**
      * Set the presiding tc other
      *
      * @param string $presidingTcOther
@@ -189,6 +197,29 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidingTcOther()
     {
         return $this->presidingTcOther;
+    }
+
+    /**
+     * Set the is cancelled
+     *
+     * @param string $isCancelled
+     * @return PiHearing
+     */
+    public function setIsCancelled($isCancelled)
+    {
+        $this->isCancelled = $isCancelled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is cancelled
+     *
+     * @return string
+     */
+    public function getIsCancelled()
+    {
+        return $this->isCancelled;
     }
 
     /**

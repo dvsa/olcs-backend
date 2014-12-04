@@ -36,7 +36,7 @@ class OppositionGrounds implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="grounds", referencedColumnName="id", nullable=false)
      */
     protected $grounds;
@@ -46,7 +46,7 @@ class OppositionGrounds implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="grounds")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="grounds")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
      */
     protected $opposition;

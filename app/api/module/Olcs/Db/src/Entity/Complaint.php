@@ -30,6 +30,7 @@ class Complaint implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\CaseManyToOne,
+        Traits\StatusManyToOneAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\Vrm20Field,
         Traits\CustomDeletedDateField,
@@ -38,21 +39,11 @@ class Complaint implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
-     */
-    protected $status;
-
-    /**
      * Complaint type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="complaint_type", referencedColumnName="id", nullable=true)
      */
     protected $complaintType;
@@ -110,29 +101,6 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="driver_family_name", length=40, nullable=true)
      */
     protected $driverFamilyName;
-
-    /**
-     * Set the status
-     *
-     * @param \Olcs\Db\Entity\RefData $status
-     * @return Complaint
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
 
     /**
      * Set the complaint type

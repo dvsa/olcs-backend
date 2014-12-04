@@ -42,7 +42,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
@@ -52,7 +52,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="data_snapshot", nullable=true)
+     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
      */
     protected $dataSnapshot;
 

@@ -5,11 +5,11 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Status many to one trait
+ * Status many to one alt1 trait
  *
- * Auto-Generated (Shared between 5 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
-trait StatusManyToOne
+trait StatusManyToOneAlt1
 {
     /**
      * Status
@@ -17,7 +17,7 @@ trait StatusManyToOne
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
     protected $status;
 

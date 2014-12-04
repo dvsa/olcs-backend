@@ -27,9 +27,9 @@ class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CategoryManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CategoryManyToOne,
         Traits\DocumentManyToOne,
         Traits\Description255Field,
         Traits\CustomCreatedOnField,
@@ -41,7 +41,7 @@ class DocTemplate implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $documentSubCategory;

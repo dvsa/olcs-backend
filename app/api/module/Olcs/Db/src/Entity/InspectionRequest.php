@@ -32,43 +32,43 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\TaskManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\TaskManyToOne,
         Traits\CaseManyToOne,
         Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOne,
+        Traits\ApplicationManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Result type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
-     */
-    protected $resultType;
 
     /**
      * Requestor user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
      */
     protected $requestorUser;
+
+    /**
+     * Result type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     */
+    protected $resultType;
 
     /**
      * Request type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="request_type", referencedColumnName="id", nullable=false)
      */
     protected $requestType;
@@ -78,7 +78,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
      */
     protected $reportType;
@@ -88,7 +88,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="requestor_notes", nullable=true)
+     * @ORM\Column(type="text", name="requestor_notes", length=65535, nullable=true)
      */
     protected $requestorNotes;
 
@@ -97,7 +97,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="inspector_notes", nullable=true)
+     * @ORM\Column(type="text", name="inspector_notes", length=65535, nullable=true)
      */
     protected $inspectorNotes;
 
@@ -192,29 +192,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
-     * Set the result type
-     *
-     * @param \Olcs\Db\Entity\RefData $resultType
-     * @return InspectionRequest
-     */
-    public function setResultType($resultType)
-    {
-        $this->resultType = $resultType;
-
-        return $this;
-    }
-
-    /**
-     * Get the result type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getResultType()
-    {
-        return $this->resultType;
-    }
-
-    /**
      * Set the requestor user
      *
      * @param \Olcs\Db\Entity\User $requestorUser
@@ -235,6 +212,29 @@ class InspectionRequest implements Interfaces\EntityInterface
     public function getRequestorUser()
     {
         return $this->requestorUser;
+    }
+
+    /**
+     * Set the result type
+     *
+     * @param \Olcs\Db\Entity\RefData $resultType
+     * @return InspectionRequest
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+
+        return $this;
+    }
+
+    /**
+     * Get the result type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
     }
 
     /**

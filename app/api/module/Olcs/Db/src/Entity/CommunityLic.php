@@ -28,7 +28,6 @@ class CommunityLic implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LicenceManyToOne,
-        Traits\SpecifiedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -38,7 +37,7 @@ class CommunityLic implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="com_lic_status", referencedColumnName="id", nullable=false)
      */
     protected $comLicStatus;
@@ -51,6 +50,15 @@ class CommunityLic implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="expired_date", nullable=true)
      */
     protected $expiredDate;
+
+    /**
+     * Specified date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="specified_date", nullable=true)
+     */
+    protected $specifiedDate;
 
     /**
      * Licence expired date
@@ -132,6 +140,29 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getExpiredDate()
     {
         return $this->expiredDate;
+    }
+
+    /**
+     * Set the specified date
+     *
+     * @param \DateTime $specifiedDate
+     * @return CommunityLic
+     */
+    public function setSpecifiedDate($specifiedDate)
+    {
+        $this->specifiedDate = $specifiedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the specified date
+     *
+     * @return \DateTime
+     */
+    public function getSpecifiedDate()
+    {
+        return $this->specifiedDate;
     }
 
     /**

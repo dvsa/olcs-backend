@@ -30,11 +30,11 @@ class Note implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\LicenceManyToOneAlt1,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOne,
         Traits\IrfoGvPermitManyToOne,
         Traits\ApplicationManyToOne,
@@ -47,7 +47,7 @@ class Note implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="note_type", referencedColumnName="id", nullable=false)
      */
     protected $noteType;

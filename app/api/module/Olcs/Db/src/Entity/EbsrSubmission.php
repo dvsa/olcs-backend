@@ -32,7 +32,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionType;
@@ -42,7 +42,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
      */
     protected $ebsrSubmissionStatus;
@@ -52,7 +52,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Document
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;

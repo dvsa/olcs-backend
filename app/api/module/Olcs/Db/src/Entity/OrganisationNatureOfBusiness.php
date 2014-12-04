@@ -35,47 +35,24 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="natureOfBusinesss")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
      * Ref data
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id", nullable=false)
      */
     protected $refData;
 
     /**
-     * Set the organisation
+     * Organisation
      *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return OrganisationNatureOfBusiness
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
+     * @var \Olcs\Db\Entity\Organisation
      *
-     * @return \Olcs\Db\Entity\Organisation
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="natureOfBusinesss")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
+    protected $organisation;
 
     /**
      * Set the ref data
@@ -98,5 +75,28 @@ class OrganisationNatureOfBusiness implements Interfaces\EntityInterface
     public function getRefData()
     {
         return $this->refData;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return OrganisationNatureOfBusiness
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 }

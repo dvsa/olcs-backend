@@ -34,7 +34,7 @@ class FeeManualAlteration implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pre_fee_status", referencedColumnName="id", nullable=false)
      */
     protected $preFeeStatus;
@@ -44,7 +44,7 @@ class FeeManualAlteration implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="post_fee_status", referencedColumnName="id", nullable=false)
      */
     protected $postFeeStatus;
@@ -54,7 +54,7 @@ class FeeManualAlteration implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="alteration_type", referencedColumnName="id", nullable=false)
      */
     protected $alterationType;
