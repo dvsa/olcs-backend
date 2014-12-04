@@ -6069,6 +6069,7 @@ CREATE TABLE `submission` (
   `submission_type` varchar(32) NOT NULL,
   `data_snapshot` text COMMENT 'Contains data for each submission section concatenated togather as a JSon string.',
   `closed_date` datetime DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
