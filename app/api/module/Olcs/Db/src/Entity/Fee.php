@@ -54,7 +54,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveRecommenderUser;
@@ -64,7 +64,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="waive_approver_user_id", referencedColumnName="id", nullable=true)
      */
     protected $waiveApproverUser;
@@ -74,7 +74,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
      */
     protected $paymentMethod;
@@ -84,7 +84,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="fee_status", referencedColumnName="id", nullable=false)
      */
     protected $feeStatus;
@@ -94,7 +94,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee")
      * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id", nullable=true)
      */
     protected $parentFee;
@@ -104,7 +104,7 @@ class Fee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\FeeType
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\FeeType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\FeeType")
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;

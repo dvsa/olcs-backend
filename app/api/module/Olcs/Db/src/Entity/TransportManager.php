@@ -43,7 +43,7 @@ class TransportManager implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=false)
      */
     protected $tmType;
@@ -53,7 +53,7 @@ class TransportManager implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="tm_status", referencedColumnName="id", nullable=false)
      */
     protected $tmStatus;

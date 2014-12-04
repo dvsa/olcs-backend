@@ -35,7 +35,7 @@ class Email implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id", nullable=true)
      */
     protected $lastUpdatedBy;
@@ -45,7 +45,7 @@ class Email implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Document", inversedBy="emails", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Document", inversedBy="emails")
      * @ORM\JoinTable(name="email_attachment",
      *     joinColumns={
      *         @ORM\JoinColumn(name="email_id", referencedColumnName="id")
