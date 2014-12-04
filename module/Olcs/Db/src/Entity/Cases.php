@@ -31,8 +31,8 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CloseDateField,
@@ -40,16 +40,6 @@ class Cases implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Erru case type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
-     */
-    protected $erruCaseType;
 
     /**
      * Case type
@@ -60,6 +50,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
      */
     protected $caseType;
+
+    /**
+     * Erru case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
+     */
+    protected $erruCaseType;
 
     /**
      * Licence
@@ -241,6 +241,15 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Prohibition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Prohibition", mappedBy="case")
+     */
+    protected $prohibitions;
+
+    /**
      * Serious infringement
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -269,31 +278,9 @@ class Cases implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
         $this->stays = new ArrayCollection();
-    }
-
-    /**
-     * Set the erru case type
-     *
-     * @param \Olcs\Db\Entity\RefData $erruCaseType
-     * @return Cases
-     */
-    public function setErruCaseType($erruCaseType)
-    {
-        $this->erruCaseType = $erruCaseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru case type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getErruCaseType()
-    {
-        return $this->erruCaseType;
     }
 
     /**
@@ -317,6 +304,29 @@ class Cases implements Interfaces\EntityInterface
     public function getCaseType()
     {
         return $this->caseType;
+    }
+
+    /**
+     * Set the erru case type
+     *
+     * @param \Olcs\Db\Entity\RefData $erruCaseType
+     * @return Cases
+     */
+    public function setErruCaseType($erruCaseType)
+    {
+        $this->erruCaseType = $erruCaseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getErruCaseType()
+    {
+        return $this->erruCaseType;
     }
 
     /**
@@ -950,6 +960,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the prohibition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $prohibitions
+     * @return Cases
+     */
+    public function setProhibitions($prohibitions)
+    {
+        $this->prohibitions = $prohibitions;
+
+        return $this;
+    }
+
+    /**
+     * Get the prohibitions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProhibitions()
+    {
+        return $this->prohibitions;
+    }
+
+    /**
+     * Add a prohibitions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $prohibitions
+     * @return Cases
+     */
+    public function addProhibitions($prohibitions)
+    {
+        if ($prohibitions instanceof ArrayCollection) {
+            $this->prohibitions = new ArrayCollection(
+                array_merge(
+                    $this->prohibitions->toArray(),
+                    $prohibitions->toArray()
+                )
+            );
+        } elseif (!$this->prohibitions->contains($prohibitions)) {
+            $this->prohibitions->add($prohibitions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a prohibitions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $prohibitions
+     * @return Cases
+     */
+    public function removeProhibitions($prohibitions)
+    {
+        if ($this->prohibitions->contains($prohibitions)) {
+            $this->prohibitions->removeElement($prohibitions);
         }
 
         return $this;

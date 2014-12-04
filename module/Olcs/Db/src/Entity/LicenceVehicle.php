@@ -30,9 +30,9 @@ class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\ApplicationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\ReceivedDateField,
         Traits\CustomDeletedDateField,
         Traits\ViAction1Field,
@@ -40,6 +40,16 @@ class LicenceVehicle implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Interim application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
+     * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $interimApplication;
 
     /**
      * Vehicle
@@ -60,16 +70,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
-
-    /**
-     * Interim application
-     *
-     * @var \Olcs\Db\Entity\Application
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
-     * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $interimApplication;
 
     /**
      * Removal date
@@ -126,6 +126,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the interim application
+     *
+     * @param \Olcs\Db\Entity\Application $interimApplication
+     * @return LicenceVehicle
+     */
+    public function setInterimApplication($interimApplication)
+    {
+        $this->interimApplication = $interimApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getInterimApplication()
+    {
+        return $this->interimApplication;
+    }
+
+    /**
      * Set the vehicle
      *
      * @param \Olcs\Db\Entity\Vehicle $vehicle
@@ -169,29 +192,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the interim application
-     *
-     * @param \Olcs\Db\Entity\Application $interimApplication
-     * @return LicenceVehicle
-     */
-    public function setInterimApplication($interimApplication)
-    {
-        $this->interimApplication = $interimApplication;
-
-        return $this;
-    }
-
-    /**
-     * Get the interim application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getInterimApplication()
-    {
-        return $this->interimApplication;
     }
 
     /**
