@@ -16,7 +16,7 @@ trait TrafficAreaManyToOne
      *
      * @var \Olcs\Db\Entity\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
      */
     protected $trafficArea;

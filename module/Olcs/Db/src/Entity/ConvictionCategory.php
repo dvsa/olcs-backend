@@ -36,7 +36,7 @@ class ConvictionCategory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConvictionCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     protected $parent;

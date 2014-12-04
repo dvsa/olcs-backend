@@ -37,7 +37,7 @@ class LegacyOffence implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="legacyOffences", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="legacyOffences")
      */
     protected $cases;
 
