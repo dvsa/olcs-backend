@@ -170,19 +170,19 @@ return array(
             'type' => 'yesnonull'
         ),
         'psv_small_vhl_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_no_small_vhl_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_limousines' => array(
             'type' => 'yesnonull'
         ),
         'psv_no_limousine_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_only_limousines_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'is_maintenance_suitable' => array(
             'type' => 'yesnonull'

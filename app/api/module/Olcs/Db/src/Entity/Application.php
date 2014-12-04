@@ -292,18 +292,18 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_small_vhl_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="psv_small_vhl_confirmation", nullable=true)
      */
-    protected $psvSmallVhlConfirmation = 0;
+    protected $psvSmallVhlConfirmation;
 
     /**
      * Psv no small vhl confirmation
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_no_small_vhl_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="psv_no_small_vhl_confirmation", nullable=true)
      */
-    protected $psvNoSmallVhlConfirmation = 0;
+    protected $psvNoSmallVhlConfirmation;
 
     /**
      * Psv limousines
@@ -319,18 +319,18 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_no_limousine_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="psv_no_limousine_confirmation", nullable=true)
      */
-    protected $psvNoLimousineConfirmation = 0;
+    protected $psvNoLimousineConfirmation;
 
     /**
      * Psv only limousines confirmation
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_only_limousines_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="psv_only_limousines_confirmation", nullable=true)
      */
-    protected $psvOnlyLimousinesConfirmation = 0;
+    protected $psvOnlyLimousinesConfirmation;
 
     /**
      * Interim start
