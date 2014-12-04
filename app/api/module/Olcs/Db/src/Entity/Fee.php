@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -197,6 +198,23 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="irfo_file_no", length=10, nullable=true)
      */
     protected $irfoFileNo;
+
+    /**
+     * Fee payment
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\FeePayment", mappedBy="fee")
+     */
+    protected $feePayments;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->feePayments = new ArrayCollection();
+    }
 
     /**
      * Set the waive recommender user
@@ -564,5 +582,65 @@ class Fee implements Interfaces\EntityInterface
     public function getIrfoFileNo()
     {
         return $this->irfoFileNo;
+    }
+
+    /**
+     * Set the fee payment
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Fee
+     */
+    public function setFeePayments($feePayments)
+    {
+        $this->feePayments = $feePayments;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee payments
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFeePayments()
+    {
+        return $this->feePayments;
+    }
+
+    /**
+     * Add a fee payments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Fee
+     */
+    public function addFeePayments($feePayments)
+    {
+        if ($feePayments instanceof ArrayCollection) {
+            $this->feePayments = new ArrayCollection(
+                array_merge(
+                    $this->feePayments->toArray(),
+                    $feePayments->toArray()
+                )
+            );
+        } elseif (!$this->feePayments->contains($feePayments)) {
+            $this->feePayments->add($feePayments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fee payments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Fee
+     */
+    public function removeFeePayments($feePayments)
+    {
+        if ($this->feePayments->contains($feePayments)) {
+            $this->feePayments->removeElement($feePayments);
+        }
+
+        return $this;
     }
 }
