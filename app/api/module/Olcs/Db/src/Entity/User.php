@@ -34,25 +34,15 @@ class User implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
+        Traits\LocalAuthorityManyToOne,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\TeamManyToOne,
-        Traits\LocalAuthorityManyToOne,
         Traits\EmailAddress45Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Partner contact details
-     *
-     * @var \Olcs\Db\Entity\ContactDetails
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
-     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
-     */
-    protected $partnerContactDetails;
 
     /**
      * Hint questions1
@@ -73,6 +63,16 @@ class User implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="hint_questions_id2", referencedColumnName="id", nullable=true)
      */
     protected $hintQuestions2;
+
+    /**
+     * Partner contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $partnerContactDetails;
 
     /**
      * Contact details
@@ -273,29 +273,6 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the partner contact details
-     *
-     * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
-     * @return User
-     */
-    public function setPartnerContactDetails($partnerContactDetails)
-    {
-        $this->partnerContactDetails = $partnerContactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the partner contact details
-     *
-     * @return \Olcs\Db\Entity\ContactDetails
-     */
-    public function getPartnerContactDetails()
-    {
-        return $this->partnerContactDetails;
-    }
-
-    /**
      * Set the hint questions1
      *
      * @param \Olcs\Db\Entity\HintQuestion $hintQuestions1
@@ -339,6 +316,29 @@ class User implements Interfaces\EntityInterface
     public function getHintQuestions2()
     {
         return $this->hintQuestions2;
+    }
+
+    /**
+     * Set the partner contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
+     * @return User
+     */
+    public function setPartnerContactDetails($partnerContactDetails)
+    {
+        $this->partnerContactDetails = $partnerContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the partner contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getPartnerContactDetails()
+    {
+        return $this->partnerContactDetails;
     }
 
     /**
