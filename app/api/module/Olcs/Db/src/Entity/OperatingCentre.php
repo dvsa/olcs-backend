@@ -24,20 +24,20 @@ use Olcs\Db\Entity\Traits;
 class OperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ViAction1Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Address
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;

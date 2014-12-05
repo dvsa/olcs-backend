@@ -26,13 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CaseManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\DecisionDateField,
         Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -41,19 +41,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="decision", referencedColumnName="id", nullable=false)
      */
     protected $decision;
-
-    /**
-     * Notified date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="notified_date", nullable=true)
-     */
-    protected $notifiedDate;
 
     /**
      * Is msi
@@ -65,6 +56,15 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $isMsi = 0;
 
     /**
+     * Notified date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="notified_date", nullable=true)
+     */
+    protected $notifiedDate;
+
+    /**
      * Repute not lost reason
      *
      * @var string
@@ -74,15 +74,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $reputeNotLostReason;
 
     /**
-     * Unfitness start date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="unfitness_start_date", nullable=true)
-     */
-    protected $unfitnessStartDate;
-
-    /**
      * Unfitness end date
      *
      * @var \DateTime
@@ -90,6 +81,15 @@ class TmCaseDecision implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="unfitness_end_date", nullable=true)
      */
     protected $unfitnessEndDate;
+
+    /**
+     * Unfitness start date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="unfitness_start_date", nullable=true)
+     */
+    protected $unfitnessStartDate;
 
     /**
      * Set the decision
@@ -112,29 +112,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     public function getDecision()
     {
         return $this->decision;
-    }
-
-    /**
-     * Set the notified date
-     *
-     * @param \DateTime $notifiedDate
-     * @return TmCaseDecision
-     */
-    public function setNotifiedDate($notifiedDate)
-    {
-        $this->notifiedDate = $notifiedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the notified date
-     *
-     * @return \DateTime
-     */
-    public function getNotifiedDate()
-    {
-        return $this->notifiedDate;
     }
 
     /**
@@ -161,6 +138,29 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the notified date
+     *
+     * @param \DateTime $notifiedDate
+     * @return TmCaseDecision
+     */
+    public function setNotifiedDate($notifiedDate)
+    {
+        $this->notifiedDate = $notifiedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the notified date
+     *
+     * @return \DateTime
+     */
+    public function getNotifiedDate()
+    {
+        return $this->notifiedDate;
+    }
+
+    /**
      * Set the repute not lost reason
      *
      * @param string $reputeNotLostReason
@@ -184,29 +184,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the unfitness start date
-     *
-     * @param \DateTime $unfitnessStartDate
-     * @return TmCaseDecision
-     */
-    public function setUnfitnessStartDate($unfitnessStartDate)
-    {
-        $this->unfitnessStartDate = $unfitnessStartDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the unfitness start date
-     *
-     * @return \DateTime
-     */
-    public function getUnfitnessStartDate()
-    {
-        return $this->unfitnessStartDate;
-    }
-
-    /**
      * Set the unfitness end date
      *
      * @param \DateTime $unfitnessEndDate
@@ -227,5 +204,28 @@ class TmCaseDecision implements Interfaces\EntityInterface
     public function getUnfitnessEndDate()
     {
         return $this->unfitnessEndDate;
+    }
+
+    /**
+     * Set the unfitness start date
+     *
+     * @param \DateTime $unfitnessStartDate
+     * @return TmCaseDecision
+     */
+    public function setUnfitnessStartDate($unfitnessStartDate)
+    {
+        $this->unfitnessStartDate = $unfitnessStartDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the unfitness start date
+     *
+     * @return \DateTime
+     */
+    public function getUnfitnessStartDate()
+    {
+        return $this->unfitnessStartDate;
     }
 }

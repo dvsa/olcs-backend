@@ -17,8 +17,8 @@ use Olcs\Db\Entity\Traits;
 class SystemParameter implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\Id32Identity,
-        Traits\Description255FieldAlt1;
+        Traits\Description255FieldAlt1,
+        Traits\Id32Identity;
 
     /**
      * Param value

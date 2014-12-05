@@ -23,11 +23,11 @@ use Olcs\Db\Entity\Traits;
 class ConvictionCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description1024Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description1024Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -36,7 +36,7 @@ class ConvictionCategory implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConvictionCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConvictionCategory")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     protected $parent;

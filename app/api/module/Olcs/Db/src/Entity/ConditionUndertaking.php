@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,33 +34,34 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ConditionUndertaking implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
+        Traits\Action1Field,
         Traits\ApplicationManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
-        Traits\LicenceManyToOneAlt1,
-        Traits\CustomDeletedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOneAlt1,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
-     * Lic condition variation
+     * Added via
      *
-     * @var \Olcs\Db\Entity\ConditionUndertaking
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", fetch="LAZY")
-     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
-    protected $licConditionVariation;
+    protected $addedVia;
 
     /**
      * Approval user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
      */
     protected $approvalUser;
@@ -69,49 +71,39 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="attached_to", referencedColumnName="id", nullable=true)
      */
     protected $attachedTo;
-
-    /**
-     * Condition type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
-     */
-    protected $conditionType;
 
     /**
      * Case
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="conditionUndertakings")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
 
     /**
-     * Added via
+     * Condition type
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
-    protected $addedVia;
+    protected $conditionType;
 
     /**
-     * Condition date
+     * Is approved
      *
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="datetime", name="condition_date", nullable=true)
+     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
      */
-    protected $conditionDate;
+    protected $isApproved = 0;
 
     /**
      * Is draft
@@ -132,6 +124,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $isFulfilled = 0;
 
     /**
+     * Lic condition variation
+     *
+     * @var \Olcs\Db\Entity\ConditionUndertaking
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
+     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licConditionVariation;
+
+    /**
      * Notes
      *
      * @var string
@@ -141,35 +143,51 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $notes;
 
     /**
-     * Is approved
+     * S4
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions")
+     * @ORM\JoinTable(name="s4_condition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $isApproved = 0;
+    protected $s4s;
 
     /**
-     * Set the lic condition variation
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->s4s = new ArrayCollection();
+    }
+
+    /**
+     * Set the added via
      *
-     * @param \Olcs\Db\Entity\ConditionUndertaking $licConditionVariation
+     * @param \Olcs\Db\Entity\RefData $addedVia
      * @return ConditionUndertaking
      */
-    public function setLicConditionVariation($licConditionVariation)
+    public function setAddedVia($addedVia)
     {
-        $this->licConditionVariation = $licConditionVariation;
+        $this->addedVia = $addedVia;
 
         return $this;
     }
 
     /**
-     * Get the lic condition variation
+     * Get the added via
      *
-     * @return \Olcs\Db\Entity\ConditionUndertaking
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getLicConditionVariation()
+    public function getAddedVia()
     {
-        return $this->licConditionVariation;
+        return $this->addedVia;
     }
 
     /**
@@ -219,29 +237,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the condition type
-     *
-     * @param \Olcs\Db\Entity\RefData $conditionType
-     * @return ConditionUndertaking
-     */
-    public function setConditionType($conditionType)
-    {
-        $this->conditionType = $conditionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the condition type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getConditionType()
-    {
-        return $this->conditionType;
-    }
-
-    /**
      * Set the case
      *
      * @param \Olcs\Db\Entity\Cases $case
@@ -265,49 +260,49 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the added via
+     * Set the condition type
      *
-     * @param \Olcs\Db\Entity\RefData $addedVia
+     * @param \Olcs\Db\Entity\RefData $conditionType
      * @return ConditionUndertaking
      */
-    public function setAddedVia($addedVia)
+    public function setConditionType($conditionType)
     {
-        $this->addedVia = $addedVia;
+        $this->conditionType = $conditionType;
 
         return $this;
     }
 
     /**
-     * Get the added via
+     * Get the condition type
      *
      * @return \Olcs\Db\Entity\RefData
      */
-    public function getAddedVia()
+    public function getConditionType()
     {
-        return $this->addedVia;
+        return $this->conditionType;
     }
 
     /**
-     * Set the condition date
+     * Set the is approved
      *
-     * @param \DateTime $conditionDate
+     * @param string $isApproved
      * @return ConditionUndertaking
      */
-    public function setConditionDate($conditionDate)
+    public function setIsApproved($isApproved)
     {
-        $this->conditionDate = $conditionDate;
+        $this->isApproved = $isApproved;
 
         return $this;
     }
 
     /**
-     * Get the condition date
+     * Get the is approved
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getConditionDate()
+    public function getIsApproved()
     {
-        return $this->conditionDate;
+        return $this->isApproved;
     }
 
     /**
@@ -357,6 +352,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the lic condition variation
+     *
+     * @param \Olcs\Db\Entity\ConditionUndertaking $licConditionVariation
+     * @return ConditionUndertaking
+     */
+    public function setLicConditionVariation($licConditionVariation)
+    {
+        $this->licConditionVariation = $licConditionVariation;
+
+        return $this;
+    }
+
+    /**
+     * Get the lic condition variation
+     *
+     * @return \Olcs\Db\Entity\ConditionUndertaking
+     */
+    public function getLicConditionVariation()
+    {
+        return $this->licConditionVariation;
+    }
+
+    /**
      * Set the notes
      *
      * @param string $notes
@@ -380,25 +398,62 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is approved
+     * Set the s4
      *
-     * @param string $isApproved
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
      * @return ConditionUndertaking
      */
-    public function setIsApproved($isApproved)
+    public function setS4s($s4s)
     {
-        $this->isApproved = $isApproved;
+        $this->s4s = $s4s;
 
         return $this;
     }
 
     /**
-     * Get the is approved
+     * Get the s4s
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getIsApproved()
+    public function getS4s()
     {
-        return $this->isApproved;
+        return $this->s4s;
+    }
+
+    /**
+     * Add a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function addS4s($s4s)
+    {
+        if ($s4s instanceof ArrayCollection) {
+            $this->s4s = new ArrayCollection(
+                array_merge(
+                    $this->s4s->toArray(),
+                    $s4s->toArray()
+                )
+            );
+        } elseif (!$this->s4s->contains($s4s)) {
+            $this->s4s->add($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return ConditionUndertaking
+     */
+    public function removeS4s($s4s)
+    {
+        if ($this->s4s->contains($s4s)) {
+            $this->s4s->removeElement($s4s);
+        }
+
+        return $this;
     }
 }

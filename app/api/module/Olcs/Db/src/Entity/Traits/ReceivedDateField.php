@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Received date field trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait ReceivedDateField
 {
@@ -16,7 +16,7 @@ trait ReceivedDateField
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="received_date", nullable=true)
+     * @ORM\Column(type="datetime", name="received_date", nullable=true)
      */
     protected $receivedDate;
 

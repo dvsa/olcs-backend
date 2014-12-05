@@ -24,10 +24,10 @@ use Olcs\Db\Entity\Traits;
 class OppositionGrounds implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -36,20 +36,10 @@ class OppositionGrounds implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="grounds", referencedColumnName="id", nullable=false)
      */
     protected $grounds;
-
-    /**
-     * Opposition
-     *
-     * @var \Olcs\Db\Entity\Opposition
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY", inversedBy="grounds")
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
-     */
-    protected $opposition;
 
     /**
      * Is representation
@@ -59,6 +49,16 @@ class OppositionGrounds implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_representation", nullable=false)
      */
     protected $isRepresentation = 0;
+
+    /**
+     * Opposition
+     *
+     * @var \Olcs\Db\Entity\Opposition
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="grounds")
+     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
+     */
+    protected $opposition;
 
     /**
      * Set the grounds
@@ -84,29 +84,6 @@ class OppositionGrounds implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the opposition
-     *
-     * @param \Olcs\Db\Entity\Opposition $opposition
-     * @return OppositionGrounds
-     */
-    public function setOpposition($opposition)
-    {
-        $this->opposition = $opposition;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition
-     *
-     * @return \Olcs\Db\Entity\Opposition
-     */
-    public function getOpposition()
-    {
-        return $this->opposition;
-    }
-
-    /**
      * Set the is representation
      *
      * @param string $isRepresentation
@@ -127,5 +104,28 @@ class OppositionGrounds implements Interfaces\EntityInterface
     public function getIsRepresentation()
     {
         return $this->isRepresentation;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Olcs\Db\Entity\Opposition $opposition
+     * @return OppositionGrounds
+     */
+    public function setOpposition($opposition)
+    {
+        $this->opposition = $opposition;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition
+     *
+     * @return \Olcs\Db\Entity\Opposition
+     */
+    public function getOpposition()
+    {
+        return $this->opposition;
     }
 }

@@ -27,13 +27,13 @@ use Olcs\Db\Entity\Traits;
 class BusRegTrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\BusRegManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
 
     /**

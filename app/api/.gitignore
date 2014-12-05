@@ -13,3 +13,4 @@ test/coverage-report
 *.sw?
 data/mapping
 data/DoctrineORMModule
+data/cache/*

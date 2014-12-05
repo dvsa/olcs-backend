@@ -23,14 +23,14 @@ use Olcs\Db\Entity\Traits;
 class CommunityLicSuspension implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CommunityLicManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\EndDateFieldAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CommunityLicManyToOne,
-        Traits\StartDateField,
-        Traits\EndDateFieldAlt1,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\StartDateField,
         Traits\CustomVersionField;
 
     /**

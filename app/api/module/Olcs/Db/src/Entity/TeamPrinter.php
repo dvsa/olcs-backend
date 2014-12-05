@@ -26,16 +26,6 @@ class TeamPrinter implements Interfaces\EntityInterface
         Traits\TeamManyToOne;
 
     /**
-     * Printer
-     *
-     * @var \Olcs\Db\Entity\Printer
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer", fetch="LAZY")
-     * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
-     */
-    protected $printer;
-
-    /**
      * Document type
      *
      * @var string
@@ -45,27 +35,14 @@ class TeamPrinter implements Interfaces\EntityInterface
     protected $documentType;
 
     /**
-     * Set the printer
+     * Printer
      *
-     * @param \Olcs\Db\Entity\Printer $printer
-     * @return TeamPrinter
-     */
-    public function setPrinter($printer)
-    {
-        $this->printer = $printer;
-
-        return $this;
-    }
-
-    /**
-     * Get the printer
+     * @var \Olcs\Db\Entity\Printer
      *
-     * @return \Olcs\Db\Entity\Printer
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Printer")
+     * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
      */
-    public function getPrinter()
-    {
-        return $this->printer;
-    }
+    protected $printer;
 
     /**
      * Set the document type
@@ -88,5 +65,28 @@ class TeamPrinter implements Interfaces\EntityInterface
     public function getDocumentType()
     {
         return $this->documentType;
+    }
+
+    /**
+     * Set the printer
+     *
+     * @param \Olcs\Db\Entity\Printer $printer
+     * @return TeamPrinter
+     */
+    public function setPrinter($printer)
+    {
+        $this->printer = $printer;
+
+        return $this;
+    }
+
+    /**
+     * Get the printer
+     *
+     * @return \Olcs\Db\Entity\Printer
+     */
+    public function getPrinter()
+    {
+        return $this->printer;
     }
 }

@@ -16,65 +16,20 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_payment_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_payment_document1_idx", columns={"receipt_document_id"})
+ *        @ORM\Index(name="fk_payment_ref_data1_idx", columns={"status"})
  *    }
  * )
  */
 class Payment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField;
-
-    /**
-     * Receipt document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="receipt_document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $receiptDocument;
-
-    /**
-     * Legacy status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="legacy_status", nullable=true)
-     */
-    protected $legacyStatus;
-
-    /**
-     * Legacy method
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="legacy_method", nullable=true)
-     */
-    protected $legacyMethod;
-
-    /**
-     * Legacy choice
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="legacy_choice", nullable=true)
-     */
-    protected $legacyChoice;
-
-    /**
-     * Legacy guid
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="legacy_guid", length=255, nullable=true)
-     */
-    protected $legacyGuid;
 
     /**
      * Completed date
@@ -95,72 +50,85 @@ class Payment implements Interfaces\EntityInterface
     protected $guid;
 
     /**
-     * Set the receipt document
+     * Legacy choice
      *
-     * @param \Olcs\Db\Entity\Document $receiptDocument
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="legacy_choice", nullable=true)
+     */
+    protected $legacyChoice;
+
+    /**
+     * Legacy guid
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="legacy_guid", length=255, nullable=true)
+     */
+    protected $legacyGuid;
+
+    /**
+     * Legacy method
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="legacy_method", nullable=true)
+     */
+    protected $legacyMethod;
+
+    /**
+     * Legacy status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="legacy_status", nullable=true)
+     */
+    protected $legacyStatus;
+
+    /**
+     * Set the completed date
+     *
+     * @param \DateTime $completedDate
      * @return Payment
      */
-    public function setReceiptDocument($receiptDocument)
+    public function setCompletedDate($completedDate)
     {
-        $this->receiptDocument = $receiptDocument;
+        $this->completedDate = $completedDate;
 
         return $this;
     }
 
     /**
-     * Get the receipt document
+     * Get the completed date
      *
-     * @return \Olcs\Db\Entity\Document
+     * @return \DateTime
      */
-    public function getReceiptDocument()
+    public function getCompletedDate()
     {
-        return $this->receiptDocument;
+        return $this->completedDate;
     }
 
     /**
-     * Set the legacy status
+     * Set the guid
      *
-     * @param int $legacyStatus
+     * @param string $guid
      * @return Payment
      */
-    public function setLegacyStatus($legacyStatus)
+    public function setGuid($guid)
     {
-        $this->legacyStatus = $legacyStatus;
+        $this->guid = $guid;
 
         return $this;
     }
 
     /**
-     * Get the legacy status
+     * Get the guid
      *
-     * @return int
+     * @return string
      */
-    public function getLegacyStatus()
+    public function getGuid()
     {
-        return $this->legacyStatus;
-    }
-
-    /**
-     * Set the legacy method
-     *
-     * @param int $legacyMethod
-     * @return Payment
-     */
-    public function setLegacyMethod($legacyMethod)
-    {
-        $this->legacyMethod = $legacyMethod;
-
-        return $this;
-    }
-
-    /**
-     * Get the legacy method
-     *
-     * @return int
-     */
-    public function getLegacyMethod()
-    {
-        return $this->legacyMethod;
+        return $this->guid;
     }
 
     /**
@@ -210,48 +178,48 @@ class Payment implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the completed date
+     * Set the legacy method
      *
-     * @param \DateTime $completedDate
+     * @param int $legacyMethod
      * @return Payment
      */
-    public function setCompletedDate($completedDate)
+    public function setLegacyMethod($legacyMethod)
     {
-        $this->completedDate = $completedDate;
+        $this->legacyMethod = $legacyMethod;
 
         return $this;
     }
 
     /**
-     * Get the completed date
+     * Get the legacy method
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getCompletedDate()
+    public function getLegacyMethod()
     {
-        return $this->completedDate;
+        return $this->legacyMethod;
     }
 
     /**
-     * Set the guid
+     * Set the legacy status
      *
-     * @param string $guid
+     * @param int $legacyStatus
      * @return Payment
      */
-    public function setGuid($guid)
+    public function setLegacyStatus($legacyStatus)
     {
-        $this->guid = $guid;
+        $this->legacyStatus = $legacyStatus;
 
         return $this;
     }
 
     /**
-     * Get the guid
+     * Get the legacy status
      *
-     * @return string
+     * @return int
      */
-    public function getGuid()
+    public function getLegacyStatus()
     {
-        return $this->guid;
+        return $this->legacyStatus;
     }
 }

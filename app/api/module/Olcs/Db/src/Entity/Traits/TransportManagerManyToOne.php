@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Transport manager many to one trait
  *
- * Auto-Generated (Shared between 6 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait TransportManagerManyToOne
 {
@@ -16,7 +16,7 @@ trait TransportManagerManyToOne
      *
      * @var \Olcs\Db\Entity\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Team many to one trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 3 entities)
  */
 trait TeamManyToOne
 {
@@ -16,7 +16,7 @@ trait TeamManyToOne
      *
      * @var \Olcs\Db\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
      */
     protected $team;

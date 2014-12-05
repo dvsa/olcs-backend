@@ -23,11 +23,11 @@ use Olcs\Db\Entity\Traits;
 class IrfoGvPermitType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description100Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description100Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -36,7 +36,7 @@ class IrfoGvPermitType implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\IrfoCountry
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoCountry", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoCountry")
      * @ORM\JoinColumn(name="irfo_country_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoCountry;

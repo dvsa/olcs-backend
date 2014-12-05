@@ -27,33 +27,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Person implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\BirthDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\FamilyName35Field,
+        Traits\Forename35Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\BirthDateField,
-        Traits\Title32Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Title32Field,
         Traits\CustomVersionField;
-
-    /**
-     * Forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="forename", length=35, nullable=true)
-     */
-    protected $forename;
-
-    /**
-     * Family name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="family_name", length=35, nullable=true)
-     */
-    protected $familyName;
 
     /**
      * Birth place
@@ -97,52 +81,6 @@ class Person implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->contactDetails = new ArrayCollection();
-    }
-
-    /**
-     * Set the forename
-     *
-     * @param string $forename
-     * @return Person
-     */
-    public function setForename($forename)
-    {
-        $this->forename = $forename;
-
-        return $this;
-    }
-
-    /**
-     * Get the forename
-     *
-     * @return string
-     */
-    public function getForename()
-    {
-        return $this->forename;
-    }
-
-    /**
-     * Set the family name
-     *
-     * @param string $familyName
-     * @return Person
-     */
-    public function setFamilyName($familyName)
-    {
-        $this->familyName = $familyName;
-
-        return $this;
-    }
-
-    /**
-     * Get the family name
-     *
-     * @return string
-     */
-    public function getFamilyName()
-    {
-        return $this->familyName;
     }
 
     /**

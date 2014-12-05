@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Category many to one trait
  *
- * Auto-Generated (Shared between 6 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait CategoryManyToOne
 {
@@ -16,7 +16,7 @@ trait CategoryManyToOne
      *
      * @var \Olcs\Db\Entity\Category
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Category", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Category")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
     protected $category;

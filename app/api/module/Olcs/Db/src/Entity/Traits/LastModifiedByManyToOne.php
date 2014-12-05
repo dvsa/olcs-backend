@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Last modified by many to one trait
  *
- * Auto-Generated (Shared between 140 entities)
+ * Auto-Generated (Shared between 142 entities)
  */
 trait LastModifiedByManyToOne
 {
@@ -16,7 +16,7 @@ trait LastModifiedByManyToOne
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;

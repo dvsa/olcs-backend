@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Created by many to one trait
  *
- * Auto-Generated (Shared between 141 entities)
+ * Auto-Generated (Shared between 143 entities)
  */
 trait CreatedByManyToOne
 {
@@ -16,7 +16,7 @@ trait CreatedByManyToOne
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;

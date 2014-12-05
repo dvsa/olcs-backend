@@ -24,34 +24,13 @@ use Olcs\Db\Entity\Traits;
 class Publication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\PublicationNoField,
-        Traits\PubType3Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Pub status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="pub_status", referencedColumnName="id", nullable=false)
-     */
-    protected $pubStatus;
-
-    /**
-     * Pub date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="pub_date", nullable=true)
-     */
-    protected $pubDate;
 
     /**
      * Doc name
@@ -63,26 +42,63 @@ class Publication implements Interfaces\EntityInterface
     protected $docName;
 
     /**
-     * Set the pub status
+     * Pub date
      *
-     * @param \Olcs\Db\Entity\RefData $pubStatus
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="pub_date", nullable=true)
+     */
+    protected $pubDate;
+
+    /**
+     * Pub status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="pub_status", referencedColumnName="id", nullable=false)
+     */
+    protected $pubStatus;
+
+    /**
+     * Pub type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="pub_type", length=3, nullable=false)
+     */
+    protected $pubType;
+
+    /**
+     * Publication no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="publication_no", nullable=false)
+     */
+    protected $publicationNo;
+
+    /**
+     * Set the doc name
+     *
+     * @param string $docName
      * @return Publication
      */
-    public function setPubStatus($pubStatus)
+    public function setDocName($docName)
     {
-        $this->pubStatus = $pubStatus;
+        $this->docName = $docName;
 
         return $this;
     }
 
     /**
-     * Get the pub status
+     * Get the doc name
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getPubStatus()
+    public function getDocName()
     {
-        return $this->pubStatus;
+        return $this->docName;
     }
 
     /**
@@ -109,25 +125,71 @@ class Publication implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the doc name
+     * Set the pub status
      *
-     * @param string $docName
+     * @param \Olcs\Db\Entity\RefData $pubStatus
      * @return Publication
      */
-    public function setDocName($docName)
+    public function setPubStatus($pubStatus)
     {
-        $this->docName = $docName;
+        $this->pubStatus = $pubStatus;
 
         return $this;
     }
 
     /**
-     * Get the doc name
+     * Get the pub status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPubStatus()
+    {
+        return $this->pubStatus;
+    }
+
+    /**
+     * Set the pub type
+     *
+     * @param string $pubType
+     * @return Publication
+     */
+    public function setPubType($pubType)
+    {
+        $this->pubType = $pubType;
+
+        return $this;
+    }
+
+    /**
+     * Get the pub type
      *
      * @return string
      */
-    public function getDocName()
+    public function getPubType()
     {
-        return $this->docName;
+        return $this->pubType;
+    }
+
+    /**
+     * Set the publication no
+     *
+     * @param int $publicationNo
+     * @return Publication
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication no
+     *
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
     }
 }

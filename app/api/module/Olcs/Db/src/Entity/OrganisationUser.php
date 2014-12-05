@@ -27,25 +27,15 @@ use Olcs\Db\Entity\Traits;
 class OrganisationUser implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\AddedDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
-        Traits\AddedDateField,
-        Traits\RemovedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\OrganisationManyToOneAlt1,
+        Traits\RemovedDateField,
         Traits\CustomVersionField;
-
-    /**
-     * User
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY", inversedBy="organisationUsers")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $user;
 
     /**
      * Is administrator
@@ -66,27 +56,14 @@ class OrganisationUser implements Interfaces\EntityInterface
     protected $sftpAccess = 0;
 
     /**
-     * Set the user
+     * User
      *
-     * @param \Olcs\Db\Entity\User $user
-     * @return OrganisationUser
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get the user
+     * @var \Olcs\Db\Entity\User
      *
-     * @return \Olcs\Db\Entity\User
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", inversedBy="organisationUsers")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
-    public function getUser()
-    {
-        return $this->user;
-    }
+    protected $user;
 
     /**
      * Set the is administrator
@@ -132,5 +109,28 @@ class OrganisationUser implements Interfaces\EntityInterface
     public function getSftpAccess()
     {
         return $this->sftpAccess;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Olcs\Db\Entity\User $user
+     * @return OrganisationUser
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

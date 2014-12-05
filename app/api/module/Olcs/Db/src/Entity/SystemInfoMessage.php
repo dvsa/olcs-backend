@@ -22,23 +22,13 @@ use Olcs\Db\Entity\Traits;
 class SystemInfoMessage implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description1024Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\IsDeletedField,
-        Traits\Description1024Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Is internal
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_internal", nullable=false)
-     */
-    protected $isInternal;
 
     /**
      * Activate date
@@ -59,27 +49,22 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     protected $importance;
 
     /**
-     * Set the is internal
+     * Is deleted
      *
-     * @param string $isInternal
-     * @return SystemInfoMessage
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
      */
-    public function setIsInternal($isInternal)
-    {
-        $this->isInternal = $isInternal;
-
-        return $this;
-    }
+    protected $isDeleted = 0;
 
     /**
-     * Get the is internal
+     * Is internal
      *
-     * @return string
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_internal", nullable=false)
      */
-    public function getIsInternal()
-    {
-        return $this->isInternal;
-    }
+    protected $isInternal;
 
     /**
      * Set the activate date
@@ -125,5 +110,51 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     public function getImportance()
     {
         return $this->importance;
+    }
+
+    /**
+     * Set the is deleted
+     *
+     * @param string $isDeleted
+     * @return SystemInfoMessage
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get the is deleted
+     *
+     * @return string
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * Set the is internal
+     *
+     * @param string $isInternal
+     * @return SystemInfoMessage
+     */
+    public function setIsInternal($isInternal)
+    {
+        $this->isInternal = $isInternal;
+
+        return $this;
+    }
+
+    /**
+     * Get the is internal
+     *
+     * @return string
+     */
+    public function getIsInternal()
+    {
+        return $this->isInternal;
     }
 }

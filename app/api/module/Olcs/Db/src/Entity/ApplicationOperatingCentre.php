@@ -27,45 +27,34 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\S4ManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
+        Traits\Action1Field,
         Traits\AdPlacedField,
-        Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
-        Traits\PermissionField,
+        Traits\AdPlacedIn70Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\IsInterimField,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
-        Traits\NoOfVehiclesPossessedField,
-        Traits\NoOfTrailersPossessedField,
-        Traits\ViAction1Field,
-        Traits\AddedDateField,
-        Traits\CustomDeletedDateField,
-        Traits\IsInterimField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\OperatingCentreManyToOne,
+        Traits\PermissionField,
+        Traits\S4ManyToOne,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Application
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="operatingCentres")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="operatingCentres")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
-     */
-    protected $action;
 
     /**
      * Publication appropriate
@@ -106,29 +95,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return ApplicationOperatingCentre
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * Get the action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**

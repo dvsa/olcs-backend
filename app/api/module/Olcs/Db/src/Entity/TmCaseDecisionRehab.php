@@ -26,13 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmCaseDecisionRehab implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TmCaseDecisionManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TmCaseDecisionManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -40,7 +40,7 @@ class TmCaseDecisionRehab implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="rehab_measure_id", referencedColumnName="id", nullable=false)
      */
     protected $rehabMeasure;

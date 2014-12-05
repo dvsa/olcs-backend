@@ -21,9 +21,9 @@ use Olcs\Db\Entity\Traits;
 class TaskSubCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CategoryManyToOne,
         Traits\Description45Field,
+        Traits\IdIdentity,
         Traits\Name45Field;
 
     /**
