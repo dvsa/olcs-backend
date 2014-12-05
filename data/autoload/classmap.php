@@ -521,6 +521,8 @@ return array(
     'Entity' => false,
     'Gedmo\Mapping\Annotation\SoftDeleteable' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
         . '/Annotation/SoftDeleteable.php',
+    'Gedmo\Mapping\Annotation\Translatable' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
+        . '/Annotation/Translatable.php',
     'Gedmo\Mapping\Driver' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping/Driver.php',
     'Gedmo\Mapping\Driver\AbstractAnnotationDriver' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
         . '/Driver/AbstractAnnotationDriver.php',
@@ -677,6 +679,8 @@ return array(
     'Olcs\Db\Entity\View\ConditionUndertaking' => false,
     'Olcs\Db\Entity\View\ContactDetails' => false,
     'Olcs\Db\Entity\View\Country' => false,
+    'Olcs\Db\Entity\View\DiscSequence' => false,
+    'Olcs\Db\Entity\View\Document' => false,
     'Olcs\Db\Entity\View\DocumentSubCategory' => false,
     'Olcs\Db\Entity\View\Fee' => false,
     'Olcs\Db\Entity\View\FeeType' => false,
@@ -695,6 +699,8 @@ return array(
     'Olcs\Db\Entity\View\PreviousLicence' => false,
     'Olcs\Db\Entity\View\Prohibition' => false,
     'Olcs\Db\Entity\View\ProposeToRevoke' => false,
+    'Olcs\Db\Entity\View\PsvDisc' => false,
+    'Olcs\Db\Entity\View\RefData' => false,
     'Olcs\Db\Entity\View\Submission' => false,
     'Olcs\Db\Entity\View\SubmissionSectionComment' => false,
     'Olcs\Db\Entity\View\Task' => false,
@@ -718,6 +724,9 @@ return array(
     'Olcs\Db\Service\ConditionUndertaking' => false,
     'Olcs\Db\Service\ContactDetails' => false,
     'Olcs\Db\Service\Country' => false,
+    'Olcs\Db\Service\DiscSequence' => false,
+    'Olcs\Db\Service\Document' => false,
+    'Olcs\Db\Service\DocumentSearchView' => false,
     'Olcs\Db\Service\DocumentSubCategory' => false,
     'Olcs\Db\Service\Fee' => false,
     'Olcs\Db\Service\FeeType' => false,
@@ -737,6 +746,8 @@ return array(
     'Olcs\Db\Service\PreviousLicence' => false,
     'Olcs\Db\Service\Prohibition' => false,
     'Olcs\Db\Service\ProposeToRevoke' => false,
+    'Olcs\Db\Service\PsvDisc' => false,
+    'Olcs\Db\Service\RefData' => false,
     'Olcs\Db\Service\Submission' => false,
     'Olcs\Db\Service\SubmissionSectionComment' => false,
     'Olcs\Db\Service\Task' => false,
@@ -760,6 +771,10 @@ return array(
     'Olcs\Logging\Log\Processor\SessionId' => $rootPath . '/vendor/olcs/olcs-logging/src/Log/Processor/SessionId.php',
     'Olcs\Logging\Log\Processor\UserId' => $rootPath . '/vendor/olcs/olcs-logging/src/Log/Processor/UserId.php',
     'Olcs\Logging\Module' => $rootPath . '/vendor/olcs/olcs-logging/src/Module.php',
+    'PHPUnit_Extensions_Database_TestCase' => false,
+    'PHPUnit_Extensions_SeleniumTestCase' => false,
+    'PHPUnit_Extensions_Story_TestCase' => false,
+    'PHP_Invoker' => false,
     'Psr\Log\LoggerInterface' => false,
     'Simple' => false,
     'Symfony\Component\Console\Application' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console'
@@ -832,6 +847,7 @@ return array(
         . '/Console/Output/OutputInterface.php',
     'Symfony\Component\Console\Output\StreamOutput' => $rootPath . '/vendor/symfony/console/Symfony/Component/Console'
         . '/Output/StreamOutput.php',
+    'Symfony\Component\Yaml\Yaml' => $rootPath . '/vendor/symfony/yaml/Symfony/Component/Yaml/Yaml.php',
     'Table' => false,
     'Zend\Cache\Service\StorageCacheAbstractServiceFactory' => $rootPath . '/vendor/zendframework/zendframework/library'
         . '/Zend/Cache/Service/StorageCacheAbstractServiceFactory.php',
