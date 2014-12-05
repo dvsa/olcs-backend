@@ -16,14 +16,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="conviction",
  *    indexes={
- *        @ORM\Index(name="fk_conviction_conviction_category1_idx", columns={"conviction_category"}),
- *        @ORM\Index(name="fk_conviction_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_conviction_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_conviction_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_conviction_operator_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"})
+ *        @ORM\Index(name="fk_conviction_ref_data1_idx", columns={"defendant_type"}),
+ *        @ORM\Index(name="fk_conviction_ref_data2_idx", columns={"conviction_category"})
  *    }
  * )
  */
@@ -39,9 +37,7 @@ class Conviction implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Notes4000Field,
-        Traits\OrganisationManyToOne,
         Traits\Penalty255Field,
-        Traits\PersonManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
