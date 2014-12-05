@@ -884,7 +884,27 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
 
     ('pi_written_outcome', 'piwo_none', 'No written reason or decision', null),
     ('pi_written_outcome', 'piwo_reason', 'Written reason', null),
-    ('pi_written_outcome', 'piwo_decision', 'Written decision', null)
+    ('pi_written_outcome', 'piwo_decision', 'Written decision', null),
+
+    /* EBSR states */
+    ('ebsr_sub_status', 'ebsrs_submitting', 'Submitting', '-1'),
+    ('ebsr_sub_status', 'ebsrs_submitted', 'Submitted', '0'),
+    ('ebsr_sub_status', 'ebsrs_validating', 'Validating', '1'),
+    ('ebsr_sub_status', 'ebsrs_validated', 'Validated', '2'),
+    ('ebsr_sub_status', 'ebsrs_publishing', 'Publishing', '3'),
+    ('ebsr_sub_status', 'ebsrs_published', 'Published', '4'),
+    ('ebsr_sub_status', 'ebsrs_processing', 'Processing', '5'),
+    ('ebsr_sub_status', 'ebsrs_processed', 'Processed', '6'),
+    ('ebsr_sub_status', 'ebsrs_distributing', 'Distributing', '7'),
+    ('ebsr_sub_status', 'ebsrs_distributed', 'Distributed', '8'),
+    ('ebsr_sub_status', 'ebsrs_expiring', 'Expiring', '9'),
+    ('ebsr_sub_status', 'ebsrs_expired', 'Expired', '10'),
+
+    /* EBSR types */
+    ('ebsr_sub_type', 'ebsrt_new', 'New Application', '0'),
+    ('ebsr_sub_type', 'ebsrt_refresh', 'Data Refresh', '1'),
+    ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
+    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3')
 ;
 
 -- Now the conviction categories
