@@ -29,9 +29,9 @@ class EventHistory implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
         Traits\TransportManagerManyToOne,
-        Traits\ApplicationManyToOne,
         Traits\UserManyToOne,
-        Traits\LicenceManyToOneAlt1;
+        Traits\LicenceManyToOneAlt1,
+        Traits\ApplicationManyToOne;
 
     /**
      * Team
@@ -113,7 +113,7 @@ class EventHistory implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="entity_data", nullable=true)
+     * @ORM\Column(type="text", name="entity_data", length=65535, nullable=true)
      */
     protected $entityData;
 

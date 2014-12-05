@@ -89,7 +89,7 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="notes", nullable=true)
+     * @ORM\Column(type="text", name="notes", length=65535, nullable=true)
      */
     protected $notes;
 

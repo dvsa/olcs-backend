@@ -52,7 +52,7 @@ class Submission implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="data_snapshot", nullable=true)
+     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
      */
     protected $dataSnapshot;
 

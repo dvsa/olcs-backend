@@ -32,7 +32,6 @@ class Vehicle implements Interfaces\EntityInterface
         Traits\Vrm20Field,
         Traits\ViAction1Field,
         Traits\CustomDeletedDateField,
-        Traits\SpecifiedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;

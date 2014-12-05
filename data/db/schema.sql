@@ -7275,7 +7275,6 @@ CREATE TABLE `vehicle` (
   `section_26_revoked` tinyint(1) NOT NULL DEFAULT '0',
   `section_26_suspend` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
-  `specified_date` datetime DEFAULT NULL,
   `psv_type` varchar(32) DEFAULT NULL COMMENT 'small, medium or large',
   `make_model` varchar(100) DEFAULT NULL COMMENT 'For small PSV vehicles the make and model are recorded.',
   `created_by` int(11) DEFAULT NULL,
