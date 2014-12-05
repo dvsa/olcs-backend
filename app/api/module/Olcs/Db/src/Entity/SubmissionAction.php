@@ -28,12 +28,22 @@ class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CommentField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Submission
+     *
+     * @var \Olcs\Db\Entity\Submission
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionActions")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
+     */
+    protected $submission;
 
     /**
      * Submission action status
@@ -46,16 +56,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $submissionActionStatus;
 
     /**
-     * Recipient user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $recipientUser;
-
-    /**
      * Sender user
      *
      * @var \Olcs\Db\Entity\User
@@ -66,14 +66,14 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $senderUser;
 
     /**
-     * Submission
+     * Recipient user
      *
-     * @var \Olcs\Db\Entity\Submission
+     * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionActions")
-     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=false)
      */
-    protected $submission;
+    protected $recipientUser;
 
     /**
      * Reason
@@ -119,6 +119,29 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the submission
+     *
+     * @param \Olcs\Db\Entity\Submission $submission
+     * @return SubmissionAction
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Olcs\Db\Entity\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
+
+    /**
      * Set the submission action status
      *
      * @param \Olcs\Db\Entity\RefData $submissionActionStatus
@@ -139,29 +162,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSubmissionActionStatus()
     {
         return $this->submissionActionStatus;
-    }
-
-    /**
-     * Set the recipient user
-     *
-     * @param \Olcs\Db\Entity\User $recipientUser
-     * @return SubmissionAction
-     */
-    public function setRecipientUser($recipientUser)
-    {
-        $this->recipientUser = $recipientUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the recipient user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getRecipientUser()
-    {
-        return $this->recipientUser;
     }
 
     /**
@@ -188,26 +188,26 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission
+     * Set the recipient user
      *
-     * @param \Olcs\Db\Entity\Submission $submission
+     * @param \Olcs\Db\Entity\User $recipientUser
      * @return SubmissionAction
      */
-    public function setSubmission($submission)
+    public function setRecipientUser($recipientUser)
     {
-        $this->submission = $submission;
+        $this->recipientUser = $recipientUser;
 
         return $this;
     }
 
     /**
-     * Get the submission
+     * Get the recipient user
      *
-     * @return \Olcs\Db\Entity\Submission
+     * @return \Olcs\Db\Entity\User
      */
-    public function getSubmission()
+    public function getRecipientUser()
     {
-        return $this->submission;
+        return $this->recipientUser;
     }
 
     /**
