@@ -31,12 +31,12 @@ class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\StatusManyToOne,
         Traits\WithdrawnReasonManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
+        Traits\StatusManyToOne,
         Traits\LicenceManyToOne,
+        Traits\LastModifiedByManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
         Traits\EffectiveDateField,
         Traits\EndDateField,
@@ -55,16 +55,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $revertStatus;
 
     /**
-     * Bus notice period
-     *
-     * @var \Olcs\Db\Entity\BusNoticePeriod
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod")
-     * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
-     */
-    protected $busNoticePeriod;
-
-    /**
      * Subsidised
      *
      * @var \Olcs\Db\Entity\RefData
@@ -73,6 +63,16 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
      */
     protected $subsidised;
+
+    /**
+     * Bus notice period
+     *
+     * @var \Olcs\Db\Entity\BusNoticePeriod
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod")
+     * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
+     */
+    protected $busNoticePeriod;
 
     /**
      * Variation reason
@@ -539,29 +539,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the bus notice period
-     *
-     * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
-     * @return BusReg
-     */
-    public function setBusNoticePeriod($busNoticePeriod)
-    {
-        $this->busNoticePeriod = $busNoticePeriod;
-
-        return $this;
-    }
-
-    /**
-     * Get the bus notice period
-     *
-     * @return \Olcs\Db\Entity\BusNoticePeriod
-     */
-    public function getBusNoticePeriod()
-    {
-        return $this->busNoticePeriod;
-    }
-
-    /**
      * Set the subsidised
      *
      * @param \Olcs\Db\Entity\RefData $subsidised
@@ -582,6 +559,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getSubsidised()
     {
         return $this->subsidised;
+    }
+
+    /**
+     * Set the bus notice period
+     *
+     * @param \Olcs\Db\Entity\BusNoticePeriod $busNoticePeriod
+     * @return BusReg
+     */
+    public function setBusNoticePeriod($busNoticePeriod)
+    {
+        $this->busNoticePeriod = $busNoticePeriod;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus notice period
+     *
+     * @return \Olcs\Db\Entity\BusNoticePeriod
+     */
+    public function getBusNoticePeriod()
+    {
+        return $this->busNoticePeriod;
     }
 
     /**
