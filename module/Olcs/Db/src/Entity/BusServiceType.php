@@ -18,15 +18,15 @@ use Olcs\Db\Entity\Traits;
 class BusServiceType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\Description70Field;
+        Traits\Description70Field,
+        Traits\IdIdentity;
 
     /**
      * Bus reg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes")
      */
     protected $busRegs;
 

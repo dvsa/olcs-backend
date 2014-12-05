@@ -24,11 +24,11 @@ use Olcs\Db\Entity\Traits;
 class LicenceVehicleFee implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\FeeManyToOne,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\FeeManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -37,7 +37,7 @@ class LicenceVehicleFee implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LicenceVehicle
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle")
      * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $licenceVehicle;

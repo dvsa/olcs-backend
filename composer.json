@@ -3,10 +3,6 @@
     "description": "Back End Application for OLCS Project",
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/MajorCaiger/doctrine2.git"
-        },
-        {
             "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
             "type": "vcs"
         },
@@ -25,18 +21,22 @@
         {
             "type": "vcs",
             "url": "https://github.com/MajorCaiger/phpcov.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "~2.3.3",
-        "doctrine/orm": "dev-master",
+        "doctrine/orm": "~2.4.0",
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "~2.3.9",
         "olcs/companies-house": "dev-develop",
         "ruflin/Elastica": "dev-master",
-        "olcs/olcs-logging": "dev-develop"
+        "olcs/olcs-logging": "dev-develop",
+        "olcs/autoload": "dev-develop"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1.5.3",
@@ -46,6 +46,10 @@
         "mockery/mockery": "~0.9.2"
     },
     "autoload": {
+        "classmap": [
+            "module/Olcs/Db/src",
+            "vendor/olcs/companies-house/lib"
+        ],
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
@@ -57,5 +61,4 @@
           "github.com": "5cdf40f8d81a7675fdaa5fc92e9381526ef4db7f"
       }
     }
-
 }

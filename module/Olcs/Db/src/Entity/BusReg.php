@@ -30,73 +30,45 @@ use Olcs\Db\Entity\Traits;
 class BusReg implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
-        Traits\ReceivedDateField,
+        Traits\CustomCreatedOnField,
         Traits\EffectiveDateField,
         Traits\EndDateField,
-        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\LicenceManyToOne,
+        Traits\OperatingCentreManyToOneAlt1,
+        Traits\ServiceNo70Field,
+        Traits\StatusManyToOne,
+        Traits\CustomVersionField,
+        Traits\WithdrawnReasonManyToOne;
 
     /**
-     * Revert status
+     * Application signed
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="yesno", name="application_signed", nullable=false)
      */
-    protected $revertStatus;
+    protected $applicationSigned = 0;
 
     /**
      * Bus notice period
      *
      * @var \Olcs\Db\Entity\BusNoticePeriod
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusNoticePeriod")
      * @ORM\JoinColumn(name="bus_notice_period_id", referencedColumnName="id", nullable=false)
      */
     protected $busNoticePeriod;
-
-    /**
-     * Subsidised
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
-     */
-    protected $subsidised;
-
-    /**
-     * Variation reason
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs", fetch="LAZY")
-     * @ORM\JoinTable(name="bus_reg_variation_reason",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="variation_reason_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $variationReasons;
 
     /**
      * Bus service type
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusServiceType", inversedBy="busRegs")
      * @ORM\JoinTable(name="bus_reg_bus_service_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -109,40 +81,22 @@ class BusReg implements Interfaces\EntityInterface
     protected $busServiceTypes;
 
     /**
-     * Route no
+     * Completed date
      *
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(type="integer", name="route_no", nullable=false)
+     * @ORM\Column(type="date", name="completed_date", nullable=true)
      */
-    protected $routeNo;
+    protected $completedDate;
 
     /**
-     * Reg no
+     * Copied to la pte
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="reg_no", length=70, nullable=false)
+     * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
      */
-    protected $regNo;
-
-    /**
-     * Service no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="service_no", length=70, nullable=true)
-     */
-    protected $serviceNo;
-
-    /**
-     * Start point
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="start_point", length=100, nullable=true)
-     */
-    protected $startPoint;
+    protected $copiedToLaPte = 0;
 
     /**
      * Finish point
@@ -154,22 +108,40 @@ class BusReg implements Interfaces\EntityInterface
     protected $finishPoint;
 
     /**
-     * Via
+     * Has manoeuvre
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="via", length=255, nullable=true)
+     * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
      */
-    protected $via;
+    protected $hasManoeuvre = 0;
 
     /**
-     * Other details
+     * Has not fixed stop
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
+     * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
      */
-    protected $otherDetails;
+    protected $hasNotFixedStop = 0;
+
+    /**
+     * Is quality contract
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_quality_contract", nullable=false)
+     */
+    protected $isQualityContract = 0;
+
+    /**
+     * Is quality partnership
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false)
+     */
+    protected $isQualityPartnership = 0;
 
     /**
      * Is short notice
@@ -181,22 +153,39 @@ class BusReg implements Interfaces\EntityInterface
     protected $isShortNotice = 0;
 
     /**
-     * Use all stops
+     * Is txc app
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
+     * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
      */
-    protected $useAllStops = 0;
+    protected $isTxcApp = 0;
 
     /**
-     * Has manoeuvre
+     * La short note
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
+     * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
      */
-    protected $hasManoeuvre = 0;
+    protected $laShortNote = 0;
+
+    /**
+     * Local authority
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LocalAuthority", inversedBy="busRegs")
+     * @ORM\JoinTable(name="bus_reg_local_auth",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $localAuthoritys;
 
     /**
      * Manoeuvre detail
@@ -206,6 +195,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="manoeuvre_detail", length=255, nullable=true)
      */
     protected $manoeuvreDetail;
+
+    /**
+     * Map supplied
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
+     */
+    protected $mapSupplied = 0;
 
     /**
      * Need new stop
@@ -226,15 +224,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $newStopDetail;
 
     /**
-     * Has not fixed stop
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
-     */
-    protected $hasNotFixedStop = 0;
-
-    /**
      * Not fixed stop detail
      *
      * @var string
@@ -242,87 +231,6 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="not_fixed_stop_detail", length=255, nullable=true)
      */
     protected $notFixedStopDetail;
-
-    /**
-     * Subsidy detail
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="subsidy_detail", length=255, nullable=true)
-     */
-    protected $subsidyDetail;
-
-    /**
-     * Timetable acceptable
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
-     */
-    protected $timetableAcceptable = 0;
-
-    /**
-     * Map supplied
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
-     */
-    protected $mapSupplied = 0;
-
-    /**
-     * Route description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="route_description", length=1000, nullable=true)
-     */
-    protected $routeDescription;
-
-    /**
-     * Copied to la pte
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
-     */
-    protected $copiedToLaPte = 0;
-
-    /**
-     * La short note
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
-     */
-    protected $laShortNote = 0;
-
-    /**
-     * Application signed
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="application_signed", nullable=false)
-     */
-    protected $applicationSigned = 0;
-
-    /**
-     * Completed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="completed_date", nullable=true)
-     */
-    protected $completedDate;
-
-    /**
-     * Route seq
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="route_seq", nullable=false)
-     */
-    protected $routeSeq = 0;
 
     /**
      * Op notified la pte
@@ -334,33 +242,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $opNotifiedLaPte = 0;
 
     /**
-     * Stopping arrangements
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="stopping_arrangements", length=800, nullable=true)
-     */
-    protected $stoppingArrangements;
-
-    /**
-     * Trc condition checked
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
-     */
-    protected $trcConditionChecked = 0;
-
-    /**
-     * Trc notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="trc_notes", length=255, nullable=true)
-     */
-    protected $trcNotes;
-
-    /**
      * Organisation email
      *
      * @var string
@@ -370,22 +251,40 @@ class BusReg implements Interfaces\EntityInterface
     protected $organisationEmail;
 
     /**
-     * Is txc app
+     * Other details
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
+     * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
-    protected $isTxcApp = 0;
+    protected $otherDetails;
 
     /**
-     * Txc app type
+     * Quality contract details
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="txc_app_type", length=20, nullable=true)
+     * @ORM\Column(type="string", name="quality_contract_details", length=4000, nullable=true)
      */
-    protected $txcAppType;
+    protected $qualityContractDetails;
+
+    /**
+     * Quality partnership details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="quality_partnership_details", length=4000, nullable=true)
+     */
+    protected $qualityPartnershipDetails;
+
+    /**
+     * Quality partnership facilities used
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false)
+     */
+    protected $qualityPartnershipFacilitiesUsed = 0;
 
     /**
      * Reason cancelled
@@ -415,6 +314,61 @@ class BusReg implements Interfaces\EntityInterface
     protected $reasonSnRefused;
 
     /**
+     * Received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="received_date", nullable=true)
+     */
+    protected $receivedDate;
+
+    /**
+     * Reg no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="reg_no", length=70, nullable=false)
+     */
+    protected $regNo;
+
+    /**
+     * Revert status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="revert_status", referencedColumnName="id", nullable=false)
+     */
+    protected $revertStatus;
+
+    /**
+     * Route description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="route_description", length=1000, nullable=true)
+     */
+    protected $routeDescription;
+
+    /**
+     * Route no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="route_no", nullable=false)
+     */
+    protected $routeNo;
+
+    /**
+     * Route seq
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="route_seq", nullable=false)
+     */
+    protected $routeSeq = 0;
+
+    /**
      * Short notice refused
      *
      * @var string
@@ -424,49 +378,112 @@ class BusReg implements Interfaces\EntityInterface
     protected $shortNoticeRefused = 0;
 
     /**
-     * Is quality partnership
+     * Start point
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false)
+     * @ORM\Column(type="string", name="start_point", length=100, nullable=true)
      */
-    protected $isQualityPartnership = 0;
+    protected $startPoint;
 
     /**
-     * Quality partnership details
+     * Stopping arrangements
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="quality_partnership_details", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="stopping_arrangements", length=800, nullable=true)
      */
-    protected $qualityPartnershipDetails;
+    protected $stoppingArrangements;
 
     /**
-     * Quality partnership facilities used
+     * Subsidised
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="subsidised", referencedColumnName="id", nullable=false)
      */
-    protected $qualityPartnershipFacilitiesUsed = 0;
+    protected $subsidised;
 
     /**
-     * Is quality contract
+     * Subsidy detail
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_quality_contract", nullable=false)
+     * @ORM\Column(type="string", name="subsidy_detail", length=255, nullable=true)
      */
-    protected $isQualityContract = 0;
+    protected $subsidyDetail;
 
     /**
-     * Quality contract details
+     * Timetable acceptable
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="quality_contract_details", length=4000, nullable=true)
+     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
      */
-    protected $qualityContractDetails;
+    protected $timetableAcceptable = 0;
+
+    /**
+     * Trc condition checked
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
+     */
+    protected $trcConditionChecked = 0;
+
+    /**
+     * Trc notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="trc_notes", length=255, nullable=true)
+     */
+    protected $trcNotes;
+
+    /**
+     * Txc app type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="txc_app_type", length=20, nullable=true)
+     */
+    protected $txcAppType;
+
+    /**
+     * Use all stops
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
+     */
+    protected $useAllStops = 0;
+
+    /**
+     * Variation reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs")
+     * @ORM\JoinTable(name="bus_reg_variation_reason",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="variation_reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $variationReasons;
+
+    /**
+     * Via
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="via", length=255, nullable=true)
+     */
+    protected $via;
 
     /**
      * Other service
@@ -493,31 +510,32 @@ class BusReg implements Interfaces\EntityInterface
     {
         $this->variationReasons = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
+        $this->localAuthoritys = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
     /**
-     * Set the revert status
+     * Set the application signed
      *
-     * @param \Olcs\Db\Entity\RefData $revertStatus
+     * @param string $applicationSigned
      * @return BusReg
      */
-    public function setRevertStatus($revertStatus)
+    public function setApplicationSigned($applicationSigned)
     {
-        $this->revertStatus = $revertStatus;
+        $this->applicationSigned = $applicationSigned;
 
         return $this;
     }
 
     /**
-     * Get the revert status
+     * Get the application signed
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getRevertStatus()
+    public function getApplicationSigned()
     {
-        return $this->revertStatus;
+        return $this->applicationSigned;
     }
 
     /**
@@ -541,89 +559,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getBusNoticePeriod()
     {
         return $this->busNoticePeriod;
-    }
-
-    /**
-     * Set the subsidised
-     *
-     * @param \Olcs\Db\Entity\RefData $subsidised
-     * @return BusReg
-     */
-    public function setSubsidised($subsidised)
-    {
-        $this->subsidised = $subsidised;
-
-        return $this;
-    }
-
-    /**
-     * Get the subsidised
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubsidised()
-    {
-        return $this->subsidised;
-    }
-
-    /**
-     * Set the variation reason
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function setVariationReasons($variationReasons)
-    {
-        $this->variationReasons = $variationReasons;
-
-        return $this;
-    }
-
-    /**
-     * Get the variation reasons
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getVariationReasons()
-    {
-        return $this->variationReasons;
-    }
-
-    /**
-     * Add a variation reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function addVariationReasons($variationReasons)
-    {
-        if ($variationReasons instanceof ArrayCollection) {
-            $this->variationReasons = new ArrayCollection(
-                array_merge(
-                    $this->variationReasons->toArray(),
-                    $variationReasons->toArray()
-                )
-            );
-        } elseif (!$this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->add($variationReasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a variation reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
-     * @return BusReg
-     */
-    public function removeVariationReasons($variationReasons)
-    {
-        if ($this->variationReasons->contains($variationReasons)) {
-            $this->variationReasons->removeElement($variationReasons);
-        }
-
-        return $this;
     }
 
     /**
@@ -687,95 +622,49 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the route no
+     * Set the completed date
      *
-     * @param int $routeNo
+     * @param \DateTime $completedDate
      * @return BusReg
      */
-    public function setRouteNo($routeNo)
+    public function setCompletedDate($completedDate)
     {
-        $this->routeNo = $routeNo;
+        $this->completedDate = $completedDate;
 
         return $this;
     }
 
     /**
-     * Get the route no
+     * Get the completed date
      *
-     * @return int
+     * @return \DateTime
      */
-    public function getRouteNo()
+    public function getCompletedDate()
     {
-        return $this->routeNo;
+        return $this->completedDate;
     }
 
     /**
-     * Set the reg no
+     * Set the copied to la pte
      *
-     * @param string $regNo
+     * @param string $copiedToLaPte
      * @return BusReg
      */
-    public function setRegNo($regNo)
+    public function setCopiedToLaPte($copiedToLaPte)
     {
-        $this->regNo = $regNo;
+        $this->copiedToLaPte = $copiedToLaPte;
 
         return $this;
     }
 
     /**
-     * Get the reg no
+     * Get the copied to la pte
      *
      * @return string
      */
-    public function getRegNo()
+    public function getCopiedToLaPte()
     {
-        return $this->regNo;
-    }
-
-    /**
-     * Set the service no
-     *
-     * @param string $serviceNo
-     * @return BusReg
-     */
-    public function setServiceNo($serviceNo)
-    {
-        $this->serviceNo = $serviceNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the service no
-     *
-     * @return string
-     */
-    public function getServiceNo()
-    {
-        return $this->serviceNo;
-    }
-
-    /**
-     * Set the start point
-     *
-     * @param string $startPoint
-     * @return BusReg
-     */
-    public function setStartPoint($startPoint)
-    {
-        $this->startPoint = $startPoint;
-
-        return $this;
-    }
-
-    /**
-     * Get the start point
-     *
-     * @return string
-     */
-    public function getStartPoint()
-    {
-        return $this->startPoint;
+        return $this->copiedToLaPte;
     }
 
     /**
@@ -802,49 +691,95 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the via
+     * Set the has manoeuvre
      *
-     * @param string $via
+     * @param string $hasManoeuvre
      * @return BusReg
      */
-    public function setVia($via)
+    public function setHasManoeuvre($hasManoeuvre)
     {
-        $this->via = $via;
+        $this->hasManoeuvre = $hasManoeuvre;
 
         return $this;
     }
 
     /**
-     * Get the via
+     * Get the has manoeuvre
      *
      * @return string
      */
-    public function getVia()
+    public function getHasManoeuvre()
     {
-        return $this->via;
+        return $this->hasManoeuvre;
     }
 
     /**
-     * Set the other details
+     * Set the has not fixed stop
      *
-     * @param string $otherDetails
+     * @param string $hasNotFixedStop
      * @return BusReg
      */
-    public function setOtherDetails($otherDetails)
+    public function setHasNotFixedStop($hasNotFixedStop)
     {
-        $this->otherDetails = $otherDetails;
+        $this->hasNotFixedStop = $hasNotFixedStop;
 
         return $this;
     }
 
     /**
-     * Get the other details
+     * Get the has not fixed stop
      *
      * @return string
      */
-    public function getOtherDetails()
+    public function getHasNotFixedStop()
     {
-        return $this->otherDetails;
+        return $this->hasNotFixedStop;
+    }
+
+    /**
+     * Set the is quality contract
+     *
+     * @param string $isQualityContract
+     * @return BusReg
+     */
+    public function setIsQualityContract($isQualityContract)
+    {
+        $this->isQualityContract = $isQualityContract;
+
+        return $this;
+    }
+
+    /**
+     * Get the is quality contract
+     *
+     * @return string
+     */
+    public function getIsQualityContract()
+    {
+        return $this->isQualityContract;
+    }
+
+    /**
+     * Set the is quality partnership
+     *
+     * @param string $isQualityPartnership
+     * @return BusReg
+     */
+    public function setIsQualityPartnership($isQualityPartnership)
+    {
+        $this->isQualityPartnership = $isQualityPartnership;
+
+        return $this;
+    }
+
+    /**
+     * Get the is quality partnership
+     *
+     * @return string
+     */
+    public function getIsQualityPartnership()
+    {
+        return $this->isQualityPartnership;
     }
 
     /**
@@ -871,49 +806,109 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the use all stops
+     * Set the is txc app
      *
-     * @param string $useAllStops
+     * @param string $isTxcApp
      * @return BusReg
      */
-    public function setUseAllStops($useAllStops)
+    public function setIsTxcApp($isTxcApp)
     {
-        $this->useAllStops = $useAllStops;
+        $this->isTxcApp = $isTxcApp;
 
         return $this;
     }
 
     /**
-     * Get the use all stops
+     * Get the is txc app
      *
      * @return string
      */
-    public function getUseAllStops()
+    public function getIsTxcApp()
     {
-        return $this->useAllStops;
+        return $this->isTxcApp;
     }
 
     /**
-     * Set the has manoeuvre
+     * Set the la short note
      *
-     * @param string $hasManoeuvre
+     * @param string $laShortNote
      * @return BusReg
      */
-    public function setHasManoeuvre($hasManoeuvre)
+    public function setLaShortNote($laShortNote)
     {
-        $this->hasManoeuvre = $hasManoeuvre;
+        $this->laShortNote = $laShortNote;
 
         return $this;
     }
 
     /**
-     * Get the has manoeuvre
+     * Get the la short note
      *
      * @return string
      */
-    public function getHasManoeuvre()
+    public function getLaShortNote()
     {
-        return $this->hasManoeuvre;
+        return $this->laShortNote;
+    }
+
+    /**
+     * Set the local authority
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function setLocalAuthoritys($localAuthoritys)
+    {
+        $this->localAuthoritys = $localAuthoritys;
+
+        return $this;
+    }
+
+    /**
+     * Get the local authoritys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLocalAuthoritys()
+    {
+        return $this->localAuthoritys;
+    }
+
+    /**
+     * Add a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function addLocalAuthoritys($localAuthoritys)
+    {
+        if ($localAuthoritys instanceof ArrayCollection) {
+            $this->localAuthoritys = new ArrayCollection(
+                array_merge(
+                    $this->localAuthoritys->toArray(),
+                    $localAuthoritys->toArray()
+                )
+            );
+        } elseif (!$this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->add($localAuthoritys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a local authoritys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @return BusReg
+     */
+    public function removeLocalAuthoritys($localAuthoritys)
+    {
+        if ($this->localAuthoritys->contains($localAuthoritys)) {
+            $this->localAuthoritys->removeElement($localAuthoritys);
+        }
+
+        return $this;
     }
 
     /**
@@ -937,6 +932,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getManoeuvreDetail()
     {
         return $this->manoeuvreDetail;
+    }
+
+    /**
+     * Set the map supplied
+     *
+     * @param string $mapSupplied
+     * @return BusReg
+     */
+    public function setMapSupplied($mapSupplied)
+    {
+        $this->mapSupplied = $mapSupplied;
+
+        return $this;
+    }
+
+    /**
+     * Get the map supplied
+     *
+     * @return string
+     */
+    public function getMapSupplied()
+    {
+        return $this->mapSupplied;
     }
 
     /**
@@ -986,29 +1004,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the has not fixed stop
-     *
-     * @param string $hasNotFixedStop
-     * @return BusReg
-     */
-    public function setHasNotFixedStop($hasNotFixedStop)
-    {
-        $this->hasNotFixedStop = $hasNotFixedStop;
-
-        return $this;
-    }
-
-    /**
-     * Get the has not fixed stop
-     *
-     * @return string
-     */
-    public function getHasNotFixedStop()
-    {
-        return $this->hasNotFixedStop;
-    }
-
-    /**
      * Set the not fixed stop detail
      *
      * @param string $notFixedStopDetail
@@ -1029,213 +1024,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getNotFixedStopDetail()
     {
         return $this->notFixedStopDetail;
-    }
-
-    /**
-     * Set the subsidy detail
-     *
-     * @param string $subsidyDetail
-     * @return BusReg
-     */
-    public function setSubsidyDetail($subsidyDetail)
-    {
-        $this->subsidyDetail = $subsidyDetail;
-
-        return $this;
-    }
-
-    /**
-     * Get the subsidy detail
-     *
-     * @return string
-     */
-    public function getSubsidyDetail()
-    {
-        return $this->subsidyDetail;
-    }
-
-    /**
-     * Set the timetable acceptable
-     *
-     * @param string $timetableAcceptable
-     * @return BusReg
-     */
-    public function setTimetableAcceptable($timetableAcceptable)
-    {
-        $this->timetableAcceptable = $timetableAcceptable;
-
-        return $this;
-    }
-
-    /**
-     * Get the timetable acceptable
-     *
-     * @return string
-     */
-    public function getTimetableAcceptable()
-    {
-        return $this->timetableAcceptable;
-    }
-
-    /**
-     * Set the map supplied
-     *
-     * @param string $mapSupplied
-     * @return BusReg
-     */
-    public function setMapSupplied($mapSupplied)
-    {
-        $this->mapSupplied = $mapSupplied;
-
-        return $this;
-    }
-
-    /**
-     * Get the map supplied
-     *
-     * @return string
-     */
-    public function getMapSupplied()
-    {
-        return $this->mapSupplied;
-    }
-
-    /**
-     * Set the route description
-     *
-     * @param string $routeDescription
-     * @return BusReg
-     */
-    public function setRouteDescription($routeDescription)
-    {
-        $this->routeDescription = $routeDescription;
-
-        return $this;
-    }
-
-    /**
-     * Get the route description
-     *
-     * @return string
-     */
-    public function getRouteDescription()
-    {
-        return $this->routeDescription;
-    }
-
-    /**
-     * Set the copied to la pte
-     *
-     * @param string $copiedToLaPte
-     * @return BusReg
-     */
-    public function setCopiedToLaPte($copiedToLaPte)
-    {
-        $this->copiedToLaPte = $copiedToLaPte;
-
-        return $this;
-    }
-
-    /**
-     * Get the copied to la pte
-     *
-     * @return string
-     */
-    public function getCopiedToLaPte()
-    {
-        return $this->copiedToLaPte;
-    }
-
-    /**
-     * Set the la short note
-     *
-     * @param string $laShortNote
-     * @return BusReg
-     */
-    public function setLaShortNote($laShortNote)
-    {
-        $this->laShortNote = $laShortNote;
-
-        return $this;
-    }
-
-    /**
-     * Get the la short note
-     *
-     * @return string
-     */
-    public function getLaShortNote()
-    {
-        return $this->laShortNote;
-    }
-
-    /**
-     * Set the application signed
-     *
-     * @param string $applicationSigned
-     * @return BusReg
-     */
-    public function setApplicationSigned($applicationSigned)
-    {
-        $this->applicationSigned = $applicationSigned;
-
-        return $this;
-    }
-
-    /**
-     * Get the application signed
-     *
-     * @return string
-     */
-    public function getApplicationSigned()
-    {
-        return $this->applicationSigned;
-    }
-
-    /**
-     * Set the completed date
-     *
-     * @param \DateTime $completedDate
-     * @return BusReg
-     */
-    public function setCompletedDate($completedDate)
-    {
-        $this->completedDate = $completedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the completed date
-     *
-     * @return \DateTime
-     */
-    public function getCompletedDate()
-    {
-        return $this->completedDate;
-    }
-
-    /**
-     * Set the route seq
-     *
-     * @param int $routeSeq
-     * @return BusReg
-     */
-    public function setRouteSeq($routeSeq)
-    {
-        $this->routeSeq = $routeSeq;
-
-        return $this;
-    }
-
-    /**
-     * Get the route seq
-     *
-     * @return int
-     */
-    public function getRouteSeq()
-    {
-        return $this->routeSeq;
     }
 
     /**
@@ -1262,75 +1050,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the stopping arrangements
-     *
-     * @param string $stoppingArrangements
-     * @return BusReg
-     */
-    public function setStoppingArrangements($stoppingArrangements)
-    {
-        $this->stoppingArrangements = $stoppingArrangements;
-
-        return $this;
-    }
-
-    /**
-     * Get the stopping arrangements
-     *
-     * @return string
-     */
-    public function getStoppingArrangements()
-    {
-        return $this->stoppingArrangements;
-    }
-
-    /**
-     * Set the trc condition checked
-     *
-     * @param string $trcConditionChecked
-     * @return BusReg
-     */
-    public function setTrcConditionChecked($trcConditionChecked)
-    {
-        $this->trcConditionChecked = $trcConditionChecked;
-
-        return $this;
-    }
-
-    /**
-     * Get the trc condition checked
-     *
-     * @return string
-     */
-    public function getTrcConditionChecked()
-    {
-        return $this->trcConditionChecked;
-    }
-
-    /**
-     * Set the trc notes
-     *
-     * @param string $trcNotes
-     * @return BusReg
-     */
-    public function setTrcNotes($trcNotes)
-    {
-        $this->trcNotes = $trcNotes;
-
-        return $this;
-    }
-
-    /**
-     * Get the trc notes
-     *
-     * @return string
-     */
-    public function getTrcNotes()
-    {
-        return $this->trcNotes;
-    }
-
-    /**
      * Set the organisation email
      *
      * @param string $organisationEmail
@@ -1354,49 +1073,95 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is txc app
+     * Set the other details
      *
-     * @param string $isTxcApp
+     * @param string $otherDetails
      * @return BusReg
      */
-    public function setIsTxcApp($isTxcApp)
+    public function setOtherDetails($otherDetails)
     {
-        $this->isTxcApp = $isTxcApp;
+        $this->otherDetails = $otherDetails;
 
         return $this;
     }
 
     /**
-     * Get the is txc app
+     * Get the other details
      *
      * @return string
      */
-    public function getIsTxcApp()
+    public function getOtherDetails()
     {
-        return $this->isTxcApp;
+        return $this->otherDetails;
     }
 
     /**
-     * Set the txc app type
+     * Set the quality contract details
      *
-     * @param string $txcAppType
+     * @param string $qualityContractDetails
      * @return BusReg
      */
-    public function setTxcAppType($txcAppType)
+    public function setQualityContractDetails($qualityContractDetails)
     {
-        $this->txcAppType = $txcAppType;
+        $this->qualityContractDetails = $qualityContractDetails;
 
         return $this;
     }
 
     /**
-     * Get the txc app type
+     * Get the quality contract details
      *
      * @return string
      */
-    public function getTxcAppType()
+    public function getQualityContractDetails()
     {
-        return $this->txcAppType;
+        return $this->qualityContractDetails;
+    }
+
+    /**
+     * Set the quality partnership details
+     *
+     * @param string $qualityPartnershipDetails
+     * @return BusReg
+     */
+    public function setQualityPartnershipDetails($qualityPartnershipDetails)
+    {
+        $this->qualityPartnershipDetails = $qualityPartnershipDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the quality partnership details
+     *
+     * @return string
+     */
+    public function getQualityPartnershipDetails()
+    {
+        return $this->qualityPartnershipDetails;
+    }
+
+    /**
+     * Set the quality partnership facilities used
+     *
+     * @param string $qualityPartnershipFacilitiesUsed
+     * @return BusReg
+     */
+    public function setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed)
+    {
+        $this->qualityPartnershipFacilitiesUsed = $qualityPartnershipFacilitiesUsed;
+
+        return $this;
+    }
+
+    /**
+     * Get the quality partnership facilities used
+     *
+     * @return string
+     */
+    public function getQualityPartnershipFacilitiesUsed()
+    {
+        return $this->qualityPartnershipFacilitiesUsed;
     }
 
     /**
@@ -1469,6 +1234,144 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the received date
+     *
+     * @param \DateTime $receivedDate
+     * @return BusReg
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the received date
+     *
+     * @return \DateTime
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
+    }
+
+    /**
+     * Set the reg no
+     *
+     * @param string $regNo
+     * @return BusReg
+     */
+    public function setRegNo($regNo)
+    {
+        $this->regNo = $regNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the reg no
+     *
+     * @return string
+     */
+    public function getRegNo()
+    {
+        return $this->regNo;
+    }
+
+    /**
+     * Set the revert status
+     *
+     * @param \Olcs\Db\Entity\RefData $revertStatus
+     * @return BusReg
+     */
+    public function setRevertStatus($revertStatus)
+    {
+        $this->revertStatus = $revertStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the revert status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRevertStatus()
+    {
+        return $this->revertStatus;
+    }
+
+    /**
+     * Set the route description
+     *
+     * @param string $routeDescription
+     * @return BusReg
+     */
+    public function setRouteDescription($routeDescription)
+    {
+        $this->routeDescription = $routeDescription;
+
+        return $this;
+    }
+
+    /**
+     * Get the route description
+     *
+     * @return string
+     */
+    public function getRouteDescription()
+    {
+        return $this->routeDescription;
+    }
+
+    /**
+     * Set the route no
+     *
+     * @param int $routeNo
+     * @return BusReg
+     */
+    public function setRouteNo($routeNo)
+    {
+        $this->routeNo = $routeNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the route no
+     *
+     * @return int
+     */
+    public function getRouteNo()
+    {
+        return $this->routeNo;
+    }
+
+    /**
+     * Set the route seq
+     *
+     * @param int $routeSeq
+     * @return BusReg
+     */
+    public function setRouteSeq($routeSeq)
+    {
+        $this->routeSeq = $routeSeq;
+
+        return $this;
+    }
+
+    /**
+     * Get the route seq
+     *
+     * @return int
+     */
+    public function getRouteSeq()
+    {
+        return $this->routeSeq;
+    }
+
+    /**
      * Set the short notice refused
      *
      * @param string $shortNoticeRefused
@@ -1492,118 +1395,293 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is quality partnership
+     * Set the start point
      *
-     * @param string $isQualityPartnership
+     * @param string $startPoint
      * @return BusReg
      */
-    public function setIsQualityPartnership($isQualityPartnership)
+    public function setStartPoint($startPoint)
     {
-        $this->isQualityPartnership = $isQualityPartnership;
+        $this->startPoint = $startPoint;
 
         return $this;
     }
 
     /**
-     * Get the is quality partnership
+     * Get the start point
      *
      * @return string
      */
-    public function getIsQualityPartnership()
+    public function getStartPoint()
     {
-        return $this->isQualityPartnership;
+        return $this->startPoint;
     }
 
     /**
-     * Set the quality partnership details
+     * Set the stopping arrangements
      *
-     * @param string $qualityPartnershipDetails
+     * @param string $stoppingArrangements
      * @return BusReg
      */
-    public function setQualityPartnershipDetails($qualityPartnershipDetails)
+    public function setStoppingArrangements($stoppingArrangements)
     {
-        $this->qualityPartnershipDetails = $qualityPartnershipDetails;
+        $this->stoppingArrangements = $stoppingArrangements;
 
         return $this;
     }
 
     /**
-     * Get the quality partnership details
+     * Get the stopping arrangements
      *
      * @return string
      */
-    public function getQualityPartnershipDetails()
+    public function getStoppingArrangements()
     {
-        return $this->qualityPartnershipDetails;
+        return $this->stoppingArrangements;
     }
 
     /**
-     * Set the quality partnership facilities used
+     * Set the subsidised
      *
-     * @param string $qualityPartnershipFacilitiesUsed
+     * @param \Olcs\Db\Entity\RefData $subsidised
      * @return BusReg
      */
-    public function setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed)
+    public function setSubsidised($subsidised)
     {
-        $this->qualityPartnershipFacilitiesUsed = $qualityPartnershipFacilitiesUsed;
+        $this->subsidised = $subsidised;
 
         return $this;
     }
 
     /**
-     * Get the quality partnership facilities used
+     * Get the subsidised
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getQualityPartnershipFacilitiesUsed()
+    public function getSubsidised()
     {
-        return $this->qualityPartnershipFacilitiesUsed;
+        return $this->subsidised;
     }
 
     /**
-     * Set the is quality contract
+     * Set the subsidy detail
      *
-     * @param string $isQualityContract
+     * @param string $subsidyDetail
      * @return BusReg
      */
-    public function setIsQualityContract($isQualityContract)
+    public function setSubsidyDetail($subsidyDetail)
     {
-        $this->isQualityContract = $isQualityContract;
+        $this->subsidyDetail = $subsidyDetail;
 
         return $this;
     }
 
     /**
-     * Get the is quality contract
+     * Get the subsidy detail
      *
      * @return string
      */
-    public function getIsQualityContract()
+    public function getSubsidyDetail()
     {
-        return $this->isQualityContract;
+        return $this->subsidyDetail;
     }
 
     /**
-     * Set the quality contract details
+     * Set the timetable acceptable
      *
-     * @param string $qualityContractDetails
+     * @param string $timetableAcceptable
      * @return BusReg
      */
-    public function setQualityContractDetails($qualityContractDetails)
+    public function setTimetableAcceptable($timetableAcceptable)
     {
-        $this->qualityContractDetails = $qualityContractDetails;
+        $this->timetableAcceptable = $timetableAcceptable;
 
         return $this;
     }
 
     /**
-     * Get the quality contract details
+     * Get the timetable acceptable
      *
      * @return string
      */
-    public function getQualityContractDetails()
+    public function getTimetableAcceptable()
     {
-        return $this->qualityContractDetails;
+        return $this->timetableAcceptable;
+    }
+
+    /**
+     * Set the trc condition checked
+     *
+     * @param string $trcConditionChecked
+     * @return BusReg
+     */
+    public function setTrcConditionChecked($trcConditionChecked)
+    {
+        $this->trcConditionChecked = $trcConditionChecked;
+
+        return $this;
+    }
+
+    /**
+     * Get the trc condition checked
+     *
+     * @return string
+     */
+    public function getTrcConditionChecked()
+    {
+        return $this->trcConditionChecked;
+    }
+
+    /**
+     * Set the trc notes
+     *
+     * @param string $trcNotes
+     * @return BusReg
+     */
+    public function setTrcNotes($trcNotes)
+    {
+        $this->trcNotes = $trcNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the trc notes
+     *
+     * @return string
+     */
+    public function getTrcNotes()
+    {
+        return $this->trcNotes;
+    }
+
+    /**
+     * Set the txc app type
+     *
+     * @param string $txcAppType
+     * @return BusReg
+     */
+    public function setTxcAppType($txcAppType)
+    {
+        $this->txcAppType = $txcAppType;
+
+        return $this;
+    }
+
+    /**
+     * Get the txc app type
+     *
+     * @return string
+     */
+    public function getTxcAppType()
+    {
+        return $this->txcAppType;
+    }
+
+    /**
+     * Set the use all stops
+     *
+     * @param string $useAllStops
+     * @return BusReg
+     */
+    public function setUseAllStops($useAllStops)
+    {
+        $this->useAllStops = $useAllStops;
+
+        return $this;
+    }
+
+    /**
+     * Get the use all stops
+     *
+     * @return string
+     */
+    public function getUseAllStops()
+    {
+        return $this->useAllStops;
+    }
+
+    /**
+     * Set the variation reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function setVariationReasons($variationReasons)
+    {
+        $this->variationReasons = $variationReasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getVariationReasons()
+    {
+        return $this->variationReasons;
+    }
+
+    /**
+     * Add a variation reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function addVariationReasons($variationReasons)
+    {
+        if ($variationReasons instanceof ArrayCollection) {
+            $this->variationReasons = new ArrayCollection(
+                array_merge(
+                    $this->variationReasons->toArray(),
+                    $variationReasons->toArray()
+                )
+            );
+        } elseif (!$this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->add($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @return BusReg
+     */
+    public function removeVariationReasons($variationReasons)
+    {
+        if ($this->variationReasons->contains($variationReasons)) {
+            $this->variationReasons->removeElement($variationReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the via
+     *
+     * @param string $via
+     * @return BusReg
+     */
+    public function setVia($via)
+    {
+        $this->via = $via;
+
+        return $this;
+    }
+
+    /**
+     * Get the via
+     *
+     * @return string
+     */
+    public function getVia()
+    {
+        return $this->via;
     }
 
     /**

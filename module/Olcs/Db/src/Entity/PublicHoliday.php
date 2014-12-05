@@ -22,21 +22,12 @@ use Olcs\Db\Entity\Traits;
 class PublicHoliday implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Public holiday date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="public_holiday_date", nullable=false)
-     */
-    protected $publicHolidayDate;
 
     /**
      * Is england
@@ -48,13 +39,13 @@ class PublicHoliday implements Interfaces\EntityInterface
     protected $isEngland;
 
     /**
-     * Is wales
+     * Is ni
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="is_wales", nullable=true)
+     * @ORM\Column(type="yesnonull", name="is_ni", nullable=true)
      */
-    protected $isWales;
+    protected $isNi;
 
     /**
      * Is scotland
@@ -66,36 +57,22 @@ class PublicHoliday implements Interfaces\EntityInterface
     protected $isScotland;
 
     /**
-     * Is ni
+     * Is wales
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="is_ni", nullable=true)
+     * @ORM\Column(type="yesnonull", name="is_wales", nullable=true)
      */
-    protected $isNi;
+    protected $isWales;
 
     /**
-     * Set the public holiday date
+     * Public holiday date
      *
-     * @param \DateTime $publicHolidayDate
-     * @return PublicHoliday
-     */
-    public function setPublicHolidayDate($publicHolidayDate)
-    {
-        $this->publicHolidayDate = $publicHolidayDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the public holiday date
+     * @var \DateTime
      *
-     * @return \DateTime
+     * @ORM\Column(type="date", name="public_holiday_date", nullable=false)
      */
-    public function getPublicHolidayDate()
-    {
-        return $this->publicHolidayDate;
-    }
+    protected $publicHolidayDate;
 
     /**
      * Set the is england
@@ -121,26 +98,26 @@ class PublicHoliday implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is wales
+     * Set the is ni
      *
-     * @param string $isWales
+     * @param string $isNi
      * @return PublicHoliday
      */
-    public function setIsWales($isWales)
+    public function setIsNi($isNi)
     {
-        $this->isWales = $isWales;
+        $this->isNi = $isNi;
 
         return $this;
     }
 
     /**
-     * Get the is wales
+     * Get the is ni
      *
      * @return string
      */
-    public function getIsWales()
+    public function getIsNi()
     {
-        return $this->isWales;
+        return $this->isNi;
     }
 
     /**
@@ -167,25 +144,48 @@ class PublicHoliday implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is ni
+     * Set the is wales
      *
-     * @param string $isNi
+     * @param string $isWales
      * @return PublicHoliday
      */
-    public function setIsNi($isNi)
+    public function setIsWales($isWales)
     {
-        $this->isNi = $isNi;
+        $this->isWales = $isWales;
 
         return $this;
     }
 
     /**
-     * Get the is ni
+     * Get the is wales
      *
      * @return string
      */
-    public function getIsNi()
+    public function getIsWales()
     {
-        return $this->isNi;
+        return $this->isWales;
+    }
+
+    /**
+     * Set the public holiday date
+     *
+     * @param \DateTime $publicHolidayDate
+     * @return PublicHoliday
+     */
+    public function setPublicHolidayDate($publicHolidayDate)
+    {
+        $this->publicHolidayDate = $publicHolidayDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the public holiday date
+     *
+     * @return \DateTime
+     */
+    public function getPublicHolidayDate()
+    {
+        return $this->publicHolidayDate;
     }
 }

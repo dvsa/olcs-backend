@@ -16,7 +16,6 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_disqualification_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_disqualification_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_disqualification_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_disqualification_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_disqualification_user2_idx", columns={"last_modified_by"})
  *    }
@@ -25,15 +24,15 @@ use Olcs\Db\Entity\Traits;
 class Disqualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
         Traits\StartDateFieldAlt1,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
@@ -44,15 +43,6 @@ class Disqualification implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_disqualified", nullable=true)
      */
     protected $isDisqualified;
-
-    /**
-     * Notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="notes", length=45, nullable=true)
-     */
-    protected $notes;
 
     /**
      * Period
@@ -84,29 +74,6 @@ class Disqualification implements Interfaces\EntityInterface
     public function getIsDisqualified()
     {
         return $this->isDisqualified;
-    }
-
-    /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return Disqualification
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
     }
 
     /**

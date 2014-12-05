@@ -20,8 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_licence_vehicle_vehicle1_idx", columns={"vehicle_id"}),
  *        @ORM\Index(name="fk_licence_vehicle_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_licence_vehicle_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_vehicle_ref_data1_idx", columns={"removal_reason"}),
  *        @ORM\Index(name="fk_licence_vehicle_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_licence_vehicle_application2_idx", columns={"interim_application_id"}),
  *        @ORM\Index(name="fk_licence_vehicle_licence1", columns={"licence_id"})
  *    }
  * )
@@ -29,56 +29,37 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\RemovalReasonManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\ReceivedDateField,
-        Traits\CustomDeletedDateField,
-        Traits\ViAction1Field,
-        Traits\SpecifiedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\ReceivedDateField,
+        Traits\SpecifiedDateField,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
-     * Vehicle
+     * Interim application
      *
-     * @var \Olcs\Db\Entity\Vehicle
+     * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", fetch="LAZY", inversedBy="licenceVehicles")
-     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
+     * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
      */
-    protected $vehicle;
+    protected $interimApplication;
 
     /**
      * Licence
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
-
-    /**
-     * Removal
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="removal", nullable=true)
-     */
-    protected $removal;
-
-    /**
-     * Removal letter seed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="removal_letter_seed_date", nullable=true)
-     */
-    protected $removalLetterSeedDate;
 
     /**
      * Removal date
@@ -90,13 +71,23 @@ class LicenceVehicle implements Interfaces\EntityInterface
     protected $removalDate;
 
     /**
-     * Is interim
+     * Removal letter seed date
      *
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(type="integer", name="is_interim", nullable=true)
+     * @ORM\Column(type="datetime", name="removal_letter_seed_date", nullable=true)
      */
-    protected $isInterim;
+    protected $removalLetterSeedDate;
+
+    /**
+     * Vehicle
+     *
+     * @var \Olcs\Db\Entity\Vehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
+     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
+     */
+    protected $vehicle;
 
     /**
      * Warning letter seed date
@@ -135,26 +126,26 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the vehicle
+     * Set the interim application
      *
-     * @param \Olcs\Db\Entity\Vehicle $vehicle
+     * @param \Olcs\Db\Entity\Application $interimApplication
      * @return LicenceVehicle
      */
-    public function setVehicle($vehicle)
+    public function setInterimApplication($interimApplication)
     {
-        $this->vehicle = $vehicle;
+        $this->interimApplication = $interimApplication;
 
         return $this;
     }
 
     /**
-     * Get the vehicle
+     * Get the interim application
      *
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getVehicle()
+    public function getInterimApplication()
     {
-        return $this->vehicle;
+        return $this->interimApplication;
     }
 
     /**
@@ -181,26 +172,26 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the removal
+     * Set the removal date
      *
-     * @param string $removal
+     * @param \DateTime $removalDate
      * @return LicenceVehicle
      */
-    public function setRemoval($removal)
+    public function setRemovalDate($removalDate)
     {
-        $this->removal = $removal;
+        $this->removalDate = $removalDate;
 
         return $this;
     }
 
     /**
-     * Get the removal
+     * Get the removal date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getRemoval()
+    public function getRemovalDate()
     {
-        return $this->removal;
+        return $this->removalDate;
     }
 
     /**
@@ -227,49 +218,26 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the removal date
+     * Set the vehicle
      *
-     * @param \DateTime $removalDate
+     * @param \Olcs\Db\Entity\Vehicle $vehicle
      * @return LicenceVehicle
      */
-    public function setRemovalDate($removalDate)
+    public function setVehicle($vehicle)
     {
-        $this->removalDate = $removalDate;
+        $this->vehicle = $vehicle;
 
         return $this;
     }
 
     /**
-     * Get the removal date
+     * Get the vehicle
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\Vehicle
      */
-    public function getRemovalDate()
+    public function getVehicle()
     {
-        return $this->removalDate;
-    }
-
-    /**
-     * Set the is interim
-     *
-     * @param int $isInterim
-     * @return LicenceVehicle
-     */
-    public function setIsInterim($isInterim)
-    {
-        $this->isInterim = $isInterim;
-
-        return $this;
-    }
-
-    /**
-     * Get the is interim
-     *
-     * @return int
-     */
-    public function getIsInterim()
-    {
-        return $this->isInterim;
+        return $this->vehicle;
     }
 
     /**

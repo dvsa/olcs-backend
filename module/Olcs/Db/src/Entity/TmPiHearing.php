@@ -30,37 +30,43 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmPiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\VenueManyToOne,
-        Traits\PresidingTcManyToOneAlt1,
-        Traits\CaseManyToOneAlt1,
-        Traits\WitnessesField,
-        Traits\AdjournedDateField,
         Traits\AgreedDateField,
-        Traits\CancelledDateField,
-        Traits\CustomDeletedDateField,
+        Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\PresidingTcManyToOneAlt1,
+        Traits\VenueManyToOne,
+        Traits\CustomVersionField,
+        Traits\WitnessesField;
 
     /**
-     * Type
+     * Adjourned date
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="datetime", name="adjourned_date", nullable=true)
      */
-    protected $type;
+    protected $adjournedDate;
+
+    /**
+     * Cancelled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cancelled_date", nullable=true)
+     */
+    protected $cancelledDate;
 
     /**
      * Presided by
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
      */
     protected $presidedBy;
@@ -70,19 +76,10 @@ class TmPiHearing implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
     protected $reason;
-
-    /**
-     * Scheduled on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
-     */
-    protected $scheduledOn;
 
     /**
      * Rescheduled on
@@ -94,26 +91,68 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $rescheduledOn;
 
     /**
-     * Set the type
+     * Scheduled on
      *
-     * @param \Olcs\Db\Entity\RefData $type
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
+     */
+    protected $scheduledOn;
+
+    /**
+     * Type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $type;
+
+    /**
+     * Set the adjourned date
+     *
+     * @param \DateTime $adjournedDate
      * @return TmPiHearing
      */
-    public function setType($type)
+    public function setAdjournedDate($adjournedDate)
     {
-        $this->type = $type;
+        $this->adjournedDate = $adjournedDate;
 
         return $this;
     }
 
     /**
-     * Get the type
+     * Get the adjourned date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getType()
+    public function getAdjournedDate()
     {
-        return $this->type;
+        return $this->adjournedDate;
+    }
+
+    /**
+     * Set the cancelled date
+     *
+     * @param \DateTime $cancelledDate
+     * @return TmPiHearing
+     */
+    public function setCancelledDate($cancelledDate)
+    {
+        $this->cancelledDate = $cancelledDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancelled date
+     *
+     * @return \DateTime
+     */
+    public function getCancelledDate()
+    {
+        return $this->cancelledDate;
     }
 
     /**
@@ -163,6 +202,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the rescheduled on
+     *
+     * @param \DateTime $rescheduledOn
+     * @return TmPiHearing
+     */
+    public function setRescheduledOn($rescheduledOn)
+    {
+        $this->rescheduledOn = $rescheduledOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the rescheduled on
+     *
+     * @return \DateTime
+     */
+    public function getRescheduledOn()
+    {
+        return $this->rescheduledOn;
+    }
+
+    /**
      * Set the scheduled on
      *
      * @param \DateTime $scheduledOn
@@ -186,25 +248,25 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the rescheduled on
+     * Set the type
      *
-     * @param \DateTime $rescheduledOn
+     * @param \Olcs\Db\Entity\RefData $type
      * @return TmPiHearing
      */
-    public function setRescheduledOn($rescheduledOn)
+    public function setType($type)
     {
-        $this->rescheduledOn = $rescheduledOn;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get the rescheduled on
+     * Get the type
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getRescheduledOn()
+    public function getType()
     {
-        return $this->rescheduledOn;
+        return $this->type;
     }
 }

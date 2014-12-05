@@ -15,65 +15,42 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="submission_section_comment",
  *    indexes={
  *        @ORM\Index(name="fk_submission_section_submission1_idx", columns={"submission_id"}),
- *        @ORM\Index(name="fk_submission_section_comment_ref_data1_idx", columns={"submission_section"}),
- *        @ORM\Index(name="fk_submission_section_comment_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_section_comment_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_submission_section_comments_ref_data1_idx", columns={"submission_section"}),
+ *        @ORM\Index(name="fk_submission_section_comments_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_submission_section_comments_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
 class SubmissionSectionComment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CommentField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CommentField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Submission section
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionSection;
 
     /**
      * Submission
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", fetch="LAZY", inversedBy="submissionSectionComments")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionSectionComments")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
 
     /**
-     * Set the submission section
+     * Submission section
      *
-     * @param \Olcs\Db\Entity\RefData $submissionSection
-     * @return SubmissionSectionComment
-     */
-    public function setSubmissionSection($submissionSection)
-    {
-        $this->submissionSection = $submissionSection;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission section
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="submission_section", referencedColumnName="id", nullable=false)
      */
-    public function getSubmissionSection()
-    {
-        return $this->submissionSection;
-    }
+    protected $submissionSection;
 
     /**
      * Set the submission
@@ -96,5 +73,28 @@ class SubmissionSectionComment implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the submission section
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionSection
+     * @return SubmissionSectionComment
+     */
+    public function setSubmissionSection($submissionSection)
+    {
+        $this->submissionSection = $submissionSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission section
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionSection()
+    {
+        return $this->submissionSection;
     }
 }

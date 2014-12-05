@@ -26,13 +26,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManagerApplication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Action1Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOneAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -40,7 +41,7 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;

@@ -21,77 +21,35 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
  *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
  *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
- *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="fk_application_ref_data5_idx", columns={"goods_or_psv"})
  *    }
  * )
  */
 class Application implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\StatusManyToOne,
-        Traits\LicenceTypeManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\GoodsOrPsvManyToOne,
+        Traits\GrantedDateField,
+        Traits\IdIdentity,
+        Traits\IsMaintenanceSuitableField,
         Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\LicenceTypeManyToOne,
+        Traits\NiFlagField,
+        Traits\ReceivedDateField,
+        Traits\StatusManyToOne,
+        Traits\TotAuthLargeVehiclesField,
+        Traits\TotAuthMediumVehiclesField,
+        Traits\TotAuthSmallVehiclesField,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
-        Traits\TotAuthSmallVehiclesField,
-        Traits\TotAuthMediumVehiclesField,
-        Traits\TotAuthLargeVehiclesField,
         Traits\TotCommunityLicencesField,
+        Traits\CustomVersionField,
         Traits\WithdrawnDateField,
-        Traits\IsMaintenanceSuitableField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Interim status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="interim_status", referencedColumnName="id", nullable=true)
-     */
-    protected $interimStatus;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="applications")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licence;
-
-    /**
-     * Is variation
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_variation", nullable=false)
-     */
-    protected $isVariation;
-
-    /**
-     * Has entered reg
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="has_entered_reg", nullable=true)
-     */
-    protected $hasEnteredReg;
-
-    /**
-     * Bankrupt
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
-     */
-    protected $bankrupt;
+        Traits\WithdrawnReasonManyToOne;
 
     /**
      * Administration
@@ -103,6 +61,24 @@ class Application implements Interfaces\EntityInterface
     protected $administration;
 
     /**
+     * Bankrupt
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="bankrupt", nullable=true)
+     */
+    protected $bankrupt;
+
+    /**
+     * Convictions confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false)
+     */
+    protected $convictionsConfirmation = 0;
+
+    /**
      * Disqualified
      *
      * @var string
@@ -112,22 +88,13 @@ class Application implements Interfaces\EntityInterface
     protected $disqualified;
 
     /**
-     * Liquidation
+     * Has entered reg
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
+     * @ORM\Column(type="yesnonull", name="has_entered_reg", nullable=true)
      */
-    protected $liquidation;
-
-    /**
-     * Receivership
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
-     */
-    protected $receivership;
+    protected $hasEnteredReg;
 
     /**
      * Insolvency confirmation
@@ -148,85 +115,87 @@ class Application implements Interfaces\EntityInterface
     protected $insolvencyDetails;
 
     /**
-     * Safety confirmation
+     * Interim auth trailers
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
+     * @ORM\Column(type="integer", name="interim_auth_trailers", nullable=true)
      */
-    protected $safetyConfirmation = 1;
+    protected $interimAuthTrailers;
 
     /**
-     * Received date
+     * Interim auth vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="interim_auth_vehicles", nullable=true)
+     */
+    protected $interimAuthVehicles;
+
+    /**
+     * Interim end
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="received_date", nullable=true)
+     * @ORM\Column(type="date", name="interim_end", nullable=true)
      */
-    protected $receivedDate;
+    protected $interimEnd;
 
     /**
-     * Target completion date
+     * Interim start
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="target_completion_date", nullable=true)
+     * @ORM\Column(type="date", name="interim_start", nullable=true)
      */
-    protected $targetCompletionDate;
+    protected $interimStart;
 
     /**
-     * Granted date
+     * Interim status
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="granted_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="interim_status", referencedColumnName="id", nullable=true)
      */
-    protected $grantedDate;
+    protected $interimStatus;
 
     /**
-     * Refused date
+     * Is variation
      *
-     * @var \DateTime
+     * @var boolean
      *
-     * @ORM\Column(type="datetime", name="refused_date", nullable=true)
+     * @ORM\Column(type="boolean", name="is_variation", nullable=false)
      */
-    protected $refusedDate;
+    protected $isVariation;
 
     /**
-     * Prev has licence
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="applications")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
+
+    /**
+     * Liquidation
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="prev_has_licence", nullable=true)
+     * @ORM\Column(type="yesnonull", name="liquidation", nullable=true)
      */
-    protected $prevHasLicence;
+    protected $liquidation;
 
     /**
-     * Prev had licence
+     * Override ooo
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="prev_had_licence", nullable=true)
+     * @ORM\Column(type="yesno", name="override_ooo", nullable=false)
      */
-    protected $prevHadLicence;
-
-    /**
-     * Prev been refused
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="prev_been_refused", nullable=true)
-     */
-    protected $prevBeenRefused;
-
-    /**
-     * Prev been revoked
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="prev_been_revoked", nullable=true)
-     */
-    protected $prevBeenRevoked;
+    protected $overrideOoo = 0;
 
     /**
      * Prev been at pi
@@ -247,22 +216,22 @@ class Application implements Interfaces\EntityInterface
     protected $prevBeenDisqualifiedTc;
 
     /**
-     * Prev purchased assets
+     * Prev been refused
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="prev_purchased_assets", nullable=true)
+     * @ORM\Column(type="yesnonull", name="prev_been_refused", nullable=true)
      */
-    protected $prevPurchasedAssets;
+    protected $prevBeenRefused;
 
     /**
-     * Override ooo
+     * Prev been revoked
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="override_ooo", nullable=false)
+     * @ORM\Column(type="yesnonull", name="prev_been_revoked", nullable=true)
      */
-    protected $overrideOoo = 0;
+    protected $prevBeenRevoked;
 
     /**
      * Prev conviction
@@ -274,13 +243,67 @@ class Application implements Interfaces\EntityInterface
     protected $prevConviction;
 
     /**
-     * Convictions confirmation
+     * Prev had licence
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="prev_had_licence", nullable=true)
      */
-    protected $convictionsConfirmation = 0;
+    protected $prevHadLicence;
+
+    /**
+     * Prev has licence
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="prev_has_licence", nullable=true)
+     */
+    protected $prevHasLicence;
+
+    /**
+     * Prev purchased assets
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="prev_purchased_assets", nullable=true)
+     */
+    protected $prevPurchasedAssets;
+
+    /**
+     * Psv limousines
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_limousines", nullable=true)
+     */
+    protected $psvLimousines;
+
+    /**
+     * Psv no limousine confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_no_limousine_confirmation", nullable=true)
+     */
+    protected $psvNoLimousineConfirmation;
+
+    /**
+     * Psv no small vhl confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_no_small_vhl_confirmation", nullable=true)
+     */
+    protected $psvNoSmallVhlConfirmation;
+
+    /**
+     * Psv only limousines confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_only_limousines_confirmation", nullable=true)
+     */
+    protected $psvOnlyLimousinesConfirmation;
 
     /**
      * Psv operate small vhl
@@ -292,6 +315,15 @@ class Application implements Interfaces\EntityInterface
     protected $psvOperateSmallVhl;
 
     /**
+     * Psv small vhl confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_small_vhl_confirmation", nullable=true)
+     */
+    protected $psvSmallVhlConfirmation;
+
+    /**
      * Psv small vhl notes
      *
      * @var string
@@ -301,85 +333,40 @@ class Application implements Interfaces\EntityInterface
     protected $psvSmallVhlNotes;
 
     /**
-     * Psv small vhl confirmation
+     * Receivership
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="psv_small_vhl_confirmation", nullable=false)
+     * @ORM\Column(type="yesnonull", name="receivership", nullable=true)
      */
-    protected $psvSmallVhlConfirmation = 0;
+    protected $receivership;
 
     /**
-     * Psv no small vhl confirmation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="psv_no_small_vhl_confirmation", nullable=false)
-     */
-    protected $psvNoSmallVhlConfirmation = 0;
-
-    /**
-     * Psv limousines
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="psv_limousines", nullable=false)
-     */
-    protected $psvLimousines = 0;
-
-    /**
-     * Psv no limousine confirmation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="psv_no_limousine_confirmation", nullable=false)
-     */
-    protected $psvNoLimousineConfirmation = 0;
-
-    /**
-     * Psv only limousines confirmation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="psv_only_limousines_confirmation", nullable=false)
-     */
-    protected $psvOnlyLimousinesConfirmation = 0;
-
-    /**
-     * Interim start
+     * Refused date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="interim_start", nullable=true)
+     * @ORM\Column(type="datetime", name="refused_date", nullable=true)
      */
-    protected $interimStart;
+    protected $refusedDate;
 
     /**
-     * Interim end
+     * Safety confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
+     */
+    protected $safetyConfirmation = 0;
+
+    /**
+     * Target completion date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="interim_end", nullable=true)
+     * @ORM\Column(type="datetime", name="target_completion_date", nullable=true)
      */
-    protected $interimEnd;
-
-    /**
-     * Interim auth vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="interim_auth_vehicles", nullable=true)
-     */
-    protected $interimAuthVehicles;
-
-    /**
-     * Interim auth trailers
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="interim_auth_trailers", nullable=true)
-     */
-    protected $interimAuthTrailers;
+    protected $targetCompletionDate;
 
     /**
      * Application completion
@@ -449,95 +436,26 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the interim status
+     * Set the administration
      *
-     * @param \Olcs\Db\Entity\RefData $interimStatus
+     * @param string $administration
      * @return Application
      */
-    public function setInterimStatus($interimStatus)
+    public function setAdministration($administration)
     {
-        $this->interimStatus = $interimStatus;
+        $this->administration = $administration;
 
         return $this;
     }
 
     /**
-     * Get the interim status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getInterimStatus()
-    {
-        return $this->interimStatus;
-    }
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return Application
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
-
-    /**
-     * Set the is variation
-     *
-     * @param boolean $isVariation
-     * @return Application
-     */
-    public function setIsVariation($isVariation)
-    {
-        $this->isVariation = $isVariation;
-
-        return $this;
-    }
-
-    /**
-     * Get the is variation
-     *
-     * @return boolean
-     */
-    public function getIsVariation()
-    {
-        return $this->isVariation;
-    }
-
-    /**
-     * Set the has entered reg
-     *
-     * @param string $hasEnteredReg
-     * @return Application
-     */
-    public function setHasEnteredReg($hasEnteredReg)
-    {
-        $this->hasEnteredReg = $hasEnteredReg;
-
-        return $this;
-    }
-
-    /**
-     * Get the has entered reg
+     * Get the administration
      *
      * @return string
      */
-    public function getHasEnteredReg()
+    public function getAdministration()
     {
-        return $this->hasEnteredReg;
+        return $this->administration;
     }
 
     /**
@@ -564,26 +482,26 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the administration
+     * Set the convictions confirmation
      *
-     * @param string $administration
+     * @param string $convictionsConfirmation
      * @return Application
      */
-    public function setAdministration($administration)
+    public function setConvictionsConfirmation($convictionsConfirmation)
     {
-        $this->administration = $administration;
+        $this->convictionsConfirmation = $convictionsConfirmation;
 
         return $this;
     }
 
     /**
-     * Get the administration
+     * Get the convictions confirmation
      *
      * @return string
      */
-    public function getAdministration()
+    public function getConvictionsConfirmation()
     {
-        return $this->administration;
+        return $this->convictionsConfirmation;
     }
 
     /**
@@ -610,49 +528,26 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the liquidation
+     * Set the has entered reg
      *
-     * @param string $liquidation
+     * @param string $hasEnteredReg
      * @return Application
      */
-    public function setLiquidation($liquidation)
+    public function setHasEnteredReg($hasEnteredReg)
     {
-        $this->liquidation = $liquidation;
+        $this->hasEnteredReg = $hasEnteredReg;
 
         return $this;
     }
 
     /**
-     * Get the liquidation
+     * Get the has entered reg
      *
      * @return string
      */
-    public function getLiquidation()
+    public function getHasEnteredReg()
     {
-        return $this->liquidation;
-    }
-
-    /**
-     * Set the receivership
-     *
-     * @param string $receivership
-     * @return Application
-     */
-    public function setReceivership($receivership)
-    {
-        $this->receivership = $receivership;
-
-        return $this;
-    }
-
-    /**
-     * Get the receivership
-     *
-     * @return string
-     */
-    public function getReceivership()
-    {
-        return $this->receivership;
+        return $this->hasEnteredReg;
     }
 
     /**
@@ -702,210 +597,210 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the safety confirmation
+     * Set the interim auth trailers
      *
-     * @param string $safetyConfirmation
+     * @param int $interimAuthTrailers
      * @return Application
      */
-    public function setSafetyConfirmation($safetyConfirmation)
+    public function setInterimAuthTrailers($interimAuthTrailers)
     {
-        $this->safetyConfirmation = $safetyConfirmation;
+        $this->interimAuthTrailers = $interimAuthTrailers;
 
         return $this;
     }
 
     /**
-     * Get the safety confirmation
+     * Get the interim auth trailers
      *
-     * @return string
+     * @return int
      */
-    public function getSafetyConfirmation()
+    public function getInterimAuthTrailers()
     {
-        return $this->safetyConfirmation;
+        return $this->interimAuthTrailers;
     }
 
     /**
-     * Set the received date
+     * Set the interim auth vehicles
      *
-     * @param \DateTime $receivedDate
+     * @param int $interimAuthVehicles
      * @return Application
      */
-    public function setReceivedDate($receivedDate)
+    public function setInterimAuthVehicles($interimAuthVehicles)
     {
-        $this->receivedDate = $receivedDate;
+        $this->interimAuthVehicles = $interimAuthVehicles;
 
         return $this;
     }
 
     /**
-     * Get the received date
+     * Get the interim auth vehicles
+     *
+     * @return int
+     */
+    public function getInterimAuthVehicles()
+    {
+        return $this->interimAuthVehicles;
+    }
+
+    /**
+     * Set the interim end
+     *
+     * @param \DateTime $interimEnd
+     * @return Application
+     */
+    public function setInterimEnd($interimEnd)
+    {
+        $this->interimEnd = $interimEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim end
      *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getInterimEnd()
     {
-        return $this->receivedDate;
+        return $this->interimEnd;
     }
 
     /**
-     * Set the target completion date
+     * Set the interim start
      *
-     * @param \DateTime $targetCompletionDate
+     * @param \DateTime $interimStart
      * @return Application
      */
-    public function setTargetCompletionDate($targetCompletionDate)
+    public function setInterimStart($interimStart)
     {
-        $this->targetCompletionDate = $targetCompletionDate;
+        $this->interimStart = $interimStart;
 
         return $this;
     }
 
     /**
-     * Get the target completion date
+     * Get the interim start
      *
      * @return \DateTime
      */
-    public function getTargetCompletionDate()
+    public function getInterimStart()
     {
-        return $this->targetCompletionDate;
+        return $this->interimStart;
     }
 
     /**
-     * Set the granted date
+     * Set the interim status
      *
-     * @param \DateTime $grantedDate
+     * @param \Olcs\Db\Entity\RefData $interimStatus
      * @return Application
      */
-    public function setGrantedDate($grantedDate)
+    public function setInterimStatus($interimStatus)
     {
-        $this->grantedDate = $grantedDate;
+        $this->interimStatus = $interimStatus;
 
         return $this;
     }
 
     /**
-     * Get the granted date
+     * Get the interim status
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getGrantedDate()
+    public function getInterimStatus()
     {
-        return $this->grantedDate;
+        return $this->interimStatus;
     }
 
     /**
-     * Set the refused date
+     * Set the is variation
      *
-     * @param \DateTime $refusedDate
+     * @param boolean $isVariation
      * @return Application
      */
-    public function setRefusedDate($refusedDate)
+    public function setIsVariation($isVariation)
     {
-        $this->refusedDate = $refusedDate;
+        $this->isVariation = $isVariation;
 
         return $this;
     }
 
     /**
-     * Get the refused date
+     * Get the is variation
      *
-     * @return \DateTime
+     * @return boolean
      */
-    public function getRefusedDate()
+    public function getIsVariation()
     {
-        return $this->refusedDate;
+        return $this->isVariation;
     }
 
     /**
-     * Set the prev has licence
+     * Set the licence
      *
-     * @param string $prevHasLicence
+     * @param \Olcs\Db\Entity\Licence $licence
      * @return Application
      */
-    public function setPrevHasLicence($prevHasLicence)
+    public function setLicence($licence)
     {
-        $this->prevHasLicence = $prevHasLicence;
+        $this->licence = $licence;
 
         return $this;
     }
 
     /**
-     * Get the prev has licence
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set the liquidation
+     *
+     * @param string $liquidation
+     * @return Application
+     */
+    public function setLiquidation($liquidation)
+    {
+        $this->liquidation = $liquidation;
+
+        return $this;
+    }
+
+    /**
+     * Get the liquidation
      *
      * @return string
      */
-    public function getPrevHasLicence()
+    public function getLiquidation()
     {
-        return $this->prevHasLicence;
+        return $this->liquidation;
     }
 
     /**
-     * Set the prev had licence
+     * Set the override ooo
      *
-     * @param string $prevHadLicence
+     * @param string $overrideOoo
      * @return Application
      */
-    public function setPrevHadLicence($prevHadLicence)
+    public function setOverrideOoo($overrideOoo)
     {
-        $this->prevHadLicence = $prevHadLicence;
+        $this->overrideOoo = $overrideOoo;
 
         return $this;
     }
 
     /**
-     * Get the prev had licence
+     * Get the override ooo
      *
      * @return string
      */
-    public function getPrevHadLicence()
+    public function getOverrideOoo()
     {
-        return $this->prevHadLicence;
-    }
-
-    /**
-     * Set the prev been refused
-     *
-     * @param string $prevBeenRefused
-     * @return Application
-     */
-    public function setPrevBeenRefused($prevBeenRefused)
-    {
-        $this->prevBeenRefused = $prevBeenRefused;
-
-        return $this;
-    }
-
-    /**
-     * Get the prev been refused
-     *
-     * @return string
-     */
-    public function getPrevBeenRefused()
-    {
-        return $this->prevBeenRefused;
-    }
-
-    /**
-     * Set the prev been revoked
-     *
-     * @param string $prevBeenRevoked
-     * @return Application
-     */
-    public function setPrevBeenRevoked($prevBeenRevoked)
-    {
-        $this->prevBeenRevoked = $prevBeenRevoked;
-
-        return $this;
-    }
-
-    /**
-     * Get the prev been revoked
-     *
-     * @return string
-     */
-    public function getPrevBeenRevoked()
-    {
-        return $this->prevBeenRevoked;
+        return $this->overrideOoo;
     }
 
     /**
@@ -955,49 +850,49 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the prev purchased assets
+     * Set the prev been refused
      *
-     * @param string $prevPurchasedAssets
+     * @param string $prevBeenRefused
      * @return Application
      */
-    public function setPrevPurchasedAssets($prevPurchasedAssets)
+    public function setPrevBeenRefused($prevBeenRefused)
     {
-        $this->prevPurchasedAssets = $prevPurchasedAssets;
+        $this->prevBeenRefused = $prevBeenRefused;
 
         return $this;
     }
 
     /**
-     * Get the prev purchased assets
+     * Get the prev been refused
      *
      * @return string
      */
-    public function getPrevPurchasedAssets()
+    public function getPrevBeenRefused()
     {
-        return $this->prevPurchasedAssets;
+        return $this->prevBeenRefused;
     }
 
     /**
-     * Set the override ooo
+     * Set the prev been revoked
      *
-     * @param string $overrideOoo
+     * @param string $prevBeenRevoked
      * @return Application
      */
-    public function setOverrideOoo($overrideOoo)
+    public function setPrevBeenRevoked($prevBeenRevoked)
     {
-        $this->overrideOoo = $overrideOoo;
+        $this->prevBeenRevoked = $prevBeenRevoked;
 
         return $this;
     }
 
     /**
-     * Get the override ooo
+     * Get the prev been revoked
      *
      * @return string
      */
-    public function getOverrideOoo()
+    public function getPrevBeenRevoked()
     {
-        return $this->overrideOoo;
+        return $this->prevBeenRevoked;
     }
 
     /**
@@ -1024,118 +919,72 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the convictions confirmation
+     * Set the prev had licence
      *
-     * @param string $convictionsConfirmation
+     * @param string $prevHadLicence
      * @return Application
      */
-    public function setConvictionsConfirmation($convictionsConfirmation)
+    public function setPrevHadLicence($prevHadLicence)
     {
-        $this->convictionsConfirmation = $convictionsConfirmation;
+        $this->prevHadLicence = $prevHadLicence;
 
         return $this;
     }
 
     /**
-     * Get the convictions confirmation
+     * Get the prev had licence
      *
      * @return string
      */
-    public function getConvictionsConfirmation()
+    public function getPrevHadLicence()
     {
-        return $this->convictionsConfirmation;
+        return $this->prevHadLicence;
     }
 
     /**
-     * Set the psv operate small vhl
+     * Set the prev has licence
      *
-     * @param string $psvOperateSmallVhl
+     * @param string $prevHasLicence
      * @return Application
      */
-    public function setPsvOperateSmallVhl($psvOperateSmallVhl)
+    public function setPrevHasLicence($prevHasLicence)
     {
-        $this->psvOperateSmallVhl = $psvOperateSmallVhl;
+        $this->prevHasLicence = $prevHasLicence;
 
         return $this;
     }
 
     /**
-     * Get the psv operate small vhl
+     * Get the prev has licence
      *
      * @return string
      */
-    public function getPsvOperateSmallVhl()
+    public function getPrevHasLicence()
     {
-        return $this->psvOperateSmallVhl;
+        return $this->prevHasLicence;
     }
 
     /**
-     * Set the psv small vhl notes
+     * Set the prev purchased assets
      *
-     * @param string $psvSmallVhlNotes
+     * @param string $prevPurchasedAssets
      * @return Application
      */
-    public function setPsvSmallVhlNotes($psvSmallVhlNotes)
+    public function setPrevPurchasedAssets($prevPurchasedAssets)
     {
-        $this->psvSmallVhlNotes = $psvSmallVhlNotes;
+        $this->prevPurchasedAssets = $prevPurchasedAssets;
 
         return $this;
     }
 
     /**
-     * Get the psv small vhl notes
+     * Get the prev purchased assets
      *
      * @return string
      */
-    public function getPsvSmallVhlNotes()
+    public function getPrevPurchasedAssets()
     {
-        return $this->psvSmallVhlNotes;
-    }
-
-    /**
-     * Set the psv small vhl confirmation
-     *
-     * @param string $psvSmallVhlConfirmation
-     * @return Application
-     */
-    public function setPsvSmallVhlConfirmation($psvSmallVhlConfirmation)
-    {
-        $this->psvSmallVhlConfirmation = $psvSmallVhlConfirmation;
-
-        return $this;
-    }
-
-    /**
-     * Get the psv small vhl confirmation
-     *
-     * @return string
-     */
-    public function getPsvSmallVhlConfirmation()
-    {
-        return $this->psvSmallVhlConfirmation;
-    }
-
-    /**
-     * Set the psv no small vhl confirmation
-     *
-     * @param string $psvNoSmallVhlConfirmation
-     * @return Application
-     */
-    public function setPsvNoSmallVhlConfirmation($psvNoSmallVhlConfirmation)
-    {
-        $this->psvNoSmallVhlConfirmation = $psvNoSmallVhlConfirmation;
-
-        return $this;
-    }
-
-    /**
-     * Get the psv no small vhl confirmation
-     *
-     * @return string
-     */
-    public function getPsvNoSmallVhlConfirmation()
-    {
-        return $this->psvNoSmallVhlConfirmation;
+        return $this->prevPurchasedAssets;
     }
 
     /**
@@ -1185,6 +1034,29 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the psv no small vhl confirmation
+     *
+     * @param string $psvNoSmallVhlConfirmation
+     * @return Application
+     */
+    public function setPsvNoSmallVhlConfirmation($psvNoSmallVhlConfirmation)
+    {
+        $this->psvNoSmallVhlConfirmation = $psvNoSmallVhlConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv no small vhl confirmation
+     *
+     * @return string
+     */
+    public function getPsvNoSmallVhlConfirmation()
+    {
+        return $this->psvNoSmallVhlConfirmation;
+    }
+
+    /**
      * Set the psv only limousines confirmation
      *
      * @param string $psvOnlyLimousinesConfirmation
@@ -1208,95 +1080,164 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the interim start
+     * Set the psv operate small vhl
      *
-     * @param \DateTime $interimStart
+     * @param string $psvOperateSmallVhl
      * @return Application
      */
-    public function setInterimStart($interimStart)
+    public function setPsvOperateSmallVhl($psvOperateSmallVhl)
     {
-        $this->interimStart = $interimStart;
+        $this->psvOperateSmallVhl = $psvOperateSmallVhl;
 
         return $this;
     }
 
     /**
-     * Get the interim start
+     * Get the psv operate small vhl
+     *
+     * @return string
+     */
+    public function getPsvOperateSmallVhl()
+    {
+        return $this->psvOperateSmallVhl;
+    }
+
+    /**
+     * Set the psv small vhl confirmation
+     *
+     * @param string $psvSmallVhlConfirmation
+     * @return Application
+     */
+    public function setPsvSmallVhlConfirmation($psvSmallVhlConfirmation)
+    {
+        $this->psvSmallVhlConfirmation = $psvSmallVhlConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv small vhl confirmation
+     *
+     * @return string
+     */
+    public function getPsvSmallVhlConfirmation()
+    {
+        return $this->psvSmallVhlConfirmation;
+    }
+
+    /**
+     * Set the psv small vhl notes
+     *
+     * @param string $psvSmallVhlNotes
+     * @return Application
+     */
+    public function setPsvSmallVhlNotes($psvSmallVhlNotes)
+    {
+        $this->psvSmallVhlNotes = $psvSmallVhlNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv small vhl notes
+     *
+     * @return string
+     */
+    public function getPsvSmallVhlNotes()
+    {
+        return $this->psvSmallVhlNotes;
+    }
+
+    /**
+     * Set the receivership
+     *
+     * @param string $receivership
+     * @return Application
+     */
+    public function setReceivership($receivership)
+    {
+        $this->receivership = $receivership;
+
+        return $this;
+    }
+
+    /**
+     * Get the receivership
+     *
+     * @return string
+     */
+    public function getReceivership()
+    {
+        return $this->receivership;
+    }
+
+    /**
+     * Set the refused date
+     *
+     * @param \DateTime $refusedDate
+     * @return Application
+     */
+    public function setRefusedDate($refusedDate)
+    {
+        $this->refusedDate = $refusedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the refused date
      *
      * @return \DateTime
      */
-    public function getInterimStart()
+    public function getRefusedDate()
     {
-        return $this->interimStart;
+        return $this->refusedDate;
     }
 
     /**
-     * Set the interim end
+     * Set the safety confirmation
      *
-     * @param \DateTime $interimEnd
+     * @param string $safetyConfirmation
      * @return Application
      */
-    public function setInterimEnd($interimEnd)
+    public function setSafetyConfirmation($safetyConfirmation)
     {
-        $this->interimEnd = $interimEnd;
+        $this->safetyConfirmation = $safetyConfirmation;
 
         return $this;
     }
 
     /**
-     * Get the interim end
+     * Get the safety confirmation
+     *
+     * @return string
+     */
+    public function getSafetyConfirmation()
+    {
+        return $this->safetyConfirmation;
+    }
+
+    /**
+     * Set the target completion date
+     *
+     * @param \DateTime $targetCompletionDate
+     * @return Application
+     */
+    public function setTargetCompletionDate($targetCompletionDate)
+    {
+        $this->targetCompletionDate = $targetCompletionDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the target completion date
      *
      * @return \DateTime
      */
-    public function getInterimEnd()
+    public function getTargetCompletionDate()
     {
-        return $this->interimEnd;
-    }
-
-    /**
-     * Set the interim auth vehicles
-     *
-     * @param int $interimAuthVehicles
-     * @return Application
-     */
-    public function setInterimAuthVehicles($interimAuthVehicles)
-    {
-        $this->interimAuthVehicles = $interimAuthVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the interim auth vehicles
-     *
-     * @return int
-     */
-    public function getInterimAuthVehicles()
-    {
-        return $this->interimAuthVehicles;
-    }
-
-    /**
-     * Set the interim auth trailers
-     *
-     * @param int $interimAuthTrailers
-     * @return Application
-     */
-    public function setInterimAuthTrailers($interimAuthTrailers)
-    {
-        $this->interimAuthTrailers = $interimAuthTrailers;
-
-        return $this;
-    }
-
-    /**
-     * Get the interim auth trailers
-     *
-     * @return int
-     */
-    public function getInterimAuthTrailers()
-    {
-        return $this->interimAuthTrailers;
+        return $this->targetCompletionDate;
     }
 
     /**

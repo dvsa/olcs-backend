@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -23,24 +24,24 @@ use Olcs\Db\Entity\Traits;
 class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\Description255Field,
         Traits\EmailAddress45Field,
-        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
-     * Txc name
+     * Bus reg
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="string", name="txc_name", length=255, nullable=true)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="localAuthoritys")
      */
-    protected $txcName;
+    protected $busRegs;
 
     /**
      * Naptan code
@@ -52,26 +53,80 @@ class LocalAuthority implements Interfaces\EntityInterface
     protected $naptanCode;
 
     /**
-     * Set the txc name
+     * Txc name
      *
-     * @param string $txcName
+     * @var string
+     *
+     * @ORM\Column(type="string", name="txc_name", length=255, nullable=true)
+     */
+    protected $txcName;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->busRegs = new ArrayCollection();
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
      * @return LocalAuthority
      */
-    public function setTxcName($txcName)
+    public function setBusRegs($busRegs)
     {
-        $this->txcName = $txcName;
+        $this->busRegs = $busRegs;
 
         return $this;
     }
 
     /**
-     * Get the txc name
+     * Get the bus regs
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTxcName()
+    public function getBusRegs()
     {
-        return $this->txcName;
+        return $this->busRegs;
+    }
+
+    /**
+     * Add a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return LocalAuthority
+     */
+    public function addBusRegs($busRegs)
+    {
+        if ($busRegs instanceof ArrayCollection) {
+            $this->busRegs = new ArrayCollection(
+                array_merge(
+                    $this->busRegs->toArray(),
+                    $busRegs->toArray()
+                )
+            );
+        } elseif (!$this->busRegs->contains($busRegs)) {
+            $this->busRegs->add($busRegs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return LocalAuthority
+     */
+    public function removeBusRegs($busRegs)
+    {
+        if ($this->busRegs->contains($busRegs)) {
+            $this->busRegs->removeElement($busRegs);
+        }
+
+        return $this;
     }
 
     /**
@@ -95,5 +150,28 @@ class LocalAuthority implements Interfaces\EntityInterface
     public function getNaptanCode()
     {
         return $this->naptanCode;
+    }
+
+    /**
+     * Set the txc name
+     *
+     * @param string $txcName
+     * @return LocalAuthority
+     */
+    public function setTxcName($txcName)
+    {
+        $this->txcName = $txcName;
+
+        return $this;
+    }
+
+    /**
+     * Get the txc name
+     *
+     * @return string
+     */
+    public function getTxcName()
+    {
+        return $this->txcName;
     }
 }

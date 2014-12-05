@@ -26,13 +26,13 @@ use Olcs\Db\Entity\Traits;
 class LegacyRecommendation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\Comment4000Field,
-        Traits\EffectiveDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\EffectiveDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -41,48 +41,20 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\LegacyCaseAction
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyCaseAction")
      * @ORM\JoinColumn(name="action_id", referencedColumnName="id", nullable=false)
      */
     protected $action;
-
-    /**
-     * To user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="to_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $toUser;
 
     /**
      * From user
      *
      * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", nullable=true)
      */
     protected $fromUser;
-
-    /**
-     * Rec date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="rec_date", nullable=false)
-     */
-    protected $recDate;
-
-    /**
-     * Pi reason
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="pi_reason", length=255, nullable=true)
-     */
-    protected $piReason;
 
     /**
      * Notes
@@ -101,6 +73,24 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="pi_decision", length=255, nullable=true)
      */
     protected $piDecision;
+
+    /**
+     * Pi reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="pi_reason", length=255, nullable=true)
+     */
+    protected $piReason;
+
+    /**
+     * Rec date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="rec_date", nullable=false)
+     */
+    protected $recDate;
 
     /**
      * Request
@@ -128,6 +118,16 @@ class LegacyRecommendation implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="status", nullable=true)
      */
     protected $status;
+
+    /**
+     * To user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="to_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $toUser;
 
     /**
      * Total points
@@ -162,29 +162,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the to user
-     *
-     * @param \Olcs\Db\Entity\User $toUser
-     * @return LegacyRecommendation
-     */
-    public function setToUser($toUser)
-    {
-        $this->toUser = $toUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the to user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getToUser()
-    {
-        return $this->toUser;
-    }
-
-    /**
      * Set the from user
      *
      * @param \Olcs\Db\Entity\User $fromUser
@@ -205,52 +182,6 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     public function getFromUser()
     {
         return $this->fromUser;
-    }
-
-    /**
-     * Set the rec date
-     *
-     * @param \DateTime $recDate
-     * @return LegacyRecommendation
-     */
-    public function setRecDate($recDate)
-    {
-        $this->recDate = $recDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the rec date
-     *
-     * @return \DateTime
-     */
-    public function getRecDate()
-    {
-        return $this->recDate;
-    }
-
-    /**
-     * Set the pi reason
-     *
-     * @param string $piReason
-     * @return LegacyRecommendation
-     */
-    public function setPiReason($piReason)
-    {
-        $this->piReason = $piReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi reason
-     *
-     * @return string
-     */
-    public function getPiReason()
-    {
-        return $this->piReason;
     }
 
     /**
@@ -297,6 +228,52 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     public function getPiDecision()
     {
         return $this->piDecision;
+    }
+
+    /**
+     * Set the pi reason
+     *
+     * @param string $piReason
+     * @return LegacyRecommendation
+     */
+    public function setPiReason($piReason)
+    {
+        $this->piReason = $piReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi reason
+     *
+     * @return string
+     */
+    public function getPiReason()
+    {
+        return $this->piReason;
+    }
+
+    /**
+     * Set the rec date
+     *
+     * @param \DateTime $recDate
+     * @return LegacyRecommendation
+     */
+    public function setRecDate($recDate)
+    {
+        $this->recDate = $recDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the rec date
+     *
+     * @return \DateTime
+     */
+    public function getRecDate()
+    {
+        return $this->recDate;
     }
 
     /**
@@ -366,6 +343,29 @@ class LegacyRecommendation implements Interfaces\EntityInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set the to user
+     *
+     * @param \Olcs\Db\Entity\User $toUser
+     * @return LegacyRecommendation
+     */
+    public function setToUser($toUser)
+    {
+        $this->toUser = $toUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the to user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getToUser()
+    {
+        return $this->toUser;
     }
 
     /**

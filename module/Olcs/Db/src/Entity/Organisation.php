@@ -26,70 +26,22 @@ use Olcs\Db\Entity\Traits;
 class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ViAction1Field,
-        Traits\IsIrfoField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
-     * Lead tc area
-     *
-     * @var \Olcs\Db\Entity\TrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $leadTcArea;
-
-    /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
-     */
-    protected $type;
-
-    /**
-     * Company or llp no
+     * Allow email
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
+     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
      */
-    protected $companyOrLlpNo;
-
-    /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=160, nullable=true)
-     */
-    protected $name;
-
-    /**
-     * Irfo name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
-     */
-    protected $irfoName;
-
-    /**
-     * Is mlh
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
-     */
-    protected $isMlh = 0;
+    protected $allowEmail = 0;
 
     /**
      * Company cert seen
@@ -101,6 +53,24 @@ class Organisation implements Interfaces\EntityInterface
     protected $companyCertSeen = 0;
 
     /**
+     * Company or llp no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
+     */
+    protected $companyOrLlpNo;
+
+    /**
+     * Irfo name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
+     */
+    protected $irfoName;
+
+    /**
      * Irfo nationality
      *
      * @var string
@@ -110,13 +80,51 @@ class Organisation implements Interfaces\EntityInterface
     protected $irfoNationality;
 
     /**
-     * Allow email
+     * Is irfo
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
+     * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
      */
-    protected $allowEmail = 0;
+    protected $isIrfo = 0;
+
+    /**
+     * Is mlh
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
+     */
+    protected $isMlh = 0;
+
+    /**
+     * Lead tc area
+     *
+     * @var \Olcs\Db\Entity\TrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
+     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $leadTcArea;
+
+    /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=160, nullable=true)
+     */
+    protected $name;
+
+    /**
+     * Type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
+     */
+    protected $type;
 
     /**
      * Contact detail
@@ -135,6 +143,15 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Licence", mappedBy="organisation")
      */
     protected $licences;
+
+    /**
+     * Nature of business
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationNatureOfBusiness", mappedBy="organisation")
+     */
+    protected $natureOfBusinesss;
 
     /**
      * Organisation person
@@ -161,146 +178,32 @@ class Organisation implements Interfaces\EntityInterface
     {
         $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
+        $this->natureOfBusinesss = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
 
     /**
-     * Set the lead tc area
+     * Set the allow email
      *
-     * @param \Olcs\Db\Entity\TrafficArea $leadTcArea
+     * @param string $allowEmail
      * @return Organisation
      */
-    public function setLeadTcArea($leadTcArea)
+    public function setAllowEmail($allowEmail)
     {
-        $this->leadTcArea = $leadTcArea;
+        $this->allowEmail = $allowEmail;
 
         return $this;
     }
 
     /**
-     * Get the lead tc area
-     *
-     * @return \Olcs\Db\Entity\TrafficArea
-     */
-    public function getLeadTcArea()
-    {
-        return $this->leadTcArea;
-    }
-
-    /**
-     * Set the type
-     *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return Organisation
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set the company or llp no
-     *
-     * @param string $companyOrLlpNo
-     * @return Organisation
-     */
-    public function setCompanyOrLlpNo($companyOrLlpNo)
-    {
-        $this->companyOrLlpNo = $companyOrLlpNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the company or llp no
+     * Get the allow email
      *
      * @return string
      */
-    public function getCompanyOrLlpNo()
+    public function getAllowEmail()
     {
-        return $this->companyOrLlpNo;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param string $name
-     * @return Organisation
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the irfo name
-     *
-     * @param string $irfoName
-     * @return Organisation
-     */
-    public function setIrfoName($irfoName)
-    {
-        $this->irfoName = $irfoName;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo name
-     *
-     * @return string
-     */
-    public function getIrfoName()
-    {
-        return $this->irfoName;
-    }
-
-    /**
-     * Set the is mlh
-     *
-     * @param string $isMlh
-     * @return Organisation
-     */
-    public function setIsMlh($isMlh)
-    {
-        $this->isMlh = $isMlh;
-
-        return $this;
-    }
-
-    /**
-     * Get the is mlh
-     *
-     * @return string
-     */
-    public function getIsMlh()
-    {
-        return $this->isMlh;
+        return $this->allowEmail;
     }
 
     /**
@@ -327,6 +230,52 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the company or llp no
+     *
+     * @param string $companyOrLlpNo
+     * @return Organisation
+     */
+    public function setCompanyOrLlpNo($companyOrLlpNo)
+    {
+        $this->companyOrLlpNo = $companyOrLlpNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the company or llp no
+     *
+     * @return string
+     */
+    public function getCompanyOrLlpNo()
+    {
+        return $this->companyOrLlpNo;
+    }
+
+    /**
+     * Set the irfo name
+     *
+     * @param string $irfoName
+     * @return Organisation
+     */
+    public function setIrfoName($irfoName)
+    {
+        $this->irfoName = $irfoName;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo name
+     *
+     * @return string
+     */
+    public function getIrfoName()
+    {
+        return $this->irfoName;
+    }
+
+    /**
      * Set the irfo nationality
      *
      * @param string $irfoNationality
@@ -350,26 +299,118 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the allow email
+     * Set the is irfo
      *
-     * @param string $allowEmail
+     * @param string $isIrfo
      * @return Organisation
      */
-    public function setAllowEmail($allowEmail)
+    public function setIsIrfo($isIrfo)
     {
-        $this->allowEmail = $allowEmail;
+        $this->isIrfo = $isIrfo;
 
         return $this;
     }
 
     /**
-     * Get the allow email
+     * Get the is irfo
      *
      * @return string
      */
-    public function getAllowEmail()
+    public function getIsIrfo()
     {
-        return $this->allowEmail;
+        return $this->isIrfo;
+    }
+
+    /**
+     * Set the is mlh
+     *
+     * @param string $isMlh
+     * @return Organisation
+     */
+    public function setIsMlh($isMlh)
+    {
+        $this->isMlh = $isMlh;
+
+        return $this;
+    }
+
+    /**
+     * Get the is mlh
+     *
+     * @return string
+     */
+    public function getIsMlh()
+    {
+        return $this->isMlh;
+    }
+
+    /**
+     * Set the lead tc area
+     *
+     * @param \Olcs\Db\Entity\TrafficArea $leadTcArea
+     * @return Organisation
+     */
+    public function setLeadTcArea($leadTcArea)
+    {
+        $this->leadTcArea = $leadTcArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the lead tc area
+     *
+     * @return \Olcs\Db\Entity\TrafficArea
+     */
+    public function getLeadTcArea()
+    {
+        return $this->leadTcArea;
+    }
+
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @return Organisation
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the type
+     *
+     * @param \Olcs\Db\Entity\RefData $type
+     * @return Organisation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -487,6 +528,66 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->licences->contains($licences)) {
             $this->licences->removeElement($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the nature of business
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
+     * @return Organisation
+     */
+    public function setNatureOfBusinesss($natureOfBusinesss)
+    {
+        $this->natureOfBusinesss = $natureOfBusinesss;
+
+        return $this;
+    }
+
+    /**
+     * Get the nature of businesss
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getNatureOfBusinesss()
+    {
+        return $this->natureOfBusinesss;
+    }
+
+    /**
+     * Add a nature of businesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
+     * @return Organisation
+     */
+    public function addNatureOfBusinesss($natureOfBusinesss)
+    {
+        if ($natureOfBusinesss instanceof ArrayCollection) {
+            $this->natureOfBusinesss = new ArrayCollection(
+                array_merge(
+                    $this->natureOfBusinesss->toArray(),
+                    $natureOfBusinesss->toArray()
+                )
+            );
+        } elseif (!$this->natureOfBusinesss->contains($natureOfBusinesss)) {
+            $this->natureOfBusinesss->add($natureOfBusinesss);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a nature of businesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
+     * @return Organisation
+     */
+    public function removeNatureOfBusinesss($natureOfBusinesss)
+    {
+        if ($this->natureOfBusinesss->contains($natureOfBusinesss)) {
+            $this->natureOfBusinesss->removeElement($natureOfBusinesss);
         }
 
         return $this;

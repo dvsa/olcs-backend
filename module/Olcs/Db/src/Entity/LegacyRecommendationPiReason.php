@@ -24,32 +24,12 @@ use Olcs\Db\Entity\Traits;
 class LegacyRecommendationPiReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Legacy pi reason
-     *
-     * @var \Olcs\Db\Entity\LegacyPiReason
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyPiReason", fetch="LAZY")
-     * @ORM\JoinColumn(name="legacy_pi_reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $legacyPiReason;
-
-    /**
-     * Legacy recommendation
-     *
-     * @var \Olcs\Db\Entity\LegacyRecommendation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation", fetch="LAZY")
-     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $legacyRecommendation;
 
     /**
      * Comment
@@ -59,6 +39,49 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="comment", length=30, nullable=true)
      */
     protected $comment;
+
+    /**
+     * Legacy pi reason
+     *
+     * @var \Olcs\Db\Entity\LegacyPiReason
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyPiReason")
+     * @ORM\JoinColumn(name="legacy_pi_reason_id", referencedColumnName="id", nullable=false)
+     */
+    protected $legacyPiReason;
+
+    /**
+     * Legacy recommendation
+     *
+     * @var \Olcs\Db\Entity\LegacyRecommendation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation")
+     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $legacyRecommendation;
+
+    /**
+     * Set the comment
+     *
+     * @param string $comment
+     * @return LegacyRecommendationPiReason
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get the comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
 
     /**
      * Set the legacy pi reason
@@ -104,28 +127,5 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     public function getLegacyRecommendation()
     {
         return $this->legacyRecommendation;
-    }
-
-    /**
-     * Set the comment
-     *
-     * @param string $comment
-     * @return LegacyRecommendationPiReason
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get the comment
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
     }
 }

@@ -15,7 +15,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template",
  *    indexes={
- *        @ORM\Index(name="fk_doc_template_doc_process1_idx", columns={"doc_process_id"}),
  *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"document_sub_category_id"}),
  *        @ORM\Index(name="fk_doc_template_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_doc_template_user1_idx", columns={"created_by"}),
@@ -27,13 +26,13 @@ use Olcs\Db\Entity\Traits;
 class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DocumentManyToOne,
-        Traits\Description255Field,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\DocumentManyToOne,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -42,20 +41,10 @@ class DocTemplate implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $documentSubCategory;
-
-    /**
-     * Doc process
-     *
-     * @var \Olcs\Db\Entity\DocProcess
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocProcess", fetch="LAZY")
-     * @ORM\JoinColumn(name="doc_process_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docProcess;
 
     /**
      * Is ni
@@ -113,29 +102,6 @@ class DocTemplate implements Interfaces\EntityInterface
     public function getDocumentSubCategory()
     {
         return $this->documentSubCategory;
-    }
-
-    /**
-     * Set the doc process
-     *
-     * @param \Olcs\Db\Entity\DocProcess $docProcess
-     * @return DocTemplate
-     */
-    public function setDocProcess($docProcess)
-    {
-        $this->docProcess = $docProcess;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc process
-     *
-     * @return \Olcs\Db\Entity\DocProcess
-     */
-    public function getDocProcess()
-    {
-        return $this->docProcess;
     }
 
     /**

@@ -15,18 +15,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="category",
  *    indexes={
  *        @ORM\Index(name="fk_document_category_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_category_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_document_category_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_category_ref_data2_idx", columns={"task_allocation_type"})
  *    }
  * )
  */
 class Category implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description255Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description255Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -40,6 +41,15 @@ class Category implements Interfaces\EntityInterface
     protected $isDocCategory = 1;
 
     /**
+     * Is scan category
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_scan_category", nullable=false)
+     */
+    protected $isScanCategory = 1;
+
+    /**
      * Is task category
      *
      * @var string
@@ -47,6 +57,16 @@ class Category implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
      */
     protected $isTaskCategory = 1;
+
+    /**
+     * Task allocation type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="task_allocation_type", referencedColumnName="id", nullable=true)
+     */
+    protected $taskAllocationType;
 
     /**
      * Set the is doc category
@@ -72,6 +92,29 @@ class Category implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is scan category
+     *
+     * @param boolean $isScanCategory
+     * @return Category
+     */
+    public function setIsScanCategory($isScanCategory)
+    {
+        $this->isScanCategory = $isScanCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scan category
+     *
+     * @return boolean
+     */
+    public function getIsScanCategory()
+    {
+        return $this->isScanCategory;
+    }
+
+    /**
      * Set the is task category
      *
      * @param string $isTaskCategory
@@ -92,5 +135,28 @@ class Category implements Interfaces\EntityInterface
     public function getIsTaskCategory()
     {
         return $this->isTaskCategory;
+    }
+
+    /**
+     * Set the task allocation type
+     *
+     * @param \Olcs\Db\Entity\RefData $taskAllocationType
+     * @return Category
+     */
+    public function setTaskAllocationType($taskAllocationType)
+    {
+        $this->taskAllocationType = $taskAllocationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the task allocation type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTaskAllocationType()
+    {
+        return $this->taskAllocationType;
     }
 }

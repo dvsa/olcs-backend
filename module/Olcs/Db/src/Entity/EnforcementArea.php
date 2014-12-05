@@ -22,12 +22,12 @@ use Olcs\Db\Entity\Traits;
 class EnforcementArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Name70Field,
-        Traits\EmailAddress60Field,
         Traits\CustomCreatedOnField,
+        Traits\EmailAddress60Field,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\Name70Field,
         Traits\CustomVersionField;
 
     /**

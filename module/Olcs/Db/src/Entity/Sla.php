@@ -29,15 +29,6 @@ class Sla implements Interfaces\EntityInterface
     protected $category;
 
     /**
-     * Field
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="field", length=32, nullable=true)
-     */
-    protected $field;
-
-    /**
      * Compare to
      *
      * @var string
@@ -56,24 +47,6 @@ class Sla implements Interfaces\EntityInterface
     protected $days;
 
     /**
-     * Weekend
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="weekend", nullable=false)
-     */
-    protected $weekend = 0;
-
-    /**
-     * Public holiday
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="public_holiday", nullable=false)
-     */
-    protected $publicHoliday = 0;
-
-    /**
      * Effective from
      *
      * @var \DateTime
@@ -90,6 +63,33 @@ class Sla implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="effective_to", nullable=true)
      */
     protected $effectiveTo;
+
+    /**
+     * Field
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="field", length=32, nullable=true)
+     */
+    protected $field;
+
+    /**
+     * Public holiday
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="public_holiday", nullable=false)
+     */
+    protected $publicHoliday = 0;
+
+    /**
+     * Weekend
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="weekend", nullable=false)
+     */
+    protected $weekend = 0;
 
     /**
      * Set the category
@@ -112,29 +112,6 @@ class Sla implements Interfaces\EntityInterface
     public function getCategory()
     {
         return $this->category;
-    }
-
-    /**
-     * Set the field
-     *
-     * @param string $field
-     * @return Sla
-     */
-    public function setField($field)
-    {
-        $this->field = $field;
-
-        return $this;
-    }
-
-    /**
-     * Get the field
-     *
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->field;
     }
 
     /**
@@ -184,52 +161,6 @@ class Sla implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the weekend
-     *
-     * @param boolean $weekend
-     * @return Sla
-     */
-    public function setWeekend($weekend)
-    {
-        $this->weekend = $weekend;
-
-        return $this;
-    }
-
-    /**
-     * Get the weekend
-     *
-     * @return boolean
-     */
-    public function getWeekend()
-    {
-        return $this->weekend;
-    }
-
-    /**
-     * Set the public holiday
-     *
-     * @param boolean $publicHoliday
-     * @return Sla
-     */
-    public function setPublicHoliday($publicHoliday)
-    {
-        $this->publicHoliday = $publicHoliday;
-
-        return $this;
-    }
-
-    /**
-     * Get the public holiday
-     *
-     * @return boolean
-     */
-    public function getPublicHoliday()
-    {
-        return $this->publicHoliday;
-    }
-
-    /**
      * Set the effective from
      *
      * @param \DateTime $effectiveFrom
@@ -273,5 +204,74 @@ class Sla implements Interfaces\EntityInterface
     public function getEffectiveTo()
     {
         return $this->effectiveTo;
+    }
+
+    /**
+     * Set the field
+     *
+     * @param string $field
+     * @return Sla
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Get the field
+     *
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * Set the public holiday
+     *
+     * @param boolean $publicHoliday
+     * @return Sla
+     */
+    public function setPublicHoliday($publicHoliday)
+    {
+        $this->publicHoliday = $publicHoliday;
+
+        return $this;
+    }
+
+    /**
+     * Get the public holiday
+     *
+     * @return boolean
+     */
+    public function getPublicHoliday()
+    {
+        return $this->publicHoliday;
+    }
+
+    /**
+     * Set the weekend
+     *
+     * @param boolean $weekend
+     * @return Sla
+     */
+    public function setWeekend($weekend)
+    {
+        $this->weekend = $weekend;
+
+        return $this;
+    }
+
+    /**
+     * Get the weekend
+     *
+     * @return boolean
+     */
+    public function getWeekend()
+    {
+        return $this->weekend;
     }
 }

@@ -25,43 +25,16 @@ use Olcs\Db\Entity\Traits;
 class FeeType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceTypeManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
-        Traits\Description255Field,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Fee type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="fee_type", length=20, nullable=false)
-     */
-    protected $feeType;
-
-    /**
-     * Effective from
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="effective_from", nullable=false)
-     */
-    protected $effectiveFrom;
-
-    /**
-     * Fixed value
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal", name="fixed_value", precision=10, scale=2, nullable=true)
-     */
-    protected $fixedValue;
 
     /**
      * Annual value
@@ -73,13 +46,13 @@ class FeeType implements Interfaces\EntityInterface
     protected $annualValue;
 
     /**
-     * Five year value
+     * Effective from
      *
-     * @var float
+     * @var \DateTime
      *
-     * @ORM\Column(type="decimal", name="five_year_value", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="datetime", name="effective_from", nullable=false)
      */
-    protected $fiveYearValue;
+    protected $effectiveFrom;
 
     /**
      * Expire fee with licence
@@ -91,26 +64,53 @@ class FeeType implements Interfaces\EntityInterface
     protected $expireFeeWithLicence = 0;
 
     /**
-     * Set the fee type
+     * Fee type
      *
-     * @param string $feeType
+     * @var string
+     *
+     * @ORM\Column(type="string", name="fee_type", length=20, nullable=false)
+     */
+    protected $feeType;
+
+    /**
+     * Five year value
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="five_year_value", precision=10, scale=2, nullable=true)
+     */
+    protected $fiveYearValue;
+
+    /**
+     * Fixed value
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="fixed_value", precision=10, scale=2, nullable=true)
+     */
+    protected $fixedValue;
+
+    /**
+     * Set the annual value
+     *
+     * @param float $annualValue
      * @return FeeType
      */
-    public function setFeeType($feeType)
+    public function setAnnualValue($annualValue)
     {
-        $this->feeType = $feeType;
+        $this->annualValue = $annualValue;
 
         return $this;
     }
 
     /**
-     * Get the fee type
+     * Get the annual value
      *
-     * @return string
+     * @return float
      */
-    public function getFeeType()
+    public function getAnnualValue()
     {
-        return $this->feeType;
+        return $this->annualValue;
     }
 
     /**
@@ -137,49 +137,49 @@ class FeeType implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the fixed value
+     * Set the expire fee with licence
      *
-     * @param float $fixedValue
+     * @param string $expireFeeWithLicence
      * @return FeeType
      */
-    public function setFixedValue($fixedValue)
+    public function setExpireFeeWithLicence($expireFeeWithLicence)
     {
-        $this->fixedValue = $fixedValue;
+        $this->expireFeeWithLicence = $expireFeeWithLicence;
 
         return $this;
     }
 
     /**
-     * Get the fixed value
+     * Get the expire fee with licence
      *
-     * @return float
+     * @return string
      */
-    public function getFixedValue()
+    public function getExpireFeeWithLicence()
     {
-        return $this->fixedValue;
+        return $this->expireFeeWithLicence;
     }
 
     /**
-     * Set the annual value
+     * Set the fee type
      *
-     * @param float $annualValue
+     * @param string $feeType
      * @return FeeType
      */
-    public function setAnnualValue($annualValue)
+    public function setFeeType($feeType)
     {
-        $this->annualValue = $annualValue;
+        $this->feeType = $feeType;
 
         return $this;
     }
 
     /**
-     * Get the annual value
+     * Get the fee type
      *
-     * @return float
+     * @return string
      */
-    public function getAnnualValue()
+    public function getFeeType()
     {
-        return $this->annualValue;
+        return $this->feeType;
     }
 
     /**
@@ -206,25 +206,25 @@ class FeeType implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the expire fee with licence
+     * Set the fixed value
      *
-     * @param string $expireFeeWithLicence
+     * @param float $fixedValue
      * @return FeeType
      */
-    public function setExpireFeeWithLicence($expireFeeWithLicence)
+    public function setFixedValue($fixedValue)
     {
-        $this->expireFeeWithLicence = $expireFeeWithLicence;
+        $this->fixedValue = $fixedValue;
 
         return $this;
     }
 
     /**
-     * Get the expire fee with licence
+     * Get the fixed value
      *
-     * @return string
+     * @return float
      */
-    public function getExpireFeeWithLicence()
+    public function getFixedValue()
     {
-        return $this->expireFeeWithLicence;
+        return $this->fixedValue;
     }
 }

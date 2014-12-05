@@ -23,23 +23,13 @@ use Olcs\Db\Entity\Traits;
 class ProhibitionDefect implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Notes4000Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
         Traits\CustomVersionField;
-
-    /**
-     * Prohibition
-     *
-     * @var \Olcs\Db\Entity\Prohibition
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Prohibition", fetch="LAZY")
-     * @ORM\JoinColumn(name="prohibition_id", referencedColumnName="id", nullable=false)
-     */
-    protected $prohibition;
 
     /**
      * Defect type
@@ -51,27 +41,14 @@ class ProhibitionDefect implements Interfaces\EntityInterface
     protected $defectType;
 
     /**
-     * Set the prohibition
+     * Prohibition
      *
-     * @param \Olcs\Db\Entity\Prohibition $prohibition
-     * @return ProhibitionDefect
-     */
-    public function setProhibition($prohibition)
-    {
-        $this->prohibition = $prohibition;
-
-        return $this;
-    }
-
-    /**
-     * Get the prohibition
+     * @var \Olcs\Db\Entity\Prohibition
      *
-     * @return \Olcs\Db\Entity\Prohibition
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Prohibition")
+     * @ORM\JoinColumn(name="prohibition_id", referencedColumnName="id", nullable=false)
      */
-    public function getProhibition()
-    {
-        return $this->prohibition;
-    }
+    protected $prohibition;
 
     /**
      * Set the defect type
@@ -94,5 +71,28 @@ class ProhibitionDefect implements Interfaces\EntityInterface
     public function getDefectType()
     {
         return $this->defectType;
+    }
+
+    /**
+     * Set the prohibition
+     *
+     * @param \Olcs\Db\Entity\Prohibition $prohibition
+     * @return ProhibitionDefect
+     */
+    public function setProhibition($prohibition)
+    {
+        $this->prohibition = $prohibition;
+
+        return $this;
+    }
+
+    /**
+     * Get the prohibition
+     *
+     * @return \Olcs\Db\Entity\Prohibition
+     */
+    public function getProhibition()
+    {
+        return $this->prohibition;
     }
 }

@@ -27,51 +27,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\S4ManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\LicenceManyToOne,
         Traits\AdPlacedField,
-        Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
-        Traits\PermissionField,
+        Traits\AdPlacedIn70Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
-        Traits\NoOfVehiclesPossessedField,
-        Traits\NoOfTrailersPossessedField,
-        Traits\ViAction1Field,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
-     */
-    protected $sufficientParking;
-
-    /**
-     * Added date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="added_date", nullable=true)
-     */
-    protected $addedDate;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
+        Traits\OperatingCentreManyToOne,
+        Traits\PermissionField,
+        Traits\S4ManyToOne,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Is interim
@@ -83,6 +55,24 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $isInterim;
 
     /**
+     * No of trailers possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
+     */
+    protected $noOfTrailersPossessed;
+
+    /**
+     * No of vehicles possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
+     */
+    protected $noOfVehiclesPossessed;
+
+    /**
      * Publication appropriate
      *
      * @var string
@@ -92,73 +82,13 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $publicationAppropriate;
 
     /**
-     * Set the sufficient parking
+     * Sufficient parking
      *
-     * @param string $sufficientParking
-     * @return LicenceOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
+     * @var string
      *
-     * @return string
+     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
-    }
-
-    /**
-     * Set the added date
-     *
-     * @param \DateTime $addedDate
-     * @return LicenceOperatingCentre
-     */
-    public function setAddedDate($addedDate)
-    {
-        $this->addedDate = $addedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the added date
-     *
-     * @return \DateTime
-     */
-    public function getAddedDate()
-    {
-        return $this->addedDate;
-    }
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate
-     * @return LicenceOperatingCentre
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate()
-    {
-        return $this->deletedDate;
-    }
+    protected $sufficientParking;
 
     /**
      * Set the is interim
@@ -184,6 +114,52 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the no of trailers possessed
+     *
+     * @param int $noOfTrailersPossessed
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfTrailersPossessed($noOfTrailersPossessed)
+    {
+        $this->noOfTrailersPossessed = $noOfTrailersPossessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of trailers possessed
+     *
+     * @return int
+     */
+    public function getNoOfTrailersPossessed()
+    {
+        return $this->noOfTrailersPossessed;
+    }
+
+    /**
+     * Set the no of vehicles possessed
+     *
+     * @param int $noOfVehiclesPossessed
+     * @return LicenceOperatingCentre
+     */
+    public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
+    {
+        $this->noOfVehiclesPossessed = $noOfVehiclesPossessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of vehicles possessed
+     *
+     * @return int
+     */
+    public function getNoOfVehiclesPossessed()
+    {
+        return $this->noOfVehiclesPossessed;
+    }
+
+    /**
      * Set the publication appropriate
      *
      * @param string $publicationAppropriate
@@ -204,5 +180,28 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
+    }
+
+    /**
+     * Set the sufficient parking
+     *
+     * @param string $sufficientParking
+     * @return LicenceOperatingCentre
+     */
+    public function setSufficientParking($sufficientParking)
+    {
+        $this->sufficientParking = $sufficientParking;
+
+        return $this;
+    }
+
+    /**
+     * Get the sufficient parking
+     *
+     * @return string
+     */
+    public function getSufficientParking()
+    {
+        return $this->sufficientParking;
     }
 }

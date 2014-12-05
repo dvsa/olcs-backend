@@ -26,35 +26,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SiPenalty implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\EndDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\StartDateFieldAlt1,
-        Traits\EndDateField,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
-
-    /**
-     * Si penalty type
-     *
-     * @var \Olcs\Db\Entity\SiPenaltyType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_penalty_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siPenaltyType;
-
-    /**
-     * Serious infringement
-     *
-     * @var \Olcs\Db\Entity\SeriousInfringement
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY", inversedBy="appliedPenalties")
-     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
-     */
-    protected $seriousInfringement;
 
     /**
      * Imposed
@@ -75,50 +55,24 @@ class SiPenalty implements Interfaces\EntityInterface
     protected $reasonNotImposed;
 
     /**
-     * Set the si penalty type
+     * Serious infringement
      *
-     * @param \Olcs\Db\Entity\SiPenaltyType $siPenaltyType
-     * @return SiPenalty
+     * @var \Olcs\Db\Entity\SeriousInfringement
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", inversedBy="appliedPenalties")
+     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
      */
-    public function setSiPenaltyType($siPenaltyType)
-    {
-        $this->siPenaltyType = $siPenaltyType;
-
-        return $this;
-    }
+    protected $seriousInfringement;
 
     /**
-     * Get the si penalty type
+     * Si penalty type
      *
-     * @return \Olcs\Db\Entity\SiPenaltyType
-     */
-    public function getSiPenaltyType()
-    {
-        return $this->siPenaltyType;
-    }
-
-    /**
-     * Set the serious infringement
+     * @var \Olcs\Db\Entity\SiPenaltyType
      *
-     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
-     * @return SiPenalty
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyType")
+     * @ORM\JoinColumn(name="si_penalty_type_id", referencedColumnName="id", nullable=false)
      */
-    public function setSeriousInfringement($seriousInfringement)
-    {
-        $this->seriousInfringement = $seriousInfringement;
-
-        return $this;
-    }
-
-    /**
-     * Get the serious infringement
-     *
-     * @return \Olcs\Db\Entity\SeriousInfringement
-     */
-    public function getSeriousInfringement()
-    {
-        return $this->seriousInfringement;
-    }
+    protected $siPenaltyType;
 
     /**
      * Set the imposed
@@ -164,5 +118,51 @@ class SiPenalty implements Interfaces\EntityInterface
     public function getReasonNotImposed()
     {
         return $this->reasonNotImposed;
+    }
+
+    /**
+     * Set the serious infringement
+     *
+     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
+     * @return SiPenalty
+     */
+    public function setSeriousInfringement($seriousInfringement)
+    {
+        $this->seriousInfringement = $seriousInfringement;
+
+        return $this;
+    }
+
+    /**
+     * Get the serious infringement
+     *
+     * @return \Olcs\Db\Entity\SeriousInfringement
+     */
+    public function getSeriousInfringement()
+    {
+        return $this->seriousInfringement;
+    }
+
+    /**
+     * Set the si penalty type
+     *
+     * @param \Olcs\Db\Entity\SiPenaltyType $siPenaltyType
+     * @return SiPenalty
+     */
+    public function setSiPenaltyType($siPenaltyType)
+    {
+        $this->siPenaltyType = $siPenaltyType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si penalty type
+     *
+     * @return \Olcs\Db\Entity\SiPenaltyType
+     */
+    public function getSiPenaltyType()
+    {
+        return $this->siPenaltyType;
     }
 }

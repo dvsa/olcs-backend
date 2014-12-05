@@ -24,23 +24,14 @@ use Olcs\Db\Entity\Traits;
 class CorrespondenceInbox implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\DocumentManyToOne,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\DocumentManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Archived
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="archived", nullable=true)
-     */
-    protected $archived;
 
     /**
      * Accessed
@@ -50,6 +41,15 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="accessed", nullable=true)
      */
     protected $accessed;
+
+    /**
+     * Archived
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="archived", nullable=true)
+     */
+    protected $archived;
 
     /**
      * Email reminder sent
@@ -68,29 +68,6 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="printed", nullable=true)
      */
     protected $printed;
-
-    /**
-     * Set the archived
-     *
-     * @param string $archived
-     * @return CorrespondenceInbox
-     */
-    public function setArchived($archived)
-    {
-        $this->archived = $archived;
-
-        return $this;
-    }
-
-    /**
-     * Get the archived
-     *
-     * @return string
-     */
-    public function getArchived()
-    {
-        return $this->archived;
-    }
 
     /**
      * Set the accessed
@@ -113,6 +90,29 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
     public function getAccessed()
     {
         return $this->accessed;
+    }
+
+    /**
+     * Set the archived
+     *
+     * @param string $archived
+     * @return CorrespondenceInbox
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
+
+        return $this;
+    }
+
+    /**
+     * Get the archived
+     *
+     * @return string
+     */
+    public function getArchived()
+    {
+        return $this->archived;
     }
 
     /**

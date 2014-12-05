@@ -26,33 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class OrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="organisationPersons")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
-
-    /**
-     * Person
-     *
-     * @var \Olcs\Db\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
-     */
-    protected $person;
 
     /**
      * Added date
@@ -64,6 +44,26 @@ class OrganisationPerson implements Interfaces\EntityInterface
     protected $addedDate;
 
     /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="organisationPersons")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
+
+    /**
+     * Person
+     *
+     * @var \Olcs\Db\Entity\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     */
+    protected $person;
+
+    /**
      * Position
      *
      * @var string
@@ -71,6 +71,29 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="position", length=45, nullable=true)
      */
     protected $position;
+
+    /**
+     * Set the added date
+     *
+     * @param string $addedDate
+     * @return OrganisationPerson
+     */
+    public function setAddedDate($addedDate)
+    {
+        $this->addedDate = $addedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the added date
+     *
+     * @return string
+     */
+    public function getAddedDate()
+    {
+        return $this->addedDate;
+    }
 
     /**
      * Set the organisation
@@ -116,29 +139,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
     public function getPerson()
     {
         return $this->person;
-    }
-
-    /**
-     * Set the added date
-     *
-     * @param string $addedDate
-     * @return OrganisationPerson
-     */
-    public function setAddedDate($addedDate)
-    {
-        $this->addedDate = $addedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the added date
-     *
-     * @return string
-     */
-    public function getAddedDate()
-    {
-        return $this->addedDate;
     }
 
     /**

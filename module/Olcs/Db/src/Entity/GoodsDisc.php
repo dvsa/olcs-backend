@@ -16,38 +16,24 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_goods_disc_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
  *        @ORM\Index(name="fk_goods_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data1_idx", columns={"removal_reason"}),
- *        @ORM\Index(name="fk_goods_disc_ref_data2_idx", columns={"removal_explanation"})
+ *        @ORM\Index(name="fk_goods_disc_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
 class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\RemovalExplanationManyToOne,
-        Traits\RemovalReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\DiscNo50Field,
-        Traits\IssuedDateField,
         Traits\CeasedDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\DiscNo50Field,
+        Traits\IdIdentity,
         Traits\IsInterimField,
         Traits\IsPrintingField,
-        Traits\CustomCreatedOnField,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Licence vehicle
-     *
-     * @var \Olcs\Db\Entity\LicenceVehicle
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY", inversedBy="goodsDiscs")
-     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licenceVehicle;
 
     /**
      * Is copy
@@ -59,6 +45,16 @@ class GoodsDisc implements Interfaces\EntityInterface
     protected $isCopy = 0;
 
     /**
+     * Licence vehicle
+     *
+     * @var \Olcs\Db\Entity\LicenceVehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", inversedBy="goodsDiscs")
+     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licenceVehicle;
+
+    /**
      * Reprint required
      *
      * @var string
@@ -66,29 +62,6 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
-
-    /**
-     * Set the licence vehicle
-     *
-     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
-     * @return GoodsDisc
-     */
-    public function setLicenceVehicle($licenceVehicle)
-    {
-        $this->licenceVehicle = $licenceVehicle;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence vehicle
-     *
-     * @return \Olcs\Db\Entity\LicenceVehicle
-     */
-    public function getLicenceVehicle()
-    {
-        return $this->licenceVehicle;
-    }
 
     /**
      * Set the is copy
@@ -111,6 +84,29 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
+     * @return GoodsDisc
+     */
+    public function setLicenceVehicle($licenceVehicle)
+    {
+        $this->licenceVehicle = $licenceVehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicle
+     *
+     * @return \Olcs\Db\Entity\LicenceVehicle
+     */
+    public function getLicenceVehicle()
+    {
+        return $this->licenceVehicle;
     }
 
     /**
