@@ -25,51 +25,14 @@ use Olcs\Db\Entity\Traits;
 class VoidDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
-        Traits\GoodsOrPsvManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
-
-    /**
-     * Licence type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
-     */
-    protected $licenceType;
-
-    /**
-     * Serial start
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="serial_start", nullable=true)
-     */
-    protected $serialStart;
-
-    /**
-     * Serial end
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="serial_end", nullable=true)
-     */
-    protected $serialEnd;
-
-    /**
-     * Is self serve
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false)
-     */
-    protected $isSelfServe = 0;
 
     /**
      * Is ni self serve
@@ -81,72 +44,63 @@ class VoidDisc implements Interfaces\EntityInterface
     protected $isNiSelfServe = 0;
 
     /**
-     * Set the licence type
+     * Is self serve
      *
-     * @param \Olcs\Db\Entity\RefData $licenceType
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false)
+     */
+    protected $isSelfServe = 0;
+
+    /**
+     * Licence type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
+     */
+    protected $licenceType;
+
+    /**
+     * Serial end
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="serial_end", nullable=true)
+     */
+    protected $serialEnd;
+
+    /**
+     * Serial start
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="serial_start", nullable=true)
+     */
+    protected $serialStart;
+
+    /**
+     * Set the is ni self serve
+     *
+     * @param boolean $isNiSelfServe
      * @return VoidDisc
      */
-    public function setLicenceType($licenceType)
+    public function setIsNiSelfServe($isNiSelfServe)
     {
-        $this->licenceType = $licenceType;
+        $this->isNiSelfServe = $isNiSelfServe;
 
         return $this;
     }
 
     /**
-     * Get the licence type
+     * Get the is ni self serve
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return boolean
      */
-    public function getLicenceType()
+    public function getIsNiSelfServe()
     {
-        return $this->licenceType;
-    }
-
-    /**
-     * Set the serial start
-     *
-     * @param int $serialStart
-     * @return VoidDisc
-     */
-    public function setSerialStart($serialStart)
-    {
-        $this->serialStart = $serialStart;
-
-        return $this;
-    }
-
-    /**
-     * Get the serial start
-     *
-     * @return int
-     */
-    public function getSerialStart()
-    {
-        return $this->serialStart;
-    }
-
-    /**
-     * Set the serial end
-     *
-     * @param int $serialEnd
-     * @return VoidDisc
-     */
-    public function setSerialEnd($serialEnd)
-    {
-        $this->serialEnd = $serialEnd;
-
-        return $this;
-    }
-
-    /**
-     * Get the serial end
-     *
-     * @return int
-     */
-    public function getSerialEnd()
-    {
-        return $this->serialEnd;
+        return $this->isNiSelfServe;
     }
 
     /**
@@ -173,25 +127,71 @@ class VoidDisc implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is ni self serve
+     * Set the licence type
      *
-     * @param boolean $isNiSelfServe
+     * @param \Olcs\Db\Entity\RefData $licenceType
      * @return VoidDisc
      */
-    public function setIsNiSelfServe($isNiSelfServe)
+    public function setLicenceType($licenceType)
     {
-        $this->isNiSelfServe = $isNiSelfServe;
+        $this->licenceType = $licenceType;
 
         return $this;
     }
 
     /**
-     * Get the is ni self serve
+     * Get the licence type
      *
-     * @return boolean
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getIsNiSelfServe()
+    public function getLicenceType()
     {
-        return $this->isNiSelfServe;
+        return $this->licenceType;
+    }
+
+    /**
+     * Set the serial end
+     *
+     * @param int $serialEnd
+     * @return VoidDisc
+     */
+    public function setSerialEnd($serialEnd)
+    {
+        $this->serialEnd = $serialEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get the serial end
+     *
+     * @return int
+     */
+    public function getSerialEnd()
+    {
+        return $this->serialEnd;
+    }
+
+    /**
+     * Set the serial start
+     *
+     * @param int $serialStart
+     * @return VoidDisc
+     */
+    public function setSerialStart($serialStart)
+    {
+        $this->serialStart = $serialStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the serial start
+     *
+     * @return int
+     */
+    public function getSerialStart()
+    {
+        return $this->serialStart;
     }
 }

@@ -30,43 +30,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Opposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LicenceManyToOne,
         Traits\CaseManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Notes4000Field,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
+        Traits\Notes4000Field,
         Traits\CustomVersionField;
-
-    /**
-     * Opposition type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
-     */
-    protected $oppositionType;
-
-    /**
-     * Opposer
-     *
-     * @var \Olcs\Db\Entity\Opposer
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer", fetch="LAZY")
-     * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
-     */
-    protected $opposer;
 
     /**
      * Application
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="oppositions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="oppositions")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
@@ -79,15 +59,6 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_copied", nullable=false)
      */
     protected $isCopied = 0;
-
-    /**
-     * Raised date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="raised_date", nullable=true)
-     */
-    protected $raisedDate;
 
     /**
      * Is in time
@@ -126,6 +97,35 @@ class Opposition implements Interfaces\EntityInterface
     protected $isWithdrawn = 0;
 
     /**
+     * Opposer
+     *
+     * @var \Olcs\Db\Entity\Opposer
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer")
+     * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
+     */
+    protected $opposer;
+
+    /**
+     * Opposition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $oppositionType;
+
+    /**
+     * Raised date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="raised_date", nullable=true)
+     */
+    protected $raisedDate;
+
+    /**
      * Valid notes
      *
      * @var string
@@ -159,52 +159,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         $this->documents = new ArrayCollection();
         $this->grounds = new ArrayCollection();
-    }
-
-    /**
-     * Set the opposition type
-     *
-     * @param \Olcs\Db\Entity\RefData $oppositionType
-     * @return Opposition
-     */
-    public function setOppositionType($oppositionType)
-    {
-        $this->oppositionType = $oppositionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getOppositionType()
-    {
-        return $this->oppositionType;
-    }
-
-    /**
-     * Set the opposer
-     *
-     * @param \Olcs\Db\Entity\Opposer $opposer
-     * @return Opposition
-     */
-    public function setOpposer($opposer)
-    {
-        $this->opposer = $opposer;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposer
-     *
-     * @return \Olcs\Db\Entity\Opposer
-     */
-    public function getOpposer()
-    {
-        return $this->opposer;
     }
 
     /**
@@ -251,29 +205,6 @@ class Opposition implements Interfaces\EntityInterface
     public function getIsCopied()
     {
         return $this->isCopied;
-    }
-
-    /**
-     * Set the raised date
-     *
-     * @param \DateTime $raisedDate
-     * @return Opposition
-     */
-    public function setRaisedDate($raisedDate)
-    {
-        $this->raisedDate = $raisedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the raised date
-     *
-     * @return \DateTime
-     */
-    public function getRaisedDate()
-    {
-        return $this->raisedDate;
     }
 
     /**
@@ -366,6 +297,75 @@ class Opposition implements Interfaces\EntityInterface
     public function getIsWithdrawn()
     {
         return $this->isWithdrawn;
+    }
+
+    /**
+     * Set the opposer
+     *
+     * @param \Olcs\Db\Entity\Opposer $opposer
+     * @return Opposition
+     */
+    public function setOpposer($opposer)
+    {
+        $this->opposer = $opposer;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposer
+     *
+     * @return \Olcs\Db\Entity\Opposer
+     */
+    public function getOpposer()
+    {
+        return $this->opposer;
+    }
+
+    /**
+     * Set the opposition type
+     *
+     * @param \Olcs\Db\Entity\RefData $oppositionType
+     * @return Opposition
+     */
+    public function setOppositionType($oppositionType)
+    {
+        $this->oppositionType = $oppositionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the opposition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getOppositionType()
+    {
+        return $this->oppositionType;
+    }
+
+    /**
+     * Set the raised date
+     *
+     * @param \DateTime $raisedDate
+     * @return Opposition
+     */
+    public function setRaisedDate($raisedDate)
+    {
+        $this->raisedDate = $raisedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the raised date
+     *
+     * @return \DateTime
+     */
+    public function getRaisedDate()
+    {
+        return $this->raisedDate;
     }
 
     /**

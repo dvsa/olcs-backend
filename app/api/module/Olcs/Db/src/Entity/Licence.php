@@ -33,128 +33,39 @@ use Olcs\Db\Entity\Traits;
 class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
-        Traits\InForceDateField,
         Traits\CustomCreatedOnField,
+        Traits\ExpiryDateField,
+        Traits\GoodsOrPsvManyToOne,
+        Traits\GrantedDateField,
+        Traits\IdIdentity,
+        Traits\InForceDateField,
+        Traits\IsMaintenanceSuitableField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Tachograph ins
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
-     */
-    protected $tachographIns;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="licences")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
+        Traits\LicNo18Field,
+        Traits\LicenceTypeManyToOne,
+        Traits\NiFlagField,
+        Traits\StatusManyToOne,
+        Traits\TotAuthLargeVehiclesField,
+        Traits\TotAuthMediumVehiclesField,
+        Traits\TotAuthSmallVehiclesField,
+        Traits\TotAuthTrailersField,
+        Traits\TotAuthVehiclesField,
+        Traits\TotCommunityLicencesField,
+        Traits\TrafficAreaManyToOneAlt1,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Enforcement area
      *
      * @var \Olcs\Db\Entity\EnforcementArea
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\EnforcementArea")
      * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
      */
     protected $enforcementArea;
-
-    /**
-     * Lic no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
-     */
-    protected $licNo;
-
-    /**
-     * Vi action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
-     */
-    protected $viAction;
-
-    /**
-     * Tot auth trailers
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_auth_trailers", nullable=true)
-     */
-    protected $totAuthTrailers;
-
-    /**
-     * Tot auth vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_auth_vehicles", nullable=true)
-     */
-    protected $totAuthVehicles;
-
-    /**
-     * Tot auth small vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_auth_small_vehicles", nullable=true)
-     */
-    protected $totAuthSmallVehicles;
-
-    /**
-     * Tot auth medium vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_auth_medium_vehicles", nullable=true)
-     */
-    protected $totAuthMediumVehicles;
-
-    /**
-     * Tot auth large vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_auth_large_vehicles", nullable=true)
-     */
-    protected $totAuthLargeVehicles;
-
-    /**
-     * Tot community licences
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
-     */
-    protected $totCommunityLicences;
-
-    /**
-     * Trailers in possession
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="trailers_in_possession", nullable=true)
-     */
-    protected $trailersInPossession;
 
     /**
      * Fabs reference
@@ -166,33 +77,6 @@ class Licence implements Interfaces\EntityInterface
     protected $fabsReference;
 
     /**
-     * Expiry date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="expiry_date", nullable=true)
-     */
-    protected $expiryDate;
-
-    /**
-     * Granted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="granted_date", nullable=true)
-     */
-    protected $grantedDate;
-
-    /**
-     * Review date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="review_date", nullable=true)
-     */
-    protected $reviewDate;
-
-    /**
      * Fee date
      *
      * @var \DateTime
@@ -202,67 +86,14 @@ class Licence implements Interfaces\EntityInterface
     protected $feeDate;
 
     /**
-     * Surrendered date
+     * Organisation
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="licences")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
-    protected $surrenderedDate;
-
-    /**
-     * Safety ins trailers
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="safety_ins_trailers", nullable=true)
-     */
-    protected $safetyInsTrailers;
-
-    /**
-     * Safety ins vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="safety_ins_vehicles", nullable=true)
-     */
-    protected $safetyInsVehicles;
-
-    /**
-     * Safety ins
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
-     */
-    protected $safetyIns = 0;
-
-    /**
-     * Safety ins varies
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=true)
-     */
-    protected $safetyInsVaries;
-
-    /**
-     * Ni flag
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="ni_flag", nullable=true)
-     */
-    protected $niFlag;
-
-    /**
-     * Tachograph ins name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="tachograph_ins_name", length=90, nullable=true)
-     */
-    protected $tachographInsName;
+    protected $organisation;
 
     /**
      * Psv discs to be printed no
@@ -274,6 +105,88 @@ class Licence implements Interfaces\EntityInterface
     protected $psvDiscsToBePrintedNo;
 
     /**
+     * Review date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="review_date", nullable=true)
+     */
+    protected $reviewDate;
+
+    /**
+     * Safety ins
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
+     */
+    protected $safetyIns = 0;
+
+    /**
+     * Safety ins trailers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="safety_ins_trailers", nullable=true)
+     */
+    protected $safetyInsTrailers;
+
+    /**
+     * Safety ins varies
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=true)
+     */
+    protected $safetyInsVaries;
+
+    /**
+     * Safety ins vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="safety_ins_vehicles", nullable=true)
+     */
+    protected $safetyInsVehicles;
+
+    /**
+     * Surrendered date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
+     */
+    protected $surrenderedDate;
+
+    /**
+     * Tachograph ins
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
+     */
+    protected $tachographIns;
+
+    /**
+     * Tachograph ins name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="tachograph_ins_name", length=90, nullable=true)
+     */
+    protected $tachographInsName;
+
+    /**
+     * Trailers in possession
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="trailers_in_possession", nullable=true)
+     */
+    protected $trailersInPossession;
+
+    /**
      * Translate to welsh
      *
      * @var string
@@ -281,15 +194,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
      */
     protected $translateToWelsh = 0;
-
-    /**
-     * Is maintenance suitable
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_maintenance_suitable", nullable=true)
-     */
-    protected $isMaintenanceSuitable;
 
     /**
      * Application
@@ -380,52 +284,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the tachograph ins
-     *
-     * @param \Olcs\Db\Entity\RefData $tachographIns
-     * @return Licence
-     */
-    public function setTachographIns($tachographIns)
-    {
-        $this->tachographIns = $tachographIns;
-
-        return $this;
-    }
-
-    /**
-     * Get the tachograph ins
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTachographIns()
-    {
-        return $this->tachographIns;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return Licence
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * Set the enforcement area
      *
      * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
@@ -446,213 +304,6 @@ class Licence implements Interfaces\EntityInterface
     public function getEnforcementArea()
     {
         return $this->enforcementArea;
-    }
-
-    /**
-     * Set the lic no
-     *
-     * @param string $licNo
-     * @return Licence
-     */
-    public function setLicNo($licNo)
-    {
-        $this->licNo = $licNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the lic no
-     *
-     * @return string
-     */
-    public function getLicNo()
-    {
-        return $this->licNo;
-    }
-
-    /**
-     * Set the vi action
-     *
-     * @param string $viAction
-     * @return Licence
-     */
-    public function setViAction($viAction)
-    {
-        $this->viAction = $viAction;
-
-        return $this;
-    }
-
-    /**
-     * Get the vi action
-     *
-     * @return string
-     */
-    public function getViAction()
-    {
-        return $this->viAction;
-    }
-
-    /**
-     * Set the tot auth trailers
-     *
-     * @param int $totAuthTrailers
-     * @return Licence
-     */
-    public function setTotAuthTrailers($totAuthTrailers)
-    {
-        $this->totAuthTrailers = $totAuthTrailers;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth trailers
-     *
-     * @return int
-     */
-    public function getTotAuthTrailers()
-    {
-        return $this->totAuthTrailers;
-    }
-
-    /**
-     * Set the tot auth vehicles
-     *
-     * @param int $totAuthVehicles
-     * @return Licence
-     */
-    public function setTotAuthVehicles($totAuthVehicles)
-    {
-        $this->totAuthVehicles = $totAuthVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthVehicles()
-    {
-        return $this->totAuthVehicles;
-    }
-
-    /**
-     * Set the tot auth small vehicles
-     *
-     * @param int $totAuthSmallVehicles
-     * @return Licence
-     */
-    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
-    {
-        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth small vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthSmallVehicles()
-    {
-        return $this->totAuthSmallVehicles;
-    }
-
-    /**
-     * Set the tot auth medium vehicles
-     *
-     * @param int $totAuthMediumVehicles
-     * @return Licence
-     */
-    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
-    {
-        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth medium vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthMediumVehicles()
-    {
-        return $this->totAuthMediumVehicles;
-    }
-
-    /**
-     * Set the tot auth large vehicles
-     *
-     * @param int $totAuthLargeVehicles
-     * @return Licence
-     */
-    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
-    {
-        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth large vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthLargeVehicles()
-    {
-        return $this->totAuthLargeVehicles;
-    }
-
-    /**
-     * Set the tot community licences
-     *
-     * @param int $totCommunityLicences
-     * @return Licence
-     */
-    public function setTotCommunityLicences($totCommunityLicences)
-    {
-        $this->totCommunityLicences = $totCommunityLicences;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot community licences
-     *
-     * @return int
-     */
-    public function getTotCommunityLicences()
-    {
-        return $this->totCommunityLicences;
-    }
-
-    /**
-     * Set the trailers in possession
-     *
-     * @param int $trailersInPossession
-     * @return Licence
-     */
-    public function setTrailersInPossession($trailersInPossession)
-    {
-        $this->trailersInPossession = $trailersInPossession;
-
-        return $this;
-    }
-
-    /**
-     * Get the trailers in possession
-     *
-     * @return int
-     */
-    public function getTrailersInPossession()
-    {
-        return $this->trailersInPossession;
     }
 
     /**
@@ -679,75 +330,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the expiry date
-     *
-     * @param \DateTime $expiryDate
-     * @return Licence
-     */
-    public function setExpiryDate($expiryDate)
-    {
-        $this->expiryDate = $expiryDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the expiry date
-     *
-     * @return \DateTime
-     */
-    public function getExpiryDate()
-    {
-        return $this->expiryDate;
-    }
-
-    /**
-     * Set the granted date
-     *
-     * @param \DateTime $grantedDate
-     * @return Licence
-     */
-    public function setGrantedDate($grantedDate)
-    {
-        $this->grantedDate = $grantedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the granted date
-     *
-     * @return \DateTime
-     */
-    public function getGrantedDate()
-    {
-        return $this->grantedDate;
-    }
-
-    /**
-     * Set the review date
-     *
-     * @param \DateTime $reviewDate
-     * @return Licence
-     */
-    public function setReviewDate($reviewDate)
-    {
-        $this->reviewDate = $reviewDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the review date
-     *
-     * @return \DateTime
-     */
-    public function getReviewDate()
-    {
-        return $this->reviewDate;
-    }
-
-    /**
      * Set the fee date
      *
      * @param \DateTime $feeDate
@@ -771,164 +353,26 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the surrendered date
+     * Set the organisation
      *
-     * @param \DateTime $surrenderedDate
+     * @param \Olcs\Db\Entity\Organisation $organisation
      * @return Licence
      */
-    public function setSurrenderedDate($surrenderedDate)
+    public function setOrganisation($organisation)
     {
-        $this->surrenderedDate = $surrenderedDate;
+        $this->organisation = $organisation;
 
         return $this;
     }
 
     /**
-     * Get the surrendered date
+     * Get the organisation
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\Organisation
      */
-    public function getSurrenderedDate()
+    public function getOrganisation()
     {
-        return $this->surrenderedDate;
-    }
-
-    /**
-     * Set the safety ins trailers
-     *
-     * @param int $safetyInsTrailers
-     * @return Licence
-     */
-    public function setSafetyInsTrailers($safetyInsTrailers)
-    {
-        $this->safetyInsTrailers = $safetyInsTrailers;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins trailers
-     *
-     * @return int
-     */
-    public function getSafetyInsTrailers()
-    {
-        return $this->safetyInsTrailers;
-    }
-
-    /**
-     * Set the safety ins vehicles
-     *
-     * @param int $safetyInsVehicles
-     * @return Licence
-     */
-    public function setSafetyInsVehicles($safetyInsVehicles)
-    {
-        $this->safetyInsVehicles = $safetyInsVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins vehicles
-     *
-     * @return int
-     */
-    public function getSafetyInsVehicles()
-    {
-        return $this->safetyInsVehicles;
-    }
-
-    /**
-     * Set the safety ins
-     *
-     * @param string $safetyIns
-     * @return Licence
-     */
-    public function setSafetyIns($safetyIns)
-    {
-        $this->safetyIns = $safetyIns;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins
-     *
-     * @return string
-     */
-    public function getSafetyIns()
-    {
-        return $this->safetyIns;
-    }
-
-    /**
-     * Set the safety ins varies
-     *
-     * @param string $safetyInsVaries
-     * @return Licence
-     */
-    public function setSafetyInsVaries($safetyInsVaries)
-    {
-        $this->safetyInsVaries = $safetyInsVaries;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins varies
-     *
-     * @return string
-     */
-    public function getSafetyInsVaries()
-    {
-        return $this->safetyInsVaries;
-    }
-
-    /**
-     * Set the ni flag
-     *
-     * @param string $niFlag
-     * @return Licence
-     */
-    public function setNiFlag($niFlag)
-    {
-        $this->niFlag = $niFlag;
-
-        return $this;
-    }
-
-    /**
-     * Get the ni flag
-     *
-     * @return string
-     */
-    public function getNiFlag()
-    {
-        return $this->niFlag;
-    }
-
-    /**
-     * Set the tachograph ins name
-     *
-     * @param string $tachographInsName
-     * @return Licence
-     */
-    public function setTachographInsName($tachographInsName)
-    {
-        $this->tachographInsName = $tachographInsName;
-
-        return $this;
-    }
-
-    /**
-     * Get the tachograph ins name
-     *
-     * @return string
-     */
-    public function getTachographInsName()
-    {
-        return $this->tachographInsName;
+        return $this->organisation;
     }
 
     /**
@@ -955,6 +399,213 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the review date
+     *
+     * @param \DateTime $reviewDate
+     * @return Licence
+     */
+    public function setReviewDate($reviewDate)
+    {
+        $this->reviewDate = $reviewDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the review date
+     *
+     * @return \DateTime
+     */
+    public function getReviewDate()
+    {
+        return $this->reviewDate;
+    }
+
+    /**
+     * Set the safety ins
+     *
+     * @param string $safetyIns
+     * @return Licence
+     */
+    public function setSafetyIns($safetyIns)
+    {
+        $this->safetyIns = $safetyIns;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins
+     *
+     * @return string
+     */
+    public function getSafetyIns()
+    {
+        return $this->safetyIns;
+    }
+
+    /**
+     * Set the safety ins trailers
+     *
+     * @param int $safetyInsTrailers
+     * @return Licence
+     */
+    public function setSafetyInsTrailers($safetyInsTrailers)
+    {
+        $this->safetyInsTrailers = $safetyInsTrailers;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins trailers
+     *
+     * @return int
+     */
+    public function getSafetyInsTrailers()
+    {
+        return $this->safetyInsTrailers;
+    }
+
+    /**
+     * Set the safety ins varies
+     *
+     * @param string $safetyInsVaries
+     * @return Licence
+     */
+    public function setSafetyInsVaries($safetyInsVaries)
+    {
+        $this->safetyInsVaries = $safetyInsVaries;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins varies
+     *
+     * @return string
+     */
+    public function getSafetyInsVaries()
+    {
+        return $this->safetyInsVaries;
+    }
+
+    /**
+     * Set the safety ins vehicles
+     *
+     * @param int $safetyInsVehicles
+     * @return Licence
+     */
+    public function setSafetyInsVehicles($safetyInsVehicles)
+    {
+        $this->safetyInsVehicles = $safetyInsVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins vehicles
+     *
+     * @return int
+     */
+    public function getSafetyInsVehicles()
+    {
+        return $this->safetyInsVehicles;
+    }
+
+    /**
+     * Set the surrendered date
+     *
+     * @param \DateTime $surrenderedDate
+     * @return Licence
+     */
+    public function setSurrenderedDate($surrenderedDate)
+    {
+        $this->surrenderedDate = $surrenderedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the surrendered date
+     *
+     * @return \DateTime
+     */
+    public function getSurrenderedDate()
+    {
+        return $this->surrenderedDate;
+    }
+
+    /**
+     * Set the tachograph ins
+     *
+     * @param \Olcs\Db\Entity\RefData $tachographIns
+     * @return Licence
+     */
+    public function setTachographIns($tachographIns)
+    {
+        $this->tachographIns = $tachographIns;
+
+        return $this;
+    }
+
+    /**
+     * Get the tachograph ins
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTachographIns()
+    {
+        return $this->tachographIns;
+    }
+
+    /**
+     * Set the tachograph ins name
+     *
+     * @param string $tachographInsName
+     * @return Licence
+     */
+    public function setTachographInsName($tachographInsName)
+    {
+        $this->tachographInsName = $tachographInsName;
+
+        return $this;
+    }
+
+    /**
+     * Get the tachograph ins name
+     *
+     * @return string
+     */
+    public function getTachographInsName()
+    {
+        return $this->tachographInsName;
+    }
+
+    /**
+     * Set the trailers in possession
+     *
+     * @param int $trailersInPossession
+     * @return Licence
+     */
+    public function setTrailersInPossession($trailersInPossession)
+    {
+        $this->trailersInPossession = $trailersInPossession;
+
+        return $this;
+    }
+
+    /**
+     * Get the trailers in possession
+     *
+     * @return int
+     */
+    public function getTrailersInPossession()
+    {
+        return $this->trailersInPossession;
+    }
+
+    /**
      * Set the translate to welsh
      *
      * @param string $translateToWelsh
@@ -975,29 +626,6 @@ class Licence implements Interfaces\EntityInterface
     public function getTranslateToWelsh()
     {
         return $this->translateToWelsh;
-    }
-
-    /**
-     * Set the is maintenance suitable
-     *
-     * @param string $isMaintenanceSuitable
-     * @return Licence
-     */
-    public function setIsMaintenanceSuitable($isMaintenanceSuitable)
-    {
-        $this->isMaintenanceSuitable = $isMaintenanceSuitable;
-
-        return $this;
-    }
-
-    /**
-     * Get the is maintenance suitable
-     *
-     * @return string
-     */
-    public function getIsMaintenanceSuitable()
-    {
-        return $this->isMaintenanceSuitable;
     }
 
     /**

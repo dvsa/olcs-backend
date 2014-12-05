@@ -26,22 +26,31 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceStatusRule implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\EndDateFieldAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\EndDateFieldAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
+
+    /**
+     * End processed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="end_processed_date", nullable=true)
+     */
+    protected $endProcessedDate;
 
     /**
      * Licence status
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="licence_status", referencedColumnName="id", nullable=false)
      */
     protected $licenceStatus;
@@ -65,13 +74,27 @@ class LicenceStatusRule implements Interfaces\EntityInterface
     protected $startProcessedDate;
 
     /**
-     * End processed date
+     * Set the end processed date
      *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="end_processed_date", nullable=true)
+     * @param \DateTime $endProcessedDate
+     * @return LicenceStatusRule
      */
-    protected $endProcessedDate;
+    public function setEndProcessedDate($endProcessedDate)
+    {
+        $this->endProcessedDate = $endProcessedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the end processed date
+     *
+     * @return \DateTime
+     */
+    public function getEndProcessedDate()
+    {
+        return $this->endProcessedDate;
+    }
 
     /**
      * Set the licence status
@@ -140,28 +163,5 @@ class LicenceStatusRule implements Interfaces\EntityInterface
     public function getStartProcessedDate()
     {
         return $this->startProcessedDate;
-    }
-
-    /**
-     * Set the end processed date
-     *
-     * @param \DateTime $endProcessedDate
-     * @return LicenceStatusRule
-     */
-    public function setEndProcessedDate($endProcessedDate)
-    {
-        $this->endProcessedDate = $endProcessedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the end processed date
-     *
-     * @return \DateTime
-     */
-    public function getEndProcessedDate()
-    {
-        return $this->endProcessedDate;
     }
 }

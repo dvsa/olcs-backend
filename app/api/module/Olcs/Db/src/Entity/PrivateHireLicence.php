@@ -24,11 +24,11 @@ use Olcs\Db\Entity\Traits;
 class PrivateHireLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -37,7 +37,7 @@ class PrivateHireLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="privateHireLicences")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="privateHireLicences")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;

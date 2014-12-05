@@ -26,33 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SiPenaltyErruRequested implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Si penalty requested type
-     *
-     * @var \Olcs\Db\Entity\SiPenaltyRequestedType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyRequestedType", fetch="LAZY")
-     * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siPenaltyRequestedType;
-
-    /**
-     * Serious infringement
-     *
-     * @var \Olcs\Db\Entity\SeriousInfringement
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", fetch="LAZY", inversedBy="requestedErrus")
-     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
-     */
-    protected $seriousInfringement;
 
     /**
      * Duration
@@ -64,26 +44,46 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     protected $duration;
 
     /**
-     * Set the si penalty requested type
+     * Serious infringement
      *
-     * @param \Olcs\Db\Entity\SiPenaltyRequestedType $siPenaltyRequestedType
+     * @var \Olcs\Db\Entity\SeriousInfringement
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SeriousInfringement", inversedBy="requestedErrus")
+     * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
+     */
+    protected $seriousInfringement;
+
+    /**
+     * Si penalty requested type
+     *
+     * @var \Olcs\Db\Entity\SiPenaltyRequestedType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyRequestedType")
+     * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siPenaltyRequestedType;
+
+    /**
+     * Set the duration
+     *
+     * @param int $duration
      * @return SiPenaltyErruRequested
      */
-    public function setSiPenaltyRequestedType($siPenaltyRequestedType)
+    public function setDuration($duration)
     {
-        $this->siPenaltyRequestedType = $siPenaltyRequestedType;
+        $this->duration = $duration;
 
         return $this;
     }
 
     /**
-     * Get the si penalty requested type
+     * Get the duration
      *
-     * @return \Olcs\Db\Entity\SiPenaltyRequestedType
+     * @return int
      */
-    public function getSiPenaltyRequestedType()
+    public function getDuration()
     {
-        return $this->siPenaltyRequestedType;
+        return $this->duration;
     }
 
     /**
@@ -110,25 +110,25 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the duration
+     * Set the si penalty requested type
      *
-     * @param int $duration
+     * @param \Olcs\Db\Entity\SiPenaltyRequestedType $siPenaltyRequestedType
      * @return SiPenaltyErruRequested
      */
-    public function setDuration($duration)
+    public function setSiPenaltyRequestedType($siPenaltyRequestedType)
     {
-        $this->duration = $duration;
+        $this->siPenaltyRequestedType = $siPenaltyRequestedType;
 
         return $this;
     }
 
     /**
-     * Get the duration
+     * Get the si penalty requested type
      *
-     * @return int
+     * @return \Olcs\Db\Entity\SiPenaltyRequestedType
      */
-    public function getDuration()
+    public function getSiPenaltyRequestedType()
     {
-        return $this->duration;
+        return $this->siPenaltyRequestedType;
     }
 }

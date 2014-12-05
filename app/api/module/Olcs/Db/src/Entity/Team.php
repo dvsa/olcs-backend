@@ -23,13 +23,13 @@ use Olcs\Db\Entity\Traits;
 class Team implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description255FieldAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\Description255FieldAlt1,
-        Traits\Name70Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Name70Field,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
 }

@@ -30,65 +30,44 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ContactDetails implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\Description255FieldAlt1,
+        Traits\EmailAddress60Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\EmailAddress60Field,
-        Traits\Description255FieldAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Contact type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
-     */
-    protected $contactType;
 
     /**
      * Address
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", fetch="LAZY", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", inversedBy="contactDetails")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
 
     /**
-     * Organisation
+     * Contact type
      *
-     * @var \Olcs\Db\Entity\Organisation
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=false)
      */
-    protected $organisation;
+    protected $contactType;
 
     /**
-     * Person
+     * Family name
      *
-     * @var \Olcs\Db\Entity\Person
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", fetch="LAZY", cascade={"persist"}, inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="family_name", length=40, nullable=true)
      */
-    protected $person;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
-     */
-    protected $licence;
+    protected $familyName;
 
     /**
      * Fao
@@ -109,13 +88,34 @@ class ContactDetails implements Interfaces\EntityInterface
     protected $forename;
 
     /**
-     * Family name
+     * Licence
      *
-     * @var string
+     * @var \Olcs\Db\Entity\Licence
      *
-     * @ORM\Column(type="string", name="family_name", length=40, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
-    protected $familyName;
+    protected $licence;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
+
+    /**
+     * Person
+     *
+     * @var \Olcs\Db\Entity\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person", cascade={"persist"}, inversedBy="contactDetails")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
+     */
+    protected $person;
 
     /**
      * Written permission to engage
@@ -144,29 +144,6 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact type
-     *
-     * @param \Olcs\Db\Entity\RefData $contactType
-     * @return ContactDetails
-     */
-    public function setContactType($contactType)
-    {
-        $this->contactType = $contactType;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getContactType()
-    {
-        return $this->contactType;
-    }
-
-    /**
      * Set the address
      *
      * @param \Olcs\Db\Entity\Address $address
@@ -190,72 +167,49 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the organisation
+     * Set the contact type
      *
-     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @param \Olcs\Db\Entity\RefData $contactType
      * @return ContactDetails
      */
-    public function setOrganisation($organisation)
+    public function setContactType($contactType)
     {
-        $this->organisation = $organisation;
+        $this->contactType = $contactType;
 
         return $this;
     }
 
     /**
-     * Get the organisation
+     * Get the contact type
      *
-     * @return \Olcs\Db\Entity\Organisation
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getOrganisation()
+    public function getContactType()
     {
-        return $this->organisation;
+        return $this->contactType;
     }
 
     /**
-     * Set the person
+     * Set the family name
      *
-     * @param \Olcs\Db\Entity\Person $person
+     * @param string $familyName
      * @return ContactDetails
      */
-    public function setPerson($person)
+    public function setFamilyName($familyName)
     {
-        $this->person = $person;
+        $this->familyName = $familyName;
 
         return $this;
     }
 
     /**
-     * Get the person
+     * Get the family name
      *
-     * @return \Olcs\Db\Entity\Person
+     * @return string
      */
-    public function getPerson()
+    public function getFamilyName()
     {
-        return $this->person;
-    }
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return ContactDetails
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
+        return $this->familyName;
     }
 
     /**
@@ -305,26 +259,72 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the family name
+     * Set the licence
      *
-     * @param string $familyName
+     * @param \Olcs\Db\Entity\Licence $licence
      * @return ContactDetails
      */
-    public function setFamilyName($familyName)
+    public function setLicence($licence)
     {
-        $this->familyName = $familyName;
+        $this->licence = $licence;
 
         return $this;
     }
 
     /**
-     * Get the family name
+     * Get the licence
      *
-     * @return string
+     * @return \Olcs\Db\Entity\Licence
      */
-    public function getFamilyName()
+    public function getLicence()
     {
-        return $this->familyName;
+        return $this->licence;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return ContactDetails
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Set the person
+     *
+     * @param \Olcs\Db\Entity\Person $person
+     * @return ContactDetails
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Olcs\Db\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 
     /**

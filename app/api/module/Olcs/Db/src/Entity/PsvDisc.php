@@ -23,26 +23,16 @@ use Olcs\Db\Entity\Traits;
 class PsvDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\DiscNo50Field,
-        Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsPrintingField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\DiscNo50Field,
+        Traits\IdIdentity,
+        Traits\IsPrintingField,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", fetch="LAZY", inversedBy="psvDiscs")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licence;
 
     /**
      * Is copy
@@ -54,6 +44,16 @@ class PsvDisc implements Interfaces\EntityInterface
     protected $isCopy = 0;
 
     /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="psvDiscs")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
+
+    /**
      * Reprint required
      *
      * @var string
@@ -61,29 +61,6 @@ class PsvDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return PsvDisc
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
 
     /**
      * Set the is copy
@@ -106,6 +83,29 @@ class PsvDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return PsvDisc
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

@@ -3,10 +3,6 @@
     "description": "Back End Application for OLCS Project",
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/MajorCaiger/doctrine2.git"
-        },
-        {
             "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
             "type": "vcs"
         },
@@ -31,11 +27,10 @@
             "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "~2.3.3",
-        "doctrine/orm": "dev-master",
+        "doctrine/orm": "~2.4.0",
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "~2.3.9",
         "olcs/companies-house": "dev-develop",

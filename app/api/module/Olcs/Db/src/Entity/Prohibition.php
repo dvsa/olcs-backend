@@ -24,33 +24,23 @@ use Olcs\Db\Entity\Traits;
 class Prohibition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
-        Traits\Vrm20Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\Vrm20Field;
 
     /**
-     * Prohibition type
+     * Case
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="prohibitions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
-    protected $prohibitionType;
-
-    /**
-     * Prohibition date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="prohibition_date", nullable=false)
-     */
-    protected $prohibitionDate;
+    protected $case;
 
     /**
      * Cleared date
@@ -62,15 +52,6 @@ class Prohibition implements Interfaces\EntityInterface
     protected $clearedDate;
 
     /**
-     * Is trailer
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_trailer", nullable=false)
-     */
-    protected $isTrailer = 0;
-
-    /**
      * Imposed at
      *
      * @var string
@@ -80,49 +61,54 @@ class Prohibition implements Interfaces\EntityInterface
     protected $imposedAt;
 
     /**
-     * Set the prohibition type
+     * Is trailer
      *
-     * @param \Olcs\Db\Entity\RefData $prohibitionType
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_trailer", nullable=false)
+     */
+    protected $isTrailer = 0;
+
+    /**
+     * Prohibition date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="prohibition_date", nullable=false)
+     */
+    protected $prohibitionDate;
+
+    /**
+     * Prohibition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $prohibitionType;
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
      * @return Prohibition
      */
-    public function setProhibitionType($prohibitionType)
+    public function setCase($case)
     {
-        $this->prohibitionType = $prohibitionType;
+        $this->case = $case;
 
         return $this;
     }
 
     /**
-     * Get the prohibition type
+     * Get the case
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Olcs\Db\Entity\Cases
      */
-    public function getProhibitionType()
+    public function getCase()
     {
-        return $this->prohibitionType;
-    }
-
-    /**
-     * Set the prohibition date
-     *
-     * @param \DateTime $prohibitionDate
-     * @return Prohibition
-     */
-    public function setProhibitionDate($prohibitionDate)
-    {
-        $this->prohibitionDate = $prohibitionDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the prohibition date
-     *
-     * @return \DateTime
-     */
-    public function getProhibitionDate()
-    {
-        return $this->prohibitionDate;
+        return $this->case;
     }
 
     /**
@@ -149,6 +135,29 @@ class Prohibition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the imposed at
+     *
+     * @param string $imposedAt
+     * @return Prohibition
+     */
+    public function setImposedAt($imposedAt)
+    {
+        $this->imposedAt = $imposedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the imposed at
+     *
+     * @return string
+     */
+    public function getImposedAt()
+    {
+        return $this->imposedAt;
+    }
+
+    /**
      * Set the is trailer
      *
      * @param string $isTrailer
@@ -172,25 +181,48 @@ class Prohibition implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the imposed at
+     * Set the prohibition date
      *
-     * @param string $imposedAt
+     * @param \DateTime $prohibitionDate
      * @return Prohibition
      */
-    public function setImposedAt($imposedAt)
+    public function setProhibitionDate($prohibitionDate)
     {
-        $this->imposedAt = $imposedAt;
+        $this->prohibitionDate = $prohibitionDate;
 
         return $this;
     }
 
     /**
-     * Get the imposed at
+     * Get the prohibition date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getImposedAt()
+    public function getProhibitionDate()
     {
-        return $this->imposedAt;
+        return $this->prohibitionDate;
+    }
+
+    /**
+     * Set the prohibition type
+     *
+     * @param \Olcs\Db\Entity\RefData $prohibitionType
+     * @return Prohibition
+     */
+    public function setProhibitionType($prohibitionType)
+    {
+        $this->prohibitionType = $prohibitionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the prohibition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getProhibitionType()
+    {
+        return $this->prohibitionType;
     }
 }

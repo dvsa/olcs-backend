@@ -27,12 +27,12 @@ use Olcs\Db\Entity\Traits;
 class CompanySubsidiaryLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -40,7 +40,7 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CompanySubsidiary
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompanySubsidiary")
      * @ORM\JoinColumn(name="company_subsidiary_id", referencedColumnName="id", nullable=false)
      */
     protected $companySubsidiary;

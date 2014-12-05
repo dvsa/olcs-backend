@@ -24,12 +24,12 @@ use Olcs\Db\Entity\Traits;
 class RolePermission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\RoleManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\RoleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -37,7 +37,7 @@ class RolePermission implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Permission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Permission", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Permission")
      * @ORM\JoinColumn(name="permission_id", referencedColumnName="id", nullable=false)
      */
     protected $permission;

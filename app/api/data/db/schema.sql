@@ -166,7 +166,9 @@ CREATE TABLE `application` (
   `tot_auth_medium_vehicles` int(11) DEFAULT NULL COMMENT 'psv medium vehicles',
   `tot_auth_large_vehicles` int(11) DEFAULT NULL COMMENT 'psv large vehicles',
   `tot_community_licences` int(11) DEFAULT NULL COMMENT 'Number of EU community licences required',
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `licence_type` varchar(32) DEFAULT NULL COMMENT 'Restricted, Standard International etc.',
+  `ni_flag` tinyint(1) DEFAULT NULL,
   `bankrupt` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been declared bankrupt',
   `administration` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been involved in a company that went into administration',
   `disqualified` tinyint(1) DEFAULT NULL COMMENT 'Any person in application has ever been disqualified as a director or manager of a company',
@@ -193,11 +195,11 @@ CREATE TABLE `application` (
   `convictions_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirmation that any convictions that occur during application process will be communicated to TC.',
   `psv_operate_small_vhl` tinyint(1) DEFAULT NULL COMMENT 'The psv operator intends to operate small vehicles English and Welsh operators only.Section 15B PSV421',
   `psv_small_vhl_notes` varchar(4000) DEFAULT NULL COMMENT 'Small vehicle notes. Section 15B PSV421',
-  `psv_small_vhl_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirmation That if they operate small vehicles they agree to the conditions in the application ui form. Section 15D PSV421',
-  `psv_no_small_vhl_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Confirm vehicles with 8 passenger seats or less will not be operated on the licence. Section 15E PSV421',
-  `psv_limousines` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Are any vehicles on licence limos or novelty.Section 15F PSV421',
-  `psv_no_limousine_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'If no limos on licence user confirms they will not put any on licence. Section 15F PSV421',
-  `psv_only_limousines_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Licence is only for limos and no other vehicle types. Section 15G PSV 421',
+  `psv_small_vhl_confirmation` tinyint(1) DEFAULT NULL COMMENT 'User confirmation That if they operate small vehicles they agree to the conditions in the application ui form. Section 15D PSV421',
+  `psv_no_small_vhl_confirmation` tinyint(1) DEFAULT NULL COMMENT 'Confirm vehicles with 8 passenger seats or less will not be operated on the licence. Section 15E PSV421',
+  `psv_limousines` tinyint(1) DEFAULT NULL COMMENT 'Are any vehicles on licence limos or novelty.Section 15F PSV421',
+  `psv_no_limousine_confirmation` tinyint(1) DEFAULT NULL COMMENT 'If no limos on licence user confirms they will not put any on licence. Section 15F PSV421',
+  `psv_only_limousines_confirmation` tinyint(1) DEFAULT NULL COMMENT 'Licence is only for limos and no other vehicle types. Section 15G PSV 421',
   `interim_start` date DEFAULT NULL COMMENT 'Date interim licence is to start.',
   `interim_end` date DEFAULT NULL COMMENT 'Date interim licence is to end.',
   `interim_auth_vehicles` int(11) DEFAULT NULL COMMENT 'Number of vehicles authorised on interim licence.',
@@ -217,13 +219,15 @@ CREATE TABLE `application` (
   KEY `fk_application_ref_data2_idx` (`status`),
   KEY `fk_application_ref_data3_idx` (`interim_status`),
   KEY `fk_application_ref_data4_idx` (`withdrawn_reason`),
+  KEY `fk_application_ref_data5_idx` (`goods_or_psv`),
   CONSTRAINT `fk_application_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data2` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_ref_data3` FOREIGN KEY (`interim_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_application_ref_data4` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_application_ref_data4` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_ref_data5` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Application to vary a licence or to apply for a new licence. If successful values from app will be copied into licence.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4256,11 +4260,14 @@ CREATE TABLE `payment` (
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
+  `status` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_payment_user1_idx` (`created_by`),
   KEY `fk_payment_user2_idx` (`last_modified_by`),
+  KEY `fk_payment_ref_data1_idx` (`status`),
   CONSTRAINT `fk_payment_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_payment_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_payment_ref_data1` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5175,9 +5182,7 @@ DROP TABLE IF EXISTS `publication_link`;
 CREATE TABLE `publication_link` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `publication_id` int(11) NOT NULL,
-  `publication_no` int(11) NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
-  `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `pi_id` int(11) DEFAULT NULL,
@@ -5187,7 +5192,6 @@ CREATE TABLE `publication_link` (
   `text2` text,
   `text3` text,
   `publication_section_id` int(11) NOT NULL,
-  `orig_pub_date` date DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -6057,6 +6061,7 @@ CREATE TABLE `submission` (
   `submission_type` varchar(32) NOT NULL,
   `data_snapshot` text COMMENT 'Contains data for each submission section concatenated togather as a JSon string.',
   `closed_date` datetime DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -7262,7 +7267,6 @@ CREATE TABLE `vehicle` (
   `section_26_revoked` tinyint(1) NOT NULL DEFAULT '0',
   `section_26_suspend` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
-  `specified_date` datetime DEFAULT NULL,
   `psv_type` varchar(32) DEFAULT NULL COMMENT 'small, medium or large',
   `make_model` varchar(100) DEFAULT NULL COMMENT 'For small PSV vehicles the make and model are recorded.',
   `created_by` int(11) DEFAULT NULL,

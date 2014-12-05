@@ -32,46 +32,24 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class PublicationLink implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
-        Traits\PublicationNoField,
-        Traits\PubType3Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Publication section
-     *
-     * @var \Olcs\Db\Entity\PublicationSection
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection", fetch="LAZY")
-     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
-     */
-    protected $publicationSection;
-
-    /**
-     * Tm pi hearing
-     *
-     * @var \Olcs\Db\Entity\TmPiHearing
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing", fetch="LAZY")
-     * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
-     */
-    protected $tmPiHearing;
 
     /**
      * Pi
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
@@ -81,10 +59,20 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication")
      * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
     protected $publication;
+
+    /**
+     * Publication section
+     *
+     * @var \Olcs\Db\Entity\PublicationSection
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection")
+     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
+     */
+    protected $publicationSection;
 
     /**
      * Text1
@@ -114,59 +102,14 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $text3;
 
     /**
-     * Orig pub date
+     * Tm pi hearing
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\TmPiHearing
      *
-     * @ORM\Column(type="date", name="orig_pub_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing")
+     * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
-    protected $origPubDate;
-
-    /**
-     * Set the publication section
-     *
-     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
-     * @return PublicationLink
-     */
-    public function setPublicationSection($publicationSection)
-    {
-        $this->publicationSection = $publicationSection;
-
-        return $this;
-    }
-
-    /**
-     * Get the publication section
-     *
-     * @return \Olcs\Db\Entity\PublicationSection
-     */
-    public function getPublicationSection()
-    {
-        return $this->publicationSection;
-    }
-
-    /**
-     * Set the tm pi hearing
-     *
-     * @param \Olcs\Db\Entity\TmPiHearing $tmPiHearing
-     * @return PublicationLink
-     */
-    public function setTmPiHearing($tmPiHearing)
-    {
-        $this->tmPiHearing = $tmPiHearing;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm pi hearing
-     *
-     * @return \Olcs\Db\Entity\TmPiHearing
-     */
-    public function getTmPiHearing()
-    {
-        return $this->tmPiHearing;
-    }
+    protected $tmPiHearing;
 
     /**
      * Set the pi
@@ -212,6 +155,29 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getPublication()
     {
         return $this->publication;
+    }
+
+    /**
+     * Set the publication section
+     *
+     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
+     * @return PublicationLink
+     */
+    public function setPublicationSection($publicationSection)
+    {
+        $this->publicationSection = $publicationSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication section
+     *
+     * @return \Olcs\Db\Entity\PublicationSection
+     */
+    public function getPublicationSection()
+    {
+        return $this->publicationSection;
     }
 
     /**
@@ -284,25 +250,25 @@ class PublicationLink implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the orig pub date
+     * Set the tm pi hearing
      *
-     * @param \DateTime $origPubDate
+     * @param \Olcs\Db\Entity\TmPiHearing $tmPiHearing
      * @return PublicationLink
      */
-    public function setOrigPubDate($origPubDate)
+    public function setTmPiHearing($tmPiHearing)
     {
-        $this->origPubDate = $origPubDate;
+        $this->tmPiHearing = $tmPiHearing;
 
         return $this;
     }
 
     /**
-     * Get the orig pub date
+     * Get the tm pi hearing
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\TmPiHearing
      */
-    public function getOrigPubDate()
+    public function getTmPiHearing()
     {
-        return $this->origPubDate;
+        return $this->tmPiHearing;
     }
 }

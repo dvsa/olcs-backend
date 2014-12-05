@@ -26,24 +26,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TradingName implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOneAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY", inversedBy="tradingNames")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $organisation;
+        Traits\LicenceManyToOneAlt1,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Name
@@ -55,36 +46,14 @@ class TradingName implements Interfaces\EntityInterface
     protected $name;
 
     /**
-     * Vi action
+     * Organisation
      *
-     * @var string
+     * @var \Olcs\Db\Entity\Organisation
      *
-     * @ORM\Column(type="string", name="vi_action", length=1, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="tradingNames")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
-    protected $viAction;
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return TradingName
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
+    protected $organisation;
 
     /**
      * Set the name
@@ -110,25 +79,25 @@ class TradingName implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the vi action
+     * Set the organisation
      *
-     * @param string $viAction
+     * @param \Olcs\Db\Entity\Organisation $organisation
      * @return TradingName
      */
-    public function setViAction($viAction)
+    public function setOrganisation($organisation)
     {
-        $this->viAction = $viAction;
+        $this->organisation = $organisation;
 
         return $this;
     }
 
     /**
-     * Get the vi action
+     * Get the organisation
      *
-     * @return string
+     * @return \Olcs\Db\Entity\Organisation
      */
-    public function getViAction()
+    public function getOrganisation()
     {
-        return $this->viAction;
+        return $this->organisation;
     }
 }

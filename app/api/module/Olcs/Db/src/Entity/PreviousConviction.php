@@ -21,11 +21,12 @@ use Olcs\Db\Entity\Traits;
 class PreviousConviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\Title32Field,
         Traits\BirthDateField,
+        Traits\CategoryText1024Field,
+        Traits\IdIdentity,
         Traits\Notes4000Field,
         Traits\Penalty255Field,
+        Traits\Title32Field,
         Traits\CustomVersionField;
 
     /**
@@ -33,7 +34,7 @@ class PreviousConviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY", inversedBy="previousConvictions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="previousConvictions")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
@@ -48,13 +49,13 @@ class PreviousConviction implements Interfaces\EntityInterface
     protected $convictionDate;
 
     /**
-     * Forename
+     * Court fpn
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="forename", length=35, nullable=false)
+     * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
-    protected $forename;
+    protected $courtFpn;
 
     /**
      * Family name
@@ -66,22 +67,13 @@ class PreviousConviction implements Interfaces\EntityInterface
     protected $familyName;
 
     /**
-     * Category text
+     * Forename
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
+     * @ORM\Column(type="string", name="forename", length=35, nullable=false)
      */
-    protected $categoryText;
-
-    /**
-     * Court fpn
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
-     */
-    protected $courtFpn;
+    protected $forename;
 
     /**
      * Set the application
@@ -130,26 +122,26 @@ class PreviousConviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the forename
+     * Set the court fpn
      *
-     * @param string $forename
+     * @param string $courtFpn
      * @return PreviousConviction
      */
-    public function setForename($forename)
+    public function setCourtFpn($courtFpn)
     {
-        $this->forename = $forename;
+        $this->courtFpn = $courtFpn;
 
         return $this;
     }
 
     /**
-     * Get the forename
+     * Get the court fpn
      *
      * @return string
      */
-    public function getForename()
+    public function getCourtFpn()
     {
-        return $this->forename;
+        return $this->courtFpn;
     }
 
     /**
@@ -176,48 +168,25 @@ class PreviousConviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the category text
+     * Set the forename
      *
-     * @param string $categoryText
+     * @param string $forename
      * @return PreviousConviction
      */
-    public function setCategoryText($categoryText)
+    public function setForename($forename)
     {
-        $this->categoryText = $categoryText;
+        $this->forename = $forename;
 
         return $this;
     }
 
     /**
-     * Get the category text
+     * Get the forename
      *
      * @return string
      */
-    public function getCategoryText()
+    public function getForename()
     {
-        return $this->categoryText;
-    }
-
-    /**
-     * Set the court fpn
-     *
-     * @param string $courtFpn
-     * @return PreviousConviction
-     */
-    public function setCourtFpn($courtFpn)
-    {
-        $this->courtFpn = $courtFpn;
-
-        return $this;
-    }
-
-    /**
-     * Get the court fpn
-     *
-     * @return string
-     */
-    public function getCourtFpn()
-    {
-        return $this->courtFpn;
+        return $this->forename;
     }
 }

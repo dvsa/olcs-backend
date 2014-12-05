@@ -103,6 +103,9 @@ return array(
         )
     ),
     'application' => array(
+        'ni_flag' => array(
+            'type' => 'yesnonull'
+        ),
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
@@ -167,19 +170,19 @@ return array(
             'type' => 'yesnonull'
         ),
         'psv_small_vhl_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_no_small_vhl_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_limousines' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_no_limousine_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'psv_only_limousines_confirmation' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'is_maintenance_suitable' => array(
             'type' => 'yesnonull'
@@ -597,7 +600,13 @@ return array(
     'prohibition' => array(
         'is_trailer' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'prohibition'
+            )
+        ),
     ),
     'conviction' => array(
         'msi' => array(
@@ -888,6 +897,12 @@ return array(
     'serious_infringement' => array(
         'erru_response_sent' => array(
             'type' => 'yesno'
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'seriousInfringement'
+            )
         )
     ),
     'si_penalty' => array(
@@ -1109,6 +1124,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'privateHireLicence'
+            )
+        )
+    ),
+    'fee_payment' => array(
+        'fee_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Fee',
+                'property' => 'feePayment'
             )
         )
     )

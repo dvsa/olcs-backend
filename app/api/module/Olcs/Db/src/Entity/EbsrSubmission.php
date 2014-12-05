@@ -24,65 +24,8 @@ use Olcs\Db\Entity\Traits;
 class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\BusRegManyToOneAlt1;
-
-    /**
-     * Ebsr submission type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $ebsrSubmissionType;
-
-    /**
-     * Ebsr submission status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
-     */
-    protected $ebsrSubmissionStatus;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $document;
-
-    /**
-     * Submitted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="submitted_date", nullable=true)
-     */
-    protected $submittedDate;
-
-    /**
-     * Licence no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="licence_no", length=7, nullable=true)
-     */
-    protected $licenceNo;
-
-    /**
-     * Organisation email address
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="organisation_email_address", length=100, nullable=true)
-     */
-    protected $organisationEmailAddress;
+        Traits\BusRegManyToOneAlt1,
+        Traits\IdIdentity;
 
     /**
      * Application classification
@@ -92,105 +35,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="application_classification", length=32, nullable=true)
      */
     protected $applicationClassification;
-
-    /**
-     * Variation no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="variation_no", nullable=true)
-     */
-    protected $variationNo;
-
-    /**
-     * Tan code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="tan_code", length=2, nullable=true)
-     */
-    protected $tanCode;
-
-    /**
-     * Registration no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="registration_no", length=4, nullable=true)
-     */
-    protected $registrationNo;
-
-    /**
-     * Validation start
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="validation_start", nullable=true)
-     */
-    protected $validationStart;
-
-    /**
-     * Validation end
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="validation_end", nullable=true)
-     */
-    protected $validationEnd;
-
-    /**
-     * Publish start
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="publish_start", nullable=true)
-     */
-    protected $publishStart;
-
-    /**
-     * Publish end
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="publish_end", nullable=true)
-     */
-    protected $publishEnd;
-
-    /**
-     * Process start
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="process_start", nullable=true)
-     */
-    protected $processStart;
-
-    /**
-     * Process end
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="process_end", nullable=true)
-     */
-    protected $processEnd;
-
-    /**
-     * Ebsr submission result
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="ebsr_submission_result", length=64, nullable=true)
-     */
-    protected $ebsrSubmissionResult;
-
-    /**
-     * Distribute start
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="distribute_start", nullable=true)
-     */
-    protected $distributeStart;
 
     /**
      * Distribute end
@@ -211,6 +55,54 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $distributeExpire;
 
     /**
+     * Distribute start
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="distribute_start", nullable=true)
+     */
+    protected $distributeStart;
+
+    /**
+     * Document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $document;
+
+    /**
+     * Ebsr submission result
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ebsr_submission_result", length=64, nullable=true)
+     */
+    protected $ebsrSubmissionResult;
+
+    /**
+     * Ebsr submission status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="ebsr_submission_status_id", referencedColumnName="id", nullable=false)
+     */
+    protected $ebsrSubmissionStatus;
+
+    /**
+     * Ebsr submission type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="ebsr_submission_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $ebsrSubmissionType;
+
+    /**
      * Is from ftp
      *
      * @var string
@@ -218,6 +110,24 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false)
      */
     protected $isFromFtp = 0;
+
+    /**
+     * Licence no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="licence_no", length=7, nullable=true)
+     */
+    protected $licenceNo;
+
+    /**
+     * Organisation email address
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="organisation_email_address", length=100, nullable=true)
+     */
+    protected $organisationEmailAddress;
 
     /**
      * Organisation id
@@ -229,142 +139,94 @@ class EbsrSubmission implements Interfaces\EntityInterface
     protected $organisationId;
 
     /**
-     * Set the ebsr submission type
+     * Process end
      *
-     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionType
-     * @return EbsrSubmission
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="process_end", nullable=true)
      */
-    public function setEbsrSubmissionType($ebsrSubmissionType)
-    {
-        $this->ebsrSubmissionType = $ebsrSubmissionType;
-
-        return $this;
-    }
+    protected $processEnd;
 
     /**
-     * Get the ebsr submission type
+     * Process start
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="process_start", nullable=true)
      */
-    public function getEbsrSubmissionType()
-    {
-        return $this->ebsrSubmissionType;
-    }
+    protected $processStart;
 
     /**
-     * Set the ebsr submission status
+     * Publish end
      *
-     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionStatus
-     * @return EbsrSubmission
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="publish_end", nullable=true)
      */
-    public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
-    {
-        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
-
-        return $this;
-    }
+    protected $publishEnd;
 
     /**
-     * Get the ebsr submission status
+     * Publish start
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="publish_start", nullable=true)
      */
-    public function getEbsrSubmissionStatus()
-    {
-        return $this->ebsrSubmissionStatus;
-    }
+    protected $publishStart;
 
     /**
-     * Set the document
+     * Registration no
      *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return EbsrSubmission
+     * @var string
+     *
+     * @ORM\Column(type="string", name="registration_no", length=4, nullable=true)
      */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
+    protected $registrationNo;
 
     /**
-     * Get the document
+     * Submitted date
      *
-     * @return \Olcs\Db\Entity\Document
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="submitted_date", nullable=true)
      */
-    public function getDocument()
-    {
-        return $this->document;
-    }
+    protected $submittedDate;
 
     /**
-     * Set the submitted date
+     * Tan code
      *
-     * @param \DateTime $submittedDate
-     * @return EbsrSubmission
+     * @var string
+     *
+     * @ORM\Column(type="string", name="tan_code", length=2, nullable=true)
      */
-    public function setSubmittedDate($submittedDate)
-    {
-        $this->submittedDate = $submittedDate;
-
-        return $this;
-    }
+    protected $tanCode;
 
     /**
-     * Get the submitted date
+     * Validation end
      *
-     * @return \DateTime
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="validation_end", nullable=true)
      */
-    public function getSubmittedDate()
-    {
-        return $this->submittedDate;
-    }
+    protected $validationEnd;
 
     /**
-     * Set the licence no
+     * Validation start
      *
-     * @param string $licenceNo
-     * @return EbsrSubmission
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="validation_start", nullable=true)
      */
-    public function setLicenceNo($licenceNo)
-    {
-        $this->licenceNo = $licenceNo;
-
-        return $this;
-    }
+    protected $validationStart;
 
     /**
-     * Get the licence no
+     * Variation no
      *
-     * @return string
-     */
-    public function getLicenceNo()
-    {
-        return $this->licenceNo;
-    }
-
-    /**
-     * Set the organisation email address
+     * @var int
      *
-     * @param string $organisationEmailAddress
-     * @return EbsrSubmission
+     * @ORM\Column(type="integer", name="variation_no", nullable=true)
      */
-    public function setOrganisationEmailAddress($organisationEmailAddress)
-    {
-        $this->organisationEmailAddress = $organisationEmailAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation email address
-     *
-     * @return string
-     */
-    public function getOrganisationEmailAddress()
-    {
-        return $this->organisationEmailAddress;
-    }
+    protected $variationNo;
 
     /**
      * Set the application classification
@@ -387,259 +249,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getApplicationClassification()
     {
         return $this->applicationClassification;
-    }
-
-    /**
-     * Set the variation no
-     *
-     * @param int $variationNo
-     * @return EbsrSubmission
-     */
-    public function setVariationNo($variationNo)
-    {
-        $this->variationNo = $variationNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the variation no
-     *
-     * @return int
-     */
-    public function getVariationNo()
-    {
-        return $this->variationNo;
-    }
-
-    /**
-     * Set the tan code
-     *
-     * @param string $tanCode
-     * @return EbsrSubmission
-     */
-    public function setTanCode($tanCode)
-    {
-        $this->tanCode = $tanCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the tan code
-     *
-     * @return string
-     */
-    public function getTanCode()
-    {
-        return $this->tanCode;
-    }
-
-    /**
-     * Set the registration no
-     *
-     * @param string $registrationNo
-     * @return EbsrSubmission
-     */
-    public function setRegistrationNo($registrationNo)
-    {
-        $this->registrationNo = $registrationNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the registration no
-     *
-     * @return string
-     */
-    public function getRegistrationNo()
-    {
-        return $this->registrationNo;
-    }
-
-    /**
-     * Set the validation start
-     *
-     * @param \DateTime $validationStart
-     * @return EbsrSubmission
-     */
-    public function setValidationStart($validationStart)
-    {
-        $this->validationStart = $validationStart;
-
-        return $this;
-    }
-
-    /**
-     * Get the validation start
-     *
-     * @return \DateTime
-     */
-    public function getValidationStart()
-    {
-        return $this->validationStart;
-    }
-
-    /**
-     * Set the validation end
-     *
-     * @param \DateTime $validationEnd
-     * @return EbsrSubmission
-     */
-    public function setValidationEnd($validationEnd)
-    {
-        $this->validationEnd = $validationEnd;
-
-        return $this;
-    }
-
-    /**
-     * Get the validation end
-     *
-     * @return \DateTime
-     */
-    public function getValidationEnd()
-    {
-        return $this->validationEnd;
-    }
-
-    /**
-     * Set the publish start
-     *
-     * @param \DateTime $publishStart
-     * @return EbsrSubmission
-     */
-    public function setPublishStart($publishStart)
-    {
-        $this->publishStart = $publishStart;
-
-        return $this;
-    }
-
-    /**
-     * Get the publish start
-     *
-     * @return \DateTime
-     */
-    public function getPublishStart()
-    {
-        return $this->publishStart;
-    }
-
-    /**
-     * Set the publish end
-     *
-     * @param \DateTime $publishEnd
-     * @return EbsrSubmission
-     */
-    public function setPublishEnd($publishEnd)
-    {
-        $this->publishEnd = $publishEnd;
-
-        return $this;
-    }
-
-    /**
-     * Get the publish end
-     *
-     * @return \DateTime
-     */
-    public function getPublishEnd()
-    {
-        return $this->publishEnd;
-    }
-
-    /**
-     * Set the process start
-     *
-     * @param \DateTime $processStart
-     * @return EbsrSubmission
-     */
-    public function setProcessStart($processStart)
-    {
-        $this->processStart = $processStart;
-
-        return $this;
-    }
-
-    /**
-     * Get the process start
-     *
-     * @return \DateTime
-     */
-    public function getProcessStart()
-    {
-        return $this->processStart;
-    }
-
-    /**
-     * Set the process end
-     *
-     * @param \DateTime $processEnd
-     * @return EbsrSubmission
-     */
-    public function setProcessEnd($processEnd)
-    {
-        $this->processEnd = $processEnd;
-
-        return $this;
-    }
-
-    /**
-     * Get the process end
-     *
-     * @return \DateTime
-     */
-    public function getProcessEnd()
-    {
-        return $this->processEnd;
-    }
-
-    /**
-     * Set the ebsr submission result
-     *
-     * @param string $ebsrSubmissionResult
-     * @return EbsrSubmission
-     */
-    public function setEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
-
-        return $this;
-    }
-
-    /**
-     * Get the ebsr submission result
-     *
-     * @return string
-     */
-    public function getEbsrSubmissionResult()
-    {
-        return $this->ebsrSubmissionResult;
-    }
-
-    /**
-     * Set the distribute start
-     *
-     * @param \DateTime $distributeStart
-     * @return EbsrSubmission
-     */
-    public function setDistributeStart($distributeStart)
-    {
-        $this->distributeStart = $distributeStart;
-
-        return $this;
-    }
-
-    /**
-     * Get the distribute start
-     *
-     * @return \DateTime
-     */
-    public function getDistributeStart()
-    {
-        return $this->distributeStart;
     }
 
     /**
@@ -689,6 +298,121 @@ class EbsrSubmission implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the distribute start
+     *
+     * @param \DateTime $distributeStart
+     * @return EbsrSubmission
+     */
+    public function setDistributeStart($distributeStart)
+    {
+        $this->distributeStart = $distributeStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the distribute start
+     *
+     * @return \DateTime
+     */
+    public function getDistributeStart()
+    {
+        return $this->distributeStart;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Olcs\Db\Entity\Document $document
+     * @return EbsrSubmission
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * Set the ebsr submission result
+     *
+     * @param string $ebsrSubmissionResult
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionResult($ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission result
+     *
+     * @return string
+     */
+    public function getEbsrSubmissionResult()
+    {
+        return $this->ebsrSubmissionResult;
+    }
+
+    /**
+     * Set the ebsr submission status
+     *
+     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionStatus
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
+    {
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getEbsrSubmissionStatus()
+    {
+        return $this->ebsrSubmissionStatus;
+    }
+
+    /**
+     * Set the ebsr submission type
+     *
+     * @param \Olcs\Db\Entity\RefData $ebsrSubmissionType
+     * @return EbsrSubmission
+     */
+    public function setEbsrSubmissionType($ebsrSubmissionType)
+    {
+        $this->ebsrSubmissionType = $ebsrSubmissionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submission type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getEbsrSubmissionType()
+    {
+        return $this->ebsrSubmissionType;
+    }
+
+    /**
      * Set the is from ftp
      *
      * @param string $isFromFtp
@@ -712,6 +436,52 @@ class EbsrSubmission implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the licence no
+     *
+     * @param string $licenceNo
+     * @return EbsrSubmission
+     */
+    public function setLicenceNo($licenceNo)
+    {
+        $this->licenceNo = $licenceNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence no
+     *
+     * @return string
+     */
+    public function getLicenceNo()
+    {
+        return $this->licenceNo;
+    }
+
+    /**
+     * Set the organisation email address
+     *
+     * @param string $organisationEmailAddress
+     * @return EbsrSubmission
+     */
+    public function setOrganisationEmailAddress($organisationEmailAddress)
+    {
+        $this->organisationEmailAddress = $organisationEmailAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation email address
+     *
+     * @return string
+     */
+    public function getOrganisationEmailAddress()
+    {
+        return $this->organisationEmailAddress;
+    }
+
+    /**
      * Set the organisation id
      *
      * @param int $organisationId
@@ -732,5 +502,235 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getOrganisationId()
     {
         return $this->organisationId;
+    }
+
+    /**
+     * Set the process end
+     *
+     * @param \DateTime $processEnd
+     * @return EbsrSubmission
+     */
+    public function setProcessEnd($processEnd)
+    {
+        $this->processEnd = $processEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get the process end
+     *
+     * @return \DateTime
+     */
+    public function getProcessEnd()
+    {
+        return $this->processEnd;
+    }
+
+    /**
+     * Set the process start
+     *
+     * @param \DateTime $processStart
+     * @return EbsrSubmission
+     */
+    public function setProcessStart($processStart)
+    {
+        $this->processStart = $processStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the process start
+     *
+     * @return \DateTime
+     */
+    public function getProcessStart()
+    {
+        return $this->processStart;
+    }
+
+    /**
+     * Set the publish end
+     *
+     * @param \DateTime $publishEnd
+     * @return EbsrSubmission
+     */
+    public function setPublishEnd($publishEnd)
+    {
+        $this->publishEnd = $publishEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get the publish end
+     *
+     * @return \DateTime
+     */
+    public function getPublishEnd()
+    {
+        return $this->publishEnd;
+    }
+
+    /**
+     * Set the publish start
+     *
+     * @param \DateTime $publishStart
+     * @return EbsrSubmission
+     */
+    public function setPublishStart($publishStart)
+    {
+        $this->publishStart = $publishStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the publish start
+     *
+     * @return \DateTime
+     */
+    public function getPublishStart()
+    {
+        return $this->publishStart;
+    }
+
+    /**
+     * Set the registration no
+     *
+     * @param string $registrationNo
+     * @return EbsrSubmission
+     */
+    public function setRegistrationNo($registrationNo)
+    {
+        $this->registrationNo = $registrationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the registration no
+     *
+     * @return string
+     */
+    public function getRegistrationNo()
+    {
+        return $this->registrationNo;
+    }
+
+    /**
+     * Set the submitted date
+     *
+     * @param \DateTime $submittedDate
+     * @return EbsrSubmission
+     */
+    public function setSubmittedDate($submittedDate)
+    {
+        $this->submittedDate = $submittedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the submitted date
+     *
+     * @return \DateTime
+     */
+    public function getSubmittedDate()
+    {
+        return $this->submittedDate;
+    }
+
+    /**
+     * Set the tan code
+     *
+     * @param string $tanCode
+     * @return EbsrSubmission
+     */
+    public function setTanCode($tanCode)
+    {
+        $this->tanCode = $tanCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the tan code
+     *
+     * @return string
+     */
+    public function getTanCode()
+    {
+        return $this->tanCode;
+    }
+
+    /**
+     * Set the validation end
+     *
+     * @param \DateTime $validationEnd
+     * @return EbsrSubmission
+     */
+    public function setValidationEnd($validationEnd)
+    {
+        $this->validationEnd = $validationEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get the validation end
+     *
+     * @return \DateTime
+     */
+    public function getValidationEnd()
+    {
+        return $this->validationEnd;
+    }
+
+    /**
+     * Set the validation start
+     *
+     * @param \DateTime $validationStart
+     * @return EbsrSubmission
+     */
+    public function setValidationStart($validationStart)
+    {
+        $this->validationStart = $validationStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the validation start
+     *
+     * @return \DateTime
+     */
+    public function getValidationStart()
+    {
+        return $this->validationStart;
+    }
+
+    /**
+     * Set the variation no
+     *
+     * @param int $variationNo
+     * @return EbsrSubmission
+     */
+    public function setVariationNo($variationNo)
+    {
+        $this->variationNo = $variationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation no
+     *
+     * @return int
+     */
+    public function getVariationNo()
+    {
+        return $this->variationNo;
     }
 }

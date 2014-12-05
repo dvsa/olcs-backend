@@ -24,11 +24,11 @@ use Olcs\Db\Entity\Traits;
 class Opposer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -37,7 +37,7 @@ class Opposer implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="opposer_type", referencedColumnName="id", nullable=true)
      */
     protected $opposerType;

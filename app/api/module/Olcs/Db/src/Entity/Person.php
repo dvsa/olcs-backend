@@ -27,16 +27,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Person implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\BirthDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\FamilyName35Field,
+        Traits\Forename35Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Forename35Field,
-        Traits\FamilyName35Field,
-        Traits\BirthDateField,
-        Traits\Title32Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Title32Field,
         Traits\CustomVersionField;
 
     /**

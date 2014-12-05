@@ -24,15 +24,14 @@ use Olcs\Db\Entity\Traits;
 class Disqualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
-        Traits\PersonManyToOne,
-        Traits\StartDateFieldAlt1,
-        Traits\Notes4000Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
+        Traits\OrganisationManyToOne,
+        Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -52,6 +51,16 @@ class Disqualification implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="period", nullable=false)
      */
     protected $period;
+
+    /**
+     * Person
+     *
+     * @var \Olcs\Db\Entity\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
+     */
+    protected $person;
 
     /**
      * Set the is disqualified
@@ -97,5 +106,28 @@ class Disqualification implements Interfaces\EntityInterface
     public function getPeriod()
     {
         return $this->period;
+    }
+
+    /**
+     * Set the person
+     *
+     * @param \Olcs\Db\Entity\Person $person
+     * @return Disqualification
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Olcs\Db\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 }

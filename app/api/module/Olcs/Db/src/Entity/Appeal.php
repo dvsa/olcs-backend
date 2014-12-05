@@ -25,54 +25,16 @@ use Olcs\Db\Entity\Traits;
 class Appeal implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\OutcomeManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\HearingDateField,
-        Traits\DecisionDateField,
-        Traits\WithdrawnDateField,
         Traits\CustomCreatedOnField,
+        Traits\DecisionDateField,
+        Traits\HearingDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
-     */
-    protected $reason;
-
-    /**
-     * Case
-     *
-     * @var \Olcs\Db\Entity\Cases
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="appeals")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
-     */
-    protected $case;
-
-    /**
-     * Appeal no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=true)
-     */
-    protected $appealNo;
-
-    /**
-     * Deadline date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deadline_date", nullable=true)
-     */
-    protected $deadlineDate;
+        Traits\OutcomeManyToOne,
+        Traits\CustomVersionField,
+        Traits\WithdrawnDateField;
 
     /**
      * Appeal date
@@ -82,6 +44,43 @@ class Appeal implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="appeal_date", nullable=true)
      */
     protected $appealDate;
+
+    /**
+     * Appeal no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=false)
+     */
+    protected $appealNo;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="appeals")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
+
+    /**
+     * Comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="comment", length=1024, nullable=true)
+     */
+    protected $comment;
+
+    /**
+     * Deadline date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deadline_date", nullable=true)
+     */
+    protected $deadlineDate;
 
     /**
      * Outline ground
@@ -102,15 +101,6 @@ class Appeal implements Interfaces\EntityInterface
     protected $papersDueDate;
 
     /**
-     * Comment
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="comment", length=1024, nullable=true)
-     */
-    protected $comment;
-
-    /**
      * Papers sent date
      *
      * @var \DateTime
@@ -120,49 +110,36 @@ class Appeal implements Interfaces\EntityInterface
     protected $papersSentDate;
 
     /**
-     * Set the reason
+     * Reason
      *
-     * @param \Olcs\Db\Entity\RefData $reason
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
+     */
+    protected $reason;
+
+    /**
+     * Set the appeal date
+     *
+     * @param \DateTime $appealDate
      * @return Appeal
      */
-    public function setReason($reason)
+    public function setAppealDate($appealDate)
     {
-        $this->reason = $reason;
+        $this->appealDate = $appealDate;
 
         return $this;
     }
 
     /**
-     * Get the reason
+     * Get the appeal date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getReason()
+    public function getAppealDate()
     {
-        return $this->reason;
-    }
-
-    /**
-     * Set the case
-     *
-     * @param \Olcs\Db\Entity\Cases $case
-     * @return Appeal
-     */
-    public function setCase($case)
-    {
-        $this->case = $case;
-
-        return $this;
-    }
-
-    /**
-     * Get the case
-     *
-     * @return \Olcs\Db\Entity\Cases
-     */
-    public function getCase()
-    {
-        return $this->case;
+        return $this->appealDate;
     }
 
     /**
@@ -189,6 +166,52 @@ class Appeal implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Appeal
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the comment
+     *
+     * @param string $comment
+     * @return Appeal
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get the comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
      * Set the deadline date
      *
      * @param \DateTime $deadlineDate
@@ -209,29 +232,6 @@ class Appeal implements Interfaces\EntityInterface
     public function getDeadlineDate()
     {
         return $this->deadlineDate;
-    }
-
-    /**
-     * Set the appeal date
-     *
-     * @param \DateTime $appealDate
-     * @return Appeal
-     */
-    public function setAppealDate($appealDate)
-    {
-        $this->appealDate = $appealDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the appeal date
-     *
-     * @return \DateTime
-     */
-    public function getAppealDate()
-    {
-        return $this->appealDate;
     }
 
     /**
@@ -281,29 +281,6 @@ class Appeal implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the comment
-     *
-     * @param string $comment
-     * @return Appeal
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get the comment
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
      * Set the papers sent date
      *
      * @param \DateTime $papersSentDate
@@ -324,5 +301,28 @@ class Appeal implements Interfaces\EntityInterface
     public function getPapersSentDate()
     {
         return $this->papersSentDate;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\RefData $reason
+     * @return Appeal
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 }

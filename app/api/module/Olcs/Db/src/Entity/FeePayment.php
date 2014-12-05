@@ -27,23 +27,22 @@ use Olcs\Db\Entity\Traits;
 class FeePayment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\FeeManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Payment
+     * Fee
      *
-     * @var \Olcs\Db\Entity\Payment
+     * @var \Olcs\Db\Entity\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Fee", inversedBy="feePayments")
+     * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
      */
-    protected $payment;
+    protected $fee;
 
     /**
      * Fee value
@@ -55,26 +54,36 @@ class FeePayment implements Interfaces\EntityInterface
     protected $feeValue;
 
     /**
-     * Set the payment
+     * Payment
      *
-     * @param \Olcs\Db\Entity\Payment $payment
+     * @var \Olcs\Db\Entity\Payment
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
+     * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
+     */
+    protected $payment;
+
+    /**
+     * Set the fee
+     *
+     * @param \Olcs\Db\Entity\Fee $fee
      * @return FeePayment
      */
-    public function setPayment($payment)
+    public function setFee($fee)
     {
-        $this->payment = $payment;
+        $this->fee = $fee;
 
         return $this;
     }
 
     /**
-     * Get the payment
+     * Get the fee
      *
-     * @return \Olcs\Db\Entity\Payment
+     * @return \Olcs\Db\Entity\Fee
      */
-    public function getPayment()
+    public function getFee()
     {
-        return $this->payment;
+        return $this->fee;
     }
 
     /**
@@ -98,5 +107,28 @@ class FeePayment implements Interfaces\EntityInterface
     public function getFeeValue()
     {
         return $this->feeValue;
+    }
+
+    /**
+     * Set the payment
+     *
+     * @param \Olcs\Db\Entity\Payment $payment
+     * @return FeePayment
+     */
+    public function setPayment($payment)
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Get the payment
+     *
+     * @return \Olcs\Db\Entity\Payment
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }

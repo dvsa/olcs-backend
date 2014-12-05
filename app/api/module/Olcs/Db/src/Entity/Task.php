@@ -33,78 +33,19 @@ use Olcs\Db\Entity\Traits;
 class Task implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CategoryManyToOne,
-        Traits\CaseManyToOne,
-        Traits\TransportManagerManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\Description255FieldAlt1,
+        Traits\CaseManyToOne,
+        Traits\CategoryManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\Description255FieldAlt1,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Task sub category
-     *
-     * @var \Olcs\Db\Entity\TaskSubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
-     */
-    protected $taskSubCategory;
-
-    /**
-     * Irfo organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoOrganisation;
-
-    /**
-     * Assigned by user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $assignedByUser;
-
-    /**
-     * Assigned to team
-     *
-     * @var \Olcs\Db\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
-     */
-    protected $assignedToTeam;
-
-    /**
-     * Assigned to user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $assignedToUser;
-
-    /**
-     * Is closed
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_closed", nullable=false)
-     */
-    protected $isClosed = 0;
 
     /**
      * Action date
@@ -116,6 +57,65 @@ class Task implements Interfaces\EntityInterface
     protected $actionDate;
 
     /**
+     * Assigned by user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="assigned_by_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedByUser;
+
+    /**
+     * Assigned to team
+     *
+     * @var \Olcs\Db\Entity\Team
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
+     * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedToTeam;
+
+    /**
+     * Assigned to user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedToUser;
+
+    /**
+     * Irfo organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation")
+     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoOrganisation;
+
+    /**
+     * Is closed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false)
+     */
+    protected $isClosed = 0;
+
+    /**
+     * Task sub category
+     *
+     * @var \Olcs\Db\Entity\TaskSubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
+     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
+     */
+    protected $taskSubCategory;
+
+    /**
      * Urgent
      *
      * @var string
@@ -125,49 +125,26 @@ class Task implements Interfaces\EntityInterface
     protected $urgent = 0;
 
     /**
-     * Set the task sub category
+     * Set the action date
      *
-     * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
+     * @param \DateTime $actionDate
      * @return Task
      */
-    public function setTaskSubCategory($taskSubCategory)
+    public function setActionDate($actionDate)
     {
-        $this->taskSubCategory = $taskSubCategory;
+        $this->actionDate = $actionDate;
 
         return $this;
     }
 
     /**
-     * Get the task sub category
+     * Get the action date
      *
-     * @return \Olcs\Db\Entity\TaskSubCategory
+     * @return \DateTime
      */
-    public function getTaskSubCategory()
+    public function getActionDate()
     {
-        return $this->taskSubCategory;
-    }
-
-    /**
-     * Set the irfo organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
-     * @return Task
-     */
-    public function setIrfoOrganisation($irfoOrganisation)
-    {
-        $this->irfoOrganisation = $irfoOrganisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getIrfoOrganisation()
-    {
-        return $this->irfoOrganisation;
+        return $this->actionDate;
     }
 
     /**
@@ -240,6 +217,29 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the irfo organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
+     * @return Task
+     */
+    public function setIrfoOrganisation($irfoOrganisation)
+    {
+        $this->irfoOrganisation = $irfoOrganisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getIrfoOrganisation()
+    {
+        return $this->irfoOrganisation;
+    }
+
+    /**
      * Set the is closed
      *
      * @param string $isClosed
@@ -263,26 +263,26 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the action date
+     * Set the task sub category
      *
-     * @param \DateTime $actionDate
+     * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
      * @return Task
      */
-    public function setActionDate($actionDate)
+    public function setTaskSubCategory($taskSubCategory)
     {
-        $this->actionDate = $actionDate;
+        $this->taskSubCategory = $taskSubCategory;
 
         return $this;
     }
 
     /**
-     * Get the action date
+     * Get the task sub category
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\TaskSubCategory
      */
-    public function getActionDate()
+    public function getTaskSubCategory()
     {
-        return $this->actionDate;
+        return $this->taskSubCategory;
     }
 
     /**

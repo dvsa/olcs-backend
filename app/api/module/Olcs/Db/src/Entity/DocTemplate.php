@@ -26,13 +26,13 @@ use Olcs\Db\Entity\Traits;
 class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CategoryManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DocumentManyToOne,
-        Traits\Description255Field,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\DocumentManyToOne,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
@@ -41,7 +41,7 @@ class DocTemplate implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\DocumentSubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $documentSubCategory;

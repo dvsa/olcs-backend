@@ -756,6 +756,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('org_person_type', 'org_pt_d', 'Director', null),
     ('org_person_type', 'org_pt_st', 'Sole Trader', null),
 
+    ('pay_status', 'pay_s_os', 'Outstanding', null),
+    ('pay_status', 'pay_s_pd', 'Paid', null),
+    ('pay_status', 'pay_s_cn', 'Cancelled', null),
+    ('pay_status', 'pay_s_leg', 'Legacy', null),
+    ('pay_status', 'pay_s_fail', 'Failed', null),
+
     ('phone_contact_type', 'phone_t_tel', 'Business', 'Business'),
     ('phone_contact_type', 'phone_t_fax', 'Fax', 'Fax'),
     ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null),
@@ -850,6 +856,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('tm_type', 'tm_t_B', 'Both', 'B'),
     ('tm_type', 'tm_t_E', 'External', 'E'),
     ('tm_type', 'tm_t_I', 'Internal', 'I'),
+    ('tm_status', 'tm_st_A', 'Active', null),
+    ('tm_status', 'tm_st_D', 'Disabled', null),
     ('vhl_removal_reason', 'vmr_cns', 'CNS', '1'),
     ('vhl_removal_reason', 'vmr_revoke', 'Revoke', '2'),
     ('vhl_removal_reason', 'vmr_surrender', 'Surrender', '3'),
@@ -898,7 +906,7 @@ VALUES
     
     ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL, '20'),
     ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL, '21'),
-    ('case_cat_trans_compet_tm','case_cat_trans',   'Professional competence of TM',    'case_category', NULL, '22'),
+    ('case_cat_trans_compet_tm','case_cat_trans','Repute / professional competence of TM','case_category', NULL, '22'),
     ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL, '23'),
     
     
@@ -2935,8 +2943,10 @@ INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_r
 (125,'lcat_gv','04 - Section 26 (1)(b)','Contravention of a licence condition (specify)',0,0,0,NULL,NULL,NULL,NULL,1),
 (126,'lcat_gv','04.1 - Section 26 (1)(b)','(1) Fail to notify of change in maintenance arrangements',0,0,1,NULL,NULL,NULL,NULL,1),
 (127,'lcat_gv','04.2 - Section 26 (1)(b)','(2) Fail to notify of change in ownership',0,0,1,NULL,NULL,NULL,NULL,1),
-(128,'lcat_gv','04.3 - Section 26 (1)(b)','(3) Fail to notify of notifiable convictions â€“ Sch 2 (restricted)',0,0,1,NULL,NULL,NULL,NULL,1),
-(129,'lcat_gv','04.4 - Section 26 (1)(b)','(4) Fail to notify of events which affect good repute â€“ Sch 3 (standard)',0,0,1,NULL,NULL,NULL,NULL,1),
+(128,'lcat_gv','04.3 - Section 26 (1)(b)','(3) Fail to notify of notifiable convictions - Sch 2 (restricted)',0,0,1,
+NULL,NULL,NULL,NULL,1),
+(129,'lcat_gv','04.4 - Section 26 (1)(b)','(4) Fail to notify of events which affect good repute - Sch 3 (standard)',
+0,0,1,NULL,NULL,NULL,NULL,1),
 (130,'lcat_gv','04.5 - Section 26 (1)(b)','(5) Fail to notify of events which affect financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (131,'lcat_gv','04.6 - Section 26 (1)(b)','(6) Fail to notify of events which affect professional competence',0,0,1,NULL,NULL,NULL,NULL,1),
 (132,'lcat_gv','04.7 - Section 26 (1)(b)','(7) Breach of road safety condition',0,0,1,NULL,NULL,NULL,NULL,1),
@@ -2946,7 +2956,8 @@ INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_r
 (136,'lcat_gv','06 - Section 26 (1)(c)(ii)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,0,1,NULL,NULL,NULL,NULL,1),
 (137,'lcat_gv','07 - Section 26 (1)(c)(iii)','Prohibitions',0,0,1,NULL,NULL,NULL,NULL,1),
 (138,'lcat_gv','08 - Section 26(1)(ca)','Fixed Penalty or conditional offer issued',0,0,1,NULL,NULL,NULL,NULL,1),
-(139,'lcat_gv','09 - Section 26(1)(d)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,0,1,NULL,NULL,NULL,NULL,1),
+(139,'lcat_gv','09 - Section 26(1)(d)','Convictions - for Schedule 2 Paragraph 5 (j) offences',0,0,1,NULL,NULL,NULL,
+NULL,1),
 (140,'lcat_gv','10 - Section 26(1)(e)','Failing to fulfil Statement of Expectation/False statement (specify)',0,0,0,NULL,NULL,NULL,NULL,1),
 (141,'lcat_gv','10.01 - Section 26(1)(e)','(1) Failure to declare previous refusal or revocation',0,0,1,NULL,NULL,NULL,NULL,1),
 (142,'lcat_gv','10.02 - Section 26(1)(e)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,0,1,NULL,NULL,NULL,NULL,1),
@@ -3026,7 +3037,8 @@ INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_r
 (216,'lcat_psv','12.09 - Section 17 (3)(b) Revoke/suspend/vary','Restricted licence only : No more than two PSV, not adapted to carry more than 16 passengers, can be used',0,0,1,NULL,NULL,NULL,NULL,1),
 (217,'lcat_psv','12.10 - Section 17 (3)(b) Revoke/suspend/vary','Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
 (218,'lcat_psv','13 - Section 17 (3)(c) Revoke/suspend/vary','A prohibition on a vehicle owned or operated by the operator',0,0,1,NULL,NULL,NULL,NULL,1),
-(219,'lcat_psv','14 - Section 17 (3)(d) Revoke/suspend/vary','RESTRICTED Licence holders only â€“ no longer of good repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
+(219,'lcat_psv','14 - Section 17 (3)(d) Revoke/suspend/vary','RESTRICTED Licence holders only - no longer of good
+repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (220,'lcat_psv','15 - Section 17 (3)(e) Revoke/suspend/vary','A material change in any of the circumstances relevant to the grant or variation of the licence (incl FPN/Conviction).',0,0,1,NULL,NULL,NULL,NULL,1),
 (221,'lcat_psv','16 - Section 17 (3)(f)','Licence subject to revocation, suspension, variation of condition following a direction under section 28(4) of the 1985 Act (director/individual disqualified on another licence)',0,0,1,NULL,NULL,NULL,NULL,1),
 (222,'lcat_psv','17 - Schedule 3(7A)(1)','TM good repute or professional competence',0,0,0,NULL,NULL,NULL,NULL,1),
@@ -3103,7 +3115,8 @@ INSERT INTO `decision` (`id`, `goods_or_psv`, `section_code`, `description`, `is
 (245,'lcat_gv','x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,1,NULL,NULL,NULL,NULL,1),
 (246,'lcat_gv','x NI-Section 23(1)(c)','Prohibitions',0,1,NULL,NULL,NULL,NULL,1),
 (247,'lcat_gv','x NI-Section 23(1)(c)','Fixed Penalty or conditional offer issued',0,1,NULL,NULL,NULL,NULL,1),
-(248,'lcat_gv','x NI-Section 23(1)(c)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,1,NULL,NULL,NULL,NULL,1),
+(248,'lcat_gv','x NI-Section 23(1)(c)','Convictions - for Schedule 2 Paragraph 5 (j) offences',0,1,NULL,NULL,NULL,
+NULL,1),
 (249,'lcat_gv','x NI-Section 23(1)(d)','Failing to fulfil Statement of Expectation/False statement (specify)',0,1,NULL,NULL,NULL,NULL,1),
 (250,'lcat_gv','x NI-Section 23(1)(d)','(1) Failure to declare previous refusal or revocation',0,1,NULL,NULL,NULL,NULL,1),
 (251,'lcat_gv','x NI-Section 23(1)(d)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,1,NULL,NULL,NULL,NULL,1),
@@ -3647,8 +3660,10 @@ DROP VIEW IF EXISTS task_search_view;
 CREATE VIEW task_search_view AS
    SELECT t.id,
        t.assigned_to_team_id,
+       t.application_id,
        t.assigned_to_user_id,
        cat.description category_name,
+       tsc.description task_sub_type,
        t.task_sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
@@ -3661,36 +3676,32 @@ CREATE VIEW task_search_view AS
             when t.transport_manager_id is not null then 'Transport Manager'
             else 'Unlinked' end link_type,
       coalesce(o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
+      l.lic_no,
+      l.id lic_id,
+      tm.id tm_id,
+      irfo.name irfo_op_name,
+      o.name op_name,
+      tmp.family_name,
+      c.id case_id,
+      br.id bus_reg_id,
       t.action_date action_date,
       t.urgent urgent,
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.name task_sub_category_name,
-      u.name user_name,
-      count(ll.id) licence_count
-
+      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
+     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
-
-    INNER JOIN (category cat, task_sub_category tsc) ON (cat.id = t.category_id AND tsc.id = t.task_sub_category_id)
-
-    LEFT JOIN licence l ON t.licence_id = l.id
-
-    LEFT JOIN organisation irfo ON t.irfo_organisation_id = irfo.id
-
-    LEFT JOIN organisation o ON l.organisation_id = o.id
-
-    LEFT JOIN licence ll ON (ll.organisation_id = o.id AND (ll.status = 'Valid'))
-
-    LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
-        ON (t.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.contact_details_id)
-
-    LEFT JOIN cases c ON t.case_id = c.id
-
-    LEFT JOIN bus_reg br ON t.bus_reg_id = br.id
-
-    LEFT JOIN user u ON t.assigned_to_user_id = u.id
-
-    GROUP BY (t.id);
+   inner join (category cat, task_sub_category tsc) on (cat.id = t.category_id and tsc.id = t.task_sub_category_id)
+   left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
+   left join organisation irfo on (t.irfo_organisation_id = irfo.id)
+   left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
+     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.contact_details_id)
+   left join cases c on (t.case_id = c.id)
+   left join bus_reg br on (t.bus_reg_id = br.id)
+   left join user u on (t.assigned_to_user_id = u.id)
+   left join contact_details cd on (u.contact_details_id = cd.id)
+;
 
 DROP TABLE IF EXISTS document_search_view;
 DROP VIEW IF EXISTS document_search_view;

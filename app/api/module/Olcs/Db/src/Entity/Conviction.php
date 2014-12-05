@@ -16,8 +16,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="conviction",
  *    indexes={
- *        @ORM\Index(name="fk_conviction_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_conviction_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_conviction_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_conviction_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_conviction_user2_idx", columns={"last_modified_by"}),
@@ -30,18 +28,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Conviction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\BirthDateField,
+        Traits\CategoryText1024Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OrganisationManyToOne,
-        Traits\TransportManagerManyToOne,
-        Traits\PersonManyToOne,
-        Traits\Penalty255Field,
-        Traits\BirthDateField,
-        Traits\Notes4000Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
+        Traits\Penalty255Field,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -49,39 +46,20 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", fetch="LAZY", inversedBy="convictions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="convictions")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
-    /**
-     * Defendant type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=false)
-     */
-    protected $defendantType;
 
     /**
      * Conviction category
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="conviction_category", referencedColumnName="id", nullable=true)
      */
     protected $convictionCategory;
-
-    /**
-     * Offence date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="offence_date", nullable=true)
-     */
-    protected $offenceDate;
 
     /**
      * Conviction date
@@ -93,15 +71,6 @@ class Conviction implements Interfaces\EntityInterface
     protected $convictionDate;
 
     /**
-     * Court
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="court", length=70, nullable=true)
-     */
-    protected $court;
-
-    /**
      * Costs
      *
      * @var string
@@ -111,13 +80,23 @@ class Conviction implements Interfaces\EntityInterface
     protected $costs;
 
     /**
-     * Msi
+     * Court
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="msi", nullable=true)
+     * @ORM\Column(type="string", name="court", length=70, nullable=true)
      */
-    protected $msi;
+    protected $court;
+
+    /**
+     * Defendant type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="defendant_type", referencedColumnName="id", nullable=false)
+     */
+    protected $defendantType;
 
     /**
      * Is dealt with
@@ -136,6 +115,24 @@ class Conviction implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_declared", nullable=false)
      */
     protected $isDeclared = 0;
+
+    /**
+     * Msi
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="msi", nullable=true)
+     */
+    protected $msi;
+
+    /**
+     * Offence date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="offence_date", nullable=true)
+     */
+    protected $offenceDate;
 
     /**
      * Operator name
@@ -174,15 +171,6 @@ class Conviction implements Interfaces\EntityInterface
     protected $takenIntoConsideration;
 
     /**
-     * Category text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_text", length=1024, nullable=true)
-     */
-    protected $categoryText;
-
-    /**
      * Set the case
      *
      * @param \Olcs\Db\Entity\Cases $case
@@ -203,29 +191,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the defendant type
-     *
-     * @param \Olcs\Db\Entity\RefData $defendantType
-     * @return Conviction
-     */
-    public function setDefendantType($defendantType)
-    {
-        $this->defendantType = $defendantType;
-
-        return $this;
-    }
-
-    /**
-     * Get the defendant type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getDefendantType()
-    {
-        return $this->defendantType;
     }
 
     /**
@@ -252,29 +217,6 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the offence date
-     *
-     * @param \DateTime $offenceDate
-     * @return Conviction
-     */
-    public function setOffenceDate($offenceDate)
-    {
-        $this->offenceDate = $offenceDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the offence date
-     *
-     * @return \DateTime
-     */
-    public function getOffenceDate()
-    {
-        return $this->offenceDate;
-    }
-
-    /**
      * Set the conviction date
      *
      * @param \DateTime $convictionDate
@@ -295,29 +237,6 @@ class Conviction implements Interfaces\EntityInterface
     public function getConvictionDate()
     {
         return $this->convictionDate;
-    }
-
-    /**
-     * Set the court
-     *
-     * @param string $court
-     * @return Conviction
-     */
-    public function setCourt($court)
-    {
-        $this->court = $court;
-
-        return $this;
-    }
-
-    /**
-     * Get the court
-     *
-     * @return string
-     */
-    public function getCourt()
-    {
-        return $this->court;
     }
 
     /**
@@ -344,26 +263,49 @@ class Conviction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the msi
+     * Set the court
      *
-     * @param string $msi
+     * @param string $court
      * @return Conviction
      */
-    public function setMsi($msi)
+    public function setCourt($court)
     {
-        $this->msi = $msi;
+        $this->court = $court;
 
         return $this;
     }
 
     /**
-     * Get the msi
+     * Get the court
      *
      * @return string
      */
-    public function getMsi()
+    public function getCourt()
     {
-        return $this->msi;
+        return $this->court;
+    }
+
+    /**
+     * Set the defendant type
+     *
+     * @param \Olcs\Db\Entity\RefData $defendantType
+     * @return Conviction
+     */
+    public function setDefendantType($defendantType)
+    {
+        $this->defendantType = $defendantType;
+
+        return $this;
+    }
+
+    /**
+     * Get the defendant type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getDefendantType()
+    {
+        return $this->defendantType;
     }
 
     /**
@@ -410,6 +352,52 @@ class Conviction implements Interfaces\EntityInterface
     public function getIsDeclared()
     {
         return $this->isDeclared;
+    }
+
+    /**
+     * Set the msi
+     *
+     * @param string $msi
+     * @return Conviction
+     */
+    public function setMsi($msi)
+    {
+        $this->msi = $msi;
+
+        return $this;
+    }
+
+    /**
+     * Get the msi
+     *
+     * @return string
+     */
+    public function getMsi()
+    {
+        return $this->msi;
+    }
+
+    /**
+     * Set the offence date
+     *
+     * @param \DateTime $offenceDate
+     * @return Conviction
+     */
+    public function setOffenceDate($offenceDate)
+    {
+        $this->offenceDate = $offenceDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the offence date
+     *
+     * @return \DateTime
+     */
+    public function getOffenceDate()
+    {
+        return $this->offenceDate;
     }
 
     /**
@@ -502,28 +490,5 @@ class Conviction implements Interfaces\EntityInterface
     public function getTakenIntoConsideration()
     {
         return $this->takenIntoConsideration;
-    }
-
-    /**
-     * Set the category text
-     *
-     * @param string $categoryText
-     * @return Conviction
-     */
-    public function setCategoryText($categoryText)
-    {
-        $this->categoryText = $categoryText;
-
-        return $this;
-    }
-
-    /**
-     * Get the category text
-     *
-     * @return string
-     */
-    public function getCategoryText()
-    {
-        return $this->categoryText;
     }
 }

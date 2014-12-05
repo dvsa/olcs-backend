@@ -22,18 +22,8 @@ use Olcs\Db\Entity\Traits;
 class EbsrRouteReprint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\BusRegManyToOne;
-
-    /**
-     * Requested user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="requested_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $requestedUser;
+        Traits\BusRegManyToOne,
+        Traits\IdIdentity;
 
     /**
      * Exception name
@@ -43,15 +33,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="exception_name", length=45, nullable=true)
      */
     protected $exceptionName;
-
-    /**
-     * Scale
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="scale", nullable=false)
-     */
-    protected $scale = 0;
 
     /**
      * Published timestamp
@@ -72,27 +53,23 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     protected $requestedTimestamp;
 
     /**
-     * Set the requested user
+     * Requested user
      *
-     * @param \Olcs\Db\Entity\User $requestedUser
-     * @return EbsrRouteReprint
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="requested_user_id", referencedColumnName="id", nullable=false)
      */
-    public function setRequestedUser($requestedUser)
-    {
-        $this->requestedUser = $requestedUser;
-
-        return $this;
-    }
+    protected $requestedUser;
 
     /**
-     * Get the requested user
+     * Scale
      *
-     * @return \Olcs\Db\Entity\User
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="scale", nullable=false)
      */
-    public function getRequestedUser()
-    {
-        return $this->requestedUser;
-    }
+    protected $scale = 0;
 
     /**
      * Set the exception name
@@ -115,29 +92,6 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     public function getExceptionName()
     {
         return $this->exceptionName;
-    }
-
-    /**
-     * Set the scale
-     *
-     * @param int $scale
-     * @return EbsrRouteReprint
-     */
-    public function setScale($scale)
-    {
-        $this->scale = $scale;
-
-        return $this;
-    }
-
-    /**
-     * Get the scale
-     *
-     * @return int
-     */
-    public function getScale()
-    {
-        return $this->scale;
     }
 
     /**
@@ -184,5 +138,51 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     public function getRequestedTimestamp()
     {
         return $this->requestedTimestamp;
+    }
+
+    /**
+     * Set the requested user
+     *
+     * @param \Olcs\Db\Entity\User $requestedUser
+     * @return EbsrRouteReprint
+     */
+    public function setRequestedUser($requestedUser)
+    {
+        $this->requestedUser = $requestedUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the requested user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRequestedUser()
+    {
+        return $this->requestedUser;
+    }
+
+    /**
+     * Set the scale
+     *
+     * @param int $scale
+     * @return EbsrRouteReprint
+     */
+    public function setScale($scale)
+    {
+        $this->scale = $scale;
+
+        return $this;
+    }
+
+    /**
+     * Get the scale
+     *
+     * @return int
+     */
+    public function getScale()
+    {
+        return $this->scale;
     }
 }
