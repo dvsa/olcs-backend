@@ -5187,9 +5187,7 @@ DROP TABLE IF EXISTS `publication_link`;
 CREATE TABLE `publication_link` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `publication_id` int(11) NOT NULL,
-  `publication_no` int(11) NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
-  `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `pi_id` int(11) DEFAULT NULL,
@@ -5199,7 +5197,6 @@ CREATE TABLE `publication_link` (
   `text2` text,
   `text3` text,
   `publication_section_id` int(11) NOT NULL,
-  `orig_pub_date` date DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,

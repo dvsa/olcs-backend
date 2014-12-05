@@ -36,6 +36,7 @@ TRUNCATE TABLE `opposer`;
 TRUNCATE TABLE `opposition`;
 TRUNCATE TABLE `opposition_grounds`;
 TRUNCATE TABLE `organisation`;
+TRUNCATE TABLE `organisation_nature_of_business`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
@@ -414,12 +415,21 @@ INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date
     (13, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1);
 
 INSERT INTO psv_disc (`id`, `licence_id`, `disc_no`, `issued_date`, `created_on`, `version`) VALUES
-    (1, 7, NULL, NULL, '2014-02-20 00:00:00', 1),
-    (2, 7, NULL, NULL, '2014-02-20 00:00:00', 1),
-    (3, 7, NULL, NULL, '2014-02-20 00:00:00', 1),
-    (4, 7, '1231', '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-    (5, 7, '1234', '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-    (6, 30, NULL, NULL, '2014-02-20 00:00:00', 1);
+    (1, 63, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (2, 75, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (3, 100, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (4, 110, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (5, 63, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (6, 75, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (7, 100, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (8, 110, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (9, 63, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (10, 75, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (11, 100, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (12, 110, NULL, NULL, '2014-02-20 00:00:00', 1),
+    (13, 110, '1231', '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (14, 110, '1234', '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+    (15, 30, NULL, NULL, '2014-02-20 00:00:00', 1);
 
 INSERT INTO `note` (`id`, `note_type`, `last_modified_by`, `bus_reg_id`, `created_by`,
   `irfo_psv_auth_id`, `licence_id`, `case_id`, `irfo_gv_permit_id`, `application_id`, `comment`,
@@ -1142,7 +1152,8 @@ VALUES
 INSERT INTO `publication_section` (`id`, `last_modified_by`, `created_by`, `description`, `created_on`,
    `last_modified_on`, `version`)
 VALUES
-  (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
+  (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
+  (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
 
 INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
@@ -1169,12 +1180,12 @@ VALUES
 
 INSERT INTO `publication_link` (`id`,`publication_section_id`,`tm_pi_hearing_id`,`pi_id`,`publication_id`,`created_by`,
   `last_modified_by`,`bus_reg_id`,`application_id`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,
-  `orig_pub_date`,`publication_no`,`pub_type`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
+  `deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
   (1,13,NULL,1,3,NULL,NULL,NULL,NULL,7,'B',
    'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY',
    'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
-   NULL,'2014-10-30',6128,'A&D',NULL,'2014-11-25 15:47:03',NULL,1);
+   NULL,NULL,'2014-11-25 15:47:03',NULL,1);
 
 INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
 VALUES
