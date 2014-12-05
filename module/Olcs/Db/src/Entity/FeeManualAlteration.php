@@ -25,29 +25,18 @@ use Olcs\Db\Entity\Traits;
 class FeeManualAlteration implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\FeeManyToOne,
         Traits\IdIdentity,
-        Traits\UserManyToOne,
-        Traits\FeeManyToOne;
+        Traits\UserManyToOne;
 
     /**
-     * Pre fee status
+     * Actioned date
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="pre_fee_status", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="datetime", name="actioned_date", nullable=true)
      */
-    protected $preFeeStatus;
-
-    /**
-     * Post fee status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="post_fee_status", referencedColumnName="id", nullable=false)
-     */
-    protected $postFeeStatus;
+    protected $actionedDate;
 
     /**
      * Alteration type
@@ -60,22 +49,14 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     protected $alterationType;
 
     /**
-     * Actioned date
+     * Post fee status
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="actioned_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="post_fee_status", referencedColumnName="id", nullable=false)
      */
-    protected $actionedDate;
-
-    /**
-     * Post received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="post_received_date", nullable=true)
-     */
-    protected $postReceivedDate;
+    protected $postFeeStatus;
 
     /**
      * Post receipt no
@@ -87,6 +68,15 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     protected $postReceiptNo;
 
     /**
+     * Post received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="post_received_date", nullable=true)
+     */
+    protected $postReceivedDate;
+
+    /**
      * Post value
      *
      * @var float
@@ -96,13 +86,14 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     protected $postValue;
 
     /**
-     * Pre received date
+     * Pre fee status
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="pre_received_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="pre_fee_status", referencedColumnName="id", nullable=false)
      */
-    protected $preReceivedDate;
+    protected $preFeeStatus;
 
     /**
      * Pre receipt no
@@ -114,6 +105,15 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     protected $preReceiptNo;
 
     /**
+     * Pre received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="pre_received_date", nullable=true)
+     */
+    protected $preReceivedDate;
+
+    /**
      * Pre value
      *
      * @var float
@@ -123,49 +123,26 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     protected $preValue;
 
     /**
-     * Set the pre fee status
+     * Set the actioned date
      *
-     * @param \Olcs\Db\Entity\RefData $preFeeStatus
+     * @param \DateTime $actionedDate
      * @return FeeManualAlteration
      */
-    public function setPreFeeStatus($preFeeStatus)
+    public function setActionedDate($actionedDate)
     {
-        $this->preFeeStatus = $preFeeStatus;
+        $this->actionedDate = $actionedDate;
 
         return $this;
     }
 
     /**
-     * Get the pre fee status
+     * Get the actioned date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getPreFeeStatus()
+    public function getActionedDate()
     {
-        return $this->preFeeStatus;
-    }
-
-    /**
-     * Set the post fee status
-     *
-     * @param \Olcs\Db\Entity\RefData $postFeeStatus
-     * @return FeeManualAlteration
-     */
-    public function setPostFeeStatus($postFeeStatus)
-    {
-        $this->postFeeStatus = $postFeeStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the post fee status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPostFeeStatus()
-    {
-        return $this->postFeeStatus;
+        return $this->actionedDate;
     }
 
     /**
@@ -192,49 +169,26 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the actioned date
+     * Set the post fee status
      *
-     * @param \DateTime $actionedDate
+     * @param \Olcs\Db\Entity\RefData $postFeeStatus
      * @return FeeManualAlteration
      */
-    public function setActionedDate($actionedDate)
+    public function setPostFeeStatus($postFeeStatus)
     {
-        $this->actionedDate = $actionedDate;
+        $this->postFeeStatus = $postFeeStatus;
 
         return $this;
     }
 
     /**
-     * Get the actioned date
+     * Get the post fee status
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getActionedDate()
+    public function getPostFeeStatus()
     {
-        return $this->actionedDate;
-    }
-
-    /**
-     * Set the post received date
-     *
-     * @param \DateTime $postReceivedDate
-     * @return FeeManualAlteration
-     */
-    public function setPostReceivedDate($postReceivedDate)
-    {
-        $this->postReceivedDate = $postReceivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the post received date
-     *
-     * @return \DateTime
-     */
-    public function getPostReceivedDate()
-    {
-        return $this->postReceivedDate;
+        return $this->postFeeStatus;
     }
 
     /**
@@ -261,6 +215,29 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the post received date
+     *
+     * @param \DateTime $postReceivedDate
+     * @return FeeManualAlteration
+     */
+    public function setPostReceivedDate($postReceivedDate)
+    {
+        $this->postReceivedDate = $postReceivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the post received date
+     *
+     * @return \DateTime
+     */
+    public function getPostReceivedDate()
+    {
+        return $this->postReceivedDate;
+    }
+
+    /**
      * Set the post value
      *
      * @param float $postValue
@@ -284,26 +261,26 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the pre received date
+     * Set the pre fee status
      *
-     * @param \DateTime $preReceivedDate
+     * @param \Olcs\Db\Entity\RefData $preFeeStatus
      * @return FeeManualAlteration
      */
-    public function setPreReceivedDate($preReceivedDate)
+    public function setPreFeeStatus($preFeeStatus)
     {
-        $this->preReceivedDate = $preReceivedDate;
+        $this->preFeeStatus = $preFeeStatus;
 
         return $this;
     }
 
     /**
-     * Get the pre received date
+     * Get the pre fee status
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getPreReceivedDate()
+    public function getPreFeeStatus()
     {
-        return $this->preReceivedDate;
+        return $this->preFeeStatus;
     }
 
     /**
@@ -327,6 +304,29 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     public function getPreReceiptNo()
     {
         return $this->preReceiptNo;
+    }
+
+    /**
+     * Set the pre received date
+     *
+     * @param \DateTime $preReceivedDate
+     * @return FeeManualAlteration
+     */
+    public function setPreReceivedDate($preReceivedDate)
+    {
+        $this->preReceivedDate = $preReceivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the pre received date
+     *
+     * @return \DateTime
+     */
+    public function getPreReceivedDate()
+    {
+        return $this->preReceivedDate;
     }
 
     /**

@@ -24,11 +24,11 @@ use Olcs\Db\Entity\Traits;
 class Opposer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

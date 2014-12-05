@@ -24,13 +24,13 @@ use Olcs\Db\Entity\Traits;
 class CommunityLic implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
@@ -53,15 +53,6 @@ class CommunityLic implements Interfaces\EntityInterface
     protected $expiredDate;
 
     /**
-     * Licence expired date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="licence_expired_date", nullable=true)
-     */
-    protected $licenceExpiredDate;
-
-    /**
      * Issue no
      *
      * @var int
@@ -69,6 +60,15 @@ class CommunityLic implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="issue_no", nullable=true)
      */
     protected $issueNo;
+
+    /**
+     * Licence expired date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="licence_expired_date", nullable=true)
+     */
+    protected $licenceExpiredDate;
 
     /**
      * Serial no
@@ -135,29 +135,6 @@ class CommunityLic implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the licence expired date
-     *
-     * @param \DateTime $licenceExpiredDate
-     * @return CommunityLic
-     */
-    public function setLicenceExpiredDate($licenceExpiredDate)
-    {
-        $this->licenceExpiredDate = $licenceExpiredDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence expired date
-     *
-     * @return \DateTime
-     */
-    public function getLicenceExpiredDate()
-    {
-        return $this->licenceExpiredDate;
-    }
-
-    /**
      * Set the issue no
      *
      * @param int $issueNo
@@ -178,6 +155,29 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getIssueNo()
     {
         return $this->issueNo;
+    }
+
+    /**
+     * Set the licence expired date
+     *
+     * @param \DateTime $licenceExpiredDate
+     * @return CommunityLic
+     */
+    public function setLicenceExpiredDate($licenceExpiredDate)
+    {
+        $this->licenceExpiredDate = $licenceExpiredDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence expired date
+     *
+     * @return \DateTime
+     */
+    public function getLicenceExpiredDate()
+    {
+        return $this->licenceExpiredDate;
     }
 
     /**

@@ -30,44 +30,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SeriousInfringement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\SiCategoryManyToOne,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SiCategoryManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Si category type
-     *
-     * @var \Olcs\Db\Entity\SiCategoryType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType")
-     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $siCategoryType;
-
-    /**
-     * Erru response user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $erruResponseUser;
-
-    /**
-     * Member state code
-     *
-     * @var \Olcs\Db\Entity\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
-     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
-     */
-    protected $memberStateCode;
 
     /**
      * Case
@@ -107,6 +77,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
     protected $erruResponseTime;
 
     /**
+     * Erru response user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $erruResponseUser;
+
+    /**
      * Infringement date
      *
      * @var \DateTime
@@ -114,6 +94,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="infringement_date", nullable=true)
      */
     protected $infringementDate;
+
+    /**
+     * Member state code
+     *
+     * @var \Olcs\Db\Entity\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Country")
+     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
+     */
+    protected $memberStateCode;
 
     /**
      * Notification number
@@ -132,6 +122,16 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="reason", length=500, nullable=true)
      */
     protected $reason;
+
+    /**
+     * Si category type
+     *
+     * @var \Olcs\Db\Entity\SiCategoryType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiCategoryType")
+     * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $siCategoryType;
 
     /**
      * Applied penaltie
@@ -168,75 +168,6 @@ class SeriousInfringement implements Interfaces\EntityInterface
         $this->appliedPenalties = new ArrayCollection();
         $this->imposedErrus = new ArrayCollection();
         $this->requestedErrus = new ArrayCollection();
-    }
-
-    /**
-     * Set the si category type
-     *
-     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
-     * @return SeriousInfringement
-     */
-    public function setSiCategoryType($siCategoryType)
-    {
-        $this->siCategoryType = $siCategoryType;
-
-        return $this;
-    }
-
-    /**
-     * Get the si category type
-     *
-     * @return \Olcs\Db\Entity\SiCategoryType
-     */
-    public function getSiCategoryType()
-    {
-        return $this->siCategoryType;
-    }
-
-    /**
-     * Set the erru response user
-     *
-     * @param \Olcs\Db\Entity\User $erruResponseUser
-     * @return SeriousInfringement
-     */
-    public function setErruResponseUser($erruResponseUser)
-    {
-        $this->erruResponseUser = $erruResponseUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru response user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getErruResponseUser()
-    {
-        return $this->erruResponseUser;
-    }
-
-    /**
-     * Set the member state code
-     *
-     * @param \Olcs\Db\Entity\Country $memberStateCode
-     * @return SeriousInfringement
-     */
-    public function setMemberStateCode($memberStateCode)
-    {
-        $this->memberStateCode = $memberStateCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the member state code
-     *
-     * @return \Olcs\Db\Entity\Country
-     */
-    public function getMemberStateCode()
-    {
-        return $this->memberStateCode;
     }
 
     /**
@@ -332,6 +263,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the erru response user
+     *
+     * @param \Olcs\Db\Entity\User $erruResponseUser
+     * @return SeriousInfringement
+     */
+    public function setErruResponseUser($erruResponseUser)
+    {
+        $this->erruResponseUser = $erruResponseUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru response user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getErruResponseUser()
+    {
+        return $this->erruResponseUser;
+    }
+
+    /**
      * Set the infringement date
      *
      * @param \DateTime $infringementDate
@@ -352,6 +306,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getInfringementDate()
     {
         return $this->infringementDate;
+    }
+
+    /**
+     * Set the member state code
+     *
+     * @param \Olcs\Db\Entity\Country $memberStateCode
+     * @return SeriousInfringement
+     */
+    public function setMemberStateCode($memberStateCode)
+    {
+        $this->memberStateCode = $memberStateCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the member state code
+     *
+     * @return \Olcs\Db\Entity\Country
+     */
+    public function getMemberStateCode()
+    {
+        return $this->memberStateCode;
     }
 
     /**
@@ -398,6 +375,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getReason()
     {
         return $this->reason;
+    }
+
+    /**
+     * Set the si category type
+     *
+     * @param \Olcs\Db\Entity\SiCategoryType $siCategoryType
+     * @return SeriousInfringement
+     */
+    public function setSiCategoryType($siCategoryType)
+    {
+        $this->siCategoryType = $siCategoryType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si category type
+     *
+     * @return \Olcs\Db\Entity\SiCategoryType
+     */
+    public function getSiCategoryType()
+    {
+        return $this->siCategoryType;
     }
 
     /**

@@ -21,17 +21,8 @@ use Olcs\Db\Entity\Traits;
 class EmailRecipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\EmailManyToOne;
-
-    /**
-     * Type
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="type", nullable=false)
-     */
-    protected $type;
+        Traits\EmailManyToOne,
+        Traits\IdIdentity;
 
     /**
      * Email address
@@ -43,27 +34,13 @@ class EmailRecipient implements Interfaces\EntityInterface
     protected $emailAddress;
 
     /**
-     * Set the type
+     * Type
      *
-     * @param int $type
-     * @return EmailRecipient
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
+     * @var int
      *
-     * @return int
+     * @ORM\Column(type="smallint", name="type", nullable=false)
      */
-    public function getType()
-    {
-        return $this->type;
-    }
+    protected $type;
 
     /**
      * Set the email address
@@ -86,5 +63,28 @@ class EmailRecipient implements Interfaces\EntityInterface
     public function getEmailAddress()
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * Set the type
+     *
+     * @param int $type
+     * @return EmailRecipient
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the type
+     *
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

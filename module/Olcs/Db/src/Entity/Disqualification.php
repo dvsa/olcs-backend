@@ -24,15 +24,15 @@ use Olcs\Db\Entity\Traits;
 class Disqualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
         Traits\StartDateFieldAlt1,
-        Traits\Notes4000Field,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**

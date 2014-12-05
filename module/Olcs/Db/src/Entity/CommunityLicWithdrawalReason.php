@@ -26,23 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawalReasonType")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
 
     /**
      * Community lic withdrawal
@@ -55,27 +45,14 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     protected $communityLicWithdrawal;
 
     /**
-     * Set the reason
+     * Reason
      *
-     * @param \Olcs\Db\Entity\CommunityLicWithdrawalReasonType $reason
-     * @return CommunityLicWithdrawalReason
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
+     * @var \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
      *
-     * @return \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicWithdrawalReasonType")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
      */
-    public function getReason()
-    {
-        return $this->reason;
-    }
+    protected $reason;
 
     /**
      * Set the community lic withdrawal
@@ -98,5 +75,28 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
     public function getCommunityLicWithdrawal()
     {
         return $this->communityLicWithdrawal;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\CommunityLicWithdrawalReasonType $reason
+     * @return CommunityLicWithdrawalReason
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\CommunityLicWithdrawalReasonType
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 }

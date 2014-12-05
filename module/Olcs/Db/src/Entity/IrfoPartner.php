@@ -24,13 +24,13 @@ use Olcs\Db\Entity\Traits;
 class IrfoPartner implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
-        Traits\OrganisationManyToOne,
-        Traits\Name70Field,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\Name70Field,
+        Traits\OrganisationManyToOne,
         Traits\CustomVersionField;
 }

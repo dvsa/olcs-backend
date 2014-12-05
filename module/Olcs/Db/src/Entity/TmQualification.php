@@ -27,24 +27,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmQualification implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOneAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
-
-    /**
-     * Qualification type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
-     */
-    protected $qualificationType;
 
     /**
      * Country code
@@ -66,6 +56,16 @@ class TmQualification implements Interfaces\EntityInterface
     protected $issuedDate;
 
     /**
+     * Qualification type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="qualification_type", referencedColumnName="id", nullable=false)
+     */
+    protected $qualificationType;
+
+    /**
      * Serial no
      *
      * @var string
@@ -73,29 +73,6 @@ class TmQualification implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="serial_no", length=20, nullable=true)
      */
     protected $serialNo;
-
-    /**
-     * Set the qualification type
-     *
-     * @param \Olcs\Db\Entity\RefData $qualificationType
-     * @return TmQualification
-     */
-    public function setQualificationType($qualificationType)
-    {
-        $this->qualificationType = $qualificationType;
-
-        return $this;
-    }
-
-    /**
-     * Get the qualification type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getQualificationType()
-    {
-        return $this->qualificationType;
-    }
 
     /**
      * Set the country code
@@ -141,6 +118,29 @@ class TmQualification implements Interfaces\EntityInterface
     public function getIssuedDate()
     {
         return $this->issuedDate;
+    }
+
+    /**
+     * Set the qualification type
+     *
+     * @param \Olcs\Db\Entity\RefData $qualificationType
+     * @return TmQualification
+     */
+    public function setQualificationType($qualificationType)
+    {
+        $this->qualificationType = $qualificationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the qualification type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getQualificationType()
+    {
+        return $this->qualificationType;
     }
 
     /**

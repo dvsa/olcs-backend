@@ -23,11 +23,11 @@ use Olcs\Db\Entity\Traits;
 class AdminAreaTrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
 
     /**

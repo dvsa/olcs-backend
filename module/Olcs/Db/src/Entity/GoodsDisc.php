@@ -23,17 +23,26 @@ use Olcs\Db\Entity\Traits;
 class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\DiscNo50Field,
-        Traits\IssuedDateField,
         Traits\CeasedDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\DiscNo50Field,
+        Traits\IdIdentity,
         Traits\IsInterimField,
         Traits\IsPrintingField,
-        Traits\CustomCreatedOnField,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Is copy
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_copy", nullable=false)
+     */
+    protected $isCopy = 0;
 
     /**
      * Licence vehicle
@@ -46,15 +55,6 @@ class GoodsDisc implements Interfaces\EntityInterface
     protected $licenceVehicle;
 
     /**
-     * Is copy
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_copy", nullable=false)
-     */
-    protected $isCopy = 0;
-
-    /**
      * Reprint required
      *
      * @var string
@@ -62,29 +62,6 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
-
-    /**
-     * Set the licence vehicle
-     *
-     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
-     * @return GoodsDisc
-     */
-    public function setLicenceVehicle($licenceVehicle)
-    {
-        $this->licenceVehicle = $licenceVehicle;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence vehicle
-     *
-     * @return \Olcs\Db\Entity\LicenceVehicle
-     */
-    public function getLicenceVehicle()
-    {
-        return $this->licenceVehicle;
-    }
 
     /**
      * Set the is copy
@@ -107,6 +84,29 @@ class GoodsDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
+     * @return GoodsDisc
+     */
+    public function setLicenceVehicle($licenceVehicle)
+    {
+        $this->licenceVehicle = $licenceVehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicle
+     *
+     * @return \Olcs\Db\Entity\LicenceVehicle
+     */
+    public function getLicenceVehicle()
+    {
+        return $this->licenceVehicle;
     }
 
     /**

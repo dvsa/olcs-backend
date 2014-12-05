@@ -31,75 +31,26 @@ use Olcs\Db\Entity\Traits;
 class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\CaseManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\TaskManyToOne,
-        Traits\CaseManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Result type
+     * Deferred date
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="date", name="deferred_date", nullable=true)
      */
-    protected $resultType;
-
-    /**
-     * Requestor user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
-     */
-    protected $requestorUser;
-
-    /**
-     * Request type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="request_type", referencedColumnName="id", nullable=false)
-     */
-    protected $requestType;
-
-    /**
-     * Report type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
-     */
-    protected $reportType;
-
-    /**
-     * Requestor notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="requestor_notes", nullable=true)
-     */
-    protected $requestorNotes;
-
-    /**
-     * Inspector notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="inspector_notes", nullable=true)
-     */
-    protected $inspectorNotes;
+    protected $deferredDate;
 
     /**
      * Due date
@@ -120,13 +71,41 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $fromDate;
 
     /**
-     * To date
+     * Inspector name
      *
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="date", name="to_date", nullable=true)
+     * @ORM\Column(type="string", name="inspector_name", length=70, nullable=true)
      */
-    protected $toDate;
+    protected $inspectorName;
+
+    /**
+     * Inspector notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="inspector_notes", length=65535, nullable=true)
+     */
+    protected $inspectorNotes;
+
+    /**
+     * Local services no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="local_services_no", nullable=true)
+     */
+    protected $localServicesNo;
+
+    /**
+     * Report type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="report_type", referencedColumnName="id", nullable=true)
+     */
+    protected $reportType;
 
     /**
      * Request date
@@ -138,6 +117,45 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $requestDate;
 
     /**
+     * Request type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="request_type", referencedColumnName="id", nullable=false)
+     */
+    protected $requestType;
+
+    /**
+     * Requestor notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="requestor_notes", length=65535, nullable=true)
+     */
+    protected $requestorNotes;
+
+    /**
+     * Requestor user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="requestor_user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $requestorUser;
+
+    /**
+     * Result type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="result_type", referencedColumnName="id", nullable=false)
+     */
+    protected $resultType;
+
+    /**
      * Return date
      *
      * @var \DateTime
@@ -147,31 +165,13 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $returnDate;
 
     /**
-     * Deferred date
+     * To date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="deferred_date", nullable=true)
+     * @ORM\Column(type="date", name="to_date", nullable=true)
      */
-    protected $deferredDate;
-
-    /**
-     * Inspector name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="inspector_name", length=70, nullable=true)
-     */
-    protected $inspectorName;
-
-    /**
-     * Local services no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="local_services_no", nullable=true)
-     */
-    protected $localServicesNo;
+    protected $toDate;
 
     /**
      * Trailors examined no
@@ -192,141 +192,26 @@ class InspectionRequest implements Interfaces\EntityInterface
     protected $vehiclesExaminedNo;
 
     /**
-     * Set the result type
+     * Set the deferred date
      *
-     * @param \Olcs\Db\Entity\RefData $resultType
+     * @param \DateTime $deferredDate
      * @return InspectionRequest
      */
-    public function setResultType($resultType)
+    public function setDeferredDate($deferredDate)
     {
-        $this->resultType = $resultType;
+        $this->deferredDate = $deferredDate;
 
         return $this;
     }
 
     /**
-     * Get the result type
+     * Get the deferred date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getResultType()
+    public function getDeferredDate()
     {
-        return $this->resultType;
-    }
-
-    /**
-     * Set the requestor user
-     *
-     * @param \Olcs\Db\Entity\User $requestorUser
-     * @return InspectionRequest
-     */
-    public function setRequestorUser($requestorUser)
-    {
-        $this->requestorUser = $requestorUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestor user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getRequestorUser()
-    {
-        return $this->requestorUser;
-    }
-
-    /**
-     * Set the request type
-     *
-     * @param \Olcs\Db\Entity\RefData $requestType
-     * @return InspectionRequest
-     */
-    public function setRequestType($requestType)
-    {
-        $this->requestType = $requestType;
-
-        return $this;
-    }
-
-    /**
-     * Get the request type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getRequestType()
-    {
-        return $this->requestType;
-    }
-
-    /**
-     * Set the report type
-     *
-     * @param \Olcs\Db\Entity\RefData $reportType
-     * @return InspectionRequest
-     */
-    public function setReportType($reportType)
-    {
-        $this->reportType = $reportType;
-
-        return $this;
-    }
-
-    /**
-     * Get the report type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getReportType()
-    {
-        return $this->reportType;
-    }
-
-    /**
-     * Set the requestor notes
-     *
-     * @param string $requestorNotes
-     * @return InspectionRequest
-     */
-    public function setRequestorNotes($requestorNotes)
-    {
-        $this->requestorNotes = $requestorNotes;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestor notes
-     *
-     * @return string
-     */
-    public function getRequestorNotes()
-    {
-        return $this->requestorNotes;
-    }
-
-    /**
-     * Set the inspector notes
-     *
-     * @param string $inspectorNotes
-     * @return InspectionRequest
-     */
-    public function setInspectorNotes($inspectorNotes)
-    {
-        $this->inspectorNotes = $inspectorNotes;
-
-        return $this;
-    }
-
-    /**
-     * Get the inspector notes
-     *
-     * @return string
-     */
-    public function getInspectorNotes()
-    {
-        return $this->inspectorNotes;
+        return $this->deferredDate;
     }
 
     /**
@@ -376,26 +261,95 @@ class InspectionRequest implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the to date
+     * Set the inspector name
      *
-     * @param \DateTime $toDate
+     * @param string $inspectorName
      * @return InspectionRequest
      */
-    public function setToDate($toDate)
+    public function setInspectorName($inspectorName)
     {
-        $this->toDate = $toDate;
+        $this->inspectorName = $inspectorName;
 
         return $this;
     }
 
     /**
-     * Get the to date
+     * Get the inspector name
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getToDate()
+    public function getInspectorName()
     {
-        return $this->toDate;
+        return $this->inspectorName;
+    }
+
+    /**
+     * Set the inspector notes
+     *
+     * @param string $inspectorNotes
+     * @return InspectionRequest
+     */
+    public function setInspectorNotes($inspectorNotes)
+    {
+        $this->inspectorNotes = $inspectorNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the inspector notes
+     *
+     * @return string
+     */
+    public function getInspectorNotes()
+    {
+        return $this->inspectorNotes;
+    }
+
+    /**
+     * Set the local services no
+     *
+     * @param int $localServicesNo
+     * @return InspectionRequest
+     */
+    public function setLocalServicesNo($localServicesNo)
+    {
+        $this->localServicesNo = $localServicesNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the local services no
+     *
+     * @return int
+     */
+    public function getLocalServicesNo()
+    {
+        return $this->localServicesNo;
+    }
+
+    /**
+     * Set the report type
+     *
+     * @param \Olcs\Db\Entity\RefData $reportType
+     * @return InspectionRequest
+     */
+    public function setReportType($reportType)
+    {
+        $this->reportType = $reportType;
+
+        return $this;
+    }
+
+    /**
+     * Get the report type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReportType()
+    {
+        return $this->reportType;
     }
 
     /**
@@ -422,6 +376,98 @@ class InspectionRequest implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the request type
+     *
+     * @param \Olcs\Db\Entity\RefData $requestType
+     * @return InspectionRequest
+     */
+    public function setRequestType($requestType)
+    {
+        $this->requestType = $requestType;
+
+        return $this;
+    }
+
+    /**
+     * Get the request type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRequestType()
+    {
+        return $this->requestType;
+    }
+
+    /**
+     * Set the requestor notes
+     *
+     * @param string $requestorNotes
+     * @return InspectionRequest
+     */
+    public function setRequestorNotes($requestorNotes)
+    {
+        $this->requestorNotes = $requestorNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestor notes
+     *
+     * @return string
+     */
+    public function getRequestorNotes()
+    {
+        return $this->requestorNotes;
+    }
+
+    /**
+     * Set the requestor user
+     *
+     * @param \Olcs\Db\Entity\User $requestorUser
+     * @return InspectionRequest
+     */
+    public function setRequestorUser($requestorUser)
+    {
+        $this->requestorUser = $requestorUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestor user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRequestorUser()
+    {
+        return $this->requestorUser;
+    }
+
+    /**
+     * Set the result type
+     *
+     * @param \Olcs\Db\Entity\RefData $resultType
+     * @return InspectionRequest
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+
+        return $this;
+    }
+
+    /**
+     * Get the result type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
+    }
+
+    /**
      * Set the return date
      *
      * @param \DateTime $returnDate
@@ -445,72 +491,26 @@ class InspectionRequest implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the deferred date
+     * Set the to date
      *
-     * @param \DateTime $deferredDate
+     * @param \DateTime $toDate
      * @return InspectionRequest
      */
-    public function setDeferredDate($deferredDate)
+    public function setToDate($toDate)
     {
-        $this->deferredDate = $deferredDate;
+        $this->toDate = $toDate;
 
         return $this;
     }
 
     /**
-     * Get the deferred date
+     * Get the to date
      *
      * @return \DateTime
      */
-    public function getDeferredDate()
+    public function getToDate()
     {
-        return $this->deferredDate;
-    }
-
-    /**
-     * Set the inspector name
-     *
-     * @param string $inspectorName
-     * @return InspectionRequest
-     */
-    public function setInspectorName($inspectorName)
-    {
-        $this->inspectorName = $inspectorName;
-
-        return $this;
-    }
-
-    /**
-     * Get the inspector name
-     *
-     * @return string
-     */
-    public function getInspectorName()
-    {
-        return $this->inspectorName;
-    }
-
-    /**
-     * Set the local services no
-     *
-     * @param int $localServicesNo
-     * @return InspectionRequest
-     */
-    public function setLocalServicesNo($localServicesNo)
-    {
-        $this->localServicesNo = $localServicesNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the local services no
-     *
-     * @return int
-     */
-    public function getLocalServicesNo()
-    {
-        return $this->localServicesNo;
+        return $this->toDate;
     }
 
     /**

@@ -29,18 +29,27 @@ use Olcs\Db\Entity\Traits;
 class Note implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
-        Traits\LicenceManyToOneAlt1,
-        Traits\CaseManyToOne,
-        Traits\IrfoGvPermitManyToOne,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\CaseManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\IrfoGvPermitManyToOne,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="comment", length=4000, nullable=false)
+     */
+    protected $comment;
 
     /**
      * Note type
@@ -53,15 +62,6 @@ class Note implements Interfaces\EntityInterface
     protected $noteType;
 
     /**
-     * Comment
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="comment", length=4000, nullable=false)
-     */
-    protected $comment;
-
-    /**
      * Priority
      *
      * @var string
@@ -69,29 +69,6 @@ class Note implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="priority", nullable=false)
      */
     protected $priority = 0;
-
-    /**
-     * Set the note type
-     *
-     * @param \Olcs\Db\Entity\RefData $noteType
-     * @return Note
-     */
-    public function setNoteType($noteType)
-    {
-        $this->noteType = $noteType;
-
-        return $this;
-    }
-
-    /**
-     * Get the note type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getNoteType()
-    {
-        return $this->noteType;
-    }
 
     /**
      * Set the comment
@@ -114,6 +91,29 @@ class Note implements Interfaces\EntityInterface
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * Set the note type
+     *
+     * @param \Olcs\Db\Entity\RefData $noteType
+     * @return Note
+     */
+    public function setNoteType($noteType)
+    {
+        $this->noteType = $noteType;
+
+        return $this;
+    }
+
+    /**
+     * Get the note type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getNoteType()
+    {
+        return $this->noteType;
     }
 
     /**

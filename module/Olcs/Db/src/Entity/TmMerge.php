@@ -26,22 +26,12 @@ use Olcs\Db\Entity\Traits;
 class TmMerge implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Tm licence
-     *
-     * @var \Olcs\Db\Entity\TransportManagerLicence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerLicence")
-     * @ORM\JoinColumn(name="tm_licence_id", referencedColumnName="id", nullable=true)
-     */
-    protected $tmLicence;
 
     /**
      * Tm application
@@ -54,16 +44,6 @@ class TmMerge implements Interfaces\EntityInterface
     protected $tmApplication;
 
     /**
-     * Tm to
-     *
-     * @var \Olcs\Db\Entity\TransportManager
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
-     * @ORM\JoinColumn(name="tm_to_id", referencedColumnName="id", nullable=false)
-     */
-    protected $tmTo;
-
-    /**
      * Tm from
      *
      * @var \Olcs\Db\Entity\TransportManager
@@ -74,27 +54,24 @@ class TmMerge implements Interfaces\EntityInterface
     protected $tmFrom;
 
     /**
-     * Set the tm licence
+     * Tm licence
      *
-     * @param \Olcs\Db\Entity\TransportManagerLicence $tmLicence
-     * @return TmMerge
+     * @var \Olcs\Db\Entity\TransportManagerLicence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerLicence")
+     * @ORM\JoinColumn(name="tm_licence_id", referencedColumnName="id", nullable=true)
      */
-    public function setTmLicence($tmLicence)
-    {
-        $this->tmLicence = $tmLicence;
-
-        return $this;
-    }
+    protected $tmLicence;
 
     /**
-     * Get the tm licence
+     * Tm to
      *
-     * @return \Olcs\Db\Entity\TransportManagerLicence
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager")
+     * @ORM\JoinColumn(name="tm_to_id", referencedColumnName="id", nullable=false)
      */
-    public function getTmLicence()
-    {
-        return $this->tmLicence;
-    }
+    protected $tmTo;
 
     /**
      * Set the tm application
@@ -120,29 +97,6 @@ class TmMerge implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the tm to
-     *
-     * @param \Olcs\Db\Entity\TransportManager $tmTo
-     * @return TmMerge
-     */
-    public function setTmTo($tmTo)
-    {
-        $this->tmTo = $tmTo;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm to
-     *
-     * @return \Olcs\Db\Entity\TransportManager
-     */
-    public function getTmTo()
-    {
-        return $this->tmTo;
-    }
-
-    /**
      * Set the tm from
      *
      * @param \Olcs\Db\Entity\TransportManager $tmFrom
@@ -163,5 +117,51 @@ class TmMerge implements Interfaces\EntityInterface
     public function getTmFrom()
     {
         return $this->tmFrom;
+    }
+
+    /**
+     * Set the tm licence
+     *
+     * @param \Olcs\Db\Entity\TransportManagerLicence $tmLicence
+     * @return TmMerge
+     */
+    public function setTmLicence($tmLicence)
+    {
+        $this->tmLicence = $tmLicence;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm licence
+     *
+     * @return \Olcs\Db\Entity\TransportManagerLicence
+     */
+    public function getTmLicence()
+    {
+        return $this->tmLicence;
+    }
+
+    /**
+     * Set the tm to
+     *
+     * @param \Olcs\Db\Entity\TransportManager $tmTo
+     * @return TmMerge
+     */
+    public function setTmTo($tmTo)
+    {
+        $this->tmTo = $tmTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm to
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTmTo()
+    {
+        return $this->tmTo;
     }
 }

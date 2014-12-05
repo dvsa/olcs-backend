@@ -24,13 +24,31 @@ use Olcs\Db\Entity\Traits;
 class Publication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
+
+    /**
+     * Doc name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="doc_name", length=255, nullable=true)
+     */
+    protected $docName;
+
+    /**
+     * Pub date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="pub_date", nullable=true)
+     */
+    protected $pubDate;
 
     /**
      * Pub status
@@ -43,15 +61,6 @@ class Publication implements Interfaces\EntityInterface
     protected $pubStatus;
 
     /**
-     * Publication no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="publication_no", nullable=false)
-     */
-    protected $publicationNo;
-
-    /**
      * Pub type
      *
      * @var string
@@ -61,90 +70,35 @@ class Publication implements Interfaces\EntityInterface
     protected $pubType;
 
     /**
-     * Pub date
+     * Publication no
      *
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(type="date", name="pub_date", nullable=true)
+     * @ORM\Column(type="integer", name="publication_no", nullable=false)
      */
-    protected $pubDate;
+    protected $publicationNo;
 
     /**
-     * Doc name
+     * Set the doc name
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="doc_name", length=255, nullable=true)
-     */
-    protected $docName;
-
-    /**
-     * Set the pub status
-     *
-     * @param \Olcs\Db\Entity\RefData $pubStatus
+     * @param string $docName
      * @return Publication
      */
-    public function setPubStatus($pubStatus)
+    public function setDocName($docName)
     {
-        $this->pubStatus = $pubStatus;
+        $this->docName = $docName;
 
         return $this;
     }
 
     /**
-     * Get the pub status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPubStatus()
-    {
-        return $this->pubStatus;
-    }
-
-    /**
-     * Set the publication no
-     *
-     * @param int $publicationNo
-     * @return Publication
-     */
-    public function setPublicationNo($publicationNo)
-    {
-        $this->publicationNo = $publicationNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the publication no
-     *
-     * @return int
-     */
-    public function getPublicationNo()
-    {
-        return $this->publicationNo;
-    }
-
-    /**
-     * Set the pub type
-     *
-     * @param string $pubType
-     * @return Publication
-     */
-    public function setPubType($pubType)
-    {
-        $this->pubType = $pubType;
-
-        return $this;
-    }
-
-    /**
-     * Get the pub type
+     * Get the doc name
      *
      * @return string
      */
-    public function getPubType()
+    public function getDocName()
     {
-        return $this->pubType;
+        return $this->docName;
     }
 
     /**
@@ -171,25 +125,71 @@ class Publication implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the doc name
+     * Set the pub status
      *
-     * @param string $docName
+     * @param \Olcs\Db\Entity\RefData $pubStatus
      * @return Publication
      */
-    public function setDocName($docName)
+    public function setPubStatus($pubStatus)
     {
-        $this->docName = $docName;
+        $this->pubStatus = $pubStatus;
 
         return $this;
     }
 
     /**
-     * Get the doc name
+     * Get the pub status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPubStatus()
+    {
+        return $this->pubStatus;
+    }
+
+    /**
+     * Set the pub type
+     *
+     * @param string $pubType
+     * @return Publication
+     */
+    public function setPubType($pubType)
+    {
+        $this->pubType = $pubType;
+
+        return $this;
+    }
+
+    /**
+     * Get the pub type
      *
      * @return string
      */
-    public function getDocName()
+    public function getPubType()
     {
-        return $this->docName;
+        return $this->pubType;
+    }
+
+    /**
+     * Set the publication no
+     *
+     * @param int $publicationNo
+     * @return Publication
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication no
+     *
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
     }
 }

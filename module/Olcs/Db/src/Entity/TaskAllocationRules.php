@@ -25,20 +25,10 @@ use Olcs\Db\Entity\Traits;
 class TaskAllocationRules implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\GoodsOrPsvManyToOne,
-        Traits\TeamManyToOne;
-
-    /**
-     * User
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $user;
+        Traits\IdIdentity,
+        Traits\TeamManyToOne,
+        Traits\TrafficAreaManyToOneAlt1;
 
     /**
      * Category
@@ -60,27 +50,14 @@ class TaskAllocationRules implements Interfaces\EntityInterface
     protected $isMlh;
 
     /**
-     * Set the user
+     * User
      *
-     * @param \Olcs\Db\Entity\User $user
-     * @return TaskAllocationRules
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get the user
+     * @var \Olcs\Db\Entity\User
      *
-     * @return \Olcs\Db\Entity\User
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
-    public function getUser()
-    {
-        return $this->user;
-    }
+    protected $user;
 
     /**
      * Set the category
@@ -126,5 +103,28 @@ class TaskAllocationRules implements Interfaces\EntityInterface
     public function getIsMlh()
     {
         return $this->isMlh;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Olcs\Db\Entity\User $user
+     * @return TaskAllocationRules
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

@@ -28,15 +28,24 @@ use Olcs\Db\Entity\Traits;
 class TxcInbox implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
+        Traits\BusRegManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LocalAuthorityManyToOne,
         Traits\OrganisationManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * File read
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
+     */
+    protected $fileRead;
 
     /**
      * Pdf document
@@ -59,6 +68,15 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $routeDocument;
 
     /**
+     * Route seq
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="route_seq", nullable=false)
+     */
+    protected $routeSeq;
+
+    /**
      * Zip document
      *
      * @var \Olcs\Db\Entity\Document
@@ -69,22 +87,27 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $zipDocument;
 
     /**
-     * File read
+     * Set the file read
      *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
+     * @param string $fileRead
+     * @return TxcInbox
      */
-    protected $fileRead;
+    public function setFileRead($fileRead)
+    {
+        $this->fileRead = $fileRead;
+
+        return $this;
+    }
 
     /**
-     * Route seq
+     * Get the file read
      *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="route_seq", nullable=false)
+     * @return string
      */
-    protected $routeSeq;
+    public function getFileRead()
+    {
+        return $this->fileRead;
+    }
 
     /**
      * Set the pdf document
@@ -133,52 +156,6 @@ class TxcInbox implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the zip document
-     *
-     * @param \Olcs\Db\Entity\Document $zipDocument
-     * @return TxcInbox
-     */
-    public function setZipDocument($zipDocument)
-    {
-        $this->zipDocument = $zipDocument;
-
-        return $this;
-    }
-
-    /**
-     * Get the zip document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getZipDocument()
-    {
-        return $this->zipDocument;
-    }
-
-    /**
-     * Set the file read
-     *
-     * @param string $fileRead
-     * @return TxcInbox
-     */
-    public function setFileRead($fileRead)
-    {
-        $this->fileRead = $fileRead;
-
-        return $this;
-    }
-
-    /**
-     * Get the file read
-     *
-     * @return string
-     */
-    public function getFileRead()
-    {
-        return $this->fileRead;
-    }
-
-    /**
      * Set the route seq
      *
      * @param int $routeSeq
@@ -199,5 +176,28 @@ class TxcInbox implements Interfaces\EntityInterface
     public function getRouteSeq()
     {
         return $this->routeSeq;
+    }
+
+    /**
+     * Set the zip document
+     *
+     * @param \Olcs\Db\Entity\Document $zipDocument
+     * @return TxcInbox
+     */
+    public function setZipDocument($zipDocument)
+    {
+        $this->zipDocument = $zipDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the zip document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getZipDocument()
+    {
+        return $this->zipDocument;
     }
 }

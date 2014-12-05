@@ -25,23 +25,13 @@ use Olcs\Db\Entity\Traits;
 class GracePeriod implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Period type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
-     */
-    protected $periodType;
 
     /**
      * Assigned to user
@@ -52,24 +42,6 @@ class GracePeriod implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
      */
     protected $assignedToUser;
-
-    /**
-     * Is active
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_active", nullable=false)
-     */
-    protected $isActive = 0;
-
-    /**
-     * Start date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="start_date", nullable=false)
-     */
-    protected $startDate;
 
     /**
      * End date
@@ -90,27 +62,32 @@ class GracePeriod implements Interfaces\EntityInterface
     protected $gracePeriodNo = 1;
 
     /**
-     * Set the period type
+     * Is active
      *
-     * @param \Olcs\Db\Entity\RefData $periodType
-     * @return GracePeriod
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_active", nullable=false)
      */
-    public function setPeriodType($periodType)
-    {
-        $this->periodType = $periodType;
-
-        return $this;
-    }
+    protected $isActive = 0;
 
     /**
-     * Get the period type
+     * Period type
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
      */
-    public function getPeriodType()
-    {
-        return $this->periodType;
-    }
+    protected $periodType;
+
+    /**
+     * Start date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="start_date", nullable=false)
+     */
+    protected $startDate;
 
     /**
      * Set the assigned to user
@@ -133,52 +110,6 @@ class GracePeriod implements Interfaces\EntityInterface
     public function getAssignedToUser()
     {
         return $this->assignedToUser;
-    }
-
-    /**
-     * Set the is active
-     *
-     * @param boolean $isActive
-     * @return GracePeriod
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get the is active
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Set the start date
-     *
-     * @param \DateTime $startDate
-     * @return GracePeriod
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the start date
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
     }
 
     /**
@@ -225,5 +156,74 @@ class GracePeriod implements Interfaces\EntityInterface
     public function getGracePeriodNo()
     {
         return $this->gracePeriodNo;
+    }
+
+    /**
+     * Set the is active
+     *
+     * @param boolean $isActive
+     * @return GracePeriod
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get the is active
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set the period type
+     *
+     * @param \Olcs\Db\Entity\RefData $periodType
+     * @return GracePeriod
+     */
+    public function setPeriodType($periodType)
+    {
+        $this->periodType = $periodType;
+
+        return $this;
+    }
+
+    /**
+     * Get the period type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPeriodType()
+    {
+        return $this->periodType;
+    }
+
+    /**
+     * Set the start date
+     *
+     * @param \DateTime $startDate
+     * @return GracePeriod
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the start date
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
     }
 }

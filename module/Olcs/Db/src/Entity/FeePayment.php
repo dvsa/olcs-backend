@@ -27,22 +27,12 @@ use Olcs\Db\Entity\Traits;
 class FeePayment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Payment
-     *
-     * @var \Olcs\Db\Entity\Payment
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
-     * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
-     */
-    protected $payment;
 
     /**
      * Fee
@@ -64,27 +54,14 @@ class FeePayment implements Interfaces\EntityInterface
     protected $feeValue;
 
     /**
-     * Set the payment
+     * Payment
      *
-     * @param \Olcs\Db\Entity\Payment $payment
-     * @return FeePayment
-     */
-    public function setPayment($payment)
-    {
-        $this->payment = $payment;
-
-        return $this;
-    }
-
-    /**
-     * Get the payment
+     * @var \Olcs\Db\Entity\Payment
      *
-     * @return \Olcs\Db\Entity\Payment
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Payment")
+     * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
      */
-    public function getPayment()
-    {
-        return $this->payment;
-    }
+    protected $payment;
 
     /**
      * Set the fee
@@ -130,5 +107,28 @@ class FeePayment implements Interfaces\EntityInterface
     public function getFeeValue()
     {
         return $this->feeValue;
+    }
+
+    /**
+     * Set the payment
+     *
+     * @param \Olcs\Db\Entity\Payment $payment
+     * @return FeePayment
+     */
+    public function setPayment($payment)
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Get the payment
+     *
+     * @return \Olcs\Db\Entity\Payment
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }

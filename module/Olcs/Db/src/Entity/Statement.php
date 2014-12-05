@@ -26,63 +26,24 @@ use Olcs\Db\Entity\Traits;
 class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\Vrm20Field,
-        Traits\IssuedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\Vrm20Field;
 
     /**
-     * Contact type
+     * Authorisers decision
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="authorisers_decision", length=4000, nullable=true)
      */
-    protected $contactType;
-
-    /**
-     * Statement type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
-     */
-    protected $statementType;
-
-    /**
-     * Requestors address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
-     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $requestorsAddress;
-
-    /**
-     * Stopped date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="stopped_date", nullable=true)
-     */
-    protected $stoppedDate;
-
-    /**
-     * Requested date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="requested_date", nullable=true)
-     */
-    protected $requestedDate;
+    protected $authorisersDecision;
 
     /**
      * Authorisers title
@@ -94,13 +55,14 @@ class Statement implements Interfaces\EntityInterface
     protected $authorisersTitle;
 
     /**
-     * Authorisers decision
+     * Contact type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="authorisers_decision", length=4000, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="contact_type", referencedColumnName="id", nullable=true)
      */
-    protected $authorisersDecision;
+    protected $contactType;
 
     /**
      * Licence no
@@ -119,6 +81,25 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="licence_type", length=32, nullable=true)
      */
     protected $licenceType;
+
+    /**
+     * Requested date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="requested_date", nullable=true)
+     */
+    protected $requestedDate;
+
+    /**
+     * Requestors address
+     *
+     * @var \Olcs\Db\Entity\Address
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
+     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
+     */
+    protected $requestorsAddress;
 
     /**
      * Requestors body
@@ -148,118 +129,45 @@ class Statement implements Interfaces\EntityInterface
     protected $requestorsForename;
 
     /**
-     * Set the contact type
+     * Statement type
      *
-     * @param \Olcs\Db\Entity\RefData $contactType
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="statement_type", referencedColumnName="id", nullable=false)
+     */
+    protected $statementType;
+
+    /**
+     * Stopped date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="stopped_date", nullable=true)
+     */
+    protected $stoppedDate;
+
+    /**
+     * Set the authorisers decision
+     *
+     * @param string $authorisersDecision
      * @return Statement
      */
-    public function setContactType($contactType)
+    public function setAuthorisersDecision($authorisersDecision)
     {
-        $this->contactType = $contactType;
+        $this->authorisersDecision = $authorisersDecision;
 
         return $this;
     }
 
     /**
-     * Get the contact type
+     * Get the authorisers decision
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getContactType()
+    public function getAuthorisersDecision()
     {
-        return $this->contactType;
-    }
-
-    /**
-     * Set the statement type
-     *
-     * @param \Olcs\Db\Entity\RefData $statementType
-     * @return Statement
-     */
-    public function setStatementType($statementType)
-    {
-        $this->statementType = $statementType;
-
-        return $this;
-    }
-
-    /**
-     * Get the statement type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getStatementType()
-    {
-        return $this->statementType;
-    }
-
-    /**
-     * Set the requestors address
-     *
-     * @param \Olcs\Db\Entity\Address $requestorsAddress
-     * @return Statement
-     */
-    public function setRequestorsAddress($requestorsAddress)
-    {
-        $this->requestorsAddress = $requestorsAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getRequestorsAddress()
-    {
-        return $this->requestorsAddress;
-    }
-
-    /**
-     * Set the stopped date
-     *
-     * @param \DateTime $stoppedDate
-     * @return Statement
-     */
-    public function setStoppedDate($stoppedDate)
-    {
-        $this->stoppedDate = $stoppedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the stopped date
-     *
-     * @return \DateTime
-     */
-    public function getStoppedDate()
-    {
-        return $this->stoppedDate;
-    }
-
-    /**
-     * Set the requested date
-     *
-     * @param \DateTime $requestedDate
-     * @return Statement
-     */
-    public function setRequestedDate($requestedDate)
-    {
-        $this->requestedDate = $requestedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the requested date
-     *
-     * @return \DateTime
-     */
-    public function getRequestedDate()
-    {
-        return $this->requestedDate;
+        return $this->authorisersDecision;
     }
 
     /**
@@ -286,26 +194,26 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the authorisers decision
+     * Set the contact type
      *
-     * @param string $authorisersDecision
+     * @param \Olcs\Db\Entity\RefData $contactType
      * @return Statement
      */
-    public function setAuthorisersDecision($authorisersDecision)
+    public function setContactType($contactType)
     {
-        $this->authorisersDecision = $authorisersDecision;
+        $this->contactType = $contactType;
 
         return $this;
     }
 
     /**
-     * Get the authorisers decision
+     * Get the contact type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getAuthorisersDecision()
+    public function getContactType()
     {
-        return $this->authorisersDecision;
+        return $this->contactType;
     }
 
     /**
@@ -352,6 +260,52 @@ class Statement implements Interfaces\EntityInterface
     public function getLicenceType()
     {
         return $this->licenceType;
+    }
+
+    /**
+     * Set the requested date
+     *
+     * @param \DateTime $requestedDate
+     * @return Statement
+     */
+    public function setRequestedDate($requestedDate)
+    {
+        $this->requestedDate = $requestedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the requested date
+     *
+     * @return \DateTime
+     */
+    public function getRequestedDate()
+    {
+        return $this->requestedDate;
+    }
+
+    /**
+     * Set the requestors address
+     *
+     * @param \Olcs\Db\Entity\Address $requestorsAddress
+     * @return Statement
+     */
+    public function setRequestorsAddress($requestorsAddress)
+    {
+        $this->requestorsAddress = $requestorsAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestors address
+     *
+     * @return \Olcs\Db\Entity\Address
+     */
+    public function getRequestorsAddress()
+    {
+        return $this->requestorsAddress;
     }
 
     /**
@@ -421,5 +375,51 @@ class Statement implements Interfaces\EntityInterface
     public function getRequestorsForename()
     {
         return $this->requestorsForename;
+    }
+
+    /**
+     * Set the statement type
+     *
+     * @param \Olcs\Db\Entity\RefData $statementType
+     * @return Statement
+     */
+    public function setStatementType($statementType)
+    {
+        $this->statementType = $statementType;
+
+        return $this;
+    }
+
+    /**
+     * Get the statement type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStatementType()
+    {
+        return $this->statementType;
+    }
+
+    /**
+     * Set the stopped date
+     *
+     * @param \DateTime $stoppedDate
+     * @return Statement
+     */
+    public function setStoppedDate($stoppedDate)
+    {
+        $this->stoppedDate = $stoppedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the stopped date
+     *
+     * @return \DateTime
+     */
+    public function getStoppedDate()
+    {
+        return $this->stoppedDate;
     }
 }
