@@ -24,12 +24,13 @@ use Olcs\Db\Entity\Traits;
 class CommunityLic implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
+        Traits\SpecifiedDateField,
         Traits\CustomVersionField;
 
     /**
@@ -37,7 +38,7 @@ class CommunityLic implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="com_lic_status", referencedColumnName="id", nullable=false)
      */
     protected $comLicStatus;
@@ -52,13 +53,13 @@ class CommunityLic implements Interfaces\EntityInterface
     protected $expiredDate;
 
     /**
-     * Specified date
+     * Issue no
      *
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(type="datetime", name="specified_date", nullable=true)
+     * @ORM\Column(type="integer", name="issue_no", nullable=true)
      */
-    protected $specifiedDate;
+    protected $issueNo;
 
     /**
      * Licence expired date
@@ -68,15 +69,6 @@ class CommunityLic implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="licence_expired_date", nullable=true)
      */
     protected $licenceExpiredDate;
-
-    /**
-     * Issue no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="issue_no", nullable=true)
-     */
-    protected $issueNo;
 
     /**
      * Serial no
@@ -143,26 +135,26 @@ class CommunityLic implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the specified date
+     * Set the issue no
      *
-     * @param \DateTime $specifiedDate
+     * @param int $issueNo
      * @return CommunityLic
      */
-    public function setSpecifiedDate($specifiedDate)
+    public function setIssueNo($issueNo)
     {
-        $this->specifiedDate = $specifiedDate;
+        $this->issueNo = $issueNo;
 
         return $this;
     }
 
     /**
-     * Get the specified date
+     * Get the issue no
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getSpecifiedDate()
+    public function getIssueNo()
     {
-        return $this->specifiedDate;
+        return $this->issueNo;
     }
 
     /**
@@ -186,29 +178,6 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getLicenceExpiredDate()
     {
         return $this->licenceExpiredDate;
-    }
-
-    /**
-     * Set the issue no
-     *
-     * @param int $issueNo
-     * @return CommunityLic
-     */
-    public function setIssueNo($issueNo)
-    {
-        $this->issueNo = $issueNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the issue no
-     *
-     * @return int
-     */
-    public function getIssueNo()
-    {
-        return $this->issueNo;
     }
 
     /**

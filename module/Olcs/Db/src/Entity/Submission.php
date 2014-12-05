@@ -5,6 +5,7 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Submission Entity
@@ -13,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="fk_submission_case1_idx", columns={"case_id"}),
@@ -25,24 +27,15 @@ use Olcs\Db\Entity\Traits;
 class Submission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Submission type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionType;
 
     /**
      * Data snapshot
@@ -52,6 +45,16 @@ class Submission implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
      */
     protected $dataSnapshot;
+
+    /**
+     * Submission type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
+     */
+    protected $submissionType;
 
     /**
      * Submission action
@@ -81,29 +84,6 @@ class Submission implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission type
-     *
-     * @param \Olcs\Db\Entity\RefData $submissionType
-     * @return Submission
-     */
-    public function setSubmissionType($submissionType)
-    {
-        $this->submissionType = $submissionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubmissionType()
-    {
-        return $this->submissionType;
-    }
-
-    /**
      * Set the data snapshot
      *
      * @param string $dataSnapshot
@@ -124,6 +104,29 @@ class Submission implements Interfaces\EntityInterface
     public function getDataSnapshot()
     {
         return $this->dataSnapshot;
+    }
+
+    /**
+     * Set the submission type
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionType
+     * @return Submission
+     */
+    public function setSubmissionType($submissionType)
+    {
+        $this->submissionType = $submissionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionType()
+    {
+        return $this->submissionType;
     }
 
     /**

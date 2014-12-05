@@ -24,22 +24,12 @@ use Olcs\Db\Entity\Traits;
 class IrfoVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\IrfoPsvAuthManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField;
-
-    /**
-     * Irfo gv permit
-     *
-     * @var \Olcs\Db\Entity\IrfoGvPermit
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoGvPermit;
 
     /**
      * Coc a
@@ -87,13 +77,14 @@ class IrfoVehicle implements Interfaces\EntityInterface
     protected $cocT = 0;
 
     /**
-     * Vrm
+     * Irfo gv permit
      *
-     * @var string
+     * @var \Olcs\Db\Entity\IrfoGvPermit
      *
-     * @ORM\Column(type="string", name="vrm", length=20, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit")
+     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=false)
      */
-    protected $vrm;
+    protected $irfoGvPermit;
 
     /**
      * Version
@@ -105,27 +96,13 @@ class IrfoVehicle implements Interfaces\EntityInterface
     protected $version = 1;
 
     /**
-     * Set the irfo gv permit
+     * Vrm
      *
-     * @param \Olcs\Db\Entity\IrfoGvPermit $irfoGvPermit
-     * @return IrfoVehicle
-     */
-    public function setIrfoGvPermit($irfoGvPermit)
-    {
-        $this->irfoGvPermit = $irfoGvPermit;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo gv permit
+     * @var string
      *
-     * @return \Olcs\Db\Entity\IrfoGvPermit
+     * @ORM\Column(type="string", name="vrm", length=20, nullable=false)
      */
-    public function getIrfoGvPermit()
-    {
-        return $this->irfoGvPermit;
-    }
+    protected $vrm;
 
     /**
      * Set the coc a
@@ -243,26 +220,26 @@ class IrfoVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the vrm
+     * Set the irfo gv permit
      *
-     * @param string $vrm
+     * @param \Olcs\Db\Entity\IrfoGvPermit $irfoGvPermit
      * @return IrfoVehicle
      */
-    public function setVrm($vrm)
+    public function setIrfoGvPermit($irfoGvPermit)
     {
-        $this->vrm = $vrm;
+        $this->irfoGvPermit = $irfoGvPermit;
 
         return $this;
     }
 
     /**
-     * Get the vrm
+     * Get the irfo gv permit
      *
-     * @return string
+     * @return \Olcs\Db\Entity\IrfoGvPermit
      */
-    public function getVrm()
+    public function getIrfoGvPermit()
     {
-        return $this->vrm;
+        return $this->irfoGvPermit;
     }
 
     /**
@@ -286,5 +263,28 @@ class IrfoVehicle implements Interfaces\EntityInterface
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the vrm
+     *
+     * @param string $vrm
+     * @return IrfoVehicle
+     */
+    public function setVrm($vrm)
+    {
+        $this->vrm = $vrm;
+
+        return $this;
+    }
+
+    /**
+     * Get the vrm
+     *
+     * @return string
+     */
+    public function getVrm()
+    {
+        return $this->vrm;
     }
 }

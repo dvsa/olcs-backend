@@ -27,74 +27,18 @@ use Olcs\Db\Entity\Traits;
 class IrfoPsvAuth implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\StatusManyToOne,
-        Traits\WithdrawnReasonManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\OrganisationManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\ExemptionDetails255Field,
         Traits\ExpiryDateField,
+        Traits\IdIdentity,
         Traits\InForceDateField,
-        Traits\CustomCreatedOnField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Irfo psv auth type
-     *
-     * @var \Olcs\Db\Entity\IrfoPsvAuthType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoPsvAuthType;
-
-    /**
-     * Journey frequency
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
-     */
-    protected $journeyFrequency;
-
-    /**
-     * Is fee exempt application
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false)
-     */
-    protected $isFeeExemptApplication = 0;
-
-    /**
-     * Is fee exempt annual
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false)
-     */
-    protected $isFeeExemptAnnual = 0;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=false)
-     */
-    protected $irfoFeeId;
-
-    /**
-     * Irfo file no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_file_no", length=10, nullable=false)
-     */
-    protected $irfoFileNo;
+        Traits\OrganisationManyToOneAlt1,
+        Traits\StatusManyToOne,
+        Traits\CustomVersionField,
+        Traits\WithdrawnReasonManyToOne;
 
     /**
      * Copies issued
@@ -104,6 +48,15 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="copies_issued", nullable=false)
      */
     protected $copiesIssued = 0;
+
+    /**
+     * Copies issued total
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="copies_issued_total", nullable=false)
+     */
+    protected $copiesIssuedTotal = 0;
 
     /**
      * Copies required
@@ -124,13 +77,60 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $copiesRequiredTotal = 0;
 
     /**
-     * Copies issued total
+     * Irfo fee id
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="copies_issued_total", nullable=false)
+     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=false)
      */
-    protected $copiesIssuedTotal = 0;
+    protected $irfoFeeId;
+
+    /**
+     * Irfo file no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="irfo_file_no", length=10, nullable=false)
+     */
+    protected $irfoFileNo;
+
+    /**
+     * Irfo psv auth type
+     *
+     * @var \Olcs\Db\Entity\IrfoPsvAuthType
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType")
+     * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irfoPsvAuthType;
+
+    /**
+     * Is fee exempt annual
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false)
+     */
+    protected $isFeeExemptAnnual = 0;
+
+    /**
+     * Is fee exempt application
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false)
+     */
+    protected $isFeeExemptApplication = 0;
+
+    /**
+     * Journey frequency
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
+     */
+    protected $journeyFrequency;
 
     /**
      * Last date copies req
@@ -178,144 +178,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
-     * Set the irfo psv auth type
-     *
-     * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoPsvAuthType($irfoPsvAuthType)
-    {
-        $this->irfoPsvAuthType = $irfoPsvAuthType;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo psv auth type
-     *
-     * @return \Olcs\Db\Entity\IrfoPsvAuthType
-     */
-    public function getIrfoPsvAuthType()
-    {
-        return $this->irfoPsvAuthType;
-    }
-
-    /**
-     * Set the journey frequency
-     *
-     * @param \Olcs\Db\Entity\RefData $journeyFrequency
-     * @return IrfoPsvAuth
-     */
-    public function setJourneyFrequency($journeyFrequency)
-    {
-        $this->journeyFrequency = $journeyFrequency;
-
-        return $this;
-    }
-
-    /**
-     * Get the journey frequency
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getJourneyFrequency()
-    {
-        return $this->journeyFrequency;
-    }
-
-    /**
-     * Set the is fee exempt application
-     *
-     * @param string $isFeeExemptApplication
-     * @return IrfoPsvAuth
-     */
-    public function setIsFeeExemptApplication($isFeeExemptApplication)
-    {
-        $this->isFeeExemptApplication = $isFeeExemptApplication;
-
-        return $this;
-    }
-
-    /**
-     * Get the is fee exempt application
-     *
-     * @return string
-     */
-    public function getIsFeeExemptApplication()
-    {
-        return $this->isFeeExemptApplication;
-    }
-
-    /**
-     * Set the is fee exempt annual
-     *
-     * @param string $isFeeExemptAnnual
-     * @return IrfoPsvAuth
-     */
-    public function setIsFeeExemptAnnual($isFeeExemptAnnual)
-    {
-        $this->isFeeExemptAnnual = $isFeeExemptAnnual;
-
-        return $this;
-    }
-
-    /**
-     * Get the is fee exempt annual
-     *
-     * @return string
-     */
-    public function getIsFeeExemptAnnual()
-    {
-        return $this->isFeeExemptAnnual;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
-    }
-
-    /**
-     * Set the irfo file no
-     *
-     * @param string $irfoFileNo
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoFileNo($irfoFileNo)
-    {
-        $this->irfoFileNo = $irfoFileNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo file no
-     *
-     * @return string
-     */
-    public function getIrfoFileNo()
-    {
-        return $this->irfoFileNo;
-    }
-
-    /**
      * Set the copies issued
      *
      * @param int $copiesIssued
@@ -336,6 +198,29 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getCopiesIssued()
     {
         return $this->copiesIssued;
+    }
+
+    /**
+     * Set the copies issued total
+     *
+     * @param int $copiesIssuedTotal
+     * @return IrfoPsvAuth
+     */
+    public function setCopiesIssuedTotal($copiesIssuedTotal)
+    {
+        $this->copiesIssuedTotal = $copiesIssuedTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get the copies issued total
+     *
+     * @return int
+     */
+    public function getCopiesIssuedTotal()
+    {
+        return $this->copiesIssuedTotal;
     }
 
     /**
@@ -385,26 +270,141 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the copies issued total
+     * Set the irfo fee id
      *
-     * @param int $copiesIssuedTotal
+     * @param string $irfoFeeId
      * @return IrfoPsvAuth
      */
-    public function setCopiesIssuedTotal($copiesIssuedTotal)
+    public function setIrfoFeeId($irfoFeeId)
     {
-        $this->copiesIssuedTotal = $copiesIssuedTotal;
+        $this->irfoFeeId = $irfoFeeId;
 
         return $this;
     }
 
     /**
-     * Get the copies issued total
+     * Get the irfo fee id
      *
-     * @return int
+     * @return string
      */
-    public function getCopiesIssuedTotal()
+    public function getIrfoFeeId()
     {
-        return $this->copiesIssuedTotal;
+        return $this->irfoFeeId;
+    }
+
+    /**
+     * Set the irfo file no
+     *
+     * @param string $irfoFileNo
+     * @return IrfoPsvAuth
+     */
+    public function setIrfoFileNo($irfoFileNo)
+    {
+        $this->irfoFileNo = $irfoFileNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo file no
+     *
+     * @return string
+     */
+    public function getIrfoFileNo()
+    {
+        return $this->irfoFileNo;
+    }
+
+    /**
+     * Set the irfo psv auth type
+     *
+     * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
+     * @return IrfoPsvAuth
+     */
+    public function setIrfoPsvAuthType($irfoPsvAuthType)
+    {
+        $this->irfoPsvAuthType = $irfoPsvAuthType;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth type
+     *
+     * @return \Olcs\Db\Entity\IrfoPsvAuthType
+     */
+    public function getIrfoPsvAuthType()
+    {
+        return $this->irfoPsvAuthType;
+    }
+
+    /**
+     * Set the is fee exempt annual
+     *
+     * @param string $isFeeExemptAnnual
+     * @return IrfoPsvAuth
+     */
+    public function setIsFeeExemptAnnual($isFeeExemptAnnual)
+    {
+        $this->isFeeExemptAnnual = $isFeeExemptAnnual;
+
+        return $this;
+    }
+
+    /**
+     * Get the is fee exempt annual
+     *
+     * @return string
+     */
+    public function getIsFeeExemptAnnual()
+    {
+        return $this->isFeeExemptAnnual;
+    }
+
+    /**
+     * Set the is fee exempt application
+     *
+     * @param string $isFeeExemptApplication
+     * @return IrfoPsvAuth
+     */
+    public function setIsFeeExemptApplication($isFeeExemptApplication)
+    {
+        $this->isFeeExemptApplication = $isFeeExemptApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the is fee exempt application
+     *
+     * @return string
+     */
+    public function getIsFeeExemptApplication()
+    {
+        return $this->isFeeExemptApplication;
+    }
+
+    /**
+     * Set the journey frequency
+     *
+     * @param \Olcs\Db\Entity\RefData $journeyFrequency
+     * @return IrfoPsvAuth
+     */
+    public function setJourneyFrequency($journeyFrequency)
+    {
+        $this->journeyFrequency = $journeyFrequency;
+
+        return $this;
+    }
+
+    /**
+     * Get the journey frequency
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getJourneyFrequency()
+    {
+        return $this->journeyFrequency;
     }
 
     /**

@@ -23,22 +23,12 @@ use Olcs\Db\Entity\Traits;
 class IrfoTransitCountry implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Irfo psv auth
-     *
-     * @var \Olcs\Db\Entity\IrfoPsvAuth
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoPsvAuth;
 
     /**
      * Description
@@ -50,27 +40,14 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
     protected $description;
 
     /**
-     * Set the irfo psv auth
+     * Irfo psv auth
      *
-     * @param \Olcs\Db\Entity\IrfoPsvAuth $irfoPsvAuth
-     * @return IrfoTransitCountry
-     */
-    public function setIrfoPsvAuth($irfoPsvAuth)
-    {
-        $this->irfoPsvAuth = $irfoPsvAuth;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo psv auth
+     * @var \Olcs\Db\Entity\IrfoPsvAuth
      *
-     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth")
+     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
      */
-    public function getIrfoPsvAuth()
-    {
-        return $this->irfoPsvAuth;
-    }
+    protected $irfoPsvAuth;
 
     /**
      * Set the description
@@ -93,5 +70,28 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Olcs\Db\Entity\IrfoPsvAuth $irfoPsvAuth
+     * @return IrfoTransitCountry
+     */
+    public function setIrfoPsvAuth($irfoPsvAuth)
+    {
+        $this->irfoPsvAuth = $irfoPsvAuth;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth
+     *
+     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     */
+    public function getIrfoPsvAuth()
+    {
+        return $this->irfoPsvAuth;
     }
 }

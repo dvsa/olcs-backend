@@ -25,24 +25,15 @@ use Olcs\Db\Entity\Traits;
 class S4 implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\ReceivedDateFieldAlt1,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Condition
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="s4s", fetch="LAZY")
-     */
-    protected $conditions;
 
     /**
      * Agreed date
@@ -52,6 +43,24 @@ class S4 implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="agreed_date", nullable=true)
      */
     protected $agreedDate;
+
+    /**
+     * Condition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="s4s")
+     */
+    protected $conditions;
+
+    /**
+     * Is true s4
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
+     */
+    protected $isTrueS4 = 0;
 
     /**
      * Outcome
@@ -72,20 +81,34 @@ class S4 implements Interfaces\EntityInterface
     protected $surrenderLicence = 0;
 
     /**
-     * Is true s4
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
-     */
-    protected $isTrueS4 = 0;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->conditions = new ArrayCollection();
+    }
+
+    /**
+     * Set the agreed date
+     *
+     * @param \DateTime $agreedDate
+     * @return S4
+     */
+    public function setAgreedDate($agreedDate)
+    {
+        $this->agreedDate = $agreedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed date
+     *
+     * @return \DateTime
+     */
+    public function getAgreedDate()
+    {
+        return $this->agreedDate;
     }
 
     /**
@@ -149,26 +172,26 @@ class S4 implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the agreed date
+     * Set the is true s4
      *
-     * @param \DateTime $agreedDate
+     * @param string $isTrueS4
      * @return S4
      */
-    public function setAgreedDate($agreedDate)
+    public function setIsTrueS4($isTrueS4)
     {
-        $this->agreedDate = $agreedDate;
+        $this->isTrueS4 = $isTrueS4;
 
         return $this;
     }
 
     /**
-     * Get the agreed date
+     * Get the is true s4
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getAgreedDate()
+    public function getIsTrueS4()
     {
-        return $this->agreedDate;
+        return $this->isTrueS4;
     }
 
     /**
@@ -215,28 +238,5 @@ class S4 implements Interfaces\EntityInterface
     public function getSurrenderLicence()
     {
         return $this->surrenderLicence;
-    }
-
-    /**
-     * Set the is true s4
-     *
-     * @param string $isTrueS4
-     * @return S4
-     */
-    public function setIsTrueS4($isTrueS4)
-    {
-        $this->isTrueS4 = $isTrueS4;
-
-        return $this;
-    }
-
-    /**
-     * Get the is true s4
-     *
-     * @return string
-     */
-    public function getIsTrueS4()
-    {
-        return $this->isTrueS4;
     }
 }

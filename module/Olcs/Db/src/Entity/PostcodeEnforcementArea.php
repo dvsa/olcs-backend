@@ -26,11 +26,11 @@ use Olcs\Db\Entity\Traits;
 class PostcodeEnforcementArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\EnforcementAreaManyToOne,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\EnforcementAreaManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

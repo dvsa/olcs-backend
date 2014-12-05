@@ -28,45 +28,15 @@ use Olcs\Db\Entity\Traits;
 class TxcInbox implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
+        Traits\BusRegManyToOne,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LocalAuthorityManyToOne,
         Traits\OrganisationManyToOne,
-        Traits\BusRegManyToOne,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Pdf document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id", nullable=false)
-     */
-    protected $pdfDocument;
-
-    /**
-     * Route document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=false)
-     */
-    protected $routeDocument;
-
-    /**
-     * Zip document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
-     */
-    protected $zipDocument;
 
     /**
      * File read
@@ -78,6 +48,26 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $fileRead;
 
     /**
+     * Pdf document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id", nullable=false)
+     */
+    protected $pdfDocument;
+
+    /**
+     * Route document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=false)
+     */
+    protected $routeDocument;
+
+    /**
      * Route seq
      *
      * @var int
@@ -85,6 +75,39 @@ class TxcInbox implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="route_seq", nullable=false)
      */
     protected $routeSeq;
+
+    /**
+     * Zip document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
+     */
+    protected $zipDocument;
+
+    /**
+     * Set the file read
+     *
+     * @param string $fileRead
+     * @return TxcInbox
+     */
+    public function setFileRead($fileRead)
+    {
+        $this->fileRead = $fileRead;
+
+        return $this;
+    }
+
+    /**
+     * Get the file read
+     *
+     * @return string
+     */
+    public function getFileRead()
+    {
+        return $this->fileRead;
+    }
 
     /**
      * Set the pdf document
@@ -133,52 +156,6 @@ class TxcInbox implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the zip document
-     *
-     * @param \Olcs\Db\Entity\Document $zipDocument
-     * @return TxcInbox
-     */
-    public function setZipDocument($zipDocument)
-    {
-        $this->zipDocument = $zipDocument;
-
-        return $this;
-    }
-
-    /**
-     * Get the zip document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getZipDocument()
-    {
-        return $this->zipDocument;
-    }
-
-    /**
-     * Set the file read
-     *
-     * @param string $fileRead
-     * @return TxcInbox
-     */
-    public function setFileRead($fileRead)
-    {
-        $this->fileRead = $fileRead;
-
-        return $this;
-    }
-
-    /**
-     * Get the file read
-     *
-     * @return string
-     */
-    public function getFileRead()
-    {
-        return $this->fileRead;
-    }
-
-    /**
      * Set the route seq
      *
      * @param int $routeSeq
@@ -199,5 +176,28 @@ class TxcInbox implements Interfaces\EntityInterface
     public function getRouteSeq()
     {
         return $this->routeSeq;
+    }
+
+    /**
+     * Set the zip document
+     *
+     * @param \Olcs\Db\Entity\Document $zipDocument
+     * @return TxcInbox
+     */
+    public function setZipDocument($zipDocument)
+    {
+        $this->zipDocument = $zipDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the zip document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getZipDocument()
+    {
+        return $this->zipDocument;
     }
 }

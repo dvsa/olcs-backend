@@ -27,98 +27,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\S4ManyToOne,
-        Traits\LastModifiedByManyToOne,
+        Traits\AdPlacedField,
+        Traits\AdPlacedDateField,
+        Traits\AdPlacedIn70Field,
         Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\ViAction1Field,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Ad placed
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
-     */
-    protected $adPlaced;
-
-    /**
-     * Ad placed in
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="ad_placed_in", length=70, nullable=true)
-     */
-    protected $adPlacedIn;
-
-    /**
-     * Ad placed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="ad_placed_date", nullable=true)
-     */
-    protected $adPlacedDate;
-
-    /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
-     */
-    protected $sufficientParking;
-
-    /**
-     * Permission
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="permission", nullable=false)
-     */
-    protected $permission;
-
-    /**
-     * No of trailers required
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_trailers_required", nullable=true)
-     */
-    protected $noOfTrailersRequired;
-
-    /**
-     * No of vehicles required
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_vehicles_required", nullable=true)
-     */
-    protected $noOfVehiclesRequired;
-
-    /**
-     * No of vehicles possessed
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
-     */
-    protected $noOfVehiclesPossessed;
-
-    /**
-     * No of trailers possessed
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
-     */
-    protected $noOfTrailersPossessed;
+        Traits\LicenceManyToOne,
+        Traits\NoOfTrailersRequiredField,
+        Traits\NoOfVehiclesRequiredField,
+        Traits\OperatingCentreManyToOne,
+        Traits\PermissionField,
+        Traits\S4ManyToOne,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Is interim
@@ -130,6 +55,24 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $isInterim;
 
     /**
+     * No of trailers possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
+     */
+    protected $noOfTrailersPossessed;
+
+    /**
+     * No of vehicles possessed
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
+     */
+    protected $noOfVehiclesPossessed;
+
+    /**
      * Publication appropriate
      *
      * @var string
@@ -139,187 +82,35 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     protected $publicationAppropriate;
 
     /**
-     * Set the ad placed
+     * Sufficient parking
      *
-     * @param string $adPlaced
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
+     */
+    protected $sufficientParking;
+
+    /**
+     * Set the is interim
+     *
+     * @param string $isInterim
      * @return LicenceOperatingCentre
      */
-    public function setAdPlaced($adPlaced)
+    public function setIsInterim($isInterim)
     {
-        $this->adPlaced = $adPlaced;
+        $this->isInterim = $isInterim;
 
         return $this;
     }
 
     /**
-     * Get the ad placed
+     * Get the is interim
      *
      * @return string
      */
-    public function getAdPlaced()
+    public function getIsInterim()
     {
-        return $this->adPlaced;
-    }
-
-    /**
-     * Set the ad placed in
-     *
-     * @param string $adPlacedIn
-     * @return LicenceOperatingCentre
-     */
-    public function setAdPlacedIn($adPlacedIn)
-    {
-        $this->adPlacedIn = $adPlacedIn;
-
-        return $this;
-    }
-
-    /**
-     * Get the ad placed in
-     *
-     * @return string
-     */
-    public function getAdPlacedIn()
-    {
-        return $this->adPlacedIn;
-    }
-
-    /**
-     * Set the ad placed date
-     *
-     * @param \DateTime $adPlacedDate
-     * @return LicenceOperatingCentre
-     */
-    public function setAdPlacedDate($adPlacedDate)
-    {
-        $this->adPlacedDate = $adPlacedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the ad placed date
-     *
-     * @return \DateTime
-     */
-    public function getAdPlacedDate()
-    {
-        return $this->adPlacedDate;
-    }
-
-    /**
-     * Set the sufficient parking
-     *
-     * @param string $sufficientParking
-     * @return LicenceOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
-     *
-     * @return string
-     */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
-    }
-
-    /**
-     * Set the permission
-     *
-     * @param string $permission
-     * @return LicenceOperatingCentre
-     */
-    public function setPermission($permission)
-    {
-        $this->permission = $permission;
-
-        return $this;
-    }
-
-    /**
-     * Get the permission
-     *
-     * @return string
-     */
-    public function getPermission()
-    {
-        return $this->permission;
-    }
-
-    /**
-     * Set the no of trailers required
-     *
-     * @param int $noOfTrailersRequired
-     * @return LicenceOperatingCentre
-     */
-    public function setNoOfTrailersRequired($noOfTrailersRequired)
-    {
-        $this->noOfTrailersRequired = $noOfTrailersRequired;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of trailers required
-     *
-     * @return int
-     */
-    public function getNoOfTrailersRequired()
-    {
-        return $this->noOfTrailersRequired;
-    }
-
-    /**
-     * Set the no of vehicles required
-     *
-     * @param int $noOfVehiclesRequired
-     * @return LicenceOperatingCentre
-     */
-    public function setNoOfVehiclesRequired($noOfVehiclesRequired)
-    {
-        $this->noOfVehiclesRequired = $noOfVehiclesRequired;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of vehicles required
-     *
-     * @return int
-     */
-    public function getNoOfVehiclesRequired()
-    {
-        return $this->noOfVehiclesRequired;
-    }
-
-    /**
-     * Set the no of vehicles possessed
-     *
-     * @param int $noOfVehiclesPossessed
-     * @return LicenceOperatingCentre
-     */
-    public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
-    {
-        $this->noOfVehiclesPossessed = $noOfVehiclesPossessed;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of vehicles possessed
-     *
-     * @return int
-     */
-    public function getNoOfVehiclesPossessed()
-    {
-        return $this->noOfVehiclesPossessed;
+        return $this->isInterim;
     }
 
     /**
@@ -346,26 +137,26 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is interim
+     * Set the no of vehicles possessed
      *
-     * @param string $isInterim
+     * @param int $noOfVehiclesPossessed
      * @return LicenceOperatingCentre
      */
-    public function setIsInterim($isInterim)
+    public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
     {
-        $this->isInterim = $isInterim;
+        $this->noOfVehiclesPossessed = $noOfVehiclesPossessed;
 
         return $this;
     }
 
     /**
-     * Get the is interim
+     * Get the no of vehicles possessed
      *
-     * @return string
+     * @return int
      */
-    public function getIsInterim()
+    public function getNoOfVehiclesPossessed()
     {
-        return $this->isInterim;
+        return $this->noOfVehiclesPossessed;
     }
 
     /**
@@ -389,5 +180,28 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getPublicationAppropriate()
     {
         return $this->publicationAppropriate;
+    }
+
+    /**
+     * Set the sufficient parking
+     *
+     * @param string $sufficientParking
+     * @return LicenceOperatingCentre
+     */
+    public function setSufficientParking($sufficientParking)
+    {
+        $this->sufficientParking = $sufficientParking;
+
+        return $this;
+    }
+
+    /**
+     * Get the sufficient parking
+     *
+     * @return string
+     */
+    public function getSufficientParking()
+    {
+        return $this->sufficientParking;
     }
 }

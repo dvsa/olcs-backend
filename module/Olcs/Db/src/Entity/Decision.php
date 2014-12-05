@@ -24,15 +24,16 @@ use Olcs\Db\Entity\Traits;
 class Decision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\GoodsOrPsvManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\SectionCode50Field,
-        Traits\Description255Field,
-        Traits\IsReadOnlyField,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\IdIdentity,
+        Traits\IsNiField,
+        Traits\IsReadOnlyField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode50Field,
         Traits\CustomVersionField;
 
     /**
@@ -40,18 +41,9 @@ class Decision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="decisions", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="decisions")
      */
     protected $pis;
-
-    /**
-     * Is ni
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
-     */
-    protected $isNi;
 
     /**
      * Initialise the collections
@@ -119,28 +111,5 @@ class Decision implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the is ni
-     *
-     * @param boolean $isNi
-     * @return Decision
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return boolean
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
     }
 }

@@ -26,16 +26,6 @@ class TaskAlphaSplit implements Interfaces\EntityInterface
         Traits\UserManyToOne;
 
     /**
-     * Task allocation rules
-     *
-     * @var \Olcs\Db\Entity\TaskAllocationRules
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskAllocationRules", fetch="LAZY")
-     * @ORM\JoinColumn(name="task_allocation_rules_id", referencedColumnName="id", nullable=false)
-     */
-    protected $taskAllocationRules;
-
-    /**
      * Split from inclusive
      *
      * @var string
@@ -54,27 +44,14 @@ class TaskAlphaSplit implements Interfaces\EntityInterface
     protected $splitToInclusive;
 
     /**
-     * Set the task allocation rules
+     * Task allocation rules
      *
-     * @param \Olcs\Db\Entity\TaskAllocationRules $taskAllocationRules
-     * @return TaskAlphaSplit
-     */
-    public function setTaskAllocationRules($taskAllocationRules)
-    {
-        $this->taskAllocationRules = $taskAllocationRules;
-
-        return $this;
-    }
-
-    /**
-     * Get the task allocation rules
+     * @var \Olcs\Db\Entity\TaskAllocationRules
      *
-     * @return \Olcs\Db\Entity\TaskAllocationRules
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskAllocationRules")
+     * @ORM\JoinColumn(name="task_allocation_rules_id", referencedColumnName="id", nullable=false)
      */
-    public function getTaskAllocationRules()
-    {
-        return $this->taskAllocationRules;
-    }
+    protected $taskAllocationRules;
 
     /**
      * Set the split from inclusive
@@ -120,5 +97,28 @@ class TaskAlphaSplit implements Interfaces\EntityInterface
     public function getSplitToInclusive()
     {
         return $this->splitToInclusive;
+    }
+
+    /**
+     * Set the task allocation rules
+     *
+     * @param \Olcs\Db\Entity\TaskAllocationRules $taskAllocationRules
+     * @return TaskAlphaSplit
+     */
+    public function setTaskAllocationRules($taskAllocationRules)
+    {
+        $this->taskAllocationRules = $taskAllocationRules;
+
+        return $this;
+    }
+
+    /**
+     * Get the task allocation rules
+     *
+     * @return \Olcs\Db\Entity\TaskAllocationRules
+     */
+    public function getTaskAllocationRules()
+    {
+        return $this->taskAllocationRules;
     }
 }

@@ -22,14 +22,15 @@ use Olcs\Db\Entity\Traits;
 class LegacyPiReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\SectionCode50Field,
-        Traits\Description255Field,
-        Traits\IsReadOnlyField,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\IdIdentity,
+        Traits\IsNiField,
+        Traits\IsReadOnlyField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode50Field,
         Traits\CustomVersionField;
 
     /**
@@ -40,15 +41,6 @@ class LegacyPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="goods_or_psv", length=3, nullable=false)
      */
     protected $goodsOrPsv;
-
-    /**
-     * Is ni
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
-     */
-    protected $isNi;
 
     /**
      * Is decision
@@ -80,29 +72,6 @@ class LegacyPiReason implements Interfaces\EntityInterface
     public function getGoodsOrPsv()
     {
         return $this->goodsOrPsv;
-    }
-
-    /**
-     * Set the is ni
-     *
-     * @param boolean $isNi
-     * @return LegacyPiReason
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return boolean
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
     }
 
     /**

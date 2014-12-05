@@ -26,13 +26,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManagerApplication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Action1Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOneAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -40,19 +41,10 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Action
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
-     */
-    protected $action;
 
     /**
      * Set the application
@@ -75,28 +67,5 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return TransportManagerApplication
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * Get the action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 }

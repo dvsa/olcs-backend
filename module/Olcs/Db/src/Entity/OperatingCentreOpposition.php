@@ -24,12 +24,12 @@ use Olcs\Db\Entity\Traits;
 class OperatingCentreOpposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\OperatingCentreManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -37,7 +37,7 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
      */
     protected $opposition;

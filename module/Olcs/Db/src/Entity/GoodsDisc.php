@@ -23,26 +23,17 @@ use Olcs\Db\Entity\Traits;
 class GoodsDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\DiscNo50Field,
-        Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsPrintingField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\DiscNo50Field,
+        Traits\IdIdentity,
+        Traits\IsInterimField,
+        Traits\IsPrintingField,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Licence vehicle
-     *
-     * @var \Olcs\Db\Entity\LicenceVehicle
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", fetch="LAZY", inversedBy="goodsDiscs")
-     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licenceVehicle;
 
     /**
      * Is copy
@@ -54,13 +45,14 @@ class GoodsDisc implements Interfaces\EntityInterface
     protected $isCopy = 0;
 
     /**
-     * Is interim
+     * Licence vehicle
      *
-     * @var string
+     * @var \Olcs\Db\Entity\LicenceVehicle
      *
-     * @ORM\Column(type="yesno", name="is_interim", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle", inversedBy="goodsDiscs")
+     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=false)
      */
-    protected $isInterim = 0;
+    protected $licenceVehicle;
 
     /**
      * Reprint required
@@ -70,29 +62,6 @@ class GoodsDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
-
-    /**
-     * Set the licence vehicle
-     *
-     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
-     * @return GoodsDisc
-     */
-    public function setLicenceVehicle($licenceVehicle)
-    {
-        $this->licenceVehicle = $licenceVehicle;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence vehicle
-     *
-     * @return \Olcs\Db\Entity\LicenceVehicle
-     */
-    public function getLicenceVehicle()
-    {
-        return $this->licenceVehicle;
-    }
 
     /**
      * Set the is copy
@@ -118,26 +87,26 @@ class GoodsDisc implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is interim
+     * Set the licence vehicle
      *
-     * @param string $isInterim
+     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
      * @return GoodsDisc
      */
-    public function setIsInterim($isInterim)
+    public function setLicenceVehicle($licenceVehicle)
     {
-        $this->isInterim = $isInterim;
+        $this->licenceVehicle = $licenceVehicle;
 
         return $this;
     }
 
     /**
-     * Get the is interim
+     * Get the licence vehicle
      *
-     * @return string
+     * @return \Olcs\Db\Entity\LicenceVehicle
      */
-    public function getIsInterim()
+    public function getLicenceVehicle()
     {
-        return $this->isInterim;
+        return $this->licenceVehicle;
     }
 
     /**

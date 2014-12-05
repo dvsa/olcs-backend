@@ -17,17 +17,8 @@ use Olcs\Db\Entity\Traits;
 class Printer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\Description255FieldAlt1;
-
-    /**
-     * Printer tray
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="printer_tray", length=45, nullable=true)
-     */
-    protected $printerTray;
+        Traits\Description255FieldAlt1,
+        Traits\IdIdentity;
 
     /**
      * Printer name
@@ -39,27 +30,13 @@ class Printer implements Interfaces\EntityInterface
     protected $printerName;
 
     /**
-     * Set the printer tray
+     * Printer tray
      *
-     * @param string $printerTray
-     * @return Printer
-     */
-    public function setPrinterTray($printerTray)
-    {
-        $this->printerTray = $printerTray;
-
-        return $this;
-    }
-
-    /**
-     * Get the printer tray
+     * @var string
      *
-     * @return string
+     * @ORM\Column(type="string", name="printer_tray", length=45, nullable=true)
      */
-    public function getPrinterTray()
-    {
-        return $this->printerTray;
-    }
+    protected $printerTray;
 
     /**
      * Set the printer name
@@ -82,5 +59,28 @@ class Printer implements Interfaces\EntityInterface
     public function getPrinterName()
     {
         return $this->printerName;
+    }
+
+    /**
+     * Set the printer tray
+     *
+     * @param string $printerTray
+     * @return Printer
+     */
+    public function setPrinterTray($printerTray)
+    {
+        $this->printerTray = $printerTray;
+
+        return $this;
+    }
+
+    /**
+     * Get the printer tray
+     *
+     * @return string
+     */
+    public function getPrinterTray()
+    {
+        return $this->printerTray;
     }
 }

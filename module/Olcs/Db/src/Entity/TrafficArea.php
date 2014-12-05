@@ -25,11 +25,11 @@ class TrafficArea implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ContactDetailsManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\Name70Field,
         Traits\CustomCreatedOnField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\Name70Field,
         Traits\CustomVersionField;
 
     /**
@@ -43,22 +43,22 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $id;
 
     /**
-     * Recipient
+     * Is england
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var boolean
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas", fetch="LAZY")
+     * @ORM\Column(type="boolean", name="is_england", nullable=false)
      */
-    protected $recipients;
+    protected $isEngland = 0;
 
     /**
-     * Txc name
+     * Is ni
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="string", name="txc_name", length=70, nullable=true)
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
      */
-    protected $txcName;
+    protected $isNi = 0;
 
     /**
      * Is scotland
@@ -79,22 +79,22 @@ class TrafficArea implements Interfaces\EntityInterface
     protected $isWales = 0;
 
     /**
-     * Is ni
+     * Recipient
      *
-     * @var boolean
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas")
      */
-    protected $isNi = 0;
+    protected $recipients;
 
     /**
-     * Is england
+     * Txc name
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_england", nullable=false)
+     * @ORM\Column(type="string", name="txc_name", length=70, nullable=true)
      */
-    protected $isEngland = 0;
+    protected $txcName;
 
     /**
      * Document
@@ -135,6 +135,98 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is england
+     *
+     * @param boolean $isEngland
+     * @return TrafficArea
+     */
+    public function setIsEngland($isEngland)
+    {
+        $this->isEngland = $isEngland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is england
+     *
+     * @return boolean
+     */
+    public function getIsEngland()
+    {
+        return $this->isEngland;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param boolean $isNi
+     * @return TrafficArea
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return boolean
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
+    }
+
+    /**
+     * Set the is scotland
+     *
+     * @param boolean $isScotland
+     * @return TrafficArea
+     */
+    public function setIsScotland($isScotland)
+    {
+        $this->isScotland = $isScotland;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scotland
+     *
+     * @return boolean
+     */
+    public function getIsScotland()
+    {
+        return $this->isScotland;
+    }
+
+    /**
+     * Set the is wales
+     *
+     * @param boolean $isWales
+     * @return TrafficArea
+     */
+    public function setIsWales($isWales)
+    {
+        $this->isWales = $isWales;
+
+        return $this;
+    }
+
+    /**
+     * Get the is wales
+     *
+     * @return boolean
+     */
+    public function getIsWales()
+    {
+        return $this->isWales;
     }
 
     /**
@@ -218,98 +310,6 @@ class TrafficArea implements Interfaces\EntityInterface
     public function getTxcName()
     {
         return $this->txcName;
-    }
-
-    /**
-     * Set the is scotland
-     *
-     * @param boolean $isScotland
-     * @return TrafficArea
-     */
-    public function setIsScotland($isScotland)
-    {
-        $this->isScotland = $isScotland;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scotland
-     *
-     * @return boolean
-     */
-    public function getIsScotland()
-    {
-        return $this->isScotland;
-    }
-
-    /**
-     * Set the is wales
-     *
-     * @param boolean $isWales
-     * @return TrafficArea
-     */
-    public function setIsWales($isWales)
-    {
-        $this->isWales = $isWales;
-
-        return $this;
-    }
-
-    /**
-     * Get the is wales
-     *
-     * @return boolean
-     */
-    public function getIsWales()
-    {
-        return $this->isWales;
-    }
-
-    /**
-     * Set the is ni
-     *
-     * @param boolean $isNi
-     * @return TrafficArea
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return boolean
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
-    }
-
-    /**
-     * Set the is england
-     *
-     * @param boolean $isEngland
-     * @return TrafficArea
-     */
-    public function setIsEngland($isEngland)
-    {
-        $this->isEngland = $isEngland;
-
-        return $this;
-    }
-
-    /**
-     * Get the is england
-     *
-     * @return boolean
-     */
-    public function getIsEngland()
-    {
-        return $this->isEngland;
     }
 
     /**

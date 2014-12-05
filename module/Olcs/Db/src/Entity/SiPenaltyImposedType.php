@@ -24,11 +24,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SiPenaltyImposedType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description255FieldAlt1,
         Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description255FieldAlt1,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
