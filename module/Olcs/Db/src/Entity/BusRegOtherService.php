@@ -23,12 +23,12 @@ use Olcs\Db\Entity\Traits;
 class BusRegOtherService implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ServiceNo70Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\ServiceNo70Field,
         Traits\CustomVersionField;
 
     /**

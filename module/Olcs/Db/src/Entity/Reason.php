@@ -24,25 +24,34 @@ use Olcs\Db\Entity\Traits;
 class Reason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
-        Traits\LastModifiedByManyToOne,
-        Traits\SectionCode50Field,
-        Traits\Description255Field,
-        Traits\IsNiFieldAlt1,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\IdIdentity,
+        Traits\IsNiFieldAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode50Field,
         Traits\CustomVersionField;
 
     /**
-     * Submission action
+     * Is propose to revoke
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var string
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="reasons")
+     * @ORM\Column(type="yesno", name="is_propose_to_revoke", nullable=false)
      */
-    protected $submissionActions;
+    protected $isProposeToRevoke;
+
+    /**
+     * Is read only
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
+     */
+    protected $isReadOnly;
 
     /**
      * Pi
@@ -63,22 +72,13 @@ class Reason implements Interfaces\EntityInterface
     protected $proposeToRevokes;
 
     /**
-     * Is read only
+     * Submission action
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="yesno", name="is_read_only", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="reasons")
      */
-    protected $isReadOnly;
-
-    /**
-     * Is propose to revoke
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_propose_to_revoke", nullable=false)
-     */
-    protected $isProposeToRevoke;
+    protected $submissionActions;
 
     /**
      * Initialise the collections
@@ -91,63 +91,49 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission action
+     * Set the is propose to revoke
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param string $isProposeToRevoke
      * @return Reason
      */
-    public function setSubmissionActions($submissionActions)
+    public function setIsProposeToRevoke($isProposeToRevoke)
     {
-        $this->submissionActions = $submissionActions;
+        $this->isProposeToRevoke = $isProposeToRevoke;
 
         return $this;
     }
 
     /**
-     * Get the submission actions
+     * Get the is propose to revoke
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return string
      */
-    public function getSubmissionActions()
+    public function getIsProposeToRevoke()
     {
-        return $this->submissionActions;
+        return $this->isProposeToRevoke;
     }
 
     /**
-     * Add a submission actions
+     * Set the is read only
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param string $isReadOnly
      * @return Reason
      */
-    public function addSubmissionActions($submissionActions)
+    public function setIsReadOnly($isReadOnly)
     {
-        if ($submissionActions instanceof ArrayCollection) {
-            $this->submissionActions = new ArrayCollection(
-                array_merge(
-                    $this->submissionActions->toArray(),
-                    $submissionActions->toArray()
-                )
-            );
-        } elseif (!$this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->add($submissionActions);
-        }
+        $this->isReadOnly = $isReadOnly;
 
         return $this;
     }
 
     /**
-     * Remove a submission actions
+     * Get the is read only
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
-     * @return Reason
+     * @return string
      */
-    public function removeSubmissionActions($submissionActions)
+    public function getIsReadOnly()
     {
-        if ($this->submissionActions->contains($submissionActions)) {
-            $this->submissionActions->removeElement($submissionActions);
-        }
-
-        return $this;
+        return $this->isReadOnly;
     }
 
     /**
@@ -271,48 +257,62 @@ class Reason implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is read only
+     * Set the submission action
      *
-     * @param string $isReadOnly
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
      * @return Reason
      */
-    public function setIsReadOnly($isReadOnly)
+    public function setSubmissionActions($submissionActions)
     {
-        $this->isReadOnly = $isReadOnly;
+        $this->submissionActions = $submissionActions;
 
         return $this;
     }
 
     /**
-     * Get the is read only
+     * Get the submission actions
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getIsReadOnly()
+    public function getSubmissionActions()
     {
-        return $this->isReadOnly;
+        return $this->submissionActions;
     }
 
     /**
-     * Set the is propose to revoke
+     * Add a submission actions
      *
-     * @param string $isProposeToRevoke
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
      * @return Reason
      */
-    public function setIsProposeToRevoke($isProposeToRevoke)
+    public function addSubmissionActions($submissionActions)
     {
-        $this->isProposeToRevoke = $isProposeToRevoke;
+        if ($submissionActions instanceof ArrayCollection) {
+            $this->submissionActions = new ArrayCollection(
+                array_merge(
+                    $this->submissionActions->toArray(),
+                    $submissionActions->toArray()
+                )
+            );
+        } elseif (!$this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->add($submissionActions);
+        }
 
         return $this;
     }
 
     /**
-     * Get the is propose to revoke
+     * Remove a submission actions
      *
-     * @return string
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Reason
      */
-    public function getIsProposeToRevoke()
+    public function removeSubmissionActions($submissionActions)
     {
-        return $this->isProposeToRevoke;
+        if ($this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->removeElement($submissionActions);
+        }
+
+        return $this;
     }
 }

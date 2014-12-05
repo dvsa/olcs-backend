@@ -29,15 +29,6 @@ class Sla implements Interfaces\EntityInterface
     protected $category;
 
     /**
-     * Field
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="field", length=32, nullable=true)
-     */
-    protected $field;
-
-    /**
      * Compare to
      *
      * @var string
@@ -72,6 +63,15 @@ class Sla implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="effective_to", nullable=true)
      */
     protected $effectiveTo;
+
+    /**
+     * Field
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="field", length=32, nullable=true)
+     */
+    protected $field;
 
     /**
      * Public holiday
@@ -112,29 +112,6 @@ class Sla implements Interfaces\EntityInterface
     public function getCategory()
     {
         return $this->category;
-    }
-
-    /**
-     * Set the field
-     *
-     * @param string $field
-     * @return Sla
-     */
-    public function setField($field)
-    {
-        $this->field = $field;
-
-        return $this;
-    }
-
-    /**
-     * Get the field
-     *
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->field;
     }
 
     /**
@@ -227,6 +204,29 @@ class Sla implements Interfaces\EntityInterface
     public function getEffectiveTo()
     {
         return $this->effectiveTo;
+    }
+
+    /**
+     * Set the field
+     *
+     * @param string $field
+     * @return Sla
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Get the field
+     *
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 
     /**

@@ -24,13 +24,13 @@ use Olcs\Db\Entity\Traits;
 class PiVenue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
-        Traits\Name70Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Name70Field,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**

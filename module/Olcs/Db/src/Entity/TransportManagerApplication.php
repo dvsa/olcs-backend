@@ -26,14 +26,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManagerApplication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Action1Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TransportManagerManyToOneAlt1,
-        Traits\Action1Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**

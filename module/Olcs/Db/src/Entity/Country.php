@@ -22,10 +22,10 @@ use Olcs\Db\Entity\Traits;
 class Country implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\Id8Identity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\Id8Identity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

@@ -24,11 +24,11 @@ use Olcs\Db\Entity\Traits;
 class SubmissionSectionComment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CommentField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CommentField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

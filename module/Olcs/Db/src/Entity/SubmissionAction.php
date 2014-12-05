@@ -27,23 +27,39 @@ use Olcs\Db\Entity\Traits;
 class SubmissionAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CommentField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Submission action status
+     * Is decision
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="yesno", name="is_decision", nullable=false)
      */
-    protected $submissionActionStatus;
+    protected $isDecision;
+
+    /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions")
+     * @ORM\JoinTable(name="submission_action_reason",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $reasons;
 
     /**
      * Recipient user
@@ -76,30 +92,14 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $submission;
 
     /**
-     * Reason
+     * Submission action status
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Reason", inversedBy="submissionActions")
-     * @ORM\JoinTable(name="submission_action_reason",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
      */
-    protected $reasons;
-
-    /**
-     * Is decision
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_decision", nullable=false)
-     */
-    protected $isDecision;
+    protected $submissionActionStatus;
 
     /**
      * Urgent
@@ -119,26 +119,86 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission action status
+     * Set the is decision
      *
-     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
+     * @param string $isDecision
      * @return SubmissionAction
      */
-    public function setSubmissionActionStatus($submissionActionStatus)
+    public function setIsDecision($isDecision)
     {
-        $this->submissionActionStatus = $submissionActionStatus;
+        $this->isDecision = $isDecision;
 
         return $this;
     }
 
     /**
-     * Get the submission action status
+     * Get the is decision
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getSubmissionActionStatus()
+    public function getIsDecision()
     {
-        return $this->submissionActionStatus;
+        return $this->isDecision;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
+    }
+
+    /**
+     * Add a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return SubmissionAction
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->removeElement($reasons);
+        }
+
+        return $this;
     }
 
     /**
@@ -211,86 +271,26 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the reason
+     * Set the submission action status
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
      * @return SubmissionAction
      */
-    public function setReasons($reasons)
+    public function setSubmissionActionStatus($submissionActionStatus)
     {
-        $this->reasons = $reasons;
+        $this->submissionActionStatus = $submissionActionStatus;
 
         return $this;
     }
 
     /**
-     * Get the reasons
+     * Get the submission action status
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getReasons()
+    public function getSubmissionActionStatus()
     {
-        return $this->reasons;
-    }
-
-    /**
-     * Add a reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
-     * @return SubmissionAction
-     */
-    public function addReasons($reasons)
-    {
-        if ($reasons instanceof ArrayCollection) {
-            $this->reasons = new ArrayCollection(
-                array_merge(
-                    $this->reasons->toArray(),
-                    $reasons->toArray()
-                )
-            );
-        } elseif (!$this->reasons->contains($reasons)) {
-            $this->reasons->add($reasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a reasons
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
-     * @return SubmissionAction
-     */
-    public function removeReasons($reasons)
-    {
-        if ($this->reasons->contains($reasons)) {
-            $this->reasons->removeElement($reasons);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the is decision
-     *
-     * @param string $isDecision
-     * @return SubmissionAction
-     */
-    public function setIsDecision($isDecision)
-    {
-        $this->isDecision = $isDecision;
-
-        return $this;
-    }
-
-    /**
-     * Get the is decision
-     *
-     * @return string
-     */
-    public function getIsDecision()
-    {
-        return $this->isDecision;
+        return $this->submissionActionStatus;
     }
 
     /**

@@ -25,24 +25,14 @@ use Olcs\Db\Entity\Traits;
 class Stay implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OutcomeManyToOne,
-        Traits\WithdrawnDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Stay type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="stay_type", referencedColumnName="id", nullable=false)
-     */
-    protected $stayType;
+        Traits\OutcomeManyToOne,
+        Traits\CustomVersionField,
+        Traits\WithdrawnDateField;
 
     /**
      * Case
@@ -53,15 +43,6 @@ class Stay implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
-    /**
-     * Request date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="request_date", nullable=true)
-     */
-    protected $requestDate;
 
     /**
      * Decision date
@@ -82,27 +63,23 @@ class Stay implements Interfaces\EntityInterface
     protected $notes;
 
     /**
-     * Set the stay type
+     * Request date
      *
-     * @param \Olcs\Db\Entity\RefData $stayType
-     * @return Stay
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="request_date", nullable=true)
      */
-    public function setStayType($stayType)
-    {
-        $this->stayType = $stayType;
-
-        return $this;
-    }
+    protected $requestDate;
 
     /**
-     * Get the stay type
+     * Stay type
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="stay_type", referencedColumnName="id", nullable=false)
      */
-    public function getStayType()
-    {
-        return $this->stayType;
-    }
+    protected $stayType;
 
     /**
      * Set the case
@@ -125,29 +102,6 @@ class Stay implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the request date
-     *
-     * @param \DateTime $requestDate
-     * @return Stay
-     */
-    public function setRequestDate($requestDate)
-    {
-        $this->requestDate = $requestDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the request date
-     *
-     * @return \DateTime
-     */
-    public function getRequestDate()
-    {
-        return $this->requestDate;
     }
 
     /**
@@ -194,5 +148,51 @@ class Stay implements Interfaces\EntityInterface
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Set the request date
+     *
+     * @param \DateTime $requestDate
+     * @return Stay
+     */
+    public function setRequestDate($requestDate)
+    {
+        $this->requestDate = $requestDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the request date
+     *
+     * @return \DateTime
+     */
+    public function getRequestDate()
+    {
+        return $this->requestDate;
+    }
+
+    /**
+     * Set the stay type
+     *
+     * @param \Olcs\Db\Entity\RefData $stayType
+     * @return Stay
+     */
+    public function setStayType($stayType)
+    {
+        $this->stayType = $stayType;
+
+        return $this;
+    }
+
+    /**
+     * Get the stay type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getStayType()
+    {
+        return $this->stayType;
     }
 }

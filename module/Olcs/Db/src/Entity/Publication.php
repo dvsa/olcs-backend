@@ -24,15 +24,33 @@ use Olcs\Db\Entity\Traits;
 class Publication implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOne,
-        Traits\PublicationNoField,
-        Traits\PubType3Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\PubType3Field,
+        Traits\PublicationNoField,
+        Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
+
+    /**
+     * Doc name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="doc_name", length=255, nullable=true)
+     */
+    protected $docName;
+
+    /**
+     * Pub date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="pub_date", nullable=true)
+     */
+    protected $pubDate;
 
     /**
      * Pub status
@@ -45,44 +63,26 @@ class Publication implements Interfaces\EntityInterface
     protected $pubStatus;
 
     /**
-     * Pub date
+     * Set the doc name
      *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="pub_date", nullable=true)
-     */
-    protected $pubDate;
-
-    /**
-     * Doc name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="doc_name", length=255, nullable=true)
-     */
-    protected $docName;
-
-    /**
-     * Set the pub status
-     *
-     * @param \Olcs\Db\Entity\RefData $pubStatus
+     * @param string $docName
      * @return Publication
      */
-    public function setPubStatus($pubStatus)
+    public function setDocName($docName)
     {
-        $this->pubStatus = $pubStatus;
+        $this->docName = $docName;
 
         return $this;
     }
 
     /**
-     * Get the pub status
+     * Get the doc name
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getPubStatus()
+    public function getDocName()
     {
-        return $this->pubStatus;
+        return $this->docName;
     }
 
     /**
@@ -109,25 +109,25 @@ class Publication implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the doc name
+     * Set the pub status
      *
-     * @param string $docName
+     * @param \Olcs\Db\Entity\RefData $pubStatus
      * @return Publication
      */
-    public function setDocName($docName)
+    public function setPubStatus($pubStatus)
     {
-        $this->docName = $docName;
+        $this->pubStatus = $pubStatus;
 
         return $this;
     }
 
     /**
-     * Get the doc name
+     * Get the pub status
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getDocName()
+    public function getPubStatus()
     {
-        return $this->docName;
+        return $this->pubStatus;
     }
 }

@@ -1045,7 +1045,9 @@ class AlignEntitiesToSchema
                     unset($extraConfig['type']);
                 }
 
-                $fields[] = array_merge($fieldConfig, $extraConfig);
+                $name = $this->formatPropertyName($fieldConfig);
+
+                $fields[$name] = array_merge($fieldConfig, $extraConfig);
             }
         }
 
@@ -1146,10 +1148,13 @@ class AlignEntitiesToSchema
                     $fieldConfig['config']['@attributes']['inversed-by'] = $fieldConfig['inversedBy']['property'];
                 }
 
-                $fields[] = $fieldConfig;
+                $name = $this->formatPropertyName($fieldConfig);
+
+                $fields[$name] = $fieldConfig;
             }
         }
 
+        ksort($fields, SORT_NATURAL);
         ksort($this->inverseFields, SORT_NATURAL);
 
         return $fields;

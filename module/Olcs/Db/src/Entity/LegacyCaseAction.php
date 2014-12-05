@@ -17,8 +17,8 @@ use Olcs\Db\Entity\Traits;
 class LegacyCaseAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\Description45Field;
+        Traits\Description45Field,
+        Traits\IdIdentity;
 
     /**
      * Is driver

@@ -25,13 +25,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SiCategoryType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\Description255FieldAlt1,
         Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\SiCategoryManyToOne,
-        Traits\Description255FieldAlt1,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\SiCategoryManyToOne,
         Traits\CustomVersionField;
 }

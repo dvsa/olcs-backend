@@ -24,14 +24,14 @@ use Olcs\Db\Entity\Traits;
 class LocalAuthority implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
+        Traits\CustomCreatedOnField,
         Traits\Description255Field,
         Traits\EmailAddress45Field,
-        Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -44,15 +44,6 @@ class LocalAuthority implements Interfaces\EntityInterface
     protected $busRegs;
 
     /**
-     * Txc name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="txc_name", length=255, nullable=true)
-     */
-    protected $txcName;
-
-    /**
      * Naptan code
      *
      * @var string
@@ -60,6 +51,15 @@ class LocalAuthority implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="naptan_code", length=3, nullable=true)
      */
     protected $naptanCode;
+
+    /**
+     * Txc name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="txc_name", length=255, nullable=true)
+     */
+    protected $txcName;
 
     /**
      * Initialise the collections
@@ -130,29 +130,6 @@ class LocalAuthority implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the txc name
-     *
-     * @param string $txcName
-     * @return LocalAuthority
-     */
-    public function setTxcName($txcName)
-    {
-        $this->txcName = $txcName;
-
-        return $this;
-    }
-
-    /**
-     * Get the txc name
-     *
-     * @return string
-     */
-    public function getTxcName()
-    {
-        return $this->txcName;
-    }
-
-    /**
      * Set the naptan code
      *
      * @param string $naptanCode
@@ -173,5 +150,28 @@ class LocalAuthority implements Interfaces\EntityInterface
     public function getNaptanCode()
     {
         return $this->naptanCode;
+    }
+
+    /**
+     * Set the txc name
+     *
+     * @param string $txcName
+     * @return LocalAuthority
+     */
+    public function setTxcName($txcName)
+    {
+        $this->txcName = $txcName;
+
+        return $this;
+    }
+
+    /**
+     * Get the txc name
+     *
+     * @return string
+     */
+    public function getTxcName()
+    {
+        return $this->txcName;
     }
 }

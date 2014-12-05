@@ -22,18 +22,8 @@ use Olcs\Db\Entity\Traits;
 class PrintQueue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\DocumentManyToOne;
-
-    /**
-     * Team printer
-     *
-     * @var \Olcs\Db\Entity\TeamPrinter
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TeamPrinter")
-     * @ORM\JoinColumn(name="team_printer_id", referencedColumnName="id", nullable=false)
-     */
-    protected $teamPrinter;
+        Traits\DocumentManyToOne,
+        Traits\IdIdentity;
 
     /**
      * Added datetime
@@ -45,27 +35,14 @@ class PrintQueue implements Interfaces\EntityInterface
     protected $addedDatetime;
 
     /**
-     * Set the team printer
+     * Team printer
      *
-     * @param \Olcs\Db\Entity\TeamPrinter $teamPrinter
-     * @return PrintQueue
-     */
-    public function setTeamPrinter($teamPrinter)
-    {
-        $this->teamPrinter = $teamPrinter;
-
-        return $this;
-    }
-
-    /**
-     * Get the team printer
+     * @var \Olcs\Db\Entity\TeamPrinter
      *
-     * @return \Olcs\Db\Entity\TeamPrinter
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TeamPrinter")
+     * @ORM\JoinColumn(name="team_printer_id", referencedColumnName="id", nullable=false)
      */
-    public function getTeamPrinter()
-    {
-        return $this->teamPrinter;
-    }
+    protected $teamPrinter;
 
     /**
      * Set the added datetime
@@ -88,5 +65,28 @@ class PrintQueue implements Interfaces\EntityInterface
     public function getAddedDatetime()
     {
         return $this->addedDatetime;
+    }
+
+    /**
+     * Set the team printer
+     *
+     * @param \Olcs\Db\Entity\TeamPrinter $teamPrinter
+     * @return PrintQueue
+     */
+    public function setTeamPrinter($teamPrinter)
+    {
+        $this->teamPrinter = $teamPrinter;
+
+        return $this;
+    }
+
+    /**
+     * Get the team printer
+     *
+     * @return \Olcs\Db\Entity\TeamPrinter
+     */
+    public function getTeamPrinter()
+    {
+        return $this->teamPrinter;
     }
 }

@@ -26,23 +26,22 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class OrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Person
+     * Added date
      *
-     * @var \Olcs\Db\Entity\Person
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="string", name="added_date", length=45, nullable=true)
      */
-    protected $person;
+    protected $addedDate;
 
     /**
      * Organisation
@@ -55,13 +54,14 @@ class OrganisationPerson implements Interfaces\EntityInterface
     protected $organisation;
 
     /**
-     * Added date
+     * Person
      *
-     * @var string
+     * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\Column(type="string", name="added_date", length=45, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
-    protected $addedDate;
+    protected $person;
 
     /**
      * Position
@@ -73,26 +73,26 @@ class OrganisationPerson implements Interfaces\EntityInterface
     protected $position;
 
     /**
-     * Set the person
+     * Set the added date
      *
-     * @param \Olcs\Db\Entity\Person $person
+     * @param string $addedDate
      * @return OrganisationPerson
      */
-    public function setPerson($person)
+    public function setAddedDate($addedDate)
     {
-        $this->person = $person;
+        $this->addedDate = $addedDate;
 
         return $this;
     }
 
     /**
-     * Get the person
+     * Get the added date
      *
-     * @return \Olcs\Db\Entity\Person
+     * @return string
      */
-    public function getPerson()
+    public function getAddedDate()
     {
-        return $this->person;
+        return $this->addedDate;
     }
 
     /**
@@ -119,26 +119,26 @@ class OrganisationPerson implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the added date
+     * Set the person
      *
-     * @param string $addedDate
+     * @param \Olcs\Db\Entity\Person $person
      * @return OrganisationPerson
      */
-    public function setAddedDate($addedDate)
+    public function setPerson($person)
     {
-        $this->addedDate = $addedDate;
+        $this->person = $person;
 
         return $this;
     }
 
     /**
-     * Get the added date
+     * Get the person
      *
-     * @return string
+     * @return \Olcs\Db\Entity\Person
      */
-    public function getAddedDate()
+    public function getPerson()
     {
-        return $this->addedDate;
+        return $this->person;
     }
 
     /**

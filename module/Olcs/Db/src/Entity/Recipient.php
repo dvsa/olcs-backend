@@ -25,66 +25,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Recipient implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Traffic area
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients")
-     * @ORM\JoinTable(name="recipient_traffic_area",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $trafficAreas;
-
-    /**
-     * Send app decision
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
-     */
-    protected $sendAppDecision = 0;
-
-    /**
-     * Send notices procs
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
-     */
-    protected $sendNoticesProcs = 0;
-
-    /**
-     * Is police
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_police", nullable=false)
-     */
-    protected $isPolice = 0;
-
-    /**
-     * Is objector
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_objector", nullable=false)
-     */
-    protected $isObjector = 0;
 
     /**
      * Contact name
@@ -105,11 +52,202 @@ class Recipient implements Interfaces\EntityInterface
     protected $emailAddress;
 
     /**
+     * Is objector
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_objector", nullable=false)
+     */
+    protected $isObjector = 0;
+
+    /**
+     * Is police
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_police", nullable=false)
+     */
+    protected $isPolice = 0;
+
+    /**
+     * Send app decision
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
+     */
+    protected $sendAppDecision = 0;
+
+    /**
+     * Send notices procs
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
+     */
+    protected $sendNoticesProcs = 0;
+
+    /**
+     * Traffic area
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="recipients")
+     * @ORM\JoinTable(name="recipient_traffic_area",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $trafficAreas;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->trafficAreas = new ArrayCollection();
+    }
+
+    /**
+     * Set the contact name
+     *
+     * @param string $contactName
+     * @return Recipient
+     */
+    public function setContactName($contactName)
+    {
+        $this->contactName = $contactName;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact name
+     *
+     * @return string
+     */
+    public function getContactName()
+    {
+        return $this->contactName;
+    }
+
+    /**
+     * Set the email address
+     *
+     * @param string $emailAddress
+     * @return Recipient
+     */
+    public function setEmailAddress($emailAddress)
+    {
+        $this->emailAddress = $emailAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the email address
+     *
+     * @return string
+     */
+    public function getEmailAddress()
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * Set the is objector
+     *
+     * @param string $isObjector
+     * @return Recipient
+     */
+    public function setIsObjector($isObjector)
+    {
+        $this->isObjector = $isObjector;
+
+        return $this;
+    }
+
+    /**
+     * Get the is objector
+     *
+     * @return string
+     */
+    public function getIsObjector()
+    {
+        return $this->isObjector;
+    }
+
+    /**
+     * Set the is police
+     *
+     * @param string $isPolice
+     * @return Recipient
+     */
+    public function setIsPolice($isPolice)
+    {
+        $this->isPolice = $isPolice;
+
+        return $this;
+    }
+
+    /**
+     * Get the is police
+     *
+     * @return string
+     */
+    public function getIsPolice()
+    {
+        return $this->isPolice;
+    }
+
+    /**
+     * Set the send app decision
+     *
+     * @param string $sendAppDecision
+     * @return Recipient
+     */
+    public function setSendAppDecision($sendAppDecision)
+    {
+        $this->sendAppDecision = $sendAppDecision;
+
+        return $this;
+    }
+
+    /**
+     * Get the send app decision
+     *
+     * @return string
+     */
+    public function getSendAppDecision()
+    {
+        return $this->sendAppDecision;
+    }
+
+    /**
+     * Set the send notices procs
+     *
+     * @param string $sendNoticesProcs
+     * @return Recipient
+     */
+    public function setSendNoticesProcs($sendNoticesProcs)
+    {
+        $this->sendNoticesProcs = $sendNoticesProcs;
+
+        return $this;
+    }
+
+    /**
+     * Get the send notices procs
+     *
+     * @return string
+     */
+    public function getSendNoticesProcs()
+    {
+        return $this->sendNoticesProcs;
     }
 
     /**
@@ -170,143 +308,5 @@ class Recipient implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the send app decision
-     *
-     * @param string $sendAppDecision
-     * @return Recipient
-     */
-    public function setSendAppDecision($sendAppDecision)
-    {
-        $this->sendAppDecision = $sendAppDecision;
-
-        return $this;
-    }
-
-    /**
-     * Get the send app decision
-     *
-     * @return string
-     */
-    public function getSendAppDecision()
-    {
-        return $this->sendAppDecision;
-    }
-
-    /**
-     * Set the send notices procs
-     *
-     * @param string $sendNoticesProcs
-     * @return Recipient
-     */
-    public function setSendNoticesProcs($sendNoticesProcs)
-    {
-        $this->sendNoticesProcs = $sendNoticesProcs;
-
-        return $this;
-    }
-
-    /**
-     * Get the send notices procs
-     *
-     * @return string
-     */
-    public function getSendNoticesProcs()
-    {
-        return $this->sendNoticesProcs;
-    }
-
-    /**
-     * Set the is police
-     *
-     * @param string $isPolice
-     * @return Recipient
-     */
-    public function setIsPolice($isPolice)
-    {
-        $this->isPolice = $isPolice;
-
-        return $this;
-    }
-
-    /**
-     * Get the is police
-     *
-     * @return string
-     */
-    public function getIsPolice()
-    {
-        return $this->isPolice;
-    }
-
-    /**
-     * Set the is objector
-     *
-     * @param string $isObjector
-     * @return Recipient
-     */
-    public function setIsObjector($isObjector)
-    {
-        $this->isObjector = $isObjector;
-
-        return $this;
-    }
-
-    /**
-     * Get the is objector
-     *
-     * @return string
-     */
-    public function getIsObjector()
-    {
-        return $this->isObjector;
-    }
-
-    /**
-     * Set the contact name
-     *
-     * @param string $contactName
-     * @return Recipient
-     */
-    public function setContactName($contactName)
-    {
-        $this->contactName = $contactName;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact name
-     *
-     * @return string
-     */
-    public function getContactName()
-    {
-        return $this->contactName;
-    }
-
-    /**
-     * Set the email address
-     *
-     * @param string $emailAddress
-     * @return Recipient
-     */
-    public function setEmailAddress($emailAddress)
-    {
-        $this->emailAddress = $emailAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the email address
-     *
-     * @return string
-     */
-    public function getEmailAddress()
-    {
-        return $this->emailAddress;
     }
 }

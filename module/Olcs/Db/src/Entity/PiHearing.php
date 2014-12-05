@@ -26,18 +26,72 @@ use Olcs\Db\Entity\Traits;
 class PiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\PresidingTcManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\PiVenueManyToOne,
-        Traits\HearingDateField,
-        Traits\PiVenueOther255Field,
-        Traits\WitnessesField,
-        Traits\IsCancelledField,
         Traits\CustomCreatedOnField,
+        Traits\HearingDateField,
+        Traits\IdIdentity,
+        Traits\IsCancelledField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\PiVenueManyToOne,
+        Traits\PiVenueOther255Field,
+        Traits\PresidingTcManyToOne,
+        Traits\CustomVersionField,
+        Traits\WitnessesField;
+
+    /**
+     * Adjourned date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="adjourned_date", nullable=true)
+     */
+    protected $adjournedDate;
+
+    /**
+     * Adjourned reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="adjourned_reason", length=4000, nullable=true)
+     */
+    protected $adjournedReason;
+
+    /**
+     * Cancelled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancelled_date", nullable=true)
+     */
+    protected $cancelledDate;
+
+    /**
+     * Cancelled reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cancelled_reason", length=4000, nullable=true)
+     */
+    protected $cancelledReason;
+
+    /**
+     * Details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="details", length=4000, nullable=true)
+     */
+    protected $details;
+
+    /**
+     * Is adjourned
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
+     */
+    protected $isAdjourned = 0;
 
     /**
      * Pi
@@ -69,58 +123,142 @@ class PiHearing implements Interfaces\EntityInterface
     protected $presidingTcOther;
 
     /**
-     * Cancelled reason
+     * Set the adjourned date
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="cancelled_reason", length=4000, nullable=true)
+     * @param \DateTime $adjournedDate
+     * @return PiHearing
      */
-    protected $cancelledReason;
+    public function setAdjournedDate($adjournedDate)
+    {
+        $this->adjournedDate = $adjournedDate;
+
+        return $this;
+    }
 
     /**
-     * Cancelled date
+     * Get the adjourned date
      *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="cancelled_date", nullable=true)
+     * @return \DateTime
      */
-    protected $cancelledDate;
+    public function getAdjournedDate()
+    {
+        return $this->adjournedDate;
+    }
 
     /**
-     * Is adjourned
+     * Set the adjourned reason
      *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_adjourned", nullable=false)
+     * @param string $adjournedReason
+     * @return PiHearing
      */
-    protected $isAdjourned = 0;
+    public function setAdjournedReason($adjournedReason)
+    {
+        $this->adjournedReason = $adjournedReason;
+
+        return $this;
+    }
 
     /**
-     * Adjourned date
+     * Get the adjourned reason
      *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="adjourned_date", nullable=true)
+     * @return string
      */
-    protected $adjournedDate;
+    public function getAdjournedReason()
+    {
+        return $this->adjournedReason;
+    }
 
     /**
-     * Adjourned reason
+     * Set the cancelled date
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="adjourned_reason", length=4000, nullable=true)
+     * @param \DateTime $cancelledDate
+     * @return PiHearing
      */
-    protected $adjournedReason;
+    public function setCancelledDate($cancelledDate)
+    {
+        $this->cancelledDate = $cancelledDate;
+
+        return $this;
+    }
 
     /**
-     * Details
+     * Get the cancelled date
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="details", length=4000, nullable=true)
+     * @return \DateTime
      */
-    protected $details;
+    public function getCancelledDate()
+    {
+        return $this->cancelledDate;
+    }
+
+    /**
+     * Set the cancelled reason
+     *
+     * @param string $cancelledReason
+     * @return PiHearing
+     */
+    public function setCancelledReason($cancelledReason)
+    {
+        $this->cancelledReason = $cancelledReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancelled reason
+     *
+     * @return string
+     */
+    public function getCancelledReason()
+    {
+        return $this->cancelledReason;
+    }
+
+    /**
+     * Set the details
+     *
+     * @param string $details
+     * @return PiHearing
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    /**
+     * Get the details
+     *
+     * @return string
+     */
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    /**
+     * Set the is adjourned
+     *
+     * @param string $isAdjourned
+     * @return PiHearing
+     */
+    public function setIsAdjourned($isAdjourned)
+    {
+        $this->isAdjourned = $isAdjourned;
+
+        return $this;
+    }
+
+    /**
+     * Get the is adjourned
+     *
+     * @return string
+     */
+    public function getIsAdjourned()
+    {
+        return $this->isAdjourned;
+    }
 
     /**
      * Set the pi
@@ -189,143 +327,5 @@ class PiHearing implements Interfaces\EntityInterface
     public function getPresidingTcOther()
     {
         return $this->presidingTcOther;
-    }
-
-    /**
-     * Set the cancelled reason
-     *
-     * @param string $cancelledReason
-     * @return PiHearing
-     */
-    public function setCancelledReason($cancelledReason)
-    {
-        $this->cancelledReason = $cancelledReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the cancelled reason
-     *
-     * @return string
-     */
-    public function getCancelledReason()
-    {
-        return $this->cancelledReason;
-    }
-
-    /**
-     * Set the cancelled date
-     *
-     * @param \DateTime $cancelledDate
-     * @return PiHearing
-     */
-    public function setCancelledDate($cancelledDate)
-    {
-        $this->cancelledDate = $cancelledDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the cancelled date
-     *
-     * @return \DateTime
-     */
-    public function getCancelledDate()
-    {
-        return $this->cancelledDate;
-    }
-
-    /**
-     * Set the is adjourned
-     *
-     * @param string $isAdjourned
-     * @return PiHearing
-     */
-    public function setIsAdjourned($isAdjourned)
-    {
-        $this->isAdjourned = $isAdjourned;
-
-        return $this;
-    }
-
-    /**
-     * Get the is adjourned
-     *
-     * @return string
-     */
-    public function getIsAdjourned()
-    {
-        return $this->isAdjourned;
-    }
-
-    /**
-     * Set the adjourned date
-     *
-     * @param \DateTime $adjournedDate
-     * @return PiHearing
-     */
-    public function setAdjournedDate($adjournedDate)
-    {
-        $this->adjournedDate = $adjournedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the adjourned date
-     *
-     * @return \DateTime
-     */
-    public function getAdjournedDate()
-    {
-        return $this->adjournedDate;
-    }
-
-    /**
-     * Set the adjourned reason
-     *
-     * @param string $adjournedReason
-     * @return PiHearing
-     */
-    public function setAdjournedReason($adjournedReason)
-    {
-        $this->adjournedReason = $adjournedReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the adjourned reason
-     *
-     * @return string
-     */
-    public function getAdjournedReason()
-    {
-        return $this->adjournedReason;
-    }
-
-    /**
-     * Set the details
-     *
-     * @param string $details
-     * @return PiHearing
-     */
-    public function setDetails($details)
-    {
-        $this->details = $details;
-
-        return $this;
-    }
-
-    /**
-     * Get the details
-     *
-     * @return string
-     */
-    public function getDetails()
-    {
-        return $this->details;
     }
 }

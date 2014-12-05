@@ -26,25 +26,24 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Vehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Vrm20Field,
-        Traits\ViAction1Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\ViAction1Field,
+        Traits\Vrm20Field;
 
     /**
-     * Psv type
+     * Certificate no
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="psv_type", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="certificate_no", length=50, nullable=true)
      */
-    protected $psvType;
+    protected $certificateNo;
 
     /**
      * Is novelty
@@ -56,6 +55,15 @@ class Vehicle implements Interfaces\EntityInterface
     protected $isNovelty;
 
     /**
+     * Make model
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="make_model", length=100, nullable=true)
+     */
+    protected $makeModel;
+
+    /**
      * Plated weight
      *
      * @var int
@@ -65,13 +73,14 @@ class Vehicle implements Interfaces\EntityInterface
     protected $platedWeight;
 
     /**
-     * Certificate no
+     * Psv type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="certificate_no", length=50, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="psv_type", referencedColumnName="id", nullable=true)
      */
-    protected $certificateNo;
+    protected $psvType;
 
     /**
      * Section26
@@ -110,15 +119,6 @@ class Vehicle implements Interfaces\EntityInterface
     protected $section26Suspend;
 
     /**
-     * Make model
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="make_model", length=100, nullable=true)
-     */
-    protected $makeModel;
-
-    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -136,26 +136,26 @@ class Vehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the psv type
+     * Set the certificate no
      *
-     * @param \Olcs\Db\Entity\RefData $psvType
+     * @param string $certificateNo
      * @return Vehicle
      */
-    public function setPsvType($psvType)
+    public function setCertificateNo($certificateNo)
     {
-        $this->psvType = $psvType;
+        $this->certificateNo = $certificateNo;
 
         return $this;
     }
 
     /**
-     * Get the psv type
+     * Get the certificate no
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getPsvType()
+    public function getCertificateNo()
     {
-        return $this->psvType;
+        return $this->certificateNo;
     }
 
     /**
@@ -182,6 +182,29 @@ class Vehicle implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the make model
+     *
+     * @param string $makeModel
+     * @return Vehicle
+     */
+    public function setMakeModel($makeModel)
+    {
+        $this->makeModel = $makeModel;
+
+        return $this;
+    }
+
+    /**
+     * Get the make model
+     *
+     * @return string
+     */
+    public function getMakeModel()
+    {
+        return $this->makeModel;
+    }
+
+    /**
      * Set the plated weight
      *
      * @param int $platedWeight
@@ -205,26 +228,26 @@ class Vehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the certificate no
+     * Set the psv type
      *
-     * @param string $certificateNo
+     * @param \Olcs\Db\Entity\RefData $psvType
      * @return Vehicle
      */
-    public function setCertificateNo($certificateNo)
+    public function setPsvType($psvType)
     {
-        $this->certificateNo = $certificateNo;
+        $this->psvType = $psvType;
 
         return $this;
     }
 
     /**
-     * Get the certificate no
+     * Get the psv type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getCertificateNo()
+    public function getPsvType()
     {
-        return $this->certificateNo;
+        return $this->psvType;
     }
 
     /**
@@ -317,29 +340,6 @@ class Vehicle implements Interfaces\EntityInterface
     public function getSection26Suspend()
     {
         return $this->section26Suspend;
-    }
-
-    /**
-     * Set the make model
-     *
-     * @param string $makeModel
-     * @return Vehicle
-     */
-    public function setMakeModel($makeModel)
-    {
-        $this->makeModel = $makeModel;
-
-        return $this;
-    }
-
-    /**
-     * Get the make model
-     *
-     * @return string
-     */
-    public function getMakeModel()
-    {
-        return $this->makeModel;
     }
 
     /**
