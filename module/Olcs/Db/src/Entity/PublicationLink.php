@@ -39,8 +39,6 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\ApplicationManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
-        Traits\PublicationNoField,
-        Traits\PubType3Field,
         Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -112,15 +110,6 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="text3", nullable=true)
      */
     protected $text3;
-
-    /**
-     * Orig pub date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="orig_pub_date", nullable=true)
-     */
-    protected $origPubDate;
 
     /**
      * Set the publication section
@@ -281,28 +270,5 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getText3()
     {
         return $this->text3;
-    }
-
-    /**
-     * Set the orig pub date
-     *
-     * @param \DateTime $origPubDate
-     * @return PublicationLink
-     */
-    public function setOrigPubDate($origPubDate)
-    {
-        $this->origPubDate = $origPubDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the orig pub date
-     *
-     * @return \DateTime
-     */
-    public function getOrigPubDate()
-    {
-        return $this->origPubDate;
     }
 }
