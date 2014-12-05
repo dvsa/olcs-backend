@@ -2293,35 +2293,6 @@ LOCK TABLES `event_history_type` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ext_translations`
---
-
-DROP TABLE IF EXISTS `ext_translations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ext_translations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `locale` varchar(8) NOT NULL,
-  `object_class` varchar(255) NOT NULL,
-  `field` varchar(32) NOT NULL,
-  `foreign_key` varchar(64) NOT NULL,
-  `content` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `lookup_unique_idx` (`locale`,`object_class`,`field`,`foreign_key`),
-  KEY `translations_lookup_idx` (`locale`,`object_class`,`foreign_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ext_translations`
---
-
-LOCK TABLES `ext_translations` WRITE;
-/*!40000 ALTER TABLE `ext_translations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ext_translations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `fee`
 --
 
