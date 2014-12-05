@@ -16,9 +16,9 @@ trait WitnessesField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="witnesses", nullable=false)
+     * @ORM\Column(type="integer", name="witnesses", nullable=true)
      */
-    protected $witnesses = 0;
+    protected $witnesses;
 
     /**
      * Set the witnesses

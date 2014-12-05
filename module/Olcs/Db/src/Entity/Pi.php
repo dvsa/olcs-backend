@@ -45,7 +45,8 @@ class Pi implements Interfaces\EntityInterface
         Traits\IsCancelledField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\WitnessesField;
 
     /**
      * Agreed by tc
@@ -265,15 +266,6 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="tc_written_reason_date", nullable=true)
      */
     protected $tcWrittenReasonDate;
-
-    /**
-     * Witnesses
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="witnesses", nullable=true)
-     */
-    protected $witnesses;
 
     /**
      * Written outcome
@@ -915,29 +907,6 @@ class Pi implements Interfaces\EntityInterface
     public function getTcWrittenReasonDate()
     {
         return $this->tcWrittenReasonDate;
-    }
-
-    /**
-     * Set the witnesses
-     *
-     * @param int $witnesses
-     * @return Pi
-     */
-    public function setWitnesses($witnesses)
-    {
-        $this->witnesses = $witnesses;
-
-        return $this;
-    }
-
-    /**
-     * Get the witnesses
-     *
-     * @return int
-     */
-    public function getWitnesses()
-    {
-        return $this->witnesses;
     }
 
     /**

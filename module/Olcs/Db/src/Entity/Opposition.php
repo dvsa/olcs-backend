@@ -21,19 +21,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_opposition_opposer1_idx", columns={"opposer_id"}),
  *        @ORM\Index(name="fk_opposition_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_opposition_ref_data1", columns={"opposition_type"})
+ *        @ORM\Index(name="fk_opposition_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_opposition_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"})
  *    }
  * )
  */
 class Opposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\Notes4000Field,
         Traits\CustomVersionField;
 
@@ -81,7 +85,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_valid", nullable=false)
      */
-    protected $isValid;
+    protected $isValid = 0;
 
     /**
      * Is withdrawn
