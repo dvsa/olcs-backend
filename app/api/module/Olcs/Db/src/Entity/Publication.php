@@ -29,8 +29,6 @@ class Publication implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\PubType3Field,
-        Traits\PublicationNoField,
         Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
 
@@ -61,6 +59,24 @@ class Publication implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="pub_status", referencedColumnName="id", nullable=false)
      */
     protected $pubStatus;
+
+    /**
+     * Pub type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="pub_type", length=3, nullable=false)
+     */
+    protected $pubType;
+
+    /**
+     * Publication no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="publication_no", nullable=false)
+     */
+    protected $publicationNo;
 
     /**
      * Set the doc name
@@ -129,5 +145,51 @@ class Publication implements Interfaces\EntityInterface
     public function getPubStatus()
     {
         return $this->pubStatus;
+    }
+
+    /**
+     * Set the pub type
+     *
+     * @param string $pubType
+     * @return Publication
+     */
+    public function setPubType($pubType)
+    {
+        $this->pubType = $pubType;
+
+        return $this;
+    }
+
+    /**
+     * Get the pub type
+     *
+     * @return string
+     */
+    public function getPubType()
+    {
+        return $this->pubType;
+    }
+
+    /**
+     * Set the publication no
+     *
+     * @param int $publicationNo
+     * @return Publication
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication no
+     *
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
     }
 }

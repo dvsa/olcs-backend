@@ -41,19 +41,8 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
-        Traits\PubType3Field,
-        Traits\PublicationNoField,
         Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Orig pub date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="orig_pub_date", nullable=true)
-     */
-    protected $origPubDate;
 
     /**
      * Pi
@@ -121,29 +110,6 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
-
-    /**
-     * Set the orig pub date
-     *
-     * @param \DateTime $origPubDate
-     * @return PublicationLink
-     */
-    public function setOrigPubDate($origPubDate)
-    {
-        $this->origPubDate = $origPubDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the orig pub date
-     *
-     * @return \DateTime
-     */
-    public function getOrigPubDate()
-    {
-        return $this->origPubDate;
-    }
 
     /**
      * Set the pi
