@@ -48,7 +48,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="message_body", nullable=true)
+     * @ORM\Column(type="text", name="message_body", length=16777215, nullable=true)
      */
     protected $messageBody;
 

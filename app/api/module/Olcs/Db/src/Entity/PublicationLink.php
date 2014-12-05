@@ -35,10 +35,10 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CreatedByManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\ApplicationManyToOne,
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\PublicationNoField,
         Traits\PubType3Field,
         Traits\CustomDeletedDateField,
@@ -47,14 +47,14 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Publication section
+     * Publication
      *
-     * @var \Olcs\Db\Entity\PublicationSection
+     * @var \Olcs\Db\Entity\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection")
-     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication")
+     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
-    protected $publicationSection;
+    protected $publication;
 
     /**
      * Tm pi hearing
@@ -77,21 +77,21 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $pi;
 
     /**
-     * Publication
+     * Publication section
      *
-     * @var \Olcs\Db\Entity\Publication
+     * @var \Olcs\Db\Entity\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Publication")
-     * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationSection")
+     * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
-    protected $publication;
+    protected $publicationSection;
 
     /**
      * Text1
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text1", nullable=true)
+     * @ORM\Column(type="text", name="text1", length=65535, nullable=true)
      */
     protected $text1;
 
@@ -100,7 +100,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text2", nullable=true)
+     * @ORM\Column(type="text", name="text2", length=65535, nullable=true)
      */
     protected $text2;
 
@@ -109,7 +109,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="text3", nullable=true)
+     * @ORM\Column(type="text", name="text3", length=65535, nullable=true)
      */
     protected $text3;
 
@@ -123,26 +123,26 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $origPubDate;
 
     /**
-     * Set the publication section
+     * Set the publication
      *
-     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
+     * @param \Olcs\Db\Entity\Publication $publication
      * @return PublicationLink
      */
-    public function setPublicationSection($publicationSection)
+    public function setPublication($publication)
     {
-        $this->publicationSection = $publicationSection;
+        $this->publication = $publication;
 
         return $this;
     }
 
     /**
-     * Get the publication section
+     * Get the publication
      *
-     * @return \Olcs\Db\Entity\PublicationSection
+     * @return \Olcs\Db\Entity\Publication
      */
-    public function getPublicationSection()
+    public function getPublication()
     {
-        return $this->publicationSection;
+        return $this->publication;
     }
 
     /**
@@ -192,26 +192,26 @@ class PublicationLink implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the publication
+     * Set the publication section
      *
-     * @param \Olcs\Db\Entity\Publication $publication
+     * @param \Olcs\Db\Entity\PublicationSection $publicationSection
      * @return PublicationLink
      */
-    public function setPublication($publication)
+    public function setPublicationSection($publicationSection)
     {
-        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
 
         return $this;
     }
 
     /**
-     * Get the publication
+     * Get the publication section
      *
-     * @return \Olcs\Db\Entity\Publication
+     * @return \Olcs\Db\Entity\PublicationSection
      */
-    public function getPublication()
+    public function getPublicationSection()
     {
-        return $this->publication;
+        return $this->publicationSection;
     }
 
     /**

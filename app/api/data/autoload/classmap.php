@@ -521,6 +521,8 @@ return array(
     'Entity' => false,
     'Gedmo\Mapping\Annotation\SoftDeleteable' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
         . '/Annotation/SoftDeleteable.php',
+    'Gedmo\Mapping\Annotation\Translatable' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
+        . '/Annotation/Translatable.php',
     'Gedmo\Mapping\Driver' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping/Driver.php',
     'Gedmo\Mapping\Driver\AbstractAnnotationDriver' => $rootPath . '/vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping'
         . '/Driver/AbstractAnnotationDriver.php',
