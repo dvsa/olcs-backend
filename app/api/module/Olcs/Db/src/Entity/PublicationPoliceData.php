@@ -26,25 +26,15 @@ use Olcs\Db\Entity\Traits;
 class PublicationPoliceData implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\BirthDateField,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\FamilyName35Field,
+        Traits\Forename35Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Forename35Field,
-        Traits\FamilyName35Field,
-        Traits\BirthDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Publication link
-     *
-     * @var \Olcs\Db\Entity\PublicationLink
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationLink")
-     * @ORM\JoinColumn(name="publication_link_id", referencedColumnName="id", nullable=false)
-     */
-    protected $publicationLink;
 
     /**
      * Olbs dob
@@ -65,27 +55,14 @@ class PublicationPoliceData implements Interfaces\EntityInterface
     protected $olbsId;
 
     /**
-     * Set the publication link
+     * Publication link
      *
-     * @param \Olcs\Db\Entity\PublicationLink $publicationLink
-     * @return PublicationPoliceData
-     */
-    public function setPublicationLink($publicationLink)
-    {
-        $this->publicationLink = $publicationLink;
-
-        return $this;
-    }
-
-    /**
-     * Get the publication link
+     * @var \Olcs\Db\Entity\PublicationLink
      *
-     * @return \Olcs\Db\Entity\PublicationLink
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PublicationLink")
+     * @ORM\JoinColumn(name="publication_link_id", referencedColumnName="id", nullable=false)
      */
-    public function getPublicationLink()
-    {
-        return $this->publicationLink;
-    }
+    protected $publicationLink;
 
     /**
      * Set the olbs dob
@@ -131,5 +108,28 @@ class PublicationPoliceData implements Interfaces\EntityInterface
     public function getOlbsId()
     {
         return $this->olbsId;
+    }
+
+    /**
+     * Set the publication link
+     *
+     * @param \Olcs\Db\Entity\PublicationLink $publicationLink
+     * @return PublicationPoliceData
+     */
+    public function setPublicationLink($publicationLink)
+    {
+        $this->publicationLink = $publicationLink;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication link
+     *
+     * @return \Olcs\Db\Entity\PublicationLink
+     */
+    public function getPublicationLink()
+    {
+        return $this->publicationLink;
     }
 }

@@ -27,24 +27,24 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\S4ManyToOne,
-        Traits\OperatingCentreManyToOne,
         Traits\Action1Field,
         Traits\AdPlacedField,
-        Traits\AdPlacedIn70Field,
         Traits\AdPlacedDateField,
-        Traits\PermissionField,
+        Traits\AdPlacedIn70Field,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\IsInterimField,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
-        Traits\ViAction1Field,
-        Traits\CustomDeletedDateField,
-        Traits\IsInterimField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\OperatingCentreManyToOne,
+        Traits\PermissionField,
+        Traits\S4ManyToOne,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Application

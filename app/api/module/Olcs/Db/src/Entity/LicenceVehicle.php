@@ -29,37 +29,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ApplicationManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ApplicationManyToOne,
-        Traits\ReceivedDateField,
-        Traits\CustomDeletedDateField,
-        Traits\ViAction1Field,
-        Traits\SpecifiedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Vehicle
-     *
-     * @var \Olcs\Db\Entity\Vehicle
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
-     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
-     */
-    protected $vehicle;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licence;
+        Traits\ReceivedDateField,
+        Traits\SpecifiedDateField,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Interim application
@@ -70,6 +50,16 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
      */
     protected $interimApplication;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceVehicles")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Removal date
@@ -88,6 +78,16 @@ class LicenceVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="removal_letter_seed_date", nullable=true)
      */
     protected $removalLetterSeedDate;
+
+    /**
+     * Vehicle
+     *
+     * @var \Olcs\Db\Entity\Vehicle
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Vehicle", inversedBy="licenceVehicles")
+     * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
+     */
+    protected $vehicle;
 
     /**
      * Warning letter seed date
@@ -126,26 +126,26 @@ class LicenceVehicle implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the vehicle
+     * Set the interim application
      *
-     * @param \Olcs\Db\Entity\Vehicle $vehicle
+     * @param \Olcs\Db\Entity\Application $interimApplication
      * @return LicenceVehicle
      */
-    public function setVehicle($vehicle)
+    public function setInterimApplication($interimApplication)
     {
-        $this->vehicle = $vehicle;
+        $this->interimApplication = $interimApplication;
 
         return $this;
     }
 
     /**
-     * Get the vehicle
+     * Get the interim application
      *
-     * @return \Olcs\Db\Entity\Vehicle
+     * @return \Olcs\Db\Entity\Application
      */
-    public function getVehicle()
+    public function getInterimApplication()
     {
-        return $this->vehicle;
+        return $this->interimApplication;
     }
 
     /**
@@ -169,29 +169,6 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the interim application
-     *
-     * @param \Olcs\Db\Entity\Application $interimApplication
-     * @return LicenceVehicle
-     */
-    public function setInterimApplication($interimApplication)
-    {
-        $this->interimApplication = $interimApplication;
-
-        return $this;
-    }
-
-    /**
-     * Get the interim application
-     *
-     * @return \Olcs\Db\Entity\Application
-     */
-    public function getInterimApplication()
-    {
-        return $this->interimApplication;
     }
 
     /**
@@ -238,6 +215,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function getRemovalLetterSeedDate()
     {
         return $this->removalLetterSeedDate;
+    }
+
+    /**
+     * Set the vehicle
+     *
+     * @param \Olcs\Db\Entity\Vehicle $vehicle
+     * @return LicenceVehicle
+     */
+    public function setVehicle($vehicle)
+    {
+        $this->vehicle = $vehicle;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicle
+     *
+     * @return \Olcs\Db\Entity\Vehicle
+     */
+    public function getVehicle()
+    {
+        return $this->vehicle;
     }
 
     /**

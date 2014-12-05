@@ -20,22 +20,13 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
         Traits\IdIdentity;
 
     /**
-     * Requested on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="requested_on", nullable=true)
-     */
-    protected $requestedOn;
-
-    /**
-     * Request type
+     * Ip address
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="request_type", length=255, nullable=true)
+     * @ORM\Column(type="string", name="ip_address", length=255, nullable=true)
      */
-    protected $requestType;
+    protected $ipAddress;
 
     /**
      * Request error
@@ -47,58 +38,44 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     protected $requestError;
 
     /**
-     * Ip address
+     * Request type
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="ip_address", length=255, nullable=true)
+     * @ORM\Column(type="string", name="request_type", length=255, nullable=true)
      */
-    protected $ipAddress;
+    protected $requestType;
 
     /**
-     * Set the requested on
+     * Requested on
      *
-     * @param \DateTime $requestedOn
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="requested_on", nullable=true)
+     */
+    protected $requestedOn;
+
+    /**
+     * Set the ip address
+     *
+     * @param string $ipAddress
      * @return CompaniesHouseRequest
      */
-    public function setRequestedOn($requestedOn)
+    public function setIpAddress($ipAddress)
     {
-        $this->requestedOn = $requestedOn;
+        $this->ipAddress = $ipAddress;
 
         return $this;
     }
 
     /**
-     * Get the requested on
-     *
-     * @return \DateTime
-     */
-    public function getRequestedOn()
-    {
-        return $this->requestedOn;
-    }
-
-    /**
-     * Set the request type
-     *
-     * @param string $requestType
-     * @return CompaniesHouseRequest
-     */
-    public function setRequestType($requestType)
-    {
-        $this->requestType = $requestType;
-
-        return $this;
-    }
-
-    /**
-     * Get the request type
+     * Get the ip address
      *
      * @return string
      */
-    public function getRequestType()
+    public function getIpAddress()
     {
-        return $this->requestType;
+        return $this->ipAddress;
     }
 
     /**
@@ -125,25 +102,48 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the ip address
+     * Set the request type
      *
-     * @param string $ipAddress
+     * @param string $requestType
      * @return CompaniesHouseRequest
      */
-    public function setIpAddress($ipAddress)
+    public function setRequestType($requestType)
     {
-        $this->ipAddress = $ipAddress;
+        $this->requestType = $requestType;
 
         return $this;
     }
 
     /**
-     * Get the ip address
+     * Get the request type
      *
      * @return string
      */
-    public function getIpAddress()
+    public function getRequestType()
     {
-        return $this->ipAddress;
+        return $this->requestType;
+    }
+
+    /**
+     * Set the requested on
+     *
+     * @param \DateTime $requestedOn
+     * @return CompaniesHouseRequest
+     */
+    public function setRequestedOn($requestedOn)
+    {
+        $this->requestedOn = $requestedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the requested on
+     *
+     * @return \DateTime
+     */
+    public function getRequestedOn()
+    {
+        return $this->requestedOn;
     }
 }

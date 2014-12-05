@@ -25,13 +25,13 @@ use Olcs\Db\Entity\Traits;
 class IrfoPermitStock implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\StatusManyToOne,
-        Traits\IrfoGvPermitManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\IrfoGvPermitManyToOne,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\StatusManyToOne,
         Traits\CustomVersionField;
 
     /**

@@ -27,22 +27,12 @@ use Olcs\Db\Entity\Traits;
 class DocTemplateBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Doc template
-     *
-     * @var \Olcs\Db\Entity\DocTemplate
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", inversedBy="docTemplateBookmarks")
-     * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docTemplate;
 
     /**
      * Doc bookmark
@@ -55,27 +45,14 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
     protected $docBookmark;
 
     /**
-     * Set the doc template
+     * Doc template
      *
-     * @param \Olcs\Db\Entity\DocTemplate $docTemplate
-     * @return DocTemplateBookmark
-     */
-    public function setDocTemplate($docTemplate)
-    {
-        $this->docTemplate = $docTemplate;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc template
+     * @var \Olcs\Db\Entity\DocTemplate
      *
-     * @return \Olcs\Db\Entity\DocTemplate
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate", inversedBy="docTemplateBookmarks")
+     * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
      */
-    public function getDocTemplate()
-    {
-        return $this->docTemplate;
-    }
+    protected $docTemplate;
 
     /**
      * Set the doc bookmark
@@ -98,5 +75,28 @@ class DocTemplateBookmark implements Interfaces\EntityInterface
     public function getDocBookmark()
     {
         return $this->docBookmark;
+    }
+
+    /**
+     * Set the doc template
+     *
+     * @param \Olcs\Db\Entity\DocTemplate $docTemplate
+     * @return DocTemplateBookmark
+     */
+    public function setDocTemplate($docTemplate)
+    {
+        $this->docTemplate = $docTemplate;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc template
+     *
+     * @return \Olcs\Db\Entity\DocTemplate
+     */
+    public function getDocTemplate()
+    {
+        return $this->docTemplate;
     }
 }

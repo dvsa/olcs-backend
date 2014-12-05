@@ -34,47 +34,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ConditionUndertaking implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
+        Traits\Action1Field,
         Traits\ApplicationManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
-        Traits\Action1Field,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Lic condition variation
-     *
-     * @var \Olcs\Db\Entity\ConditionUndertaking
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
-     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $licConditionVariation;
-
-    /**
-     * Approval user
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $approvalUser;
-
-    /**
-     * Condition type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
-     */
-    protected $conditionType;
 
     /**
      * Added via
@@ -87,14 +57,14 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $addedVia;
 
     /**
-     * Case
+     * Approval user
      *
-     * @var \Olcs\Db\Entity\Cases
+     * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="conditionUndertakings")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="approval_user_id", referencedColumnName="id", nullable=true)
      */
-    protected $case;
+    protected $approvalUser;
 
     /**
      * Attached to
@@ -107,21 +77,33 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $attachedTo;
 
     /**
-     * S4
+     * Case
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions")
-     * @ORM\JoinTable(name="s4_condition",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
-    protected $s4s;
+    protected $case;
+
+    /**
+     * Condition type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
+     */
+    protected $conditionType;
+
+    /**
+     * Is approved
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     */
+    protected $isApproved = 0;
 
     /**
      * Is draft
@@ -142,13 +124,14 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $isFulfilled = 0;
 
     /**
-     * Is approved
+     * Lic condition variation
      *
-     * @var string
+     * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
+     * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
-    protected $isApproved = 0;
+    protected $licConditionVariation;
 
     /**
      * Notes
@@ -160,80 +143,28 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $notes;
 
     /**
+     * S4
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\S4", inversedBy="conditions")
+     * @ORM\JoinTable(name="s4_condition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $s4s;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->s4s = new ArrayCollection();
-    }
-
-    /**
-     * Set the lic condition variation
-     *
-     * @param \Olcs\Db\Entity\ConditionUndertaking $licConditionVariation
-     * @return ConditionUndertaking
-     */
-    public function setLicConditionVariation($licConditionVariation)
-    {
-        $this->licConditionVariation = $licConditionVariation;
-
-        return $this;
-    }
-
-    /**
-     * Get the lic condition variation
-     *
-     * @return \Olcs\Db\Entity\ConditionUndertaking
-     */
-    public function getLicConditionVariation()
-    {
-        return $this->licConditionVariation;
-    }
-
-    /**
-     * Set the approval user
-     *
-     * @param \Olcs\Db\Entity\User $approvalUser
-     * @return ConditionUndertaking
-     */
-    public function setApprovalUser($approvalUser)
-    {
-        $this->approvalUser = $approvalUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the approval user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getApprovalUser()
-    {
-        return $this->approvalUser;
-    }
-
-    /**
-     * Set the condition type
-     *
-     * @param \Olcs\Db\Entity\RefData $conditionType
-     * @return ConditionUndertaking
-     */
-    public function setConditionType($conditionType)
-    {
-        $this->conditionType = $conditionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the condition type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getConditionType()
-    {
-        return $this->conditionType;
     }
 
     /**
@@ -260,26 +191,26 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case
+     * Set the approval user
      *
-     * @param \Olcs\Db\Entity\Cases $case
+     * @param \Olcs\Db\Entity\User $approvalUser
      * @return ConditionUndertaking
      */
-    public function setCase($case)
+    public function setApprovalUser($approvalUser)
     {
-        $this->case = $case;
+        $this->approvalUser = $approvalUser;
 
         return $this;
     }
 
     /**
-     * Get the case
+     * Get the approval user
      *
-     * @return \Olcs\Db\Entity\Cases
+     * @return \Olcs\Db\Entity\User
      */
-    public function getCase()
+    public function getApprovalUser()
     {
-        return $this->case;
+        return $this->approvalUser;
     }
 
     /**
@@ -303,6 +234,167 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getAttachedTo()
     {
         return $this->attachedTo;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return ConditionUndertaking
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * Set the condition type
+     *
+     * @param \Olcs\Db\Entity\RefData $conditionType
+     * @return ConditionUndertaking
+     */
+    public function setConditionType($conditionType)
+    {
+        $this->conditionType = $conditionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getConditionType()
+    {
+        return $this->conditionType;
+    }
+
+    /**
+     * Set the is approved
+     *
+     * @param string $isApproved
+     * @return ConditionUndertaking
+     */
+    public function setIsApproved($isApproved)
+    {
+        $this->isApproved = $isApproved;
+
+        return $this;
+    }
+
+    /**
+     * Get the is approved
+     *
+     * @return string
+     */
+    public function getIsApproved()
+    {
+        return $this->isApproved;
+    }
+
+    /**
+     * Set the is draft
+     *
+     * @param string $isDraft
+     * @return ConditionUndertaking
+     */
+    public function setIsDraft($isDraft)
+    {
+        $this->isDraft = $isDraft;
+
+        return $this;
+    }
+
+    /**
+     * Get the is draft
+     *
+     * @return string
+     */
+    public function getIsDraft()
+    {
+        return $this->isDraft;
+    }
+
+    /**
+     * Set the is fulfilled
+     *
+     * @param string $isFulfilled
+     * @return ConditionUndertaking
+     */
+    public function setIsFulfilled($isFulfilled)
+    {
+        $this->isFulfilled = $isFulfilled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is fulfilled
+     *
+     * @return string
+     */
+    public function getIsFulfilled()
+    {
+        return $this->isFulfilled;
+    }
+
+    /**
+     * Set the lic condition variation
+     *
+     * @param \Olcs\Db\Entity\ConditionUndertaking $licConditionVariation
+     * @return ConditionUndertaking
+     */
+    public function setLicConditionVariation($licConditionVariation)
+    {
+        $this->licConditionVariation = $licConditionVariation;
+
+        return $this;
+    }
+
+    /**
+     * Get the lic condition variation
+     *
+     * @return \Olcs\Db\Entity\ConditionUndertaking
+     */
+    public function getLicConditionVariation()
+    {
+        return $this->licConditionVariation;
+    }
+
+    /**
+     * Set the notes
+     *
+     * @param string $notes
+     * @return ConditionUndertaking
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 
     /**
@@ -363,97 +455,5 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the is draft
-     *
-     * @param string $isDraft
-     * @return ConditionUndertaking
-     */
-    public function setIsDraft($isDraft)
-    {
-        $this->isDraft = $isDraft;
-
-        return $this;
-    }
-
-    /**
-     * Get the is draft
-     *
-     * @return string
-     */
-    public function getIsDraft()
-    {
-        return $this->isDraft;
-    }
-
-    /**
-     * Set the is fulfilled
-     *
-     * @param string $isFulfilled
-     * @return ConditionUndertaking
-     */
-    public function setIsFulfilled($isFulfilled)
-    {
-        $this->isFulfilled = $isFulfilled;
-
-        return $this;
-    }
-
-    /**
-     * Get the is fulfilled
-     *
-     * @return string
-     */
-    public function getIsFulfilled()
-    {
-        return $this->isFulfilled;
-    }
-
-    /**
-     * Set the is approved
-     *
-     * @param string $isApproved
-     * @return ConditionUndertaking
-     */
-    public function setIsApproved($isApproved)
-    {
-        $this->isApproved = $isApproved;
-
-        return $this;
-    }
-
-    /**
-     * Get the is approved
-     *
-     * @return string
-     */
-    public function getIsApproved()
-    {
-        return $this->isApproved;
-    }
-
-    /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return ConditionUndertaking
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
     }
 }

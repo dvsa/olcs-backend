@@ -30,48 +30,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmPiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\VenueManyToOne,
-        Traits\PresidingTcManyToOneAlt1,
-        Traits\CaseManyToOneAlt1,
-        Traits\WitnessesField,
         Traits\AgreedDateField,
-        Traits\CustomDeletedDateField,
+        Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $type;
-
-    /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
-
-    /**
-     * Presided by
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
-     */
-    protected $presidedBy;
+        Traits\PresidingTcManyToOneAlt1,
+        Traits\VenueManyToOne,
+        Traits\CustomVersionField,
+        Traits\WitnessesField;
 
     /**
      * Adjourned date
@@ -92,13 +62,24 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $cancelledDate;
 
     /**
-     * Scheduled on
+     * Presided by
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="presided_by", referencedColumnName="id", nullable=true)
      */
-    protected $scheduledOn;
+    protected $presidedBy;
+
+    /**
+     * Reason
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
+     */
+    protected $reason;
 
     /**
      * Rescheduled on
@@ -110,73 +91,23 @@ class TmPiHearing implements Interfaces\EntityInterface
     protected $rescheduledOn;
 
     /**
-     * Set the type
+     * Scheduled on
      *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return TmPiHearing
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
      */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
+    protected $scheduledOn;
 
     /**
-     * Get the type
+     * Type
      *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set the reason
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @param \Olcs\Db\Entity\RefData $reason
-     * @return TmPiHearing
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
-     * Set the presided by
-     *
-     * @param \Olcs\Db\Entity\RefData $presidedBy
-     * @return TmPiHearing
-     */
-    public function setPresidedBy($presidedBy)
-    {
-        $this->presidedBy = $presidedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the presided by
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPresidedBy()
-    {
-        return $this->presidedBy;
-    }
+    protected $type;
 
     /**
      * Set the adjourned date
@@ -225,26 +156,49 @@ class TmPiHearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the scheduled on
+     * Set the presided by
      *
-     * @param \DateTime $scheduledOn
+     * @param \Olcs\Db\Entity\RefData $presidedBy
      * @return TmPiHearing
      */
-    public function setScheduledOn($scheduledOn)
+    public function setPresidedBy($presidedBy)
     {
-        $this->scheduledOn = $scheduledOn;
+        $this->presidedBy = $presidedBy;
 
         return $this;
     }
 
     /**
-     * Get the scheduled on
+     * Get the presided by
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getScheduledOn()
+    public function getPresidedBy()
     {
-        return $this->scheduledOn;
+        return $this->presidedBy;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Olcs\Db\Entity\RefData $reason
+     * @return TmPiHearing
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get the reason
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     /**
@@ -268,5 +222,51 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getRescheduledOn()
     {
         return $this->rescheduledOn;
+    }
+
+    /**
+     * Set the scheduled on
+     *
+     * @param \DateTime $scheduledOn
+     * @return TmPiHearing
+     */
+    public function setScheduledOn($scheduledOn)
+    {
+        $this->scheduledOn = $scheduledOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the scheduled on
+     *
+     * @return \DateTime
+     */
+    public function getScheduledOn()
+    {
+        return $this->scheduledOn;
+    }
+
+    /**
+     * Set the type
+     *
+     * @param \Olcs\Db\Entity\RefData $type
+     * @return TmPiHearing
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

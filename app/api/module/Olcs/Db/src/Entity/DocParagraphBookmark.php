@@ -27,22 +27,12 @@ use Olcs\Db\Entity\Traits;
 class DocParagraphBookmark implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Doc paragraph
-     *
-     * @var \Olcs\Db\Entity\DocParagraph
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph")
-     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
-     */
-    protected $docParagraph;
 
     /**
      * Doc bookmark
@@ -55,27 +45,14 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     protected $docBookmark;
 
     /**
-     * Set the doc paragraph
+     * Doc paragraph
      *
-     * @param \Olcs\Db\Entity\DocParagraph $docParagraph
-     * @return DocParagraphBookmark
-     */
-    public function setDocParagraph($docParagraph)
-    {
-        $this->docParagraph = $docParagraph;
-
-        return $this;
-    }
-
-    /**
-     * Get the doc paragraph
+     * @var \Olcs\Db\Entity\DocParagraph
      *
-     * @return \Olcs\Db\Entity\DocParagraph
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocParagraph")
+     * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
-    public function getDocParagraph()
-    {
-        return $this->docParagraph;
-    }
+    protected $docParagraph;
 
     /**
      * Set the doc bookmark
@@ -98,5 +75,28 @@ class DocParagraphBookmark implements Interfaces\EntityInterface
     public function getDocBookmark()
     {
         return $this->docBookmark;
+    }
+
+    /**
+     * Set the doc paragraph
+     *
+     * @param \Olcs\Db\Entity\DocParagraph $docParagraph
+     * @return DocParagraphBookmark
+     */
+    public function setDocParagraph($docParagraph)
+    {
+        $this->docParagraph = $docParagraph;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc paragraph
+     *
+     * @return \Olcs\Db\Entity\DocParagraph
+     */
+    public function getDocParagraph()
+    {
+        return $this->docParagraph;
     }
 }

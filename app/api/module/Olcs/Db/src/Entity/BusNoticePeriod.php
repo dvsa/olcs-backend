@@ -22,12 +22,21 @@ use Olcs\Db\Entity\Traits;
 class BusNoticePeriod implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Cancellation period
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="cancellation_period", nullable=false)
+     */
+    protected $cancellationPeriod;
 
     /**
      * Notice area
@@ -48,13 +57,27 @@ class BusNoticePeriod implements Interfaces\EntityInterface
     protected $standardPeriod;
 
     /**
-     * Cancellation period
+     * Set the cancellation period
      *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="cancellation_period", nullable=false)
+     * @param int $cancellationPeriod
+     * @return BusNoticePeriod
      */
-    protected $cancellationPeriod;
+    public function setCancellationPeriod($cancellationPeriod)
+    {
+        $this->cancellationPeriod = $cancellationPeriod;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancellation period
+     *
+     * @return int
+     */
+    public function getCancellationPeriod()
+    {
+        return $this->cancellationPeriod;
+    }
 
     /**
      * Set the notice area
@@ -100,28 +123,5 @@ class BusNoticePeriod implements Interfaces\EntityInterface
     public function getStandardPeriod()
     {
         return $this->standardPeriod;
-    }
-
-    /**
-     * Set the cancellation period
-     *
-     * @param int $cancellationPeriod
-     * @return BusNoticePeriod
-     */
-    public function setCancellationPeriod($cancellationPeriod)
-    {
-        $this->cancellationPeriod = $cancellationPeriod;
-
-        return $this;
-    }
-
-    /**
-     * Get the cancellation period
-     *
-     * @return int
-     */
-    public function getCancellationPeriod()
-    {
-        return $this->cancellationPeriod;
     }
 }

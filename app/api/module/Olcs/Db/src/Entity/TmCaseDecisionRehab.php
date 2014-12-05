@@ -26,13 +26,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmCaseDecisionRehab implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\TmCaseDecisionManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\TmCaseDecisionManyToOne,
         Traits\CustomVersionField;
 
     /**

@@ -30,26 +30,25 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
         Traits\ApplicationManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\CloseDateField,
-        Traits\CustomDeletedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
-     * Erru case type
+     * Annual test history
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="annual_test_history", length=4000, nullable=true)
      */
-    protected $erruCaseType;
+    protected $annualTestHistory;
 
     /**
      * Case type
@@ -60,33 +59,6 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=false)
      */
     protected $caseType;
-
-    /**
-     * Licence
-     *
-     * @var \Olcs\Db\Entity\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="cases")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
-     */
-    protected $licence;
-
-    /**
-     * Legacy offence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases")
-     * @ORM\JoinTable(name="legacy_case_offence",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="legacy_offence_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $legacyOffences;
 
     /**
      * Category
@@ -106,22 +78,13 @@ class Cases implements Interfaces\EntityInterface
     protected $categorys;
 
     /**
-     * Ecms no
+     * Conviction note
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="ecms_no", length=45, nullable=true)
+     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
      */
-    protected $ecmsNo;
-
-    /**
-     * Open date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="open_date", nullable=false)
-     */
-    protected $openDate;
+    protected $convictionNote;
 
     /**
      * Description
@@ -133,13 +96,23 @@ class Cases implements Interfaces\EntityInterface
     protected $description;
 
     /**
-     * Is impounding
+     * Ecms no
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
+     * @ORM\Column(type="string", name="ecms_no", length=45, nullable=true)
      */
-    protected $isImpounding = 0;
+    protected $ecmsNo;
+
+    /**
+     * Erru case type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
+     */
+    protected $erruCaseType;
 
     /**
      * Erru originating authority
@@ -169,22 +142,49 @@ class Cases implements Interfaces\EntityInterface
     protected $erruVrm;
 
     /**
-     * Annual test history
+     * Is impounding
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="annual_test_history", length=4000, nullable=true)
+     * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
      */
-    protected $annualTestHistory;
+    protected $isImpounding = 0;
 
     /**
-     * Prohibition note
+     * Legacy offence
      *
-     * @var string
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\Column(type="string", name="prohibition_note", length=4000, nullable=true)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases")
+     * @ORM\JoinTable(name="legacy_case_offence",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="legacy_offence_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $prohibitionNote;
+    protected $legacyOffences;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="cases")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
+
+    /**
+     * Open date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="open_date", nullable=false)
+     */
+    protected $openDate;
 
     /**
      * Penalties note
@@ -196,13 +196,13 @@ class Cases implements Interfaces\EntityInterface
     protected $penaltiesNote;
 
     /**
-     * Conviction note
+     * Prohibition note
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="conviction_note", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="prohibition_note", length=4000, nullable=true)
      */
-    protected $convictionNote;
+    protected $prohibitionNote;
 
     /**
      * Appeal
@@ -284,26 +284,26 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the erru case type
+     * Set the annual test history
      *
-     * @param \Olcs\Db\Entity\RefData $erruCaseType
+     * @param string $annualTestHistory
      * @return Cases
      */
-    public function setErruCaseType($erruCaseType)
+    public function setAnnualTestHistory($annualTestHistory)
     {
-        $this->erruCaseType = $erruCaseType;
+        $this->annualTestHistory = $annualTestHistory;
 
         return $this;
     }
 
     /**
-     * Get the erru case type
+     * Get the annual test history
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getErruCaseType()
+    public function getAnnualTestHistory()
     {
-        return $this->erruCaseType;
+        return $this->annualTestHistory;
     }
 
     /**
@@ -327,89 +327,6 @@ class Cases implements Interfaces\EntityInterface
     public function getCaseType()
     {
         return $this->caseType;
-    }
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return Cases
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
-
-    /**
-     * Set the legacy offence
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function setLegacyOffences($legacyOffences)
-    {
-        $this->legacyOffences = $legacyOffences;
-
-        return $this;
-    }
-
-    /**
-     * Get the legacy offences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getLegacyOffences()
-    {
-        return $this->legacyOffences;
-    }
-
-    /**
-     * Add a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function addLegacyOffences($legacyOffences)
-    {
-        if ($legacyOffences instanceof ArrayCollection) {
-            $this->legacyOffences = new ArrayCollection(
-                array_merge(
-                    $this->legacyOffences->toArray(),
-                    $legacyOffences->toArray()
-                )
-            );
-        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->add($legacyOffences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function removeLegacyOffences($legacyOffences)
-    {
-        if ($this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->removeElement($legacyOffences);
-        }
-
-        return $this;
     }
 
     /**
@@ -473,49 +390,26 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the ecms no
+     * Set the conviction note
      *
-     * @param string $ecmsNo
+     * @param string $convictionNote
      * @return Cases
      */
-    public function setEcmsNo($ecmsNo)
+    public function setConvictionNote($convictionNote)
     {
-        $this->ecmsNo = $ecmsNo;
+        $this->convictionNote = $convictionNote;
 
         return $this;
     }
 
     /**
-     * Get the ecms no
+     * Get the conviction note
      *
      * @return string
      */
-    public function getEcmsNo()
+    public function getConvictionNote()
     {
-        return $this->ecmsNo;
-    }
-
-    /**
-     * Set the open date
-     *
-     * @param \DateTime $openDate
-     * @return Cases
-     */
-    public function setOpenDate($openDate)
-    {
-        $this->openDate = $openDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the open date
-     *
-     * @return \DateTime
-     */
-    public function getOpenDate()
-    {
-        return $this->openDate;
+        return $this->convictionNote;
     }
 
     /**
@@ -542,26 +436,49 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is impounding
+     * Set the ecms no
      *
-     * @param string $isImpounding
+     * @param string $ecmsNo
      * @return Cases
      */
-    public function setIsImpounding($isImpounding)
+    public function setEcmsNo($ecmsNo)
     {
-        $this->isImpounding = $isImpounding;
+        $this->ecmsNo = $ecmsNo;
 
         return $this;
     }
 
     /**
-     * Get the is impounding
+     * Get the ecms no
      *
      * @return string
      */
-    public function getIsImpounding()
+    public function getEcmsNo()
     {
-        return $this->isImpounding;
+        return $this->ecmsNo;
+    }
+
+    /**
+     * Set the erru case type
+     *
+     * @param \Olcs\Db\Entity\RefData $erruCaseType
+     * @return Cases
+     */
+    public function setErruCaseType($erruCaseType)
+    {
+        $this->erruCaseType = $erruCaseType;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru case type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getErruCaseType()
+    {
+        return $this->erruCaseType;
     }
 
     /**
@@ -634,49 +551,132 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the annual test history
+     * Set the is impounding
      *
-     * @param string $annualTestHistory
+     * @param string $isImpounding
      * @return Cases
      */
-    public function setAnnualTestHistory($annualTestHistory)
+    public function setIsImpounding($isImpounding)
     {
-        $this->annualTestHistory = $annualTestHistory;
+        $this->isImpounding = $isImpounding;
 
         return $this;
     }
 
     /**
-     * Get the annual test history
+     * Get the is impounding
      *
      * @return string
      */
-    public function getAnnualTestHistory()
+    public function getIsImpounding()
     {
-        return $this->annualTestHistory;
+        return $this->isImpounding;
     }
 
     /**
-     * Set the prohibition note
+     * Set the legacy offence
      *
-     * @param string $prohibitionNote
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
      * @return Cases
      */
-    public function setProhibitionNote($prohibitionNote)
+    public function setLegacyOffences($legacyOffences)
     {
-        $this->prohibitionNote = $prohibitionNote;
+        $this->legacyOffences = $legacyOffences;
 
         return $this;
     }
 
     /**
-     * Get the prohibition note
+     * Get the legacy offences
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProhibitionNote()
+    public function getLegacyOffences()
     {
-        return $this->prohibitionNote;
+        return $this->legacyOffences;
+    }
+
+    /**
+     * Add a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function addLegacyOffences($legacyOffences)
+    {
+        if ($legacyOffences instanceof ArrayCollection) {
+            $this->legacyOffences = new ArrayCollection(
+                array_merge(
+                    $this->legacyOffences->toArray(),
+                    $legacyOffences->toArray()
+                )
+            );
+        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->add($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function removeLegacyOffences($legacyOffences)
+    {
+        if ($this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->removeElement($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Cases
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set the open date
+     *
+     * @param \DateTime $openDate
+     * @return Cases
+     */
+    public function setOpenDate($openDate)
+    {
+        $this->openDate = $openDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the open date
+     *
+     * @return \DateTime
+     */
+    public function getOpenDate()
+    {
+        return $this->openDate;
     }
 
     /**
@@ -703,26 +703,26 @@ class Cases implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the conviction note
+     * Set the prohibition note
      *
-     * @param string $convictionNote
+     * @param string $prohibitionNote
      * @return Cases
      */
-    public function setConvictionNote($convictionNote)
+    public function setProhibitionNote($prohibitionNote)
     {
-        $this->convictionNote = $convictionNote;
+        $this->prohibitionNote = $prohibitionNote;
 
         return $this;
     }
 
     /**
-     * Get the conviction note
+     * Get the prohibition note
      *
      * @return string
      */
-    public function getConvictionNote()
+    public function getProhibitionNote()
     {
-        return $this->convictionNote;
+        return $this->prohibitionNote;
     }
 
     /**

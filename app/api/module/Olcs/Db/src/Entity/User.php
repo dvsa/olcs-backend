@@ -32,27 +32,81 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\TeamManyToOne,
-        Traits\LocalAuthorityManyToOne,
-        Traits\EmailAddress45Field,
-        Traits\CustomDeletedDateField,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\EmailAddress45Field,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LocalAuthorityManyToOne,
+        Traits\TeamManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
-     * Partner contact details
+     * Account disabled
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
+     */
+    protected $accountDisabled = 0;
+
+    /**
+     * Attempts
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="attempts", nullable=true)
+     */
+    protected $attempts;
+
+    /**
+     * Contact details
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
-     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
      */
-    protected $partnerContactDetails;
+    protected $contactDetails;
+
+    /**
+     * Department name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="department_name", length=100, nullable=true)
+     */
+    protected $departmentName;
+
+    /**
+     * Division group
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
+     */
+    protected $divisionGroup;
+
+    /**
+     * Hint answer1
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hint_answer_1", length=50, nullable=true)
+     */
+    protected $hintAnswer1;
+
+    /**
+     * Hint answer2
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hint_answer_2", length=50, nullable=true)
+     */
+    protected $hintAnswer2;
 
     /**
      * Hint questions1
@@ -75,59 +129,13 @@ class User implements Interfaces\EntityInterface
     protected $hintQuestions2;
 
     /**
-     * Contact details
-     *
-     * @var \Olcs\Db\Entity\ContactDetails
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
-     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
-     */
-    protected $contactDetails;
-
-    /**
-     * Pid
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="pid", nullable=true)
-     */
-    protected $pid;
-
-    /**
-     * Name
+     * Job title
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="name", length=40, nullable=true)
+     * @ORM\Column(type="string", name="job_title", length=100, nullable=true)
      */
-    protected $name;
-
-    /**
-     * Account disabled
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
-     */
-    protected $accountDisabled = 0;
-
-    /**
-     * Locked date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="locked_date", nullable=true)
-     */
-    protected $lockedDate;
-
-    /**
-     * Attempts
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="attempts", nullable=true)
-     */
-    protected $attempts;
+    protected $jobTitle;
 
     /**
      * Last successful login date
@@ -139,22 +147,22 @@ class User implements Interfaces\EntityInterface
     protected $lastSuccessfulLoginDate;
 
     /**
-     * Hint answer1
+     * Locked date
      *
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(type="string", name="hint_answer_1", length=50, nullable=true)
+     * @ORM\Column(type="datetime", name="locked_date", nullable=true)
      */
-    protected $hintAnswer1;
+    protected $lockedDate;
 
     /**
-     * Hint answer2
+     * Locked datetime
      *
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(type="string", name="hint_answer_2", length=50, nullable=true)
+     * @ORM\Column(type="datetime", name="locked_datetime", nullable=true)
      */
-    protected $hintAnswer2;
+    protected $lockedDatetime;
 
     /**
      * Memorable word
@@ -193,6 +201,25 @@ class User implements Interfaces\EntityInterface
     protected $mustResetPassword = 0;
 
     /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=40, nullable=true)
+     */
+    protected $name;
+
+    /**
+     * Partner contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $partnerContactDetails;
+
+    /**
      * Password expiry date
      *
      * @var \DateTime
@@ -200,15 +227,6 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="password_expiry_date", nullable=true)
      */
     protected $passwordExpiryDate;
-
-    /**
-     * Reset password expiry date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="reset_password_expiry_date", nullable=true)
-     */
-    protected $resetPasswordExpiryDate;
 
     /**
      * Password reminder sent
@@ -220,40 +238,22 @@ class User implements Interfaces\EntityInterface
     protected $passwordReminderSent;
 
     /**
-     * Locked datetime
+     * Pid
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="pid", nullable=true)
+     */
+    protected $pid;
+
+    /**
+     * Reset password expiry date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="locked_datetime", nullable=true)
+     * @ORM\Column(type="datetime", name="reset_password_expiry_date", nullable=true)
      */
-    protected $lockedDatetime;
-
-    /**
-     * Job title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="job_title", length=100, nullable=true)
-     */
-    protected $jobTitle;
-
-    /**
-     * Division group
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
-     */
-    protected $divisionGroup;
-
-    /**
-     * Department name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="department_name", length=100, nullable=true)
-     */
-    protected $departmentName;
+    protected $resetPasswordExpiryDate;
 
     /**
      * Organisation user
@@ -273,26 +273,164 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the partner contact details
+     * Set the account disabled
      *
-     * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
+     * @param string $accountDisabled
      * @return User
      */
-    public function setPartnerContactDetails($partnerContactDetails)
+    public function setAccountDisabled($accountDisabled)
     {
-        $this->partnerContactDetails = $partnerContactDetails;
+        $this->accountDisabled = $accountDisabled;
 
         return $this;
     }
 
     /**
-     * Get the partner contact details
+     * Get the account disabled
+     *
+     * @return string
+     */
+    public function getAccountDisabled()
+    {
+        return $this->accountDisabled;
+    }
+
+    /**
+     * Set the attempts
+     *
+     * @param int $attempts
+     * @return User
+     */
+    public function setAttempts($attempts)
+    {
+        $this->attempts = $attempts;
+
+        return $this;
+    }
+
+    /**
+     * Get the attempts
+     *
+     * @return int
+     */
+    public function getAttempts()
+    {
+        return $this->attempts;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return User
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
      *
      * @return \Olcs\Db\Entity\ContactDetails
      */
-    public function getPartnerContactDetails()
+    public function getContactDetails()
     {
-        return $this->partnerContactDetails;
+        return $this->contactDetails;
+    }
+
+    /**
+     * Set the department name
+     *
+     * @param string $departmentName
+     * @return User
+     */
+    public function setDepartmentName($departmentName)
+    {
+        $this->departmentName = $departmentName;
+
+        return $this;
+    }
+
+    /**
+     * Get the department name
+     *
+     * @return string
+     */
+    public function getDepartmentName()
+    {
+        return $this->departmentName;
+    }
+
+    /**
+     * Set the division group
+     *
+     * @param string $divisionGroup
+     * @return User
+     */
+    public function setDivisionGroup($divisionGroup)
+    {
+        $this->divisionGroup = $divisionGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get the division group
+     *
+     * @return string
+     */
+    public function getDivisionGroup()
+    {
+        return $this->divisionGroup;
+    }
+
+    /**
+     * Set the hint answer1
+     *
+     * @param string $hintAnswer1
+     * @return User
+     */
+    public function setHintAnswer1($hintAnswer1)
+    {
+        $this->hintAnswer1 = $hintAnswer1;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint answer1
+     *
+     * @return string
+     */
+    public function getHintAnswer1()
+    {
+        return $this->hintAnswer1;
+    }
+
+    /**
+     * Set the hint answer2
+     *
+     * @param string $hintAnswer2
+     * @return User
+     */
+    public function setHintAnswer2($hintAnswer2)
+    {
+        $this->hintAnswer2 = $hintAnswer2;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint answer2
+     *
+     * @return string
+     */
+    public function getHintAnswer2()
+    {
+        return $this->hintAnswer2;
     }
 
     /**
@@ -342,141 +480,26 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the contact details
+     * Set the job title
      *
-     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @param string $jobTitle
      * @return User
      */
-    public function setContactDetails($contactDetails)
+    public function setJobTitle($jobTitle)
     {
-        $this->contactDetails = $contactDetails;
+        $this->jobTitle = $jobTitle;
 
         return $this;
     }
 
     /**
-     * Get the contact details
-     *
-     * @return \Olcs\Db\Entity\ContactDetails
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
-     * Set the pid
-     *
-     * @param int $pid
-     * @return User
-     */
-    public function setPid($pid)
-    {
-        $this->pid = $pid;
-
-        return $this;
-    }
-
-    /**
-     * Get the pid
-     *
-     * @return int
-     */
-    public function getPid()
-    {
-        return $this->pid;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param string $name
-     * @return User
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
+     * Get the job title
      *
      * @return string
      */
-    public function getName()
+    public function getJobTitle()
     {
-        return $this->name;
-    }
-
-    /**
-     * Set the account disabled
-     *
-     * @param string $accountDisabled
-     * @return User
-     */
-    public function setAccountDisabled($accountDisabled)
-    {
-        $this->accountDisabled = $accountDisabled;
-
-        return $this;
-    }
-
-    /**
-     * Get the account disabled
-     *
-     * @return string
-     */
-    public function getAccountDisabled()
-    {
-        return $this->accountDisabled;
-    }
-
-    /**
-     * Set the locked date
-     *
-     * @param \DateTime $lockedDate
-     * @return User
-     */
-    public function setLockedDate($lockedDate)
-    {
-        $this->lockedDate = $lockedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the locked date
-     *
-     * @return \DateTime
-     */
-    public function getLockedDate()
-    {
-        return $this->lockedDate;
-    }
-
-    /**
-     * Set the attempts
-     *
-     * @param int $attempts
-     * @return User
-     */
-    public function setAttempts($attempts)
-    {
-        $this->attempts = $attempts;
-
-        return $this;
-    }
-
-    /**
-     * Get the attempts
-     *
-     * @return int
-     */
-    public function getAttempts()
-    {
-        return $this->attempts;
+        return $this->jobTitle;
     }
 
     /**
@@ -503,49 +526,49 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the hint answer1
+     * Set the locked date
      *
-     * @param string $hintAnswer1
+     * @param \DateTime $lockedDate
      * @return User
      */
-    public function setHintAnswer1($hintAnswer1)
+    public function setLockedDate($lockedDate)
     {
-        $this->hintAnswer1 = $hintAnswer1;
+        $this->lockedDate = $lockedDate;
 
         return $this;
     }
 
     /**
-     * Get the hint answer1
+     * Get the locked date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getHintAnswer1()
+    public function getLockedDate()
     {
-        return $this->hintAnswer1;
+        return $this->lockedDate;
     }
 
     /**
-     * Set the hint answer2
+     * Set the locked datetime
      *
-     * @param string $hintAnswer2
+     * @param \DateTime $lockedDatetime
      * @return User
      */
-    public function setHintAnswer2($hintAnswer2)
+    public function setLockedDatetime($lockedDatetime)
     {
-        $this->hintAnswer2 = $hintAnswer2;
+        $this->lockedDatetime = $lockedDatetime;
 
         return $this;
     }
 
     /**
-     * Get the hint answer2
+     * Get the locked datetime
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getHintAnswer2()
+    public function getLockedDatetime()
     {
-        return $this->hintAnswer2;
+        return $this->lockedDatetime;
     }
 
     /**
@@ -641,6 +664,52 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the name
+     *
+     * @param string $name
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the partner contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $partnerContactDetails
+     * @return User
+     */
+    public function setPartnerContactDetails($partnerContactDetails)
+    {
+        $this->partnerContactDetails = $partnerContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the partner contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getPartnerContactDetails()
+    {
+        return $this->partnerContactDetails;
+    }
+
+    /**
      * Set the password expiry date
      *
      * @param \DateTime $passwordExpiryDate
@@ -661,29 +730,6 @@ class User implements Interfaces\EntityInterface
     public function getPasswordExpiryDate()
     {
         return $this->passwordExpiryDate;
-    }
-
-    /**
-     * Set the reset password expiry date
-     *
-     * @param \DateTime $resetPasswordExpiryDate
-     * @return User
-     */
-    public function setResetPasswordExpiryDate($resetPasswordExpiryDate)
-    {
-        $this->resetPasswordExpiryDate = $resetPasswordExpiryDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the reset password expiry date
-     *
-     * @return \DateTime
-     */
-    public function getResetPasswordExpiryDate()
-    {
-        return $this->resetPasswordExpiryDate;
     }
 
     /**
@@ -710,95 +756,49 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the locked datetime
+     * Set the pid
      *
-     * @param \DateTime $lockedDatetime
+     * @param int $pid
      * @return User
      */
-    public function setLockedDatetime($lockedDatetime)
+    public function setPid($pid)
     {
-        $this->lockedDatetime = $lockedDatetime;
+        $this->pid = $pid;
 
         return $this;
     }
 
     /**
-     * Get the locked datetime
+     * Get the pid
+     *
+     * @return int
+     */
+    public function getPid()
+    {
+        return $this->pid;
+    }
+
+    /**
+     * Set the reset password expiry date
+     *
+     * @param \DateTime $resetPasswordExpiryDate
+     * @return User
+     */
+    public function setResetPasswordExpiryDate($resetPasswordExpiryDate)
+    {
+        $this->resetPasswordExpiryDate = $resetPasswordExpiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the reset password expiry date
      *
      * @return \DateTime
      */
-    public function getLockedDatetime()
+    public function getResetPasswordExpiryDate()
     {
-        return $this->lockedDatetime;
-    }
-
-    /**
-     * Set the job title
-     *
-     * @param string $jobTitle
-     * @return User
-     */
-    public function setJobTitle($jobTitle)
-    {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get the job title
-     *
-     * @return string
-     */
-    public function getJobTitle()
-    {
-        return $this->jobTitle;
-    }
-
-    /**
-     * Set the division group
-     *
-     * @param string $divisionGroup
-     * @return User
-     */
-    public function setDivisionGroup($divisionGroup)
-    {
-        $this->divisionGroup = $divisionGroup;
-
-        return $this;
-    }
-
-    /**
-     * Get the division group
-     *
-     * @return string
-     */
-    public function getDivisionGroup()
-    {
-        return $this->divisionGroup;
-    }
-
-    /**
-     * Set the department name
-     *
-     * @param string $departmentName
-     * @return User
-     */
-    public function setDepartmentName($departmentName)
-    {
-        $this->departmentName = $departmentName;
-
-        return $this;
-    }
-
-    /**
-     * Get the department name
-     *
-     * @return string
-     */
-    public function getDepartmentName()
-    {
-        return $this->departmentName;
+        return $this->resetPasswordExpiryDate;
     }
 
     /**

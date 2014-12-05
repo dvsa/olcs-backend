@@ -21,8 +21,8 @@ use Olcs\Db\Entity\Traits;
 class EmailBody implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\EmailManyToOne;
+        Traits\EmailManyToOne,
+        Traits\IdIdentity;
 
     /**
      * Seq

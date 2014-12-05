@@ -26,25 +26,33 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class SiPenaltyErruImposed implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\EndDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\StartDateFieldAlt1,
-        Traits\EndDateField,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
 
     /**
-     * Si penalty imposed type
+     * Executed
      *
-     * @var \Olcs\Db\Entity\SiPenaltyImposedType
+     * @var boolean
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType")
-     * @ORM\JoinColumn(name="si_penalty_imposed_type_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="boolean", name="executed", nullable=true)
      */
-    protected $siPenaltyImposedType;
+    protected $executed;
+
+    /**
+     * Final decision date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="final_decision_date", nullable=true)
+     */
+    protected $finalDecisionDate;
 
     /**
      * Serious infringement
@@ -57,67 +65,36 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     protected $seriousInfringement;
 
     /**
-     * Final decision date
+     * Si penalty imposed type
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\SiPenaltyImposedType
      *
-     * @ORM\Column(type="date", name="final_decision_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SiPenaltyImposedType")
+     * @ORM\JoinColumn(name="si_penalty_imposed_type_id", referencedColumnName="id", nullable=false)
      */
-    protected $finalDecisionDate;
+    protected $siPenaltyImposedType;
 
     /**
-     * Executed
+     * Set the executed
      *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="executed", nullable=true)
-     */
-    protected $executed;
-
-    /**
-     * Set the si penalty imposed type
-     *
-     * @param \Olcs\Db\Entity\SiPenaltyImposedType $siPenaltyImposedType
+     * @param boolean $executed
      * @return SiPenaltyErruImposed
      */
-    public function setSiPenaltyImposedType($siPenaltyImposedType)
+    public function setExecuted($executed)
     {
-        $this->siPenaltyImposedType = $siPenaltyImposedType;
+        $this->executed = $executed;
 
         return $this;
     }
 
     /**
-     * Get the si penalty imposed type
+     * Get the executed
      *
-     * @return \Olcs\Db\Entity\SiPenaltyImposedType
+     * @return boolean
      */
-    public function getSiPenaltyImposedType()
+    public function getExecuted()
     {
-        return $this->siPenaltyImposedType;
-    }
-
-    /**
-     * Set the serious infringement
-     *
-     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
-     * @return SiPenaltyErruImposed
-     */
-    public function setSeriousInfringement($seriousInfringement)
-    {
-        $this->seriousInfringement = $seriousInfringement;
-
-        return $this;
-    }
-
-    /**
-     * Get the serious infringement
-     *
-     * @return \Olcs\Db\Entity\SeriousInfringement
-     */
-    public function getSeriousInfringement()
-    {
-        return $this->seriousInfringement;
+        return $this->executed;
     }
 
     /**
@@ -144,25 +121,48 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the executed
+     * Set the serious infringement
      *
-     * @param boolean $executed
+     * @param \Olcs\Db\Entity\SeriousInfringement $seriousInfringement
      * @return SiPenaltyErruImposed
      */
-    public function setExecuted($executed)
+    public function setSeriousInfringement($seriousInfringement)
     {
-        $this->executed = $executed;
+        $this->seriousInfringement = $seriousInfringement;
 
         return $this;
     }
 
     /**
-     * Get the executed
+     * Get the serious infringement
      *
-     * @return boolean
+     * @return \Olcs\Db\Entity\SeriousInfringement
      */
-    public function getExecuted()
+    public function getSeriousInfringement()
     {
-        return $this->executed;
+        return $this->seriousInfringement;
+    }
+
+    /**
+     * Set the si penalty imposed type
+     *
+     * @param \Olcs\Db\Entity\SiPenaltyImposedType $siPenaltyImposedType
+     * @return SiPenaltyErruImposed
+     */
+    public function setSiPenaltyImposedType($siPenaltyImposedType)
+    {
+        $this->siPenaltyImposedType = $siPenaltyImposedType;
+
+        return $this;
+    }
+
+    /**
+     * Get the si penalty imposed type
+     *
+     * @return \Olcs\Db\Entity\SiPenaltyImposedType
+     */
+    public function getSiPenaltyImposedType()
+    {
+        return $this->siPenaltyImposedType;
     }
 }

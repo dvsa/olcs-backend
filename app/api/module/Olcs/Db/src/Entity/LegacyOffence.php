@@ -23,14 +23,14 @@ use Olcs\Db\Entity\Traits;
 class LegacyOffence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\Notes4000Field,
-        Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\Notes4000Field,
+        Traits\CustomVersionField,
+        Traits\Vrm20Field;
 
     /**
      * Case
@@ -96,6 +96,15 @@ class LegacyOffence implements Interfaces\EntityInterface
     protected $offenceToDate;
 
     /**
+     * Offence type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="offence_type", length=100, nullable=true)
+     */
+    protected $offenceType;
+
+    /**
      * Offender name
      *
      * @var string
@@ -121,15 +130,6 @@ class LegacyOffence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="position", length=100, nullable=true)
      */
     protected $position;
-
-    /**
-     * Offence type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="offence_type", length=100, nullable=true)
-     */
-    protected $offenceType;
 
     /**
      * Initialise the collections
@@ -338,6 +338,29 @@ class LegacyOffence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the offence type
+     *
+     * @param string $offenceType
+     * @return LegacyOffence
+     */
+    public function setOffenceType($offenceType)
+    {
+        $this->offenceType = $offenceType;
+
+        return $this;
+    }
+
+    /**
+     * Get the offence type
+     *
+     * @return string
+     */
+    public function getOffenceType()
+    {
+        return $this->offenceType;
+    }
+
+    /**
      * Set the offender name
      *
      * @param string $offenderName
@@ -404,28 +427,5 @@ class LegacyOffence implements Interfaces\EntityInterface
     public function getPosition()
     {
         return $this->position;
-    }
-
-    /**
-     * Set the offence type
-     *
-     * @param string $offenceType
-     * @return LegacyOffence
-     */
-    public function setOffenceType($offenceType)
-    {
-        $this->offenceType = $offenceType;
-
-        return $this;
-    }
-
-    /**
-     * Get the offence type
-     *
-     * @return string
-     */
-    public function getOffenceType()
-    {
-        return $this->offenceType;
     }
 }

@@ -27,16 +27,25 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CaseManyToOneAlt1,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\HearingDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\VenueManyToOne,
-        Traits\CaseManyToOneAlt1,
-        Traits\HearingDateField,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\VenueManyToOne,
         Traits\CustomVersionField;
+
+    /**
+     * Agreed by tc date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="agreed_by_tc_date", nullable=true)
+     */
+    protected $agreedByTcDate;
 
     /**
      * Presiding tc
@@ -49,15 +58,6 @@ class Hearing implements Interfaces\EntityInterface
     protected $presidingTc = 0;
 
     /**
-     * Agreed by tc date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="agreed_by_tc_date", nullable=true)
-     */
-    protected $agreedByTcDate;
-
-    /**
      * Witness count
      *
      * @var int
@@ -65,29 +65,6 @@ class Hearing implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="witness_count", nullable=false)
      */
     protected $witnessCount = 0;
-
-    /**
-     * Set the presiding tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
-     * @return Hearing
-     */
-    public function setPresidingTc($presidingTc)
-    {
-        $this->presidingTc = $presidingTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the presiding tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getPresidingTc()
-    {
-        return $this->presidingTc;
-    }
 
     /**
      * Set the agreed by tc date
@@ -110,6 +87,29 @@ class Hearing implements Interfaces\EntityInterface
     public function getAgreedByTcDate()
     {
         return $this->agreedByTcDate;
+    }
+
+    /**
+     * Set the presiding tc
+     *
+     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
+     * @return Hearing
+     */
+    public function setPresidingTc($presidingTc)
+    {
+        $this->presidingTc = $presidingTc;
+
+        return $this;
+    }
+
+    /**
+     * Get the presiding tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getPresidingTc()
+    {
+        return $this->presidingTc;
     }
 
     /**

@@ -33,29 +33,28 @@ use Olcs\Db\Entity\Traits;
 class Task implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\TransportManagerManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\CaseManyToOne,
-        Traits\BusRegManyToOneAlt1,
-        Traits\CategoryManyToOne,
-        Traits\LicenceManyToOneAlt1,
         Traits\ApplicationManyToOne,
-        Traits\Description255FieldAlt1,
+        Traits\BusRegManyToOneAlt1,
+        Traits\CaseManyToOne,
+        Traits\CategoryManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\Description255FieldAlt1,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOneAlt1,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
-     * Assigned to user
+     * Action date
      *
-     * @var \Olcs\Db\Entity\User
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="date", name="action_date", nullable=true)
      */
-    protected $assignedToUser;
+    protected $actionDate;
 
     /**
      * Assigned by user
@@ -78,14 +77,14 @@ class Task implements Interfaces\EntityInterface
     protected $assignedToTeam;
 
     /**
-     * Task sub category
+     * Assigned to user
      *
-     * @var \Olcs\Db\Entity\TaskSubCategory
+     * @var \Olcs\Db\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
-     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
      */
-    protected $taskSubCategory;
+    protected $assignedToUser;
 
     /**
      * Irfo organisation
@@ -107,13 +106,14 @@ class Task implements Interfaces\EntityInterface
     protected $isClosed = 0;
 
     /**
-     * Action date
+     * Task sub category
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\TaskSubCategory
      *
-     * @ORM\Column(type="date", name="action_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
+     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
      */
-    protected $actionDate;
+    protected $taskSubCategory;
 
     /**
      * Urgent
@@ -125,26 +125,26 @@ class Task implements Interfaces\EntityInterface
     protected $urgent = 0;
 
     /**
-     * Set the assigned to user
+     * Set the action date
      *
-     * @param \Olcs\Db\Entity\User $assignedToUser
+     * @param \DateTime $actionDate
      * @return Task
      */
-    public function setAssignedToUser($assignedToUser)
+    public function setActionDate($actionDate)
     {
-        $this->assignedToUser = $assignedToUser;
+        $this->actionDate = $actionDate;
 
         return $this;
     }
 
     /**
-     * Get the assigned to user
+     * Get the action date
      *
-     * @return \Olcs\Db\Entity\User
+     * @return \DateTime
      */
-    public function getAssignedToUser()
+    public function getActionDate()
     {
-        return $this->assignedToUser;
+        return $this->actionDate;
     }
 
     /**
@@ -194,26 +194,26 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the task sub category
+     * Set the assigned to user
      *
-     * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
+     * @param \Olcs\Db\Entity\User $assignedToUser
      * @return Task
      */
-    public function setTaskSubCategory($taskSubCategory)
+    public function setAssignedToUser($assignedToUser)
     {
-        $this->taskSubCategory = $taskSubCategory;
+        $this->assignedToUser = $assignedToUser;
 
         return $this;
     }
 
     /**
-     * Get the task sub category
+     * Get the assigned to user
      *
-     * @return \Olcs\Db\Entity\TaskSubCategory
+     * @return \Olcs\Db\Entity\User
      */
-    public function getTaskSubCategory()
+    public function getAssignedToUser()
     {
-        return $this->taskSubCategory;
+        return $this->assignedToUser;
     }
 
     /**
@@ -263,26 +263,26 @@ class Task implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the action date
+     * Set the task sub category
      *
-     * @param \DateTime $actionDate
+     * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
      * @return Task
      */
-    public function setActionDate($actionDate)
+    public function setTaskSubCategory($taskSubCategory)
     {
-        $this->actionDate = $actionDate;
+        $this->taskSubCategory = $taskSubCategory;
 
         return $this;
     }
 
     /**
-     * Get the action date
+     * Get the task sub category
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\TaskSubCategory
      */
-    public function getActionDate()
+    public function getTaskSubCategory()
     {
-        return $this->actionDate;
+        return $this->taskSubCategory;
     }
 
     /**

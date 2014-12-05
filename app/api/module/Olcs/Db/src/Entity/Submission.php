@@ -27,15 +27,24 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Submission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
         Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
-        Traits\CustomDeletedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Data snapshot
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
+     */
+    protected $dataSnapshot;
 
     /**
      * Submission type
@@ -46,15 +55,6 @@ class Submission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
-
-    /**
-     * Data snapshot
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
-     */
-    protected $dataSnapshot;
 
     /**
      * Submission action
@@ -84,29 +84,6 @@ class Submission implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the submission type
-     *
-     * @param \Olcs\Db\Entity\RefData $submissionType
-     * @return Submission
-     */
-    public function setSubmissionType($submissionType)
-    {
-        $this->submissionType = $submissionType;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubmissionType()
-    {
-        return $this->submissionType;
-    }
-
-    /**
      * Set the data snapshot
      *
      * @param string $dataSnapshot
@@ -127,6 +104,29 @@ class Submission implements Interfaces\EntityInterface
     public function getDataSnapshot()
     {
         return $this->dataSnapshot;
+    }
+
+    /**
+     * Set the submission type
+     *
+     * @param \Olcs\Db\Entity\RefData $submissionType
+     * @return Submission
+     */
+    public function setSubmissionType($submissionType)
+    {
+        $this->submissionType = $submissionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getSubmissionType()
+    {
+        return $this->submissionType;
     }
 
     /**

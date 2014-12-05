@@ -23,16 +23,25 @@ use Olcs\Db\Entity\Traits;
 class PsvDisc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\DiscNo50Field,
-        Traits\IssuedDateField,
         Traits\CeasedDateField,
-        Traits\IsPrintingField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\DiscNo50Field,
+        Traits\IdIdentity,
+        Traits\IsPrintingField,
+        Traits\IssuedDateField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Is copy
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false)
+     */
+    protected $isCopy = 0;
 
     /**
      * Licence
@@ -45,15 +54,6 @@ class PsvDisc implements Interfaces\EntityInterface
     protected $licence;
 
     /**
-     * Is copy
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false)
-     */
-    protected $isCopy = 0;
-
-    /**
      * Reprint required
      *
      * @var string
@@ -61,29 +61,6 @@ class PsvDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false)
      */
     protected $reprintRequired = 0;
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return PsvDisc
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
 
     /**
      * Set the is copy
@@ -106,6 +83,29 @@ class PsvDisc implements Interfaces\EntityInterface
     public function getIsCopy()
     {
         return $this->isCopy;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return PsvDisc
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

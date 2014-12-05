@@ -25,6 +25,15 @@ class InspectionEmail implements Interfaces\EntityInterface
         Traits\ReceivedDateFieldAlt1;
 
     /**
+     * Email status
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="email_status", length=1, nullable=false)
+     */
+    protected $emailStatus;
+
+    /**
      * Inspection request
      *
      * @var \Olcs\Db\Entity\InspectionRequest
@@ -35,15 +44,6 @@ class InspectionEmail implements Interfaces\EntityInterface
     protected $inspectionRequest;
 
     /**
-     * Subject
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="subject", length=1024, nullable=false)
-     */
-    protected $subject;
-
-    /**
      * Message body
      *
      * @var string
@@ -51,15 +51,6 @@ class InspectionEmail implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="message_body", length=16777215, nullable=true)
      */
     protected $messageBody;
-
-    /**
-     * Email status
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="email_status", length=1, nullable=false)
-     */
-    protected $emailStatus;
 
     /**
      * Processed
@@ -78,6 +69,38 @@ class InspectionEmail implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="sender_email_address", length=200, nullable=true)
      */
     protected $senderEmailAddress;
+
+    /**
+     * Subject
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="subject", length=1024, nullable=false)
+     */
+    protected $subject;
+
+    /**
+     * Set the email status
+     *
+     * @param string $emailStatus
+     * @return InspectionEmail
+     */
+    public function setEmailStatus($emailStatus)
+    {
+        $this->emailStatus = $emailStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the email status
+     *
+     * @return string
+     */
+    public function getEmailStatus()
+    {
+        return $this->emailStatus;
+    }
 
     /**
      * Set the inspection request
@@ -103,29 +126,6 @@ class InspectionEmail implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the subject
-     *
-     * @param string $subject
-     * @return InspectionEmail
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * Get the subject
-     *
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
      * Set the message body
      *
      * @param string $messageBody
@@ -146,29 +146,6 @@ class InspectionEmail implements Interfaces\EntityInterface
     public function getMessageBody()
     {
         return $this->messageBody;
-    }
-
-    /**
-     * Set the email status
-     *
-     * @param string $emailStatus
-     * @return InspectionEmail
-     */
-    public function setEmailStatus($emailStatus)
-    {
-        $this->emailStatus = $emailStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the email status
-     *
-     * @return string
-     */
-    public function getEmailStatus()
-    {
-        return $this->emailStatus;
     }
 
     /**
@@ -215,5 +192,28 @@ class InspectionEmail implements Interfaces\EntityInterface
     public function getSenderEmailAddress()
     {
         return $this->senderEmailAddress;
+    }
+
+    /**
+     * Set the subject
+     *
+     * @param string $subject
+     * @return InspectionEmail
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Get the subject
+     *
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
     }
 }

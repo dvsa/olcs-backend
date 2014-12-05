@@ -24,23 +24,14 @@ use Olcs\Db\Entity\Traits;
 class UserRole implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\UserManyToOne,
-        Traits\RoleManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\RoleManyToOne,
+        Traits\UserManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Valid from
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
-     */
-    protected $validFrom;
 
     /**
      * Expiry date
@@ -52,27 +43,13 @@ class UserRole implements Interfaces\EntityInterface
     protected $expiryDate;
 
     /**
-     * Set the valid from
+     * Valid from
      *
-     * @param \DateTime $validFrom
-     * @return UserRole
-     */
-    public function setValidFrom($validFrom)
-    {
-        $this->validFrom = $validFrom;
-
-        return $this;
-    }
-
-    /**
-     * Get the valid from
+     * @var \DateTime
      *
-     * @return \DateTime
+     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
      */
-    public function getValidFrom()
-    {
-        return $this->validFrom;
-    }
+    protected $validFrom;
 
     /**
      * Set the expiry date
@@ -95,5 +72,28 @@ class UserRole implements Interfaces\EntityInterface
     public function getExpiryDate()
     {
         return $this->expiryDate;
+    }
+
+    /**
+     * Set the valid from
+     *
+     * @param \DateTime $validFrom
+     * @return UserRole
+     */
+    public function setValidFrom($validFrom)
+    {
+        $this->validFrom = $validFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get the valid from
+     *
+     * @return \DateTime
+     */
+    public function getValidFrom()
+    {
+        return $this->validFrom;
     }
 }

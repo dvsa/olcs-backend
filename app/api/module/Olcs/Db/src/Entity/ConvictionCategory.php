@@ -23,11 +23,11 @@ use Olcs\Db\Entity\Traits;
 class ConvictionCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description1024Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description1024Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

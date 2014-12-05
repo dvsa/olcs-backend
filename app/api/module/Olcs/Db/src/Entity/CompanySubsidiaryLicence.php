@@ -27,12 +27,12 @@ use Olcs\Db\Entity\Traits;
 class CompanySubsidiaryLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\LicenceManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
 
     /**

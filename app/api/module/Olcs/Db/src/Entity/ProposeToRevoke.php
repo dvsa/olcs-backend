@@ -25,16 +25,25 @@ use Olcs\Db\Entity\Traits;
 class ProposeToRevoke implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CaseManyToOneAlt1,
-        Traits\CreatedByManyToOne,
-        Traits\PresidingTcManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\PresidingTcManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Ptr agreed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="ptr_agreed_date", nullable=true)
+     */
+    protected $ptrAgreedDate;
 
     /**
      * Reason
@@ -54,20 +63,34 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     protected $reasons;
 
     /**
-     * Ptr agreed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="ptr_agreed_date", nullable=true)
-     */
-    protected $ptrAgreedDate;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->reasons = new ArrayCollection();
+    }
+
+    /**
+     * Set the ptr agreed date
+     *
+     * @param \DateTime $ptrAgreedDate
+     * @return ProposeToRevoke
+     */
+    public function setPtrAgreedDate($ptrAgreedDate)
+    {
+        $this->ptrAgreedDate = $ptrAgreedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the ptr agreed date
+     *
+     * @return \DateTime
+     */
+    public function getPtrAgreedDate()
+    {
+        return $this->ptrAgreedDate;
     }
 
     /**
@@ -128,28 +151,5 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the ptr agreed date
-     *
-     * @param \DateTime $ptrAgreedDate
-     * @return ProposeToRevoke
-     */
-    public function setPtrAgreedDate($ptrAgreedDate)
-    {
-        $this->ptrAgreedDate = $ptrAgreedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the ptr agreed date
-     *
-     * @return \DateTime
-     */
-    public function getPtrAgreedDate()
-    {
-        return $this->ptrAgreedDate;
     }
 }

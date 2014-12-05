@@ -22,22 +22,13 @@ use Olcs\Db\Entity\Traits;
 class SystemInfoMessage implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description1024Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\Description1024Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Is internal
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_internal", nullable=false)
-     */
-    protected $isInternal;
 
     /**
      * Activate date
@@ -49,15 +40,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     protected $activateDate;
 
     /**
-     * Is deleted
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
-     */
-    protected $isDeleted = 0;
-
-    /**
      * Importance
      *
      * @var int
@@ -67,27 +49,22 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     protected $importance;
 
     /**
-     * Set the is internal
+     * Is deleted
      *
-     * @param string $isInternal
-     * @return SystemInfoMessage
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
      */
-    public function setIsInternal($isInternal)
-    {
-        $this->isInternal = $isInternal;
-
-        return $this;
-    }
+    protected $isDeleted = 0;
 
     /**
-     * Get the is internal
+     * Is internal
      *
-     * @return string
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_internal", nullable=false)
      */
-    public function getIsInternal()
-    {
-        return $this->isInternal;
-    }
+    protected $isInternal;
 
     /**
      * Set the activate date
@@ -110,6 +87,29 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     public function getActivateDate()
     {
         return $this->activateDate;
+    }
+
+    /**
+     * Set the importance
+     *
+     * @param int $importance
+     * @return SystemInfoMessage
+     */
+    public function setImportance($importance)
+    {
+        $this->importance = $importance;
+
+        return $this;
+    }
+
+    /**
+     * Get the importance
+     *
+     * @return int
+     */
+    public function getImportance()
+    {
+        return $this->importance;
     }
 
     /**
@@ -136,25 +136,25 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the importance
+     * Set the is internal
      *
-     * @param int $importance
+     * @param string $isInternal
      * @return SystemInfoMessage
      */
-    public function setImportance($importance)
+    public function setIsInternal($isInternal)
     {
-        $this->importance = $importance;
+        $this->isInternal = $isInternal;
 
         return $this;
     }
 
     /**
-     * Get the importance
+     * Get the is internal
      *
-     * @return int
+     * @return string
      */
-    public function getImportance()
+    public function getIsInternal()
     {
-        return $this->importance;
+        return $this->isInternal;
     }
 }

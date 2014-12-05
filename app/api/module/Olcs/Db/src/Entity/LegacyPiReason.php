@@ -22,15 +22,15 @@ use Olcs\Db\Entity\Traits;
 class LegacyPiReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\SectionCode50Field,
-        Traits\Description255Field,
-        Traits\IsReadOnlyField,
-        Traits\IsNiField,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\IdIdentity,
+        Traits\IsNiField,
+        Traits\IsReadOnlyField,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode50Field,
         Traits\CustomVersionField;
 
     /**
