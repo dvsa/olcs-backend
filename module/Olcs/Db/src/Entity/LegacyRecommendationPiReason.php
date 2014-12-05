@@ -32,16 +32,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Legacy recommendation
-     *
-     * @var \Olcs\Db\Entity\LegacyRecommendation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation")
-     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $legacyRecommendation;
-
-    /**
      * Legacy pi reason
      *
      * @var \Olcs\Db\Entity\LegacyPiReason
@@ -52,6 +42,16 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     protected $legacyPiReason;
 
     /**
+     * Legacy recommendation
+     *
+     * @var \Olcs\Db\Entity\LegacyRecommendation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LegacyRecommendation")
+     * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $legacyRecommendation;
+
+    /**
      * Comment
      *
      * @var string
@@ -59,29 +59,6 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="comment", length=30, nullable=true)
      */
     protected $comment;
-
-    /**
-     * Set the legacy recommendation
-     *
-     * @param \Olcs\Db\Entity\LegacyRecommendation $legacyRecommendation
-     * @return LegacyRecommendationPiReason
-     */
-    public function setLegacyRecommendation($legacyRecommendation)
-    {
-        $this->legacyRecommendation = $legacyRecommendation;
-
-        return $this;
-    }
-
-    /**
-     * Get the legacy recommendation
-     *
-     * @return \Olcs\Db\Entity\LegacyRecommendation
-     */
-    public function getLegacyRecommendation()
-    {
-        return $this->legacyRecommendation;
-    }
 
     /**
      * Set the legacy pi reason
@@ -104,6 +81,29 @@ class LegacyRecommendationPiReason implements Interfaces\EntityInterface
     public function getLegacyPiReason()
     {
         return $this->legacyPiReason;
+    }
+
+    /**
+     * Set the legacy recommendation
+     *
+     * @param \Olcs\Db\Entity\LegacyRecommendation $legacyRecommendation
+     * @return LegacyRecommendationPiReason
+     */
+    public function setLegacyRecommendation($legacyRecommendation)
+    {
+        $this->legacyRecommendation = $legacyRecommendation;
+
+        return $this;
+    }
+
+    /**
+     * Get the legacy recommendation
+     *
+     * @return \Olcs\Db\Entity\LegacyRecommendation
+     */
+    public function getLegacyRecommendation()
+    {
+        return $this->legacyRecommendation;
     }
 
     /**
