@@ -27,7 +27,6 @@ class Prohibition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\CaseManyToOneAlt1,
         Traits\Vrm20Field,
         Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
@@ -42,6 +41,16 @@ class Prohibition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=false)
      */
     protected $prohibitionType;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="prohibitions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Prohibition date
@@ -100,6 +109,29 @@ class Prohibition implements Interfaces\EntityInterface
     public function getProhibitionType()
     {
         return $this->prohibitionType;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Prohibition
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
