@@ -25,14 +25,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Trailer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**

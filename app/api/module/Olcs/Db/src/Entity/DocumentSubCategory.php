@@ -23,23 +23,14 @@ use Olcs\Db\Entity\Traits;
 class DocumentSubCategory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CategoryManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\Description255Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CategoryManyToOne,
-        Traits\Description255Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Is scanned
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_scanned", nullable=false)
-     */
-    protected $isScanned = 0;
 
     /**
      * Display free text
@@ -51,27 +42,13 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     protected $displayFreeText = 0;
 
     /**
-     * Set the is scanned
+     * Is scanned
      *
-     * @param string $isScanned
-     * @return DocumentSubCategory
-     */
-    public function setIsScanned($isScanned)
-    {
-        $this->isScanned = $isScanned;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scanned
+     * @var string
      *
-     * @return string
+     * @ORM\Column(type="yesno", name="is_scanned", nullable=false)
      */
-    public function getIsScanned()
-    {
-        return $this->isScanned;
-    }
+    protected $isScanned = 0;
 
     /**
      * Set the display free text
@@ -94,5 +71,28 @@ class DocumentSubCategory implements Interfaces\EntityInterface
     public function getDisplayFreeText()
     {
         return $this->displayFreeText;
+    }
+
+    /**
+     * Set the is scanned
+     *
+     * @param string $isScanned
+     * @return DocumentSubCategory
+     */
+    public function setIsScanned($isScanned)
+    {
+        $this->isScanned = $isScanned;
+
+        return $this;
+    }
+
+    /**
+     * Get the is scanned
+     *
+     * @return string
+     */
+    public function getIsScanned()
+    {
+        return $this->isScanned;
     }
 }

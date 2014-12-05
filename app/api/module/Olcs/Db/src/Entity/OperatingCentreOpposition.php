@@ -24,12 +24,12 @@ use Olcs\Db\Entity\Traits;
 class OperatingCentreOpposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\OperatingCentreManyToOne,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\OperatingCentreManyToOne,
         Traits\CustomVersionField;
 
     /**

@@ -26,33 +26,31 @@ use Olcs\Db\Entity\Traits;
 class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ViAction1Field,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
-     * Lead tc area
+     * Allow email
      *
-     * @var \Olcs\Db\Entity\TrafficArea
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
-     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
      */
-    protected $leadTcArea;
+    protected $allowEmail = 0;
 
     /**
-     * Type
+     * Company cert seen
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
      */
-    protected $type;
+    protected $companyCertSeen = 0;
 
     /**
      * Company or llp no
@@ -64,15 +62,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $companyOrLlpNo;
 
     /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=160, nullable=true)
-     */
-    protected $name;
-
-    /**
      * Irfo name
      *
      * @var string
@@ -80,24 +69,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
      */
     protected $irfoName;
-
-    /**
-     * Is mlh
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
-     */
-    protected $isMlh = 0;
-
-    /**
-     * Company cert seen
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
-     */
-    protected $companyCertSeen = 0;
 
     /**
      * Irfo nationality
@@ -118,13 +89,42 @@ class Organisation implements Interfaces\EntityInterface
     protected $isIrfo = 0;
 
     /**
-     * Allow email
+     * Is mlh
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
+     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
      */
-    protected $allowEmail = 0;
+    protected $isMlh = 0;
+
+    /**
+     * Lead tc area
+     *
+     * @var \Olcs\Db\Entity\TrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TrafficArea")
+     * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
+     */
+    protected $leadTcArea;
+
+    /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=160, nullable=true)
+     */
+    protected $name;
+
+    /**
+     * Type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
+     */
+    protected $type;
 
     /**
      * Contact detail
@@ -184,49 +184,49 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the lead tc area
+     * Set the allow email
      *
-     * @param \Olcs\Db\Entity\TrafficArea $leadTcArea
+     * @param string $allowEmail
      * @return Organisation
      */
-    public function setLeadTcArea($leadTcArea)
+    public function setAllowEmail($allowEmail)
     {
-        $this->leadTcArea = $leadTcArea;
+        $this->allowEmail = $allowEmail;
 
         return $this;
     }
 
     /**
-     * Get the lead tc area
+     * Get the allow email
      *
-     * @return \Olcs\Db\Entity\TrafficArea
+     * @return string
      */
-    public function getLeadTcArea()
+    public function getAllowEmail()
     {
-        return $this->leadTcArea;
+        return $this->allowEmail;
     }
 
     /**
-     * Set the type
+     * Set the company cert seen
      *
-     * @param \Olcs\Db\Entity\RefData $type
+     * @param string $companyCertSeen
      * @return Organisation
      */
-    public function setType($type)
+    public function setCompanyCertSeen($companyCertSeen)
     {
-        $this->type = $type;
+        $this->companyCertSeen = $companyCertSeen;
 
         return $this;
     }
 
     /**
-     * Get the type
+     * Get the company cert seen
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
-    public function getType()
+    public function getCompanyCertSeen()
     {
-        return $this->type;
+        return $this->companyCertSeen;
     }
 
     /**
@@ -253,29 +253,6 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the name
-     *
-     * @param string $name
-     * @return Organisation
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set the irfo name
      *
      * @param string $irfoName
@@ -296,52 +273,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getIrfoName()
     {
         return $this->irfoName;
-    }
-
-    /**
-     * Set the is mlh
-     *
-     * @param string $isMlh
-     * @return Organisation
-     */
-    public function setIsMlh($isMlh)
-    {
-        $this->isMlh = $isMlh;
-
-        return $this;
-    }
-
-    /**
-     * Get the is mlh
-     *
-     * @return string
-     */
-    public function getIsMlh()
-    {
-        return $this->isMlh;
-    }
-
-    /**
-     * Set the company cert seen
-     *
-     * @param string $companyCertSeen
-     * @return Organisation
-     */
-    public function setCompanyCertSeen($companyCertSeen)
-    {
-        $this->companyCertSeen = $companyCertSeen;
-
-        return $this;
-    }
-
-    /**
-     * Get the company cert seen
-     *
-     * @return string
-     */
-    public function getCompanyCertSeen()
-    {
-        return $this->companyCertSeen;
     }
 
     /**
@@ -391,26 +322,95 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the allow email
+     * Set the is mlh
      *
-     * @param string $allowEmail
+     * @param string $isMlh
      * @return Organisation
      */
-    public function setAllowEmail($allowEmail)
+    public function setIsMlh($isMlh)
     {
-        $this->allowEmail = $allowEmail;
+        $this->isMlh = $isMlh;
 
         return $this;
     }
 
     /**
-     * Get the allow email
+     * Get the is mlh
      *
      * @return string
      */
-    public function getAllowEmail()
+    public function getIsMlh()
     {
-        return $this->allowEmail;
+        return $this->isMlh;
+    }
+
+    /**
+     * Set the lead tc area
+     *
+     * @param \Olcs\Db\Entity\TrafficArea $leadTcArea
+     * @return Organisation
+     */
+    public function setLeadTcArea($leadTcArea)
+    {
+        $this->leadTcArea = $leadTcArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the lead tc area
+     *
+     * @return \Olcs\Db\Entity\TrafficArea
+     */
+    public function getLeadTcArea()
+    {
+        return $this->leadTcArea;
+    }
+
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @return Organisation
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the type
+     *
+     * @param \Olcs\Db\Entity\RefData $type
+     * @return Organisation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

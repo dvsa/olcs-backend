@@ -22,21 +22,12 @@ use Olcs\Db\Entity\Traits;
 class DocParagraph implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Para title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="para_title", length=255, nullable=false)
-     */
-    protected $paraTitle;
 
     /**
      * Para text
@@ -48,27 +39,13 @@ class DocParagraph implements Interfaces\EntityInterface
     protected $paraText;
 
     /**
-     * Set the para title
+     * Para title
      *
-     * @param string $paraTitle
-     * @return DocParagraph
-     */
-    public function setParaTitle($paraTitle)
-    {
-        $this->paraTitle = $paraTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get the para title
+     * @var string
      *
-     * @return string
+     * @ORM\Column(type="string", name="para_title", length=255, nullable=false)
      */
-    public function getParaTitle()
-    {
-        return $this->paraTitle;
-    }
+    protected $paraTitle;
 
     /**
      * Set the para text
@@ -91,5 +68,28 @@ class DocParagraph implements Interfaces\EntityInterface
     public function getParaText()
     {
         return $this->paraText;
+    }
+
+    /**
+     * Set the para title
+     *
+     * @param string $paraTitle
+     * @return DocParagraph
+     */
+    public function setParaTitle($paraTitle)
+    {
+        $this->paraTitle = $paraTitle;
+
+        return $this;
+    }
+
+    /**
+     * Get the para title
+     *
+     * @return string
+     */
+    public function getParaTitle()
+    {
+        return $this->paraTitle;
     }
 }

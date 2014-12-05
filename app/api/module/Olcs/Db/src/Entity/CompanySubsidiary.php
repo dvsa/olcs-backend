@@ -22,21 +22,12 @@ use Olcs\Db\Entity\Traits;
 class CompanySubsidiary implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=70, nullable=true)
-     */
-    protected $name;
 
     /**
      * Company no
@@ -48,27 +39,13 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     protected $companyNo;
 
     /**
-     * Set the name
+     * Name
      *
-     * @param string $name
-     * @return CompanySubsidiary
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
+     * @var string
      *
-     * @return string
+     * @ORM\Column(type="string", name="name", length=70, nullable=true)
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    protected $name;
 
     /**
      * Set the company no
@@ -91,5 +68,28 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     public function getCompanyNo()
     {
         return $this->companyNo;
+    }
+
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @return CompanySubsidiary
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

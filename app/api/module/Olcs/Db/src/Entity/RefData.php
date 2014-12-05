@@ -27,6 +27,52 @@ class RefData implements Interfaces\EntityInterface
         Traits\Id32Identity;
 
     /**
+     * Case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="categorys")
+     */
+    protected $cases;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=512, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $description;
+
+    /**
+     * Display order
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="display_order", nullable=true)
+     */
+    protected $displayOrder;
+
+    /**
+     * Impounding
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Impounding", mappedBy="impoundingLegislationTypes")
+     */
+    protected $impoundings;
+
+    /**
+     * Olbs key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_key", length=20, nullable=true)
+     */
+    protected $olbsKey;
+
+    /**
      * Parent
      *
      * @var \Olcs\Db\Entity\RefData
@@ -46,34 +92,6 @@ class RefData implements Interfaces\EntityInterface
     protected $pis;
 
     /**
-     * Case
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="categorys")
-     */
-    protected $cases;
-
-    /**
-     * Impounding
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Impounding", mappedBy="impoundingLegislationTypes")
-     */
-    protected $impoundings;
-
-    /**
-     * Description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="description", length=512, nullable=true)
-     * @Gedmo\Translatable
-     */
-    protected $description;
-
-    /**
      * Ref data category id
      *
      * @var string
@@ -83,24 +101,6 @@ class RefData implements Interfaces\EntityInterface
     protected $refDataCategoryId;
 
     /**
-     * Olbs key
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="olbs_key", length=20, nullable=true)
-     */
-    protected $olbsKey;
-
-    /**
-     * Display order
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="display_order", nullable=true)
-     */
-    protected $displayOrder;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
@@ -108,6 +108,195 @@ class RefData implements Interfaces\EntityInterface
         $this->pis = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function setCases($cases)
+    {
+        $this->cases = $cases;
+
+        return $this;
+    }
+
+    /**
+     * Get the cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCases()
+    {
+        return $this->cases;
+    }
+
+    /**
+     * Add a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return RefData
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->removeElement($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return RefData
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the display order
+     *
+     * @param int $displayOrder
+     * @return RefData
+     */
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get the display order
+     *
+     * @return int
+     */
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    /**
+     * Set the impounding
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function setImpoundings($impoundings)
+    {
+        $this->impoundings = $impoundings;
+
+        return $this;
+    }
+
+    /**
+     * Get the impoundings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getImpoundings()
+    {
+        return $this->impoundings;
+    }
+
+    /**
+     * Add a impoundings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function addImpoundings($impoundings)
+    {
+        if ($impoundings instanceof ArrayCollection) {
+            $this->impoundings = new ArrayCollection(
+                array_merge(
+                    $this->impoundings->toArray(),
+                    $impoundings->toArray()
+                )
+            );
+        } elseif (!$this->impoundings->contains($impoundings)) {
+            $this->impoundings->add($impoundings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a impoundings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
+     * @return RefData
+     */
+    public function removeImpoundings($impoundings)
+    {
+        if ($this->impoundings->contains($impoundings)) {
+            $this->impoundings->removeElement($impoundings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param string $olbsKey
+     * @return RefData
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return string
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
     }
 
     /**
@@ -194,149 +383,6 @@ class RefData implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the case
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return RefData
-     */
-    public function setCases($cases)
-    {
-        $this->cases = $cases;
-
-        return $this;
-    }
-
-    /**
-     * Get the cases
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getCases()
-    {
-        return $this->cases;
-    }
-
-    /**
-     * Add a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return RefData
-     */
-    public function addCases($cases)
-    {
-        if ($cases instanceof ArrayCollection) {
-            $this->cases = new ArrayCollection(
-                array_merge(
-                    $this->cases->toArray(),
-                    $cases->toArray()
-                )
-            );
-        } elseif (!$this->cases->contains($cases)) {
-            $this->cases->add($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return RefData
-     */
-    public function removeCases($cases)
-    {
-        if ($this->cases->contains($cases)) {
-            $this->cases->removeElement($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the impounding
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
-     * @return RefData
-     */
-    public function setImpoundings($impoundings)
-    {
-        $this->impoundings = $impoundings;
-
-        return $this;
-    }
-
-    /**
-     * Get the impoundings
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getImpoundings()
-    {
-        return $this->impoundings;
-    }
-
-    /**
-     * Add a impoundings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
-     * @return RefData
-     */
-    public function addImpoundings($impoundings)
-    {
-        if ($impoundings instanceof ArrayCollection) {
-            $this->impoundings = new ArrayCollection(
-                array_merge(
-                    $this->impoundings->toArray(),
-                    $impoundings->toArray()
-                )
-            );
-        } elseif (!$this->impoundings->contains($impoundings)) {
-            $this->impoundings->add($impoundings);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a impoundings
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundings
-     * @return RefData
-     */
-    public function removeImpoundings($impoundings)
-    {
-        if ($this->impoundings->contains($impoundings)) {
-            $this->impoundings->removeElement($impoundings);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the description
-     *
-     * @param string $description
-     * @return RefData
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
      * Set the ref data category id
      *
      * @param string $refDataCategoryId
@@ -357,51 +403,5 @@ class RefData implements Interfaces\EntityInterface
     public function getRefDataCategoryId()
     {
         return $this->refDataCategoryId;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param string $olbsKey
-     * @return RefData
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return string
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
-    }
-
-    /**
-     * Set the display order
-     *
-     * @param int $displayOrder
-     * @return RefData
-     */
-    public function setDisplayOrder($displayOrder)
-    {
-        $this->displayOrder = $displayOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get the display order
-     *
-     * @return int
-     */
-    public function getDisplayOrder()
-    {
-        return $this->displayOrder;
     }
 }

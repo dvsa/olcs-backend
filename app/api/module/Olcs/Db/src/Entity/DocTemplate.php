@@ -26,13 +26,13 @@ use Olcs\Db\Entity\Traits;
 class DocTemplate implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CategoryManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\DocumentManyToOne,
-        Traits\Description255Field,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\DocumentManyToOne,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

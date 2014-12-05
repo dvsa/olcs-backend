@@ -24,22 +24,12 @@ use Olcs\Db\Entity\Traits;
 class PhoneContact implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Phone contact type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="phone_contact_type", referencedColumnName="id", nullable=false)
-     */
-    protected $phoneContactType;
 
     /**
      * Contact details
@@ -52,15 +42,6 @@ class PhoneContact implements Interfaces\EntityInterface
     protected $contactDetails;
 
     /**
-     * Phone number
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="phone_number", length=45, nullable=true)
-     */
-    protected $phoneNumber;
-
-    /**
      * Details
      *
      * @var string
@@ -70,27 +51,23 @@ class PhoneContact implements Interfaces\EntityInterface
     protected $details;
 
     /**
-     * Set the phone contact type
+     * Phone contact type
      *
-     * @param \Olcs\Db\Entity\RefData $phoneContactType
-     * @return PhoneContact
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="phone_contact_type", referencedColumnName="id", nullable=false)
      */
-    public function setPhoneContactType($phoneContactType)
-    {
-        $this->phoneContactType = $phoneContactType;
-
-        return $this;
-    }
+    protected $phoneContactType;
 
     /**
-     * Get the phone contact type
+     * Phone number
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @var string
+     *
+     * @ORM\Column(type="string", name="phone_number", length=45, nullable=true)
      */
-    public function getPhoneContactType()
-    {
-        return $this->phoneContactType;
-    }
+    protected $phoneNumber;
 
     /**
      * Set the contact details
@@ -116,29 +93,6 @@ class PhoneContact implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the phone number
-     *
-     * @param string $phoneNumber
-     * @return PhoneContact
-     */
-    public function setPhoneNumber($phoneNumber)
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get the phone number
-     *
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phoneNumber;
-    }
-
-    /**
      * Set the details
      *
      * @param string $details
@@ -159,5 +113,51 @@ class PhoneContact implements Interfaces\EntityInterface
     public function getDetails()
     {
         return $this->details;
+    }
+
+    /**
+     * Set the phone contact type
+     *
+     * @param \Olcs\Db\Entity\RefData $phoneContactType
+     * @return PhoneContact
+     */
+    public function setPhoneContactType($phoneContactType)
+    {
+        $this->phoneContactType = $phoneContactType;
+
+        return $this;
+    }
+
+    /**
+     * Get the phone contact type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPhoneContactType()
+    {
+        return $this->phoneContactType;
+    }
+
+    /**
+     * Set the phone number
+     *
+     * @param string $phoneNumber
+     * @return PhoneContact
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the phone number
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
     }
 }

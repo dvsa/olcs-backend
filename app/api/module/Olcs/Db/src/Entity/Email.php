@@ -23,22 +23,21 @@ use Olcs\Db\Entity\Traits;
 class Email implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\CreatedByManyToOne,
         Traits\AddedDateField,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
-     * Last updated by
+     * Deferred date
      *
-     * @var \Olcs\Db\Entity\User
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="datetime", name="deferred_date", nullable=true)
      */
-    protected $lastUpdatedBy;
+    protected $deferredDate;
 
     /**
      * Document
@@ -56,24 +55,6 @@ class Email implements Interfaces\EntityInterface
      * )
      */
     protected $documents;
-
-    /**
-     * Deferred date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deferred_date", nullable=true)
-     */
-    protected $deferredDate;
-
-    /**
-     * Sent date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="sent_date", nullable=true)
-     */
-    protected $sentDate;
 
     /**
      * Importance
@@ -94,6 +75,25 @@ class Email implements Interfaces\EntityInterface
     protected $isSensitive;
 
     /**
+     * Last updated by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id", nullable=true)
+     */
+    protected $lastUpdatedBy;
+
+    /**
+     * Sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="sent_date", nullable=true)
+     */
+    protected $sentDate;
+
+    /**
      * Subject
      *
      * @var string
@@ -111,26 +111,26 @@ class Email implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the last updated by
+     * Set the deferred date
      *
-     * @param \Olcs\Db\Entity\User $lastUpdatedBy
+     * @param \DateTime $deferredDate
      * @return Email
      */
-    public function setLastUpdatedBy($lastUpdatedBy)
+    public function setDeferredDate($deferredDate)
     {
-        $this->lastUpdatedBy = $lastUpdatedBy;
+        $this->deferredDate = $deferredDate;
 
         return $this;
     }
 
     /**
-     * Get the last updated by
+     * Get the deferred date
      *
-     * @return \Olcs\Db\Entity\User
+     * @return \DateTime
      */
-    public function getLastUpdatedBy()
+    public function getDeferredDate()
     {
-        return $this->lastUpdatedBy;
+        return $this->deferredDate;
     }
 
     /**
@@ -194,52 +194,6 @@ class Email implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the deferred date
-     *
-     * @param \DateTime $deferredDate
-     * @return Email
-     */
-    public function setDeferredDate($deferredDate)
-    {
-        $this->deferredDate = $deferredDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deferred date
-     *
-     * @return \DateTime
-     */
-    public function getDeferredDate()
-    {
-        return $this->deferredDate;
-    }
-
-    /**
-     * Set the sent date
-     *
-     * @param \DateTime $sentDate
-     * @return Email
-     */
-    public function setSentDate($sentDate)
-    {
-        $this->sentDate = $sentDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the sent date
-     *
-     * @return \DateTime
-     */
-    public function getSentDate()
-    {
-        return $this->sentDate;
-    }
-
-    /**
      * Set the importance
      *
      * @param int $importance
@@ -283,6 +237,52 @@ class Email implements Interfaces\EntityInterface
     public function getIsSensitive()
     {
         return $this->isSensitive;
+    }
+
+    /**
+     * Set the last updated by
+     *
+     * @param \Olcs\Db\Entity\User $lastUpdatedBy
+     * @return Email
+     */
+    public function setLastUpdatedBy($lastUpdatedBy)
+    {
+        $this->lastUpdatedBy = $lastUpdatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last updated by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastUpdatedBy()
+    {
+        return $this->lastUpdatedBy;
+    }
+
+    /**
+     * Set the sent date
+     *
+     * @param \DateTime $sentDate
+     * @return Email
+     */
+    public function setSentDate($sentDate)
+    {
+        $this->sentDate = $sentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the sent date
+     *
+     * @return \DateTime
+     */
+    public function getSentDate()
+    {
+        return $this->sentDate;
     }
 
     /**

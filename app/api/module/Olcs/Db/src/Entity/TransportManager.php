@@ -28,35 +28,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManager implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOne,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\ContactDetailsManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\Notes4000Field,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
+        Traits\Notes4000Field,
         Traits\CustomVersionField;
-
-    /**
-     * Tm type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=false)
-     */
-    protected $tmType;
-
-    /**
-     * Tm status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_status", referencedColumnName="id", nullable=false)
-     */
-    protected $tmStatus;
 
     /**
      * Disqualification tm case id
@@ -86,6 +66,26 @@ class TransportManager implements Interfaces\EntityInterface
     protected $nysiisForename;
 
     /**
+     * Tm status
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="tm_status", referencedColumnName="id", nullable=false)
+     */
+    protected $tmStatus;
+
+    /**
+     * Tm type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=false)
+     */
+    protected $tmType;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -100,52 +100,6 @@ class TransportManager implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->documents = new ArrayCollection();
-    }
-
-    /**
-     * Set the tm type
-     *
-     * @param \Olcs\Db\Entity\RefData $tmType
-     * @return TransportManager
-     */
-    public function setTmType($tmType)
-    {
-        $this->tmType = $tmType;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTmType()
-    {
-        return $this->tmType;
-    }
-
-    /**
-     * Set the tm status
-     *
-     * @param \Olcs\Db\Entity\RefData $tmStatus
-     * @return TransportManager
-     */
-    public function setTmStatus($tmStatus)
-    {
-        $this->tmStatus = $tmStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTmStatus()
-    {
-        return $this->tmStatus;
     }
 
     /**
@@ -215,6 +169,52 @@ class TransportManager implements Interfaces\EntityInterface
     public function getNysiisForename()
     {
         return $this->nysiisForename;
+    }
+
+    /**
+     * Set the tm status
+     *
+     * @param \Olcs\Db\Entity\RefData $tmStatus
+     * @return TransportManager
+     */
+    public function setTmStatus($tmStatus)
+    {
+        $this->tmStatus = $tmStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm status
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTmStatus()
+    {
+        return $this->tmStatus;
+    }
+
+    /**
+     * Set the tm type
+     *
+     * @param \Olcs\Db\Entity\RefData $tmType
+     * @return TransportManager
+     */
+    public function setTmType($tmType)
+    {
+        $this->tmType = $tmType;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTmType()
+    {
+        return $this->tmType;
     }
 
     /**

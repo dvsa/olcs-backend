@@ -24,14 +24,23 @@ use Olcs\Db\Entity\Traits;
 class Workshop implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\ContactDetailsManyToOne,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\RemovedDateField,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\RemovedDateField,
         Traits\CustomVersionField;
+
+    /**
+     * Is external
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_external", nullable=false)
+     */
+    protected $isExternal = 0;
 
     /**
      * Licence
@@ -42,15 +51,6 @@ class Workshop implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
-
-    /**
-     * Is external
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_external", nullable=false)
-     */
-    protected $isExternal = 0;
 
     /**
      * Maintenance
@@ -69,29 +69,6 @@ class Workshop implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="safety_inspection", nullable=false)
      */
     protected $safetyInspection = 0;
-
-    /**
-     * Set the licence
-     *
-     * @param \Olcs\Db\Entity\Licence $licence
-     * @return Workshop
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Olcs\Db\Entity\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
 
     /**
      * Set the is external
@@ -114,6 +91,29 @@ class Workshop implements Interfaces\EntityInterface
     public function getIsExternal()
     {
         return $this->isExternal;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Workshop
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

@@ -18,8 +18,8 @@ use Olcs\Db\Entity\Traits;
 class VariationReason implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\Description45Field;
+        Traits\Description45Field,
+        Traits\IdIdentity;
 
     /**
      * Bus reg

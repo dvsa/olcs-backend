@@ -23,13 +23,13 @@ use Olcs\Db\Entity\Traits;
 class PiDefinition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
-        Traits\GoodsOrPsvManyToOneAlt1,
-        Traits\Description255Field,
-        Traits\IsNiFieldAlt1,
         Traits\CustomCreatedOnField,
+        Traits\Description255Field,
+        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\IdIdentity,
+        Traits\IsNiFieldAlt1,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 

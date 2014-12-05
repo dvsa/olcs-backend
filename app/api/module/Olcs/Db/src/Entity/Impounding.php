@@ -28,31 +28,30 @@ use Olcs\Db\Entity\Traits;
 class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
         Traits\CaseManyToOneAlt1,
-        Traits\PiVenueManyToOne,
-        Traits\OutcomeManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\PresidingTcManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\HearingDateField,
-        Traits\Notes4000Field,
         Traits\CloseDateField,
-        Traits\PiVenueOther255Field,
-        Traits\Vrm20Field,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\HearingDateField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\Notes4000Field,
+        Traits\OutcomeManyToOne,
+        Traits\PiVenueManyToOne,
+        Traits\PiVenueOther255Field,
+        Traits\PresidingTcManyToOne,
+        Traits\CustomVersionField,
+        Traits\Vrm20Field;
 
     /**
-     * Impounding type
+     * Application receipt date
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="datetime", name="application_receipt_date", nullable=true)
      */
-    protected $impoundingType;
+    protected $applicationReceiptDate;
 
     /**
      * Impounding legislation type
@@ -72,13 +71,14 @@ class Impounding implements Interfaces\EntityInterface
     protected $impoundingLegislationTypes;
 
     /**
-     * Application receipt date
+     * Impounding type
      *
-     * @var \DateTime
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="datetime", name="application_receipt_date", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
-    protected $applicationReceiptDate;
+    protected $impoundingType;
 
     /**
      * Outcome sent date
@@ -98,26 +98,26 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the impounding type
+     * Set the application receipt date
      *
-     * @param \Olcs\Db\Entity\RefData $impoundingType
+     * @param \DateTime $applicationReceiptDate
      * @return Impounding
      */
-    public function setImpoundingType($impoundingType)
+    public function setApplicationReceiptDate($applicationReceiptDate)
     {
-        $this->impoundingType = $impoundingType;
+        $this->applicationReceiptDate = $applicationReceiptDate;
 
         return $this;
     }
 
     /**
-     * Get the impounding type
+     * Get the application receipt date
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \DateTime
      */
-    public function getImpoundingType()
+    public function getApplicationReceiptDate()
     {
-        return $this->impoundingType;
+        return $this->applicationReceiptDate;
     }
 
     /**
@@ -181,26 +181,26 @@ class Impounding implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application receipt date
+     * Set the impounding type
      *
-     * @param \DateTime $applicationReceiptDate
+     * @param \Olcs\Db\Entity\RefData $impoundingType
      * @return Impounding
      */
-    public function setApplicationReceiptDate($applicationReceiptDate)
+    public function setImpoundingType($impoundingType)
     {
-        $this->applicationReceiptDate = $applicationReceiptDate;
+        $this->impoundingType = $impoundingType;
 
         return $this;
     }
 
     /**
-     * Get the application receipt date
+     * Get the impounding type
      *
-     * @return \DateTime
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getApplicationReceiptDate()
+    public function getImpoundingType()
     {
-        return $this->applicationReceiptDate;
+        return $this->impoundingType;
     }
 
     /**

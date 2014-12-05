@@ -23,22 +23,12 @@ use Olcs\Db\Entity\Traits;
 class TaskNote implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Task
-     *
-     * @var \Olcs\Db\Entity\Task
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task")
-     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=false)
-     */
-    protected $task;
 
     /**
      * Note text
@@ -50,27 +40,14 @@ class TaskNote implements Interfaces\EntityInterface
     protected $noteText;
 
     /**
-     * Set the task
+     * Task
      *
-     * @param \Olcs\Db\Entity\Task $task
-     * @return TaskNote
-     */
-    public function setTask($task)
-    {
-        $this->task = $task;
-
-        return $this;
-    }
-
-    /**
-     * Get the task
+     * @var \Olcs\Db\Entity\Task
      *
-     * @return \Olcs\Db\Entity\Task
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Task")
+     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=false)
      */
-    public function getTask()
-    {
-        return $this->task;
-    }
+    protected $task;
 
     /**
      * Set the note text
@@ -93,5 +70,28 @@ class TaskNote implements Interfaces\EntityInterface
     public function getNoteText()
     {
         return $this->noteText;
+    }
+
+    /**
+     * Set the task
+     *
+     * @param \Olcs\Db\Entity\Task $task
+     * @return TaskNote
+     */
+    public function setTask($task)
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    /**
+     * Get the task
+     *
+     * @return \Olcs\Db\Entity\Task
+     */
+    public function getTask()
+    {
+        return $this->task;
     }
 }

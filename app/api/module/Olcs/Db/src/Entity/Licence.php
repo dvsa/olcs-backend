@@ -33,49 +33,29 @@ use Olcs\Db\Entity\Traits;
 class Licence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\IdIdentity,
-        Traits\LicenceTypeManyToOne,
-        Traits\StatusManyToOne,
-        Traits\GoodsOrPsvManyToOne,
-        Traits\LastModifiedByManyToOne,
-        Traits\TrafficAreaManyToOneAlt1,
         Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\ExpiryDateField,
+        Traits\GoodsOrPsvManyToOne,
+        Traits\GrantedDateField,
+        Traits\IdIdentity,
+        Traits\InForceDateField,
+        Traits\IsMaintenanceSuitableField,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\LicNo18Field,
-        Traits\ViAction1Field,
+        Traits\LicenceTypeManyToOne,
+        Traits\NiFlagField,
+        Traits\StatusManyToOne,
+        Traits\TotAuthLargeVehiclesField,
+        Traits\TotAuthMediumVehiclesField,
+        Traits\TotAuthSmallVehiclesField,
         Traits\TotAuthTrailersField,
         Traits\TotAuthVehiclesField,
-        Traits\TotAuthSmallVehiclesField,
-        Traits\TotAuthMediumVehiclesField,
-        Traits\TotAuthLargeVehiclesField,
         Traits\TotCommunityLicencesField,
-        Traits\ExpiryDateField,
-        Traits\GrantedDateField,
-        Traits\InForceDateField,
-        Traits\NiFlagField,
-        Traits\IsMaintenanceSuitableField,
-        Traits\CustomCreatedOnField,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
-
-    /**
-     * Tachograph ins
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
-     */
-    protected $tachographIns;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="licences")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
+        Traits\TrafficAreaManyToOneAlt1,
+        Traits\CustomVersionField,
+        Traits\ViAction1Field;
 
     /**
      * Enforcement area
@@ -88,15 +68,6 @@ class Licence implements Interfaces\EntityInterface
     protected $enforcementArea;
 
     /**
-     * Trailers in possession
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="trailers_in_possession", nullable=true)
-     */
-    protected $trailersInPossession;
-
-    /**
      * Fabs reference
      *
      * @var string
@@ -104,15 +75,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="fabs_reference", length=10, nullable=true)
      */
     protected $fabsReference;
-
-    /**
-     * Review date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="review_date", nullable=true)
-     */
-    protected $reviewDate;
 
     /**
      * Fee date
@@ -124,31 +86,32 @@ class Licence implements Interfaces\EntityInterface
     protected $feeDate;
 
     /**
-     * Surrendered date
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="licences")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
+
+    /**
+     * Psv discs to be printed no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="psv_discs_to_be_printed_no", nullable=true)
+     */
+    protected $psvDiscsToBePrintedNo;
+
+    /**
+     * Review date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
+     * @ORM\Column(type="date", name="review_date", nullable=true)
      */
-    protected $surrenderedDate;
-
-    /**
-     * Safety ins trailers
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="safety_ins_trailers", nullable=true)
-     */
-    protected $safetyInsTrailers;
-
-    /**
-     * Safety ins vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="safety_ins_vehicles", nullable=true)
-     */
-    protected $safetyInsVehicles;
+    protected $reviewDate;
 
     /**
      * Safety ins
@@ -160,6 +123,15 @@ class Licence implements Interfaces\EntityInterface
     protected $safetyIns = 0;
 
     /**
+     * Safety ins trailers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="safety_ins_trailers", nullable=true)
+     */
+    protected $safetyInsTrailers;
+
+    /**
      * Safety ins varies
      *
      * @var string
@@ -167,6 +139,34 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="safety_ins_varies", nullable=true)
      */
     protected $safetyInsVaries;
+
+    /**
+     * Safety ins vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="safety_ins_vehicles", nullable=true)
+     */
+    protected $safetyInsVehicles;
+
+    /**
+     * Surrendered date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
+     */
+    protected $surrenderedDate;
+
+    /**
+     * Tachograph ins
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="tachograph_ins", referencedColumnName="id", nullable=true)
+     */
+    protected $tachographIns;
 
     /**
      * Tachograph ins name
@@ -178,13 +178,13 @@ class Licence implements Interfaces\EntityInterface
     protected $tachographInsName;
 
     /**
-     * Psv discs to be printed no
+     * Trailers in possession
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="psv_discs_to_be_printed_no", nullable=true)
+     * @ORM\Column(type="integer", name="trailers_in_possession", nullable=true)
      */
-    protected $psvDiscsToBePrintedNo;
+    protected $trailersInPossession;
 
     /**
      * Translate to welsh
@@ -284,52 +284,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the tachograph ins
-     *
-     * @param \Olcs\Db\Entity\RefData $tachographIns
-     * @return Licence
-     */
-    public function setTachographIns($tachographIns)
-    {
-        $this->tachographIns = $tachographIns;
-
-        return $this;
-    }
-
-    /**
-     * Get the tachograph ins
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTachographIns()
-    {
-        return $this->tachographIns;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return Licence
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * Set the enforcement area
      *
      * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
@@ -350,29 +304,6 @@ class Licence implements Interfaces\EntityInterface
     public function getEnforcementArea()
     {
         return $this->enforcementArea;
-    }
-
-    /**
-     * Set the trailers in possession
-     *
-     * @param int $trailersInPossession
-     * @return Licence
-     */
-    public function setTrailersInPossession($trailersInPossession)
-    {
-        $this->trailersInPossession = $trailersInPossession;
-
-        return $this;
-    }
-
-    /**
-     * Get the trailers in possession
-     *
-     * @return int
-     */
-    public function getTrailersInPossession()
-    {
-        return $this->trailersInPossession;
     }
 
     /**
@@ -399,29 +330,6 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the review date
-     *
-     * @param \DateTime $reviewDate
-     * @return Licence
-     */
-    public function setReviewDate($reviewDate)
-    {
-        $this->reviewDate = $reviewDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the review date
-     *
-     * @return \DateTime
-     */
-    public function getReviewDate()
-    {
-        return $this->reviewDate;
-    }
-
-    /**
      * Set the fee date
      *
      * @param \DateTime $feeDate
@@ -445,72 +353,72 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the surrendered date
+     * Set the organisation
      *
-     * @param \DateTime $surrenderedDate
+     * @param \Olcs\Db\Entity\Organisation $organisation
      * @return Licence
      */
-    public function setSurrenderedDate($surrenderedDate)
+    public function setOrganisation($organisation)
     {
-        $this->surrenderedDate = $surrenderedDate;
+        $this->organisation = $organisation;
 
         return $this;
     }
 
     /**
-     * Get the surrendered date
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Set the psv discs to be printed no
+     *
+     * @param int $psvDiscsToBePrintedNo
+     * @return Licence
+     */
+    public function setPsvDiscsToBePrintedNo($psvDiscsToBePrintedNo)
+    {
+        $this->psvDiscsToBePrintedNo = $psvDiscsToBePrintedNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv discs to be printed no
+     *
+     * @return int
+     */
+    public function getPsvDiscsToBePrintedNo()
+    {
+        return $this->psvDiscsToBePrintedNo;
+    }
+
+    /**
+     * Set the review date
+     *
+     * @param \DateTime $reviewDate
+     * @return Licence
+     */
+    public function setReviewDate($reviewDate)
+    {
+        $this->reviewDate = $reviewDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the review date
      *
      * @return \DateTime
      */
-    public function getSurrenderedDate()
+    public function getReviewDate()
     {
-        return $this->surrenderedDate;
-    }
-
-    /**
-     * Set the safety ins trailers
-     *
-     * @param int $safetyInsTrailers
-     * @return Licence
-     */
-    public function setSafetyInsTrailers($safetyInsTrailers)
-    {
-        $this->safetyInsTrailers = $safetyInsTrailers;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins trailers
-     *
-     * @return int
-     */
-    public function getSafetyInsTrailers()
-    {
-        return $this->safetyInsTrailers;
-    }
-
-    /**
-     * Set the safety ins vehicles
-     *
-     * @param int $safetyInsVehicles
-     * @return Licence
-     */
-    public function setSafetyInsVehicles($safetyInsVehicles)
-    {
-        $this->safetyInsVehicles = $safetyInsVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the safety ins vehicles
-     *
-     * @return int
-     */
-    public function getSafetyInsVehicles()
-    {
-        return $this->safetyInsVehicles;
+        return $this->reviewDate;
     }
 
     /**
@@ -537,6 +445,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the safety ins trailers
+     *
+     * @param int $safetyInsTrailers
+     * @return Licence
+     */
+    public function setSafetyInsTrailers($safetyInsTrailers)
+    {
+        $this->safetyInsTrailers = $safetyInsTrailers;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins trailers
+     *
+     * @return int
+     */
+    public function getSafetyInsTrailers()
+    {
+        return $this->safetyInsTrailers;
+    }
+
+    /**
      * Set the safety ins varies
      *
      * @param string $safetyInsVaries
@@ -557,6 +488,75 @@ class Licence implements Interfaces\EntityInterface
     public function getSafetyInsVaries()
     {
         return $this->safetyInsVaries;
+    }
+
+    /**
+     * Set the safety ins vehicles
+     *
+     * @param int $safetyInsVehicles
+     * @return Licence
+     */
+    public function setSafetyInsVehicles($safetyInsVehicles)
+    {
+        $this->safetyInsVehicles = $safetyInsVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety ins vehicles
+     *
+     * @return int
+     */
+    public function getSafetyInsVehicles()
+    {
+        return $this->safetyInsVehicles;
+    }
+
+    /**
+     * Set the surrendered date
+     *
+     * @param \DateTime $surrenderedDate
+     * @return Licence
+     */
+    public function setSurrenderedDate($surrenderedDate)
+    {
+        $this->surrenderedDate = $surrenderedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the surrendered date
+     *
+     * @return \DateTime
+     */
+    public function getSurrenderedDate()
+    {
+        return $this->surrenderedDate;
+    }
+
+    /**
+     * Set the tachograph ins
+     *
+     * @param \Olcs\Db\Entity\RefData $tachographIns
+     * @return Licence
+     */
+    public function setTachographIns($tachographIns)
+    {
+        $this->tachographIns = $tachographIns;
+
+        return $this;
+    }
+
+    /**
+     * Get the tachograph ins
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTachographIns()
+    {
+        return $this->tachographIns;
     }
 
     /**
@@ -583,26 +583,26 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the psv discs to be printed no
+     * Set the trailers in possession
      *
-     * @param int $psvDiscsToBePrintedNo
+     * @param int $trailersInPossession
      * @return Licence
      */
-    public function setPsvDiscsToBePrintedNo($psvDiscsToBePrintedNo)
+    public function setTrailersInPossession($trailersInPossession)
     {
-        $this->psvDiscsToBePrintedNo = $psvDiscsToBePrintedNo;
+        $this->trailersInPossession = $trailersInPossession;
 
         return $this;
     }
 
     /**
-     * Get the psv discs to be printed no
+     * Get the trailers in possession
      *
      * @return int
      */
-    public function getPsvDiscsToBePrintedNo()
+    public function getTrailersInPossession()
     {
-        return $this->psvDiscsToBePrintedNo;
+        return $this->trailersInPossession;
     }
 
     /**

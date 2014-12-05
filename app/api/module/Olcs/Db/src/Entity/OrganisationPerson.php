@@ -26,13 +26,22 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class OrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CreatedByManyToOne,
-        Traits\CustomDeletedDateField,
-        Traits\CustomCreatedOnField,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Added date
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="added_date", length=45, nullable=true)
+     */
+    protected $addedDate;
 
     /**
      * Organisation
@@ -55,15 +64,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
     protected $person;
 
     /**
-     * Added date
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="added_date", length=45, nullable=true)
-     */
-    protected $addedDate;
-
-    /**
      * Position
      *
      * @var string
@@ -71,6 +71,29 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="position", length=45, nullable=true)
      */
     protected $position;
+
+    /**
+     * Set the added date
+     *
+     * @param string $addedDate
+     * @return OrganisationPerson
+     */
+    public function setAddedDate($addedDate)
+    {
+        $this->addedDate = $addedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the added date
+     *
+     * @return string
+     */
+    public function getAddedDate()
+    {
+        return $this->addedDate;
+    }
 
     /**
      * Set the organisation
@@ -116,29 +139,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
     public function getPerson()
     {
         return $this->person;
-    }
-
-    /**
-     * Set the added date
-     *
-     * @param string $addedDate
-     * @return OrganisationPerson
-     */
-    public function setAddedDate($addedDate)
-    {
-        $this->addedDate = $addedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the added date
-     *
-     * @return string
-     */
-    public function getAddedDate()
-    {
-        return $this->addedDate;
     }
 
     /**
