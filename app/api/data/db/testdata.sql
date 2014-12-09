@@ -614,14 +614,10 @@ INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by
     (43,'N',NULL,NULL,NULL,NULL,1,'venue_43',63),
     (44,'N',NULL,NULL,NULL,NULL,1,'venue_44',64);
 
-INSERT INTO `pi_hearing` (`id`,`presided_by_role`,`pi_id`,`pi_venue_id`,`last_modified_by`,`created_by`,
-    `presiding_tc_id`,`presiding_tc_other`,`cancelled_reason`,`adjourned_reason`,`details`,`hearing_date`,
-    `pi_venue_other`,`witnesses`,`is_cancelled`,`cancelled_date`,`adjourned_date`,`created_on`,
-    `last_modified_on`,`version`)
+INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`pi_venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`pi_venue_other`,`version`,`witnesses`)
   VALUES
-    (1,'tc_r_htru',1,1,NULL,NULL,1,NULL,NULL,'Test adjourned reason',
-     'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26','2014-03-16 14:30:00',
-     NULL,9,0,NULL,'2014-03-16','2014-11-24 10:22:24',NULL,1);
+    (1,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',1,NULL,'2014-11-24 10:22:24','2014-03-16 14:30:00',0,'2014-12-08 16:16:34',NULL,2,9),
+    (2,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',0,NULL,'2014-11-24 10:22:24','2014-04-05 14:30:00',0,'2014-12-08 17:57:54',NULL,2,9);
 
 INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
@@ -1189,14 +1185,10 @@ VALUES
   (19,'pub_s_new',1,1,'N','2014-10-30',NULL,30,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
   (20,'pub_s_new',1,1,'N','2014-10-30',NULL,2,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
 
-INSERT INTO `publication_link` (`id`,`publication_section_id`,`tm_pi_hearing_id`,`pi_id`,`publication_id`,`created_by`,
-  `last_modified_by`,`bus_reg_id`,`application_id`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,
-  `deleted_date`,`created_on`,`last_modified_on`,`version`)
-VALUES
-  (1,13,NULL,1,3,NULL,NULL,NULL,NULL,7,'B',
-   'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY',
-   'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
-   NULL,NULL,'2014-11-25 15:47:03',NULL,1);
+INSERT INTO `publication_link` (`id`,`pi_id`,`publication_id`,`publication_section_id`,`tm_pi_hearing_id`,`application_id`,`bus_reg_id`,`created_by`,`last_modified_by`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,`created_on`,`deleted_date`,`last_modified_on`,`version`)
+  VALUES
+    (1,1,1,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
+    (2,1,3,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1);
 
 INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
 VALUES
