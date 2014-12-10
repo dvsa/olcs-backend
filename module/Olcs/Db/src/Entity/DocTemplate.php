@@ -39,9 +39,9 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Document sub category
      *
-     * @var \Olcs\Db\Entity\DocumentSubCategory
+     * @var \Olcs\Db\Entity\SubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $documentSubCategory;
@@ -84,7 +84,7 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Set the document sub category
      *
-     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @param \Olcs\Db\Entity\SubCategory $documentSubCategory
      * @return DocTemplate
      */
     public function setDocumentSubCategory($documentSubCategory)
@@ -97,7 +97,7 @@ class DocTemplate implements Interfaces\EntityInterface
     /**
      * Get the document sub category
      *
-     * @return \Olcs\Db\Entity\DocumentSubCategory
+     * @return \Olcs\Db\Entity\SubCategory
      */
     public function getDocumentSubCategory()
     {
