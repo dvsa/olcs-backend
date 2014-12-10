@@ -17,7 +17,6 @@ TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `document`;
-TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_paragraph`;
@@ -839,12 +838,12 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,s
     (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
 
 INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,5,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,5,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,5,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,5,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,5,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,5,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
+    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
+    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
+    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
+    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
+    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),

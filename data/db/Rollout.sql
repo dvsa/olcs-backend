@@ -3703,7 +3703,7 @@ CREATE VIEW task_search_view AS
        t.assigned_to_user_id,
        cat.description category_name,
        tsc.sub_category_name task_sub_type,
-       t.sub_category_id task_sub_category_id,
+       t.sub_category_id sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
