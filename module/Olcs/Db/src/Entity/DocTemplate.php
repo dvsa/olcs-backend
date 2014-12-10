@@ -15,7 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template",
  *    indexes={
- *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"sub_category_id"}),
  *        @ORM\Index(name="fk_doc_template_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_doc_template_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_doc_template_user2_idx", columns={"last_modified_by"}),
@@ -34,17 +34,8 @@ class DocTemplate implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SubCategoryManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Document sub category
-     *
-     * @var \Olcs\Db\Entity\SubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
-     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=false)
-     */
-    protected $documentSubCategory;
 
     /**
      * Is ni
@@ -79,29 +70,6 @@ class DocTemplate implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->docTemplateBookmarks = new ArrayCollection();
-    }
-
-    /**
-     * Set the document sub category
-     *
-     * @param \Olcs\Db\Entity\SubCategory $documentSubCategory
-     * @return DocTemplate
-     */
-    public function setDocumentSubCategory($documentSubCategory)
-    {
-        $this->documentSubCategory = $documentSubCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the document sub category
-     *
-     * @return \Olcs\Db\Entity\SubCategory
-     */
-    public function getDocumentSubCategory()
-    {
-        return $this->documentSubCategory;
     }
 
     /**
