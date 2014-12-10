@@ -1826,7 +1826,7 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (9, 'submission_section', 'intelligence-unit-check', 'Intelligence unit check', NULL),
     (10, 'submission_section', 'interim', 'Interim', NULL),
     (11, 'submission_section', 'advertisement', 'Advertisement', NULL),
-    (12, 'submission_section', 'linked-licences-app-numbers', 'Linked licences & application numbers', NULL),
+    (12, 'submission_section', 'linked-licences-app-numbers', 'Linked licences', NULL),
 
     (14, 'submission_section', 'lead-tc-area', 'Lead TC area', NULL),
     (15, 'submission_section', 'current-submissions', 'Current submissions', NULL),
