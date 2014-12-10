@@ -42,6 +42,7 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomDeletedDateField,
         Traits\Description255FieldAlt1,
         Traits\IdIdentity,
+        Traits\IsScanField,
         Traits\IssuedDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -80,9 +81,9 @@ class Document implements Interfaces\EntityInterface
     /**
      * Document sub category
      *
-     * @var \Olcs\Db\Entity\DocumentSubCategory
+     * @var \Olcs\Db\Entity\SubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
      * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $documentSubCategory;
@@ -141,15 +142,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_read_only", nullable=true)
      */
     protected $isReadOnly;
-
-    /**
-     * Is scan
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_scan", nullable=false)
-     */
-    protected $isScan = 0;
 
     /**
      * Licence
@@ -290,7 +282,7 @@ class Document implements Interfaces\EntityInterface
     /**
      * Set the document sub category
      *
-     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
+     * @param \Olcs\Db\Entity\SubCategory $documentSubCategory
      * @return Document
      */
     public function setDocumentSubCategory($documentSubCategory)
@@ -303,7 +295,7 @@ class Document implements Interfaces\EntityInterface
     /**
      * Get the document sub category
      *
-     * @return \Olcs\Db\Entity\DocumentSubCategory
+     * @return \Olcs\Db\Entity\SubCategory
      */
     public function getDocumentSubCategory()
     {
@@ -483,29 +475,6 @@ class Document implements Interfaces\EntityInterface
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
-    }
-
-    /**
-     * Set the is scan
-     *
-     * @param boolean $isScan
-     * @return Document
-     */
-    public function setIsScan($isScan)
-    {
-        $this->isScan = $isScan;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scan
-     *
-     * @return boolean
-     */
-    public function getIsScan()
-    {
-        return $this->isScan;
     }
 
     /**

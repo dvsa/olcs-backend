@@ -108,9 +108,9 @@ class Task implements Interfaces\EntityInterface
     /**
      * Task sub category
      *
-     * @var \Olcs\Db\Entity\TaskSubCategory
+     * @var \Olcs\Db\Entity\SubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TaskSubCategory")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
      * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $taskSubCategory;
@@ -265,7 +265,7 @@ class Task implements Interfaces\EntityInterface
     /**
      * Set the task sub category
      *
-     * @param \Olcs\Db\Entity\TaskSubCategory $taskSubCategory
+     * @param \Olcs\Db\Entity\SubCategory $taskSubCategory
      * @return Task
      */
     public function setTaskSubCategory($taskSubCategory)
@@ -278,7 +278,7 @@ class Task implements Interfaces\EntityInterface
     /**
      * Get the task sub category
      *
-     * @return \Olcs\Db\Entity\TaskSubCategory
+     * @return \Olcs\Db\Entity\SubCategory
      */
     public function getTaskSubCategory()
     {
