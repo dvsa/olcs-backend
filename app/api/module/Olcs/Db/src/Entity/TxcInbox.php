@@ -68,13 +68,13 @@ class TxcInbox implements Interfaces\EntityInterface
     protected $routeDocument;
 
     /**
-     * Route seq
+     * Variation no
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="route_seq", nullable=false)
+     * @ORM\Column(type="integer", name="variation_no", nullable=false)
      */
-    protected $routeSeq;
+    protected $variationNo;
 
     /**
      * Zip document
@@ -156,26 +156,26 @@ class TxcInbox implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the route seq
+     * Set the variation no
      *
-     * @param int $routeSeq
+     * @param int $variationNo
      * @return TxcInbox
      */
-    public function setRouteSeq($routeSeq)
+    public function setVariationNo($variationNo)
     {
-        $this->routeSeq = $routeSeq;
+        $this->variationNo = $variationNo;
 
         return $this;
     }
 
     /**
-     * Get the route seq
+     * Get the variation no
      *
      * @return int
      */
-    public function getRouteSeq()
+    public function getVariationNo()
     {
-        return $this->routeSeq;
+        return $this->variationNo;
     }
 
     /**
