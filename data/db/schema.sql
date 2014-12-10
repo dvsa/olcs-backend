@@ -5983,6 +5983,45 @@ LOCK TABLES `stay` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sub_category`
+--
+
+DROP TABLE IF EXISTS `sub_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sub_category` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `sub_category_name` varchar(64) NOT NULL,
+  `is_scan` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Category used for scanning documents',
+  `is_doc` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Is a valid document category',
+  `is_task` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Is a valid task category',
+  `is_free_text` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User can enter freetext description - applied to task etc when creating.',
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `fk_document_sub_category_document_category1_idx` (`category_id`),
+  KEY `fk_document_sub_category_user1_idx` (`created_by`),
+  KEY `fk_document_sub_category_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_document_sub_category_document_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_document_sub_category_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_document_sub_category_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Used to categorise documents, tasks and scans.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sub_category`
+--
+
+LOCK TABLES `sub_category` WRITE;
+/*!40000 ALTER TABLE `sub_category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sub_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `submission`
 --
 
