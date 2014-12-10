@@ -40,13 +40,22 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $issuedDate;
 
     /**
-     * Identifier
+     * Category ID
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="id_col")
+     * @ORM\Column(type="integer", name="category_id")
      */
-    protected $identifier;
+    protected $category;
+
+    /**
+     * Sub Category ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="document_sub_category_id")
+     */
+    protected $documentSubCategory;
 
     /**
      * Description
@@ -56,6 +65,42 @@ class DocumentSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="description")
      */
     protected $description;
+
+    /**
+     * Document Store Identifier
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="document_store_id")
+     */
+    protected $documentStoreIdentifier;
+
+    /**
+     * Document ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="document_id")
+     */
+    protected $document;
+
+    /**
+     * Category Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="category_name")
+     */
+    protected $categoryName;
+
+    /**
+     * Sub Category Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="document_sub_category_name")
+     */
+    protected $documentSubCategoryName;
 
     /**
      * Filename
@@ -76,51 +121,6 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $fileExtension;
 
     /**
-     * File Extension
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_type")
-     */
-    protected $documentType;
-
-    /**
-     * Category ID
-     *
-     * @var string
-     *
-     * @ORM\Column(type="integer", name="category_id")
-     */
-    protected $category;
-
-    /**
-     * Category Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="category_name")
-     */
-    protected $categoryName;
-
-    /**
-     * Sub Category ID
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_sub_category_id")
-     */
-    protected $documentSubCategory;
-
-    /**
-     * Sub Category Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_sub_category_name")
-     */
-    protected $documentSubCategoryName;
-
-    /**
      * Is digital or not
      *
      * @var bool
@@ -130,31 +130,76 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $isDigital;
 
     /**
-     * Licence ID
+     * Document type
      *
      * @var string
+     *
+     * @ORM\Column(type="string", name="document_type")
+     */
+    protected $documentType;
+
+    /**
+     * Identifier
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="id_col")
+     */
+    protected $identifier;
+
+    /**
+     * Licence number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no")
+     */
+    protected $licenceNo;
+
+    /**
+     * Licence ID
+     *
+     * @var int
      *
      * @ORM\Column(type="integer", name="licence_id")
      */
     protected $licenceId;
 
     /**
-     * Document Store Identifier
+     * Family name
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="document_store_id")
+     * @ORM\Column(type="string", name="family_name")
      */
-    protected $documentStoreIdentifier;
+    protected $familyName;
 
     /**
-     * Document ID
+     * Case ID
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="integer", name="document_id")
+     * @ORM\Column(type="integer", name="case_id")
      */
-    protected $document;
+    protected $caseId;
+
+    /**
+     * Bus Registration ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="bus_reg_id")
+     */
+    protected $busRegId;
+
+    /**
+     * Transport Manager ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tm_id")
+     */
+    protected $tmId;
 
     /**
      * Get the id
@@ -177,13 +222,23 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the identifier
+     * Get the category ID
      *
-     * @return string
+     * @return int
      */
-    public function getIdentifier()
+    public function getCategory()
     {
-        return $this->identifier;
+        return $this->category;
+    }
+
+    /**
+     * Get the sub category ID
+     *
+     * @return int
+     */
+    public function getDocumentSubCategory()
+    {
+        return $this->documentSubCategory;
     }
 
     /**
@@ -194,6 +249,46 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Get the document store identifier
+     *
+     * @return string
+     */
+    public function getDocumentStoreIdentifier()
+    {
+        return $this->documentStoreIdentifier;
+    }
+
+    /**
+     * Get the document ID
+     *
+     * @return int
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * Get the category name
+     *
+     * @return string
+     */
+    public function getCategoryName()
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * Get the sub category name
+     *
+     * @return string
+     */
+    public function getDocumentSubCategoryName()
+    {
+        return $this->documentSubCategoryName;
     }
 
     /**
@@ -217,43 +312,13 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the category ID
+     * Get if digital
      *
      * @return int
      */
-    public function getCategory()
+    public function getIsDigital()
     {
-        return $this->category;
-    }
-
-    /**
-     * Get the category name
-     *
-     * @return string
-     */
-    public function getCategoryName()
-    {
-        return $this->categoryName;
-    }
-
-    /**
-     * Get the sub category ID
-     *
-     * @return int
-     */
-    public function getDocumentSubCategory()
-    {
-        return $this->documentSubCategory;
-    }
-
-    /**
-     * Get the sub category name
-     *
-     * @return string
-     */
-    public function getDocumentSubCategoryName()
-    {
-        return $this->documentSubCategoryName;
+        return $this->isDigital;
     }
 
     /**
@@ -267,13 +332,23 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get if digital
+     * Get the identifier
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Get the licence number
      *
      * @return int
      */
-    public function getIsDigital()
+    public function getLicenceNo()
     {
-        return $this->isDigital;
+        return $this->licenceNo;
     }
 
     /**
@@ -287,22 +362,42 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the document store identifier
+     * Get the family name
      *
      * @return string
      */
-    public function getDocumentStoreIdentifier()
+    public function getFamilyName()
     {
-        return $this->documentStoreIdentifier;
+        return $this->familyName;
     }
 
     /**
-     * Get the document ID
+     * Get the case ID (if applicable)
      *
      * @return int
      */
-    public function getDocument()
+    public function getCaseId()
     {
-        return $this->document;
+        return $this->caseId;
+    }
+
+    /**
+     * Get the Bus Registration ID (if applicable)
+     *
+     * @return int
+     */
+    public function getBusRegId()
+    {
+        return $this->busRegId;
+    }
+
+    /**
+     * Get the Transport Manager ID (if applicable)
+     *
+     * @return int
+     */
+    public function getTmId()
+    {
+        return $this->tmId;
     }
 }
