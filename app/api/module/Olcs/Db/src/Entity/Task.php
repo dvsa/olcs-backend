@@ -26,7 +26,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_task_user4_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_task_category1_idx", columns={"category_id"}),
  *        @ORM\Index(name="fk_task_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"task_sub_category_id"})
+ *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"sub_category_id"})
  *    }
  * )
  */
@@ -44,6 +44,7 @@ class Task implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\SubCategoryManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
@@ -104,16 +105,6 @@ class Task implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_closed", nullable=false)
      */
     protected $isClosed = 0;
-
-    /**
-     * Task sub category
-     *
-     * @var \Olcs\Db\Entity\SubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
-     * @ORM\JoinColumn(name="task_sub_category_id", referencedColumnName="id", nullable=false)
-     */
-    protected $taskSubCategory;
 
     /**
      * Urgent
@@ -260,29 +251,6 @@ class Task implements Interfaces\EntityInterface
     public function getIsClosed()
     {
         return $this->isClosed;
-    }
-
-    /**
-     * Set the task sub category
-     *
-     * @param \Olcs\Db\Entity\SubCategory $taskSubCategory
-     * @return Task
-     */
-    public function setTaskSubCategory($taskSubCategory)
-    {
-        $this->taskSubCategory = $taskSubCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the task sub category
-     *
-     * @return \Olcs\Db\Entity\SubCategory
-     */
-    public function getTaskSubCategory()
-    {
-        return $this->taskSubCategory;
     }
 
     /**

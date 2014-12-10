@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
  *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"sub_category_id"}),
  *        @ORM\Index(name="fk_document_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_document_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_document_cases1_idx", columns={"case_id"}),
@@ -77,16 +77,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
-
-    /**
-     * Document sub category
-     *
-     * @var \Olcs\Db\Entity\SubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
-     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
-     */
-    protected $documentSubCategory;
 
     /**
      * Email
@@ -183,6 +173,16 @@ class Document implements Interfaces\EntityInterface
     protected $size;
 
     /**
+     * Sub category
+     *
+     * @var \Olcs\Db\Entity\SubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $subCategory;
+
+    /**
      * Traffic area
      *
      * @var \Olcs\Db\Entity\TrafficArea
@@ -277,29 +277,6 @@ class Document implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the document sub category
-     *
-     * @param \Olcs\Db\Entity\SubCategory $documentSubCategory
-     * @return Document
-     */
-    public function setDocumentSubCategory($documentSubCategory)
-    {
-        $this->documentSubCategory = $documentSubCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the document sub category
-     *
-     * @return \Olcs\Db\Entity\SubCategory
-     */
-    public function getDocumentSubCategory()
-    {
-        return $this->documentSubCategory;
     }
 
     /**
@@ -567,6 +544,29 @@ class Document implements Interfaces\EntityInterface
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set the sub category
+     *
+     * @param \Olcs\Db\Entity\SubCategory $subCategory
+     * @return Document
+     */
+    public function setSubCategory($subCategory)
+    {
+        $this->subCategory = $subCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the sub category
+     *
+     * @return \Olcs\Db\Entity\SubCategory
+     */
+    public function getSubCategory()
+    {
+        return $this->subCategory;
     }
 
     /**
