@@ -859,12 +859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460"
+                "reference": "664e8050b80cf7c8e858616209fbf69aed1cb1b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/171e86ac56c2dbb8ef328fe87f938dda9f26d460",
-                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/664e8050b80cf7c8e858616209fbf69aed1cb1b6",
+                "reference": "664e8050b80cf7c8e858616209fbf69aed1cb1b6",
                 "shasum": ""
             },
             "require": {
@@ -911,7 +911,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-11-30 15:17:41"
+            "time": "2014-12-09 07:06:36"
         },
         {
             "name": "symfony/console",
