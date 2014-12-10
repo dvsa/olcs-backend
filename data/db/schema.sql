@@ -1801,7 +1801,7 @@ DROP TABLE IF EXISTS `doc_template`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `document_sub_category_id` int(11) NOT NULL,
+  `sub_category_id` int(11) NOT NULL,
   `description` varchar(255) NOT NULL,
   `document_id` int(11) NOT NULL,
   `is_ni` tinyint(1) NOT NULL DEFAULT '0',
@@ -1813,12 +1813,12 @@ CREATE TABLE `doc_template` (
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_doc_template_document_sub_category1_idx` (`document_sub_category_id`),
+  KEY `fk_doc_template_document_sub_category1_idx` (`sub_category_id`),
   KEY `fk_doc_template_document1_idx` (`document_id`),
   KEY `fk_doc_template_user1_idx` (`created_by`),
   KEY `fk_doc_template_user2_idx` (`last_modified_by`),
   KEY `fk_doc_template_document_category1_idx` (`category_id`),
-  CONSTRAINT `fk_doc_template_document_sub_category1` FOREIGN KEY (`document_sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_doc_template_document_sub_category1` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_document1` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_doc_template_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1885,7 +1885,7 @@ CREATE TABLE `document` (
   `description` varchar(255) DEFAULT NULL,
   `traffic_area_id` varchar(1) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
-  `document_sub_category_id` int(11) DEFAULT NULL,
+  `sub_category_id` int(11) DEFAULT NULL,
   `is_read_only` tinyint(1) DEFAULT NULL,
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
@@ -1910,7 +1910,7 @@ CREATE TABLE `document` (
   KEY `fk_document_ref_data1_idx` (`file_extension`),
   KEY `fk_document_traffic_area1_idx` (`traffic_area_id`),
   KEY `fk_document_document_category1_idx` (`category_id`),
-  KEY `fk_document_document_sub_category1_idx` (`document_sub_category_id`),
+  KEY `fk_document_document_sub_category1_idx` (`sub_category_id`),
   KEY `fk_document_licence1_idx` (`licence_id`),
   KEY `fk_document_application1_idx` (`application_id`),
   KEY `fk_document_cases1_idx` (`case_id`),
@@ -1923,7 +1923,7 @@ CREATE TABLE `document` (
   CONSTRAINT `fk_document_ref_data1_idx` FOREIGN KEY (`file_extension`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_document_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_document_document_sub_category1` FOREIGN KEY (`document_sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_document_document_sub_category1` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -6242,7 +6242,7 @@ DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
-  `task_sub_category_id` int(11) NOT NULL,
+  `sub_category_id` int(11) NOT NULL,
   `assigned_to_user_id` int(11) DEFAULT NULL,
   `assigned_to_team_id` int(11) DEFAULT NULL,
   `assigned_by_user_id` int(11) DEFAULT NULL,
@@ -6274,7 +6274,7 @@ CREATE TABLE `task` (
   KEY `fk_task_user4_idx` (`last_modified_by`),
   KEY `fk_task_category1_idx` (`category_id`),
   KEY `fk_task_cases1_idx` (`case_id`),
-  KEY `fk_task_task_sub_category1_idx` (`task_sub_category_id`),
+  KEY `fk_task_task_sub_category1_idx` (`sub_category_id`),
   CONSTRAINT `fk_task_user1` FOREIGN KEY (`assigned_to_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_team1` FOREIGN KEY (`assigned_to_team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_user2` FOREIGN KEY (`assigned_by_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -6287,7 +6287,7 @@ CREATE TABLE `task` (
   CONSTRAINT `fk_task_user4` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_task_sub_category1` FOREIGN KEY (`task_sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_task_task_sub_category1` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
