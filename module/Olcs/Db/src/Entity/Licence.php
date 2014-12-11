@@ -23,7 +23,10 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_licence_ref_data1_idx", columns={"goods_or_psv"}),
  *        @ORM\Index(name="fk_licence_ref_data2_idx", columns={"licence_type"}),
  *        @ORM\Index(name="fk_licence_ref_data3_idx", columns={"status"}),
- *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"})
+ *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"}),
+ *        @ORM\Index(name="fk_licence_contact_details1_idx", columns={"correspondence_cd_id"}),
+ *        @ORM\Index(name="fk_licence_contact_details2_idx", columns={"establishment_cd_id"}),
+ *        @ORM\Index(name="fk_licence_contact_details3_idx", columns={"transport_consultant_cd_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
@@ -58,6 +61,16 @@ class Licence implements Interfaces\EntityInterface
         Traits\ViAction1Field;
 
     /**
+     * Correspondence cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="correspondence_cd_id", referencedColumnName="id", nullable=true)
+     */
+    protected $correspondenceCd;
+
+    /**
      * Enforcement area
      *
      * @var \Olcs\Db\Entity\EnforcementArea
@@ -66,6 +79,16 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
      */
     protected $enforcementArea;
+
+    /**
+     * Establishment cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="establishment_cd_id", referencedColumnName="id", nullable=true)
+     */
+    protected $establishmentCd;
 
     /**
      * Fabs reference
@@ -196,6 +219,16 @@ class Licence implements Interfaces\EntityInterface
     protected $translateToWelsh = 0;
 
     /**
+     * Transport consultant cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="transport_consultant_cd_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportConsultantCd;
+
+    /**
      * Application
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -212,15 +245,6 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="licence")
      */
     protected $cases;
-
-    /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="licence")
-     */
-    protected $contactDetails;
 
     /**
      * Document
@@ -275,12 +299,34 @@ class Licence implements Interfaces\EntityInterface
     {
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
-        $this->contactDetails = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
         $this->workshops = new ArrayCollection();
+    }
+
+    /**
+     * Set the correspondence cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $correspondenceCd
+     * @return Licence
+     */
+    public function setCorrespondenceCd($correspondenceCd)
+    {
+        $this->correspondenceCd = $correspondenceCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the correspondence cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getCorrespondenceCd()
+    {
+        return $this->correspondenceCd;
     }
 
     /**
@@ -304,6 +350,29 @@ class Licence implements Interfaces\EntityInterface
     public function getEnforcementArea()
     {
         return $this->enforcementArea;
+    }
+
+    /**
+     * Set the establishment cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $establishmentCd
+     * @return Licence
+     */
+    public function setEstablishmentCd($establishmentCd)
+    {
+        $this->establishmentCd = $establishmentCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the establishment cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getEstablishmentCd()
+    {
+        return $this->establishmentCd;
     }
 
     /**
@@ -629,6 +698,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the transport consultant cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $transportConsultantCd
+     * @return Licence
+     */
+    public function setTransportConsultantCd($transportConsultantCd)
+    {
+        $this->transportConsultantCd = $transportConsultantCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport consultant cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getTransportConsultantCd()
+    {
+        return $this->transportConsultantCd;
+    }
+
+    /**
      * Set the application
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $applications
@@ -743,66 +835,6 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->cases->contains($cases)) {
             $this->cases->removeElement($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the contact detail
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function setContactDetails($contactDetails)
-    {
-        $this->contactDetails = $contactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact details
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Licence
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->removeElement($contactDetails);
         }
 
         return $this;
