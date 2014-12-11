@@ -17,7 +17,6 @@ TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `document`;
-TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_paragraph`;
@@ -882,36 +881,35 @@ INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
     (29, 'case_cat_7');
 
-    
 /**
  * NOTE: These inserts can't be grouped into one as they insert different columns
  */
 /* Application task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,32,1,2,'A test task','2014-08-12',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (2,null,110,1,69,1,2,'Another test task','2013-02-11',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
 /* IRFO task */
-INSERT INTO task(id,irfo_organisation_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,57,1,2,'An organisation task','2014-05-01',1);
+INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
-INSERT INTO task(id,transport_manager_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,76,6,3,'A transport task','2010-01-01',1);
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
 /* Case task */
-INSERT INTO task(id,case_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (5,24,2,44,null,4,'A case task','2010-02-01',1);
 /* Unlinked task */
-INSERT INTO task(id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,49,null,null,'Unassigned task','2010-07-03',1);
+INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,32,1,2,'A test task','2018-09-27',1,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
 
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date,document_store_id) VALUES
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
     (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
@@ -931,13 +929,13 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
     (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
 
-INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,5,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,5,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,5,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,5,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,5,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,5,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
+    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
+    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
+    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
+    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
+    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
+    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),
