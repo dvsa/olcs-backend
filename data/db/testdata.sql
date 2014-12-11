@@ -926,6 +926,10 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,s
     (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
     (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
 
+/* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
+INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
+    (19,3,'Test TM document','testdocument19.doc',1,5,101,'doc_doc','2014-12-11 12:34:56');
+
 INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
     (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
     (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
