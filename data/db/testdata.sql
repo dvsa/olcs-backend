@@ -878,28 +878,28 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,11,1,2,'A test task','2014-08-12',1);
+    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
 /* IRFO task */
 INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,57,1,2,'An organisation task','2014-05-01',1);
+    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
 INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,76,6,3,'A transport task','2010-01-01',1);
+    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
 /* Case task */
 INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (5,24,2,44,null,4,'A case task','2010-02-01',1);
 /* Unlinked task */
 INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,49,null,null,'Unassigned task','2010-07-03',1);
+    (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,11,1,2,'A test task','2018-09-27',1,1);
+    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
