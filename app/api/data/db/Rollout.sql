@@ -3,7 +3,6 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `traffic_area`;
 TRUNCATE TABLE `category`;
-TRUNCATE TABLE `task_sub_category`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
@@ -11,7 +10,7 @@ TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `submission`;
 TRUNCATE TABLE `submission_section_comment`;
-TRUNCATE TABLE `document_sub_category`;
+TRUNCATE TABLE `sub_category`;
 TRUNCATE TABLE `fee_type`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
@@ -2649,98 +2648,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`) VALUES
     ('SIC_CODE','99000','Activities of extraterritorial organisations and bodies'),
     ('SIC_CODE','99999','Dormant Company');
 
-INSERT INTO task_sub_category(id,description,name,category_id,is_freetext_description) VALUES
-    (1, 'Address Change ', 'Address Change Assisted Digital', 9, 0),
-    (2, 'Address Change ', 'Address Change Digital', 9, 0),
-    (3, 'Bank Statement', 'Bank Statement Assisted Digital', 9, 0),
-    (4, 'Bank Statement', 'Bank Statement Digital', 9, 0),
-    (5, 'Change of Partner(s)', 'Change of Partner Assisted Digital', 9, 0),
-    (6, 'Change of Partner(s)', 'Change of Partner Digital', 9, 0),
-    (7, 'Change of Director(s)', 'Director Assisted Digital App', 9, 0),
-    (8, 'Change of Director(s)', 'Director Digital App', 9, 0),
-    (9, 'Application Fee Due', 'Fee Due', 9, 0),
-    (10, 'Grant Fee Due', 'Fee Due', 9, 0),
-    (11, 'Interim Fee Due', 'Fee Due', 9, 0),
-    (12, 'Application Fee Due', 'Fee Due', 9, 0),
-    (13, null, 'Financial Document Assisted Digital', 9, 1),
-    (14, null, 'Financial Document Digital', 9, 1),
-    (15, 'GV79 Application', 'GV79 Assisted Digital', 9, 0),
-    (16, 'GV79 Application', 'GV79 Digital', 9, 0),
-    (17, 'GV80A', 'GV80A Assisted Digital', 9, 0),
-    (18, 'GV80A', 'GV80A Digital', 9, 0),
-    (19, 'GV81 Assisted Digital', 'GV81 Assisted Digital', 9, 0),
-    (20, 'GV81 Digital', 'GV81 Digital', 9, 0),
-    (21, 'Interim licence expiring', 'Interim', 9, 0),
-    (22, 'Interim Request', 'Interim App Assisted Digital', 9, 0),
-    (23, 'Interim Request', 'Interim App Digital', 9, 0),
-    (24, 'Maintenance Contract', 'Maint Contract Assisted Digital', 9, 0),
-    (25, 'Maintenance Contract', 'Maint Contract Digital', 9, 0),
-    (26, 'PSV421 Application', 'PSV421 Assisted Digital', 9, 0),
-    (27, 'PSV421 Application', 'PSV421 Digital', 9, 0),
-    (28, 'PSV431 Application', 'PSV431 Assisted Digital', 9, 0),
-    (29, 'PSV431 Application', 'PSV431 Digital', 9, 0),
-    (30, null, 'Response to 1st Request ', 9, 1),
-    (31, null, 'Response to Final Request', 9, 1),
-    (32, 'Subsidiary Company change', 'Subsidiary Assisted Digital App', 9, 0),
-    (33, 'Subsidiary Company change', 'Subsidiary Digital App', 9, 0),
-    (34, 'New application ', 'Time expired', 9, 0),
-    (35, 'Variation Application', 'Time expired', 9, 0),
-    (36, 'New Application: {bus_reg_no}', 'EBSR', 3, 0),
-    (37, 'Data Refresh: {bus_reg_no}', 'EBSR', 3, 0),
-    (38, 'Variation: {bus_reg_no}', 'EBSR', 3, 0),
-    (39, 'Cancellation: {bus_reg_no}', 'EBSR', 3, 0),
-    (40, 'Bus Registration Fee Due', 'Fee Due', 3, 0),
-    (41, 'Bus Registration Fee Due', 'Fee Due', 3, 0),
-    (42, null, 'General Task', 3, 1),
-    (43, 'SFTP Request {user_name}', 'SFTP request', 3, 0),
-    (44, 'Bank Statement', 'Bank Statement', 2, 0),
-    (45, 'ERRU Case:{case_id}', 'ERRU Auto Case', 2, 0),
-    (46, null, 'TM Compliance Doc', 2, 1),
-    (47, null, 'General Task', 2, 1),
-    (48, 'GV79E', 'GV79E', 7, 0),
-    (49, 'Objection', 'Objection', 7, 0),
-    (50, 'Plan of OC', 'Plan of OC', 7, 0),
-    (51, 'Representation', 'Representation', 7, 0),
-    (52, 'Review Complaint', 'Review Complaint', 7, 0),
-    (53, 'Review period complaint recorded', 'Review Period ends in 2 weeks', 7, 0),
-    (54, null, 'General Task', 7, 1),
-    (55, 'Application', 'Application', 8, 0),
-    (56, 'Fee Due', 'Fee Due', 8, 0),
-    (57, null, 'General Task', 8, 1),
-    (58, 'Bank Statement', 'Bank Statement', 1, 0),
-    (59, 'Old Licence: {lic_no}', 'Change of entity Assisted Digital', 1, 0),
-    (60, 'Old Licence: {lic_no}', 'Change of entity Digital', 1, 0),
-    (61, 'Checklist Not Received', 'Checklist Not received', 1, 0),
-    (62, null, 'General Task', 1, 1),
-    (63, 'Response To Request {inspection_request_id}', 'Inspection request/seminar', 1, 0),
-    (64, 'Satisfactory Result {inspection_request_id}', 'Inspection request/seminar', 1, 0),
-    (65, 'Unsatisfactory Result {inspection_request_id}', 'Inspection request/seminar', 1, 0),
-    (66, 'ID:{organisation_id}/ Merge Lic: {lic_no}', 'Request to merge licences', 1, 0),
-    (67, 'Surrender Request', 'Sur 1 Assisted Digital', 1, 0),
-    (68, 'Surrender Request', 'Sur 1 Digital', 1, 0),
-    (69, 'TM Required', 'TM Period of Grace', 1, 0),
-    (70, 'Application', 'Application', 4, 0),
-    (71, 'Fee Due', 'Fee Due', 4, 0),
-    (72, null, 'General Task', 4, 1),
-    (73, 'Case Decision', 'Decision', 10, 0),
-    (74, 'Case Recommendation', 'Recommendation', 10, 0),
-    (75, null, 'General Task', 5, 1),
-    (76, 'Certificate', 'Certificate', 5, 0),
-    (77, 'Close TM Case', 'Close TM Case', 5, 0),
-    (78, 'TM Removed from this licence', 'TM Declared Unfit', 5, 0),
-    (79, 'TM1 Application', 'TM1 Assisted Digital', 5, 0),
-    (80, 'TM1 Application', 'TM1 Digital', 5, 0),
-    (81, 'Public Inquiry', 'Public Inquiry', 2, 0);
-
-INSERT INTO `document_sub_category` (`id`, `category_id`, `created_by`, `last_modified_by`, `description`, `is_scanned`,
-    `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,'Insolvency History',0,NULL,NULL,1),
-    (2,1,NULL,NULL,'Advertisement',0,NULL,NULL,1),
-    (3,2,NULL,NULL,'Test subcategory',0,NULL,NULL,1),
-    (4,2,NULL,NULL,'Other documents',0,NULL,NULL,1),
-    (5,1,NULL,NULL,'Publishable Applications',0,NULL,NULL,1),
-    (6,1,NULL,NULL,'Vehicle List',0,NULL,NULL,1);
-
 INSERT INTO `pi_definition`
 (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -3174,7 +3081,7 @@ NULL,1),
 (283,'lcat_gv','x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,NULL,NULL,NULL,NULL,1),
 (284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO `fee_type` (`id`,`fee_type`,`effective_from`,`description`,`fixed_value`,`annual_value`,`five_year_value`,`traffic_area_id`,`licence_type`,`goods_or_psv`,`expire_fee_with_licence`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES 
+INSERT INTO `fee_type` (`id`,`fee_type`,`effective_from`,`description`,`fixed_value`,`annual_value`,`five_year_value`,`traffic_area_id`,`licence_type`,`goods_or_psv`,`expire_fee_with_licence`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'APP','1995-01-01 00:00:00','GV Application Fee',160.00,0.00,0.00,NULL,NULL,'lcat_gv',0,479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
     (2,'APP','1995-01-01 00:00:00','PSV/R Application Fee',100.00,0.00,0.00,NULL,'ltyp_r','lcat_psv',0,479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
     (3,'APP','1995-01-01 00:00:00','PSV/SR Application Fee',40.00,0.00,0.00,NULL,'ltyp_sr','lcat_psv',0,479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
@@ -3672,6 +3579,118 @@ INSERT INTO `fee_type` (`id`,`fee_type`,`effective_from`,`description`,`fixed_va
     (20040,'VAR','2020-04-30 23:59:59','PSV/SR Variation Fee',123.00,0.00,0.00,NULL,'ltyp_sr','lcat_psv',0,1,1,'2014-03-21 17:12:07','2014-03-21 17:12:07',1),
     (20041,'CONT','2020-04-30 23:59:59','PSV/SR Continuation Fee',62.00,0.00,0.00,NULL,'ltyp_sr','lcat_psv',1,1,1,'2014-03-21 17:12:07','2014-03-21 17:12:07',1);
 
+INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
+VALUES
+  ( 9,   2, 1, 1, 1, 0, 'Address Change Assisted Digital')
+ ,( 9,   3, 1, 1, 0, 0, 'Address Change Digital')
+ ,( 9,   4, 1, 1, 1, 0, 'Advert Assisted Digital')
+ ,( 9,   5, 1, 1, 0, 0, 'Advert Digital')
+ ,( 9,   6, 1, 1, 1, 0, 'Partner Change Assisted Digital')
+ ,( 9,   7, 1, 1, 0, 0, 'Partner Change Digital')
+ ,( 9,   8, 1, 1, 1, 0, 'CPC or Exemption')
+ ,( 9,   9, 1, 1, 1, 0, 'Director Change Assisted Digital')
+ ,( 9,  10, 1, 1, 0, 0, 'Director Change Digital')
+ ,( 9,  11, 0, 1, 0, 0, 'Fee Due')
+ ,( 9,  12, 1, 1, 1, 0, 'Financial Document Assisted Digital')
+ ,( 9,  13, 1, 1, 0, 1, 'Financial Document Digital')
+ ,( 9,  14, 1, 1, 1, 0, 'Forms Assisted Digital')
+ ,( 9,  15, 1, 1, 0, 0, 'Forms Digital')
+ ,( 9,  16, 0, 1, 0, 0, 'Interim')
+ ,( 9,  17, 1, 1, 1, 0, 'Interim Application Assisted Digital')
+ ,( 9,  18, 0, 1, 0, 0, 'Interim Application Digital')
+ ,( 9,  19, 1, 1, 1, 0, 'Maint Contract Assisted Digital')
+ ,( 9,  20, 1, 1, 0, 0, 'Maint Contract Digital')
+ ,( 9,  21, 1, 1, 1, 1, 'Other Documents')
+ ,( 9,  22, 0, 1, 0, 1, 'Response to 1st Request')
+ ,( 9,  23, 0, 1, 0, 1, 'Response to Final Request')
+ ,( 9,  24, 1, 1, 1, 0, 'Subsidiary Assisted Digital')
+ ,( 9,  25, 1, 1, 0, 0, 'Subsidiary Digital')
+ ,( 9,  26, 1, 1, 1, 0, 'Schedule 4/1')
+ ,( 9,  27, 1, 1, 1, 0, 'TM1 Assisted Digital')
+ ,( 9,  28, 1, 1, 0, 0, 'TM1 Digital')
+ ,( 9,  29, 1, 1, 1, 0, 'TM Correspondence')
+ ,( 9,  30, 0, 1, 0, 0, 'Time Expired')
+ ,( 9,  31, 1, 0, 0, 0, 'Application Letters')
+ ,( 9,  32, 1, 0, 0, 0, 'Refunds')
+ ,( 9,  33, 1, 1, 1, 0, 'Reports')
+ ,( 9,  34, 1, 0, 0, 0, 'Vehicle List')
+ ,( 3,  35, 1, 1, 1, 0, 'Assisted Digital')
+ ,( 3,  36, 0, 1, 0, 0, 'EBSR')
+ ,( 3,  37, 0, 1, 0, 0, 'Fee Due')
+ ,( 3,  38, 1, 0, 0, 0, 'Fee Request')
+ ,( 3,  39, 0, 1, 0, 1, 'General Task')
+ ,( 3,  40, 1, 1, 1, 0, 'Other Documents')
+ ,( 3,  41, 1, 1, 1, 0, 'Traffic Regulation Condition Letter')
+ ,( 2,  42, 1, 1, 1, 0, 'Bus Complaint')
+ ,( 2,  43, 1, 0, 0, 0, 'Bus Registration Letter')
+ ,( 2,  44, 1, 1, 1, 0, 'Complaint Letter')
+ ,( 2,  45, 1, 1, 1, 0, 'Conviction')
+ ,( 2,  46, 1, 0, 0, 0, 'Driver Conduct Letter')
+ ,( 2,  47, 0, 1, 0, 0, 'ERRU Auto Case')
+ ,( 2,  48, 1, 1, 1, 0, 'Financial Document Assisted Digital')
+ ,( 2,  49, 1, 1, 1, 0, 'Hearings and Appeals')
+ ,( 2,  50, 0, 1, 0, 1, 'General Task')
+ ,( 2,  51, 1, 0, 0, 0, 'Interview Letter')
+ ,( 2,  52, 1, 0, 0, 0, 'Maintenance')
+ ,( 2,  53, 1, 1, 1, 1, 'Other Documents')
+ ,( 2,  54, 1, 0, 0, 0, 'Operator Staff Conduct')
+ ,( 2,  55, 1, 1, 1, 0, 'Reports and Statements')
+ ,( 2,  56, 1, 1, 1, 0, 'TM Compliance Doc')
+ ,( 2,  57, 1, 0, 0, 0, 'Warning Letter')
+ ,( 7,  58, 1, 1, 1, 0, 'General Correspondence')
+ ,( 7,  59, 1, 1, 1, 0, 'GV79E')
+ ,( 7,  60, 1, 1, 1, 0, 'Non Review Complaint')
+ ,( 7,  61, 1, 1, 1, 0, 'Review Complaint')
+ ,( 7,  62, 1, 1, 1, 0, 'Objection')
+ ,( 7,  63, 1, 1, 1, 1, 'Other Documents')
+ ,( 7,  64, 1, 1, 1, 0, 'Plan of OC')
+ ,( 7,  65, 1, 1, 1, 0, 'Representation')
+ ,( 7,  66, 0, 1, 0, 0, 'Review Period Ends in 2 Weeks')
+ ,( 7,  67, 0, 1, 0, 1, 'General Task')
+ ,( 7,  68, 1, 0, 0, 0, 'Review Letter')
+ ,( 8,  69, 1, 1, 1, 0, 'Continuations and Renewals')
+ ,( 8,  70, 1, 1, 1, 0, 'IRFO Assisted Digital')
+ ,( 8,  71, 1, 1, 1, 1, 'Other Documents')
+ ,( 8,  72, 0, 1, 0, 1, 'General Task')
+ ,( 8,  73, 0, 1, 0, 0, 'Fee Due')
+ ,( 1,  74, 1, 1, 1, 0, 'Continuations and Renewals')
+ ,( 1,  75, 0, 1, 0, 0, 'Checklist Not Received')
+ ,( 1,  76, 1, 1, 1, 0, 'Financial Document Assisted Digital')
+ ,( 1,  77, 0, 1, 0, 1, 'General Task')
+ ,( 1,  78, 0, 1, 0, 0, 'Inspection Request/Seminar')
+ ,( 1,  79, 1, 1, 1, 1, 'Other Documents')
+ ,( 1,  80, 1, 1, 1, 0, 'Vehicle Change Assisted Digital')
+ ,( 1,  81, 1, 1, 1, 0, 'Regulation 29/31/Section 57')
+ ,( 1,  82, 1, 1, 1, 0, 'Sur 1 Assisted Digital')
+ ,( 1,  83, 1, 1, 0, 0, 'Sur 1 Digital')
+ ,( 1,  84, 0, 1, 0, 0, 'TM Period of Grace')
+ ,( 1,  85, 1, 1, 1, 0, 'Change of Entity Assisted Digital')
+ ,( 1,  86, 0, 1, 0, 0, 'Change of Entity Digital')
+ ,( 1,  87, 0, 1, 0, 0, 'Request to Merge Licences')
+ ,( 1,  88, 1, 0, 0, 0, 'Financial Calculator')
+ ,( 1,  89, 1, 1, 1, 0, 'Complaint')
+ ,( 1,  90, 1, 0, 0, 0, 'Refunds')
+ ,( 1,  91, 1, 0, 0, 0, 'Vehicle List')
+ ,( 4,  92, 1, 1, 1, 1, 'Other Documents')
+ ,( 4,  93, 1, 1, 1, 0, 'Application')
+ ,( 4,  94, 1, 1, 0, 0, 'Fee Due')
+ ,( 4,  95, 0, 1, 0, 1, 'General Task')
+ ,(10,  96, 0, 1, 0, 0, 'Decision')
+ ,(10,  97, 0, 1, 0, 0, 'Recommendation')
+ ,( 5,  98, 1, 1, 1, 0, 'CPC or Exemption')
+ ,( 5,  99, 1, 1, 1, 0, 'TM Correspondence')
+ ,( 5, 100, 1, 1, 1, 0, 'TM1 Assisted Digital')
+ ,( 5, 101, 1, 1, 0, 0, 'TM1 Digital')
+ ,( 5, 102, 1, 1, 1, 1, 'Other Documents')
+ ,( 5, 103, 0, 1, 0, 1, 'General Task')
+ ,( 5, 104, 0, 1, 0, 0, 'Close TM Case')
+ ,( 5, 105, 0, 1, 0, 0, 'TM Declared Unfit')
+ ,( 5, 106, 1, 0, 0, 0, 'Letters')
+ ,( 3, 107, 1, 1, 0, 0, 'TransXChange File')
+ ,( 3, 108, 1, 1, 0, 0, 'TransXChange PDF')
+ ,( 1, 109, 1, 1, 1, 0, 'Dishonoured Cheques')
+ ,( 1, 110, 1, 1, 1, 0, 'Fee Request');
+
 SET foreign_key_checks = 1;
 
 DROP TABLE IF EXISTS task_search_view;
@@ -3683,8 +3702,8 @@ CREATE VIEW task_search_view AS
        t.application_id,
        t.assigned_to_user_id,
        cat.description category_name,
-       tsc.description task_sub_type,
-       t.task_sub_category_id,
+       tsc.sub_category_name task_sub_type,
+       t.sub_category_id sub_category_id,
        t.description,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
@@ -3708,11 +3727,11 @@ CREATE VIEW task_search_view AS
       t.urgent urgent,
       t.is_closed is_closed,
       t.category_id category_id,
-      tsc.name task_sub_category_name,
+      tsc.sub_category_name task_sub_category_name,
       concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
-   inner join (category cat, task_sub_category tsc) on (cat.id = t.category_id and tsc.id = t.task_sub_category_id)
+   inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
    left join organisation irfo on (t.irfo_organisation_id = irfo.id)
    left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
@@ -3727,15 +3746,15 @@ DROP TABLE IF EXISTS document_search_view;
 DROP VIEW IF EXISTS document_search_view;
 
 CREATE VIEW document_search_view AS
-    SELECT d.id, d.issued_date, d.category_id, d.document_sub_category_id, d.description,
+    SELECT d.id, d.issued_date, d.category_id, d.sub_category_id, d.description,
         d.document_store_id, d.id document_id,
-        cat.description category_name, dsc.description document_sub_category_name, d.filename,
+        cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
 		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id
     FROM `document` d
 
-    INNER JOIN (category cat, document_sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.document_sub_category_id)
+    INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
 
     LEFT JOIN ref_data r ON d.file_extension = r.id
 
