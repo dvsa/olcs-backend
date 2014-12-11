@@ -107,7 +107,7 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="document_sub_category_id")
+     * @ORM\Column(type="string", name="sub_category_id")
      */
     protected $documentSubCategory;
 
