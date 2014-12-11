@@ -4,6 +4,7 @@
  * Document Search View
  *
  * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
+ * @author Dan Eggleston <dan@stolenegg.com>
  */
 
 namespace Olcs\Db\Entity\View;
