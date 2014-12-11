@@ -53,7 +53,7 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="document_sub_category_id")
+     * @ORM\Column(type="integer", name="sub_category_id")
      */
     protected $documentSubCategory;
 
