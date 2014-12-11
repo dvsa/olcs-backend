@@ -3911,7 +3911,7 @@ CREATE VIEW document_search_view AS
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
 		d.file_extension, d.is_digital, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
-        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id
+        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id
     FROM `document` d
 
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)

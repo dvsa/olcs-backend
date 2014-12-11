@@ -8,6 +8,8 @@ use Olcs\Db\Entity\View\TaskSearchView;
  * Task Search View entity unit tests
  *
  * N.B. NOT Auto-Generated!!
+ *
+ * @author Dan Eggleston <dan@stolenegg.com>
  */
 class TaskSearchViewTest extends \PHPUnit_Framework_TestCase
 {
