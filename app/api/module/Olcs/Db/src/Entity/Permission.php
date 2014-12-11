@@ -27,7 +27,6 @@ class Permission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\Name45Field,
         Traits\CustomVersionField;
 
     /**
@@ -38,6 +37,15 @@ class Permission implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="code", length=5, nullable=false)
      */
     protected $code;
+
+    /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=45, nullable=false)
+     */
+    protected $name;
 
     /**
      * Set the code
@@ -60,5 +68,28 @@ class Permission implements Interfaces\EntityInterface
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @return Permission
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }
