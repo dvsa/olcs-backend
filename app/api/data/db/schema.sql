@@ -421,7 +421,6 @@ CREATE TABLE `bus_reg` (
   `la_short_note` tinyint(1) NOT NULL DEFAULT '0',
   `application_signed` tinyint(1) NOT NULL DEFAULT '0',
   `operating_centre_id` int(11) DEFAULT NULL COMMENT 'Populated if the oc address is to be used',
-  `completed_date` date DEFAULT NULL,
   `variation_no` int(11) NOT NULL DEFAULT '0' COMMENT 'Increments for each variation',
   `op_notified_la_pte` tinyint(1) NOT NULL DEFAULT '0',
   `stopping_arrangements` varchar(800) DEFAULT NULL,
