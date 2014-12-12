@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
  *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"document_sub_category_id"}),
+ *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"sub_category_id"}),
  *        @ORM\Index(name="fk_document_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_document_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_document_cases1_idx", columns={"case_id"}),
@@ -42,6 +42,7 @@ class Document implements Interfaces\EntityInterface
         Traits\CustomDeletedDateField,
         Traits\Description255FieldAlt1,
         Traits\IdIdentity,
+        Traits\IsScanField,
         Traits\IssuedDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -76,16 +77,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
-
-    /**
-     * Document sub category
-     *
-     * @var \Olcs\Db\Entity\DocumentSubCategory
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocumentSubCategory")
-     * @ORM\JoinColumn(name="document_sub_category_id", referencedColumnName="id", nullable=true)
-     */
-    protected $documentSubCategory;
 
     /**
      * Email
@@ -143,15 +134,6 @@ class Document implements Interfaces\EntityInterface
     protected $isReadOnly;
 
     /**
-     * Is scan
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_scan", nullable=false)
-     */
-    protected $isScan = 0;
-
-    /**
      * Licence
      *
      * @var \Olcs\Db\Entity\Licence
@@ -189,6 +171,16 @@ class Document implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="size", nullable=true)
      */
     protected $size;
+
+    /**
+     * Sub category
+     *
+     * @var \Olcs\Db\Entity\SubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\SubCategory")
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $subCategory;
 
     /**
      * Traffic area
@@ -285,29 +277,6 @@ class Document implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the document sub category
-     *
-     * @param \Olcs\Db\Entity\DocumentSubCategory $documentSubCategory
-     * @return Document
-     */
-    public function setDocumentSubCategory($documentSubCategory)
-    {
-        $this->documentSubCategory = $documentSubCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the document sub category
-     *
-     * @return \Olcs\Db\Entity\DocumentSubCategory
-     */
-    public function getDocumentSubCategory()
-    {
-        return $this->documentSubCategory;
     }
 
     /**
@@ -486,29 +455,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is scan
-     *
-     * @param boolean $isScan
-     * @return Document
-     */
-    public function setIsScan($isScan)
-    {
-        $this->isScan = $isScan;
-
-        return $this;
-    }
-
-    /**
-     * Get the is scan
-     *
-     * @return boolean
-     */
-    public function getIsScan()
-    {
-        return $this->isScan;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Olcs\Db\Entity\Licence $licence
@@ -598,6 +544,29 @@ class Document implements Interfaces\EntityInterface
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set the sub category
+     *
+     * @param \Olcs\Db\Entity\SubCategory $subCategory
+     * @return Document
+     */
+    public function setSubCategory($subCategory)
+    {
+        $this->subCategory = $subCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the sub category
+     *
+     * @return \Olcs\Db\Entity\SubCategory
+     */
+    public function getSubCategory()
+    {
+        return $this->subCategory;
     }
 
     /**

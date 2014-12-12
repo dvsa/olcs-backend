@@ -17,7 +17,6 @@ TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `document`;
-TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_paragraph`;
@@ -81,6 +80,7 @@ TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
+TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
@@ -145,106 +145,106 @@ INSERT INTO `bus_reg`
  `operating_centre_id`, `route_no`, `reg_no`, `start_point`, `finish_point`, `via`, `other_details`, `is_short_notice`,
  `use_all_stops`, `has_manoeuvre`, `manoeuvre_detail`, `need_new_stop`, `new_stop_detail`, `has_not_fixed_stop`,
  `not_fixed_stop_detail`, `subsidy_detail`, `timetable_acceptable`, `map_supplied`, `route_description`,
- `copied_to_la_pte`, `la_short_note`, `application_signed`, `completed_date`, `variation_no`, `op_notified_la_pte`,
+ `copied_to_la_pte`, `la_short_note`, `application_signed`, `variation_no`, `op_notified_la_pte`,
  `stopping_arrangements`, `trc_condition_checked`, `trc_notes`, `status`, `revert_status`, `organisation_email`,
  `is_txc_app`, `txc_app_type`, `ebsr_refresh`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`,
  `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
   (1, 2, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 1, '', '', '', 0, 90839, '2014-03-13', '2014-03-15',
   null, null, null, 1),
   (2, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 0, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
    '2015-03-05',
    null, null,
     1),
   (3, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, null, 0, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 0, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-14',
    null,
    null, null,
    1),
   (4, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, null, 0, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 0, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 1, '', '', '', 0, 26453, '2014-05-24', '2014-05-31',
    null,
    null, null,
    1),
    (5, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 1', 0, 0, 0, null, 1, 0, 'Stopping arrangements', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 1', 0, 0, 0, 1, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
    '2015-03-05',
    null, null,
     1),
    (6, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 2', 0, 0, 0, null, 2, 0, 'Stopping arrangements', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 2', 0, 0, 0, 2, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-08',
    '2015-03-05',
    null, null,
     1),
       (7, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 3', 0, 0, 0, null, 3, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 3', 0, 0, 0, 3, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
     1),
   (8, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, null, 1, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 1, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-15', '2014-03-15',
    null,
    null, null,
    1),
   (9, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, null, 2, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 2, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-11',
    null,
    null, null,
    1),
   (10, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, null, 3, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 3, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-12', '2014-03-14',
    null,
    null, null,
    1),
   (11, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, null, 4, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 4, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-13', '2014-03-14',
    null,
    null, null,
    1),
   (12, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, null, 1, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 1, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 0, '', '', '', 0, 26453, '2014-05-27', '2014-05-27',
    null,
    null, null,
    1),
    (13, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 4', 0, 0, 0, null, 4, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 4', 0, 0, 0, 4, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
     1),
       (14, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 5', 0, 0, 0, null, 5, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 5', 0, 0, 0, 5, 0,
    'Stopping arrangements change 4', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
     1),
       (15, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 6', 0, 0, 0, null, 6, 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 6', 0, 0, 0, 6, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
@@ -318,11 +318,11 @@ INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_c
     (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 9',NOW(),NULL,1),
     (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 10',NOW(),NULL,1),
     (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 11',NOW(),NULL,1),
-    (12,24,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12',NOW(),NULL,1),
-    (13,24,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13',NOW(),NULL,1),
-    (14,24,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14',NOW(),NULL,1),
-    (15,24,110,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15',NOW(),NULL,1),
-    (16,24,110,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16',NOW(),NULL,1);
+    (12,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12',NOW(),NULL,1),
+    (13,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13',NOW(),NULL,1),
+    (14,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14',NOW(),NULL,1),
+    (15,75,110,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15',NOW(),NULL,1),
+    (16,75,110,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`forename`,`family_name`,`written_permission_to_engage`,`email_address`,
@@ -649,16 +649,16 @@ INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO `pi` (`id`,`agreed_by_tc_role`,`decided_by_tc_role`,`written_outcome`,`agreed_by_tc_id`,`decided_by_tc_id`,
-    `assigned_to`,`pi_status`,`case_id`,`created_by`,`last_modified_by`,`witnesses`,`section_code_text`,
-    `licence_revoked_at_pi`,`licence_suspended_at_pi`,`licence_curtailed_at_pi`,
-    `notification_date`,`decision_notes`,`call_up_letter_date`,`brief_to_tc_date`,`written_reason_date`,
-    `decision_letter_sent_date`,`tc_written_decision_date`,`tc_written_reason_date`,`written_reason_letter_date`,
-    `dec_sent_after_written_dec_date`,`agreed_date`,`is_cancelled`,`decision_date`,`deleted_date`,
-    `comment`,`closed_date`,`created_on`,`last_modified_on`,`version`)
-  VALUES
-    (1,'tc_r_dtc',NULL,NULL,2,NULL,NULL,'pi_s_reg',24,NULL,NULL,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,
-     NULL,NULL,NULL,NULL,'2014-11-24',0,NULL,NULL,'Test Pi',NULL,'2014-11-24 10:06:49',NULL,1);
+INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
+  `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
+  `dec_sent_after_written_dec_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
+  `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`section_code_text`,`tc_written_decision_date`,
+  `tc_written_reason_date`,`written_reason_date`,`written_reason_letter_date`,`agreed_date`,`closed_date`,`comment`,
+  `created_on`,`decision_date`,`deleted_date`,`is_cancelled`,`last_modified_on`,`version`,`witnesses`)
+VALUES
+  (1,2,'tc_r_dtc',NULL,2,'tc_r_dhtru','pi_s_reg',NULL,24,NULL,NULL,NULL,NULL,NULL,NULL,
+   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
+   'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0);
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
@@ -707,8 +707,10 @@ INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by
 
 INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`pi_venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`pi_venue_other`,`version`,`witnesses`)
   VALUES
-    (1,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',1,NULL,'2014-11-24 10:22:24','2014-03-16 14:30:00',0,'2014-12-08 16:16:34',NULL,2,9),
-    (2,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',0,NULL,'2014-11-24 10:22:24','2014-04-05 14:30:00',0,'2014-12-08 17:57:54',NULL,2,9);
+    (1,1,'tc_r_htru',NULL,NULL,1,1,'2014-03-16','adjourned reason',NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',1,NULL,'2014-11-24 10:22:24','2014-03-16 14:30:00',0,NULL,NULL,1,9),
+    (2,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',0,NULL,'2014-11-24 10:22:24','2014-04-05 14:30:00',0,NULL,NULL,1,9);
+
+INSERT INTO `pi_decision` (`pi_id`,`decision_id`) VALUES (1,65);
 
 INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
@@ -881,36 +883,35 @@ INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
     (29, 'case_cat_7');
 
-    
 /**
  * NOTE: These inserts can't be grouped into one as they insert different columns
  */
 /* Application task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,32,1,2,'A test task','2014-08-12',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (2,null,110,1,69,1,2,'Another test task','2013-02-11',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
 /* IRFO task */
-INSERT INTO task(id,irfo_organisation_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,57,1,2,'An organisation task','2014-05-01',1);
+INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
-INSERT INTO task(id,transport_manager_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,76,6,3,'A transport task','2010-01-01',1);
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
 /* Case task */
-INSERT INTO task(id,case_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (5,24,2,44,null,4,'A case task','2010-02-01',1);
 /* Unlinked task */
-INSERT INTO task(id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,49,null,null,'Unassigned task','2010-07-03',1);
+INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,32,1,2,'A test task','2018-09-27',1,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
 
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date,document_store_id) VALUES
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
     (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
@@ -930,13 +931,17 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
     (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
 
-INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,5,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,5,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,5,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,5,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,5,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,5,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+/* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
+INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
+    (19,3,'Test TM document','testdocument19.doc',1,5,101,'doc_doc','2014-12-11 12:34:56');
+
+INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
+    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
+    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
+    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
+    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
+    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
+    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),
@@ -1279,7 +1284,17 @@ VALUES
 INSERT INTO `publication_link` (`id`,`pi_id`,`publication_id`,`publication_section_id`,`tm_pi_hearing_id`,`application_id`,`bus_reg_id`,`created_by`,`last_modified_by`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,`created_on`,`deleted_date`,`last_modified_on`,`version`)
   VALUES
     (1,1,1,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
-    (2,1,3,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1);
+    (2,1,3,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
+    (3,1,3,14,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1);
+
+INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`olbs_id`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
+  VALUES
+    (1,1,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
+    (2,1,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
+    (3,2,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
+    (4,2,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
+    (5,3,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
+    (6,3,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
 INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
 VALUES
