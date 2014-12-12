@@ -1806,12 +1806,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   (1,'Licensing',1,1,1,1)
  ,(2,'Compliance',1,1,1,1)
  ,(3,'Bus Registration',1,1,1,1)
- ,(4,'Permits',1,1,1,1)
+ ,(4,'Permits',1,1,0,1)
  ,(5,'Transport Manager',1,1,1,1)
  ,(7,'Environmental',1,1,1,1)
  ,(8,'IRFO',1,1,1,1)
  ,(9,'Application',1,1,1,1)
- ,(10,'Submission',0,1,1,0)
+ ,(10,'Submission',0,1,0,1)
 ;
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
