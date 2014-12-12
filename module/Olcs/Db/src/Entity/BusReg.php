@@ -81,15 +81,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $busServiceTypes;
 
     /**
-     * Completed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="completed_date", nullable=true)
-     */
-    protected $completedDate;
-
-    /**
      * Copied to la pte
      *
      * @var string
@@ -628,29 +619,6 @@ class BusReg implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the completed date
-     *
-     * @param \DateTime $completedDate
-     * @return BusReg
-     */
-    public function setCompletedDate($completedDate)
-    {
-        $this->completedDate = $completedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the completed date
-     *
-     * @return \DateTime
-     */
-    public function getCompletedDate()
-    {
-        return $this->completedDate;
     }
 
     /**
