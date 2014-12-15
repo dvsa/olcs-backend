@@ -5,6 +5,7 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Licence Entity
@@ -13,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence",
  *    indexes={
  *        @ORM\Index(name="fk_licence_vehicle_inspectorate1_idx", columns={"enforcement_area_id"}),
@@ -35,6 +37,7 @@ class Licence implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\ExpiryDateField,
         Traits\GoodsOrPsvManyToOne,
         Traits\GrantedDateField,
