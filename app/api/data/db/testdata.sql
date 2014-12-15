@@ -908,6 +908,12 @@ INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assign
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+/* Transport Manager task */
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+/* Bus Registration task */
+INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
@@ -1070,7 +1076,7 @@ INSERT INTO submission_section_comment (submission_section,submission_id,comment
     ('lead-tc-area',10,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
     ('auth-requested-applied-for',10,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
     ('case-outline',10,'Case for convictions against company directors','2014-10-16 15:03:19'),
-    
+
     ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
     ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
 
