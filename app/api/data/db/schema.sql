@@ -5935,6 +5935,23 @@ LOCK TABLES `sla` WRITE;
 /*!40000 ALTER TABLE `sla` ENABLE KEYS */;
 UNLOCK TABLES;
 
+-- -----------------------------------------------------
+-- Table `sub_category_description`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sub_category_description`;
+CREATE TABLE `sub_category_description` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sub_category_id` INT NOT NULL,
+  `description` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_sub_category_description_sub_category1_idx` (`sub_category_id` ASC),
+  CONSTRAINT `fk_sub_category_description_sub_category1`
+    FOREIGN KEY (`sub_category_id`)
+    REFERENCES `sub_category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB COMMENT = 'Possible values to be used in task or document description field for the sub category.';
+
 --
 -- Table structure for table `statement`
 --
