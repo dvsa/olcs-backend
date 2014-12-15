@@ -1386,40 +1386,57 @@ DROP TABLE IF EXISTS `contact_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contact_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contact_type` varchar(32) NOT NULL,
-  `email_address` varchar(60) DEFAULT NULL,
-  `fao` varchar(90) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `licence_id` int(11) DEFAULT NULL,
-  `organisation_id` int(11) DEFAULT NULL,
-  `address_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `forename` varchar(40) DEFAULT NULL,
-  `family_name` varchar(40) DEFAULT NULL,
-  `written_permission_to_engage` tinyint(1) NOT NULL DEFAULT '0',
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `contact_type` VARCHAR(32) NOT NULL,
+  `email_address` VARCHAR(60) NULL,
+  `fao` VARCHAR(90) NULL,
+  `description` VARCHAR(255) NULL,
+  `address_id` INT NULL,
+  `person_id` INT NULL,
+  `forename` VARCHAR(40) NULL,
+  `family_name` VARCHAR(40) NULL,
+  `written_permission_to_engage` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_date` DATETIME NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  `olbs_key` INT NULL,
+  `olbs_type` VARCHAR(32) NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_contact_details_licence1_idx` (`licence_id`),
-  KEY `fk_contact_details_organisation1_idx` (`organisation_id`),
-  KEY `fk_contact_details_person1_idx` (`person_id`),
-  KEY `fk_contact_details_address1_idx` (`address_id`),
-  KEY `fk_contact_details_user1_idx` (`created_by`),
-  KEY `fk_contact_details_user2_idx` (`last_modified_by`),
-  KEY `fk_contact_details_ref_data1_idx` (`contact_type`),
-  CONSTRAINT `fk_contact_details_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_organisation1` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_person1` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_address1` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contact_details_ref_data1` FOREIGN KEY (`contact_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  INDEX `fk_contact_details_person1_idx` (`person_id` ASC),
+  INDEX `fk_contact_details_address1_idx` (`address_id` ASC),
+  INDEX `fk_contact_details_user1_idx` (`created_by` ASC),
+  INDEX `fk_contact_details_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_contact_details_ref_data1_idx` (`contact_type` ASC),
+  UNIQUE INDEX `uk_olbs_key_etl` (`olbs_key` ASC, `olbs_type` ASC),
+  CONSTRAINT `fk_contact_details_person1`
+    FOREIGN KEY (`person_id`)
+    REFERENCES `person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_contact_details_address1`
+    FOREIGN KEY (`address_id`)
+    REFERENCES `address` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_contact_details_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_contact_details_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_contact_details_ref_data1`
+    FOREIGN KEY (`contact_type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3408,66 +3425,123 @@ DROP TABLE IF EXISTS `licence`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `licence` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enforcement_area_id` varchar(4) DEFAULT NULL COMMENT 'FK to vehicle_inspectorate.',
-  `organisation_id` int(11) NOT NULL,
-  `traffic_area_id` varchar(1) DEFAULT NULL COMMENT 'FK to traffic area.  An Operator can have One licence per area.',
-  `lic_no` varchar(18) DEFAULT NULL COMMENT 'Licence number.  Normally 9 Chars.  First denotes goods/psv, second TA, rest ID.',
-  `goods_or_psv` varchar(32) DEFAULT NULL,
-  `licence_type` varchar(32) DEFAULT NULL,
-  `status` varchar(32) NOT NULL,
-  `vi_action` varchar(1) DEFAULT NULL COMMENT 'C, U or D.  Triggers VI export.',
-  `tot_auth_trailers` int(11) DEFAULT NULL,
-  `tot_auth_vehicles` int(11) DEFAULT NULL,
-  `tot_auth_small_vehicles` int(11) DEFAULT NULL,
-  `tot_auth_medium_vehicles` int(11) DEFAULT NULL,
-  `tot_auth_large_vehicles` int(11) DEFAULT NULL,
-  `tot_community_licences` int(11) DEFAULT NULL,
-  `trailers_in_possession` int(11) DEFAULT NULL,
-  `fabs_reference` varchar(10) DEFAULT NULL,
-  `expiry_date` date DEFAULT NULL COMMENT 'expiry date',
-  `granted_date` datetime DEFAULT NULL COMMENT 'granted date',
-  `review_date` date DEFAULT NULL,
-  `fee_date` date DEFAULT NULL,
-  `in_force_date` date DEFAULT NULL,
-  `surrendered_date` datetime DEFAULT NULL,
-  `safety_ins_trailers` int(11) DEFAULT NULL COMMENT 'Max period in weeks between safety inspections.',
-  `safety_ins_vehicles` int(11) DEFAULT NULL COMMENT 'Max period in weeks between safety inspections.',
-  `safety_ins` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Does own safety inspections.',
-  `safety_ins_varies` tinyint(1) DEFAULT NULL COMMENT 'New olcs column for when some vehicles inspected more often',
-  `ni_flag` tinyint(1) DEFAULT NULL,
-  `tachograph_ins` varchar(32) DEFAULT NULL COMMENT 'New olcs column values not applicable, external, internal',
-  `tachograph_ins_name` varchar(90) DEFAULT NULL COMMENT 'New olcs column for tachograph inspector',
-  `psv_discs_to_be_printed_no` int(11) DEFAULT NULL,
-  `translate_to_welsh` tinyint(1) NOT NULL DEFAULT '0',
-  `is_maintenance_suitable` tinyint(1) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `enforcement_area_id` VARCHAR(4) NULL COMMENT 'FK to vehicle_inspectorate.',
+  `organisation_id` INT NOT NULL,
+  `traffic_area_id` VARCHAR(1) NULL COMMENT 'FK to traffic area.  An Operator can have One licence per area.',
+  `correspondence_cd_id` INT NULL COMMENT 'Correspondence contact details',
+  `establishment_cd_id` INT NULL COMMENT 'Establishment contact details',
+  `transport_consultant_cd_id` INT NULL COMMENT 'Transport consultant contact details',
+  `lic_no` VARCHAR(18) NULL COMMENT 'Licence number.  Normally 9 Chars.  First denotes goods/psv, second TA, rest ID.',
+  `goods_or_psv` VARCHAR(32) NULL,
+  `licence_type` VARCHAR(32) NULL,
+  `status` VARCHAR(32) NOT NULL,
+  `vi_action` VARCHAR(1) NULL COMMENT 'C, U or D.  Triggers VI export.',
+  `tot_auth_trailers` INT NULL,
+  `tot_auth_vehicles` INT NULL,
+  `tot_auth_small_vehicles` INT NULL,
+  `tot_auth_medium_vehicles` INT NULL,
+  `tot_auth_large_vehicles` INT NULL,
+  `tot_community_licences` INT NULL,
+  `trailers_in_possession` INT NULL,
+  `fabs_reference` VARCHAR(10) NULL,
+  `expiry_date` DATE NULL COMMENT 'expiry date',
+  `granted_date` DATETIME NULL COMMENT 'granted date',
+  `review_date` DATE NULL,
+  `fee_date` DATE NULL,
+  `in_force_date` DATE NULL,
+  `surrendered_date` DATETIME NULL,
+  `safety_ins_trailers` INT NULL COMMENT 'Max period in weeks between safety inspections.',
+  `safety_ins_vehicles` INT NULL COMMENT 'Max period in weeks between safety inspections.',
+  `safety_ins` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Does own safety inspections.',
+  `safety_ins_varies` TINYINT(1) NULL COMMENT 'New olcs column for when some vehicles inspected more often',
+  `ni_flag` TINYINT(1) NULL,
+  `tachograph_ins` VARCHAR(32) NULL COMMENT 'New olcs column values not applicable, external, internal',
+  `tachograph_ins_name` VARCHAR(90) NULL COMMENT 'New olcs column for tachograph inspector',
+  `psv_discs_to_be_printed_no` INT NULL,
+  `translate_to_welsh` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_maintenance_suitable` TINYINT(1) NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
   `deleted_date` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
+  `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `licence_lic_no_idx` (`lic_no`),
-  KEY `fk_licence_vehicle_inspectorate1_idx` (`enforcement_area_id`),
-  KEY `fk_licence_traffic_area1_idx` (`traffic_area_id`),
-  KEY `fk_licence_organisation1_idx` (`organisation_id`),
-  KEY `fk_licence_user1_idx` (`created_by`),
-  KEY `fk_licence_user2_idx` (`last_modified_by`),
-  KEY `fk_licence_ref_data1_idx` (`goods_or_psv`),
-  KEY `fk_licence_ref_data2_idx` (`licence_type`),
-  KEY `fk_licence_ref_data3_idx` (`status`),
-  KEY `fk_licence_ref_data4_idx` (`tachograph_ins`),
-  CONSTRAINT `fk_licence_vehicle_inspectorate1` FOREIGN KEY (`enforcement_area_id`) REFERENCES `enforcement_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_organisation1` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_ref_data2` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_ref_data3` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_ref_data4` FOREIGN KEY (`tachograph_ins`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  INDEX `fk_licence_vehicle_inspectorate1_idx` (`enforcement_area_id` ASC),
+  INDEX `fk_licence_traffic_area1_idx` (`traffic_area_id` ASC),
+  INDEX `fk_licence_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_licence_user1_idx` (`created_by` ASC),
+  INDEX `fk_licence_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_licence_ref_data1_idx` (`goods_or_psv` ASC),
+  INDEX `fk_licence_ref_data2_idx` (`licence_type` ASC),
+  INDEX `fk_licence_ref_data3_idx` (`status` ASC),
+  INDEX `fk_licence_ref_data4_idx` (`tachograph_ins` ASC),
+  UNIQUE INDEX `licence_lic_no_idx` (`lic_no` ASC),
+  INDEX `fk_licence_contact_details1_idx` (`correspondence_cd_id` ASC),
+  INDEX `fk_licence_contact_details2_idx` (`establishment_cd_id` ASC),
+  INDEX `fk_licence_contact_details3_idx` (`transport_consultant_cd_id` ASC),
+  CONSTRAINT `fk_licence_vehicle_inspectorate1`
+    FOREIGN KEY (`enforcement_area_id`)
+    REFERENCES `enforcement_area` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_traffic_area1`
+    FOREIGN KEY (`traffic_area_id`)
+    REFERENCES `traffic_area` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_organisation1`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_ref_data1`
+    FOREIGN KEY (`goods_or_psv`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_ref_data2`
+    FOREIGN KEY (`licence_type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_ref_data3`
+    FOREIGN KEY (`status`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_ref_data4`
+    FOREIGN KEY (`tachograph_ins`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_contact_details1`
+    FOREIGN KEY (`correspondence_cd_id`)
+    REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_contact_details2`
+    FOREIGN KEY (`establishment_cd_id`)
+    REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_licence_contact_details3`
+    FOREIGN KEY (`transport_consultant_cd_id`)
+    REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3989,34 +4063,57 @@ DROP TABLE IF EXISTS `organisation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organisation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `company_or_llp_no` varchar(20) DEFAULT NULL,
-  `name` varchar(160) DEFAULT NULL,
-  `irfo_name` varchar(160) DEFAULT NULL COMMENT 'Hold irfo company name separate from normal name.  Dont want changes to one affecting other on licences.',
-  `type` varchar(32) NOT NULL,
-  `vi_action` varchar(1) DEFAULT NULL,
-  `is_mlh` tinyint(1) NOT NULL DEFAULT '0',
-  `company_cert_seen` tinyint(1) NOT NULL DEFAULT '0',
-  `irfo_nationality` varchar(45) DEFAULT NULL,
-  `is_irfo` tinyint(1) NOT NULL DEFAULT '0',
-  `allow_email` tinyint(1) NOT NULL DEFAULT '0',
-  `lead_tc_area_id` char(1) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `company_or_llp_no` VARCHAR(20) NULL,
+  `name` VARCHAR(160) NULL,
+  `irfo_name` VARCHAR(160) NULL COMMENT 'Hold irfo company name separate from normal name.  Dont want changes to one affecting other on licences.',
+  `contact_details_id` INT NULL COMMENT 'Registered office details',
+  `type` VARCHAR(32) NOT NULL,
+  `vi_action` VARCHAR(1) NULL,
+  `is_mlh` TINYINT(1) NOT NULL DEFAULT 0,
+  `company_cert_seen` TINYINT(1) NOT NULL DEFAULT 0,
+  `irfo_nationality` VARCHAR(45) NULL,
+  `is_irfo` TINYINT(1) NOT NULL DEFAULT 0,
+  `allow_email` TINYINT(1) NOT NULL DEFAULT 0,
+  `lead_tc_area_id` CHAR(1) NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `last_modified_on` DATETIME NULL,
+  `created_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  KEY `fk_organisation_user1_idx` (`created_by`),
-  KEY `fk_organisation_user2_idx` (`last_modified_by`),
-  KEY `fk_organisation_ref_data1_idx` (`type`),
-  KEY `fk_organisation_traffic_area1_idx` (`lead_tc_area_id`),
-  KEY `organisation_name_idx` (`name`),
-  CONSTRAINT `fk_organisation_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_ref_data1` FOREIGN KEY (`type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_traffic_area1` FOREIGN KEY (`lead_tc_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  INDEX `fk_organisation_user1_idx` (`created_by` ASC),
+  INDEX `fk_organisation_user2_idx` (`last_modified_by` ASC),
+  INDEX `fk_organisation_ref_data1_idx` (`type` ASC),
+  INDEX `fk_organisation_traffic_area1_idx` (`lead_tc_area_id` ASC),
+  INDEX `organisation_name_idx` (`name` ASC),
+  INDEX `fk_organisation_contact_details1_idx` (`contact_details_id` ASC),
+  CONSTRAINT `fk_organisation_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_ref_data1`
+    FOREIGN KEY (`type`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_traffic_area1`
+    FOREIGN KEY (`lead_tc_area_id`)
+    REFERENCES `traffic_area` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_organisation_contact_details1`
+    FOREIGN KEY (`contact_details_id`)
+    REFERENCES `contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB AUTO_INCREMENT = 1000000 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

@@ -17,13 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
- *        @ORM\Index(name="fk_contact_details_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_contact_details_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_contact_details_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_contact_details_address1_idx", columns={"address_id"}),
  *        @ORM\Index(name="fk_contact_details_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_contact_details_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_contact_details_ref_data1_idx", columns={"contact_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_olbs_key_etl", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -88,24 +89,22 @@ class ContactDetails implements Interfaces\EntityInterface
     protected $forename;
 
     /**
-     * Licence
+     * Olbs key
      *
-     * @var \Olcs\Db\Entity\Licence
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
      */
-    protected $licence;
+    protected $olbsKey;
 
     /**
-     * Organisation
+     * Olbs type
      *
-     * @var \Olcs\Db\Entity\Organisation
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="olbs_type", length=32, nullable=true)
      */
-    protected $organisation;
+    protected $olbsType;
 
     /**
      * Person
@@ -259,49 +258,49 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the licence
+     * Set the olbs key
      *
-     * @param \Olcs\Db\Entity\Licence $licence
+     * @param int $olbsKey
      * @return ContactDetails
      */
-    public function setLicence($licence)
+    public function setOlbsKey($olbsKey)
     {
-        $this->licence = $licence;
+        $this->olbsKey = $olbsKey;
 
         return $this;
     }
 
     /**
-     * Get the licence
+     * Get the olbs key
      *
-     * @return \Olcs\Db\Entity\Licence
+     * @return int
      */
-    public function getLicence()
+    public function getOlbsKey()
     {
-        return $this->licence;
+        return $this->olbsKey;
     }
 
     /**
-     * Set the organisation
+     * Set the olbs type
      *
-     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @param string $olbsType
      * @return ContactDetails
      */
-    public function setOrganisation($organisation)
+    public function setOlbsType($olbsType)
     {
-        $this->organisation = $organisation;
+        $this->olbsType = $olbsType;
 
         return $this;
     }
 
     /**
-     * Get the organisation
+     * Get the olbs type
      *
-     * @return \Olcs\Db\Entity\Organisation
+     * @return string
      */
-    public function getOrganisation()
+    public function getOlbsType()
     {
-        return $this->organisation;
+        return $this->olbsType;
     }
 
     /**
