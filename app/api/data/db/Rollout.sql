@@ -902,7 +902,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_new', 'New Application', '0'),
     ('ebsr_sub_type', 'ebsrt_refresh', 'Data Refresh', '1'),
     ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
-    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3')
+    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3'),
+
+    /* Opposition types */
+    ('opposition_type', 'opp_type_env', 'Environmental objection', '1'),
+    ('opposition_type', 'opp_type_env', 'Representation', '1'),
+    ('opposition_type', 'opp_type_env', 'Environmental objection', '3'),
+    ('opposition_type', 'opp_type_env', 'Environmental objection', '4'),
 ;
 
 -- Case categories
