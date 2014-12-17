@@ -3592,8 +3592,8 @@ VALUES
  ,( 9,   9, 1, 1, 1, 0, 'Director Change Assisted Digital')
  ,( 9,  10, 1, 1, 0, 0, 'Director Change Digital')
  ,( 9,  11, 0, 1, 0, 0, 'Fee Due')
- ,( 9,  12, 1, 1, 1, 0, 'Financial Document Assisted Digital')
- ,( 9,  13, 1, 1, 0, 1, 'Financial Document Digital')
+ ,( 9,  12, 1, 1, 1, 0, 'Financial Evidence Assisted Digital')
+ ,( 9,  13, 1, 1, 0, 1, 'Financial Evidence Digital')
  ,( 9,  14, 1, 1, 1, 0, 'Forms Assisted Digital')
  ,( 9,  15, 1, 1, 0, 0, 'Forms Digital')
  ,( 9,  16, 0, 1, 0, 0, 'Interim')
@@ -3690,7 +3690,9 @@ VALUES
  ,( 3, 107, 1, 1, 0, 0, 'TransXChange File')
  ,( 3, 108, 1, 1, 0, 0, 'TransXChange PDF')
  ,( 1, 109, 1, 1, 1, 0, 'Dishonoured Cheques')
- ,( 1, 110, 1, 1, 1, 0, 'Fee Request');
+ ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
+ ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
+ ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital');
 
 INSERT INTO sub_category_description
   (sub_category_id, description)
