@@ -3690,7 +3690,7 @@ VALUES
  ,( 3, 107, 1, 1, 0, 0, 'TransXChange File')
  ,( 3, 108, 1, 1, 0, 0, 'TransXChange PDF')
  ,( 1, 109, 1, 1, 1, 0, 'Dishonoured Cheques')
- ,( 1, 110, 1, 1, 1, 0, 'Fee Request'),
+ ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
  ,( 9, 112, 1, 1, 0, 1, 'Insolvencey Document Digital');
 
