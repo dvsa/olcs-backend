@@ -1022,54 +1022,6 @@ INSERT INTO `disc_sequence` (
 
 ALTER TABLE companies_house_request AUTO_INCREMENT=53;
 
-INSERT INTO submission_section_comment (submission_section,submission_id,comment,created_on) VALUES
-    ('most-serious-infringement',1,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',1,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',1,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',1,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',2,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',2,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',2,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',3,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',3,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',3,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',4,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',4,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',5,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',5,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('prohibition-history',5,'Placeholder for prohibition-history','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',5,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('annual-test-history',5,'Placeholder for annual-test-history','2014-10-16 15:03:19'),
-    ('penalties',5,'Placeholder for penalties','2014-10-16 15:03:19'),
-    ('case-outline',5,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',6,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',6,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',6,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('case-outline',6,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',7,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',7,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',8,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',8,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',8,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',9,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',9,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',10,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',10,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',10,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',10,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
-
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
     `created_on`, `last_modified_on`)
