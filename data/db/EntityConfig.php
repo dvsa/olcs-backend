@@ -279,7 +279,13 @@ return array(
                 'entity' => 'Application',
                 'property' => 'opposition'
             )
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'opposition'
+            )
+        ),
     ),
     'bus_reg' => array(
         'use_all_stops' => array(
