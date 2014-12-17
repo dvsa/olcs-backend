@@ -890,7 +890,7 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
+    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
@@ -908,7 +908,7 @@ INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_
     (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
+    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
