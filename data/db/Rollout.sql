@@ -3692,7 +3692,7 @@ VALUES
  ,( 1, 109, 1, 1, 1, 0, 'Dishonoured Cheques')
  ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
- ,( 9, 112, 1, 1, 0, 1, 'Insolvencey Document Digital');
+ ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital');
 
 INSERT INTO sub_category_description
   (sub_category_id, description)
