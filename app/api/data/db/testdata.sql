@@ -354,7 +354,9 @@ VALUES
     (101,'ct_team_user',26,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (104,'ct_tm',104,77,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (104,'ct_tm',104,77,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (105,'ct_team_user',26,NULL,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -779,8 +781,8 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL,'','',''),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL,'','',''),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',105,'','',''),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',106,'','',''),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
@@ -888,7 +890,7 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
+    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
@@ -906,10 +908,16 @@ INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_
     (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
+    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+/* Transport Manager task */
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+/* Bus Registration task */
+INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
@@ -1072,7 +1080,7 @@ INSERT INTO submission_section_comment (submission_section,submission_id,comment
     ('lead-tc-area',10,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
     ('auth-requested-applied-for',10,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
     ('case-outline',10,'Case for convictions against company directors','2014-10-16 15:03:19'),
-    
+
     ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
     ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
 
