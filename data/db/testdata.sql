@@ -291,17 +291,23 @@ VALUES
   (9,'Rural Bus Service','RuralService'),
   (10,'Flexible Registration','Flexible');
 
-INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `created_by`,
+INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
     `created_on`, `last_modified_on`, `version`)
 VALUES
-    (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Driver F John',
     'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+        (103, 'cs_ack', 'ct_cov', 1,  NULL, NULL, 24, NOW(), 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+        (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Alberto',
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
+        (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1),
+        (103, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', NOW(), NOW(), 1),
+        (103, 'cs_ack', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
+        (103, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
