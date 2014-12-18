@@ -1235,6 +1235,7 @@ DROP TABLE IF EXISTS `complaint`;
 CREATE TABLE `complaint` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) DEFAULT NULL,
+  `is_compliance` tinyint(1) NOT NULL DEFAULT '1',
   `complainant_contact_details_id` int(11) DEFAULT NULL,
   `complaint_date` datetime DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,

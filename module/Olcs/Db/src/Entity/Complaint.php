@@ -96,6 +96,15 @@ class Complaint implements Interfaces\EntityInterface
     protected $driverForename;
 
     /**
+     * Is compliance
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_compliance", nullable=false)
+     */
+    protected $isCompliance = 1;
+
+    /**
      * Set the complainant contact details
      *
      * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
@@ -231,5 +240,28 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriverForename()
     {
         return $this->driverForename;
+    }
+
+    /**
+     * Set the is compliance
+     *
+     * @param boolean $isCompliance
+     * @return Complaint
+     */
+    public function setIsCompliance($isCompliance)
+    {
+        $this->isCompliance = $isCompliance;
+
+        return $this;
+    }
+
+    /**
+     * Get the is compliance
+     *
+     * @return boolean
+     */
+    public function getIsCompliance()
+    {
+        return $this->isCompliance;
     }
 }
