@@ -303,12 +303,25 @@ VALUES
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
         (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1),
+
         (103, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Driver F John',
-    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
-    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
-    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
+    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1),
+        (103, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1),
+        (103, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (103, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (103, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1);
+
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
+`created_on`, `last_modified_on`)
+VALUES
+    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
+    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
+    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
+    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
