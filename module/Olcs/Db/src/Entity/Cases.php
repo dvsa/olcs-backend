@@ -241,6 +241,15 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Opposition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Opposition", mappedBy="case")
+     */
+    protected $oppositions;
+
+    /**
      * Prohibition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -278,6 +287,7 @@ class Cases implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
         $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
         $this->stays = new ArrayCollection();
@@ -960,6 +970,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Cases
+     */
+    public function setOppositions($oppositions)
+    {
+        $this->oppositions = $oppositions;
+
+        return $this;
+    }
+
+    /**
+     * Get the oppositions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOppositions()
+    {
+        return $this->oppositions;
+    }
+
+    /**
+     * Add a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Cases
+     */
+    public function addOppositions($oppositions)
+    {
+        if ($oppositions instanceof ArrayCollection) {
+            $this->oppositions = new ArrayCollection(
+                array_merge(
+                    $this->oppositions->toArray(),
+                    $oppositions->toArray()
+                )
+            );
+        } elseif (!$this->oppositions->contains($oppositions)) {
+            $this->oppositions->add($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return Cases
+     */
+    public function removeOppositions($oppositions)
+    {
+        if ($this->oppositions->contains($oppositions)) {
+            $this->oppositions->removeElement($oppositions);
         }
 
         return $this;
