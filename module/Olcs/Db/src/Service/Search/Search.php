@@ -41,13 +41,23 @@ class Search
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
-        $elasticaQueryString  = new Query\QueryString($query);
+        $elasticaQueryString  = new Query\Match();
+        $elasticaQueryString->setField('_all', $query);
 
-        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $query, 2.0);
+        $vrmQuery = new Query\Match();
+        $vrmQuery->setField('vrm', $query);
+
+        $postcodeQuery = new Query\Match();
+        $postcodeQuery->setField('correspondence_postcode', $query);
+
+        $wildcardQuery = strtolower(rtrim($query, '*') . '*');
+        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
 
         $elasticaQueryBool = new Query\Bool();
-        $elasticaQueryBool->addShould($elasticaQueryString);
         $elasticaQueryBool->addShould($elasticaQueryWildcard);
+        $elasticaQueryBool->addShould($vrmQuery);
+        $elasticaQueryBool->addShould($postcodeQuery);
+        $elasticaQueryBool->addShould($elasticaQueryString);
 
         $elasticaQuery        = new Query();
         $elasticaQuery->setQuery($elasticaQueryBool);
