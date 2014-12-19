@@ -307,11 +307,11 @@ VALUES
     'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1),
         (103, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1),
-        (107, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+        (105, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
-        (108, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+        (106, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
-        (109, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+        (103, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1);
 
 INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
