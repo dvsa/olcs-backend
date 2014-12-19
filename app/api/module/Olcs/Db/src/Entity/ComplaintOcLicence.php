@@ -25,6 +25,7 @@ use Olcs\Db\Entity\Traits;
 class ComplaintOcLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ComplaintManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -33,37 +34,4 @@ class ComplaintOcLicence implements Interfaces\EntityInterface
         Traits\LicenceManyToOne,
         Traits\OperatingCentreManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Complaint
-     *
-     * @var \Olcs\Db\Entity\Complaint
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Complaint")
-     * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
-     */
-    protected $complaint;
-
-    /**
-     * Set the complaint
-     *
-     * @param \Olcs\Db\Entity\Complaint $complaint
-     * @return ComplaintOcLicence
-     */
-    public function setComplaint($complaint)
-    {
-        $this->complaint = $complaint;
-
-        return $this;
-    }
-
-    /**
-     * Get the complaint
-     *
-     * @return \Olcs\Db\Entity\Complaint
-     */
-    public function getComplaint()
-    {
-        return $this->complaint;
-    }
 }
