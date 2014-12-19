@@ -586,6 +586,14 @@ return array(
             )
         )
     ),
+    'oc_complaint' => array(
+        'complaint_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Complaint',
+                'property' => 'ocComplaint'
+            )
+        )
+    ),
     'complaint_case' => array(
         'complaint_id' => array(
             'cascade' => array(

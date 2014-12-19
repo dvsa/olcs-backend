@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -94,6 +95,32 @@ class Complaint implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="driver_forename", length=40, nullable=true)
      */
     protected $driverForename;
+
+    /**
+     * Is compliance
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_compliance", nullable=false)
+     */
+    protected $isCompliance = 1;
+
+    /**
+     * Oc complaint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OcComplaint", mappedBy="complaint")
+     */
+    protected $ocComplaints;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->ocComplaints = new ArrayCollection();
+    }
 
     /**
      * Set the complainant contact details
@@ -231,5 +258,88 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriverForename()
     {
         return $this->driverForename;
+    }
+
+    /**
+     * Set the is compliance
+     *
+     * @param boolean $isCompliance
+     * @return Complaint
+     */
+    public function setIsCompliance($isCompliance)
+    {
+        $this->isCompliance = $isCompliance;
+
+        return $this;
+    }
+
+    /**
+     * Get the is compliance
+     *
+     * @return boolean
+     */
+    public function getIsCompliance()
+    {
+        return $this->isCompliance;
+    }
+
+    /**
+     * Set the oc complaint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function setOcComplaints($ocComplaints)
+    {
+        $this->ocComplaints = $ocComplaints;
+
+        return $this;
+    }
+
+    /**
+     * Get the oc complaints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOcComplaints()
+    {
+        return $this->ocComplaints;
+    }
+
+    /**
+     * Add a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function addOcComplaints($ocComplaints)
+    {
+        if ($ocComplaints instanceof ArrayCollection) {
+            $this->ocComplaints = new ArrayCollection(
+                array_merge(
+                    $this->ocComplaints->toArray(),
+                    $ocComplaints->toArray()
+                )
+            );
+        } elseif (!$this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->add($ocComplaints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function removeOcComplaints($ocComplaints)
+    {
+        if ($this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->removeElement($ocComplaints);
+        }
+
+        return $this;
     }
 }

@@ -291,18 +291,36 @@ VALUES
   (9,'Rural Bus Service','RuralService'),
   (10,'Flexible Registration','Flexible');
 
-INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `created_by`,
+INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
     `created_on`, `last_modified_on`, `version`)
 VALUES
-    (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Driver F John',
     'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
-        (107, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+        (103, 'cs_ack', 'ct_cov', 1,  NULL, NULL, 24, NOW(), 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
-        (108, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+        (107, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Alberto',
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
-        (109, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
-    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
+        (108, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1),
+        (109, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1),
+        (110, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1),
+        (111, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (112, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1);
+
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
+`created_on`, `last_modified_on`)
+VALUES
+    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
+    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
+    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
+    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -359,7 +377,17 @@ VALUES
     (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (108,'ct_complainant',72,34,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (109,'ct_complainant',72,35,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (109,'ct_complainant',72,35,4,1,NULL,'Lesley','Stephenson',0,NULL,NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+
+    (110,'ct_team_user',26,NULL,4,1,NULL,'Andrew','Pringle',0,'andy@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (111,'ct_team_user',26,NULL,4,1,NULL,'Peter','Crumpet',0,'p.crumpet@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (112,'ct_team_user',26,NULL,4,1,NULL,'Nicholas','Chimney',0,'nick@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (113,'ct_team_user',26,NULL,4,1,NULL,'Kieth','Lemon',0,'klemon@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
