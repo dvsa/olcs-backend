@@ -1235,6 +1235,7 @@ DROP TABLE IF EXISTS `complaint`;
 CREATE TABLE `complaint` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) DEFAULT NULL,
+  `is_compliance` tinyint(1) NOT NULL DEFAULT '1',
   `complainant_contact_details_id` int(11) DEFAULT NULL,
   `complaint_date` datetime DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,
@@ -7429,6 +7430,55 @@ CREATE TABLE `workshop` (
   CONSTRAINT `fk_workshop_contact_details1` FOREIGN KEY (`contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `oc_complaint`
+--
+
+DROP TABLE IF EXISTS `oc_complaint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `oc_complaint` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `complaint_id` INT NOT NULL,
+  `operating_centre_id` INT NOT NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  `olbs_key` INT NULL COMMENT 'Used for ETL. Can be dropped.',
+  PRIMARY KEY (`id`),
+  INDEX `fk_oc_complaint_complaint1_idx` (`complaint_id` ASC),
+  INDEX `fk_oc_complaint_operating_centre1_idx` (`operating_centre_id` ASC),
+  INDEX `fk_oc_complaint_user1_idx` (`created_by` ASC),
+  INDEX `fk_oc_complaint_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_oc_complaint_complaint1`
+    FOREIGN KEY (`complaint_id`)
+    REFERENCES `complaint` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_oc_complaint_operating_centre1`
+    FOREIGN KEY (`operating_centre_id`)
+    REFERENCES `operating_centre` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_oc_complaint_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_oc_complaint_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE=InnoDB;
+
+LOCK TABLES `oc_complaint` WRITE;
+/*!40000 ALTER TABLE `oc_complaint` DISABLE KEYS */;
+/*!40000 ALTER TABLE `oc_complaint` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping data for table `workshop`
