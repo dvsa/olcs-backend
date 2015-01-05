@@ -17,13 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
- *        @ORM\Index(name="fk_contact_details_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_contact_details_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_contact_details_person1_idx", columns={"person_id"}),
  *        @ORM\Index(name="fk_contact_details_address1_idx", columns={"address_id"}),
  *        @ORM\Index(name="fk_contact_details_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_contact_details_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_contact_details_ref_data1_idx", columns={"contact_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_olbs_key_etl", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -38,6 +39,7 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -88,24 +90,13 @@ class ContactDetails implements Interfaces\EntityInterface
     protected $forename;
 
     /**
-     * Licence
+     * Olbs type
      *
-     * @var \Olcs\Db\Entity\Licence
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="olbs_type", length=32, nullable=true)
      */
-    protected $licence;
-
-    /**
-     * Organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="contactDetails")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $organisation;
+    protected $olbsType;
 
     /**
      * Person
@@ -259,49 +250,26 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the licence
+     * Set the olbs type
      *
-     * @param \Olcs\Db\Entity\Licence $licence
+     * @param string $olbsType
      * @return ContactDetails
      */
-    public function setLicence($licence)
+    public function setOlbsType($olbsType)
     {
-        $this->licence = $licence;
+        $this->olbsType = $olbsType;
 
         return $this;
     }
 
     /**
-     * Get the licence
+     * Get the olbs type
      *
-     * @return \Olcs\Db\Entity\Licence
+     * @return string
      */
-    public function getLicence()
+    public function getOlbsType()
     {
-        return $this->licence;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $organisation
-     * @return ContactDetails
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
+        return $this->olbsType;
     }
 
     /**

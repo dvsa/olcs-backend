@@ -24,7 +24,6 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\Description1024Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -38,6 +37,15 @@ class SystemInfoMessage implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="activate_date", nullable=false)
      */
     protected $activateDate;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=1024, nullable=false)
+     */
+    protected $description;
 
     /**
      * Importance
@@ -87,6 +95,29 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     public function getActivateDate()
     {
         return $this->activateDate;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return SystemInfoMessage
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

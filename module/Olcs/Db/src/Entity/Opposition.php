@@ -21,7 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_opposition_opposer1_idx", columns={"opposer_id"}),
  *        @ORM\Index(name="fk_opposition_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_opposition_ref_data1", columns={"opposition_type"})
+ *        @ORM\Index(name="fk_opposition_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_opposition_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"})
  *    }
  * )
  */
@@ -34,6 +36,7 @@ class Opposition implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceManyToOne,
         Traits\Notes4000Field,
         Traits\CustomVersionField;
 
@@ -46,6 +49,16 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="oppositions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
 
     /**
      * Is copied
@@ -81,7 +94,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_valid", nullable=false)
      */
-    protected $isValid;
+    protected $isValid = 0;
 
     /**
      * Is withdrawn
@@ -178,6 +191,29 @@ class Opposition implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Opposition
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**

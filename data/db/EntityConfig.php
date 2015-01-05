@@ -279,7 +279,13 @@ return array(
                 'entity' => 'Application',
                 'property' => 'opposition'
             )
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'opposition'
+            )
+        ),
     ),
     'bus_reg' => array(
         'use_all_stops' => array(
@@ -577,6 +583,14 @@ return array(
         'driver_id' => array(
             'cascade' => array(
                 'persist'
+            )
+        )
+    ),
+    'oc_complaint' => array(
+        'complaint_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Complaint',
+                'property' => 'ocComplaint'
             )
         )
     ),

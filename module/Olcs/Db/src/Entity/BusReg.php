@@ -81,15 +81,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $busServiceTypes;
 
     /**
-     * Completed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="completed_date", nullable=true)
-     */
-    protected $completedDate;
-
-    /**
      * Copied to la pte
      *
      * @var string
@@ -97,6 +88,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
      */
     protected $copiedToLaPte = 0;
+
+    /**
+     * Ebsr refresh
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="ebsr_refresh", nullable=false)
+     */
+    protected $ebsrRefresh = 0;
 
     /**
      * Finish point
@@ -360,15 +360,6 @@ class BusReg implements Interfaces\EntityInterface
     protected $routeNo;
 
     /**
-     * Route seq
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="route_seq", nullable=false)
-     */
-    protected $routeSeq = 0;
-
-    /**
      * Short notice refused
      *
      * @var string
@@ -458,6 +449,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
      */
     protected $useAllStops = 0;
+
+    /**
+     * Variation no
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="variation_no", nullable=false)
+     */
+    protected $variationNo = 0;
 
     /**
      * Variation reason
@@ -622,29 +622,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the completed date
-     *
-     * @param \DateTime $completedDate
-     * @return BusReg
-     */
-    public function setCompletedDate($completedDate)
-    {
-        $this->completedDate = $completedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the completed date
-     *
-     * @return \DateTime
-     */
-    public function getCompletedDate()
-    {
-        return $this->completedDate;
-    }
-
-    /**
      * Set the copied to la pte
      *
      * @param string $copiedToLaPte
@@ -665,6 +642,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getCopiedToLaPte()
     {
         return $this->copiedToLaPte;
+    }
+
+    /**
+     * Set the ebsr refresh
+     *
+     * @param boolean $ebsrRefresh
+     * @return BusReg
+     */
+    public function setEbsrRefresh($ebsrRefresh)
+    {
+        $this->ebsrRefresh = $ebsrRefresh;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr refresh
+     *
+     * @return boolean
+     */
+    public function getEbsrRefresh()
+    {
+        return $this->ebsrRefresh;
     }
 
     /**
@@ -1349,29 +1349,6 @@ class BusReg implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the route seq
-     *
-     * @param int $routeSeq
-     * @return BusReg
-     */
-    public function setRouteSeq($routeSeq)
-    {
-        $this->routeSeq = $routeSeq;
-
-        return $this;
-    }
-
-    /**
-     * Get the route seq
-     *
-     * @return int
-     */
-    public function getRouteSeq()
-    {
-        return $this->routeSeq;
-    }
-
-    /**
      * Set the short notice refused
      *
      * @param string $shortNoticeRefused
@@ -1599,6 +1576,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getUseAllStops()
     {
         return $this->useAllStops;
+    }
+
+    /**
+     * Set the variation no
+     *
+     * @param int $variationNo
+     * @return BusReg
+     */
+    public function setVariationNo($variationNo)
+    {
+        $this->variationNo = $variationNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation no
+     *
+     * @return int
+     */
+    public function getVariationNo()
+    {
+        return $this->variationNo;
     }
 
     /**
