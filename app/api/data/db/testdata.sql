@@ -1064,7 +1064,7 @@ VALUES
 INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `weekend`, `public_holiday`, `effective_from`, `effective_to`)
 VALUES
     (1, 'pi', 'callUpLetterDate', 'hearingDate', -35, 0, 0, '1900-01-01', NULL),
-    (2, 'pi', 'briefToTcDate', 'hearingDate', -14, 1, 1, '1900-01-01', NULL),
+    (2, 'pi', 'briefToTcDate', 'hearingDate', -14, 0, 0, '1900-01-01', NULL),
     (3, 'pi', 'decisionLetterSentDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
     (4, 'pi', 'tcWrittenDecisionDate', 'hearingDate', 20, 1, 1, '1900-01-01', NULL),
     (5, 'pi', 'tcWrittenReasonDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
