@@ -30,7 +30,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Opposition implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -50,6 +49,16 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="oppositions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
 
     /**
      * Is copied
@@ -182,6 +191,29 @@ class Opposition implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Opposition
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**

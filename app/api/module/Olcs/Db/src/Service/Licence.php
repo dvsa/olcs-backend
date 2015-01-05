@@ -100,7 +100,7 @@ class Licence extends ServiceAbstract
         $sql = 'FROM organisation o
 INNER JOIN licence l ON l.organisation_id = o.id
 LEFT JOIN application app ON app.licence_id = l.id
-LEFT JOIN contact_details cd ON (cd.organisation_id = o.id AND cd.contact_type = \'ct_corr\')
+LEFT JOIN contact_details cd ON (cd.id = o.contact_details_id AND cd.contact_type = \'ct_corr\')
 LEFT JOIN address a ON cd.address_id = a.id
 LEFT JOIN trading_name tm ON l.id = tm.licence_id
 LEFT OUTER JOIN cases c ON c.licence_id = l.id

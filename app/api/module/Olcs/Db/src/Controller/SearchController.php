@@ -15,7 +15,12 @@ class SearchController extends AbstractController
         $params = array_merge($this->params()->fromRoute(), $this->params()->fromQuery());
 
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
-        $resultSet = $elastic->search($params['query'], [$params['index']], $params['page'], $params['limit']);
+        $resultSet = $elastic->search(
+            urldecode($params['query']),
+            [$params['index']],
+            $params['page'],
+            $params['limit']
+        );
 
         return $this->respond(Response::STATUS_CODE_200, 'Results found', $resultSet);
     }

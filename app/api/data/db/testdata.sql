@@ -291,18 +291,36 @@ VALUES
   (9,'Rural Bus Service','RuralService'),
   (10,'Flexible Registration','Flexible');
 
-INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `created_by`,
+INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
     `created_on`, `last_modified_on`, `version`)
 VALUES
-    (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Driver F John',
     'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+        (103, 'cs_ack', 'ct_cov', 1,  NULL, NULL, 24, NOW(), 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+        (107, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Alberto',
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
-        (103, 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
-    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
+        (108, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1),
+        (109, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1),
+        (110, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1),
+        (111, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (112, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1);
+
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
+`created_on`, `last_modified_on`)
+VALUES
+    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
+    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
+    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
+    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -354,7 +372,22 @@ VALUES
     (101,'ct_team_user',26,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (104,'ct_tm',104,77,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (104,'ct_tm',104,77,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (105,'ct_team_user',26,NULL,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (108,'ct_complainant',72,34,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (109,'ct_complainant',72,35,4,1,NULL,'Lesley','Stephenson',0,NULL,NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+
+    (110,'ct_team_user',26,NULL,4,1,NULL,'Andrew','Pringle',0,'andy@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (111,'ct_team_user',26,NULL,4,1,NULL,'Peter','Crumpet',0,'p.crumpet@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (112,'ct_team_user',26,NULL,4,1,NULL,'Nicholas','Chimney',0,'nick@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (113,'ct_team_user',26,NULL,4,1,NULL,'Kieth','Lemon',0,'klemon@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -572,13 +605,13 @@ VALUES
   (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
 
 INSERT INTO `opposition`
-(`id`, `opposition_type`, `application_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+(`id`, `opposition_type`, `application_id`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 1, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (1, 'otf_eob', 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 1, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (2, 'otf_rep', 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
@@ -779,8 +812,8 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL,'','',''),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL,'','',''),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',105,'','',''),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',106,'','',''),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
@@ -888,7 +921,7 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,8,1,2,'A test task','2014-08-12',1);
+    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
@@ -906,10 +939,16 @@ INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_
     (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,33,1,2,'A test task','2018-09-27',1,1);
+    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+/* Transport Manager task */
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+/* Bus Registration task */
+INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
@@ -1013,68 +1052,6 @@ INSERT INTO `disc_sequence` (
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
 ALTER TABLE companies_house_request AUTO_INCREMENT=53;
-
-/* Test submissions, 1 for each type */
-INSERT INTO `submission` (`id`, `submission_type`, `last_modified_by`, `created_by`, `case_id`, `data_snapshot`, `closed_date`, `created_on`, `last_modified_on`, `version`) VALUES
-(1,'submission_type_o_mlh',NULL,NULL,24, '{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"linked-mlh-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:47:50',NULL,1),
-(2,'submission_type_o_clo_g',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:48:58',NULL,1),
-(3,'submission_type_o_clo_psv',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"total-bus-registrations":{"data":[]},"local-licence-history":{"data":[]},"registration-details":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:50:04',NULL,1),
-(4,'submission_type_o_clo_fep',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"waive-fee-late-fee":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:51:19',NULL,1),
-(5,'submission_type_o_otc',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"current-submissions":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"prohibition-history":{"data":[]},"conviction-fpn-offence-history":{"data":[{"id":25,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Test Category text 1","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":26,"offenceDate":"2012-04-10T00:00:00+0100","convictionDate":"2012-05-15T00:00:00+0100","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"John Smith","categoryText":"Conviction Child Category 1","court":"Leeds Magistrate court","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":27,"offenceDate":"2012-12-17T00:00:00+0000","convictionDate":"2013-03-02T00:00:00+0000","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"Boris Johnson","categoryText":"Conviction Child Category 3","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":29,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Conviction Child Category 4","court":"Leeds Magistrate court","penalty":"6 monthly investigation","msi":"Y","isDeclared":"N","isDealtWith":"N"}]},"annual-test-history":{"data":[]},"penalties":{"data":[]},"other-issues":{"data":[]},"compliance-complaints":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:53:13',NULL,1),
-(6,'submission_type_o_env',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"conviction-fpn-offence-history":{"data":[{"id":25,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Test Category text 1","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":26,"offenceDate":"2012-04-10T00:00:00+0100","convictionDate":"2012-05-15T00:00:00+0100","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"John Smith","categoryText":"Conviction Child Category 1","court":"Leeds Magistrate court","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":27,"offenceDate":"2012-12-17T00:00:00+0000","convictionDate":"2013-03-02T00:00:00+0000","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"Boris Johnson","categoryText":"Conviction Child Category 3","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":29,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Conviction Child Category 4","court":"Leeds Magistrate court","penalty":"6 monthly investigation","msi":"Y","isDeclared":"N","isDealtWith":"N"}]},"other-issues":{"data":[]},"te-reports":{"data":[]},"site-plans":{"data":[]},"planning-permission":{"data":[]},"applicants-comments":{"data":[]},"visibility-access-egress-size":{"data":[]},"environmental-complaints":{"data":[]},"financial-information":{"data":[]},"maps":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:56:30',NULL,1),
-(7,'submission_type_o_irfo',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:58:18',NULL,1),
-(8,'submission_type_o_bus_reg',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"bus-reg-app-details":{"data":[]},"transport-authority-comments":{"data":[]},"total-bus-registrations":{"data":[]},"local-licence-history":{"data":[]},"registration-details":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:00:54',NULL,1),
-(9,'submission_type_o_tm',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"intelligence-unit-check":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"oppositions":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":["id":77,{"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:02:08',NULL,1),
-(10,'submission_type_o_schedule_41',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"auth-requested-applied-for":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"site-plans":{"data":[]},"applicants-comments":{"data":[]},"environmental-complaints":{"data":[]},"waive-fee-late-fee":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:03:19',NULL,1),
-(11,'submission_type_o_impounding',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:03:19',NULL,1);
-
-INSERT INTO submission_section_comment (submission_section,submission_id,comment,created_on) VALUES
-    ('most-serious-infringement',1,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',1,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',1,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',1,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',2,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',2,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',2,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',3,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',3,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',3,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',4,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',4,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',5,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',5,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('prohibition-history',5,'Placeholder for prohibition-history','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',5,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('annual-test-history',5,'Placeholder for annual-test-history','2014-10-16 15:03:19'),
-    ('penalties',5,'Placeholder for penalties','2014-10-16 15:03:19'),
-    ('case-outline',5,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',6,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',6,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',6,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('case-outline',6,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',7,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',7,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',8,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',8,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',8,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',9,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',9,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',10,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',10,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',10,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',10,'Case for convictions against company directors','2014-10-16 15:03:19'),
-    
-    ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
 
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
