@@ -548,7 +548,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
     ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
 
-    ('complaint_type', 'ct_cor', 'Continuing to operator after Revocation', null),
+    ('complaint_type', 'ct_cor', 'Continuing to operate after revocation', null),
     ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),
     ('complaint_type', 'ct_dgm', 'Driving in a dangerous manner', null),
     ('complaint_type', 'ct_dsk', 'Driver smoking', null),
@@ -2983,7 +2983,62 @@ repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (227,'lcat_psv','22 - Section 28 of the Transport Act 1985','Disqualification  of operator',0,0,0,NULL,NULL,NULL,NULL,1),
 (228,'lcat_psv','23.1 - Section 155 of the TA 2000','(a) Financial penalty for failure to operate bus service',0,0,0,NULL,NULL,NULL,NULL,1),
 (229,'lcat_psv','23.2 - Section 155 of the TA 2000','(b) Withdraw/suspend community licence',0,0,0,NULL,NULL,NULL,NULL,1),
-(230,'lcat_psv','23.3 - Section 155 of the TA 2000','(c) Other (please specify)',0,0,0,NULL,NULL,NULL,NULL,1);
+(230,'lcat_psv','23.3 - Section 155 of the TA 2000','(c) Other (please specify)',0,0,0,NULL,NULL,NULL,NULL,1),
+
+(231,'lcat_gv','x NI-Section 12','New application',0,1,0,NULL,NULL,NULL,NULL,1),
+(232,'lcat_gv','x NI-Section 16','Variation application',0,1,0,NULL,NULL,NULL,NULL,1),
+(233,'lcat_gv','x NI-Section 23(1)(a)','Unauthorised use of a place as an operating centre',0,1,1,NULL,NULL,NULL,NULL,1),
+(234,'lcat_gv','x NI-Section 23(1)(b)','Contravention of a licence condition (specify)',0,1,1,NULL,NULL,NULL,NULL,1),
+(235,'lcat_gv','x NI-Section 23(1)(b)','(1) Fail to notify of change in maintenance arrangements',0,1,1,NULL,NULL,NULL,NULL,1),
+(236,'lcat_gv','x NI-Section 23(1)(b)','(2) Fail to notify of change in ownership',0,1,1,NULL,NULL,NULL,NULL,1),
+(237,'lcat_gv','x NI-Section 23(1)(b)','(3) Fail to notify of notifiable convictions ',0,1,1,NULL,NULL,NULL,NULL,1),
+(238,'lcat_gv','x NI-Section 23(1)(b)','(4) Fail to notify of events which affect good repute ',0,1,1,NULL,NULL,NULL,NULL,1),
+(239,'lcat_gv','x NI-Section 23(1)(b)','(5) Fail to notify of events which affect financial standing',0,1,1,NULL,NULL,NULL,NULL,1),
+(240,'lcat_gv','x NI-Section 23(1)(b)','(6) Fail to notify of events which affect professional competence',0,1,1,NULL,NULL,NULL,NULL,1),
+(241,'lcat_gv','x NI-Section 23(1)(b)','(7) Breach of road safety condition',0,1,1,NULL,NULL,NULL,NULL,1),
+(242,'lcat_gv','x NI-Section 23(1)(b)','(8) Breach of environmental condition',0,1,1,NULL,NULL,NULL,NULL,1),
+(243,'lcat_gv','x NI-Section 23(1)(b)','(9) Other (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
+(244,'lcat_gv','x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (operator)',0,1,1,NULL,NULL,NULL,NULL,1),
+(245,'lcat_gv','x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,1,1,NULL,NULL,NULL,NULL,1),
+(246,'lcat_gv','x NI-Section 23(1)(c)','Prohibitions',0,1,1,NULL,NULL,NULL,NULL,1),
+(247,'lcat_gv','x NI-Section 23(1)(c)','Fixed Penalty or conditional offer issued',0,1,1,NULL,NULL,NULL,NULL,1),
+(248,'lcat_gv','x NI-Section 23(1)(c)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,1,1,NULL,NULL,NULL,NULL,1),
+(249,'lcat_gv','x NI-Section 23(1)(d)','Failing to fulfil Statement of Expectation/False statement (specify)',0,1,1,NULL,NULL,NULL,NULL,1),
+(250,'lcat_gv','x NI-Section 23(1)(d)','(1) Failure to declare previous refusal or revocation',0,1,1,NULL,NULL,NULL,NULL,1),
+(251,'lcat_gv','x NI-Section 23(1)(d)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,1,1,NULL,NULL,NULL,NULL,1),
+(252,'lcat_gv','x NI-Section 23(1)(d)','(3) Stating that the TM would not be responsible for any other licence',0,1,1,NULL,NULL,NULL,NULL,1),
+(253,'lcat_gv','x NI-Section 23(1)(d)','(4) Stating that the vehicles would normally be kept at the o/c',0,1,1,NULL,NULL,NULL,NULL,1),
+(254,'lcat_gv','x NI-Section 23(1)(d)','(5) Stating that the nominated o/c is not used by other operators',0,1,1,NULL,NULL,NULL,NULL,1),
+(255,'lcat_gv','x NI-Section 23(1)(d)','(6) Stating that the vehicles would be given inspections at (x) intervals',0,1,1,NULL,NULL,NULL,NULL,1),
+(256,'lcat_gv','x NI-Section 23(1)(d)','(7) Stating that the maintenance would be carried out by own staff',0,1,1,NULL,NULL,NULL,NULL,1),
+(257,'lcat_gv','x NI-Section 23(1)(d)','(8) Stating that the maintenance would be carried out by (x) firm',0,1,1,NULL,NULL,NULL,NULL,1),
+(258,'lcat_gv','x NI-Section 23(1)(d)','(9) Failure to declare that (x) has been made bankrupt',0,1,1,NULL,NULL,NULL,NULL,1),
+(259,'lcat_gv','x NI-Section 23(1)(d)','(10) Failure to declare that (x) has been involved in a liquidated co',0,1,1,NULL,NULL,NULL,NULL,1),
+(260,'lcat_gv','x NI-Section 23(1)(d)','(11) Failure to declare that (x) has been disqualified as a director',0,1,1,NULL,NULL,NULL,NULL,1),
+(261,'lcat_gv','x NI-Section 23(1)(d)','(12) Failure to declare convictions on making the application',0,1,1,NULL,NULL,NULL,NULL,1),
+(262,'lcat_gv','x NI-Section 23(1)(d)','(13) Stating that the holder would abide by any conditions on the licence',0,1,1,NULL,NULL,NULL,NULL,1),
+(263,'lcat_gv','x NI-Section 23(1)(e)','Failing to fulfil a licence undertaking',0,1,1,NULL,NULL,NULL,NULL,1),
+(264,'lcat_gv','x NI-Section 23(1)(e)','(1) Rules on drivers hours and tachographs would be observed',0,1,1,NULL,NULL,NULL,NULL,1),
+(265,'lcat_gv','x NI-Section 23(1)(e)','(2) Vehicles and trailers not to be overloaded',0,1,1,NULL,NULL,NULL,NULL,1),
+(266,'lcat_gv','x NI-Section 23(1)(e)','(3) Vehicles operate within speed limits',0,1,1,NULL,NULL,NULL,NULL,1),
+(267,'lcat_gv','x NI-Section 23(1)(e)','(4) Vehicles and trailers would be kept fit and serviceable',0,1,1,NULL,NULL,NULL,NULL,1),
+(268,'lcat_gv','x NI-Section 23(1)(e)','(5) Driver reports any defects in writing',0,1,1,NULL,NULL,NULL,NULL,1),
+(269,'lcat_gv','x NI-Section 23(1)(e)','(6) Maintenance records would be kept for 15 months',0,1,1,NULL,NULL,NULL,NULL,1),
+(270,'lcat_gv','x NI-Section 23(1)(e)','(7) Exceeding operating centre authorisation',0,1,1,NULL,NULL,NULL,NULL,1),
+(271,'lcat_gv','x NI-Section 23(1)(e)','(8) Other (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
+(272,'lcat_gv','x NI-Section 23(1)(f)','Bankruptcy/liquidation (other than voluntary liquidation)',0,1,1,NULL,NULL,NULL,NULL,1),
+(273,'lcat_gv','x NI-Section 23(1)(g)','Material Change (please specify)',0,1,1,NULL,NULL,NULL,NULL,1),
+(274,'lcat_gv','x NI-Section 23(1)(h)','Licence liable to revocation, suspension or curtailment following a direction under section 25 (4) (director/individual disqualified on another licence)',0,1,1,NULL,NULL,NULL,NULL,1),
+(275,'lcat_gv','x NI-Section 24(1)(a)','To consider whether the operator has an effective and stable establishment in Great Britain.',0,1,1,NULL,NULL,NULL,NULL,1),
+(276,'lcat_gv','x NI-Section 24(1)(a)','To consider the operator is still of good repute in accordance with Regulation 5 of the Goods Vehicles (Qualifications of Operators) Regualtions(Northern Ireland) 2012',0,1,1,NULL,NULL,NULL,NULL,1),
+(277,'lcat_gv','x NI-Section 24(1)(a)','To consider whether the operator continues to meet the requirement to be of appropriate financial standing.',0,1,1,NULL,NULL,NULL,NULL,1),
+(278,'lcat_gv','x NI-Section 24(1)(a)','No longer professionally competent.',0,1,1,NULL,NULL,NULL,NULL,1),
+(279,'lcat_gv','x NI-Section 24(1)(b)','No longer of good repute (section 12A (3)(a))',0,1,1,NULL,NULL,NULL,NULL,1),
+(280,'lcat_gv','x NI-Section 24(1)(b)','No longer professionally competent (section 12A (3)(b))',0,1,1,NULL,NULL,NULL,NULL,1),
+(281,'lcat_gv','x NI-Section 24(1)(b)','External TM exceeds the 4/50 rule (section 12A (3)(c )(ii))',0,1,1,NULL,NULL,NULL,NULL,1),
+(282,'lcat_gv','x NI-Section 25','Disqualification to be considered - Operator licence',0,1,0,NULL,NULL,NULL,NULL,1),
+(283,'lcat_gv','x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,0,NULL,NULL,NULL,NULL,1),
+(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `decision` (`id`, `goods_or_psv`, `section_code`, `description`, `is_read_only`, `is_ni`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES (37,'lcat_gv','Section 13','Application Granted',1,0,NULL,NULL,NULL,NULL,1),
 (38,'lcat_gv','Section 13','Undertakings',1,0,NULL,NULL,NULL,NULL,1),
@@ -3598,8 +3653,8 @@ VALUES
  ,( 9,   9, 1, 1, 1, 0, 'Director Change Assisted Digital')
  ,( 9,  10, 1, 1, 0, 0, 'Director Change Digital')
  ,( 9,  11, 0, 1, 0, 0, 'Fee Due')
- ,( 9,  12, 1, 1, 1, 0, 'Financial Document Assisted Digital')
- ,( 9,  13, 1, 1, 0, 1, 'Financial Document Digital')
+ ,( 9,  12, 1, 1, 1, 0, 'Financial Evidence Assisted Digital')
+ ,( 9,  13, 1, 1, 0, 1, 'Financial Evidence Digital')
  ,( 9,  14, 1, 1, 1, 0, 'Forms Assisted Digital')
  ,( 9,  15, 1, 1, 0, 0, 'Forms Digital')
  ,( 9,  16, 0, 1, 0, 0, 'Interim')
@@ -3696,7 +3751,9 @@ VALUES
  ,( 3, 107, 1, 1, 0, 0, 'TransXChange File')
  ,( 3, 108, 1, 1, 0, 0, 'TransXChange PDF')
  ,( 1, 109, 1, 1, 1, 0, 'Dishonoured Cheques')
- ,( 1, 110, 1, 1, 1, 0, 'Fee Request');
+ ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
+ ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
+ ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital');
 
 INSERT INTO sub_category_description
   (sub_category_id, description)
