@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "doctrine/annotations",
-            "version": "v1.2.1",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "6a6bec0670bb6e71a263b08bc1b98ea242928633"
+                "reference": "eeda578cbe24a170331a1cfdf78be723412df7a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/6a6bec0670bb6e71a263b08bc1b98ea242928633",
-                "reference": "6a6bec0670bb6e71a263b08bc1b98ea242928633",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/eeda578cbe24a170331a1cfdf78be723412df7a4",
+                "reference": "eeda578cbe24a170331a1cfdf78be723412df7a4",
                 "shasum": ""
             },
             "require": {
@@ -72,7 +72,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2014-09-25 16:45:30"
+            "time": "2014-12-20 20:49:38"
         },
         {
             "name": "doctrine/cache",
@@ -529,22 +529,30 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "54b8333d2a5682afdc690060c1cf384ba9f47f08"
+                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/54b8333d2a5682afdc690060c1cf384ba9f47f08",
-                "reference": "54b8333d2a5682afdc690060c1cf384ba9f47f08",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/0bcb2e79d8571787f18b7eb036ed3d004908e604",
+                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\Inflector\\": "lib/"
@@ -556,17 +564,6 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
@@ -575,40 +572,51 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
             "description": "Common String Manipulations with regard to casing and singular/plural rules.",
             "homepage": "http://www.doctrine-project.org",
             "keywords": [
                 "inflection",
-                "pluarlize",
-                "singuarlize",
+                "pluralize",
+                "singularize",
                 "string"
             ],
-            "time": "2013-01-10 21:49:15"
+            "time": "2014-12-20 21:24:13"
         },
         {
             "name": "doctrine/lexer",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb"
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/2f708a85bb3aab5d99dab8be435abd73e0b18acb",
-                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\Lexer\\": "lib/"
@@ -620,19 +628,16 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
             "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
@@ -641,20 +646,20 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2013-01-12 18:59:04"
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.4.6",
+            "version": "v2.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9"
+                "reference": "2bc4ff3cab2ae297bcd05f2e619d42e6a7ca9e68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9",
-                "reference": "bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/2bc4ff3cab2ae297bcd05f2e619d42e6a7ca9e68",
+                "reference": "2bc4ff3cab2ae297bcd05f2e619d42e6a7ca9e68",
                 "shasum": ""
             },
             "require": {
@@ -714,7 +719,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-10-06 13:22:50"
+            "time": "2014-12-16 13:45:01"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -802,14 +807,14 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git",
-                "reference": "7b3646d0930394dca35cd98c2d87b230c6202f5a"
+                "reference": "62b20c2c9b4b548764bd4e5171502f5824df8acf"
             },
             "bin": [
                 "bin/autoload"
             ],
             "type": "library",
             "description": "OLCS optimised autoloader",
-            "time": "2014-12-08 09:43:41"
+            "time": "2014-12-10 09:14:08"
         },
         {
             "name": "olcs/companies-house",
@@ -828,7 +833,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
-                "reference": "c100472c964a1cd3c56f511ccc593a2fb9764040"
+                "reference": "f310df1afae7427175be33df788c5fb71717c079"
             },
             "require": {
                 "php": ">=5.4",
@@ -851,7 +856,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2014-11-06 09:54:51"
+            "time": "2014-12-12 09:17:49"
         },
         {
             "name": "ruflin/elastica",
@@ -859,12 +864,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460"
+                "reference": "6150be23c1ce358ae80ff6f329e2686b12efabd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/171e86ac56c2dbb8ef328fe87f938dda9f26d460",
-                "reference": "171e86ac56c2dbb8ef328fe87f938dda9f26d460",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/6150be23c1ce358ae80ff6f329e2686b12efabd3",
+                "reference": "6150be23c1ce358ae80ff6f329e2686b12efabd3",
                 "shasum": ""
             },
             "require": {
@@ -911,7 +916,7 @@
                 "client",
                 "search"
             ],
-            "time": "2014-11-30 15:17:41"
+            "time": "2015-01-02 17:41:52"
         },
         {
             "name": "symfony/console",
@@ -1191,16 +1196,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "0.9.2",
+            "version": "0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "95a4855380dc70176c51807c678fb3bd6198529a"
+                "reference": "686f85fa5b3b079cc0157d7cd3e9adb97f0b41e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/95a4855380dc70176c51807c678fb3bd6198529a",
-                "reference": "95a4855380dc70176c51807c678fb3bd6198529a",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/686f85fa5b3b079cc0157d7cd3e9adb97f0b41e1",
+                "reference": "686f85fa5b3b079cc0157d7cd3e9adb97f0b41e1",
                 "shasum": ""
             },
             "require": {
@@ -1253,20 +1258,20 @@
                 "test double",
                 "testing"
             ],
-            "time": "2014-09-03 10:11:10"
+            "time": "2014-12-22 10:06:19"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5"
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca158276c1200cc27f5409a5e338486bc0b4fc94",
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94",
                 "shasum": ""
             },
             "require": {
@@ -1318,7 +1323,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-12-03 06:41:44"
+            "time": "2014-12-26 13:28:33"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1508,12 +1513,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MajorCaiger/phpcov.git",
-                "reference": "f55784a92356f63648544d8af7ff8055f3d28086"
+                "reference": "13845e9aeedbe1fa998976b5b982220c5328469a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MajorCaiger/phpcov/zipball/f55784a92356f63648544d8af7ff8055f3d28086",
-                "reference": "f55784a92356f63648544d8af7ff8055f3d28086",
+                "url": "https://api.github.com/repos/MajorCaiger/phpcov/zipball/13845e9aeedbe1fa998976b5b982220c5328469a",
+                "reference": "13845e9aeedbe1fa998976b5b982220c5328469a",
                 "shasum": ""
             },
             "require": {
@@ -1555,20 +1560,20 @@
                 "issues": "https://github.com/sebastianbergmann/phpcov/issues",
                 "source": "https://github.com/MajorCaiger/phpcov/tree/master"
             },
-            "time": "2014-11-04 14:41:27"
+            "time": "2014-12-12 14:35:57"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "bbe7bcb83b6ec1a9eaabbe1b70d4795027c53ee0"
+                "reference": "6a5e49a86ce5e33b8d0657abe145057fc513543a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bbe7bcb83b6ec1a9eaabbe1b70d4795027c53ee0",
-                "reference": "bbe7bcb83b6ec1a9eaabbe1b70d4795027c53ee0",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6a5e49a86ce5e33b8d0657abe145057fc513543a",
+                "reference": "6a5e49a86ce5e33b8d0657abe145057fc513543a",
                 "shasum": ""
             },
             "require": {
@@ -1626,7 +1631,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-12-05 06:49:03"
+            "time": "2014-12-28 07:57:05"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1753,12 +1758,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "f38057b48125c2b421361da224a8aa800d70aeca"
+                "reference": "6dc90302a4cdf8486c221a0ad3a4da53859fcfa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/f38057b48125c2b421361da224a8aa800d70aeca",
-                "reference": "f38057b48125c2b421361da224a8aa800d70aeca",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/6dc90302a4cdf8486c221a0ad3a4da53859fcfa5",
+                "reference": "6dc90302a4cdf8486c221a0ad3a4da53859fcfa5",
                 "shasum": ""
             },
             "require": {
@@ -1797,7 +1802,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2014-11-22 06:25:40"
+            "time": "2015-01-01 09:20:29"
         },
         {
             "name": "sebastian/environment",
@@ -2006,16 +2011,16 @@
         },
         {
             "name": "sebastian/version",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/version.git",
-                "reference": "b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43"
+                "reference": "a77d9123f8e809db3fbdea15038c27a95da4058b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43",
-                "reference": "b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43",
+                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/a77d9123f8e809db3fbdea15038c27a95da4058b",
+                "reference": "a77d9123f8e809db3fbdea15038c27a95da4058b",
                 "shasum": ""
             },
             "type": "library",
@@ -2037,7 +2042,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2014-03-07 15:35:33"
+            "time": "2014-12-15 14:25:24"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -2260,6 +2265,7 @@
         "phpunit/phpcov": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },
