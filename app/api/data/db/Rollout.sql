@@ -905,10 +905,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3'),
 
     /* Opposition types */
-    ('opposition_type', 'opp_type_env', 'Environmental objection', '1'),
-    ('opposition_type', 'opp_type_env', 'Representation', '1'),
-    ('opposition_type', 'opp_type_env', 'Environmental objection', '3'),
-    ('opposition_type', 'opp_type_env', 'Environmental objection', '4'),
+    ('opposition_type', 'opp_type_env', 'Environmental objection', null),
+    ('opposition_type', 'opp_type_rep', 'Representation', null),
+    ('opposition_type', 'opp_type_env_obj', 'Environmental objection', null),
+    ('opposition_type', 'opp_type_obj', 'Objection', null)
 ;
 
 -- Case categories
