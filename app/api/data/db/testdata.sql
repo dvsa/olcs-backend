@@ -17,7 +17,6 @@ TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `document`;
-TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_paragraph`;
@@ -81,6 +80,7 @@ TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
+TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
@@ -115,11 +115,11 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
     `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`, `goods_or_psv`, `ni_flag`) VALUES
-    (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-02-19 09:06:53', '2014-12-25 10:06:53',NULL,
+    (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, NULL,NULL,
     NULL,NOW(),NULL,1,0,'lcat_gv',0),
-    (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,NULL,NULL,
     NULL,1,1,'lcat_gv',0),
-    (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,
     NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0,'lcat_psv',1);
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -145,17 +145,111 @@ INSERT INTO `bus_reg`
  `operating_centre_id`, `route_no`, `reg_no`, `start_point`, `finish_point`, `via`, `other_details`, `is_short_notice`,
  `use_all_stops`, `has_manoeuvre`, `manoeuvre_detail`, `need_new_stop`, `new_stop_detail`, `has_not_fixed_stop`,
  `not_fixed_stop_detail`, `subsidy_detail`, `timetable_acceptable`, `map_supplied`, `route_description`,
- `copied_to_la_pte`, `la_short_note`, `application_signed`, `completed_date`, `route_seq`, `op_notified_la_pte`,
+ `copied_to_la_pte`, `la_short_note`, `application_signed`, `variation_no`, `op_notified_la_pte`,
  `stopping_arrangements`, `trc_condition_checked`, `trc_notes`, `status`, `revert_status`, `organisation_email`,
- `is_txc_app`, `txc_app_type`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `short_notice_refused`,
+ `is_txc_app`, `txc_app_type`, `ebsr_refresh`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`,
+ `short_notice_refused`,
  `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
-  'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 90839, null, null, null, null, null, 1),
-  (2, 1, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
-   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, null, 0, 0, 'Stopping arrangements', 0,
-   'Trc notes', 'breg_s_registered', 'revert status', '', 1, '', '', '', '', 0, 46474, null, null, null, null, null, 1);
+  (1, 2, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
+  'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 1, '', '', '', 0, 90839, '2014-03-13', '2014-03-15',
+  null, null, null, 1),
+  (2, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 0, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
+   '2015-03-05',
+   null, null,
+    1),
+  (3, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 0, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-14',
+   null,
+   null, null,
+   1),
+  (4, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 0, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 1, '', '', '', 0, 26453, '2014-05-24', '2014-05-31',
+   null,
+   null, null,
+   1),
+   (5, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 1', 0, 0, 0, 1, 0, 'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
+   '2015-03-05',
+   null, null,
+    1),
+   (6, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 2', 0, 0, 0, 2, 0, 'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-08',
+   '2015-03-05',
+   null, null,
+    1),
+      (7, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 3', 0, 0, 0, 3, 0,
+   'Stopping arrangements change 3', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
+   '2015-03-05',
+   null, null,
+    1),
+  (8, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 1, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-15', '2014-03-15',
+   null,
+   null, null,
+   1),
+  (9, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 2, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-11',
+   null,
+   null, null,
+   1),
+  (10, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 3, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-12', '2014-03-14',
+   null,
+   null, null,
+   1),
+  (11, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 4, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-13', '2014-03-14',
+   null,
+   null, null,
+   1),
+  (12, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 1, 0,
+   'Stopping arrangements', 0,
+   'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 0, '', '', '', 0, 26453, '2014-05-27', '2014-05-27',
+   null,
+   null, null,
+   1),
+   (13, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 4', 0, 0, 0, 4, 0,
+   'Stopping arrangements change 3', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
+   '2015-03-05',
+   null, null,
+    1),
+      (14, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 5', 0, 0, 0, 5, 0,
+   'Stopping arrangements change 4', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
+   '2015-03-05',
+   null, null,
+    1),
+      (15, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
+   0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 6', 0, 0, 0, 6, 0,
+   'Stopping arrangements change 3', 0,
+   'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
+   '2015-03-05',
+   null, null,
+    1);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -197,18 +291,36 @@ VALUES
   (9,'Rural Bus Service','RuralService'),
   (10,'Flexible Registration','Flexible');
 
-INSERT INTO `complaint` (`complainant_forename`, `complainant_family_name`, `status`, `complaint_type`, `created_by`,
+INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
     `created_on`, `last_modified_on`, `version`)
 VALUES
-    ('Complainant First Name', 'Complainant Last Name', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F John',
+    (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Driver F John',
     'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1),
-        ('John', 'Smith', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Driver F Joe',
+        (103, 'cs_ack', 'ct_cov', 1,  NULL, NULL, 24, NOW(), 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', NOW(), NOW(), 1),
-        ('Fred', 'Jones', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Alberto',
+        (107, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Alberto',
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1),
-        ('Janet', 'Porter', 'cs_ack', 'ct_cov', NULL, NULL, 24, NOW(), 'Ian',
-    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1);
+        (108, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1),
+        (109, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Driver F John',
+    'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1),
+        (110, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, NOW(), 'Driver F Joe',
+    'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1),
+        (111, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (112, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1),
+        (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, NOW(), 'Ian',
+    'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1);
+
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
+`created_on`, `last_modified_on`)
+VALUES
+    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
+    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
+    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
+    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -220,61 +332,81 @@ INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_c
     (5,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 5',NOW(),NULL,1),
     (6,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,1,'Some notes 6',NOW(),NULL,1),
     (7,24,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some ninvoice_nootes 8',NOW(),NULL,1),
+    (8,24,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some invoice_notes 8',NOW(),NULL,1),
     (9,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 9',NOW(),NULL,1),
     (10,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 11',NOW(),NULL,1);
+    (11,24,7,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 11',NOW(),NULL,1),
+    (12,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12',NOW(),NULL,1),
+    (13,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13',NOW(),NULL,1),
+    (14,75,110,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14',NOW(),NULL,1),
+    (15,75,110,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15',NOW(),NULL,1),
+    (16,75,110,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16',NOW(),NULL,1);
 
-INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`organisation_id`,`person_id`,`licence_id`,
+INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`forename`,`family_name`,`written_permission_to_engage`,`email_address`,
    `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-  (1,'ct_ta',26,NULL,NULL,NULL,2,0,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-  (7,'ct_reg',7,7,9,NULL,2,0,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(8,'ct_corr',8,NULL,10,NULL,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(21,'ct_oc',21,1,NULL,NULL,0,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(25,'ct_def',25,1,NULL,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(26,'ct_def',26,1,NULL,NULL,0,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(27,'ct_def',27,1,NULL,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(29,'ct_def',29,7,NULL,NULL,3,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(30,'ct_reg',30,30,NULL,NULL,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(31,'ct_corr',31,NULL,NULL,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(37,'ct_oc',37,30,NULL,NULL,2,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(39,'ct_oc',39,30,NULL,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(41,'ct_reg',41,41,NULL,NULL,2,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(42,'ct_corr',42,NULL,NULL,NULL,1,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(54,'ct_reg',54,54,NULL,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(55,'ct_corr',55,NULL,NULL,NULL,3,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(63,'ct_reg',63,63,NULL,NULL,3,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(64,'ct_corr',64,NULL,NULL,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(67,'ct_oc',67,63,NULL,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(72,'ct_oc',72,63,NULL,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(75,'',75,75,NULL,NULL,4,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(76,'ct_corr',76,NULL,46,NULL,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(77,'ct_corr',72,NULL,46,NULL,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(100,'ct_reg',100,100,44,NULL,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(101,'ct_team_user',26,NULL,NULL,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(102,'ct_corr',41,1,NULL,7,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-(104,'ct_tm',104,1,77,7,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (1,'ct_ta',26,NULL,2,0,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (8,'ct_corr',8,10,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (21,'ct_reg',21,NULL,0,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (25,'ct_def',25,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (26,'ct_def',26,NULL,0,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (27,'ct_def',27,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (29,'ct_def',29,NULL,3,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (30,'ct_reg',30,NULL,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (31,'ct_corr',31,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (37,'ct_oc',37,NULL,2,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (39,'ct_oc',39,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (41,'ct_reg',41,NULL,2,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (42,'ct_corr',42,NULL,1,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (54,'ct_reg',54,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (55,'ct_corr',55,NULL,3,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (63,'ct_reg',63,NULL,3,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (64,'ct_corr',64,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (67,'ct_oc',67,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (72,'ct_oc',72,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (75,'',75,NULL,4,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (76,'ct_corr',76,46,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (77,'ct_corr',72,46,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (100,'ct_reg',100,44,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (101,'ct_team_user',26,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (104,'ct_tm',104,77,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (105,'ct_team_user',26,NULL,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (108,'ct_complainant',72,34,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (109,'ct_complainant',72,35,4,1,NULL,'Lesley','Stephenson',0,NULL,NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+
+    (110,'ct_team_user',26,NULL,4,1,NULL,'Andrew','Pringle',0,'andy@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (111,'ct_team_user',26,NULL,4,1,NULL,'Peter','Crumpet',0,'p.crumpet@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (112,'ct_team_user',26,NULL,4,1,NULL,'Nicholas','Chimney',0,'nick@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (113,'ct_team_user',26,NULL,4,1,NULL,'Kieth','Lemon',0,'klemon@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
     `offence_date`, `conviction_date`, `court`, `penalty`, `costs`, `msi`, `operator_name`,
-    `defendant_type`, `notes`, `taken_into_consideration`, `person_id`, `created_on`, `last_modified_on`, `version`,
+    `defendant_type`, `notes`, `taken_into_consideration`, `created_on`, `last_modified_on`, `version`,
     `conviction_category`) VALUES
     (25,24,3,4,'Test Category text 1',NULL,NULL,'1971-11-05','2012-03-10','2012-06-15','FPN','3 points on licence',
     '60',0,
-    'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1, 'conv_c_cat_1'),
+    'John Smith Haulage Ltd.','def_t_op',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_1'),
     (26,24,0,4,'Conviction Child Category 1','John','Smith','1980-02-20','2012-04-10','2012-05-15',
     'Leeds Magistrate court',
-    '3 points on licence','60',0,'','def_t_owner',NULL,NULL,4,NOW(),NOW(),1, 'conv_c_cat_2'),
+    '3 points on licence','60',0,'','def_t_owner',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_2'),
     (27,24,1,3,'Conviction Child Category 3','Boris','Johnson','1962-08-12','2012-12-17','2013-03-02','FPN',
     '3 points on licence',
     '60',0,'',
-    'def_t_owner',NULL,NULL,4,NOW(),NOW(),1, 'conv_c_cat_4'),
+    'def_t_owner',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_4'),
     (29,24,3,3,'Conviction Child Category 4',NULL,NULL,'1976-03-11', '2012-03-10','2012-06-15',
     'Leeds Magistrate court',
-    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,4,NOW(),NOW(),1, null);
+    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_2');
 
 INSERT INTO `legacy_offence` (`id`, `created_by`, `last_modified_by`, `definition`, `is_trailer`, `num_of_offences`,
     `offence_authority`, `offence_date`, `offence_to_date`, `offender_name`, `points`, `position`, `offence_type`,
@@ -318,52 +450,57 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_
     (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL);
 
 INSERT INTO `licence` (
-    `id`, `organisation_id`, `traffic_area_id`, `created_by`, `last_modified_by`, `goods_or_psv`, `lic_no`, `status`,
+    `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
+    `transport_consultant_cd_id`, `last_modified_by`,
+    `goods_or_psv`, `lic_no`, `status`,
     `ni_flag`, `licence_type`, `in_force_date`, `review_date`, `surrendered_date`, `fabs_reference`,
     `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
     `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
-    `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,1,'B',1,4,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',4,12,NULL,NULL,NULL,
-    NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`, `expiry_date`) VALUES
+    (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12',
+    '',4,12,NULL,NULL,NULL,
+    NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
 
     -- extra licence for application 1
-    (201,1,'B',0,1,NULL,'OB4234560','lsts_not_submitted',NULL,NULL,'2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (202,1,'B',0,1,'lcat_gv','OB4234561','lsts_consideration',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (203,1,'B',0,1,'lcat_psv','OB4234562','lsts_surrendered',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (204,1,'B',0,1,'lcat_gv','OB4234563','lsts_unlicenced',1,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (205,1,'B',0,1,'lcat_psv','OB4234564','lsts_terminated',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (206,1,'B',0,1,'lcat_psv','OB4234565','lsts_withdrawn',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (207,1,'B',0,1,'lcat_psv','OB4234566','lsts_suspended',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (208,1,'B',0,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',1,
-    3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (209,1,'B',0,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
+    (201,1,'B',0,NULL,NULL,NULL,1,NULL,'OB4234560','lsts_not_submitted',NULL,NULL,'2011-03-16','2011-03-16',
+    '2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (202,1,'B',0,NULL,NULL,NULL,1,'lcat_gv','OB4234561','lsts_consideration',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (203,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234562','lsts_surrendered',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (204,1,'B',0,NULL,NULL,NULL,1,'lcat_gv','OB4234563','lsts_unlicenced',1,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (205,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234564','lsts_terminated',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (206,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234565','lsts_withdrawn',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (207,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234566','lsts_suspended',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (208,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234567','lsts_curtailed',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',1,
+    3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (209,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
 
-    (30,30,'B',0,1,'lcat_gv','OB1234568','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
-    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (41,41,'B',2,2,'lcat_gv','OB1234577','lsts_not_submitted',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
-    21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (54,54,'B',2,4,'lcat_gv','OB1234578','lsts_not_submitted',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
-    NULL,NULL, NULL,NOW(),NOW(),1),
-    (63,63,'D',4,0,'lcat_psv','PD1234589','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,NULL,NULL,
-    NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (75,75,'D',4,4,'lcat_psv','PD2737289','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,NULL,
-    NULL,NULL,NULL,NULL,NOW(),NOW(),1),
-    (100,100,'D',4,0,'lcat_psv','PD1001001','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
-    NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2),
-    (110,75,'D',4,4,'lcat_psv','PD2737280','lsts_not_submitted',0,'ltyp_r','2010-01-12','2010-01-12','2010-01-12','',0,10,5,5,NULL,NULL,
-    NULL,NULL,NULL,NOW(),NOW(),1),
-    (114,104,'B',NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1),
-    (115,105,'S',NULL,NULL,'lcat_psv','TS1234568','lsts_not_submitted',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    NULL,NULL,NULL,NOW(),NULL,1);
+    (30,30,'B',0,NULL,NULL,NULL,1,'lcat_gv','OB1234568','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
+    9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (41,41,'B',2,NULL,NULL,NULL,2,'lcat_gv','OB1234577','lsts_not_submitted',0,'ltyp_sn','2007-01-12','2007-01-12','2007-01-12','',1,
+    21,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (54,54,'B',2,NULL,NULL,NULL,4,'lcat_gv','OB1234578','lsts_not_submitted',0,'ltyp_r','2007-01-12','2007-01-12','2007-01-12','',0,4,NULL,NULL,NULL,NULL,
+    NULL,NULL, NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (63,63,'D',4,NULL,NULL,NULL,0,'lcat_psv','PD1234589','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',1,7,NULL,NULL,NULL,
+    NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (75,75,'D',4,NULL,NULL,NULL,4,'lcat_psv','PD2737289','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,NULL,
+    NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (100,100,'D',4,NULL,NULL,NULL,0,'lcat_psv','PD1001001','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
+    NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2, '2016-01-01 10:00:00'),
+    (110,75,'D',4,8,21,25,4,'lcat_psv','PD2737280','lsts_not_submitted',0,'ltyp_r','2010-01-12','2010-01-12',
+    '2010-01-12','',0,10,5,5,NULL,NULL,
+    NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+    (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1, '2016-01-01 10:00:00'),
+    (115,105,'S',NULL,NULL,NULL,NULL,NULL,'lcat_psv','TS1234568','lsts_not_submitted',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    NULL,NULL,NULL,NOW(),NULL,1, '2016-01-01 10:00:00');
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
     `specified_date`, `removal_date`, `created_on`,
@@ -468,13 +605,13 @@ VALUES
   (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
 
 INSERT INTO `opposition`
-(`id`, `opposition_type`, `application_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+(`id`, `opposition_type`, `application_id`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 1, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (1, 'otf_eob', 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 1, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (2, 'otf_rep', 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
@@ -486,19 +623,17 @@ VALUES
   (3, 'ogf_safety', 1, 1, 2, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
   (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
 
-
-INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`, `company_or_llp_no`, `name`,
-`is_mlh`, `type`,
-    `created_on`, `last_modified_on`, `version`) VALUES
-    (1,'B',1,3,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (30,'C',1,4,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (41,'D',0,4,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (54,'F',3,4,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (63,'G',1,2,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (75,'H',1,0,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
-    (100,'K',1,3,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
-    (104,'M',NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
-    (105,'N',1,3,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
+INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
+`company_or_llp_no`, `name`,`is_mlh`, `type`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
+    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
+    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
+    (100,'K',1,3,  100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
+    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
+    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -547,16 +682,16 @@ INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1);
 
-INSERT INTO `pi` (`id`,`agreed_by_tc_role`,`decided_by_tc_role`,`written_outcome`,`agreed_by_tc_id`,`decided_by_tc_id`,
-    `assigned_to`,`pi_status`,`case_id`,`created_by`,`last_modified_by`,`witnesses`,`section_code_text`,
-    `licence_revoked_at_pi`,`licence_suspended_at_pi`,`licence_curtailed_at_pi`,
-    `notification_date`,`decision_notes`,`call_up_letter_date`,`brief_to_tc_date`,`written_reason_date`,
-    `decision_letter_sent_date`,`tc_written_decision_date`,`tc_written_reason_date`,`written_reason_letter_date`,
-    `dec_sent_after_written_dec_date`,`agreed_date`,`is_cancelled`,`decision_date`,`deleted_date`,
-    `comment`,`closed_date`,`created_on`,`last_modified_on`,`version`)
-  VALUES
-    (1,'tc_r_dtc',NULL,NULL,2,NULL,NULL,'pi_s_reg',24,NULL,NULL,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,
-     NULL,NULL,NULL,NULL,'2014-11-24',0,NULL,NULL,'Test Pi',NULL,'2014-11-24 10:06:49',NULL,1);
+INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
+  `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
+  `dec_sent_after_written_dec_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
+  `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`section_code_text`,`tc_written_decision_date`,
+  `tc_written_reason_date`,`written_reason_date`,`written_reason_letter_date`,`agreed_date`,`closed_date`,`comment`,
+  `created_on`,`decision_date`,`deleted_date`,`is_cancelled`,`last_modified_on`,`version`,`witnesses`)
+VALUES
+  (1,2,'tc_r_dtc',NULL,2,'tc_r_dhtru','pi_s_reg',NULL,24,NULL,NULL,NULL,NULL,NULL,NULL,
+   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
+   'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0);
 
 INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
     `version`, `name`, `address_id`) VALUES
@@ -603,14 +738,12 @@ INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by
     (43,'N',NULL,NULL,NULL,NULL,1,'venue_43',63),
     (44,'N',NULL,NULL,NULL,NULL,1,'venue_44',64);
 
-INSERT INTO `pi_hearing` (`id`,`presided_by_role`,`pi_id`,`pi_venue_id`,`last_modified_by`,`created_by`,
-    `presiding_tc_id`,`presiding_tc_other`,`cancelled_reason`,`adjourned_reason`,`details`,`hearing_date`,
-    `pi_venue_other`,`witnesses`,`is_cancelled`,`cancelled_date`,`adjourned_date`,`created_on`,
-    `last_modified_on`,`version`)
+INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`pi_venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`pi_venue_other`,`version`,`witnesses`)
   VALUES
-    (1,'tc_r_htru',1,1,NULL,NULL,1,NULL,NULL,'Test adjourned reason',
-     'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26','2014-03-16 14:30:00',
-     NULL,9,0,NULL,'2014-03-16','2014-11-24 10:22:24',NULL,1);
+    (1,1,'tc_r_htru',NULL,NULL,1,1,'2014-03-16','adjourned reason',NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',1,NULL,'2014-11-24 10:22:24','2014-03-16 14:30:00',0,NULL,NULL,1,9),
+    (2,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',0,NULL,'2014-11-24 10:22:24','2014-04-05 14:30:00',0,NULL,NULL,1,9);
+
+INSERT INTO `pi_decision` (`pi_id`,`decision_id`) VALUES (1,65);
 
 INSERT INTO `presiding_tc` (`id`, `name`) VALUES
     (1,'Presiding TC Name 1'),
@@ -679,8 +812,8 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',NULL,'','',''),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',NULL,'','',''),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',105,'','',''),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',106,'','',''),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
@@ -783,36 +916,41 @@ INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
     (29, 'case_cat_7');
 
-    
 /**
  * NOTE: These inserts can't be grouped into one as they insert different columns
  */
 /* Application task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,110,9,32,1,2,'A test task','2014-08-12',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
     /* Licence task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (2,null,110,1,69,1,2,'Another test task','2013-02-11',1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
 /* IRFO task */
-INSERT INTO task(id,irfo_organisation_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,57,1,2,'An organisation task','2014-05-01',1);
+INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
-INSERT INTO task(id,transport_manager_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,76,6,3,'A transport task','2010-01-01',1);
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
 /* Case task */
-INSERT INTO task(id,case_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (5,24,2,44,null,4,'A case task','2010-02-01',1);
 /* Unlinked task */
-INSERT INTO task(id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,49,null,null,'Unassigned task','2010-07-03',1);
+INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (6,7,67,null,null,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,110,9,32,1,2,'A test task','2018-09-27',1,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
-INSERT INTO task(id,application_id,licence_id,category_id,task_sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,9,32,1,2,'Single licence','2012-09-27',0,1);
+INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
+    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+/* Transport Manager task */
+INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+/* Bus Registration task */
+INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
+    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,document_sub_category_id,file_extension,issued_date,document_store_id) VALUES
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
     (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
@@ -832,13 +970,17 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,d
     (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
     (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
 
-INSERT INTO doc_template(id,category_id,document_sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,5,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,5,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,5,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,5,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,5,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,5,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+/* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
+INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
+    (19,3,'Test TM document','testdocument19.doc',1,5,101,'doc_doc','2014-12-11 12:34:56');
+
+INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
+    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
+    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
+    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
+    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
+    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
+    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),
@@ -910,68 +1052,6 @@ INSERT INTO `disc_sequence` (
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
 ALTER TABLE companies_house_request AUTO_INCREMENT=53;
-
-/* Test submissions, 1 for each type */
-INSERT INTO `submission` (`id`, `submission_type`, `last_modified_by`, `created_by`, `case_id`, `data_snapshot`, `closed_date`, `created_on`, `last_modified_on`, `version`) VALUES
-(1,'submission_type_o_mlh',NULL,NULL,24, '{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"linked-mlh-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:47:50',NULL,1),
-(2,'submission_type_o_clo_g',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:48:58',NULL,1),
-(3,'submission_type_o_clo_psv',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"total-bus-registrations":{"data":[]},"local-licence-history":{"data":[]},"registration-details":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:50:04',NULL,1),
-(4,'submission_type_o_clo_fep',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"waive-fee-late-fee":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:51:19',NULL,1),
-(5,'submission_type_o_otc',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"current-submissions":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"prohibition-history":{"data":[]},"conviction-fpn-offence-history":{"data":[{"id":25,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Test Category text 1","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":26,"offenceDate":"2012-04-10T00:00:00+0100","convictionDate":"2012-05-15T00:00:00+0100","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"John Smith","categoryText":"Conviction Child Category 1","court":"Leeds Magistrate court","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":27,"offenceDate":"2012-12-17T00:00:00+0000","convictionDate":"2013-03-02T00:00:00+0000","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"Boris Johnson","categoryText":"Conviction Child Category 3","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":29,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Conviction Child Category 4","court":"Leeds Magistrate court","penalty":"6 monthly investigation","msi":"Y","isDeclared":"N","isDealtWith":"N"}]},"annual-test-history":{"data":[]},"penalties":{"data":[]},"other-issues":{"data":[]},"compliance-complaints":{"data":[]},"financial-information":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:53:13',NULL,1),
-(6,'submission_type_o_env',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"conviction-fpn-offence-history":{"data":[{"id":25,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Test Category text 1","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":26,"offenceDate":"2012-04-10T00:00:00+0100","convictionDate":"2012-05-15T00:00:00+0100","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"John Smith","categoryText":"Conviction Child Category 1","court":"Leeds Magistrate court","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":27,"offenceDate":"2012-12-17T00:00:00+0000","convictionDate":"2013-03-02T00:00:00+0000","defendantType":{"description":"Owner","id":"def_t_owner"},"name":"Boris Johnson","categoryText":"Conviction Child Category 3","court":"FPN","penalty":"3 points on licence","msi":"N","isDeclared":"N","isDealtWith":"N"},{"id":29,"offenceDate":"2012-03-10T00:00:00+0000","convictionDate":"2012-06-15T00:00:00+0100","defendantType":{"description":"Operator","id":"def_t_op"},"name":"John Smith Haulage Ltd.","categoryText":"Conviction Child Category 4","court":"Leeds Magistrate court","penalty":"6 monthly investigation","msi":"Y","isDeclared":"N","isDealtWith":"N"}]},"other-issues":{"data":[]},"te-reports":{"data":[]},"site-plans":{"data":[]},"planning-permission":{"data":[]},"applicants-comments":{"data":[]},"visibility-access-egress-size":{"data":[]},"environmental-complaints":{"data":[]},"financial-information":{"data":[]},"maps":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:56:30',NULL,1),
-(7,'submission_type_o_irfo',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 14:58:18',NULL,1),
-(8,'submission_type_o_bus_reg',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"auth-requested-applied-for":{"data":[]},"transport-managers":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"bus-reg-app-details":{"data":[]},"transport-authority-comments":{"data":[]},"total-bus-registrations":{"data":[]},"local-licence-history":{"data":[]},"registration-details":{"data":[]},"maintenance-tachographs-hours":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:00:54',NULL,1),
-(9,'submission_type_o_tm',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"intelligence-unit-check":{"data":[]},"transport-managers":{"data":[]},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"oppositions":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":["id":77,{"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:02:08',NULL,1),
-(10,'submission_type_o_schedule_41',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"operating-centres":{"data":[]},"conditions-and-undertakings":{"data":[]},"linked-licences-app-numbers":{"data":[]},"lead-tc-area":{"data":[]},"auth-requested-applied-for":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"site-plans":{"data":[]},"applicants-comments":{"data":[]},"environmental-complaints":{"data":[]},"waive-fee-late-fee":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:03:19',NULL,1),
-(11,'submission_type_o_impounding',NULL,NULL,24,'{"most-serious-infringement":{"data":[]},"previous-history":{"data":[]},"other-issues":{"data":[]},"annex":{"data":[]},"introduction":{"data":[]},"case-summary":{"data":{"id":24,"organisationName":"John Smith Haulage Ltd.","isMlh":"N","organisationType":"Registered Company","businessType":null,"caseType":"case_t_lic","ecmsNo":"E123456","licNo":"OB1234567","licenceStartDate":"2010-01-12T00:00:00+0000","licenceType":"Standard National","goodsOrPsv":"Goods Vehicle","serviceStandardDate":null,"licenceStatus":"New","totAuthorisedVehicles":12,"totAuthorisedTrailers":4,"vehiclesInPossession":4,"trailersInPossession":4}},"case-outline":{"data":{"outline":"Case for convictions against company directors"}},"persons":{"data":[{"id":77,"title":"Mr","familyName":"Jones","forename":"Tom","birthDate":"1972-02-15T00:00:00+0000"},{"id":78,"title":"Mr","familyName":"Winnard","forename":"Keith","birthDate":"1975-03-15T00:00:00+0000"}]}}',NULL,'2014-10-16 15:03:19',NULL,1);
-
-INSERT INTO submission_section_comment (submission_section,submission_id,comment,created_on) VALUES
-    ('most-serious-infringement',1,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',1,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',1,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',1,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',2,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',2,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',2,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',3,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',3,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',3,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',4,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',4,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',5,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',5,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('prohibition-history',5,'Placeholder for prohibition-history','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',5,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('annual-test-history',5,'Placeholder for annual-test-history','2014-10-16 15:03:19'),
-    ('penalties',5,'Placeholder for penalties','2014-10-16 15:03:19'),
-    ('case-outline',5,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',6,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',6,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('conviction-fpn-offence-history',6,'Placeholder for conviction-fpn-offence-history','2014-10-16 15:03:19'),
-    ('case-outline',6,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',7,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',7,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',8,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',8,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',8,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',9,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',9,'Case for convictions against company directors','2014-10-16 15:03:19'),
-
-    ('most-serious-infringement',10,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('lead-tc-area',10,'Placeholder for lead-tc-area','2014-10-16 15:03:19'),
-    ('auth-requested-applied-for',10,'Placeholder for auth-requested-applied-for','2014-10-16 15:03:19'),
-    ('case-outline',10,'Case for convictions against company directors','2014-10-16 15:03:19'),
-    
-    ('most-serious-infringement',11,'Placeholder for most-serious-infringment','2014-10-16 15:03:19'),
-    ('case-outline',11,'Case for convictions against company directors','2014-10-16 15:03:19');
 
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
@@ -1178,14 +1258,20 @@ VALUES
   (19,'pub_s_new',1,1,'N','2014-10-30',NULL,30,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
   (20,'pub_s_new',1,1,'N','2014-10-30',NULL,2,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
 
-INSERT INTO `publication_link` (`id`,`publication_section_id`,`tm_pi_hearing_id`,`pi_id`,`publication_id`,`created_by`,
-  `last_modified_by`,`bus_reg_id`,`application_id`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,
-  `deleted_date`,`created_on`,`last_modified_on`,`version`)
-VALUES
-  (1,13,NULL,1,3,NULL,NULL,NULL,NULL,7,'B',
-   'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY',
-   'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',
-   NULL,NULL,'2014-11-25 15:47:03',NULL,1);
+INSERT INTO `publication_link` (`id`,`pi_id`,`publication_id`,`publication_section_id`,`tm_pi_hearing_id`,`application_id`,`bus_reg_id`,`created_by`,`last_modified_by`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,`created_on`,`deleted_date`,`last_modified_on`,`version`)
+  VALUES
+    (1,1,1,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
+    (2,1,3,13,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
+    (3,1,3,14,NULL,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1);
+
+INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`olbs_id`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
+  VALUES
+    (1,1,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
+    (2,1,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
+    (3,2,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
+    (4,2,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
+    (5,3,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
+    (6,3,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
 INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
 VALUES

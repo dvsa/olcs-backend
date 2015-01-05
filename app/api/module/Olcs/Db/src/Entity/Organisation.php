@@ -19,13 +19,15 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
  *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
- *        @ORM\Index(name="organisation_name_idx", columns={"name"})
+ *        @ORM\Index(name="organisation_name_idx", columns={"name"}),
+ *        @ORM\Index(name="fk_organisation_contact_details1_idx", columns={"contact_details_id"})
  *    }
  * )
  */
 class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ContactDetailsManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -127,15 +129,6 @@ class Organisation implements Interfaces\EntityInterface
     protected $type;
 
     /**
-     * Contact detail
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ContactDetails", mappedBy="organisation")
-     */
-    protected $contactDetails;
-
-    /**
      * Licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -176,7 +169,6 @@ class Organisation implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->contactDetails = new ArrayCollection();
         $this->licences = new ArrayCollection();
         $this->natureOfBusinesss = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
@@ -411,66 +403,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set the contact detail
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function setContactDetails($contactDetails)
-    {
-        $this->contactDetails = $contactDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the contact details
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getContactDetails()
-    {
-        return $this->contactDetails;
-    }
-
-    /**
-     * Add a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function addContactDetails($contactDetails)
-    {
-        if ($contactDetails instanceof ArrayCollection) {
-            $this->contactDetails = new ArrayCollection(
-                array_merge(
-                    $this->contactDetails->toArray(),
-                    $contactDetails->toArray()
-                )
-            );
-        } elseif (!$this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->add($contactDetails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a contact details
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
-     * @return Organisation
-     */
-    public function removeContactDetails($contactDetails)
-    {
-        if ($this->contactDetails->contains($contactDetails)) {
-            $this->contactDetails->removeElement($contactDetails);
-        }
-
-        return $this;
     }
 
     /**

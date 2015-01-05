@@ -40,8 +40,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\PresidingTcManyToOneAlt1,
         Traits\VenueManyToOne,
-        Traits\CustomVersionField,
-        Traits\WitnessesField;
+        Traits\CustomVersionField;
 
     /**
      * Adjourned date
@@ -108,6 +107,15 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     protected $type;
+
+    /**
+     * Witnesses
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="witnesses", nullable=false)
+     */
+    protected $witnesses = 0;
 
     /**
      * Set the adjourned date
@@ -268,5 +276,28 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set the witnesses
+     *
+     * @param int $witnesses
+     * @return TmPiHearing
+     */
+    public function setWitnesses($witnesses)
+    {
+        $this->witnesses = $witnesses;
+
+        return $this;
+    }
+
+    /**
+     * Get the witnesses
+     *
+     * @return int
+     */
+    public function getWitnesses()
+    {
+        return $this->witnesses;
     }
 }

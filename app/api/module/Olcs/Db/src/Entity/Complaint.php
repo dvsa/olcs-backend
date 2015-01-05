@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -16,11 +17,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="IDX_5F2732B57B00651C", columns={"status"}),
- *        @ORM\Index(name="IDX_5F2732B553DF8182", columns={"complaint_type"}),
- *        @ORM\Index(name="IDX_5F2732B5DE12AB56", columns={"created_by"}),
- *        @ORM\Index(name="IDX_5F2732B565CF370E", columns={"last_modified_by"}),
- *        @ORM\Index(name="IDX_5F2732B5CF10D4F5", columns={"case_id"})
+ *        @ORM\Index(name="fk_complaint_contact_details1_idx", columns={"complainant_contact_details_id"}),
+ *        @ORM\Index(name="fk_complaint_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_complaint_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_complaint_ref_data1_idx", columns={"status"}),
+ *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"}),
+ *        @ORM\Index(name="fk_complaint_cases1_idx", columns={"case_id"})
  *    }
  * )
  */
@@ -39,22 +41,14 @@ class Complaint implements Interfaces\EntityInterface
         Traits\Vrm20Field;
 
     /**
-     * Complainant family name
+     * Complainant contact details
      *
-     * @var string
+     * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\Column(type="string", name="complainant_family_name", length=40, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
+     * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
      */
-    protected $complainantFamilyName;
-
-    /**
-     * Complainant forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="complainant_forename", length=40, nullable=true)
-     */
-    protected $complainantForename;
+    protected $complainantContactDetails;
 
     /**
      * Complaint date
@@ -103,49 +97,52 @@ class Complaint implements Interfaces\EntityInterface
     protected $driverForename;
 
     /**
-     * Set the complainant family name
+     * Is compliance
      *
-     * @param string $complainantFamilyName
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_compliance", nullable=false)
+     */
+    protected $isCompliance = 1;
+
+    /**
+     * Oc complaint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OcComplaint", mappedBy="complaint")
+     */
+    protected $ocComplaints;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->ocComplaints = new ArrayCollection();
+    }
+
+    /**
+     * Set the complainant contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $complainantContactDetails
      * @return Complaint
      */
-    public function setComplainantFamilyName($complainantFamilyName)
+    public function setComplainantContactDetails($complainantContactDetails)
     {
-        $this->complainantFamilyName = $complainantFamilyName;
+        $this->complainantContactDetails = $complainantContactDetails;
 
         return $this;
     }
 
     /**
-     * Get the complainant family name
+     * Get the complainant contact details
      *
-     * @return string
+     * @return \Olcs\Db\Entity\ContactDetails
      */
-    public function getComplainantFamilyName()
+    public function getComplainantContactDetails()
     {
-        return $this->complainantFamilyName;
-    }
-
-    /**
-     * Set the complainant forename
-     *
-     * @param string $complainantForename
-     * @return Complaint
-     */
-    public function setComplainantForename($complainantForename)
-    {
-        $this->complainantForename = $complainantForename;
-
-        return $this;
-    }
-
-    /**
-     * Get the complainant forename
-     *
-     * @return string
-     */
-    public function getComplainantForename()
-    {
-        return $this->complainantForename;
+        return $this->complainantContactDetails;
     }
 
     /**
@@ -261,5 +258,88 @@ class Complaint implements Interfaces\EntityInterface
     public function getDriverForename()
     {
         return $this->driverForename;
+    }
+
+    /**
+     * Set the is compliance
+     *
+     * @param boolean $isCompliance
+     * @return Complaint
+     */
+    public function setIsCompliance($isCompliance)
+    {
+        $this->isCompliance = $isCompliance;
+
+        return $this;
+    }
+
+    /**
+     * Get the is compliance
+     *
+     * @return boolean
+     */
+    public function getIsCompliance()
+    {
+        return $this->isCompliance;
+    }
+
+    /**
+     * Set the oc complaint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function setOcComplaints($ocComplaints)
+    {
+        $this->ocComplaints = $ocComplaints;
+
+        return $this;
+    }
+
+    /**
+     * Get the oc complaints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOcComplaints()
+    {
+        return $this->ocComplaints;
+    }
+
+    /**
+     * Add a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function addOcComplaints($ocComplaints)
+    {
+        if ($ocComplaints instanceof ArrayCollection) {
+            $this->ocComplaints = new ArrayCollection(
+                array_merge(
+                    $this->ocComplaints->toArray(),
+                    $ocComplaints->toArray()
+                )
+            );
+        } elseif (!$this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->add($ocComplaints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return Complaint
+     */
+    public function removeOcComplaints($ocComplaints)
+    {
+        if ($this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->removeElement($ocComplaints);
+        }
+
+        return $this;
     }
 }
