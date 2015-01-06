@@ -904,12 +904,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
     ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3'),
 
-    /* Opposition types */
-    ('opposition_type', 'opp_type_env', 'Environmental objection', null),
-    ('opposition_type', 'opp_type_rep', 'Representation', null),
-    ('opposition_type', 'opp_type_env_obj', 'Environmental objection', null),
-    ('opposition_type', 'opp_type_obj', 'Objection', null)
-;
+    /* Opposition status */
+    ('opposition_status', 'opp_ack', 'Acknowledged', 'A-Acknwlgd'),
+    ('opposition_status', 'opp_pro_rec', 'Proforma received', 'B-ProfRcvd'),
+    ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
+    ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
+    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
 
 -- Case categories
 INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
