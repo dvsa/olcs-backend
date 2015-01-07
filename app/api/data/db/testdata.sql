@@ -788,9 +788,9 @@ INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_
     (2,7,2,NULL,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
-    `qualification_type`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,'GB','CPCSI',NULL,NULL,1),
-    (2,2,NULL,NULL,'GB','CPCSN',NULL,NULL,1);
+    `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
+    (1,1,NULL,NULL,'GB','tm_qt_CPCSI',NULL,NULL,1,'2014-01-01','1'),
+    (2,1,NULL,NULL,'GB','tm_qt_CPCSN',NULL,NULL,1,'2014-02-02','2');
 
 INSERT INTO `trading_name` (`id`,`organisation_id`,`last_modified_by`,`created_by`,`licence_id`,`name`,`deleted_date`,
   `vi_action`,`created_on`,`last_modified_on`,`version`)
