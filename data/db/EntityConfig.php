@@ -59,6 +59,9 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Address',
                 'property' => 'contactDetail'
+            ),
+            'cascade' => array(
+                'persist'
             )
         ),
         'person_id' => array(
@@ -292,6 +295,18 @@ return array(
                 'property' => 'opposition'
             )
         ),
+        'opposer_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        )
+    ),
+    'opposer' => array(
+        'contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        )
     ),
     'bus_reg' => array(
         'use_all_stops' => array(

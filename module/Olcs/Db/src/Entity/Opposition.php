@@ -121,7 +121,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer", cascade={"persist"})
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
      */
     protected $opposer;
