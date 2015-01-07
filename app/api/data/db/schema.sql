@@ -3982,10 +3982,12 @@ CREATE TABLE `opposition` (
   `raised_date` date DEFAULT NULL,
   `is_in_time` tinyint(1) NOT NULL DEFAULT '0',
   `is_public_inquiry` tinyint(1) NOT NULL DEFAULT '0',
+  `is_willing_to_attend_pi` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `is_valid` tinyint(1) NOT NULL DEFAULT '0',
   `is_withdrawn` tinyint(1) NOT NULL DEFAULT '0',
   `valid_notes` varchar(4000) DEFAULT NULL,
+  `status` varchar(32) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -3999,13 +4001,15 @@ CREATE TABLE `opposition` (
   KEY `fk_opposition_cases1_idx` (`case_id`),
   KEY `fk_opposition_licence1_idx` (`licence_id`),
   KEY `fk_opposition_ref_data1_idx` (`opposition_type`),
+  KEY `fk_opposition_ref_data2_idx` (`status`),
   CONSTRAINT `fk_opposition_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_opposer1` FOREIGN KEY (`opposer_id`) REFERENCES `opposer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_opposition_ref_data2` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
