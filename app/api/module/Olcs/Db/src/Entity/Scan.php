@@ -19,6 +19,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_scan_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_scan_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_scan_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_scan_category1_idx", columns={"category_id"}),
  *        @ORM\Index(name="fk_scan_sub_category1_idx", columns={"sub_category_id"}),
  *        @ORM\Index(name="fk_scan_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_scan_user2_idx", columns={"last_modified_by"})
@@ -31,6 +32,7 @@ class Scan implements Interfaces\EntityInterface
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOne,
+        Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\Description100Field,

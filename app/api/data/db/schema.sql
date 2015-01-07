@@ -7496,6 +7496,7 @@ CREATE TABLE IF NOT EXISTS `scan` (
   `licence_id` INT NULL,
   `case_id` INT NULL,
   `transport_manager_id` INT NULL,
+  `category_id` INT NOT NULL,
   `sub_category_id` INT NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   `created_by` INT NULL,
@@ -7509,6 +7510,7 @@ CREATE TABLE IF NOT EXISTS `scan` (
   INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
   INDEX `fk_scan_cases1_idx` (`case_id` ASC),
   INDEX `fk_scan_transport_manager1_idx` (`transport_manager_id` ASC),
+  INDEX `fk_scan_category1_idx` (`category_id` ASC),
   INDEX `fk_scan_sub_category1_idx` (`sub_category_id` ASC),
   INDEX `fk_scan_user1_idx` (`created_by` ASC),
   INDEX `fk_scan_user2_idx` (`last_modified_by` ASC),
@@ -7535,6 +7537,11 @@ CREATE TABLE IF NOT EXISTS `scan` (
   CONSTRAINT `fk_scan_transport_manager1`
     FOREIGN KEY (`transport_manager_id`)
     REFERENCES `transport_manager` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_category1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `category` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_scan_sub_category1`
