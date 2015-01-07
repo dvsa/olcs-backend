@@ -7492,6 +7492,7 @@ UNLOCK TABLES;
 CREATE TABLE IF NOT EXISTS `scan` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `application_id` INT NULL,
+  `organisation_id` INT NULL,
   `bus_reg_id` INT NULL,
   `licence_id` INT NULL,
   `case_id` INT NULL,
@@ -7506,6 +7507,7 @@ CREATE TABLE IF NOT EXISTS `scan` (
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_scan_application1_idx` (`application_id` ASC),
+  INDEX `fk_scan_organisation1_idx` (`organisation_id` ASC),
   INDEX `fk_scan_bus_reg1_idx` (`bus_reg_id` ASC),
   INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
   INDEX `fk_scan_cases1_idx` (`case_id` ASC),
@@ -7517,6 +7519,11 @@ CREATE TABLE IF NOT EXISTS `scan` (
   CONSTRAINT `fk_scan_application1`
     FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_organisation1`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_scan_bus_reg1`

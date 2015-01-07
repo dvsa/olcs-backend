@@ -15,6 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="scan",
  *    indexes={
  *        @ORM\Index(name="fk_scan_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_scan_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_scan_bus_reg1_idx", columns={"bus_reg_id"}),
  *        @ORM\Index(name="fk_scan_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_scan_cases1_idx", columns={"case_id"}),
@@ -40,6 +41,7 @@ class Scan implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\SubCategoryManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
