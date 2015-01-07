@@ -59,6 +59,15 @@ class Fee implements Interfaces\EntityInterface
     protected $amount;
 
     /**
+     * Cheque no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cheque_no", length=45, nullable=true)
+     */
+    protected $chequeNo;
+
+    /**
      * Fee status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -125,6 +134,15 @@ class Fee implements Interfaces\EntityInterface
     protected $parentFee;
 
     /**
+     * Payer
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="payer", length=255, nullable=true)
+     */
+    protected $payer;
+
+    /**
      * Payment method
      *
      * @var \Olcs\Db\Entity\RefData
@@ -133,6 +151,15 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
      */
     protected $paymentMethod;
+
+    /**
+     * Po no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="po_no", length=45, nullable=true)
+     */
+    protected $poNo;
 
     /**
      * Receipt no
@@ -151,6 +178,15 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="received_amount", precision=10, scale=2, nullable=true)
      */
     protected $receivedAmount;
+
+    /**
+     * Slip no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="slip_no", length=45, nullable=true)
+     */
+    protected $slipNo;
 
     /**
      * Waive approval date
@@ -237,6 +273,29 @@ class Fee implements Interfaces\EntityInterface
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Set the cheque no
+     *
+     * @param string $chequeNo
+     * @return Fee
+     */
+    public function setChequeNo($chequeNo)
+    {
+        $this->chequeNo = $chequeNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the cheque no
+     *
+     * @return string
+     */
+    public function getChequeNo()
+    {
+        return $this->chequeNo;
     }
 
     /**
@@ -401,6 +460,29 @@ class Fee implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the payer
+     *
+     * @param string $payer
+     * @return Fee
+     */
+    public function setPayer($payer)
+    {
+        $this->payer = $payer;
+
+        return $this;
+    }
+
+    /**
+     * Get the payer
+     *
+     * @return string
+     */
+    public function getPayer()
+    {
+        return $this->payer;
+    }
+
+    /**
      * Set the payment method
      *
      * @param \Olcs\Db\Entity\RefData $paymentMethod
@@ -421,6 +503,29 @@ class Fee implements Interfaces\EntityInterface
     public function getPaymentMethod()
     {
         return $this->paymentMethod;
+    }
+
+    /**
+     * Set the po no
+     *
+     * @param string $poNo
+     * @return Fee
+     */
+    public function setPoNo($poNo)
+    {
+        $this->poNo = $poNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the po no
+     *
+     * @return string
+     */
+    public function getPoNo()
+    {
+        return $this->poNo;
     }
 
     /**
@@ -467,6 +572,29 @@ class Fee implements Interfaces\EntityInterface
     public function getReceivedAmount()
     {
         return $this->receivedAmount;
+    }
+
+    /**
+     * Set the slip no
+     *
+     * @param string $slipNo
+     * @return Fee
+     */
+    public function setSlipNo($slipNo)
+    {
+        $this->slipNo = $slipNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the slip no
+     *
+     * @return string
+     */
+    public function getSlipNo()
+    {
+        return $this->slipNo;
     }
 
     /**
