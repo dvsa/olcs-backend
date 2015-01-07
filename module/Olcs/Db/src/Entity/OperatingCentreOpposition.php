@@ -37,7 +37,7 @@ class OperatingCentreOpposition implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Opposition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposition", inversedBy="operatingCentres")
      * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=false)
      */
     protected $opposition;

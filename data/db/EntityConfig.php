@@ -301,6 +301,14 @@ return array(
             )
         )
     ),
+    'operating_centre_opposition' => array(
+        'opposition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Opposition',
+                'property' => 'operatingCentre'
+            )
+        )
+    ),
     'opposer' => array(
         'contact_details_id' => array(
             'cascade' => array(
