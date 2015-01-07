@@ -23,7 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_opposition_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_opposition_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"})
+ *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"}),
+ *        @ORM\Index(name="fk_opposition_ref_data2_idx", columns={"status"})
  *    }
  * )
  */
@@ -38,6 +39,7 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\Notes4000Field,
+        Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -95,6 +97,15 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_valid", nullable=false)
      */
     protected $isValid = 0;
+
+    /**
+     * Is willing to attend pi
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_willing_to_attend_pi", nullable=false)
+     */
+    protected $isWillingToAttendPi = 0;
 
     /**
      * Is withdrawn
@@ -306,6 +317,29 @@ class Opposition implements Interfaces\EntityInterface
     public function getIsValid()
     {
         return $this->isValid;
+    }
+
+    /**
+     * Set the is willing to attend pi
+     *
+     * @param boolean $isWillingToAttendPi
+     * @return Opposition
+     */
+    public function setIsWillingToAttendPi($isWillingToAttendPi)
+    {
+        $this->isWillingToAttendPi = $isWillingToAttendPi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is willing to attend pi
+     *
+     * @return boolean
+     */
+    public function getIsWillingToAttendPi()
+    {
+        return $this->isWillingToAttendPi;
     }
 
     /**
