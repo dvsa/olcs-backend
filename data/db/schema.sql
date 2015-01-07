@@ -7488,6 +7488,71 @@ LOCK TABLES `workshop` WRITE;
 /*!40000 ALTER TABLE `workshop` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workshop` ENABLE KEYS */;
 UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `scan` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `application_id` INT NULL,
+  `bus_reg_id` INT NULL,
+  `licence_id` INT NULL,
+  `case_id` INT NULL,
+  `transport_manager_id` INT NULL,
+  `sub_category_id` INT NOT NULL,
+  `description` VARCHAR(100) NOT NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_scan_application1_idx` (`application_id` ASC),
+  INDEX `fk_scan_bus_reg1_idx` (`bus_reg_id` ASC),
+  INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
+  INDEX `fk_scan_cases1_idx` (`case_id` ASC),
+  INDEX `fk_scan_transport_manager1_idx` (`transport_manager_id` ASC),
+  INDEX `fk_scan_sub_category1_idx` (`sub_category_id` ASC),
+  INDEX `fk_scan_user1_idx` (`created_by` ASC),
+  INDEX `fk_scan_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_scan_application1`
+    FOREIGN KEY (`application_id`)
+    REFERENCES `application` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_bus_reg1`
+    FOREIGN KEY (`bus_reg_id`)
+    REFERENCES `bus_reg` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_licence1`
+    FOREIGN KEY (`licence_id`)
+    REFERENCES `licence` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_cases1`
+    FOREIGN KEY (`case_id`)
+    REFERENCES `cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_transport_manager1`
+    FOREIGN KEY (`transport_manager_id`)
+    REFERENCES `transport_manager` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_sub_category1`
+    FOREIGN KEY (`sub_category_id`)
+    REFERENCES `sub_category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
