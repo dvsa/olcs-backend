@@ -625,6 +625,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
     ('document_type', 'doc_rtf', 'RTF', null),
+    ('document_type', 'doc_tiff', 'TIFF', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
