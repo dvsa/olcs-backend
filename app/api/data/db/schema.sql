@@ -423,6 +423,7 @@ CREATE TABLE `bus_reg` (
   `application_signed` tinyint(1) NOT NULL DEFAULT '0',
   `operating_centre_id` int(11) DEFAULT NULL COMMENT 'Populated if the oc address is to be used',
   `variation_no` int(11) NOT NULL DEFAULT '0' COMMENT 'Increments for each variation',
+  `parent_id` int(11) NULL DEFAULT NULL,
   `op_notified_la_pte` tinyint(1) NOT NULL DEFAULT '0',
   `stopping_arrangements` varchar(800) DEFAULT NULL,
   `trc_condition_checked` tinyint(1) NOT NULL DEFAULT '0',
@@ -456,6 +457,7 @@ CREATE TABLE `bus_reg` (
   KEY `fk_bus_reg_ref_data2_idx` (`withdrawn_reason`),
   KEY `fk_bus_reg_ref_data3_idx` (`status`),
   KEY `fk_bus_reg_ref_data4_idx` (`revert_status`),
+  KEY `fk_bus_reg_bus_reg_idx` (`parent_id`),
   CONSTRAINT `fk_bus_reg_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_bus_notice_period1` FOREIGN KEY (`bus_notice_period_id`) REFERENCES `bus_notice_period` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data1` FOREIGN KEY (`subsidised`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -464,7 +466,8 @@ CREATE TABLE `bus_reg` (
   CONSTRAINT `fk_bus_reg_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data2` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data3` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_ref_data4` FOREIGN KEY (`revert_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_bus_reg_ref_data4` FOREIGN KEY (`revert_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_bus_reg` FOREIGN KEY (`parent_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
