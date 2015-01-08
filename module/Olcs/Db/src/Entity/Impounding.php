@@ -28,7 +28,7 @@ use Olcs\Db\Entity\Traits;
 class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CloseDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

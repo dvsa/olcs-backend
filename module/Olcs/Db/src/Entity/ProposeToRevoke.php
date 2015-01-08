@@ -25,7 +25,7 @@ use Olcs\Db\Entity\Traits;
 class ProposeToRevoke implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,
