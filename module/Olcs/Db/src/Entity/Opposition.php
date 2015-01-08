@@ -101,9 +101,9 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is willing to attend pi
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_willing_to_attend_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false)
      */
     protected $isWillingToAttendPi = 0;
 
@@ -332,7 +332,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Set the is willing to attend pi
      *
-     * @param boolean $isWillingToAttendPi
+     * @param string $isWillingToAttendPi
      * @return Opposition
      */
     public function setIsWillingToAttendPi($isWillingToAttendPi)
@@ -345,7 +345,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is willing to attend pi
      *
-     * @return boolean
+     * @return string
      */
     public function getIsWillingToAttendPi()
     {

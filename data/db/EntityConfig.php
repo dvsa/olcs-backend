@@ -75,6 +75,11 @@ return array(
         ),
         'written_permission_to_engage' => array(
             'type' => 'yesno'
+        ),
+        'phone_contacts' => array(
+            'cascade' => array(
+                'persist'
+            )
         )
     ),
     'user' => array(
@@ -281,6 +286,9 @@ return array(
             'type' => 'yesno'
         ),
         'is_withdrawn' => array(
+            'type' => 'yesno'
+        ),
+        'is_willing_to_attend_pi' => array(
             'type' => 'yesno'
         ),
         'application_id' => array(
