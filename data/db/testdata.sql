@@ -65,6 +65,7 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `licence`;
+TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
 TRUNCATE TABLE `si_category_type`;
