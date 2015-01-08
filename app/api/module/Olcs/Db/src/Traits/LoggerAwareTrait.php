@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A trait that controllers can use to easily interact with the flash messenger.
+ * A trait that controllers can use to easily interact with the logger.
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
@@ -11,7 +11,7 @@ use Zend\Log\LoggerAwareTrait as ZendLoggerAwareTrait;
 use Zend\Log\Logger;
 
 /**
- * A trait that controllers can use to easily interact with the flash messenger.
+ * A trait that controllers can use to easily interact with the logger.
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
