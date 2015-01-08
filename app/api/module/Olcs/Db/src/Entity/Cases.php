@@ -214,6 +214,15 @@ class Cases implements Interfaces\EntityInterface
     protected $appeals;
 
     /**
+     * Complaint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Complaint", mappedBy="case")
+     */
+    protected $complaints;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -284,6 +293,7 @@ class Cases implements Interfaces\EntityInterface
         $this->legacyOffences = new ArrayCollection();
         $this->categorys = new ArrayCollection();
         $this->appeals = new ArrayCollection();
+        $this->complaints = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -790,6 +800,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->appeals->contains($appeals)) {
             $this->appeals->removeElement($appeals);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the complaint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return Cases
+     */
+    public function setComplaints($complaints)
+    {
+        $this->complaints = $complaints;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getComplaints()
+    {
+        return $this->complaints;
+    }
+
+    /**
+     * Add a complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return Cases
+     */
+    public function addComplaints($complaints)
+    {
+        if ($complaints instanceof ArrayCollection) {
+            $this->complaints = new ArrayCollection(
+                array_merge(
+                    $this->complaints->toArray(),
+                    $complaints->toArray()
+                )
+            );
+        } elseif (!$this->complaints->contains($complaints)) {
+            $this->complaints->add($complaints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return Cases
+     */
+    public function removeComplaints($complaints)
+    {
+        if ($this->complaints->contains($complaints)) {
+            $this->complaints->removeElement($complaints);
         }
 
         return $this;

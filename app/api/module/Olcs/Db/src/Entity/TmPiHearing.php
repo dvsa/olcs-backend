@@ -31,7 +31,7 @@ class TmPiHearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AgreedDateField,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,

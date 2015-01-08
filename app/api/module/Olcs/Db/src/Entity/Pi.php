@@ -34,7 +34,7 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AgreedDateField,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,

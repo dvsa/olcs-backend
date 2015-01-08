@@ -31,7 +31,7 @@ class Note implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
