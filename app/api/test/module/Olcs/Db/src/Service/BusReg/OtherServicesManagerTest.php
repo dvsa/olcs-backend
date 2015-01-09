@@ -51,7 +51,6 @@ class OtherServicesManagerTest extends TestCase
         $busReg->getOtherServices()->add($existing1);
         $busReg->getOtherServices()->add($existing2);
 
-
         $data = [
             ['id' => 1, 'serviceNo' => 'abc'],
             ['serviceNo' => 54]
