@@ -423,6 +423,7 @@ CREATE TABLE `bus_reg` (
   `application_signed` tinyint(1) NOT NULL DEFAULT '0',
   `operating_centre_id` int(11) DEFAULT NULL COMMENT 'Populated if the oc address is to be used',
   `variation_no` int(11) NOT NULL DEFAULT '0' COMMENT 'Increments for each variation',
+  `parent_id` int(11) NULL DEFAULT NULL,
   `op_notified_la_pte` tinyint(1) NOT NULL DEFAULT '0',
   `stopping_arrangements` varchar(800) DEFAULT NULL,
   `trc_condition_checked` tinyint(1) NOT NULL DEFAULT '0',
@@ -456,6 +457,7 @@ CREATE TABLE `bus_reg` (
   KEY `fk_bus_reg_ref_data2_idx` (`withdrawn_reason`),
   KEY `fk_bus_reg_ref_data3_idx` (`status`),
   KEY `fk_bus_reg_ref_data4_idx` (`revert_status`),
+  KEY `fk_bus_reg_bus_reg_idx` (`parent_id`),
   CONSTRAINT `fk_bus_reg_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_bus_notice_period1` FOREIGN KEY (`bus_notice_period_id`) REFERENCES `bus_notice_period` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data1` FOREIGN KEY (`subsidised`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -464,7 +466,8 @@ CREATE TABLE `bus_reg` (
   CONSTRAINT `fk_bus_reg_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data2` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data3` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_ref_data4` FOREIGN KEY (`revert_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_bus_reg_ref_data4` FOREIGN KEY (`revert_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_bus_reg` FOREIGN KEY (`parent_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2307,6 +2310,9 @@ CREATE TABLE `fee` (
   `irfo_file_no` varchar(10) DEFAULT NULL,
   `irfo_gv_permit_id` int(11) DEFAULT NULL,
   `payment_method` varchar(32) DEFAULT NULL COMMENT 'The method of the successful payment. There could have been several attempts to pay with differing methods, but only one successful.',
+  `payer_name` VARCHAR(100) NULL COMMENT 'Name on cheque or POs',
+  `cheque_po_number` VARCHAR(100) NULL,
+  `paying_in_slip_number` VARCHAR(100) NULL COMMENT 'Paying in slip from DVSA employee paying cheque or PO into bank.',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -7488,6 +7494,85 @@ LOCK TABLES `workshop` WRITE;
 /*!40000 ALTER TABLE `workshop` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workshop` ENABLE KEYS */;
 UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `scan` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `application_id` INT NULL,
+  `organisation_id` INT NULL,
+  `bus_reg_id` INT NULL,
+  `licence_id` INT NULL,
+  `case_id` INT NULL,
+  `transport_manager_id` INT NULL,
+  `category_id` INT NOT NULL,
+  `sub_category_id` INT NOT NULL,
+  `description` VARCHAR(100) NOT NULL,
+  `created_by` INT NULL,
+  `last_modified_by` INT NULL,
+  `created_on` DATETIME NULL,
+  `last_modified_on` DATETIME NULL,
+  `version` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_scan_application1_idx` (`application_id` ASC),
+  INDEX `fk_scan_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_scan_bus_reg1_idx` (`bus_reg_id` ASC),
+  INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
+  INDEX `fk_scan_cases1_idx` (`case_id` ASC),
+  INDEX `fk_scan_transport_manager1_idx` (`transport_manager_id` ASC),
+  INDEX `fk_scan_category1_idx` (`category_id` ASC),
+  INDEX `fk_scan_sub_category1_idx` (`sub_category_id` ASC),
+  INDEX `fk_scan_user1_idx` (`created_by` ASC),
+  INDEX `fk_scan_user2_idx` (`last_modified_by` ASC),
+  CONSTRAINT `fk_scan_application1`
+    FOREIGN KEY (`application_id`)
+    REFERENCES `application` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_organisation1`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_bus_reg1`
+    FOREIGN KEY (`bus_reg_id`)
+    REFERENCES `bus_reg` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_licence1`
+    FOREIGN KEY (`licence_id`)
+    REFERENCES `licence` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_cases1`
+    FOREIGN KEY (`case_id`)
+    REFERENCES `cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_transport_manager1`
+    FOREIGN KEY (`transport_manager_id`)
+    REFERENCES `transport_manager` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_category1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_sub_category1`
+    FOREIGN KEY (`sub_category_id`)
+    REFERENCES `sub_category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_user1`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scan_user2`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
