@@ -1,6 +1,7 @@
 <?php
 
 namespace Olcs\Db\Service\BusReg;
+
 use Olcs\Db\Entity\BusReg;
 use Olcs\Db\Entity\BusRegOtherService;
 use Zend\ServiceManager\FactoryInterface;
