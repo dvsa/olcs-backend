@@ -625,6 +625,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
     ('document_type', 'doc_rtf', 'RTF', null),
+    ('document_type', 'doc_tiff', 'TIFF', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -840,16 +841,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('tm_unfit_reason', 'tm_unfit_inn', 'Infringement Of National Rules', 'INN'),
     ('tm_pi_reason', 'tm_pi_reason_art6', 'Article 6 of Regulation (EC) No 1071/2009', 'ART6'),
     ('tm_pi_type', 'tm_pi_t_reg', 'Regulatory', 'REG'),
-    ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR'),
-    ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI'),
-    ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN'),
-    ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI'),
-    ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN'),
-    ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR'),
-    ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI'),
-    ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN'),
-    ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI'),
-    ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN'),
     ('tm_status', 'tm_s_cur', 'Current', 'C'),
     ('tm_status', 'tm_s_dis', 'Disqualified', 'D'),
     ('tm_type', 'tm_t_B', 'Both', 'B'),
@@ -904,6 +895,20 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
     ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3')
 ;
+
+-- TM qualifications
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
+VALUES
+    ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI', '1'),
+    ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI', '2'),
+    ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN', '3'),
+    ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN', '4'),
+    ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR', '5'),
+    ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR', '6'),
+    ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI', '7'),
+    ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI', '8'),
+    ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN', '9'),
+    ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN', '10');
 
 -- Case categories
 INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
