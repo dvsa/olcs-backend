@@ -120,12 +120,15 @@ INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`,
     NULL,NOW(),NULL,1,0,'lcat_gv',0),
     (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,NULL,NULL,
     NULL,1,1,'lcat_gv',0),
+    (3,210,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, NULL,NULL,
+    NULL,NOW(),NULL,1,0,'lcat_gv',0),
     (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,
     NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0,'lcat_psv',1);
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
 (1,NULL,NULL,NULL,NULL,NULL,1),
-(2,NULL,NULL,NULL,NULL,NULL,1);
+(2,NULL,NULL,NULL,NULL,NULL,1),
+(3,NULL,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -448,7 +451,8 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_
     (85,1,110,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL),
     (86,1,110,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL),
     (87,1,110,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason'),
-    (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL);
+    (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL),
+    (89,3,210,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes');
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -482,6 +486,11 @@ INSERT INTO `licence` (
     3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
     (209,1,'B',0,NULL,NULL,NULL,1,'lcat_psv','OB4234568','lsts_revoked',0,'ltyp_sn','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
+
+    -- extra licence for application 3
+    (210,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1,NULL),
+
 
     (30,30,'B',0,NULL,NULL,NULL,1,'lcat_gv','OB1234568','lsts_not_submitted',0,'ltyp_si','2011-03-16','2011-03-16','2011-03-16','',3,
     9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00'),
@@ -789,9 +798,9 @@ INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_
     (2,7,2,NULL,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
-    `qualification_type`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,1,NULL,NULL,'GB','CPCSI',NULL,NULL,1),
-    (2,2,NULL,NULL,'GB','CPCSN',NULL,NULL,1);
+    `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
+    (1,1,NULL,NULL,'GB','tm_qt_CPCSI',NULL,NULL,1,'2014-01-01','1'),
+    (2,1,NULL,NULL,'GB','tm_qt_CPCSN',NULL,NULL,1,'2014-02-02','2');
 
 INSERT INTO `trading_name` (`id`,`organisation_id`,`last_modified_by`,`created_by`,`licence_id`,`name`,`deleted_date`,
   `vi_action`,`created_on`,`last_modified_on`,`version`)
@@ -1094,21 +1103,21 @@ VALUES
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (4, '101', 1, 1, 2, 1, '', '2014-05-01', '2015-01-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (5, '102', 1, 1, 2, 1, '', '2014-04-01', '2015-04-31', null,
+  (5, '102', 1, 1, 2, 1, '', '2014-04-01', '2015-04-30', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (6, '301', 1, 1, 2, 1, '', '2014-03-01', '2015-03-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (7, '302', 1, 1, 2, 1, '', '2014-02-01', '2015-02-31', null,
+  (7, '302', 1, 1, 2, 1, '', '2014-02-01', '2015-02-28', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (8, '303', 1, 1, 2, 1, '', '2014-01-01', '2015-01-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (9, '304', 1, 1, 2, 1, '', '2013-12-01', '2014-12-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (10, '305', 1, 1, 2, 1, '', '2013-11-01', '2014-11-31', null,
+  (10, '305', 1, 1, 2, 1, '', '2013-11-01', '2014-11-30', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (11, '306', 1, 1, 2, 1, '', '2013-10-01', '2014-10-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (12, '307', 1, 1, 2, 1, '', '2013-09-01', '2014-09-31', null,
+  (12, '307', 1, 1, 2, 1, '', '2013-09-01', '2014-09-30', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
 
 -- si_category
