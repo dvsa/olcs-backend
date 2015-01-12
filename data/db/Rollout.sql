@@ -548,6 +548,9 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
     ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
 
+    ('cst-status', 'cst_open', 'Open', null),
+    ('cst-status', 'cst_closed', 'Closed', null),
+
     ('complaint_type', 'ct_cor', 'Continuing to operate after revocation', null),
     ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),
     ('complaint_type', 'ct_dgm', 'Driving in a dangerous manner', null),
