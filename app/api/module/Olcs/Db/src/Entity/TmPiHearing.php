@@ -39,7 +39,6 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\PresidingTcManyToOneAlt1,
-        Traits\VenueManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -107,6 +106,16 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     protected $type;
+
+    /**
+     * Venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=false)
+     */
+    protected $venue;
 
     /**
      * Witnesses
@@ -276,6 +285,29 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $venue
+     * @return TmPiHearing
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
     }
 
     /**
