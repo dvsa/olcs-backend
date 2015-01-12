@@ -64,7 +64,7 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
-TRUNCATE TABLE `task_allocation_rules`;
+TRUNCATE TABLE `task_allocation_rule`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -966,7 +966,7 @@ INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
-INSERT INTO `task_allocation_rules` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
+INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
     (1,9,5,NULL,NULL,NULL,NULL),
     (2,3,6,NULL,NULL,NULL,NULL),
     (3,2,7,NULL,NULL,NULL,NULL),
