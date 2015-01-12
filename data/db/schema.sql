@@ -2579,7 +2579,8 @@ DROP TABLE IF EXISTS `hearing`;
 CREATE TABLE `hearing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) NOT NULL,
-  `venue_id` int(11) NOT NULL,
+  `venue_id` int(11) DEFAULT NULL,
+  `venue_other` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `presiding_tc_id` int(11) NOT NULL DEFAULT '0',
   `hearing_date` datetime DEFAULT NULL,
   `agreed_by_tc_date` date DEFAULT NULL,
