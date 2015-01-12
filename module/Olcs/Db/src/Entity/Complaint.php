@@ -29,7 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
+        Traits\CloseDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -39,6 +39,16 @@ class Complaint implements Interfaces\EntityInterface
         Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField,
         Traits\Vrm20Field;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="complaints")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     */
+    protected $case;
 
     /**
      * Complainant contact details
@@ -120,6 +130,29 @@ class Complaint implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->ocComplaints = new ArrayCollection();
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Complaint
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**

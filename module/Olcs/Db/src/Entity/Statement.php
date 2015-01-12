@@ -26,7 +26,7 @@ use Olcs\Db\Entity\Traits;
 class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,

@@ -59,6 +59,15 @@ class Fee implements Interfaces\EntityInterface
     protected $amount;
 
     /**
+     * Cheque po number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cheque_po_number", length=100, nullable=true)
+     */
+    protected $chequePoNumber;
+
+    /**
      * Fee status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -123,6 +132,24 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="parent_fee_id", referencedColumnName="id", nullable=true)
      */
     protected $parentFee;
+
+    /**
+     * Payer name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="payer_name", length=100, nullable=true)
+     */
+    protected $payerName;
+
+    /**
+     * Paying in slip number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="paying_in_slip_number", length=100, nullable=true)
+     */
+    protected $payingInSlipNumber;
 
     /**
      * Payment method
@@ -237,6 +264,29 @@ class Fee implements Interfaces\EntityInterface
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Set the cheque po number
+     *
+     * @param string $chequePoNumber
+     * @return Fee
+     */
+    public function setChequePoNumber($chequePoNumber)
+    {
+        $this->chequePoNumber = $chequePoNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the cheque po number
+     *
+     * @return string
+     */
+    public function getChequePoNumber()
+    {
+        return $this->chequePoNumber;
     }
 
     /**
@@ -398,6 +448,52 @@ class Fee implements Interfaces\EntityInterface
     public function getParentFee()
     {
         return $this->parentFee;
+    }
+
+    /**
+     * Set the payer name
+     *
+     * @param string $payerName
+     * @return Fee
+     */
+    public function setPayerName($payerName)
+    {
+        $this->payerName = $payerName;
+
+        return $this;
+    }
+
+    /**
+     * Get the payer name
+     *
+     * @return string
+     */
+    public function getPayerName()
+    {
+        return $this->payerName;
+    }
+
+    /**
+     * Set the paying in slip number
+     *
+     * @param string $payingInSlipNumber
+     * @return Fee
+     */
+    public function setPayingInSlipNumber($payingInSlipNumber)
+    {
+        $this->payingInSlipNumber = $payingInSlipNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the paying in slip number
+     *
+     * @return string
+     */
+    public function getPayingInSlipNumber()
+    {
+        return $this->payingInSlipNumber;
     }
 
     /**
