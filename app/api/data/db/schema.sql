@@ -1913,6 +1913,7 @@ CREATE TABLE `document` (
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `case_id` int(11) DEFAULT NULL,
+  `irfo_organisation_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
   `operating_centre_id` int(11) DEFAULT NULL,
   `opposition_id` int(11) DEFAULT NULL,
@@ -1937,6 +1938,7 @@ CREATE TABLE `document` (
   KEY `fk_document_licence1_idx` (`licence_id`),
   KEY `fk_document_application1_idx` (`application_id`),
   KEY `fk_document_cases1_idx` (`case_id`),
+  KEY `fk_document_irfo_organisation1_idx` (`irfo_organisation_id`),
   KEY `fk_document_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_document_operating_centre1_idx` (`operating_centre_id`),
   KEY `fk_document_user1_idx` (`created_by`),
@@ -1950,6 +1952,7 @@ CREATE TABLE `document` (
   CONSTRAINT `fk_document_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_document_irfo_organisation1` FOREIGN KEY (`irfo_organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7499,7 +7502,7 @@ UNLOCK TABLES;
 CREATE TABLE IF NOT EXISTS `scan` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `application_id` INT NULL,
-  `organisation_id` INT NULL,
+  `irfo_organisation_id` INT NULL,
   `bus_reg_id` INT NULL,
   `licence_id` INT NULL,
   `case_id` INT NULL,
@@ -7514,7 +7517,7 @@ CREATE TABLE IF NOT EXISTS `scan` (
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_scan_application1_idx` (`application_id` ASC),
-  INDEX `fk_scan_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_scan_irfo_organisation1_idx` (`irfo_organisation_id` ASC),
   INDEX `fk_scan_bus_reg1_idx` (`bus_reg_id` ASC),
   INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
   INDEX `fk_scan_cases1_idx` (`case_id` ASC),
@@ -7528,8 +7531,8 @@ CREATE TABLE IF NOT EXISTS `scan` (
     REFERENCES `application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_scan_organisation1`
-    FOREIGN KEY (`organisation_id`)
+  CONSTRAINT `fk_scan_irfo_organisation1`
+    FOREIGN KEY (`irfo_organisation_id`)
     REFERENCES `organisation` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
