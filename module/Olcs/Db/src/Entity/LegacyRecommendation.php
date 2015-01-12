@@ -26,7 +26,7 @@ use Olcs\Db\Entity\Traits;
 class LegacyRecommendation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

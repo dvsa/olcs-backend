@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\DecisionDateField,
