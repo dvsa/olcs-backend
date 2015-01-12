@@ -41,6 +41,7 @@ class Task implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\Description255FieldAlt1,
         Traits\IdIdentity,
+        Traits\IrfoOrganisationManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
@@ -86,16 +87,6 @@ class Task implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedToUser;
-
-    /**
-     * Irfo organisation
-     *
-     * @var \Olcs\Db\Entity\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation")
-     * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoOrganisation;
 
     /**
      * Is closed
@@ -205,29 +196,6 @@ class Task implements Interfaces\EntityInterface
     public function getAssignedToUser()
     {
         return $this->assignedToUser;
-    }
-
-    /**
-     * Set the irfo organisation
-     *
-     * @param \Olcs\Db\Entity\Organisation $irfoOrganisation
-     * @return Task
-     */
-    public function setIrfoOrganisation($irfoOrganisation)
-    {
-        $this->irfoOrganisation = $irfoOrganisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo organisation
-     *
-     * @return \Olcs\Db\Entity\Organisation
-     */
-    public function getIrfoOrganisation()
-    {
-        return $this->irfoOrganisation;
     }
 
     /**
