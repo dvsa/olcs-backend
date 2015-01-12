@@ -1248,6 +1248,7 @@ CREATE TABLE `complaint` (
   `driver_forename` varchar(40) DEFAULT NULL,
   `driver_family_name` varchar(40) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete.',
+  `close_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,

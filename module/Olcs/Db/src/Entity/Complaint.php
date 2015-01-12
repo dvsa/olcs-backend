@@ -29,6 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CloseDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
