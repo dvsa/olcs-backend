@@ -64,6 +64,7 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
+TRUNCATE TABLE `task_allocation_rules`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -920,7 +921,12 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (1,1,'Marketing',''),
     (2,1,'Development','B'),
     (3,1,'Infrastructure',''),
-    (4,1,'Support','');
+    (4,1,'Support',''),
+    (5,1,'Assisted Digital FEP',''),
+    (6,1,'Bus Reg Team',''),
+    (7,1,'Compliance Team',''),
+    (8,1,'Environmental Team',''),
+    (9,1,'IRFO Team','');
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -959,6 +965,15 @@ INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to
 /* Bus Registration task */
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
+
+INSERT INTO `task_allocation_rules` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
+    (1,9,5,NULL,NULL,NULL,NULL),
+    (2,3,6,NULL,NULL,NULL,NULL),
+    (3,2,7,NULL,NULL,NULL,NULL),
+    (4,7,8,NULL,NULL,NULL,NULL),
+    (5,8,9,NULL,NULL,NULL,NULL),
+    (6,1,5,NULL,NULL,NULL,NULL),
+    (7,5,5,NULL,NULL,NULL,NULL);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
