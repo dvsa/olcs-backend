@@ -1248,6 +1248,7 @@ CREATE TABLE `complaint` (
   `driver_forename` varchar(40) DEFAULT NULL,
   `driver_family_name` varchar(40) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete.',
+  `close_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -1912,6 +1913,7 @@ CREATE TABLE `document` (
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `case_id` int(11) DEFAULT NULL,
+  `irfo_organisation_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
   `operating_centre_id` int(11) DEFAULT NULL,
   `opposition_id` int(11) DEFAULT NULL,
@@ -1936,6 +1938,7 @@ CREATE TABLE `document` (
   KEY `fk_document_licence1_idx` (`licence_id`),
   KEY `fk_document_application1_idx` (`application_id`),
   KEY `fk_document_cases1_idx` (`case_id`),
+  KEY `fk_document_irfo_organisation1_idx` (`irfo_organisation_id`),
   KEY `fk_document_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_document_operating_centre1_idx` (`operating_centre_id`),
   KEY `fk_document_user1_idx` (`created_by`),
@@ -1949,6 +1952,7 @@ CREATE TABLE `document` (
   CONSTRAINT `fk_document_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_document_irfo_organisation1` FOREIGN KEY (`irfo_organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_document_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2582,7 +2586,8 @@ DROP TABLE IF EXISTS `hearing`;
 CREATE TABLE `hearing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) NOT NULL,
-  `venue_id` int(11) NOT NULL,
+  `venue_id` int(11) DEFAULT NULL,
+  `venue_other` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `presiding_tc_id` int(11) NOT NULL DEFAULT '0',
   `hearing_date` datetime DEFAULT NULL,
   `agreed_by_tc_date` date DEFAULT NULL,
@@ -6424,13 +6429,13 @@ LOCK TABLES `task` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `task_allocation_rules`
+-- Table structure for table `task_allocation_rule`
 --
 
-DROP TABLE IF EXISTS `task_allocation_rules`;
+DROP TABLE IF EXISTS `task_allocation_rule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `task_allocation_rules` (
+CREATE TABLE `task_allocation_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
   `team_id` int(11) NOT NULL,
@@ -6439,26 +6444,26 @@ CREATE TABLE `task_allocation_rules` (
   `is_mlh` tinyint(1) DEFAULT NULL,
   `traffic_area_id` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_allocation_rules_category1_idx` (`category_id`),
-  KEY `fk_task_allocation_rules_team1_idx` (`team_id`),
-  KEY `fk_task_allocation_rules_user1_idx` (`user_id`),
-  KEY `fk_task_allocation_rules_ref_data1_idx` (`goods_or_psv`),
-  KEY `fk_task_allocation_rules_traffic_area1_idx` (`traffic_area_id`),
-  CONSTRAINT `fk_task_allocation_rules_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_task_allocation_rule_category1_idx` (`category_id`),
+  KEY `fk_task_allocation_rule_team1_idx` (`team_id`),
+  KEY `fk_task_allocation_rule_user1_idx` (`user_id`),
+  KEY `fk_task_allocation_rule_ref_data1_idx` (`goods_or_psv`),
+  KEY `fk_task_allocation_rule_traffic_area1_idx` (`traffic_area_id`),
+  CONSTRAINT `fk_task_allocation_rule_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `task_allocation_rules`
+-- Dumping data for table `task_allocation_rule`
 --
 
-LOCK TABLES `task_allocation_rules` WRITE;
-/*!40000 ALTER TABLE `task_allocation_rules` DISABLE KEYS */;
-/*!40000 ALTER TABLE `task_allocation_rules` ENABLE KEYS */;
+LOCK TABLES `task_allocation_rule` WRITE;
+/*!40000 ALTER TABLE `task_allocation_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task_allocation_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6470,14 +6475,14 @@ DROP TABLE IF EXISTS `task_alpha_split`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_alpha_split` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `task_allocation_rules_id` int(11) NOT NULL,
+  `task_allocation_rule_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `split_from_inclusive` varchar(2) NOT NULL,
   `split_to_inclusive` varchar(2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_alpha_split_task_allocation_rules1_idx` (`task_allocation_rules_id`),
+  KEY `fk_task_alpha_split_task_allocation_rule1_idx` (`task_allocation_rule_id`),
   KEY `fk_task_alpha_split_user1_idx` (`user_id`),
-  CONSTRAINT `fk_task_alpha_split_task_allocation_rules1` FOREIGN KEY (`task_allocation_rules_id`) REFERENCES `task_allocation_rules` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_alpha_split_task_allocation_rule1` FOREIGN KEY (`task_allocation_rule_id`) REFERENCES `task_allocation_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_alpha_split_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7575,7 +7580,7 @@ UNLOCK TABLES;
 CREATE TABLE IF NOT EXISTS `scan` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `application_id` INT NULL,
-  `organisation_id` INT NULL,
+  `irfo_organisation_id` INT NULL,
   `bus_reg_id` INT NULL,
   `licence_id` INT NULL,
   `case_id` INT NULL,
@@ -7590,7 +7595,7 @@ CREATE TABLE IF NOT EXISTS `scan` (
   `version` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_scan_application1_idx` (`application_id` ASC),
-  INDEX `fk_scan_organisation1_idx` (`organisation_id` ASC),
+  INDEX `fk_scan_irfo_organisation1_idx` (`irfo_organisation_id` ASC),
   INDEX `fk_scan_bus_reg1_idx` (`bus_reg_id` ASC),
   INDEX `fk_scan_licence1_idx` (`licence_id` ASC),
   INDEX `fk_scan_cases1_idx` (`case_id` ASC),
@@ -7604,8 +7609,8 @@ CREATE TABLE IF NOT EXISTS `scan` (
     REFERENCES `application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_scan_organisation1`
-    FOREIGN KEY (`organisation_id`)
+  CONSTRAINT `fk_scan_irfo_organisation1`
+    FOREIGN KEY (`irfo_organisation_id`)
     REFERENCES `organisation` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

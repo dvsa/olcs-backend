@@ -27,7 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -35,7 +35,6 @@ class Hearing implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\VenueManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -56,6 +55,25 @@ class Hearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
      */
     protected $presidingTc = 0;
+
+    /**
+     * Venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
+     */
+    protected $venue;
+
+    /**
+     * Venue other
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="venue_other", length=255, nullable=true)
+     */
+    protected $venueOther;
 
     /**
      * Witness count
@@ -110,6 +128,52 @@ class Hearing implements Interfaces\EntityInterface
     public function getPresidingTc()
     {
         return $this->presidingTc;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $venue
+     * @return Hearing
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
+    /**
+     * Set the venue other
+     *
+     * @param string $venueOther
+     * @return Hearing
+     */
+    public function setVenueOther($venueOther)
+    {
+        $this->venueOther = $venueOther;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue other
+     *
+     * @return string
+     */
+    public function getVenueOther()
+    {
+        return $this->venueOther;
     }
 
     /**
