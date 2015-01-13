@@ -52,7 +52,9 @@ TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `psv_disc`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_licence`;
-TRUNCATE TABLE `tm_qualification`;
+TRUNCATE TABLE `tm_case_decision`;
+TRUNCATE TABLE `tm_case_decision_rehab`;
+TRUNCATE TABLE `tm_case_decision_unfitness`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
 TRUNCATE TABLE `user`;
@@ -821,6 +823,21 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (2,NULL,NULL,'tm_st_A','tm_t_E',NULL,NULL,NULL,NULL,1),
     (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
 
+INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
+    `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
+    `last_modified_on`,`version`) VALUES
+    (1,'tm_decision_rl',82,1,1,0,'2015-01-12',NULL,'2015-03-31','2015-01-20',NULL,'2015-01-10',NULL,NULL,1),
+    (2,'tm_decision_rnl',83,1,1,1,'2014-12-10','Reason why repute not lost',NULL,NULL,NULL,'2014-12-06',NULL,NULL,1),
+    (3,'tm_decision_noa',84,1,1,1,'2014-09-30',NULL,NULL,NULL,NULL,'2014-10-06',NULL,NULL,1);
+
+INSERT INTO `tm_case_decision_rehab` (`id`,`rehab_measure_id`,`created_by`,`last_modified_by`,`tm_case_decision_id`,
+    `created_on`,`deleted_date`,`last_modified_on`,`version`) VALUES
+    (1,'tm_rehab_adc',1,1,1,NULL,NULL,NULL,1);
+
+INSERT INTO `tm_case_decision_unfitness` (`id`,`unfitness_reason_id`,`created_by`,`last_modified_by`,
+    `tm_case_decision_id`,`created_on`,`deleted_date`,`last_modified_on`,`version`) VALUES
+    (1,'tm_unfit_inn',1,1,1,NULL,NULL,NULL,1);
+
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `name`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
@@ -917,7 +934,8 @@ VALUES
   (80,'case_t_msirnys',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to MSI with response not sent',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (81,'case_t_nmsi',NULL,110,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'Case linked to Non-MSI',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (82,'case_t_tm',NULL,110,NULL,1,NULL,NULL,'','2014-02-11',NULL,'Case linked to an internal Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
-  (83,'case_t_tm',NULL,110,NULL,2,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
+  (83,'case_t_tm',NULL,110,NULL,2,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
+  (84,'case_t_tm',NULL,110,NULL,2,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
 
 INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (1,1,'Marketing',''),
