@@ -79,6 +79,7 @@ TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
+TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
@@ -828,7 +829,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','','');
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','',''),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Another User',NULL,'','','');
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -970,7 +972,7 @@ INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `
     (1,9,5,NULL,NULL,NULL,NULL),
     (2,3,6,NULL,NULL,NULL,NULL),
     (3,2,7,NULL,NULL,NULL,NULL),
-    (4,7,8,NULL,NULL,NULL,NULL),
+    (4,7,8,8,   NULL,NULL,NULL),
     (5,8,9,NULL,NULL,NULL,NULL),
     (6,1,5,NULL,NULL,NULL,NULL),
     (7,5,5,NULL,NULL,NULL,NULL);
@@ -1310,5 +1312,10 @@ VALUES
 	(8, 100, '01150', '2014-11-26 10:39:47', 1),
 	(9, 104, '01150', '2014-11-26 10:39:47', 1),
 	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+
+INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
+VALUES
+    ('task.default_team', 2, NULL),
+    ('task.default_user', 1, NULL);
 
 SET foreign_key_checks = 1;
