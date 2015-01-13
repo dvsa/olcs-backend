@@ -627,6 +627,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_rtf', 'RTF', null),
     ('document_type', 'doc_tiff', 'TIFF', null),
 
+    -- task allocation rules
+
+    ('task_allocation_type', 'task_at_simple', 'Simple', null),
+    ('task_allocation_type', 'task_at_medium', 'Medium', null),
+    ('task_allocation_type', 'task_at_complex', 'Complex', null),
+
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
     ('erru_case_type', 'erru_case_t_msirnys', 'MSI - Response not sent yet', 'MSIRNYS'),
@@ -1807,16 +1813,16 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_129','conv_p_cat_7','With intent to deceive made / an operators licence / a document, plate or mark or other thing by which a vehicle is to be identified as being authorised to be used or as being used under an operators licence','conv_category',129,799),
   ('conv_c_cat_294','conv_p_cat_14','Withholding information to obtain insurance.','conv_category',294,800);
 
- INSERT INTO category (id,description,is_doc_category,is_task_category,is_scan_category,version) VALUES
-  (1,'Licensing',1,1,1,1)
- ,(2,'Compliance',1,1,1,1)
- ,(3,'Bus Registration',1,1,1,1)
- ,(4,'Permits',1,1,0,1)
- ,(5,'Transport Manager',1,1,1,1)
- ,(7,'Environmental',1,1,1,1)
- ,(8,'IRFO',1,1,1,1)
- ,(9,'Application',1,1,1,1)
- ,(10,'Submission',0,1,0,1)
+ INSERT INTO category (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
+  (1,'Licensing',1,1,1,1,'task_at_simple')
+ ,(2,'Compliance',1,1,1,1,'task_at_simple')
+ ,(3,'Bus Registration',1,1,1,1,'task_at_simple')
+ ,(4,'Permits',1,1,0,1,NULL)
+ ,(5,'Transport Manager',1,1,1,1,'task_at_simple')
+ ,(7,'Environmental',1,1,1,1,'task_at_simple')
+ ,(8,'IRFO',1,1,1,1,'task_at_simple')
+ ,(9,'Application',1,1,1,1,'task_at_simple')
+ ,(10,'Submission',0,1,0,1,NULL)
 ;
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES

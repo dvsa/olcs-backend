@@ -6429,13 +6429,13 @@ LOCK TABLES `task` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `task_allocation_rules`
+-- Table structure for table `task_allocation_rule`
 --
 
-DROP TABLE IF EXISTS `task_allocation_rules`;
+DROP TABLE IF EXISTS `task_allocation_rule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `task_allocation_rules` (
+CREATE TABLE `task_allocation_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
   `team_id` int(11) NOT NULL,
@@ -6444,26 +6444,26 @@ CREATE TABLE `task_allocation_rules` (
   `is_mlh` tinyint(1) DEFAULT NULL,
   `traffic_area_id` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_allocation_rules_category1_idx` (`category_id`),
-  KEY `fk_task_allocation_rules_team1_idx` (`team_id`),
-  KEY `fk_task_allocation_rules_user1_idx` (`user_id`),
-  KEY `fk_task_allocation_rules_ref_data1_idx` (`goods_or_psv`),
-  KEY `fk_task_allocation_rules_traffic_area1_idx` (`traffic_area_id`),
-  CONSTRAINT `fk_task_allocation_rules_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_task_allocation_rule_category1_idx` (`category_id`),
+  KEY `fk_task_allocation_rule_team1_idx` (`team_id`),
+  KEY `fk_task_allocation_rule_user1_idx` (`user_id`),
+  KEY `fk_task_allocation_rule_ref_data1_idx` (`goods_or_psv`),
+  KEY `fk_task_allocation_rule_traffic_area1_idx` (`traffic_area_id`),
+  CONSTRAINT `fk_task_allocation_rule_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `task_allocation_rules`
+-- Dumping data for table `task_allocation_rule`
 --
 
-LOCK TABLES `task_allocation_rules` WRITE;
-/*!40000 ALTER TABLE `task_allocation_rules` DISABLE KEYS */;
-/*!40000 ALTER TABLE `task_allocation_rules` ENABLE KEYS */;
+LOCK TABLES `task_allocation_rule` WRITE;
+/*!40000 ALTER TABLE `task_allocation_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task_allocation_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6475,14 +6475,14 @@ DROP TABLE IF EXISTS `task_alpha_split`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_alpha_split` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `task_allocation_rules_id` int(11) NOT NULL,
+  `task_allocation_rule_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `split_from_inclusive` varchar(2) NOT NULL,
   `split_to_inclusive` varchar(2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_alpha_split_task_allocation_rules1_idx` (`task_allocation_rules_id`),
+  KEY `fk_task_alpha_split_task_allocation_rule1_idx` (`task_allocation_rule_id`),
   KEY `fk_task_alpha_split_user1_idx` (`user_id`),
-  CONSTRAINT `fk_task_alpha_split_task_allocation_rules1` FOREIGN KEY (`task_allocation_rules_id`) REFERENCES `task_allocation_rules` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_alpha_split_task_allocation_rule1` FOREIGN KEY (`task_allocation_rule_id`) REFERENCES `task_allocation_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_alpha_split_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

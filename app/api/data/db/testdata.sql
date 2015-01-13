@@ -66,6 +66,7 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
+TRUNCATE TABLE `task_allocation_rule`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -80,6 +81,7 @@ TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
+TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
@@ -393,7 +395,8 @@ VALUES
     (112,'ct_complainant',26,66,4,1,NULL,NULL,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
     (113,'ct_complainant',26,77,4,1,NULL,NULL,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1);
+    '2014-11-24 10:30:04',1),
+    (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -844,7 +847,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','','');
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','',''),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Another User',114,'','','');
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -938,7 +942,12 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (1,1,'Marketing',''),
     (2,1,'Development','B'),
     (3,1,'Infrastructure',''),
-    (4,1,'Support','');
+    (4,1,'Support',''),
+    (5,1,'Assisted Digital FEP',''),
+    (6,1,'Bus Reg Team',''),
+    (7,1,'Compliance Team',''),
+    (8,1,'Environmental Team',''),
+    (9,1,'IRFO Team','');
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -977,6 +986,14 @@ INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to
 /* Bus Registration task */
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
+
+INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
+    (1,9,5,NULL,NULL,NULL,NULL),
+    (2,3,6,NULL,NULL,NULL,NULL),
+    (3,2,7,NULL,NULL,NULL,NULL),
+    (4,7,8,8,   NULL,NULL,NULL),
+    (5,8,9,NULL,NULL,NULL,NULL),
+    (6,1,5,NULL,NULL,NULL,NULL);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
@@ -1313,5 +1330,10 @@ VALUES
 	(8, 100, '01150', '2014-11-26 10:39:47', 1),
 	(9, 104, '01150', '2014-11-26 10:39:47', 1),
 	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+
+INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
+VALUES
+    ('task.default_team', 2, NULL),
+    ('task.default_user', 1, NULL);
 
 SET foreign_key_checks = 1;
