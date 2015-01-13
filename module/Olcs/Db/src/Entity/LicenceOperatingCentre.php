@@ -36,7 +36,6 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
         Traits\OperatingCentreManyToOne,
@@ -53,6 +52,16 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="is_interim", nullable=true)
      */
     protected $isInterim;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="operatingCentres")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * No of trailers possessed
@@ -111,6 +120,29 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
     public function getIsInterim()
     {
         return $this->isInterim;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return LicenceOperatingCentre
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**
