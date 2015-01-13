@@ -1248,6 +1248,7 @@ CREATE TABLE `complaint` (
   `driver_forename` varchar(40) DEFAULT NULL,
   `driver_family_name` varchar(40) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete.',
+  `close_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -2585,7 +2586,8 @@ DROP TABLE IF EXISTS `hearing`;
 CREATE TABLE `hearing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) NOT NULL,
-  `venue_id` int(11) NOT NULL,
+  `venue_id` int(11) DEFAULT NULL,
+  `venue_other` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `presiding_tc_id` int(11) NOT NULL DEFAULT '0',
   `hearing_date` datetime DEFAULT NULL,
   `agreed_by_tc_date` date DEFAULT NULL,
