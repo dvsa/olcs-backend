@@ -584,6 +584,12 @@ return array(
             'cascade' => array(
                 'persist'
             )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'complaint'
+            )
         )
     ),
     'oc_complaint' => array(
