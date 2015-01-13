@@ -7452,17 +7452,9 @@ CREATE TABLE `oc_complaint` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `complaint_id` INT NOT NULL,
   `operating_centre_id` INT NOT NULL,
-  `created_by` INT NULL,
-  `last_modified_by` INT NULL,
-  `created_on` DATETIME NULL,
-  `last_modified_on` DATETIME NULL,
-  `version` INT NOT NULL DEFAULT 1,
-  `olbs_key` INT NULL COMMENT 'Used for ETL. Can be dropped.',
   PRIMARY KEY (`id`),
   INDEX `fk_oc_complaint_complaint1_idx` (`complaint_id` ASC),
   INDEX `fk_oc_complaint_operating_centre1_idx` (`operating_centre_id` ASC),
-  INDEX `fk_oc_complaint_user1_idx` (`created_by` ASC),
-  INDEX `fk_oc_complaint_user2_idx` (`last_modified_by` ASC),
   CONSTRAINT `fk_oc_complaint_complaint1`
     FOREIGN KEY (`complaint_id`)
     REFERENCES `complaint` (`id`)
@@ -7471,16 +7463,6 @@ CREATE TABLE `oc_complaint` (
   CONSTRAINT `fk_oc_complaint_operating_centre1`
     FOREIGN KEY (`operating_centre_id`)
     REFERENCES `operating_centre` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_oc_complaint_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_oc_complaint_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB;
