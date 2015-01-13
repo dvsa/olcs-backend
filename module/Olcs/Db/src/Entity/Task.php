@@ -35,7 +35,7 @@ class Task implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
