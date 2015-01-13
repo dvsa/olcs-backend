@@ -1148,5 +1148,21 @@ return array(
                 'property' => 'feePayment'
             )
         )
-    )
+    ),
+    'tm_application_oc' => array(
+        'transport_manager_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerApplication',
+                'property' => 'tmApplicationOc'
+            ),
+        )
+    ),
+    'tm_licence_oc' => array(
+        'transport_manager_licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerLicence',
+                'property' => 'tmLicenceOc'
+            ),
+        )
+    ),
 );
