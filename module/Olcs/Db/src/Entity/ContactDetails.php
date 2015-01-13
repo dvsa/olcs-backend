@@ -39,7 +39,6 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -88,6 +87,15 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="forename", length=40, nullable=true)
      */
     protected $forename;
+
+    /**
+     * Olbs key
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     */
+    protected $olbsKey;
 
     /**
      * Olbs type
@@ -247,6 +255,29 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getForename()
     {
         return $this->forename;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param int $olbsKey
+     * @return ContactDetails
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return int
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
     }
 
     /**
