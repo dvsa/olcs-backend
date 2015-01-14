@@ -19,7 +19,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_tm_case_decision_ref_data1_idx", columns={"decision"}),
  *        @ORM\Index(name="fk_tm_case_decision_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_tm_case_decision_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_tm_case_decision_ref_data2", columns={"unfitness"}),
+ *        @ORM\Index(name="fk_tm_case_decision_ref_data3", columns={"rehab"})
  *    }
  * )
  */
@@ -65,6 +67,16 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $notifiedDate;
 
     /**
+     * Rehab
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="rehab", referencedColumnName="id", nullable=true)
+     */
+    protected $rehab;
+
+    /**
      * Repute not lost reason
      *
      * @var string
@@ -72,6 +84,16 @@ class TmCaseDecision implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="repute_not_lost_reason", length=4000, nullable=true)
      */
     protected $reputeNotLostReason;
+
+    /**
+     * Unfitness
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="unfitness", referencedColumnName="id", nullable=true)
+     */
+    protected $unfitness;
 
     /**
      * Unfitness end date
@@ -161,6 +183,29 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the rehab
+     *
+     * @param \Olcs\Db\Entity\RefData $rehab
+     * @return TmCaseDecision
+     */
+    public function setRehab($rehab)
+    {
+        $this->rehab = $rehab;
+
+        return $this;
+    }
+
+    /**
+     * Get the rehab
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRehab()
+    {
+        return $this->rehab;
+    }
+
+    /**
      * Set the repute not lost reason
      *
      * @param string $reputeNotLostReason
@@ -181,6 +226,29 @@ class TmCaseDecision implements Interfaces\EntityInterface
     public function getReputeNotLostReason()
     {
         return $this->reputeNotLostReason;
+    }
+
+    /**
+     * Set the unfitness
+     *
+     * @param \Olcs\Db\Entity\RefData $unfitness
+     * @return TmCaseDecision
+     */
+    public function setUnfitness($unfitness)
+    {
+        $this->unfitness = $unfitness;
+
+        return $this;
+    }
+
+    /**
+     * Get the unfitness
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getUnfitness()
+    {
+        return $this->unfitness;
     }
 
     /**

@@ -6610,6 +6610,8 @@ CREATE TABLE `tm_case_decision` (
   `notified_date` date DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `decision` varchar(32) NOT NULL,
+  `unfitness` varchar(32) NULL,
+  `rehab` varchar(32) NULL,
   `is_msi` tinyint(1) NOT NULL DEFAULT '0',
   `repute_not_lost_reason` varchar(4000) DEFAULT NULL,
   `unfitness_start_date` date DEFAULT NULL,
@@ -6625,6 +6627,8 @@ CREATE TABLE `tm_case_decision` (
   KEY `fk_tm_case_decision_user2_idx` (`last_modified_by`),
   KEY `fk_tm_case_decision_cases1_idx` (`case_id`),
   CONSTRAINT `fk_tm_case_decision_ref_data1` FOREIGN KEY (`decision`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decision_ref_data2` FOREIGN KEY (`unfitness`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decision_ref_data3` FOREIGN KEY (`rehab`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_case_decision_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_case_decision_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_case_decision_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -6638,82 +6642,6 @@ CREATE TABLE `tm_case_decision` (
 LOCK TABLES `tm_case_decision` WRITE;
 /*!40000 ALTER TABLE `tm_case_decision` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tm_case_decision` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tm_case_decision_rehab`
---
-
-DROP TABLE IF EXISTS `tm_case_decision_rehab`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tm_case_decision_rehab` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `deleted_date` datetime DEFAULT NULL,
-  `tm_case_decision_id` int(11) NOT NULL,
-  `rehab_measure_id` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_case_decision_rehab_tm_case_decision1_idx` (`tm_case_decision_id`),
-  KEY `fk_tm_case_decision_rehab_ref_data1_idx` (`rehab_measure_id`),
-  KEY `fk_tm_case_decision_rehab_user1_idx` (`created_by`),
-  KEY `fk_tm_case_decision_rehab_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_case_decision_rehab_tm_case_decision1` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_ref_data1` FOREIGN KEY (`rehab_measure_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tm_case_decision_rehab`
---
-
-LOCK TABLES `tm_case_decision_rehab` WRITE;
-/*!40000 ALTER TABLE `tm_case_decision_rehab` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tm_case_decision_rehab` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tm_case_decision_unfitness`
---
-
-DROP TABLE IF EXISTS `tm_case_decision_unfitness`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tm_case_decision_unfitness` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `deleted_date` datetime DEFAULT NULL,
-  `tm_case_decision_id` int(11) NOT NULL,
-  `unfitness_reason_id` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_case_decision_unfitness_tm_case_decision1_idx` (`tm_case_decision_id`),
-  KEY `fk_tm_case_decision_unfitness_ref_data1_idx` (`unfitness_reason_id`),
-  KEY `fk_tm_case_decision_unfitness_user1_idx` (`created_by`),
-  KEY `fk_tm_case_decision_unfitness_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_case_decision_unfitness_tm_case_decision1` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_ref_data1` FOREIGN KEY (`unfitness_reason_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tm_case_decision_unfitness`
---
-
-LOCK TABLES `tm_case_decision_unfitness` WRITE;
-/*!40000 ALTER TABLE `tm_case_decision_unfitness` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tm_case_decision_unfitness` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
