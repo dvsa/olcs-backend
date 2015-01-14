@@ -326,13 +326,12 @@ VALUES
         (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, NULL);
 
-INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
-`created_on`, `last_modified_on`)
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`)
 VALUES
-    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
-    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
-    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
-    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
+    (1, 7, 16),
+    (2, 7, 21),
+    (3, 7, 37),
+    (4, 9, 39);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
