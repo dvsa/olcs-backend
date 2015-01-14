@@ -2585,6 +2585,7 @@ DROP TABLE IF EXISTS `hearing`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hearing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hearing_type` varchar(32) NOT NULL,
   `case_id` int(11) NOT NULL,
   `venue_id` int(11) DEFAULT NULL,
   `venue_other` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -2599,11 +2600,13 @@ CREATE TABLE `hearing` (
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  KEY `fk_hearing_hearing_type_idx` (`hearing_type`),
   KEY `fk_hearing_cases1_idx` (`case_id`),
   KEY `fk_hearing_pi_venue1_idx` (`venue_id`),
   KEY `fk_hearing_user1_idx` (`created_by`),
   KEY `fk_hearing_user2_idx` (`last_modified_by`),
   KEY `fk_hearing_presiding_tc1_idx` (`presiding_tc_id`),
+  CONSTRAINT `fk_hearing_hearing_type` FOREIGN KEY (`hearing_type`) REFERENCES `ref_data` (`id`),
   CONSTRAINT `fk_hearing_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_hearing_pi_venue1` FOREIGN KEY (`venue_id`) REFERENCES `pi_venue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_hearing_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

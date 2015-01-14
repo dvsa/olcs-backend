@@ -1923,6 +1923,11 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (99, 'sub_st_rec', 'sub_st_rec_other', 'Other', NULL);
 
 
+-- NON TM TYPE
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'non_pi_type', 'non_pi_type_off_proc', 'Office procedure', NULL),
+    (2, 'non_pi_type', 'non_pi_type_in_cham', 'In chambers', NULL);
+
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'fee_pay_method', 'fpm_cash', 'Cash', NULL),
     (2, 'fee_pay_method', 'fpm_cheque', 'Cheque', NULL),
