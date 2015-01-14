@@ -51,7 +51,11 @@ TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `psv_disc`;
 TRUNCATE TABLE `tm_qualification`;
+TRUNCATE TABLE `transport_manager_application`;
 TRUNCATE TABLE `transport_manager_licence`;
+TRUNCATE TABLE `tm_application_oc`;
+TRUNCATE TABLE `tm_licence_oc`;
+TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `tm_case_decision`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
@@ -64,6 +68,7 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
+TRUNCATE TABLE `task_allocation_rule`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -78,6 +83,7 @@ TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `submission_action`;
+TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
@@ -318,13 +324,12 @@ VALUES
         (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, NULL);
 
-INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`, `created_by`, `last_modified_by`, `version`,
-`created_on`, `last_modified_on`)
+INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`)
 VALUES
-    (1, 7, 16, 1, 1, 1, '2012-04-01', '2012-04-02'),
-    (2, 7, 21, 1, 1, 1, '2012-05-01', '2012-05-02'),
-    (3, 7, 37, 1, 1, 1, '2012-06-01', '2012-06-02'),
-    (4, 9, 39, 1, 1, 1, '2012-07-01', '2012-07-02');
+    (1, 7, 16),
+    (2, 7, 21),
+    (3, 7, 37),
+    (4, 9, 39);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_centre_id`, `created_by`,
     `last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -391,7 +396,8 @@ VALUES
     (112,'ct_complainant',26,66,4,1,NULL,NULL,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
     (113,'ct_complainant',26,77,4,1,NULL,NULL,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1);
+    '2014-11-24 10:30:04',1),
+    (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -792,10 +798,24 @@ INSERT INTO `impounding_legislation_type`
 VALUES
     (17, 'imlgis_type_goods_ni2');
 
-INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
-    `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,7,1,NULL,NULL,NULL,NULL,NULL,1),
-    (2,7,2,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `transport_manager_licence` (`id`, `created_by`, `last_modified_by`, `licence_id`, `tm_type`, `transport_manager_id`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
+VALUES
+	(1, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 2, 2, 2, 2, 2, NULL, NULL, NULL, NULL, 1),
+	(2, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
+VALUES
+	(1, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
+	(2, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, NULL, NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL, NULL, 1);
+
+INSERT INTO `tm_application_oc` (`id`, `transport_manager_application_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1),
+	(2, 2, NULL, NULL, 16, NULL, NULL, NULL, 1);
+
+INSERT INTO `tm_licence_oc` (`id`, `transport_manager_licence_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1);
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
@@ -834,7 +854,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','','');
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','',''),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Another User',114,'','','');
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -928,7 +949,12 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (1,1,'Marketing',''),
     (2,1,'Development','B'),
     (3,1,'Infrastructure',''),
-    (4,1,'Support','');
+    (4,1,'Support',''),
+    (5,1,'Assisted Digital FEP',''),
+    (6,1,'Bus Reg Team',''),
+    (7,1,'Compliance Team',''),
+    (8,1,'Environmental Team',''),
+    (9,1,'IRFO Team','');
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -967,6 +993,14 @@ INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to
 /* Bus Registration task */
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
+
+INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
+    (1,9,5,NULL,NULL,NULL,NULL),
+    (2,3,6,NULL,NULL,NULL,NULL),
+    (3,2,7,NULL,NULL,NULL,NULL),
+    (4,7,8,8,   NULL,NULL,NULL),
+    (5,8,9,NULL,NULL,NULL,NULL),
+    (6,1,5,NULL,NULL,NULL,NULL);
 
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
@@ -1303,5 +1337,10 @@ VALUES
 	(8, 100, '01150', '2014-11-26 10:39:47', 1),
 	(9, 104, '01150', '2014-11-26 10:39:47', 1),
 	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+
+INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
+VALUES
+    ('task.default_team', 2, NULL),
+    ('task.default_user', 1, NULL);
 
 SET foreign_key_checks = 1;
