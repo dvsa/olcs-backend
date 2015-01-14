@@ -6429,13 +6429,13 @@ LOCK TABLES `task` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `task_allocation_rules`
+-- Table structure for table `task_allocation_rule`
 --
 
-DROP TABLE IF EXISTS `task_allocation_rules`;
+DROP TABLE IF EXISTS `task_allocation_rule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `task_allocation_rules` (
+CREATE TABLE `task_allocation_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
   `team_id` int(11) NOT NULL,
@@ -6444,26 +6444,26 @@ CREATE TABLE `task_allocation_rules` (
   `is_mlh` tinyint(1) DEFAULT NULL,
   `traffic_area_id` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_allocation_rules_category1_idx` (`category_id`),
-  KEY `fk_task_allocation_rules_team1_idx` (`team_id`),
-  KEY `fk_task_allocation_rules_user1_idx` (`user_id`),
-  KEY `fk_task_allocation_rules_ref_data1_idx` (`goods_or_psv`),
-  KEY `fk_task_allocation_rules_traffic_area1_idx` (`traffic_area_id`),
-  CONSTRAINT `fk_task_allocation_rules_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_allocation_rules_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_task_allocation_rule_category1_idx` (`category_id`),
+  KEY `fk_task_allocation_rule_team1_idx` (`team_id`),
+  KEY `fk_task_allocation_rule_user1_idx` (`user_id`),
+  KEY `fk_task_allocation_rule_ref_data1_idx` (`goods_or_psv`),
+  KEY `fk_task_allocation_rule_traffic_area1_idx` (`traffic_area_id`),
+  CONSTRAINT `fk_task_allocation_rule_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_ref_data1` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_allocation_rule_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `task_allocation_rules`
+-- Dumping data for table `task_allocation_rule`
 --
 
-LOCK TABLES `task_allocation_rules` WRITE;
-/*!40000 ALTER TABLE `task_allocation_rules` DISABLE KEYS */;
-/*!40000 ALTER TABLE `task_allocation_rules` ENABLE KEYS */;
+LOCK TABLES `task_allocation_rule` WRITE;
+/*!40000 ALTER TABLE `task_allocation_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task_allocation_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6475,14 +6475,14 @@ DROP TABLE IF EXISTS `task_alpha_split`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_alpha_split` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `task_allocation_rules_id` int(11) NOT NULL,
+  `task_allocation_rule_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `split_from_inclusive` varchar(2) NOT NULL,
   `split_to_inclusive` varchar(2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_task_alpha_split_task_allocation_rules1_idx` (`task_allocation_rules_id`),
+  KEY `fk_task_alpha_split_task_allocation_rule1_idx` (`task_allocation_rule_id`),
   KEY `fk_task_alpha_split_user1_idx` (`user_id`),
-  CONSTRAINT `fk_task_alpha_split_task_allocation_rules1` FOREIGN KEY (`task_allocation_rules_id`) REFERENCES `task_allocation_rules` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_task_alpha_split_task_allocation_rule1` FOREIGN KEY (`task_allocation_rule_id`) REFERENCES `task_allocation_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_alpha_split_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6996,23 +6996,38 @@ DROP TABLE IF EXISTS `transport_manager_application`;
 CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
+  `tm_type` varchar(32) NOT NULL,
+  `tm_application_status` varchar(32) NOT NULL,
   `application_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
+  `hours_mon` int(11) DEFAULT NULL,
+  `hours_tue` int(11) DEFAULT NULL,
+  `hours_wed` int(11) DEFAULT NULL,
+  `hours_thu` int(11) DEFAULT NULL,
+  `hours_fri` int(11) DEFAULT NULL,
+  `hours_sat` int(11) DEFAULT NULL,
+  `hours_sun` int(11) DEFAULT NULL,
+  `additional_information` varchar(4000) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '0',
+  `olbs_key` INT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_transport_manager_application_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_transport_manager_application_application1_idx` (`application_id`),
   KEY `fk_transport_manager_application_user1_idx` (`created_by`),
   KEY `fk_transport_manager_application_user2_idx` (`last_modified_by`),
+  KEY `fk_transport_manager_application_ref_data1_idx` (`tm_type`),
+  KEY `fk_transport_manager_application_ref_data2_idx` (`tm_application_status`),
   CONSTRAINT `fk_transport_manager_application_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_application_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_application_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_application_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_transport_manager_application_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_application_ref_data1` FOREIGN KEY (`tm_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_application_ref_data2` FOREIGN KEY (`tm_application_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7035,22 +7050,34 @@ DROP TABLE IF EXISTS `transport_manager_licence`;
 CREATE TABLE `transport_manager_licence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
+  `tm_type` varchar(32) NOT NULL,
   `licence_id` int(11) NOT NULL,
+  `hours_mon` int(11) DEFAULT NULL,
+  `hours_tue` int(11) DEFAULT NULL,
+  `hours_wed` int(11) DEFAULT NULL,
+  `hours_thu` int(11) DEFAULT NULL,
+  `hours_fri` int(11) DEFAULT NULL,
+  `hours_sat` int(11) DEFAULT NULL,
+  `hours_sun` int(11) DEFAULT NULL,
+  `additional_information` varchar(4000) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
+  `olbs_key` INT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_transport_manager_licence_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_transport_manager_licence_licence1_idx` (`licence_id`),
   KEY `fk_transport_manager_licence_user1_idx` (`created_by`),
   KEY `fk_transport_manager_licence_user2_idx` (`last_modified_by`),
+  KEY `fk_transport_manager_licence_ref_data1_idx` (`tm_type`),
   CONSTRAINT `fk_transport_manager_licence_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_licence_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transport_manager_licence_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transport_manager_licence_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_transport_manager_licence_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transport_manager_licence_ref_data1` FOREIGN KEY (`tm_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7062,6 +7089,56 @@ LOCK TABLES `transport_manager_licence` WRITE;
 /*!40000 ALTER TABLE `transport_manager_licence` DISABLE KEYS */;
 /*!40000 ALTER TABLE `transport_manager_licence` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `tm_application_oc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tm_application_oc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transport_manager_application_id` int(11) NOT NULL,
+  `operating_centre_id` int(11) NOT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_tm_application_oc_application1_idx` (`transport_manager_application_id`),
+  KEY `fk_tm_application_oc_operating_centre1_idx` (`operating_centre_id`),
+  KEY `fk_tm_application_oc_user1_idx` (`created_by`),
+  KEY `fk_tm_application_oc_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_tm_application_oc_user1_idx` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_application_oc_user2_idx` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_application_oc_application1_idx` FOREIGN KEY (`transport_manager_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_application_oc_operating_centre1_idx` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `tm_licence_oc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tm_licence_oc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transport_manager_licence_id` int(11) NOT NULL,
+  `operating_centre_id` int(11) NOT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_tm_licence_oc_licence1_idx` (`transport_manager_licence_id`),
+  KEY `fk_tm_licence_oc_operating_centre1_idx` (`operating_centre_id`),
+  KEY `fk_tm_licence_oc_user1_idx` (`created_by`),
+  KEY `fk_tm_licence_oc_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_tm_licence_oc_user1_idx` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_licence_oc_user2_idx` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_licence_oc_application1_idx` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_licence_oc_operating_centre1_idx` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `txc_inbox`
@@ -7381,17 +7458,9 @@ CREATE TABLE `oc_complaint` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `complaint_id` INT NOT NULL,
   `operating_centre_id` INT NOT NULL,
-  `created_by` INT NULL,
-  `last_modified_by` INT NULL,
-  `created_on` DATETIME NULL,
-  `last_modified_on` DATETIME NULL,
-  `version` INT NOT NULL DEFAULT 1,
-  `olbs_key` INT NULL COMMENT 'Used for ETL. Can be dropped.',
   PRIMARY KEY (`id`),
   INDEX `fk_oc_complaint_complaint1_idx` (`complaint_id` ASC),
   INDEX `fk_oc_complaint_operating_centre1_idx` (`operating_centre_id` ASC),
-  INDEX `fk_oc_complaint_user1_idx` (`created_by` ASC),
-  INDEX `fk_oc_complaint_user2_idx` (`last_modified_by` ASC),
   CONSTRAINT `fk_oc_complaint_complaint1`
     FOREIGN KEY (`complaint_id`)
     REFERENCES `complaint` (`id`)
@@ -7400,16 +7469,6 @@ CREATE TABLE `oc_complaint` (
   CONSTRAINT `fk_oc_complaint_operating_centre1`
     FOREIGN KEY (`operating_centre_id`)
     REFERENCES `operating_centre` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_oc_complaint_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_oc_complaint_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB;
