@@ -541,15 +541,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('case_type', 'case_t_tm', 'Transport Manager', null),
     ('case_type', 'case_t_imp', 'Impounding', null),
 
-
     ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
     ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
     ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS'),
     ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
     ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
 
-    ('cst-status', 'cst_open', 'Open', null),
-    ('cst-status', 'cst_closed', 'Closed', null),
+    ('env-complaint-status', 'ecst_open', 'Open', null),
+    ('env-complaint-status', 'ecst_closed', 'Closed', null),
 
     ('complaint_type', 'ct_cor', 'Continuing to operate after revocation', null),
     ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),

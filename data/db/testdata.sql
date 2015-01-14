@@ -315,15 +315,15 @@ VALUES
     'Van der Groot', 'Speeding', 'SHA123S', NOW(), NOW(), 1, '2015-01-16 10:37:10'),
         (108, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, '2015-01-13 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', NOW(), NOW(), 1, '2015-01-16 10:37:10'),
-        (109, 'cs_ack', 'ct_cov', 0, NULL, NULL, 24, '2015-01-16 10:37:10', 'Driver F John',
+        (109, 'ecst_closed', 'ct_cov', 0, NULL, NULL, 24, '2015-01-16 10:37:10', 'Driver F John',
     'Driver L Smith', 'Vehicle burning oil', 'VRM123T', '2014-01-01', NOW(), 1, '2015-01-16 10:37:10'),
-        (110, 'cs_pin', 'ct_cov', 0,  NULL, NULL, 24, '2015-01-16 10:37:10', 'Driver F Joe',
+        (110, 'ecst_closed', 'ct_cov', 0,  NULL, NULL, 24, '2015-01-16 10:37:10', 'Driver F Joe',
     'Driver L Bloggs', 'Exhaust fumes from parked vehicles', 'ABC456S', '2014-02-02', NOW(), 1, '2015-01-16 10:37:10'),
-        (111, 'cs_rfs', 'ct_cov', 0, NULL, NULL, 24, '2015-01-15 10:37:10', 'Ian',
+        (111, 'ecst_closed', 'ct_cov', 0, NULL, NULL, 24, '2015-01-15 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, '2015-01-16 10:37:10'),
-        (112, 'cs_vfr', 'ct_cov', 0, NULL, NULL, 24, '2015-01-16 10:37:10', 'Ian',
+        (112, 'ecst_closed', 'ct_cov', 0, NULL, NULL, 24, '2015-01-16 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, '2015-01-16 10:37:10'),
-        (113, 'cs_yst', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
+        (113, 'ecst_open', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, NULL);
 
 INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`)
