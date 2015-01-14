@@ -51,7 +51,11 @@ TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `psv_disc`;
 TRUNCATE TABLE `tm_qualification`;
+TRUNCATE TABLE `transport_manager_application`;
 TRUNCATE TABLE `transport_manager_licence`;
+TRUNCATE TABLE `tm_application_oc`;
+TRUNCATE TABLE `tm_licence_oc`;
+TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `tm_case_decision`;
 TRUNCATE TABLE `tm_case_decision_rehab`;
 TRUNCATE TABLE `tm_case_decision_unfitness`;
@@ -797,10 +801,24 @@ INSERT INTO `impounding_legislation_type`
 VALUES
     (17, 'imlgis_type_goods_ni2');
 
-INSERT INTO `transport_manager_licence` (`id`, `licence_id`, `transport_manager_id`, `created_by`, `last_modified_by`,
-    `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,7,1,NULL,NULL,NULL,NULL,NULL,1),
-    (2,7,2,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `transport_manager_licence` (`id`, `created_by`, `last_modified_by`, `licence_id`, `tm_type`, `transport_manager_id`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
+VALUES
+	(1, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 2, 2, 2, 2, 2, NULL, NULL, NULL, NULL, 1),
+	(2, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
+VALUES
+	(1, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
+	(2, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, NULL, NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL, NULL, 1);
+
+INSERT INTO `tm_application_oc` (`id`, `transport_manager_application_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1),
+	(2, 2, NULL, NULL, 16, NULL, NULL, NULL, 1);
+
+INSERT INTO `tm_licence_oc` (`id`, `transport_manager_licence_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1);
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
