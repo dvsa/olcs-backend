@@ -16,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="hearing",
  *    indexes={
+ *        @ORM\Index(name="fk_hearing_hearing_type_idx", columns={"hearing_type"}),
  *        @ORM\Index(name="fk_hearing_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_hearing_pi_venue1_idx", columns={"venue_id"}),
  *        @ORM\Index(name="fk_hearing_user1_idx", columns={"created_by"}),
@@ -45,6 +46,16 @@ class Hearing implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="agreed_by_tc_date", nullable=true)
      */
     protected $agreedByTcDate;
+
+    /**
+     * Hearing type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="hearing_type", referencedColumnName="id", nullable=false)
+     */
+    protected $hearingType;
 
     /**
      * Presiding tc
@@ -105,6 +116,29 @@ class Hearing implements Interfaces\EntityInterface
     public function getAgreedByTcDate()
     {
         return $this->agreedByTcDate;
+    }
+
+    /**
+     * Set the hearing type
+     *
+     * @param \Olcs\Db\Entity\RefData $hearingType
+     * @return Hearing
+     */
+    public function setHearingType($hearingType)
+    {
+        $this->hearingType = $hearingType;
+
+        return $this;
+    }
+
+    /**
+     * Get the hearing type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getHearingType()
+    {
+        return $this->hearingType;
     }
 
     /**
