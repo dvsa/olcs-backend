@@ -36,6 +36,7 @@ class Hearing implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\PresidingTcManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -56,16 +57,6 @@ class Hearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="hearing_type", referencedColumnName="id", nullable=false)
      */
     protected $hearingType;
-
-    /**
-     * Presiding tc
-     *
-     * @var \Olcs\Db\Entity\PresidingTc
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
-     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
-     */
-    protected $presidingTc = 0;
 
     /**
      * Venue
@@ -139,29 +130,6 @@ class Hearing implements Interfaces\EntityInterface
     public function getHearingType()
     {
         return $this->hearingType;
-    }
-
-    /**
-     * Set the presiding tc
-     *
-     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
-     * @return Hearing
-     */
-    public function setPresidingTc($presidingTc)
-    {
-        $this->presidingTc = $presidingTc;
-
-        return $this;
-    }
-
-    /**
-     * Get the presiding tc
-     *
-     * @return \Olcs\Db\Entity\PresidingTc
-     */
-    public function getPresidingTc()
-    {
-        return $this->presidingTc;
     }
 
     /**
