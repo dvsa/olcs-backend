@@ -3958,7 +3958,7 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
+      concat(ifnull(cd.forename,''), ' ', ifnull(cd.family_name,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
