@@ -211,6 +211,12 @@ return array(
         ),
         'publication_appropriate' => array(
             'type' => 'yesnonull'
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'operatingCentre'
+            )
         )
     ),
     'application_operating_centre' => array(
