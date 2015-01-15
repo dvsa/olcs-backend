@@ -1832,8 +1832,9 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (2, 'submission_section', 'case-summary', 'Case summary', NULL),
     (3, 'submission_section', 'case-outline', 'Case outline', NULL),
     (4, 'submission_section', 'most-serious-infringement', 'Most serious infringement', NULL),
-    (5, 'submission_section', 'persons', 'Persons', NULL),
-    (6, 'submission_section', 'operating-centres', 'Operating centres', NULL),
+    (5, 'submission_section', 'outstanding-applications', 'Outstanding applications', NULL),
+    (6, 'submission_section', 'persons', 'Persons', NULL),
+    (7, 'submission_section', 'operating-centres', 'Operating centres', NULL),
 
     (8, 'submission_section', 'conditions-and-undertakings', 'Conditions and undertakings', NULL),
     (9, 'submission_section', 'intelligence-unit-check', 'Intelligence unit check', NULL),
