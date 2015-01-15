@@ -30,6 +30,7 @@ TRUNCATE TABLE `licence_operating_centre`;
 TRUNCATE TABLE `legacy_case_offence`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
+TRUNCATE TABLE `oc_complaint`;
 TRUNCATE TABLE `operating_centre`;
 TRUNCATE TABLE `opposer`;
 TRUNCATE TABLE `opposition`;
@@ -848,14 +849,14 @@ INSERT INTO `tm_case_decision` (`id`,`decision`,`rehab`,`unfitness`,`case_id`,`c
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Logged in user',101,'Accountant','Division 1','Department X'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'John Spellman',105,'','',''),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Steve Fox',106,'','',''),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Amy Wrigg',NULL,'','',''),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Phil Jowitt',NULL,'','',''),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Kevin Rooney',NULL,'','',''),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Sarah Thompson',NULL,'','',''),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'Another User',114,'','','');
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'loggedinuser',101,'Accountant','Division 1','Department X'),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'johnspellman',105,'','',''),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'stevefox',106,'','',''),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',NULL,'','',''),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'philjowitt',NULL,'','',''),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'kevinrooney',NULL,'','',''),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'sarahthompson',NULL,'','',''),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'anotheruser',114,'','','');
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
