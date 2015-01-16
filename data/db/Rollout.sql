@@ -541,12 +541,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('case_type', 'case_t_tm', 'Transport Manager', null),
     ('case_type', 'case_t_imp', 'Impounding', null),
 
-
     ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
     ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
     ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS'),
     ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
     ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
+
+    ('env-complaint-status', 'ecst_open', 'Open', null),
+    ('env-complaint-status', 'ecst_closed', 'Closed', null),
 
     ('complaint_type', 'ct_cor', 'Continuing to operate after revocation', null),
     ('complaint_type', 'ct_cov', 'Condition of Vehicles', null),
@@ -625,6 +627,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_jpg', 'JPG', null),
     ('document_type', 'doc_txt', 'TXT', null),
     ('document_type', 'doc_rtf', 'RTF', null),
+    ('document_type', 'doc_tiff', 'TIFF', null),
+
+    -- task allocation rules
+
+    ('task_allocation_type', 'task_at_simple', 'Simple', null),
+    ('task_allocation_type', 'task_at_medium', 'Medium', null),
+    ('task_allocation_type', 'task_at_complex', 'Complex', null),
 
     ('erru_case_type', 'erru_case_t_msi', 'MSI', 'MSI'),
     ('erru_case_type', 'erru_case_t_msinre', 'MSI - No response entered', 'MSINRE'),
@@ -840,16 +849,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('tm_unfit_reason', 'tm_unfit_inn', 'Infringement Of National Rules', 'INN'),
     ('tm_pi_reason', 'tm_pi_reason_art6', 'Article 6 of Regulation (EC) No 1071/2009', 'ART6'),
     ('tm_pi_type', 'tm_pi_t_reg', 'Regulatory', 'REG'),
-    ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR'),
-    ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI'),
-    ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN'),
-    ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI'),
-    ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN'),
-    ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR'),
-    ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI'),
-    ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN'),
-    ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI'),
-    ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN'),
     ('tm_status', 'tm_s_cur', 'Current', 'C'),
     ('tm_status', 'tm_s_dis', 'Disqualified', 'D'),
     ('tm_type', 'tm_t_B', 'Both', 'B'),
@@ -910,6 +909,20 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
     ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
     ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
+
+-- TM qualifications
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
+VALUES
+    ('tm_qual_type', 'tm_qt_CPCSI', 'CPCSI', 'CPCSI', '1'),
+    ('tm_qual_type', 'tm_qt_NICPCSI', 'NICPCSI', 'NICPCSI', '2'),
+    ('tm_qual_type', 'tm_qt_CPCSN', 'CPCSN', 'CPCSN', '3'),
+    ('tm_qual_type', 'tm_qt_NICPCSN', 'NICPCSN', 'NICPCSN', '4'),
+    ('tm_qual_type', 'tm_qt_AR', 'AR', 'AR', '5'),
+    ('tm_qual_type', 'tm_qt_NIAR', 'NIAR', 'NIAR', '6'),
+    ('tm_qual_type', 'tm_qt_EXSI', 'EXSI', 'EXSI', '7'),
+    ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI', '8'),
+    ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN', '9'),
+    ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN', '10');
 
 -- Case categories
 INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
@@ -1808,16 +1821,16 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_129','conv_p_cat_7','With intent to deceive made / an operators licence / a document, plate or mark or other thing by which a vehicle is to be identified as being authorised to be used or as being used under an operators licence','conv_category',129,799),
   ('conv_c_cat_294','conv_p_cat_14','Withholding information to obtain insurance.','conv_category',294,800);
 
- INSERT INTO category (id,description,is_doc_category,is_task_category,is_scan_category,version) VALUES
-  (1,'Licensing',1,1,1,1)
- ,(2,'Compliance',1,1,1,1)
- ,(3,'Bus Registration',1,1,1,1)
- ,(4,'Permits',1,1,0,1)
- ,(5,'Transport Manager',1,1,1,1)
- ,(7,'Environmental',1,1,1,1)
- ,(8,'IRFO',1,1,1,1)
- ,(9,'Application',1,1,1,1)
- ,(10,'Submission',0,1,0,1)
+ INSERT INTO category (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
+  (1,'Licensing',1,1,1,1,'task_at_simple')
+ ,(2,'Compliance',1,1,1,1,'task_at_simple')
+ ,(3,'Bus Registration',1,1,1,1,'task_at_simple')
+ ,(4,'Permits',1,1,0,1,NULL)
+ ,(5,'Transport Manager',1,1,1,1,'task_at_simple')
+ ,(7,'Environmental',1,1,1,1,'task_at_simple')
+ ,(8,'IRFO',1,1,1,1,'task_at_simple')
+ ,(9,'Application',1,1,1,1,'task_at_simple')
+ ,(10,'Submission',0,1,0,1,NULL)
 ;
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
@@ -1825,8 +1838,9 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (2, 'submission_section', 'case-summary', 'Case summary', NULL),
     (3, 'submission_section', 'case-outline', 'Case outline', NULL),
     (4, 'submission_section', 'most-serious-infringement', 'Most serious infringement', NULL),
-    (5, 'submission_section', 'persons', 'Persons', NULL),
-    (6, 'submission_section', 'operating-centres', 'Operating centres', NULL),
+    (5, 'submission_section', 'outstanding-applications', 'Outstanding applications', NULL),
+    (6, 'submission_section', 'persons', 'Persons', NULL),
+    (7, 'submission_section', 'operating-centres', 'Operating centres', NULL),
 
     (8, 'submission_section', 'conditions-and-undertakings', 'Conditions and undertakings', NULL),
     (9, 'submission_section', 'intelligence-unit-check', 'Intelligence unit check', NULL),
@@ -1914,6 +1928,11 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (6, 'sub_st_rec', 'sub_st_rec_non_pi', 'Non PI hearing', NULL),
     (99, 'sub_st_rec', 'sub_st_rec_other', 'Other', NULL);
 
+
+-- NON TM TYPE
+INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'non_pi_type', 'non_pi_type_off_proc', 'Office procedure', NULL),
+    (2, 'non_pi_type', 'non_pi_type_in_cham', 'In chambers', NULL);
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'fee_pay_method', 'fpm_cash', 'Cash', NULL),
@@ -2851,7 +2870,7 @@ INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_r
 (81,'lcat_psv','Section 17 (3)(d)','Financial Standing (Restricted Licence)',0,0,0,NULL,NULL,NULL,NULL,1),
 (82,'lcat_psv','Section 17 (3)(e)','Material Change',0,0,0,NULL,NULL,NULL,NULL,1),
 (83,'lcat_psv','Section 21','Certificate of Qualification',0,0,0,NULL,NULL,NULL,NULL,1),
-(84,'lcat_psv','Schedule 3','Transport Managerâ€™s Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
+(84,'lcat_psv','Schedule 3','Transport Managers Good Repute',1,0,0,NULL,NULL,NULL,NULL,1),
 (85,'lcat_psv','Section 26','Bus Registration: Local Services',0,0,0,NULL,NULL,NULL,NULL,1),
 (86,'lcat_psv','Section 28','Disqualification',1,0,0,NULL,NULL,NULL,NULL,1),
 (87,'lcat_psv','Section 111','Bus Registration: Fuel Duty',0,0,0,NULL,NULL,NULL,NULL,1),
@@ -2953,7 +2972,7 @@ NULL,1),
 (198,'lcat_psv','10.7 - Section 17(3)(a) Revoke/suspend/vary','(g) Other (please specify)',0,0,1,NULL,NULL,NULL,NULL,1),
 (199,'lcat_psv','11 - Section 17 (3)(aa) Revoke/suspend/vary','An undertaking has not been fulfilled namely',0,0,0,NULL,NULL,NULL,NULL,1),
 (200,'lcat_psv','11.1 - Section 17 (3)(aa) Revoke/suspend/vary','(a) the laws relating to the driving and operation of vehicles used under the licence were observed',0,0,1,NULL,NULL,NULL,NULL,1),
-(201,'lcat_psv','11.2 - Section 17 (3)(aa) Revoke/suspend/vary','(b) the rules on driverâ€™s hours and tachographs are observed and proper records kept',0,0,1,NULL,NULL,NULL,NULL,1),
+(201,'lcat_psv','11.2 - Section 17 (3)(aa) Revoke/suspend/vary','(b) the rules on drivers hours and tachographs are observed and proper records kept',0,0,1,NULL,NULL,NULL,NULL,1),
 (202,'lcat_psv','11.3 - Section 17 (3)(aa) Revoke/suspend/vary','(c) vehicles do not carry more than the permitted number of passengers',0,0,1,NULL,NULL,NULL,NULL,1),
 (203,'lcat_psv','11.4 - Section 17 (3)(aa) Revoke/suspend/vary','(d) vehicles, including hired vehicles, are kept in a fit and serviceable condition',0,0,1,NULL,NULL,NULL,NULL,1),
 (204,'lcat_psv','11.5 - Section 17 (3)(aa) Revoke/suspend/vary','(e) drivers report promptly any defects that could prevent the safe operation of vehicles, and that any defects are promptly recorded in writing',0,0,1,NULL,NULL,NULL,NULL,1),
@@ -3002,7 +3021,7 @@ repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (245,'lcat_gv','x NI-Section 23(1)(c)','Schedule 2 Paragraph 5 convictions (servants/agents)',0,1,1,NULL,NULL,NULL,NULL,1),
 (246,'lcat_gv','x NI-Section 23(1)(c)','Prohibitions',0,1,1,NULL,NULL,NULL,NULL,1),
 (247,'lcat_gv','x NI-Section 23(1)(c)','Fixed Penalty or conditional offer issued',0,1,1,NULL,NULL,NULL,NULL,1),
-(248,'lcat_gv','x NI-Section 23(1)(c)','Convictions â€“ for Schedule 2 Paragraph 5 (j) offences',0,1,1,NULL,NULL,NULL,NULL,1),
+(248,'lcat_gv','x NI-Section 23(1)(c)','Convictions for Schedule 2 Paragraph 5 (j) offences',0,1,1,NULL,NULL,NULL,NULL,1),
 (249,'lcat_gv','x NI-Section 23(1)(d)','Failing to fulfil Statement of Expectation/False statement (specify)',0,1,1,NULL,NULL,NULL,NULL,1),
 (250,'lcat_gv','x NI-Section 23(1)(d)','(1) Failure to declare previous refusal or revocation',0,1,1,NULL,NULL,NULL,NULL,1),
 (251,'lcat_gv','x NI-Section 23(1)(d)','(2) Stating that (x) would be the TM responsible for vehicles on licence',0,1,1,NULL,NULL,NULL,NULL,1),
@@ -3050,7 +3069,7 @@ INSERT INTO `decision` (`id`, `goods_or_psv`, `section_code`, `description`, `is
 (44,'lcat_gv','Section 19','Application Refused',1,0,NULL,NULL,NULL,NULL,1),
 (45,'lcat_gv','Section 21','Application Granted: Conditions: Road Safety',1,0,NULL,NULL,NULL,NULL,1),
 (46,'lcat_gv','Section 22','Application Granted: Conditions: Notified Matters',1,0,NULL,NULL,NULL,NULL,1),
-(47,'lcat_gv','Section 23','Application Granted: Conditions: O/Câ€™s',1,0,NULL,NULL,NULL,NULL,1),
+(47,'lcat_gv','Section 23','Application Granted: Conditions: O/Cs',1,0,NULL,NULL,NULL,NULL,1),
 (48,'lcat_gv','Section 26','No Action',1,0,NULL,NULL,NULL,NULL,1),
 (49,'lcat_gv','Section 26','Formal Warning',1,0,NULL,NULL,NULL,NULL,1),
 (50,'lcat_gv','Section 26','Final Warning',1,0,NULL,NULL,NULL,NULL,1),
@@ -3951,7 +3970,7 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
+      concat(ifnull(cd.forename,''), ' ', ifnull(cd.family_name,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)

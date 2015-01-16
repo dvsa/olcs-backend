@@ -156,6 +156,15 @@ class User implements Interfaces\EntityInterface
     protected $lockedDatetime;
 
     /**
+     * Login id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="login_id", length=40, nullable=true)
+     */
+    protected $loginId;
+
+    /**
      * Memorable word
      *
      * @var string
@@ -190,15 +199,6 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="must_reset_password", nullable=false)
      */
     protected $mustResetPassword = 0;
-
-    /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=40, nullable=true)
-     */
-    protected $name;
 
     /**
      * Partner contact details
@@ -540,6 +540,29 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the login id
+     *
+     * @param string $loginId
+     * @return User
+     */
+    public function setLoginId($loginId)
+    {
+        $this->loginId = $loginId;
+
+        return $this;
+    }
+
+    /**
+     * Get the login id
+     *
+     * @return string
+     */
+    public function getLoginId()
+    {
+        return $this->loginId;
+    }
+
+    /**
      * Set the memorable word
      *
      * @param string $memorableWord
@@ -629,29 +652,6 @@ class User implements Interfaces\EntityInterface
     public function getMustResetPassword()
     {
         return $this->mustResetPassword;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param string $name
-     * @return User
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

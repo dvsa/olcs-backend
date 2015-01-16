@@ -32,7 +32,7 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
