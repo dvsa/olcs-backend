@@ -32,7 +32,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class PublicationLink implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
@@ -43,6 +42,16 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="publicationLinks")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
 
     /**
      * Pi
@@ -110,6 +119,29 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
      */
     protected $tmPiHearing;
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return PublicationLink
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
     /**
      * Set the pi
