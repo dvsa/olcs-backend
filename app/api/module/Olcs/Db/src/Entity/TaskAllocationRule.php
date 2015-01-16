@@ -6,23 +6,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * TaskAllocationRules Entity
+ * TaskAllocationRule Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="task_allocation_rules",
+ * @ORM\Table(name="task_allocation_rule",
  *    indexes={
- *        @ORM\Index(name="fk_task_allocation_rules_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_task_allocation_rules_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_task_allocation_rules_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_task_allocation_rules_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_task_allocation_rules_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="fk_task_allocation_rule_category1_idx", columns={"category_id"}),
+ *        @ORM\Index(name="fk_task_allocation_rule_team1_idx", columns={"team_id"}),
+ *        @ORM\Index(name="fk_task_allocation_rule_user1_idx", columns={"user_id"}),
+ *        @ORM\Index(name="fk_task_allocation_rule_ref_data1_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_task_allocation_rule_traffic_area1_idx", columns={"traffic_area_id"})
  *    }
  * )
  */
-class TaskAllocationRules implements Interfaces\EntityInterface
+class TaskAllocationRule implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\GoodsOrPsvManyToOne,
@@ -63,7 +63,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
      * Set the category
      *
      * @param \Olcs\Db\Entity\Category $category
-     * @return TaskAllocationRules
+     * @return TaskAllocationRule
      */
     public function setCategory($category)
     {
@@ -86,7 +86,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
      * Set the is mlh
      *
      * @param boolean $isMlh
-     * @return TaskAllocationRules
+     * @return TaskAllocationRule
      */
     public function setIsMlh($isMlh)
     {
@@ -109,7 +109,7 @@ class TaskAllocationRules implements Interfaces\EntityInterface
      * Set the user
      *
      * @param \Olcs\Db\Entity\User $user
-     * @return TaskAllocationRules
+     * @return TaskAllocationRule
      */
     public function setUser($user)
     {

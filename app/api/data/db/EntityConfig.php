@@ -621,6 +621,12 @@ return array(
             'cascade' => array(
                 'persist'
             )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'complaint'
+            )
         )
     ),
     'oc_complaint' => array(
@@ -1183,6 +1189,30 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Fee',
                 'property' => 'feePayment'
+            )
+        )
+    ),
+    'tm_application_oc' => array(
+        'transport_manager_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerApplication',
+                'property' => 'tmApplicationOc'
+            ),
+        )
+    ),
+    'tm_licence_oc' => array(
+        'transport_manager_licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerLicence',
+                'property' => 'tmLicenceOc'
+            ),
+        )
+    ),
+    'publication_link' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'publicationLink'
             )
         )
     )

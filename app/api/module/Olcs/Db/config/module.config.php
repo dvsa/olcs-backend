@@ -138,7 +138,9 @@ return [
         'factories' => [
             'serviceFactory' => '\Olcs\Db\Service\Factory',
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
-            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
+            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
+            'Olcs\Db\Service\BusReg\OtherServicesManager' =>
+                'Olcs\Db\Service\BusReg\OtherServicesManager'
         ],
         'invokables' => [
             'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',

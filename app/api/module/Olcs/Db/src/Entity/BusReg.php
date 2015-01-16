@@ -23,7 +23,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"})
+ *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"}),
+ *        @ORM\Index(name="fk_bus_reg_bus_reg_idx", columns={"parent_id"})
  *    }
  * )
  */
@@ -258,6 +259,16 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_details", length=800, nullable=true)
      */
     protected $otherDetails;
+
+    /**
+     * Parent
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
+    protected $parent;
 
     /**
      * Quality contract details
@@ -1093,6 +1104,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getOtherDetails()
     {
         return $this->otherDetails;
+    }
+
+    /**
+     * Set the parent
+     *
+     * @param \Olcs\Db\Entity\BusReg $parent
+     * @return BusReg
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get the parent
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**

@@ -16,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="hearing",
  *    indexes={
+ *        @ORM\Index(name="fk_hearing_hearing_type_idx", columns={"hearing_type"}),
  *        @ORM\Index(name="fk_hearing_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_hearing_pi_venue1_idx", columns={"venue_id"}),
  *        @ORM\Index(name="fk_hearing_user1_idx", columns={"created_by"}),
@@ -27,7 +28,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -35,7 +36,7 @@ class Hearing implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\VenueManyToOne,
+        Traits\PresidingTcManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -48,14 +49,33 @@ class Hearing implements Interfaces\EntityInterface
     protected $agreedByTcDate;
 
     /**
-     * Presiding tc
+     * Hearing type
      *
-     * @var \Olcs\Db\Entity\PresidingTc
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
-     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="hearing_type", referencedColumnName="id", nullable=false)
      */
-    protected $presidingTc = 0;
+    protected $hearingType;
+
+    /**
+     * Venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
+     */
+    protected $venue;
+
+    /**
+     * Venue other
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="venue_other", length=255, nullable=true)
+     */
+    protected $venueOther;
 
     /**
      * Witness count
@@ -90,26 +110,72 @@ class Hearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the presiding tc
+     * Set the hearing type
      *
-     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
+     * @param \Olcs\Db\Entity\RefData $hearingType
      * @return Hearing
      */
-    public function setPresidingTc($presidingTc)
+    public function setHearingType($hearingType)
     {
-        $this->presidingTc = $presidingTc;
+        $this->hearingType = $hearingType;
 
         return $this;
     }
 
     /**
-     * Get the presiding tc
+     * Get the hearing type
      *
-     * @return \Olcs\Db\Entity\PresidingTc
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getPresidingTc()
+    public function getHearingType()
     {
-        return $this->presidingTc;
+        return $this->hearingType;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $venue
+     * @return Hearing
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
+    /**
+     * Set the venue other
+     *
+     * @param string $venueOther
+     * @return Hearing
+     */
+    public function setVenueOther($venueOther)
+    {
+        $this->venueOther = $venueOther;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue other
+     *
+     * @return string
+     */
+    public function getVenueOther()
+    {
+        return $this->venueOther;
     }
 
     /**
