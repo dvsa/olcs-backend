@@ -81,7 +81,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="repute_not_lost_reason", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="repute_not_lost_reason", length=500, nullable=true)
      */
     protected $reputeNotLostReason;
 
