@@ -6616,7 +6616,7 @@ CREATE TABLE `tm_case_decision` (
   `unfitness` varchar(32) NULL,
   `rehab` varchar(32) NULL,
   `is_msi` tinyint(1) NOT NULL DEFAULT '0',
-  `repute_not_lost_reason` varchar(4000) DEFAULT NULL,
+  `repute_not_lost_reason` varchar(500) DEFAULT NULL,
   `unfitness_start_date` date DEFAULT NULL,
   `unfitness_end_date` date DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
