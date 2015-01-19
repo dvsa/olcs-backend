@@ -2812,7 +2812,7 @@ VALUES
 (142,'Withdrawn','Art. 8(3)','Art. 8(3) - Community Authorisation withdrawn with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
 
 (143,'Regulation','Article 6','Repute Not Lost under Article 6 of Regulation (EC) No 1071/2009',1,null,1,1,NOW(),NOW(),1),
-(143,'Regulation','Article 6','Declared Unfit under Article 6 of Regulation (EC) No 1071/2009`',1,null,1,1,NOW(),NOW(),1);
+(144,'Regulation','Article 6','Declared Unfit under Article 6 of Regulation (EC) No 1071/2009`',1,null,1,1,NOW(),NOW(),1);
 
 INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_read_only`, `is_ni`, `is_propose_to_revoke`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES (1,'lcat_gv','Section 12','Objection/Representation: New application',1,0,0,NULL,NULL,NULL,NULL,1),
 (2,'lcat_gv','Section 13','New application',1,0,0,NULL,NULL,NULL,NULL,1),
