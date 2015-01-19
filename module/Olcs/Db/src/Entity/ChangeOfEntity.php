@@ -14,7 +14,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="change_of_entity",
  *    indexes={
- *        @ORM\Index(name="fk_change_of_entity_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_change_of_entity_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_change_of_entity_user2_idx", columns={"last_modified_by"})
  *    },
