@@ -7068,7 +7068,7 @@ DROP TABLE IF EXISTS `transport_manager_application`;
 CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
-  `tm_type` varchar(32) NOT NULL,
+  `tm_type` varchar(32) DEFAULT NULL,
   `tm_application_status` varchar(32) NOT NULL,
   `application_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
