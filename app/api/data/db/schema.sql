@@ -1595,7 +1595,7 @@ DROP TABLE IF EXISTS `decision`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `decision` (
   `id` int(11) NOT NULL,
-  `goods_or_psv` varchar(32) NOT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `section_code` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL,
   `is_read_only` tinyint(1) NOT NULL,
@@ -4557,7 +4557,7 @@ CREATE TABLE `pi_definition` (
   `section_code` varchar(20) NOT NULL,
   `description` varchar(255) NOT NULL,
   `is_ni` tinyint(1) NOT NULL,
-  `goods_or_psv` varchar(32) NOT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -5360,7 +5360,7 @@ DROP TABLE IF EXISTS `reason`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reason` (
   `id` int(11) NOT NULL,
-  `goods_or_psv` varchar(32) NOT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `section_code` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL,
   `is_read_only` tinyint(1) NOT NULL,
