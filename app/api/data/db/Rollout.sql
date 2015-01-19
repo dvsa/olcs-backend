@@ -3055,7 +3055,9 @@ repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (281,'lcat_gv','x NI-Section 24(1)(b)','External TM exceeds the 4/50 rule (section 12A (3)(c )(ii))',0,1,1,NULL,NULL,NULL,NULL,1),
 (282,'lcat_gv','x NI-Section 25','Disqualification to be considered - Operator licence',0,1,0,NULL,NULL,NULL,NULL,1),
 (283,'lcat_gv','x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,0,NULL,NULL,NULL,NULL,1),
-(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1);
+(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1),
+(285,null,'Article 6','Declare unfit',0,0,0,NULL,NULL,NULL,NULL,1),
+(286,null,'Article 6','Repute not lost',0,0,0,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `decision` (`id`, `goods_or_psv`, `section_code`, `description`, `is_read_only`, `is_ni`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES (37,'lcat_gv','Section 13','Application Granted',1,0,NULL,NULL,NULL,NULL,1),
 (38,'lcat_gv','Section 13','Undertakings',1,0,NULL,NULL,NULL,NULL,1),
