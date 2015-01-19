@@ -27,7 +27,7 @@ class Reason implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\Description255Field,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\IdIdentity,
         Traits\IsNiFieldAlt1,
         Traits\LastModifiedByManyToOne,
