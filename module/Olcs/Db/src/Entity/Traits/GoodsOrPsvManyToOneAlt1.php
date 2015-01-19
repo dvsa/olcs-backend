@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Goods or psv many to one alt1 trait
  *
- * Auto-Generated (Shared between 6 entities)
+ * Auto-Generated (Shared between 4 entities)
  */
 trait GoodsOrPsvManyToOneAlt1
 {
