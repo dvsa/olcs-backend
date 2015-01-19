@@ -114,15 +114,7 @@ class RefData implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TmCaseDecision", inversedBy="unfitnessReasons")
-     * @ORM\JoinTable(name="tm_case_decision_unfitness",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="tm_case_decision_unfitness_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TmCaseDecision", mappedBy="unfitnessReasons")
      */
     protected $tmCaseDecisionUnfitnesss;
 
