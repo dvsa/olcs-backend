@@ -6651,24 +6651,13 @@ DROP TABLE IF EXISTS `tm_case_decision_rehab`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_case_decision_rehab` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `deleted_date` datetime DEFAULT NULL,
-  `tm_case_decision_id` int(11) NOT NULL,
+  `tm_case_decision_rehab_id` int(11) NOT NULL,
   `rehab_measure_id` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_case_decision_rehab_tm_case_decision1_idx` (`tm_case_decision_id`),
+  PRIMARY KEY (`tm_case_decision_rehab_id`, `rehab_measure_id`),
+  KEY `fk_tm_case_decision_rehab_tm_case_decision1_idx` (`tm_case_decision_rehab_id`),
   KEY `fk_tm_case_decision_rehab_ref_data1_idx` (`rehab_measure_id`),
-  KEY `fk_tm_case_decision_rehab_user1_idx` (`created_by`),
-  KEY `fk_tm_case_decision_rehab_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_case_decision_rehab_tm_case_decision1` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_ref_data1` FOREIGN KEY (`rehab_measure_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tm_case_decision_rehab_tm_case_decision1` FOREIGN KEY (`tm_case_decision_rehab_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decision_rehab_ref_data1` FOREIGN KEY (`rehab_measure_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6689,24 +6678,13 @@ DROP TABLE IF EXISTS `tm_case_decision_unfitness`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_case_decision_unfitness` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `deleted_date` datetime DEFAULT NULL,
-  `tm_case_decision_id` int(11) NOT NULL,
+  `tm_case_decision_unfitness_id` int(11) NOT NULL,
   `unfitness_reason_id` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_case_decision_unfitness_tm_case_decision1_idx` (`tm_case_decision_id`),
+  PRIMARY KEY (`unfitness_reason_id`,`tm_case_decision_unfitness_id`),
+  KEY `fk_tm_case_decision_unfitness_tm_case_decision1_idx` (`tm_case_decision_unfitness_id`),
   KEY `fk_tm_case_decision_unfitness_ref_data1_idx` (`unfitness_reason_id`),
-  KEY `fk_tm_case_decision_unfitness_user1_idx` (`created_by`),
-  KEY `fk_tm_case_decision_unfitness_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_case_decision_unfitness_tm_case_decision1` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_ref_data1` FOREIGN KEY (`unfitness_reason_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tm_case_decision_unfitness_tm_case_decision1` FOREIGN KEY (`tm_case_decision_unfitness_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decision_unfitness_ref_data1` FOREIGN KEY (`unfitness_reason_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
