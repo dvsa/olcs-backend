@@ -6680,7 +6680,7 @@ DROP TABLE IF EXISTS `tm_case_decision_unfitness`;
 CREATE TABLE `tm_case_decision_unfitness` (
   `tm_case_decision_unfitness_id` int(11) NOT NULL,
   `unfitness_reason_id` varchar(32) NOT NULL,
-  PRIMARY KEY (`unfitness_reason_id`,`tm_case_decision_unfitness_id`),
+  PRIMARY KEY (`tm_case_decision_unfitness_id`,`unfitness_reason_id`),
   KEY `fk_tm_case_decision_unfitness_tm_case_decision1_idx` (`tm_case_decision_unfitness_id`),
   KEY `fk_tm_case_decision_unfitness_ref_data1_idx` (`unfitness_reason_id`),
   CONSTRAINT `fk_tm_case_decision_unfitness_tm_case_decision1` FOREIGN KEY (`tm_case_decision_unfitness_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

@@ -105,7 +105,15 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", mappedBy="tmCaseDecisionUnfitnesss")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionUnfitnesss")
+     * @ORM\JoinTable(name="tm_case_decision_unfitness",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="tm_case_decision_unfitness_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")
+     *     }
+     * )
      */
     protected $unfitnessReasons;
 
