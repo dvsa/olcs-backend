@@ -501,6 +501,11 @@ INSERT INTO `country` (`id`,`country_desc`) VALUES
     ('ZW', 'Zimbabwe');
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+
+    ('accrual_rule', 'acr_licence_start', 'From licence start date', null), /* TODO check OLBS key with Paul Roberts? */
+    ('accrual_rule', 'acr_continuation', 'From continuation date', null),
+    ('accrual_rule', 'acr_immediate', 'Immediate', null),
+
     ('appeal_outcome', 'appeal_o_dis', 'Dismissed', 'DIS'),
     ('appeal_outcome', 'appeal_o_pas', 'Partially Successful', 'PAS'),
     ('appeal_outcome', 'appeal_o_ref', 'Refer Back to TC', 'REF'),

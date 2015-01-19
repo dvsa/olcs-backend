@@ -17,6 +17,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_fee_type_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"licence_type"}),
  *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="fk_fee_type_ref_data3_idx", columns={"accrual_rule"}),
  *        @ORM\Index(name="fk_fee_type_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_fee_type_user2_idx", columns={"last_modified_by"})
  *    }
@@ -35,6 +36,16 @@ class FeeType implements Interfaces\EntityInterface
         Traits\LicenceTypeManyToOne,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Accrual rule
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="accrual_rule", referencedColumnName="id", nullable=false)
+     */
+    protected $accrualRule;
 
     /**
      * Annual value
@@ -89,6 +100,29 @@ class FeeType implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="fixed_value", precision=10, scale=2, nullable=true)
      */
     protected $fixedValue;
+
+    /**
+     * Set the accrual rule
+     *
+     * @param \Olcs\Db\Entity\RefData $accrualRule
+     * @return FeeType
+     */
+    public function setAccrualRule($accrualRule)
+    {
+        $this->accrualRule = $accrualRule;
+
+        return $this;
+    }
+
+    /**
+     * Get the accrual rule
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getAccrualRule()
+    {
+        return $this->accrualRule;
+    }
 
     /**
      * Set the annual value
