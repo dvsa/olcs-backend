@@ -849,13 +849,11 @@ INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_mod
   (2,'tm_decision_rnl',83,1,1,1,'2014-12-10','Reason why repute not lost',NULL,NULL,NULL,'2014-12-06',NULL,NULL,1),
   (3,'tm_decision_noa',84,1,1,1,'2014-09-30',NULL,NULL,NULL,NULL,'2014-10-06',NULL,NULL,1);
 
-INSERT INTO `tm_case_decision_rehab` (`id`,`rehab_measure_id`,`created_by`,`last_modified_by`,`tm_case_decision_id`,
-                                      `created_on`,`deleted_date`,`last_modified_on`,`version`) VALUES
-  (1,'tm_rehab_adc',1,1,1,NULL,NULL,NULL,1);
+INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_rehab_id`,`rehab_measure_id`) VALUES
+  (1,'tm_rehab_adc');
 
-INSERT INTO `tm_case_decision_unfitness` (`id`,`unfitness_reason_id`,`created_by`,`last_modified_by`,
-                                          `tm_case_decision_id`,`created_on`,`deleted_date`,`last_modified_on`,`version`) VALUES
-  (1,'tm_unfit_inn',1,1,1,NULL,NULL,NULL,1);
+INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_unfitness_id`,`unfitness_reason_id`) VALUES
+  (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
     `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
