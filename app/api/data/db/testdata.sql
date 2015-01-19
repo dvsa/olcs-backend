@@ -150,107 +150,107 @@ INSERT INTO `bus_reg`
  `stopping_arrangements`, `trc_condition_checked`, `trc_notes`, `status`, `revert_status`, `organisation_email`,
  `is_txc_app`, `txc_app_type`, `ebsr_refresh`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`,
  `short_notice_refused`,
- `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`)
+ `service_no`, `received_date`, `effective_date`, `end_date`, `created_on`, `last_modified_on`, `version`, `parent_id`)
 VALUES
   (1, 2, 'bs_no', 1, '', 110, 1, 1, 14686, 'PD2737280/14686', 'Doncaster', 'Sheffield', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
   'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 1, '', '', '', 0, 90839, '2014-03-13', '2014-03-15',
-  null, null, null, 1),
+  null, null, null, 1, null),
   (2, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description', 0, 0, 0, 0, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 0, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
    '2015-03-05',
    null, null,
-    1),
+    1, null),
   (3, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 0, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-14',
    null,
    null, null,
-   1),
+   1, null),
   (4, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 0, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 1, '', '', '', 0, 26453, '2014-05-24', '2014-05-31',
    null,
    null, null,
-   1),
+   1, null),
    (5, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 1', 0, 0, 0, 1, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-05',
    '2015-03-05',
    null, null,
-    1),
+    1, 2),
    (6, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 2', 0, 0, 0, 2, 0, 'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-08',
    '2015-03-05',
    null, null,
-    1),
+    1, 5),
       (7, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 3', 0, 0, 0, 3, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
-    1),
+    1, 6),
   (8, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 1, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-15', '2014-03-15',
    null,
    null, null,
-   1),
+   1, 3),
   (9, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 2, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-11', '2014-03-11',
    null,
    null, null,
-   1),
+   1, 8),
   (10, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 3, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-12', '2014-03-14',
    null,
    null, null,
-   1),
+   1, 9),
   (11, 1, 'bs_no', 1, '', 110, 1, 1, 43542, 'PD2737280/43542', 'Aberdeen', 'Edinburgh', 'Dundee', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Scotish Route description', 0, 0, 0, 4, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 1, 0, 0, '', '', '', 0, 34254, '2014-03-13', '2014-03-14',
    null,
    null, null,
-   1),
+   1, 10),
   (12, 2, 'bs_no', 1, '', 110, 1, 1, 13245, 'PD2737280/13245', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Non-scottish Route description cancelled', 0, 0, 0, 1, 0,
    'Stopping arrangements', 0,
    'Trc notes', 'breg_s_cancelled', 'revert status', '', 1, 0, 0, '', '', '', 0, 26453, '2014-05-27', '2014-05-27',
    null,
    null, null,
-   1),
+   1, 4),
    (13, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 4', 0, 0, 0, 4, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
-    1),
+    1, 7),
       (14, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 5', 0, 0, 0, 5, 0,
    'Stopping arrangements change 4', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
-    1),
+    1, 13),
       (15, 2, 'bs_no', 1, '', 110, 1, 1, 15711, 'PD2737280/15711', 'Leeds', 'Doncaster', 'York', 'Other details', 0,
    0, 0, '', 0, '', 0, '', '', 0, 0, 'Route description change 6', 0, 0, 0, 6, 0,
    'Stopping arrangements change 3', 0,
    'Trc notes', 'breg_s_registered', 'revert status', '', 0, 1, 1, '', '', '', 0, 46474, '2014-02-27', '2014-03-10',
    '2015-03-05',
    null, null,
-    1);
+    1, 14);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -1054,8 +1054,8 @@ INSERT INTO `disc_sequence` (
 
 ALTER TABLE companies_house_request AUTO_INCREMENT=53;
 
-INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`, 
-    `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`, 
+INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
+    `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`,
     `created_on`, `last_modified_on`)
 VALUES
     (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
@@ -1116,7 +1116,7 @@ INSERT INTO `si_category` (`id`,`description`,`deleted_date`,`created_by`,`last_
 VALUES ('MSI','MSI',NULL,1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1);
 
 -- si_category_type
-INSERT INTO `si_category_type` (`id`,`description`,`deleted_date`,`si_category_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+INSERT INTO `si_category_type` (`id`,`description`,`deleted_date`,`si_category_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
 VALUES
   ('101','Exceeding the maximum six-day or fortnightly driving time limits by margins of 25 % or more',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
   ('102','Exceeding, during a daily working period, the maximum daily driving time limit by a margin of 50 % or more without taking a break or without an uninterrupted rest period of at least 4,5 hours',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
@@ -1141,7 +1141,7 @@ VALUES
   ('701','Carrying goods exceeding the maximum permissible laden mass by 20 % or more for vehicles the permissible laden weight of which exceeds 12 tonnes',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1),
   ('702','Carrying goods exceeding the maximum permissible laden mass by 25 % or more for vehicles the permissible laden weight of which does not exceed 12 tonnes',NULL,'MSI',1,1,'2011-11-04 17:50:06','2011-11-04 17:50:06',1);
 
-INSERT INTO `si_penalty_imposed_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+INSERT INTO `si_penalty_imposed_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
 VALUES
   ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('102','Other',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
@@ -1150,7 +1150,7 @@ VALUES
   ('203','Prohibition',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('204','Immobilisation',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
 
-INSERT INTO `si_penalty_requested_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+INSERT INTO `si_penalty_requested_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
 VALUES
   ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('301','Temporary withdrawl of some or all of the certified true copies of the Community licence',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
@@ -1161,7 +1161,7 @@ VALUES
   ('306','Withdrawl of driver attestations ',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('307','Issue of driver attestations subject to additional conditions in order to prevent misuse',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
 
-INSERT INTO `si_penalty_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) 
+INSERT INTO `si_penalty_type` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
 VALUES
   ('101','Warning',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('102','Other',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
