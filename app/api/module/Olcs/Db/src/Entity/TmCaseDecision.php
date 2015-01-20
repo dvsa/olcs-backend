@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -19,9 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_tm_case_decision_ref_data1_idx", columns={"decision"}),
  *        @ORM\Index(name="fk_tm_case_decision_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_tm_case_decision_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_tm_case_decision_ref_data2", columns={"unfitness"}),
- *        @ORM\Index(name="fk_tm_case_decision_ref_data3", columns={"rehab"})
+ *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"})
  *    }
  * )
  */
@@ -67,14 +66,21 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $notifiedDate;
 
     /**
-     * Rehab
+     * Rehab measure
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="rehab", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionRehabs")
+     * @ORM\JoinTable(name="tm_case_decision_rehab",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="tm_case_decision_rehab_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="rehab_measure_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $rehab;
+    protected $rehabMeasures;
 
     /**
      * Repute not lost reason
@@ -86,16 +92,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $reputeNotLostReason;
 
     /**
-     * Unfitness
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="unfitness", referencedColumnName="id", nullable=true)
-     */
-    protected $unfitness;
-
-    /**
      * Unfitness end date
      *
      * @var \DateTime
@@ -105,6 +101,23 @@ class TmCaseDecision implements Interfaces\EntityInterface
     protected $unfitnessEndDate;
 
     /**
+     * Unfitness reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionUnfitnesss")
+     * @ORM\JoinTable(name="tm_case_decision_unfitness",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="tm_case_decision_unfitness_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $unfitnessReasons;
+
+    /**
      * Unfitness start date
      *
      * @var \DateTime
@@ -112,6 +125,15 @@ class TmCaseDecision implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="unfitness_start_date", nullable=true)
      */
     protected $unfitnessStartDate;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->unfitnessReasons = new ArrayCollection();
+        $this->rehabMeasures = new ArrayCollection();
+    }
 
     /**
      * Set the decision
@@ -183,26 +205,63 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the rehab
+     * Set the rehab measure
      *
-     * @param \Olcs\Db\Entity\RefData $rehab
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
      * @return TmCaseDecision
      */
-    public function setRehab($rehab)
+    public function setRehabMeasures($rehabMeasures)
     {
-        $this->rehab = $rehab;
+        $this->rehabMeasures = $rehabMeasures;
 
         return $this;
     }
 
     /**
-     * Get the rehab
+     * Get the rehab measures
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getRehab()
+    public function getRehabMeasures()
     {
-        return $this->rehab;
+        return $this->rehabMeasures;
+    }
+
+    /**
+     * Add a rehab measures
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
+     * @return TmCaseDecision
+     */
+    public function addRehabMeasures($rehabMeasures)
+    {
+        if ($rehabMeasures instanceof ArrayCollection) {
+            $this->rehabMeasures = new ArrayCollection(
+                array_merge(
+                    $this->rehabMeasures->toArray(),
+                    $rehabMeasures->toArray()
+                )
+            );
+        } elseif (!$this->rehabMeasures->contains($rehabMeasures)) {
+            $this->rehabMeasures->add($rehabMeasures);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a rehab measures
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
+     * @return TmCaseDecision
+     */
+    public function removeRehabMeasures($rehabMeasures)
+    {
+        if ($this->rehabMeasures->contains($rehabMeasures)) {
+            $this->rehabMeasures->removeElement($rehabMeasures);
+        }
+
+        return $this;
     }
 
     /**
@@ -229,29 +288,6 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the unfitness
-     *
-     * @param \Olcs\Db\Entity\RefData $unfitness
-     * @return TmCaseDecision
-     */
-    public function setUnfitness($unfitness)
-    {
-        $this->unfitness = $unfitness;
-
-        return $this;
-    }
-
-    /**
-     * Get the unfitness
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getUnfitness()
-    {
-        return $this->unfitness;
-    }
-
-    /**
      * Set the unfitness end date
      *
      * @param \DateTime $unfitnessEndDate
@@ -272,6 +308,66 @@ class TmCaseDecision implements Interfaces\EntityInterface
     public function getUnfitnessEndDate()
     {
         return $this->unfitnessEndDate;
+    }
+
+    /**
+     * Set the unfitness reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @return TmCaseDecision
+     */
+    public function setUnfitnessReasons($unfitnessReasons)
+    {
+        $this->unfitnessReasons = $unfitnessReasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the unfitness reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUnfitnessReasons()
+    {
+        return $this->unfitnessReasons;
+    }
+
+    /**
+     * Add a unfitness reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @return TmCaseDecision
+     */
+    public function addUnfitnessReasons($unfitnessReasons)
+    {
+        if ($unfitnessReasons instanceof ArrayCollection) {
+            $this->unfitnessReasons = new ArrayCollection(
+                array_merge(
+                    $this->unfitnessReasons->toArray(),
+                    $unfitnessReasons->toArray()
+                )
+            );
+        } elseif (!$this->unfitnessReasons->contains($unfitnessReasons)) {
+            $this->unfitnessReasons->add($unfitnessReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a unfitness reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @return TmCaseDecision
+     */
+    public function removeUnfitnessReasons($unfitnessReasons)
+    {
+        if ($this->unfitnessReasons->contains($unfitnessReasons)) {
+            $this->unfitnessReasons->removeElement($unfitnessReasons);
+        }
+
+        return $this;
     }
 
     /**

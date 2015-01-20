@@ -699,6 +699,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('interim_status', 'int_sts_refused', 'Refused', 'Refused'),
     ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked'),
     ('interim_status', 'int_sts_saved', 'Saved', 'Saved'),
+
     ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV'),
     ('lic_cat', 'lcat_permit', 'Permit', 'Permit'),
     ('lic_cat', 'lcat_psv', 'Public Service Vehicle', 'PSV'),
@@ -2814,7 +2815,10 @@ VALUES
 (139,'Direction','S26','S26 - Direction/order made under [....] not to take effect until [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
 (140,'Direction','S28','S28 - Direction made removing [....name of operating center....] from the licence with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
 (141,'Direction','S29','S29 - Direction made attaching/varying conditions to the licence as follows [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
-(142,'Withdrawn','Art. 8(3)','Art. 8(3) - Community Authorisation withdrawn with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1);
+(142,'Withdrawn','Art. 8(3)','Art. 8(3) - Community Authorisation withdrawn with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
+
+(143,'Regulation','Article 6','Repute Not Lost under Article 6 of Regulation (EC) No 1071/2009',1,null,1,1,NOW(),NOW(),1),
+(144,'Regulation','Article 6','Declared Unfit under Article 6 of Regulation (EC) No 1071/2009`',1,null,1,1,NOW(),NOW(),1);
 
 INSERT INTO `reason` (`id`, `goods_or_psv`, `section_code`, `description`, `is_read_only`, `is_ni`, `is_propose_to_revoke`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES (1,'lcat_gv','Section 12','Objection/Representation: New application',1,0,0,NULL,NULL,NULL,NULL,1),
 (2,'lcat_gv','Section 13','New application',1,0,0,NULL,NULL,NULL,NULL,1),
@@ -3057,7 +3061,9 @@ repute and/or financial standing',0,0,1,NULL,NULL,NULL,NULL,1),
 (281,'lcat_gv','x NI-Section 24(1)(b)','External TM exceeds the 4/50 rule (section 12A (3)(c )(ii))',0,1,1,NULL,NULL,NULL,NULL,1),
 (282,'lcat_gv','x NI-Section 25','Disqualification to be considered - Operator licence',0,1,0,NULL,NULL,NULL,NULL,1),
 (283,'lcat_gv','x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,0,NULL,NULL,NULL,NULL,1),
-(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1);
+(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,0,NULL,NULL,NULL,NULL,1),
+(285,null,'Article 6','Declare unfit',0,0,0,NULL,NULL,NULL,NULL,1),
+(286,null,'Article 6','Repute not lost',0,0,0,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `decision` (`id`, `goods_or_psv`, `section_code`, `description`, `is_read_only`, `is_ni`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES (37,'lcat_gv','Section 13','Application Granted',1,0,NULL,NULL,NULL,NULL,1),
 (38,'lcat_gv','Section 13','Undertakings',1,0,NULL,NULL,NULL,NULL,1),
@@ -3160,7 +3166,9 @@ NULL,1),
 (281,'lcat_gv','x NI-Section 24(1)(b)','External TM exceeds the 4/50 rule (section 12A (3)(c )(ii))',0,1,NULL,NULL,NULL,NULL,1),
 (282,'lcat_gv','x NI-Section 25','Disqualification to be considered - Operator licence',0,1,NULL,NULL,NULL,NULL,1),
 (283,'lcat_gv','x NI-Section 12A(3)(a) or (b)','TM good repute or professional competence',0,1,NULL,NULL,NULL,NULL,1),
-(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,NULL,NULL,NULL,NULL,1);
+(284,'lcat_gv','x NI-Section 25','Disqualification to be considered - Transport Manager',0,1,NULL,NULL,NULL,NULL,1),
+(285,null,'Article 6','Declare unfit',0,0,NULL,NULL,NULL,NULL,1),
+(286,null,'Article 6','Repute not lost',0,0,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `fee_type` (`id`,`fee_type`,`effective_from`,`description`,`fixed_value`,`annual_value`,`five_year_value`,`traffic_area_id`,`licence_type`,`goods_or_psv`,`expire_fee_with_licence`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'APP','1995-01-01 00:00:00','GV Application Fee',160.00,0.00,0.00,NULL,NULL,'lcat_gv',0,479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
