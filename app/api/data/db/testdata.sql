@@ -634,7 +634,7 @@ VALUES
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
-(`id`, `ground_id`)
+(`opposition_id`, `ground_id`)
 VALUES
   (1, 'ogf_env'),
   (1, 'ogf_parking'),
