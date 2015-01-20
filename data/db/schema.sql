@@ -4044,24 +4044,13 @@ DROP TABLE IF EXISTS `opposition_grounds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `opposition_grounds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `opposition_id` int(11) NOT NULL,
-  `is_representation` tinyint(1) NOT NULL DEFAULT '0',
-  `grounds` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
+  `ground_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`opposition_id`, `ground_id`),
   KEY `fk_opposition_ground_opposition1_idx` (`opposition_id`),
-  KEY `fk_opposition_ground_ref_data1_idx` (`grounds`),
-  KEY `fk_opposition_grounds_user1_idx` (`created_by`),
-  KEY `fk_opposition_grounds_user2_idx` (`last_modified_by`),
+  KEY `fk_opposition_ground_ref_data1_idx` (`ground_id`),
   CONSTRAINT `fk_opposition_ground_opposition1` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_ground_ref_data1` FOREIGN KEY (`grounds`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_grounds_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_grounds_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_ground_ref_data1` FOREIGN KEY (`ground_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
