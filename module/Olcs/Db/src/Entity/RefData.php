@@ -101,13 +101,33 @@ class RefData implements Interfaces\EntityInterface
     protected $refDataCategoryId;
 
     /**
+     * Tm case decision rehab
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TmCaseDecision", mappedBy="rehabMeasures")
+     */
+    protected $tmCaseDecisionRehabs;
+
+    /**
+     * Tm case decision unfitness
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TmCaseDecision", mappedBy="unfitnessReasons")
+     */
+    protected $tmCaseDecisionUnfitnesss;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->pis = new ArrayCollection();
-        $this->cases = new ArrayCollection();
+        $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
+        $this->tmCaseDecisionRehabs = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
+        $this->cases = new ArrayCollection();
+        $this->pis = new ArrayCollection();
     }
 
     /**
@@ -403,5 +423,125 @@ class RefData implements Interfaces\EntityInterface
     public function getRefDataCategoryId()
     {
         return $this->refDataCategoryId;
+    }
+
+    /**
+     * Set the tm case decision rehab
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionRehabs
+     * @return RefData
+     */
+    public function setTmCaseDecisionRehabs($tmCaseDecisionRehabs)
+    {
+        $this->tmCaseDecisionRehabs = $tmCaseDecisionRehabs;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm case decision rehabs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmCaseDecisionRehabs()
+    {
+        return $this->tmCaseDecisionRehabs;
+    }
+
+    /**
+     * Add a tm case decision rehabs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionRehabs
+     * @return RefData
+     */
+    public function addTmCaseDecisionRehabs($tmCaseDecisionRehabs)
+    {
+        if ($tmCaseDecisionRehabs instanceof ArrayCollection) {
+            $this->tmCaseDecisionRehabs = new ArrayCollection(
+                array_merge(
+                    $this->tmCaseDecisionRehabs->toArray(),
+                    $tmCaseDecisionRehabs->toArray()
+                )
+            );
+        } elseif (!$this->tmCaseDecisionRehabs->contains($tmCaseDecisionRehabs)) {
+            $this->tmCaseDecisionRehabs->add($tmCaseDecisionRehabs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm case decision rehabs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionRehabs
+     * @return RefData
+     */
+    public function removeTmCaseDecisionRehabs($tmCaseDecisionRehabs)
+    {
+        if ($this->tmCaseDecisionRehabs->contains($tmCaseDecisionRehabs)) {
+            $this->tmCaseDecisionRehabs->removeElement($tmCaseDecisionRehabs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm case decision unfitness
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionUnfitnesss
+     * @return RefData
+     */
+    public function setTmCaseDecisionUnfitnesss($tmCaseDecisionUnfitnesss)
+    {
+        $this->tmCaseDecisionUnfitnesss = $tmCaseDecisionUnfitnesss;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm case decision unfitnesss
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmCaseDecisionUnfitnesss()
+    {
+        return $this->tmCaseDecisionUnfitnesss;
+    }
+
+    /**
+     * Add a tm case decision unfitnesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionUnfitnesss
+     * @return RefData
+     */
+    public function addTmCaseDecisionUnfitnesss($tmCaseDecisionUnfitnesss)
+    {
+        if ($tmCaseDecisionUnfitnesss instanceof ArrayCollection) {
+            $this->tmCaseDecisionUnfitnesss = new ArrayCollection(
+                array_merge(
+                    $this->tmCaseDecisionUnfitnesss->toArray(),
+                    $tmCaseDecisionUnfitnesss->toArray()
+                )
+            );
+        } elseif (!$this->tmCaseDecisionUnfitnesss->contains($tmCaseDecisionUnfitnesss)) {
+            $this->tmCaseDecisionUnfitnesss->add($tmCaseDecisionUnfitnesss);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm case decision unfitnesss
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmCaseDecisionUnfitnesss
+     * @return RefData
+     */
+    public function removeTmCaseDecisionUnfitnesss($tmCaseDecisionUnfitnesss)
+    {
+        if ($this->tmCaseDecisionUnfitnesss->contains($tmCaseDecisionUnfitnesss)) {
+            $this->tmCaseDecisionUnfitnesss->removeElement($tmCaseDecisionUnfitnesss);
+        }
+
+        return $this;
     }
 }
