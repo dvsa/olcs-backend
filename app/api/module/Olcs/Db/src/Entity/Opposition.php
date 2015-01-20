@@ -63,6 +63,23 @@ class Opposition implements Interfaces\EntityInterface
     protected $case;
 
     /**
+     * Ground
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="oppositions")
+     * @ORM\JoinTable(name="opposition_grounds",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ground_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $grounds;
+
+    /**
      * Is copied
      *
      * @var string
@@ -173,22 +190,13 @@ class Opposition implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
-     * Ground
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OppositionGrounds", mappedBy="opposition")
-     */
-    protected $grounds;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
+        $this->grounds = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
-        $this->grounds = new ArrayCollection();
     }
 
     /**
@@ -235,6 +243,66 @@ class Opposition implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Set the ground
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function setGrounds($grounds)
+    {
+        $this->grounds = $grounds;
+
+        return $this;
+    }
+
+    /**
+     * Get the grounds
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGrounds()
+    {
+        return $this->grounds;
+    }
+
+    /**
+     * Add a grounds
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function addGrounds($grounds)
+    {
+        if ($grounds instanceof ArrayCollection) {
+            $this->grounds = new ArrayCollection(
+                array_merge(
+                    $this->grounds->toArray(),
+                    $grounds->toArray()
+                )
+            );
+        } elseif (!$this->grounds->contains($grounds)) {
+            $this->grounds->add($grounds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a grounds
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function removeGrounds($grounds)
+    {
+        if ($this->grounds->contains($grounds)) {
+            $this->grounds->removeElement($grounds);
+        }
+
+        return $this;
     }
 
     /**
@@ -582,66 +650,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the ground
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function setGrounds($grounds)
-    {
-        $this->grounds = $grounds;
-
-        return $this;
-    }
-
-    /**
-     * Get the grounds
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getGrounds()
-    {
-        return $this->grounds;
-    }
-
-    /**
-     * Add a grounds
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function addGrounds($grounds)
-    {
-        if ($grounds instanceof ArrayCollection) {
-            $this->grounds = new ArrayCollection(
-                array_merge(
-                    $this->grounds->toArray(),
-                    $grounds->toArray()
-                )
-            );
-        } elseif (!$this->grounds->contains($grounds)) {
-            $this->grounds->add($grounds);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a grounds
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function removeGrounds($grounds)
-    {
-        if ($this->grounds->contains($grounds)) {
-            $this->grounds->removeElement($grounds);
         }
 
         return $this;
