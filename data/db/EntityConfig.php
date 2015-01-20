@@ -1055,9 +1055,6 @@ return array(
         )
     ),
     'opposition_grounds' => array(
-        'is_representation' => array(
-            'type' => 'yesno'
-        ),
         'opposition_id' => array(
             'inversedBy' => array(
                 'entity' => 'Opposition',
