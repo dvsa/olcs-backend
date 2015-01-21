@@ -43,6 +43,15 @@ class OperatingCentre implements Interfaces\EntityInterface
     protected $address;
 
     /**
+     * Opposition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Opposition", mappedBy="operatingCentres")
+     */
+    protected $oppositions;
+
+    /**
      * Ad document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -56,6 +65,7 @@ class OperatingCentre implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->oppositions = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
     }
 
@@ -80,6 +90,66 @@ class OperatingCentre implements Interfaces\EntityInterface
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return OperatingCentre
+     */
+    public function setOppositions($oppositions)
+    {
+        $this->oppositions = $oppositions;
+
+        return $this;
+    }
+
+    /**
+     * Get the oppositions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOppositions()
+    {
+        return $this->oppositions;
+    }
+
+    /**
+     * Add a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return OperatingCentre
+     */
+    public function addOppositions($oppositions)
+    {
+        if ($oppositions instanceof ArrayCollection) {
+            $this->oppositions = new ArrayCollection(
+                array_merge(
+                    $this->oppositions->toArray(),
+                    $oppositions->toArray()
+                )
+            );
+        } elseif (!$this->oppositions->contains($oppositions)) {
+            $this->oppositions->add($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return OperatingCentre
+     */
+    public function removeOppositions($oppositions)
+    {
+        if ($this->oppositions->contains($oppositions)) {
+            $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
     }
 
     /**

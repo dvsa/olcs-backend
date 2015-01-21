@@ -134,6 +134,23 @@ class Opposition implements Interfaces\EntityInterface
     protected $isWithdrawn = 0;
 
     /**
+     * Operating centre
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="oppositions")
+     * @ORM\JoinTable(name="operating_centre_opposition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $operatingCentres;
+
+    /**
      * Opposer
      *
      * @var \Olcs\Db\Entity\Opposer
@@ -181,22 +198,13 @@ class Opposition implements Interfaces\EntityInterface
     protected $documents;
 
     /**
-     * Operating centre
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OperatingCentreOpposition", mappedBy="opposition")
-     */
-    protected $operatingCentres;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->grounds = new ArrayCollection();
-        $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     /**
@@ -444,6 +452,66 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the operating centre
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
+     * Add a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function addOperatingCentres($operatingCentres)
+    {
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
+                array_merge(
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
+                )
+            );
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function removeOperatingCentres($operatingCentres)
+    {
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the opposer
      *
      * @param \Olcs\Db\Entity\Opposer $opposer
@@ -590,66 +658,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
-     * @return Opposition
-     */
-    public function setOperatingCentres($operatingCentres)
-    {
-        $this->operatingCentres = $operatingCentres;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centres
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOperatingCentres()
-    {
-        return $this->operatingCentres;
-    }
-
-    /**
-     * Add a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
-     * @return Opposition
-     */
-    public function addOperatingCentres($operatingCentres)
-    {
-        if ($operatingCentres instanceof ArrayCollection) {
-            $this->operatingCentres = new ArrayCollection(
-                array_merge(
-                    $this->operatingCentres->toArray(),
-                    $operatingCentres->toArray()
-                )
-            );
-        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->add($operatingCentres);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
-     * @return Opposition
-     */
-    public function removeOperatingCentres($operatingCentres)
-    {
-        if ($this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->removeElement($operatingCentres);
         }
 
         return $this;
