@@ -883,7 +883,7 @@ DROP TABLE IF EXISTS `community_lic`;
 CREATE TABLE `community_lic` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
-  `com_lic_status` varchar(32) NOT NULL COMMENT 'annulled, cns, expired, pending, returned, revoked, surrender, suspended, valid, void, withdrawn',
+  `status` varchar(32) NOT NULL COMMENT 'annulled, cns, expired, pending, returned, revoked, surrender, suspended, valid, void, withdrawn',
   `expired_date` datetime DEFAULT NULL COMMENT 'The date the licence expired.',
   `specified_date` datetime DEFAULT NULL COMMENT 'Activation date of com licence.',
   `licence_expired_date` date DEFAULT NULL COMMENT 'The date the community licence will expire. Typically 5 years after specified date.  Generally less for an interim licence.',
@@ -899,11 +899,11 @@ CREATE TABLE `community_lic` (
   KEY `fk_community_lic_licence1_idx` (`licence_id`),
   KEY `fk_community_lic_user1_idx` (`created_by`),
   KEY `fk_community_lic_user2_idx` (`last_modified_by`),
-  KEY `fk_community_lic_ref_data1_idx` (`com_lic_status`),
+  KEY `fk_community_lic_ref_data1_idx` (`status`),
   CONSTRAINT `fk_community_lic_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_ref_data1` FOREIGN KEY (`com_lic_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_ref_data1` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Community licence. A licence for travel within the EU for both goods and PSV (but not PSV SR).';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
