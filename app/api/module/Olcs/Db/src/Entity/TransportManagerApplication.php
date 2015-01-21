@@ -45,7 +45,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
-        Traits\TmTypeManyToOne,
         Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
@@ -68,6 +67,16 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=false)
      */
     protected $tmApplicationStatus;
+
+    /**
+     * Tm type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=true)
+     */
+    protected $tmType;
 
     /**
      * Tm application oc
@@ -130,6 +139,29 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getTmApplicationStatus()
     {
         return $this->tmApplicationStatus;
+    }
+
+    /**
+     * Set the tm type
+     *
+     * @param \Olcs\Db\Entity\RefData $tmType
+     * @return TransportManagerApplication
+     */
+    public function setTmType($tmType)
+    {
+        $this->tmType = $tmType;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getTmType()
+    {
+        return $this->tmType;
     }
 
     /**
