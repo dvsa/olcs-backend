@@ -3987,7 +3987,7 @@ DROP TABLE IF EXISTS `opposition`;
 CREATE TABLE `opposition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
-  `application_id` int(11) NOT NULL,
+  `application_id` int(11) DEFAULT NULL,
   `case_id` int(11) DEFAULT NULL,
   `opposer_id` int(11) NOT NULL,
   `opposition_type` varchar(32) NOT NULL,
