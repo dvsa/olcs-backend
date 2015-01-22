@@ -1161,7 +1161,10 @@ return array(
         'contact_details_id' => array(
             'inversedBy' => array(
                 'entity' => 'ContactDetails',
-                'property' => 'phoneContact'
+                'property' => 'phoneContact',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),
