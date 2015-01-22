@@ -1383,7 +1383,7 @@ INSERT INTO `community_lic` (
     ('cl_sts_withdrawn', 7, '2014-03-12', 3, NULL, 'UKGB', '2015-01-01', NULL),
     ('cl_sts_suspended', 7, '2014-06-07', 4, NULL, 'UKGB', '2015-01-01', NULL),
     ('cl_sts_void', 7, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
-    ('cl_sts_returned', 7, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL)
+    ('cl_sts_returned', 7, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
     ('cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 SET foreign_key_checks = 1;
