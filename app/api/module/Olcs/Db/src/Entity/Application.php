@@ -372,6 +372,15 @@ class Application implements Interfaces\EntityInterface
     protected $targetCompletionDate;
 
     /**
+     * Undertakings confirmation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="undertakings_confirmation", nullable=false)
+     */
+    protected $undertakingsConfirmation = 0;
+
+    /**
      * Application completion
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -1251,6 +1260,29 @@ class Application implements Interfaces\EntityInterface
     public function getTargetCompletionDate()
     {
         return $this->targetCompletionDate;
+    }
+
+    /**
+     * Set the undertakings confirmation
+     *
+     * @param boolean $undertakingsConfirmation
+     * @return Application
+     */
+    public function setUndertakingsConfirmation($undertakingsConfirmation)
+    {
+        $this->undertakingsConfirmation = $undertakingsConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the undertakings confirmation
+     *
+     * @return boolean
+     */
+    public function getUndertakingsConfirmation()
+    {
+        return $this->undertakingsConfirmation;
     }
 
     /**
