@@ -401,7 +401,9 @@ VALUES
     '2014-11-24 10:30:04',1),
     (113,'ct_complainant',26,77,4,1,NULL,NULL,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (115,'ct_tm',104,79,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (116,'ct_tm',104,80,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -688,7 +690,9 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `title`, `birth_da
     (65,NULL,NULL,'Mr','1972-02-15 00:00:00','Jonathan','Smith',NULL,NULL,NULL,1,NULL, NULL),
     (66,NULL,NULL,'Mr','1975-03-15 00:00:00','Tim','Cooper',NULL,NULL,NULL,1,NULL, NULL),
     (77,NULL,NULL,'Mr','1972-02-15 00:00:00','Tom','Jones',NULL,NULL,NULL,1,NULL, 'Leeds'),
-    (78,NULL,NULL,'Mr','1975-03-15 00:00:00','Keith','Winnard',NULL,NULL,NULL,1,NULL, NULL);
+    (78,NULL,NULL,'Mr','1975-03-15 00:00:00','Keith','Winnard',NULL,NULL,NULL,1,NULL, NULL),
+    (79,NULL,NULL,'Mr','1975-04-15 00:00:00','James','Bond',NULL,NULL,NULL,1,NULL, NULL),
+    (80,NULL,NULL,'Mr','1975-04-15 00:00:00','Dave','Smith',NULL,NULL,NULL,1,NULL, NULL);
 
 INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`, `notes`,
     `created_on`, `last_modified_on`, `version`, `person_id`) VALUES
@@ -839,8 +843,8 @@ VALUES
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `contact_details_id`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'tm_st_A','tm_t_I',NULL,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'tm_st_A','tm_t_E',NULL,NULL,NULL,NULL,1),
+    (1,NULL,NULL,'tm_st_A','tm_t_I',115,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_A','tm_t_E',116,NULL,NULL,NULL,1),
     (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
