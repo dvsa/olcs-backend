@@ -498,6 +498,10 @@ class AlignEntitiesToSchema
                     'orderBy' => $fieldDetails['orderBy']
                 );
 
+                if (isset($fieldDetails['cascade'])) {
+                    $item['@attributes']['cascade'] = $fieldDetails['cascade'];
+                }
+
                 $details['fields'][] = array(
                     'isId' => false,
                     'isInverse' => true,
@@ -1140,6 +1144,9 @@ class AlignEntitiesToSchema
                         'targetEntity' => self::ENTITY_NAMESPACE . ucfirst($className),
                         'property' => $fieldConfig['inversedBy']['property'],
                         'relationship' => $relationship,
+                        'cascade' => isset($fieldConfig['inversedBy']['cascade'])
+                            ? $fieldConfig['inversedBy']['cascade']
+                            : null,
                         'orderBy' => isset($fieldConfig['inversedBy']['orderBy'])
                             ? $fieldConfig['inversedBy']['orderBy']
                             : null
