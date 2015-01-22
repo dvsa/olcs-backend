@@ -92,6 +92,7 @@ TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
+TRUNCATE TABLE `community_lic`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -1371,5 +1372,18 @@ INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
     ('task.default_team', 2, NULL),
     ('task.default_user', 1, NULL);
+
+INSERT INTO `community_lic` (
+    `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
+    `serial_no_prefix`, `specified_date`, `licence_expired_date`
+) VALUES
+    ('cl_sts_valid', 7, NULL, 0, NULL, 'UKGB', '2015-01-01', NULL),
+    ('cl_sts_valid', 7, NULL, 1, NULL, 'UKGB', '2015-01-01', NULL),
+    ('cl_sts_expired', 7, '2014-01-01', 2, NULL, 'UKGB', '2015-01-01', NULL),
+    ('cl_sts_withdrawn', 7, '2014-03-12', 3, NULL, 'UKGB', '2015-01-01', NULL),
+    ('cl_sts_suspended', 7, '2014-06-07', 4, NULL, 'UKGB', '2015-01-01', NULL),
+    ('cl_sts_void', 7, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
+    ('cl_sts_returned', 7, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL)
+    ('cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 SET foreign_key_checks = 1;
