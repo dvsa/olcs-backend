@@ -82,6 +82,15 @@ class Application implements Interfaces\EntityInterface
     protected $convictionsConfirmation = 0;
 
     /**
+     * Declaration confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false)
+     */
+    protected $declarationConfirmation = 0;
+
+    /**
      * Disqualified
      *
      * @var string
@@ -545,6 +554,29 @@ class Application implements Interfaces\EntityInterface
     public function getConvictionsConfirmation()
     {
         return $this->convictionsConfirmation;
+    }
+
+    /**
+     * Set the declaration confirmation
+     *
+     * @param string $declarationConfirmation
+     * @return Application
+     */
+    public function setDeclarationConfirmation($declarationConfirmation)
+    {
+        $this->declarationConfirmation = $declarationConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the declaration confirmation
+     *
+     * @return string
+     */
+    public function getDeclarationConfirmation()
+    {
+        return $this->declarationConfirmation;
     }
 
     /**
