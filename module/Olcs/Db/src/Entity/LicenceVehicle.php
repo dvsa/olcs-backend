@@ -29,7 +29,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceVehicle implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -40,6 +39,16 @@ class LicenceVehicle implements Interfaces\EntityInterface
         Traits\SpecifiedDateField,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="licenceVehicles")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
 
     /**
      * Interim application
@@ -123,6 +132,29 @@ class LicenceVehicle implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->goodsDiscs = new ArrayCollection();
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return LicenceVehicle
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**
