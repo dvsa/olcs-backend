@@ -502,6 +502,19 @@ INSERT INTO `country` (`id`,`country_desc`) VALUES
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
+    ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
+    ('com_lic_sts', 'cl_sts_valid', 'Active', null),
+    ('com_lic_sts', 'cl_sts_expired', 'Expired', null),
+    ('com_lic_sts', 'cl_sts_withdrawn', 'Withdrawn', null),
+    ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
+    ('com_lic_sts', 'cl_sts_void', 'Voided', null),
+    ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
+
+ -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
+ -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
+ -- ('com_lic_sts', 'cl_sts_revoked', 'Revoked', 'Revoked'),
+ -- ('com_lic_sts', 'cl_sts_surrender', 'Surrender', 'Surrender'),
+    
     ('accrual_rule', 'acr_licence_start', 'From licence start date', null),
     ('accrual_rule', 'acr_continuation', 'From continuation date', null),
     ('accrual_rule', 'acr_immediate', 'Immediate', null),
@@ -533,13 +546,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_reg_status', 'breg_s_registered', 'Registered', 'Registered'),
     ('bus_reg_status', 'breg_s_refused', 'Refused', 'Refused'),
     ('bus_reg_status', 'breg_s_cancellation', 'Cancellation', 'Cancellation'),
-    ('bus_reg_status', 'breg_s_withdrawn', 'Withdrawn', 'WithDrawn'),
+    ('bus_reg_status', 'breg_s_withdrawn', 'Withdrawn', 'Withdrawn'),
     ('bus_reg_status', 'breg_s_var', 'Variation', 'Variation'),
     ('bus_reg_status', 'breg_s_cns', 'CNS', 'CNS'),
-    ('bus_reg_status', 'breg_s_revoked', 'Revoked', 'Revoked'),
     ('bus_reg_status', 'breg_s_cancelled', 'Cancelled', 'Cancelled'),
     ('bus_reg_status', 'breg_s_new', 'New', 'New'),
-    ('bus_reg_status', 'breg_s_surr', 'Surrendered', 'Surrendered'),
 
     ('case_type', 'case_t_app', 'Application', null),
     ('case_type', 'case_t_lic', 'Licence', null),
@@ -547,10 +558,10 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('case_type', 'case_t_imp', 'Impounding', null),
 
     ('complaint_status', 'cs_ack', 'Acknowledged', 'ACK'),
-    ('complaint_status', 'cs_pin', 'PI Notified', 'PIN'),
-    ('complaint_status', 'cs_rfs', 'Review Form Sent', 'RFS'),
-    ('complaint_status', 'cs_vfr', 'Valid For Review', 'VFR'),
-    ('complaint_status', 'cs_yst', 'Are You Still There', 'YST'),
+    ('complaint_status', 'cs_pin', 'PI notified', 'PIN'),
+    ('complaint_status', 'cs_rfs', 'Review form sent', 'RFS'),
+    ('complaint_status', 'cs_vfr', 'Valid for review', 'VFR'),
+    ('complaint_status', 'cs_yst', 'Are you still there', 'YST'),
 
     ('env-complaint-status', 'ecst_open', 'Open', null),
     ('env-complaint-status', 'ecst_closed', 'Closed', null),
