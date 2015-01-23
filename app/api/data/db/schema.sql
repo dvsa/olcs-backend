@@ -883,7 +883,7 @@ DROP TABLE IF EXISTS `community_lic`;
 CREATE TABLE `community_lic` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
-  `com_lic_status` varchar(32) NOT NULL COMMENT 'annulled, cns, expired, pending, returned, revoked, surrender, suspended, valid, void, withdrawn',
+  `status` varchar(32) NOT NULL COMMENT 'annulled, cns, expired, pending, returned, revoked, surrender, suspended, valid, void, withdrawn',
   `expired_date` datetime DEFAULT NULL COMMENT 'The date the licence expired.',
   `specified_date` datetime DEFAULT NULL COMMENT 'Activation date of com licence.',
   `licence_expired_date` date DEFAULT NULL COMMENT 'The date the community licence will expire. Typically 5 years after specified date.  Generally less for an interim licence.',
@@ -899,11 +899,11 @@ CREATE TABLE `community_lic` (
   KEY `fk_community_lic_licence1_idx` (`licence_id`),
   KEY `fk_community_lic_user1_idx` (`created_by`),
   KEY `fk_community_lic_user2_idx` (`last_modified_by`),
-  KEY `fk_community_lic_ref_data1_idx` (`com_lic_status`),
+  KEY `fk_community_lic_ref_data1_idx` (`status`),
   CONSTRAINT `fk_community_lic_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_ref_data1` FOREIGN KEY (`com_lic_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_ref_data1` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Community licence. A licence for travel within the EU for both goods and PSV (but not PSV SR).';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2463,6 +2463,7 @@ CREATE TABLE `fee_type` (
   `licence_type` varchar(32) DEFAULT NULL,
   `goods_or_psv` varchar(32) NOT NULL,
   `expire_fee_with_licence` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Dont allow payment after licence expires',
+  `accrual_rule` VARCHAR(32) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -2472,11 +2473,13 @@ CREATE TABLE `fee_type` (
   KEY `fk_fee_type_traffic_area1_idx` (`traffic_area_id`),
   KEY `fk_fee_type_ref_data1_idx` (`licence_type`),
   KEY `fk_fee_type_ref_data2_idx` (`goods_or_psv`),
+  KEY `fk_fee_type_ref_data3_idx` (`accrual_rule`),
   KEY `fk_fee_type_user1_idx` (`created_by`),
   KEY `fk_fee_type_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_fee_type_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_type_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_type_ref_data2` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fee_type_ref_data3` FOREIGN KEY (`accrual_rule`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_type_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_fee_type_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -7049,7 +7052,7 @@ DROP TABLE IF EXISTS `transport_manager_application`;
 CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
-  `tm_type` varchar(32) NOT NULL,
+  `tm_type` varchar(32) DEFAULT NULL,
   `tm_application_status` varchar(32) NOT NULL,
   `application_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
