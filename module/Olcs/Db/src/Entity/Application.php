@@ -82,6 +82,15 @@ class Application implements Interfaces\EntityInterface
     protected $convictionsConfirmation = 0;
 
     /**
+     * Declaration confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false)
+     */
+    protected $declarationConfirmation = 0;
+
+    /**
      * Disqualified
      *
      * @var string
@@ -372,15 +381,6 @@ class Application implements Interfaces\EntityInterface
     protected $targetCompletionDate;
 
     /**
-     * Undertakings confirmation
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="undertakings_confirmation", nullable=false)
-     */
-    protected $undertakingsConfirmation = 0;
-
-    /**
      * Application completion
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -524,6 +524,29 @@ class Application implements Interfaces\EntityInterface
     public function getConvictionsConfirmation()
     {
         return $this->convictionsConfirmation;
+    }
+
+    /**
+     * Set the declaration confirmation
+     *
+     * @param string $declarationConfirmation
+     * @return Application
+     */
+    public function setDeclarationConfirmation($declarationConfirmation)
+    {
+        $this->declarationConfirmation = $declarationConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the declaration confirmation
+     *
+     * @return string
+     */
+    public function getDeclarationConfirmation()
+    {
+        return $this->declarationConfirmation;
     }
 
     /**
@@ -1260,29 +1283,6 @@ class Application implements Interfaces\EntityInterface
     public function getTargetCompletionDate()
     {
         return $this->targetCompletionDate;
-    }
-
-    /**
-     * Set the undertakings confirmation
-     *
-     * @param boolean $undertakingsConfirmation
-     * @return Application
-     */
-    public function setUndertakingsConfirmation($undertakingsConfirmation)
-    {
-        $this->undertakingsConfirmation = $undertakingsConfirmation;
-
-        return $this;
-    }
-
-    /**
-     * Get the undertakings confirmation
-     *
-     * @return boolean
-     */
-    public function getUndertakingsConfirmation()
-    {
-        return $this->undertakingsConfirmation;
     }
 
     /**
