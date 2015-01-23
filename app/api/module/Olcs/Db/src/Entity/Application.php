@@ -435,6 +435,15 @@ class Application implements Interfaces\EntityInterface
     protected $publicationLinks;
 
     /**
+     * Transport manager
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerApplication", mappedBy="application")
+     */
+    protected $transportManagers;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -446,6 +455,7 @@ class Application implements Interfaces\EntityInterface
         $this->previousConvictions = new ArrayCollection();
         $this->previousLicences = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->transportManagers = new ArrayCollection();
     }
 
     /**
@@ -1668,6 +1678,66 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function setTransportManagers($transportManagers)
+    {
+        $this->transportManagers = $transportManagers;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport managers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTransportManagers()
+    {
+        return $this->transportManagers;
+    }
+
+    /**
+     * Add a transport managers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function addTransportManagers($transportManagers)
+    {
+        if ($transportManagers instanceof ArrayCollection) {
+            $this->transportManagers = new ArrayCollection(
+                array_merge(
+                    $this->transportManagers->toArray(),
+                    $transportManagers->toArray()
+                )
+            );
+        } elseif (!$this->transportManagers->contains($transportManagers)) {
+            $this->transportManagers->add($transportManagers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a transport managers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function removeTransportManagers($transportManagers)
+    {
+        if ($this->transportManagers->contains($transportManagers)) {
+            $this->transportManagers->removeElement($transportManagers);
         }
 
         return $this;
