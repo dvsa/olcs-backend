@@ -1187,5 +1187,13 @@ return array(
                 'property' => 'publicationLink'
             )
         )
+    ),
+    'statement' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'statement'
+            ),
+        )
     )
 );
