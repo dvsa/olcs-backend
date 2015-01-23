@@ -1187,5 +1187,13 @@ return array(
                 'property' => 'publicationLink'
             )
         )
+    ),
+    'transport_manager_application' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'transportManager'
+            )
+        )
     )
 );
