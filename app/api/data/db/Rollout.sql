@@ -502,6 +502,19 @@ INSERT INTO `country` (`id`,`country_desc`) VALUES
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
+    ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
+    ('com_lic_sts', 'cl_sts_valid', 'Active', null),
+    ('com_lic_sts', 'cl_sts_expired', 'Expired', null),
+    ('com_lic_sts', 'cl_sts_withdrawn', 'Withdrawn', null),
+    ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
+    ('com_lic_sts', 'cl_sts_void', 'Voided', null),
+    ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
+
+ -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
+ -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
+ -- ('com_lic_sts', 'cl_sts_revoked', 'Revoked', 'Revoked'),
+ -- ('com_lic_sts', 'cl_sts_surrender', 'Surrender', 'Surrender'),
+    
     ('accrual_rule', 'acr_licence_start', 'From licence start date', null),
     ('accrual_rule', 'acr_continuation', 'From continuation date', null),
     ('accrual_rule', 'acr_immediate', 'Immediate', null),
