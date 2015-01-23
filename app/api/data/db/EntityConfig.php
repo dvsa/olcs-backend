@@ -136,6 +136,9 @@ return array(
         'safety_confirmation' => array(
             'type' => 'yesno'
         ),
+        'declaration_confirmation' => array(
+            'type' => 'yesno'
+        ),
         'prev_has_licence' => array(
             'type' => 'yesnonull'
         ),
