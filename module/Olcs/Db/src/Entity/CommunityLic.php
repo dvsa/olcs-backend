@@ -17,7 +17,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_community_lic_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_community_lic_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_community_lic_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_community_lic_ref_data1_idx", columns={"com_lic_status"})
+ *        @ORM\Index(name="fk_community_lic_ref_data1_idx", columns={"status"})
  *    }
  * )
  */
@@ -31,17 +31,8 @@ class CommunityLic implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
+        Traits\StatusManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Com lic status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="com_lic_status", referencedColumnName="id", nullable=false)
-     */
-    protected $comLicStatus;
 
     /**
      * Expired date
@@ -87,29 +78,6 @@ class CommunityLic implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="serial_no_prefix", length=4, nullable=true)
      */
     protected $serialNoPrefix;
-
-    /**
-     * Set the com lic status
-     *
-     * @param \Olcs\Db\Entity\RefData $comLicStatus
-     * @return CommunityLic
-     */
-    public function setComLicStatus($comLicStatus)
-    {
-        $this->comLicStatus = $comLicStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the com lic status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getComLicStatus()
-    {
-        return $this->comLicStatus;
-    }
 
     /**
      * Set the expired date
