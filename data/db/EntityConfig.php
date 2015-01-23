@@ -79,6 +79,10 @@ return array(
         'phone_contacts' => array(
             'cascade' => array(
                 'persist'
+            ),
+            'inversedBy' => array(
+                'entity' => 'PhoneContact',
+                'property' => 'contactDetails'
             )
         )
     ),
