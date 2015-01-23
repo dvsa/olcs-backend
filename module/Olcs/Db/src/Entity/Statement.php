@@ -26,7 +26,6 @@ use Olcs\Db\Entity\Traits;
 class Statement implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -53,6 +52,16 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="authorisers_title", length=40, nullable=true)
      */
     protected $authorisersTitle;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="statements")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Contact type
@@ -191,6 +200,29 @@ class Statement implements Interfaces\EntityInterface
     public function getAuthorisersTitle()
     {
         return $this->authorisersTitle;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Statement
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
