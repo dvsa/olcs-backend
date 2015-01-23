@@ -1405,17 +1405,17 @@ INSERT INTO `community_lic` (
 
 INSERT INTO `statement`
 (`id`, `contact_type`, `requestors_address_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
-`authorisers_decision`, `authorisers_title`, `requested_date`, `requestors_body`, `issued_date`, `created_on`,
- `last_modified_on`, `version`)
+`authorisers_decision`, `authorisers_title`, `stopped_date`, `requested_date`, `requestors_body`, `issued_date`,
+`created_on`, `last_modified_on`, `version`, `vrm`)
 VALUES
-  (1, 'cm_letter', 105, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-01-01',
-  'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1),
-  (2, 'cm_fax', 106, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-02-02',
-  'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1),
-  (3, 'cm_email', 107, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-03-03',
-  'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1),
-  (4, 'cm_tel', 108, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-04-04',
-  'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1);
+  (1, 'cm_letter', 105, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-05-01',
+  '2014-01-01', 'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1, 'VRM 1'),
+  (2, 'cm_fax', 106, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-06-02',
+  '2014-02-02', 'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1, 'VRM 2'),
+  (3, 'cm_email', 107, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-07-03',
+  '2014-03-03', 'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1, 'VRM 3'),
+  (4, 'cm_tel', 108, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
+  '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
 
 
 SET foreign_key_checks = 1;
