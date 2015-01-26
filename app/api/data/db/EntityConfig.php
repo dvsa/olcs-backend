@@ -510,6 +510,12 @@ return array(
                 'property' => 'licenceVehicle'
             )
         ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'licenceVehicle'
+            )
+        ),
         'vehicle_id' => array(
             'inversedBy' => array(
                 'entity' => 'Vehicle',
@@ -752,6 +758,12 @@ return array(
         )
     ),
     'condition_undertaking' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
@@ -1220,6 +1232,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Application',
                 'property' => 'publicationLink'
+            )
+        )
+    ),
+    'transport_manager_application' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'transportManager'
             )
         )
     ),
