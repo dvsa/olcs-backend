@@ -277,6 +277,15 @@ class Cases implements Interfaces\EntityInterface
     protected $seriousInfringements;
 
     /**
+     * Statement
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Statement", mappedBy="case")
+     */
+    protected $statements;
+
+    /**
      * Stay
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -300,6 +309,7 @@ class Cases implements Interfaces\EntityInterface
         $this->oppositions = new ArrayCollection();
         $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
+        $this->statements = new ArrayCollection();
         $this->stays = new ArrayCollection();
     }
 
@@ -1220,6 +1230,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->seriousInfringements->contains($seriousInfringements)) {
             $this->seriousInfringements->removeElement($seriousInfringements);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the statement
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $statements
+     * @return Cases
+     */
+    public function setStatements($statements)
+    {
+        $this->statements = $statements;
+
+        return $this;
+    }
+
+    /**
+     * Get the statements
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getStatements()
+    {
+        return $this->statements;
+    }
+
+    /**
+     * Add a statements
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $statements
+     * @return Cases
+     */
+    public function addStatements($statements)
+    {
+        if ($statements instanceof ArrayCollection) {
+            $this->statements = new ArrayCollection(
+                array_merge(
+                    $this->statements->toArray(),
+                    $statements->toArray()
+                )
+            );
+        } elseif (!$this->statements->contains($statements)) {
+            $this->statements->add($statements);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a statements
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $statements
+     * @return Cases
+     */
+    public function removeStatements($statements)
+    {
+        if ($this->statements->contains($statements)) {
+            $this->statements->removeElement($statements);
         }
 
         return $this;
