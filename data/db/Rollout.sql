@@ -918,8 +918,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_new', 'New Application', '0'),
     ('ebsr_sub_type', 'ebsrt_refresh', 'Data Refresh', '1'),
     ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
-    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3')
-;
+    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3'),
+
+    /* Opposition status */
+    ('opposition_status', 'opp_ack', 'Acknowledged', 'A-Acknwlgd'),
+    ('opposition_status', 'opp_pro_rec', 'Proforma received', 'B-ProfRcvd'),
+    ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
+    ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
+    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
 
 -- TM qualifications
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)

@@ -23,7 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_opposition_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_opposition_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"})
+ *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"}),
+ *        @ORM\Index(name="fk_opposition_ref_data2_idx", columns={"status"})
  *    }
  * )
  */
@@ -38,6 +39,7 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\Notes4000Field,
+        Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -46,7 +48,7 @@ class Opposition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="oppositions")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
 
@@ -59,6 +61,23 @@ class Opposition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
+
+    /**
+     * Ground
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="oppositions")
+     * @ORM\JoinTable(name="opposition_grounds",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ground_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $grounds;
 
     /**
      * Is copied
@@ -97,6 +116,15 @@ class Opposition implements Interfaces\EntityInterface
     protected $isValid = 0;
 
     /**
+     * Is willing to attend pi
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false)
+     */
+    protected $isWillingToAttendPi = 0;
+
+    /**
      * Is withdrawn
      *
      * @var string
@@ -106,11 +134,28 @@ class Opposition implements Interfaces\EntityInterface
     protected $isWithdrawn = 0;
 
     /**
+     * Operating centre
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="oppositions")
+     * @ORM\JoinTable(name="operating_centre_opposition",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $operatingCentres;
+
+    /**
      * Opposer
      *
      * @var \Olcs\Db\Entity\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Opposer", cascade={"persist"})
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
      */
     protected $opposer;
@@ -153,21 +198,13 @@ class Opposition implements Interfaces\EntityInterface
     protected $documents;
 
     /**
-     * Ground
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OppositionGrounds", mappedBy="opposition")
-     */
-    protected $grounds;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->documents = new ArrayCollection();
         $this->grounds = new ArrayCollection();
+        $this->operatingCentres = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     /**
@@ -214,6 +251,66 @@ class Opposition implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Set the ground
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function setGrounds($grounds)
+    {
+        $this->grounds = $grounds;
+
+        return $this;
+    }
+
+    /**
+     * Get the grounds
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGrounds()
+    {
+        return $this->grounds;
+    }
+
+    /**
+     * Add a grounds
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function addGrounds($grounds)
+    {
+        if ($grounds instanceof ArrayCollection) {
+            $this->grounds = new ArrayCollection(
+                array_merge(
+                    $this->grounds->toArray(),
+                    $grounds->toArray()
+                )
+            );
+        } elseif (!$this->grounds->contains($grounds)) {
+            $this->grounds->add($grounds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a grounds
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
+     * @return Opposition
+     */
+    public function removeGrounds($grounds)
+    {
+        if ($this->grounds->contains($grounds)) {
+            $this->grounds->removeElement($grounds);
+        }
+
+        return $this;
     }
 
     /**
@@ -309,6 +406,29 @@ class Opposition implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the is willing to attend pi
+     *
+     * @param string $isWillingToAttendPi
+     * @return Opposition
+     */
+    public function setIsWillingToAttendPi($isWillingToAttendPi)
+    {
+        $this->isWillingToAttendPi = $isWillingToAttendPi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is willing to attend pi
+     *
+     * @return string
+     */
+    public function getIsWillingToAttendPi()
+    {
+        return $this->isWillingToAttendPi;
+    }
+
+    /**
      * Set the is withdrawn
      *
      * @param string $isWithdrawn
@@ -329,6 +449,66 @@ class Opposition implements Interfaces\EntityInterface
     public function getIsWithdrawn()
     {
         return $this->isWithdrawn;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
+     * Add a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function addOperatingCentres($operatingCentres)
+    {
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
+                array_merge(
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
+                )
+            );
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return Opposition
+     */
+    public function removeOperatingCentres($operatingCentres)
+    {
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
     }
 
     /**
@@ -478,66 +658,6 @@ class Opposition implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the ground
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function setGrounds($grounds)
-    {
-        $this->grounds = $grounds;
-
-        return $this;
-    }
-
-    /**
-     * Get the grounds
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getGrounds()
-    {
-        return $this->grounds;
-    }
-
-    /**
-     * Add a grounds
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function addGrounds($grounds)
-    {
-        if ($grounds instanceof ArrayCollection) {
-            $this->grounds = new ArrayCollection(
-                array_merge(
-                    $this->grounds->toArray(),
-                    $grounds->toArray()
-                )
-            );
-        } elseif (!$this->grounds->contains($grounds)) {
-            $this->grounds->add($grounds);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a grounds
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds
-     * @return Opposition
-     */
-    public function removeGrounds($grounds)
-    {
-        if ($this->grounds->contains($grounds)) {
-            $this->grounds->removeElement($grounds);
         }
 
         return $this;

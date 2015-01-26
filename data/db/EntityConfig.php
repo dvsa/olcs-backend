@@ -59,6 +59,9 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Address',
                 'property' => 'contactDetail'
+            ),
+            'cascade' => array(
+                'persist'
             )
         ),
         'person_id' => array(
@@ -72,6 +75,15 @@ return array(
         ),
         'written_permission_to_engage' => array(
             'type' => 'yesno'
+        ),
+        'phone_contacts' => array(
+            'cascade' => array(
+                'persist'
+            ),
+            'inversedBy' => array(
+                'entity' => 'PhoneContact',
+                'property' => 'contactDetails'
+            )
         )
     ),
     'user' => array(
@@ -283,6 +295,9 @@ return array(
         'is_withdrawn' => array(
             'type' => 'yesno'
         ),
+        'is_willing_to_attend_pi' => array(
+            'type' => 'yesno'
+        ),
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
@@ -295,6 +310,26 @@ return array(
                 'property' => 'opposition'
             )
         ),
+        'opposer_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        )
+    ),
+    'operating_centre_opposition' => array(
+        'opposition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Opposition',
+                'property' => 'operatingCentre'
+            )
+        )
+    ),
+    'opposer' => array(
+        'contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        )
     ),
     'bus_reg' => array(
         'use_all_stops' => array(
@@ -472,6 +507,12 @@ return array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
+                'property' => 'licenceVehicle'
+            )
+        ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
                 'property' => 'licenceVehicle'
             )
         ),
@@ -717,6 +758,12 @@ return array(
         )
     ),
     'condition_undertaking' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
@@ -1027,9 +1074,6 @@ return array(
         )
     ),
     'opposition_grounds' => array(
-        'is_representation' => array(
-            'type' => 'yesno'
-        ),
         'opposition_id' => array(
             'inversedBy' => array(
                 'entity' => 'Opposition',
@@ -1188,6 +1232,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Application',
                 'property' => 'publicationLink'
+            )
+        )
+    ),
+    'transport_manager_application' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'transportManager'
             )
         )
     ),
