@@ -24,13 +24,22 @@ use Olcs\Db\Entity\Traits;
 class Opposer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=false)
+     */
+    protected $contactDetails;
 
     /**
      * Opposer type
@@ -41,6 +50,29 @@ class Opposer implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="opposer_type", referencedColumnName="id", nullable=true)
      */
     protected $opposerType;
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return Opposer
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
+    }
 
     /**
      * Set the opposer type
