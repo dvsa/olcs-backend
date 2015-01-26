@@ -19,7 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_transport_manager_ref_data1_idx", columns={"tm_status"}),
  *        @ORM\Index(name="fk_transport_manager_ref_data2_idx", columns={"tm_type"}),
- *        @ORM\Index(name="fk_transport_manager_contact_details1_idx", columns={"contact_details_id"}),
+ *        @ORM\Index(name="fk_transport_manager_home_cd_idx", columns={"home_cd_id"}),
+ *        @ORM\Index(name="fk_transport_manager_work_cd_idx", columns={"work_cd_id"}),
  *        @ORM\Index(name="fk_transport_manager_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_transport_manager_user2_idx", columns={"last_modified_by"})
  *    }
@@ -28,7 +29,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManager implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -47,6 +47,16 @@ class TransportManager implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="disqualification_tm_case_id", nullable=true)
      */
     protected $disqualificationTmCaseId;
+
+    /**
+     * Home cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="home_cd_id", referencedColumnName="id", nullable=false)
+     */
+    protected $homeCd;
 
     /**
      * Nysiis family name
@@ -75,6 +85,16 @@ class TransportManager implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_status", referencedColumnName="id", nullable=false)
      */
     protected $tmStatus;
+
+    /**
+     * Work cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="work_cd_id", referencedColumnName="id", nullable=false)
+     */
+    protected $workCd;
 
     /**
      * Document
@@ -114,6 +134,29 @@ class TransportManager implements Interfaces\EntityInterface
     public function getDisqualificationTmCaseId()
     {
         return $this->disqualificationTmCaseId;
+    }
+
+    /**
+     * Set the home cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $homeCd
+     * @return TransportManager
+     */
+    public function setHomeCd($homeCd)
+    {
+        $this->homeCd = $homeCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the home cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getHomeCd()
+    {
+        return $this->homeCd;
     }
 
     /**
@@ -183,6 +226,29 @@ class TransportManager implements Interfaces\EntityInterface
     public function getTmStatus()
     {
         return $this->tmStatus;
+    }
+
+    /**
+     * Set the work cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $workCd
+     * @return TransportManager
+     */
+    public function setWorkCd($workCd)
+    {
+        $this->workCd = $workCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the work cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getWorkCd()
+    {
+        return $this->workCd;
     }
 
     /**

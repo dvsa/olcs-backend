@@ -403,7 +403,10 @@ VALUES
     '2014-11-24 10:30:04',1),
     (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (115,'ct_tm',104,79,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (116,'ct_tm',104,80,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (116,'ct_tm',104,80,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (117,'ct_tm',55,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (118,'ct_tm',63,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (119,'ct_tm',72,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -841,11 +844,11 @@ VALUES
   (75,NULL,2,0,75,'LCC',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1),
   (110,NULL,2,0,110,'test',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1);
 
-INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `contact_details_id`, `deleted_date`,
+INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `home_cd_id`, `work_cd_id`, `deleted_date`,
     `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'tm_st_A','tm_t_I',115,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'tm_st_A','tm_t_E',116,NULL,NULL,NULL,1),
-    (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
+    (1,NULL,NULL,'tm_st_A','tm_t_I',115,117,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_A','tm_t_E',116,118,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_st_A','tm_t_I',104,119,NULL,NULL,NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
