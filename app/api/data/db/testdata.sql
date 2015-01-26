@@ -822,7 +822,7 @@ VALUES
 INSERT INTO `transport_manager_licence` (`id`, `created_by`, `last_modified_by`, `licence_id`, `tm_type`, `transport_manager_id`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
 	(1, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 2, 2, 2, 2, 2, NULL, NULL, NULL, NULL, 1),
-	(2, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
+	(2, NULL, NULL, 7, '', 2, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
@@ -862,9 +862,9 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
 `created_on`, `last_modified_on`, `version`) VALUES
-    (1,208,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (2,209,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (3,208,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
+    (1,3,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1),
+    (2,3,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1),
+    (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
