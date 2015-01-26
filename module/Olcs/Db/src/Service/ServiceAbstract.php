@@ -90,16 +90,21 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     public function getEntityName()
     {
         if (!isset($this->entityName)) {
-            $entityPrefix = '\Olcs\Db\Entity\\';
-
             $class = get_called_class();
 
             $parts = explode('\\', $class);
 
-            return $entityPrefix . array_pop($parts);
+            return $this->formatEntityName(array_pop($parts));
         }
 
         return $this->entityName;
+    }
+
+    protected function formatEntityName($entity)
+    {
+        $entityPrefix = '\Olcs\Db\Entity\\';
+
+        return $entityPrefix . $entity;
     }
 
     /**
@@ -116,14 +121,86 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $entity = $this->getNewEntity();
 
-        $hydrator = $this->getDoctrineHydrator();
+        if (isset($data['_OPTIONS_']['cascade'])) {
+            $data = $this->processCascades($entity, $data);
+        }
 
+        $hydrator = $this->getDoctrineHydrator();
         $hydrator->hydrate($data, $entity);
 
         $this->dbPersist($entity);
         $this->dbFlush();
 
         return $entity->getId();
+    }
+
+    protected function processCascades($parentEntity, $data)
+    {
+        if (isset($data['_OPTIONS_']['cascade']['list'])) {
+            $data = $this->processCascadeList($parentEntity, $data);
+        }
+
+        if (isset($data['_OPTIONS_']['cascade']['single'])) {
+            $data = $this->processCascadeSingle($parentEntity, $data);
+        }
+
+        return $data;
+    }
+
+    protected function processCascadeList($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['list'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            foreach ($data[$property] as $key => $entityData) {
+
+                $data[$property][$key] = $this->generateCascadeEntity(
+                    $entityClass,
+                    $entityData,
+                    $cascadeOptions,
+                    $parentEntity
+                );
+            }
+        }
+
+        return $data;
+    }
+
+    protected function processCascadeSingle($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['single'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            $entityData = $data[$property];
+
+            $data[$property] = $this->generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity);
+        }
+
+        return $data;
+    }
+
+    protected function generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity)
+    {
+        if (isset($entityData['id'])) {
+            $cascadeEntity = $this->getEntityByTypeAndId($entityClass, $entityData['id']);
+        } else {
+            $cascadeEntity = new $entityClass();
+        }
+
+        if (isset($entityData['_OPTIONS_']['cascade'])) {
+            $entityData = $this->processCascades($cascadeEntity, $entityData);
+        }
+
+        $hydrator = $this->getDoctrineHydrator();
+        $hydrator->hydrate($entityData, $cascadeEntity);
+
+        if (isset($cascadeOptions['parent'])) {
+            $cascadeEntity->{'set' . ucfirst($cascadeOptions['parent'])}($parentEntity);
+        }
+
+        return $cascadeEntity;
     }
 
     /**
@@ -351,8 +428,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $entity->clearProperties(array_keys($data));
 
-        $hydrator = $this->getDoctrineHydrator();
+        if (isset($data['_OPTIONS_']['cascade'])) {
+            $data = $this->processCascades($entity, $data);
+        }
 
+        $hydrator = $this->getDoctrineHydrator();
         $entity = $hydrator->hydrate($data, $entity);
 
         if (!$force) {
@@ -410,9 +490,14 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     protected function getEntityById($id)
     {
+        return $this->getEntityByTypeAndId($this->getEntityName(), $id);
+    }
+
+    protected function getEntityByTypeAndId($entityType, $id)
+    {
         $id = is_numeric($id) ? (int) $id : $id;
 
-        return $this->getEntityManager()->find($this->getEntityName(), $id);
+        return $this->getEntityManager()->find($entityType, $id);
     }
 
     /**
