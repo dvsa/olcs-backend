@@ -3915,23 +3915,13 @@ DROP TABLE IF EXISTS `operating_centre_opposition`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `operating_centre_opposition` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `opposition_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`opposition_id`, `operating_centre_id`),
   KEY `fk_opposition_operating_centre_opposition1_idx` (`opposition_id`),
   KEY `fk_opposition_operating_centre_operating_centre1_idx` (`operating_centre_id`),
-  KEY `fk_operating_centre_opposition_user1_idx` (`created_by`),
-  KEY `fk_operating_centre_opposition_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_opposition_operating_centre_opposition1` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_operating_centre_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_operating_centre_opposition_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_operating_centre_opposition_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_operating_centre_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3991,7 +3981,7 @@ DROP TABLE IF EXISTS `opposition`;
 CREATE TABLE `opposition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_id` int(11) NOT NULL,
-  `application_id` int(11) NOT NULL,
+  `application_id` int(11) DEFAULT NULL,
   `case_id` int(11) DEFAULT NULL,
   `opposer_id` int(11) NOT NULL,
   `opposition_type` varchar(32) NOT NULL,
@@ -4000,10 +3990,12 @@ CREATE TABLE `opposition` (
   `raised_date` date DEFAULT NULL,
   `is_in_time` tinyint(1) NOT NULL DEFAULT '0',
   `is_public_inquiry` tinyint(1) NOT NULL DEFAULT '0',
+  `is_willing_to_attend_pi` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `is_valid` tinyint(1) NOT NULL DEFAULT '0',
   `is_withdrawn` tinyint(1) NOT NULL DEFAULT '0',
   `valid_notes` varchar(4000) DEFAULT NULL,
+  `status` varchar(32) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -4017,13 +4009,15 @@ CREATE TABLE `opposition` (
   KEY `fk_opposition_cases1_idx` (`case_id`),
   KEY `fk_opposition_licence1_idx` (`licence_id`),
   KEY `fk_opposition_ref_data1_idx` (`opposition_type`),
+  KEY `fk_opposition_ref_data2_idx` (`status`),
   CONSTRAINT `fk_opposition_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_opposer1` FOREIGN KEY (`opposer_id`) REFERENCES `opposer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_ref_data1` FOREIGN KEY (`opposition_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_opposition_ref_data2` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4044,24 +4038,13 @@ DROP TABLE IF EXISTS `opposition_grounds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `opposition_grounds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `opposition_id` int(11) NOT NULL,
-  `is_representation` tinyint(1) NOT NULL DEFAULT '0',
-  `grounds` varchar(32) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
+  `ground_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`opposition_id`, `ground_id`),
   KEY `fk_opposition_ground_opposition1_idx` (`opposition_id`),
-  KEY `fk_opposition_ground_ref_data1_idx` (`grounds`),
-  KEY `fk_opposition_grounds_user1_idx` (`created_by`),
-  KEY `fk_opposition_grounds_user2_idx` (`last_modified_by`),
+  KEY `fk_opposition_ground_ref_data1_idx` (`ground_id`),
   CONSTRAINT `fk_opposition_ground_opposition1` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_ground_ref_data1` FOREIGN KEY (`grounds`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_grounds_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_opposition_grounds_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_opposition_ground_ref_data1` FOREIGN KEY (`ground_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

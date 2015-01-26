@@ -53,7 +53,7 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="tmApplications")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="transportManagers")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
