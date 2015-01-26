@@ -19,7 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_transport_manager_ref_data1_idx", columns={"tm_status"}),
  *        @ORM\Index(name="fk_transport_manager_ref_data2_idx", columns={"tm_type"}),
- *        @ORM\Index(name="fk_transport_manager_contact_details1_idx", columns={"contact_details_id"}),
+ *        @ORM\Index(name="fk_transport_manager_home_cd_idx", columns={"home_cd_id"}),
+ *        @ORM\Index(name="fk_transport_manager_work_cd_idx", columns={"work_cd_id"}),
  *        @ORM\Index(name="fk_transport_manager_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_transport_manager_user2_idx", columns={"last_modified_by"})
  *    }
@@ -28,7 +29,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TransportManager implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -47,6 +47,16 @@ class TransportManager implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="disqualification_tm_case_id", nullable=true)
      */
     protected $disqualificationTmCaseId;
+
+    /**
+     * Home cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="home_cd_id", referencedColumnName="id", nullable=false)
+     */
+    protected $homeCd;
 
     /**
      * Nysiis family name
@@ -77,6 +87,16 @@ class TransportManager implements Interfaces\EntityInterface
     protected $tmStatus;
 
     /**
+     * Work cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="work_cd_id", referencedColumnName="id", nullable=false)
+     */
+    protected $workCd;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -86,11 +106,21 @@ class TransportManager implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Qualification
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmQualification", mappedBy="transportManager")
+     */
+    protected $qualifications;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+        $this->qualifications = new ArrayCollection();
     }
 
     /**
@@ -114,6 +144,29 @@ class TransportManager implements Interfaces\EntityInterface
     public function getDisqualificationTmCaseId()
     {
         return $this->disqualificationTmCaseId;
+    }
+
+    /**
+     * Set the home cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $homeCd
+     * @return TransportManager
+     */
+    public function setHomeCd($homeCd)
+    {
+        $this->homeCd = $homeCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the home cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getHomeCd()
+    {
+        return $this->homeCd;
     }
 
     /**
@@ -186,6 +239,29 @@ class TransportManager implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the work cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $workCd
+     * @return TransportManager
+     */
+    public function setWorkCd($workCd)
+    {
+        $this->workCd = $workCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the work cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getWorkCd()
+    {
+        return $this->workCd;
+    }
+
+    /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
@@ -240,6 +316,66 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the qualification
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function setQualifications($qualifications)
+    {
+        $this->qualifications = $qualifications;
+
+        return $this;
+    }
+
+    /**
+     * Get the qualifications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getQualifications()
+    {
+        return $this->qualifications;
+    }
+
+    /**
+     * Add a qualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function addQualifications($qualifications)
+    {
+        if ($qualifications instanceof ArrayCollection) {
+            $this->qualifications = new ArrayCollection(
+                array_merge(
+                    $this->qualifications->toArray(),
+                    $qualifications->toArray()
+                )
+            );
+        } elseif (!$this->qualifications->contains($qualifications)) {
+            $this->qualifications->add($qualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a qualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function removeQualifications($qualifications)
+    {
+        if ($this->qualifications->contains($qualifications)) {
+            $this->qualifications->removeElement($qualifications);
         }
 
         return $this;
