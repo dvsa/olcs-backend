@@ -1210,5 +1210,13 @@ return array(
                 'property' => 'transportManager'
             )
         )
+    ),
+    'statement' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'statement'
+            ),
+        )
     )
 );
