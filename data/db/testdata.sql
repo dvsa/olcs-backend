@@ -119,21 +119,25 @@ INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `pao
     (76,NULL,NULL,'Unit 5','10 High Street','','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (100,NULL,NULL,'Test Partnership LLP','10 Partnerships street','PartnershipDistrict','Partnership Land','PA7 5IP',
     'Leeds','GB',NOW(),NOW(),1),
-    (104,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1);
+    (104,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
+    (105,NULL,NULL,'Unit 1','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
+    (106,NULL,NULL,'Unit 2','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
+    (107,NULL,NULL,'Unit 3','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
+    (108,NULL,NULL,'Unit 4','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1);
 
 INSERT INTO `application` (`id`, `licence_id`, `created_by`, `last_modified_by`, `status`, `tot_auth_vehicles`,
     `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_large_vehicles`, `tot_community_licences`,
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`, `disqualified`,
     `insolvency_details`, `insolvency_confirmation`, `safety_confirmation`, `received_date`, `target_completion_date`,
-    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`, `goods_or_psv`, `ni_flag`) VALUES
+    `prev_conviction`, `convictions_confirmation`, `created_on`, `last_modified_on`, `version`, `is_variation`, `goods_or_psv`, `ni_flag`, `licence_type`) VALUES
     (1,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-    '2010-12-15 10:48:00', NULL,NULL,NULL,NOW(),NULL,1,0,'lcat_gv',0),
+    '2010-12-15 10:48:00', NULL,NULL,NULL,NOW(),NULL,1,0,'lcat_gv',0, 'ltyp_r'),
     (2,7,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,NULL,NULL,
-    NULL,1,1,'lcat_gv',0),
+    NULL,1,1,'lcat_gv',0, NULL),
     (3,210,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, NULL,NULL,
-    NULL,NOW(),NULL,1,0,'lcat_gv',0),
+    NULL,NOW(),NULL,1,0,'lcat_gv',0, NULL),
     (6,114,NULL,NULL,'apsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-12-15 10:48:00','2015-02-16 10:48:00',NULL,
-    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0,'lcat_psv',1);
+    NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',1,0,'lcat_psv',1,NULL);
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
 (1,NULL,NULL,NULL,NULL,NULL,1),
@@ -406,7 +410,15 @@ VALUES
     (116,'ct_tm',104,80,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (117,'ct_tm',55,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (118,'ct_tm',63,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (119,'ct_tm',72,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (119,'ct_tm',72,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (120,'ct_corr',105,4,1,1,NULL,NULL,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (121,'ct_corr',106,9,1,1,NULL,NULL,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (122,'ct_corr',107,10,1,1,NULL,NULL,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (123,'ct_corr',108,11,1,1,NULL,NULL,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -640,13 +652,12 @@ VALUES
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
-(`id`, `grounds`, `last_modified_by`, `created_by`, `opposition_id`, `is_representation`, `created_on`,
- `last_modified_on`, `version`)
+(`opposition_id`, `ground_id`)
 VALUES
-  (1, 'ogf_env', 1, 1, 1, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-  (2, 'ogf_parking', 1, 1, 1, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1),
-  (3, 'ogf_safety', 1, 1, 2, 1, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
-  (4, 'ogf_size', 1, 1, 2, 1, '2014-02-24 00:00:00', '2014-02-24 00:00:00', 1);
+  (1, 'ogf_env'),
+  (1, 'ogf_parking'),
+  (2, 'ogf_safety'),
+  (2, 'ogf_size');
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
 `company_or_llp_no`, `name`,`is_mlh`, `type`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -1392,5 +1403,20 @@ INSERT INTO `community_lic` (
     ('cl_sts_void', 7, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
     ('cl_sts_returned', 7, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
     ('cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
+
+INSERT INTO `statement`
+(`id`, `contact_type`, `requestors_address_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
+`authorisers_decision`, `authorisers_title`, `stopped_date`, `requested_date`, `requestors_body`, `issued_date`,
+`created_on`, `last_modified_on`, `version`, `vrm`)
+VALUES
+  (1, 'cm_letter', 105, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-05-01',
+  '2014-01-01', 'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1, 'VRM 1'),
+  (2, 'cm_fax', 106, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-06-02',
+  '2014-02-02', 'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1, 'VRM 2'),
+  (3, 'cm_email', 107, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-07-03',
+  '2014-03-03', 'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1, 'VRM 3'),
+  (4, 'cm_tel', 108, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
+  '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
+
 
 SET foreign_key_checks = 1;

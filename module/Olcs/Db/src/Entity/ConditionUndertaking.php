@@ -35,7 +35,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Action1Field,
-        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -55,6 +54,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="added_via", referencedColumnName="id", nullable=true)
      */
     protected $addedVia;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
 
     /**
      * Approval user
@@ -188,6 +197,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getAddedVia()
     {
         return $this->addedVia;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return ConditionUndertaking
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**

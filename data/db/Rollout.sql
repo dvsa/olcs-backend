@@ -918,8 +918,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('ebsr_sub_type', 'ebsrt_new', 'New Application', '0'),
     ('ebsr_sub_type', 'ebsrt_refresh', 'Data Refresh', '1'),
     ('ebsr_sub_type', 'ebsrt_unknown', 'Unknown', '2'),
-    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3')
-;
+    ('ebsr_sub_type', 'ebsrt_map', 'Map Request', '3'),
+
+    /* Opposition status */
+    ('opposition_status', 'opp_ack', 'Acknowledged', 'A-Acknwlgd'),
+    ('opposition_status', 'opp_pro_rec', 'Proforma received', 'B-ProfRcvd'),
+    ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
+    ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
+    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
 
 -- TM qualifications
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
@@ -1878,14 +1884,15 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (29, 'submission_section', 'conviction-fpn-offence-history', 'Conviction / FPN / Offence history', NULL),
     (30, 'submission_section', 'annual-test-history', 'Annual test history', NULL),
     (31, 'submission_section', 'penalties', 'ERRU Penalties', NULL),
-    (32, 'submission_section', 'other-issues', 'Other issues / misc', NULL),
-    (33, 'submission_section', 'te-reports', 'TE reports', NULL),
-    (34, 'submission_section', 'site-plans', 'Site plans', NULL),
-    (35, 'submission_section', 'planning-permission', 'Planning permission', NULL),
-    (36, 'submission_section', 'applicants-comments', 'Applicants comments', NULL),
-    (37, 'submission_section', 'visibility-access-egress-size', 'Visibility / access egress size', NULL),
-    (38, 'submission_section', 'compliance-complaints', 'Compliance complaints', NULL),
-    (39, 'submission_section', 'environmental-complaints', 'Environmental complaints', NULL),
+    (32, 'submission_section', 'statements', 'Statements', NULL),
+    (33, 'submission_section', 'other-issues', 'Other issues / misc', NULL),
+    (34, 'submission_section', 'te-reports', 'TE reports', NULL),
+    (35, 'submission_section', 'site-plans', 'Site plans', NULL),
+    (36, 'submission_section', 'planning-permission', 'Planning permission', NULL),
+    (37, 'submission_section', 'applicants-comments', 'Applicants comments', NULL),
+    (38, 'submission_section', 'visibility-access-egress-size', 'Visibility / access egress size', NULL),
+    (39, 'submission_section', 'compliance-complaints', 'Compliance complaints', NULL),
+    (40, 'submission_section', 'environmental-complaints', 'Environmental complaints', NULL),
 
     (41, 'submission_section', 'oppositions', 'Oppositions', NULL),
     (42, 'submission_section', 'financial-information', 'Financial information', NULL),
