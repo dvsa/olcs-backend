@@ -28,6 +28,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         EntityManagerAwareTrait,
         OlcsLoggerAwareTrait;
 
+    protected $entityNamespace = '\Olcs\Db\Entity\\';
+
     /**
      * Holds the Entity Name
      *
@@ -70,6 +72,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     protected $classMetadata = array();
 
+    public function setEntityNamespace($namespace)
+    {
+        $this->entityNamespace = $namespace;
+    }
+
     /**
      * Set the entity name
      *
@@ -100,13 +107,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         return $this->entityName;
     }
 
-    protected function formatEntityName($entity)
-    {
-        $entityPrefix = '\Olcs\Db\Entity\\';
-
-        return $entityPrefix . $entity;
-    }
-
     /**
      * Should enter a value into the database and return the identifier for the record that has been created.
      *
@@ -132,75 +132,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $this->dbFlush();
 
         return $entity->getId();
-    }
-
-    protected function processCascades($parentEntity, $data)
-    {
-        if (isset($data['_OPTIONS_']['cascade']['list'])) {
-            $data = $this->processCascadeList($parentEntity, $data);
-        }
-
-        if (isset($data['_OPTIONS_']['cascade']['single'])) {
-            $data = $this->processCascadeSingle($parentEntity, $data);
-        }
-
-        return $data;
-    }
-
-    protected function processCascadeList($parentEntity, $data)
-    {
-        foreach ($data['_OPTIONS_']['cascade']['list'] as $property => $cascadeOptions) {
-
-            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
-
-            foreach ($data[$property] as $key => $entityData) {
-
-                $data[$property][$key] = $this->generateCascadeEntity(
-                    $entityClass,
-                    $entityData,
-                    $cascadeOptions,
-                    $parentEntity
-                );
-            }
-        }
-
-        return $data;
-    }
-
-    protected function processCascadeSingle($parentEntity, $data)
-    {
-        foreach ($data['_OPTIONS_']['cascade']['single'] as $property => $cascadeOptions) {
-
-            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
-
-            $entityData = $data[$property];
-
-            $data[$property] = $this->generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity);
-        }
-
-        return $data;
-    }
-
-    protected function generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity)
-    {
-        if (isset($entityData['id'])) {
-            $cascadeEntity = $this->getEntityByTypeAndId($entityClass, $entityData['id']);
-        } else {
-            $cascadeEntity = new $entityClass();
-        }
-
-        if (isset($entityData['_OPTIONS_']['cascade'])) {
-            $entityData = $this->processCascades($cascadeEntity, $entityData);
-        }
-
-        $hydrator = $this->getDoctrineHydrator();
-        $hydrator->hydrate($entityData, $cascadeEntity);
-
-        if (isset($cascadeOptions['parent'])) {
-            $cascadeEntity->{'set' . ucfirst($cascadeOptions['parent'])}($parentEntity);
-        }
-
-        return $cascadeEntity;
     }
 
     /**
@@ -596,5 +527,85 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         }
 
         return $data;
+    }
+
+    protected function formatEntityName($entity)
+    {
+        return $this->entityNamespace . $entity;
+    }
+
+    protected function processCascades($parentEntity, $data)
+    {
+        if (isset($data['_OPTIONS_']['cascade']['list'])) {
+            $data = $this->processCascadeList($parentEntity, $data);
+        }
+
+        if (isset($data['_OPTIONS_']['cascade']['single'])) {
+            $data = $this->processCascadeSingle($parentEntity, $data);
+        }
+
+        unset($data['_OPTIONS_']['cascade']);
+
+        return $data;
+    }
+
+    protected function processCascadeList($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['list'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            foreach ($data[$property] as $key => $entityData) {
+
+                $data[$property][$key] = $this->generateCascadeEntity(
+                    $entityClass,
+                    $entityData,
+                    $cascadeOptions,
+                    $parentEntity
+                );
+            }
+        }
+
+        unset($data['_OPTIONS_']['cascade']['list']);
+
+        return $data;
+    }
+
+    protected function processCascadeSingle($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['single'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            $entityData = $data[$property];
+
+            $data[$property] = $this->generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity);
+        }
+
+        unset ($data['_OPTIONS_']['cascade']['single']);
+
+        return $data;
+    }
+
+    protected function generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity)
+    {
+        if (isset($entityData['id'])) {
+            $cascadeEntity = $this->getEntityByTypeAndId($entityClass, $entityData['id']);
+        } else {
+            $cascadeEntity = new $entityClass();
+        }
+
+        if (isset($entityData['_OPTIONS_']['cascade'])) {
+            $entityData = $this->processCascades($cascadeEntity, $entityData);
+        }
+
+        $hydrator = $this->getDoctrineHydrator();
+        $hydrator->hydrate($entityData, $cascadeEntity);
+
+        if (isset($cascadeOptions['parent'])) {
+            $cascadeEntity->{'set' . ucfirst($cascadeOptions['parent'])}($parentEntity);
+        }
+
+        return $cascadeEntity;
     }
 }
