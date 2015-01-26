@@ -1207,6 +1207,14 @@ return array(
             ),
         )
     ),
+    'other_licence' => array(
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'otherLicence'
+            ),
+        )
+    ),
     'publication_link' => array(
         'application_id' => array(
             'inversedBy' => array(
