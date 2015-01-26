@@ -399,6 +399,15 @@ class Application implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
+     * Condition undertaking
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="application")
+     */
+    protected $conditionUndertakings;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -406,6 +415,15 @@ class Application implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Document", mappedBy="application")
      */
     protected $documents;
+
+    /**
+     * Licence vehicle
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceVehicle", mappedBy="application")
+     */
+    protected $licenceVehicles;
 
     /**
      * Opposition
@@ -444,17 +462,29 @@ class Application implements Interfaces\EntityInterface
     protected $publicationLinks;
 
     /**
+     * Transport manager
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerApplication", mappedBy="application")
+     */
+    protected $transportManagers;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->applicationCompletions = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->licenceVehicles = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
         $this->previousLicences = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->transportManagers = new ArrayCollection();
     }
 
     /**
@@ -1406,6 +1436,66 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the condition undertaking
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Application
+     */
+    public function setConditionUndertakings($conditionUndertakings)
+    {
+        $this->conditionUndertakings = $conditionUndertakings;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition undertakings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditionUndertakings()
+    {
+        return $this->conditionUndertakings;
+    }
+
+    /**
+     * Add a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Application
+     */
+    public function addConditionUndertakings($conditionUndertakings)
+    {
+        if ($conditionUndertakings instanceof ArrayCollection) {
+            $this->conditionUndertakings = new ArrayCollection(
+                array_merge(
+                    $this->conditionUndertakings->toArray(),
+                    $conditionUndertakings->toArray()
+                )
+            );
+        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->add($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Application
+     */
+    public function removeConditionUndertakings($conditionUndertakings)
+    {
+        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->removeElement($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the document
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $documents
@@ -1460,6 +1550,66 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the licence vehicle
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Application
+     */
+    public function setLicenceVehicles($licenceVehicles)
+    {
+        $this->licenceVehicles = $licenceVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLicenceVehicles()
+    {
+        return $this->licenceVehicles;
+    }
+
+    /**
+     * Add a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Application
+     */
+    public function addLicenceVehicles($licenceVehicles)
+    {
+        if ($licenceVehicles instanceof ArrayCollection) {
+            $this->licenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->licenceVehicles->toArray(),
+                    $licenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->add($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @return Application
+     */
+    public function removeLicenceVehicles($licenceVehicles)
+    {
+        if ($this->licenceVehicles->contains($licenceVehicles)) {
+            $this->licenceVehicles->removeElement($licenceVehicles);
         }
 
         return $this;
@@ -1700,6 +1850,66 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function setTransportManagers($transportManagers)
+    {
+        $this->transportManagers = $transportManagers;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport managers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTransportManagers()
+    {
+        return $this->transportManagers;
+    }
+
+    /**
+     * Add a transport managers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function addTransportManagers($transportManagers)
+    {
+        if ($transportManagers instanceof ArrayCollection) {
+            $this->transportManagers = new ArrayCollection(
+                array_merge(
+                    $this->transportManagers->toArray(),
+                    $transportManagers->toArray()
+                )
+            );
+        } elseif (!$this->transportManagers->contains($transportManagers)) {
+            $this->transportManagers->add($transportManagers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a transport managers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @return Application
+     */
+    public function removeTransportManagers($transportManagers)
+    {
+        if ($this->transportManagers->contains($transportManagers)) {
+            $this->transportManagers->removeElement($transportManagers);
         }
 
         return $this;
