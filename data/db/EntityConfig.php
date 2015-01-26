@@ -1183,6 +1183,30 @@ return array(
             ),
         )
     ),
+    'transport_manager_licence' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'tmLicence'
+            ),
+        )
+    ),
+    'transport_manager_application' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'tmApplication'
+            ),
+        )
+    ),
+    'tm_qualification' => array(
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'qualification'
+            ),
+        )
+    ),
     'publication_link' => array(
         'application_id' => array(
             'inversedBy' => array(

@@ -854,11 +854,11 @@ VALUES
   (75,NULL,2,0,75,'LCC',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1),
   (110,NULL,2,0,110,'test',NULL,NULL,'2014-11-23 21:58:52','2014-11-23 21:58:52',1);
 
-INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `contact_details_id`, `deleted_date`,
-    `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'tm_st_A','tm_t_I',115,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'tm_st_A','tm_t_E',116,NULL,NULL,NULL,1),
-    (3,NULL,NULL,'tm_st_A','tm_t_I',104,NULL,NULL,NULL,1);
+INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `work_cd_id`,
+ `home_cd_id`, `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1,NULL,NULL,'tm_st_A','tm_t_I',115,115,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_A','tm_t_E',116,116,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_st_A','tm_t_I',104,104,NULL,NULL,NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,

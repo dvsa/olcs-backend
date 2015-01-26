@@ -3996,7 +3996,7 @@ CREATE VIEW task_search_view AS
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
    left join organisation irfo on (t.irfo_organisation_id = irfo.id)
    left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
-     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.contact_details_id)
+     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.work_cd_id)
    left join cases c on (t.case_id = c.id)
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
@@ -4022,7 +4022,7 @@ CREATE VIEW document_search_view AS
     LEFT JOIN licence l ON d.licence_id = l.id
 
     LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
-        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.contact_details_id)
+        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.work_cd_id)
 
     LEFT JOIN cases c ON d.case_id = c.id
 
