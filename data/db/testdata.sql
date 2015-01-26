@@ -36,6 +36,7 @@ TRUNCATE TABLE `opposer`;
 TRUNCATE TABLE `opposition`;
 TRUNCATE TABLE `opposition_grounds`;
 TRUNCATE TABLE `organisation`;
+TRUNCATE TABLE `other_licence`;
 TRUNCATE TABLE `organisation_nature_of_business`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
@@ -858,6 +859,12 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (1,NULL,NULL,'tm_st_A','tm_t_I',115,115,NULL,NULL,NULL,1),
     (2,NULL,NULL,'tm_st_A','tm_t_E',116,116,NULL,NULL,NULL,1),
     (3,NULL,NULL,'tm_st_A','tm_t_I',104,104,NULL,NULL,NULL,1);
+
+INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
+`created_on`, `last_modified_on`, `version`) VALUES
+    (1,208,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1),
+    (2,209,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1),
+    (3,208,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
