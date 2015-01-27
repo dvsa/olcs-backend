@@ -158,7 +158,8 @@ INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, 
     `created_on`, `last_modified_on`, `version`, `licence_id`, `operating_centre_id`) VALUES
 (1,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,7,16),
 (2,NULL,NULL,10,0,1,0,NULL,NULL,1,NULL,NULL,1,110,16),
-(3,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,41,17);
+(3,NULL,NULL,14,4,1,0,NULL,NULL,1,NULL,NULL,1,41,17),
+(4,NULL,NULL,32,46,1,0,NULL,NULL,1,NULL,NULL,1,7,72);
 
 INSERT INTO `bus_reg`
 (`id`, `bus_notice_period_id`, `subsidised`, `last_modified_by`, `withdrawn_reason`, `licence_id`, `created_by`,
