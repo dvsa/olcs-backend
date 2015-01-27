@@ -85,6 +85,7 @@ TRUNCATE TABLE `si_penalty_requested_type`;
 TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
+TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
@@ -1046,7 +1047,11 @@ INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,s
     (15,null,'GB PSV - New/App incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_NEW_APP_SUPP_DOCS_1ST.rtf'),
     (16,null,'GB Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf'),
     (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
-    (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf');
+    (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf'),
+    (20,null,'GB Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter.rtf'),
+    (21,null,'NI Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter(NI).rtf'),
+    (22,null,'GB Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter.rtf'),
+    (23,null,'NI Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter(NI).rtf');
 
 /* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
 INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
@@ -1058,7 +1063,11 @@ INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,
     (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
     (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
     (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1);
+    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1),
+    (7,2,57,'GB Compliance: No Further Action Letter',20,0,1,1),
+    (8,2,57,'NI Compliance: No Further Action Letter',21,1,1,1),
+    (9,2,57,'GB Compliance: Warning Letter',22,0,1,1),
+    (10,2,57,'NI Compliance: Warning Letter',23,1,1,1);
 
 INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (1,'sample_bookmark','A sample bookmark',1),
@@ -1066,7 +1075,8 @@ INSERT INTO doc_bookmark(id,name,description,version) VALUES
     (3,'a_third_sample_bookmark','A third sample bookmark',1),
     (4,'application_type','Application type',1),
     (5,'p_unacceptable_advert','Unacceptable advert',1),
-    (6,'warning_re_early_operating','Warning RE early operating',1);
+    (6,'warning_re_early_operating','Warning RE early operating',1),
+    (7,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle',1);
 
 INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
     (1,'para 1','Sample paragraph 1.',1),
@@ -1077,7 +1087,8 @@ INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
     (6,'app type 2','App type number two.',1),
     (7,'unacceptable advert','Your advert was unacceptable.',1),
     (8,'early operating 1','Early operating text one.',1),
-    (9,'early operating 2','Early operating text two!',1);
+    (9,'early operating 2','Early operating text two!',1),
+    (10,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle paragraph text',1);
 
 INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUES
     (1,1,1),
@@ -1089,7 +1100,11 @@ INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUE
     (3,1,1),
     (4,1,1),
     (5,1,1),
-    (6,1,1);
+    (6,1,1),
+    (7,7,1),
+    (8,7,1),
+    (9,7,1),
+    (10,7,1);
 
 INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VALUES
     (1,1,1),
@@ -1102,7 +1117,8 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (4,6,1),
     (5,7,1),
     (6,8,1),
-    (6,9,1);
+    (6,9,1),
+    (7,10,1);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
