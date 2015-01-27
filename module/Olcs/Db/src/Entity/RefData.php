@@ -73,6 +73,15 @@ class RefData implements Interfaces\EntityInterface
     protected $olbsKey;
 
     /**
+     * Opposition
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Opposition", mappedBy="grounds")
+     */
+    protected $oppositions;
+
+    /**
      * Parent
      *
      * @var \Olcs\Db\Entity\RefData
@@ -123,11 +132,12 @@ class RefData implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
         $this->tmCaseDecisionRehabs = new ArrayCollection();
-        $this->impoundings = new ArrayCollection();
-        $this->cases = new ArrayCollection();
+        $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
         $this->pis = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
+        $this->cases = new ArrayCollection();
+        $this->impoundings = new ArrayCollection();
     }
 
     /**
@@ -317,6 +327,66 @@ class RefData implements Interfaces\EntityInterface
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the opposition
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return RefData
+     */
+    public function setOppositions($oppositions)
+    {
+        $this->oppositions = $oppositions;
+
+        return $this;
+    }
+
+    /**
+     * Get the oppositions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOppositions()
+    {
+        return $this->oppositions;
+    }
+
+    /**
+     * Add a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return RefData
+     */
+    public function addOppositions($oppositions)
+    {
+        if ($oppositions instanceof ArrayCollection) {
+            $this->oppositions = new ArrayCollection(
+                array_merge(
+                    $this->oppositions->toArray(),
+                    $oppositions->toArray()
+                )
+            );
+        } elseif (!$this->oppositions->contains($oppositions)) {
+            $this->oppositions->add($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oppositions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @return RefData
+     */
+    public function removeOppositions($oppositions)
+    {
+        if ($this->oppositions->contains($oppositions)) {
+            $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
     }
 
     /**

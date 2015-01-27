@@ -7,16 +7,16 @@
  */
 namespace OlcsTest\Db\Service;
 
-use PHPUnit_Framework_TestCase;
 use OlcsTest\Bootstrap;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Tests ServiceAbstract
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ServiceAbstractTest extends PHPUnit_Framework_TestCase
+class ServiceAbstractTest extends MockeryTestCase
 {
     /**
      * SUT
@@ -578,7 +578,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateWithVersionWithEntity()
     {
-        $this->sut->setEntityName('\OlcsTest\Db\Service\Stub\EntityStub');
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
 
         $id = 7;
 
@@ -586,13 +586,13 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stub\EntityStub', array('clearProperties'));
+        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stub\EntityStub'))
+            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'))
             ->will($this->returnValue($mockEntity));
 
         $this->em->expects($this->once())
@@ -619,7 +619,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchWithVersionWithEntity()
     {
-        $this->sut->setEntityName('\OlcsTest\Db\Service\Stub\EntityStub');
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
 
         $id = 7;
 
@@ -627,14 +627,14 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stub\EntityStub', array('clearProperties'));
+        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
         $mockEntity->expects($this->once())
             ->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stub\EntityStub'))
+            ->with($data, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'))
             ->will($this->returnValue($mockEntity));
 
         $this->em->expects($this->once())
@@ -699,7 +699,7 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $mockDoctrineObject = $this->getMock('\stdClass', ['hydrate']);
 
         $mockHydratorManager = $this->getMock('\stdClass', ['get']);
-        $mockHydratorManager->expects($this->once())
+        $mockHydratorManager->expects($this->any())
             ->method('get')
             ->with('DoctrineModule\Stdlib\Hydrator\DoctrineObject')
             ->will($this->returnValue($mockDoctrineObject));
@@ -707,5 +707,379 @@ class ServiceAbstractTest extends PHPUnit_Framework_TestCase
         $this->sm->setService('HydratorManager', $mockHydratorManager);
 
         return $mockDoctrineObject;
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testCreateWithCascade()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
+
+        $data = array(
+            'foo' => 'bar',
+            'childList' => array(
+                array(
+                    'child' => 1
+                ),
+                array(
+                    'child' => 2,
+                    'relative' => array(
+                        'relative' => 3
+                    ),
+                    '_OPTIONS_' => array(
+                        'cascade' => array(
+                            'single' => array(
+                                'relative' => array(
+                                    'entity' => 'EntityStub',
+                                    'parent' => 'cousin'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            'relative' => array(
+                'relative' => 4
+            ),
+            '_OPTIONS_' => array(
+                'cascade' => array(
+                    'list' => array(
+                        'childList' => array(
+                            'entity' => 'EntityStub',
+                            'parent' => 'parent'
+                        )
+                    ),
+                    'single' => array(
+                        'relative' => array(
+                            'entity' => 'EntityStub'
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $mockDoctrineObject = $this->mockHydrator();
+
+        $mockDoctrineObject->expects($this->any())
+            ->method('hydrate')
+            ->will(
+                $this->returnCallback(
+                    function ($data, $entity) {
+                        $entity->setData($data);
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->will(
+                $this->returnCallback(
+                    function ($entity) {
+
+                        // Assert we have the correct foo property
+                        $this->assertEquals('bar', $entity->data['foo']);
+
+                        // We should still have 2 children
+                        $this->assertCount(2, $entity->data['childList']);
+
+                        // Both children should be entities now
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][0]);
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][1]);
+
+                        // Both children should have the correct id's
+                        $this->assertEquals(1, $entity->data['childList'][0]->data['child']);
+                        $this->assertEquals(2, $entity->data['childList'][1]->data['child']);
+
+                        // Both children should have the correct parent
+                        $this->assertSame($entity, $entity->data['childList'][0]->parent);
+                        $this->assertSame($entity, $entity->data['childList'][1]->parent);
+
+                        // The second child, should have a relative
+                        $this->assertInstanceOf(
+                            '\OlcsTest\Db\Service\Stubs\EntityStub',
+                            $entity->data['childList'][1]->data['relative']
+                        );
+
+                        // That cousin, should be the parent entity (A bit obscure but it's right)
+                        $this->assertSame(
+                            $entity->data['childList'][1],
+                            $entity->data['childList'][1]->data['relative']->cousin
+                        );
+
+                        // This relative should now be an entity
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['relative']);
+
+                        // This relative should have the right data
+                        $this->assertEquals(4, $entity->data['relative']->data['relative']);
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertNull($this->sut->create($data));
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testCreateWithCascadeWithUpdate()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
+
+        $data = array(
+            'foo' => 'bar',
+            'childList' => array(
+                array(
+                    'id' => 7,
+                    'child' => 1
+                ),
+                array(
+                    'child' => 2,
+                    'relative' => array(
+                        'relative' => 3
+                    ),
+                    '_OPTIONS_' => array(
+                        'cascade' => array(
+                            'single' => array(
+                                'relative' => array(
+                                    'entity' => 'EntityStub',
+                                    'parent' => 'cousin'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            'relative' => array(
+                'relative' => 4
+            ),
+            '_OPTIONS_' => array(
+                'cascade' => array(
+                    'list' => array(
+                        'childList' => array(
+                            'entity' => 'EntityStub',
+                            'parent' => 'parent'
+                        )
+                    ),
+                    'single' => array(
+                        'relative' => array(
+                            'entity' => 'EntityStub'
+                        )
+                    )
+                )
+            )
+        );
+
+        $mockChild = m::mock('\OlcsTest\Db\Service\Stubs\EntityStub')->makePartial();
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $this->em->expects($this->once())
+            ->method('find')
+            ->with('\OlcsTest\Db\Service\Stubs\EntityStub', 7)
+            ->will($this->returnValue($mockChild));
+
+        $mockDoctrineObject = $this->mockHydrator();
+
+        $mockDoctrineObject->expects($this->any())
+            ->method('hydrate')
+            ->will(
+                $this->returnCallback(
+                    function ($data, $entity) {
+                        $entity->setData($data);
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->will(
+                $this->returnCallback(
+                    function ($entity) use ($mockChild) {
+
+                        // Assert we have the correct foo property
+                        $this->assertEquals('bar', $entity->data['foo']);
+
+                        // We should still have 2 children
+                        $this->assertCount(2, $entity->data['childList']);
+
+                        // Both children should be entities now
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][0]);
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][1]);
+
+                        // Both children should have the correct id's
+                        $this->assertEquals(1, $entity->data['childList'][0]->data['child']);
+                        $this->assertEquals(2, $entity->data['childList'][1]->data['child']);
+
+                        $this->assertSame($mockChild, $entity->data['childList'][0]);
+
+                        // Both children should have the correct parent
+                        $this->assertSame($entity, $entity->data['childList'][0]->parent);
+                        $this->assertSame($entity, $entity->data['childList'][1]->parent);
+
+                        // The second child, should have a relative
+                        $this->assertInstanceOf(
+                            '\OlcsTest\Db\Service\Stubs\EntityStub',
+                            $entity->data['childList'][1]->data['relative']
+                        );
+
+                        // That cousin, should be the parent entity (A bit obscure but it's right)
+                        $this->assertSame(
+                            $entity->data['childList'][1],
+                            $entity->data['childList'][1]->data['relative']->cousin
+                        );
+
+                        // This relative should now be an entity
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['relative']);
+
+                        // This relative should have the right data
+                        $this->assertEquals(4, $entity->data['relative']->data['relative']);
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertNull($this->sut->create($data));
+    }
+
+    /**
+     * @group service_abstract
+     */
+    public function testUpdateWithCascade()
+    {
+        $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
+        $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
+
+        $id = 7;
+
+        $data = array(
+            'version' => 1,
+            'foo' => 'bar',
+            'childList' => array(
+                array(
+                    'child' => 1
+                ),
+                array(
+                    'child' => 2,
+                    'relative' => array(
+                        'relative' => 3
+                    ),
+                    '_OPTIONS_' => array(
+                        'cascade' => array(
+                            'single' => array(
+                                'relative' => array(
+                                    'entity' => 'EntityStub',
+                                    'parent' => 'cousin'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            'relative' => array(
+                'relative' => 4
+            ),
+            '_OPTIONS_' => array(
+                'cascade' => array(
+                    'list' => array(
+                        'childList' => array(
+                            'entity' => 'EntityStub',
+                            'parent' => 'parent'
+                        )
+                    ),
+                    'single' => array(
+                        'relative' => array(
+                            'entity' => 'EntityStub'
+                        )
+                    )
+                )
+            )
+        );
+
+        $mockEntity = m::mock('\OlcsTest\Db\Service\Stubs\EntityStub')->makePartial();
+        $mockEntity->shouldReceive('clearProperties');
+
+        $this->em->expects($this->once())
+            ->method('lock')
+            ->will($this->returnValue($mockEntity));
+        $this->em->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($mockEntity));
+
+        $this->mockLogger->expects($this->once())->method('info');
+
+        $mockDoctrineObject = $this->mockHydrator();
+
+        $mockDoctrineObject->expects($this->any())
+            ->method('hydrate')
+            ->will(
+                $this->returnCallback(
+                    function ($data, $entity) {
+                        $entity->setData($data);
+                        return $entity;
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->will(
+                $this->returnCallback(
+                    function ($entity) use ($mockEntity) {
+
+                        $this->assertSame($mockEntity, $entity);
+
+                        // Assert we have the correct foo property
+                        $this->assertEquals('bar', $entity->data['foo']);
+
+                        // We should still have 2 children
+                        $this->assertCount(2, $entity->data['childList']);
+
+                        // Both children should be entities now
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][0]);
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['childList'][1]);
+
+                        // Both children should have the correct id's
+                        $this->assertEquals(1, $entity->data['childList'][0]->data['child']);
+                        $this->assertEquals(2, $entity->data['childList'][1]->data['child']);
+
+                        // Both children should have the correct parent
+                        $this->assertSame($entity, $entity->data['childList'][0]->parent);
+                        $this->assertSame($entity, $entity->data['childList'][1]->parent);
+
+                        // The second child, should have a relative
+                        $this->assertInstanceOf(
+                            '\OlcsTest\Db\Service\Stubs\EntityStub',
+                            $entity->data['childList'][1]->data['relative']
+                        );
+
+                        // That cousin, should be the parent entity (A bit obscure but it's right)
+                        $this->assertSame(
+                            $entity->data['childList'][1],
+                            $entity->data['childList'][1]->data['relative']->cousin
+                        );
+
+                        // This relative should now be an entity
+                        $this->assertInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub', $entity->data['relative']);
+
+                        // This relative should have the right data
+                        $this->assertEquals(4, $entity->data['relative']->data['relative']);
+                    }
+                )
+            );
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->assertTrue($this->sut->update($id, $data));
     }
 }
