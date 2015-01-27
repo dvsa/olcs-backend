@@ -47,7 +47,7 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Address
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", inversedBy="contactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address", cascade={"persist"}, inversedBy="contactDetails")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
