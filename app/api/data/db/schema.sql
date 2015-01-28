@@ -7183,6 +7183,60 @@ CREATE TABLE `tm_licence_oc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `other_licence`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `other_licence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `application_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
+  `transport_manager_application_id` int(11) DEFAULT NULL,
+  `lic_no` VARCHAR(18) NULL,
+  `holder_name` VARCHAR(90) DEFAULT NULL,
+  `purchase_date` DATE DEFAULT NULL,
+  `will_surrender` TINYINT(1) DEFAULT NULL,
+  `disqualification_date` DATE DEFAULT NULL,
+  `disqualification_length` VARCHAR(255) NULL,
+  `previous_licence_type` VARCHAR(32) NOT NULL,
+  `additional_information` VARCHAR(4000) DEFAULT NULL,
+  `total_auth_vehicles` int(11) DEFAULT NULL,
+  `hours_per_week` int(11) DEFAULT NULL COMMENT 'If on transport manager',
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  INDEX `fk_previous_licence_application1_idx` (`application_id` ASC),
+  PRIMARY KEY (`id`),
+  KEY `fk_other_licence_ref_data1_idx` (`previous_licence_type` ASC),
+  KEY `fk_other_licence_user1_idx` (`created_by` ASC),
+  KEY `fk_other_licence_user2_idx` (`last_modified_by` ASC),
+  KEY `fk_other_licence_transport_manager1_idx` (`transport_manager_id` ASC),
+  KEY `fk_other_licence_transport_manager_application1_idx` (`transport_manager_application_id` ASC),
+  CONSTRAINT `fk_other_licence_application1` FOREIGN KEY (`application_id`)
+    REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_ref_data1` FOREIGN KEY (`previous_licence_type`)
+    REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_user1` FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_user2` FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_transport_manager1` FOREIGN KEY (`transport_manager_id`)
+    REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_transport_manager_application1` FOREIGN KEY (`transport_manager_application_id`)
+    REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `other_licence`
+--
+
+LOCK TABLES `other_licence` WRITE;
+/*!40000 ALTER TABLE `other_licence` DISABLE KEYS */;
+/*!40000 ALTER TABLE `other_licence` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `txc_inbox`
 --
