@@ -106,11 +106,31 @@ class TransportManager implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Other licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OtherLicence", mappedBy="transportManager")
+     */
+    protected $otherLicences;
+
+    /**
+     * Qualification
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmQualification", mappedBy="transportManager")
+     */
+    protected $qualifications;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+        $this->otherLicences = new ArrayCollection();
+        $this->qualifications = new ArrayCollection();
     }
 
     /**
@@ -306,6 +326,126 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the other licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManager
+     */
+    public function setOtherLicences($otherLicences)
+    {
+        $this->otherLicences = $otherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the other licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOtherLicences()
+    {
+        return $this->otherLicences;
+    }
+
+    /**
+     * Add a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManager
+     */
+    public function addOtherLicences($otherLicences)
+    {
+        if ($otherLicences instanceof ArrayCollection) {
+            $this->otherLicences = new ArrayCollection(
+                array_merge(
+                    $this->otherLicences->toArray(),
+                    $otherLicences->toArray()
+                )
+            );
+        } elseif (!$this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->add($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManager
+     */
+    public function removeOtherLicences($otherLicences)
+    {
+        if ($this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->removeElement($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the qualification
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function setQualifications($qualifications)
+    {
+        $this->qualifications = $qualifications;
+
+        return $this;
+    }
+
+    /**
+     * Get the qualifications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getQualifications()
+    {
+        return $this->qualifications;
+    }
+
+    /**
+     * Add a qualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function addQualifications($qualifications)
+    {
+        if ($qualifications instanceof ArrayCollection) {
+            $this->qualifications = new ArrayCollection(
+                array_merge(
+                    $this->qualifications->toArray(),
+                    $qualifications->toArray()
+                )
+            );
+        } elseif (!$this->qualifications->contains($qualifications)) {
+            $this->qualifications->add($qualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a qualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
+     * @return TransportManager
+     */
+    public function removeQualifications($qualifications)
+    {
+        if ($this->qualifications->contains($qualifications)) {
+            $this->qualifications->removeElement($qualifications);
         }
 
         return $this;
