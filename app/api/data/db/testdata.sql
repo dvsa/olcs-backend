@@ -16,12 +16,6 @@ TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
-TRUNCATE TABLE `document`;
-TRUNCATE TABLE `doc_bookmark`;
-TRUNCATE TABLE `doc_template`;
-TRUNCATE TABLE `doc_paragraph`;
-TRUNCATE TABLE `doc_template_bookmark`;
-TRUNCATE TABLE `doc_paragraph_bookmark`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
@@ -1036,97 +1030,6 @@ INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `
     (4,7,8,8,   NULL,NULL,NULL),
     (5,8,9,NULL,NULL,NULL,NULL),
     (6,1,5,NULL,NULL,NULL,NULL);
-
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
-    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
-    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
-    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
-    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
-    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
-    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
-    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
-    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
-    (13,null,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-08-28 15:03:00','/templates/PUB_APPS_SUPP_DOCS_1ST(GB).rtf'),
-    (14,null,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PUB_APPS_SUPP_DOCS_1ST(NI).rtf'),
-    (15,null,'GB PSV - New/App incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_NEW_APP_SUPP_DOCS_1ST.rtf'),
-    (16,null,'GB Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf'),
-    (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
-    (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf'),
-    (20,null,'GB Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter.rtf'),
-    (21,null,'NI Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter(NI).rtf'),
-    (22,null,'GB Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter.rtf'),
-    (23,null,'NI Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter(NI).rtf');
-
-/* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
-INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
-    (19,3,'Test TM document','testdocument19.doc',1,5,101,'doc_doc','2014-12-11 12:34:56');
-
-INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1),
-    (7,2,57,'GB Compliance: No Further Action Letter',20,0,1,1),
-    (8,2,57,'NI Compliance: No Further Action Letter',21,1,1,1),
-    (9,2,57,'GB Compliance: Warning Letter',22,0,1,1),
-    (10,2,57,'NI Compliance: Warning Letter',23,1,1,1);
-
-INSERT INTO doc_bookmark(id,name,description,version) VALUES
-    (1,'sample_bookmark','A sample bookmark',1),
-    (2,'another_sample_bookmark','Another sample bookmark',1),
-    (3,'a_third_sample_bookmark','A third sample bookmark',1),
-    (4,'application_type','Application type',1),
-    (5,'p_unacceptable_advert','Unacceptable advert',1),
-    (6,'warning_re_early_operating','Warning RE early operating',1),
-    (7,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle',1);
-
-INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
-    (1,'para 1','Sample paragraph 1.',1),
-    (2,'para 2','Sample Paragraph 2.',1),
-    (3,'para 3','Sample Paragraph 3.',1),
-    (4,'para 4','Sample Paragraph 4.',1),
-    (5,'app type 1','App type number one.',1),
-    (6,'app type 2','App type number two.',1),
-    (7,'unacceptable advert','Your advert was unacceptable.',1),
-    (8,'early operating 1','Early operating text one.',1),
-    (9,'early operating 2','Early operating text two!',1),
-    (10,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle paragraph text',1);
-
-INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUES
-    (1,1,1),
-    (1,3,1),
-    (1,2,1),
-    (2,4,1),
-    (2,5,1),
-    (2,6,1),
-    (3,1,1),
-    (4,1,1),
-    (5,1,1),
-    (6,1,1),
-    (7,7,1),
-    (8,7,1),
-    (9,7,1),
-    (10,7,1);
-
-INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VALUES
-    (1,1,1),
-    (1,2,1),
-    (1,3,1),
-    (2,2,1),
-    (2,4,1),
-    (3,4,1),
-    (4,5,1),
-    (4,6,1),
-    (5,7,1),
-    (6,8,1),
-    (6,9,1),
-    (7,10,1);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
