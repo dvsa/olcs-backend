@@ -4028,7 +4028,7 @@ CREATE VIEW document_search_view AS
     LEFT JOIN licence l ON d.licence_id = l.id
 
     LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
-        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.work_cd_id)
+        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
 
     LEFT JOIN cases c ON d.case_id = c.id
 
