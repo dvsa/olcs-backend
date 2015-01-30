@@ -6024,8 +6024,6 @@ CREATE TABLE `statement` (
   `licence_type` varchar(32) DEFAULT NULL,
   `requestors_body` varchar(40) DEFAULT NULL,
   `requestors_contact_details_id` int(11) DEFAULT NULL,
-  `requestors_family_name` varchar(35) DEFAULT NULL,
-  `requestors_forename` varchar(35) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
