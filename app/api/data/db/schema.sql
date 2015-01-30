@@ -7183,6 +7183,38 @@ CREATE TABLE `tm_licence_oc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tm_employment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `tm_employment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `transport_manager_id` INT NOT NULL,
+  `contact_details_id` INT NOT NULL,
+  `position` VARCHAR(45) NULL,
+  `hours_per_week` INT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `employer_name` VARCHAR(90) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tm_employment_transport_manager1_idx` (`transport_manager_id` ASC),
+  INDEX `fk_tm_employment_contact_details1_idx` (`contact_details_id` ASC),
+  CONSTRAINT `fk_tm_employment_transport_manager1`
+    FOREIGN KEY (`transport_manager_id`)
+    REFERENCES `olcs`.`transport_manager` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_employment_contact_details1`
+    FOREIGN KEY (`contact_details_id`)
+    REFERENCES `olcs`.`contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 DROP TABLE IF EXISTS `other_licence`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
