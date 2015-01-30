@@ -114,7 +114,7 @@ class Statement implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
      * @ORM\JoinColumn(name="requestors_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $requestorsContactDetails;
