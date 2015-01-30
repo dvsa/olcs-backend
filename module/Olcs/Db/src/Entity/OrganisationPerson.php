@@ -32,6 +32,7 @@ class OrganisationPerson implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\Position45Field,
         Traits\CustomVersionField;
 
     /**
@@ -62,15 +63,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
     protected $person;
-
-    /**
-     * Position
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="position", length=45, nullable=true)
-     */
-    protected $position;
 
     /**
      * Set the added date
@@ -139,28 +131,5 @@ class OrganisationPerson implements Interfaces\EntityInterface
     public function getPerson()
     {
         return $this->person;
-    }
-
-    /**
-     * Set the position
-     *
-     * @param string $position
-     * @return OrganisationPerson
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-
-        return $this;
-    }
-
-    /**
-     * Get the position
-     *
-     * @return string
-     */
-    public function getPosition()
-    {
-        return $this->position;
     }
 }

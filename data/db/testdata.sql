@@ -836,6 +836,11 @@ INSERT INTO `tm_licence_oc` (`id`, `transport_manager_licence_id`, `created_by`,
 VALUES
 	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1);
 
+INSERT INTO `tm_employment` (`id`, `transport_manager_id`, `contact_details_id`, `employer_name`, `position`, `hours_per_week`, `created_by`, `created_on`, `version`)
+VALUES
+    (1, 1, 116, 'TESCO', 'Manager', 10, 1, '2014-01-01 10:10:10', 1),
+    (2, 1, 117, 'TESCO', 'Director', 15, 2, '2014-01-01 10:10:10', 1);
+
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
     (1,1,NULL,NULL,'GB','tm_qt_CPCSI',NULL,NULL,1,'2014-01-01','1'),
@@ -1332,17 +1337,17 @@ INSERT INTO `community_lic` (
     ('cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `statement`
-(`id`, `contact_type`, `requestors_address_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
+(`id`, `contact_type`, `requestors_contact_details_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
 `authorisers_decision`, `authorisers_title`, `stopped_date`, `requested_date`, `requestors_body`, `issued_date`,
 `created_on`, `last_modified_on`, `version`, `vrm`)
 VALUES
-  (1, 'cm_letter', 105, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-05-01',
+  (1, 'cm_letter', 120, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-05-01',
   '2014-01-01', 'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1, 'VRM 1'),
-  (2, 'cm_fax', 106, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-06-02',
+  (2, 'cm_fax', 121, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-06-02',
   '2014-02-02', 'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1, 'VRM 2'),
-  (3, 'cm_email', 107, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-07-03',
+  (3, 'cm_email', 122, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-07-03',
   '2014-03-03', 'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1, 'VRM 3'),
-  (4, 'cm_tel', 108, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
+  (4, 'cm_tel', 123, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
   '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
 
 
