@@ -6023,9 +6023,7 @@ CREATE TABLE `statement` (
   `licence_no` varchar(20) DEFAULT NULL,
   `licence_type` varchar(32) DEFAULT NULL,
   `requestors_body` varchar(40) DEFAULT NULL,
-  `requestors_address_id` int(11) DEFAULT NULL,
-  `requestors_family_name` varchar(35) DEFAULT NULL,
-  `requestors_forename` varchar(35) DEFAULT NULL,
+  `requestors_contact_details_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -6033,13 +6031,14 @@ CREATE TABLE `statement` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_statement_case1_idx` (`case_id`),
-  KEY `fk_statement_address1_idx` (`requestors_address_id`),
+  KEY `fk_statement_contact_details1_idx` (`requestors_contact_details_id`),
   KEY `fk_statement_user1_idx` (`created_by`),
   KEY `fk_statement_user2_idx` (`last_modified_by`),
   KEY `fk_statement_ref_data2_idx` (`contact_type`),
   KEY `fk_statement_ref_data1_idx` (`statement_type`),
   CONSTRAINT `fk_statement_case1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_statement_address1` FOREIGN KEY (`requestors_address_id`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_statement_contact_details1` FOREIGN KEY (`requestors_contact_details_id`) REFERENCES
+  `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_statement_ref_data2` FOREIGN KEY (`contact_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7181,6 +7180,38 @@ CREATE TABLE `tm_licence_oc` (
   CONSTRAINT `fk_tm_licence_oc_application1_idx` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_licence_oc_operating_centre1_idx` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `tm_employment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `tm_employment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `transport_manager_id` INT NOT NULL,
+  `contact_details_id` INT NOT NULL,
+  `position` VARCHAR(45) NULL,
+  `hours_per_week` INT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `employer_name` VARCHAR(90) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tm_employment_transport_manager1_idx` (`transport_manager_id` ASC),
+  INDEX `fk_tm_employment_contact_details1_idx` (`contact_details_id` ASC),
+  CONSTRAINT `fk_tm_employment_transport_manager1`
+    FOREIGN KEY (`transport_manager_id`)
+    REFERENCES `olcs`.`transport_manager` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_employment_contact_details1`
+    FOREIGN KEY (`contact_details_id`)
+    REFERENCES `olcs`.`contact_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 DROP TABLE IF EXISTS `other_licence`;
