@@ -96,6 +96,11 @@ class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
                 'a.foo1 IS NULL',
                 array()
             ),
+            'not null' => array(
+                array('foo1' => 'NOT NULL'),
+                'a.foo1 IS NOT NULL',
+                array()
+            ),
             'in' => array(
                 array('foo1' => 'IN ["foo","bar","cake"]'),
                 'a.foo1 IN(\'foo\', \'bar\', \'cake\')',
@@ -172,7 +177,17 @@ class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
                     ), 'foo2' => 'bar'),
                 '((a.foo1 >= ?0 AND a.foo1 <= ?1) OR a.foo1 = ?2) AND a.foo2 = ?3',
                 array(5, 10, 0, 'bar')
-            )
+            ),
+            'complex or one' => array(
+                array(
+                    array(
+                        'foo' => 'bar',
+                        'bar' => 'cake'
+                    )
+                ),
+                'a.foo = ?0 OR a.bar = ?1',
+                array('bar', 'cake')
+            ),
         );
     }
 }
