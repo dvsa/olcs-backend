@@ -1281,6 +1281,11 @@ return array(
                 'entity' => 'Cases',
                 'property' => 'statement'
             ),
+        ),
+        'requestors_contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
         )
     )
 );
