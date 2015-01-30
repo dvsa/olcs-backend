@@ -120,24 +120,6 @@ class Statement implements Interfaces\EntityInterface
     protected $requestorsContactDetails;
 
     /**
-     * Requestors family name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="requestors_family_name", length=35, nullable=true)
-     */
-    protected $requestorsFamilyName;
-
-    /**
-     * Requestors forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="requestors_forename", length=35, nullable=true)
-     */
-    protected $requestorsForename;
-
-    /**
      * Statement type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -361,52 +343,6 @@ class Statement implements Interfaces\EntityInterface
     public function getRequestorsContactDetails()
     {
         return $this->requestorsContactDetails;
-    }
-
-    /**
-     * Set the requestors family name
-     *
-     * @param string $requestorsFamilyName
-     * @return Statement
-     */
-    public function setRequestorsFamilyName($requestorsFamilyName)
-    {
-        $this->requestorsFamilyName = $requestorsFamilyName;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors family name
-     *
-     * @return string
-     */
-    public function getRequestorsFamilyName()
-    {
-        return $this->requestorsFamilyName;
-    }
-
-    /**
-     * Set the requestors forename
-     *
-     * @param string $requestorsForename
-     * @return Statement
-     */
-    public function setRequestorsForename($requestorsForename)
-    {
-        $this->requestorsForename = $requestorsForename;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors forename
-     *
-     * @return string
-     */
-    public function getRequestorsForename()
-    {
-        return $this->requestorsForename;
     }
 
     /**
