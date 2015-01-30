@@ -15,7 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
+ *        @ORM\Index(name="fk_statement_contact_details1_idx", columns={"requestors_contact_details_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"}),
@@ -101,16 +101,6 @@ class Statement implements Interfaces\EntityInterface
     protected $requestedDate;
 
     /**
-     * Requestors address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
-     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $requestorsAddress;
-
-    /**
      * Requestors body
      *
      * @var string
@@ -118,6 +108,16 @@ class Statement implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="requestors_body", length=40, nullable=true)
      */
     protected $requestorsBody;
+
+    /**
+     * Requestors contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="requestors_contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $requestorsContactDetails;
 
     /**
      * Requestors family name
@@ -318,29 +318,6 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requestors address
-     *
-     * @param \Olcs\Db\Entity\Address $requestorsAddress
-     * @return Statement
-     */
-    public function setRequestorsAddress($requestorsAddress)
-    {
-        $this->requestorsAddress = $requestorsAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getRequestorsAddress()
-    {
-        return $this->requestorsAddress;
-    }
-
-    /**
      * Set the requestors body
      *
      * @param string $requestorsBody
@@ -361,6 +338,29 @@ class Statement implements Interfaces\EntityInterface
     public function getRequestorsBody()
     {
         return $this->requestorsBody;
+    }
+
+    /**
+     * Set the requestors contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $requestorsContactDetails
+     * @return Statement
+     */
+    public function setRequestorsContactDetails($requestorsContactDetails)
+    {
+        $this->requestorsContactDetails = $requestorsContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the requestors contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getRequestorsContactDetails()
+    {
+        return $this->requestorsContactDetails;
     }
 
     /**
