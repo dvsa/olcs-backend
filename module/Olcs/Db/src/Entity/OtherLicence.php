@@ -33,6 +33,7 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\DisqualificationDateField,
         Traits\DisqualificationLength255Field,
         Traits\HolderName90Field,
+        Traits\HoursPerWeekField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -40,15 +41,6 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\PreviousLicenceTypeManyToOne,
         Traits\PurchaseDateField,
         Traits\CustomVersionField;
-
-    /**
-     * Hours per week
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="hours_per_week", nullable=true)
-     */
-    protected $hoursPerWeek;
 
     /**
      * Total auth vehicles
@@ -87,29 +79,6 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="will_surrender", nullable=true)
      */
     protected $willSurrender;
-
-    /**
-     * Set the hours per week
-     *
-     * @param int $hoursPerWeek
-     * @return OtherLicence
-     */
-    public function setHoursPerWeek($hoursPerWeek)
-    {
-        $this->hoursPerWeek = $hoursPerWeek;
-
-        return $this;
-    }
-
-    /**
-     * Get the hours per week
-     *
-     * @return int
-     */
-    public function getHoursPerWeek()
-    {
-        return $this->hoursPerWeek;
-    }
 
     /**
      * Set the total auth vehicles

@@ -836,6 +836,11 @@ INSERT INTO `tm_licence_oc` (`id`, `transport_manager_licence_id`, `created_by`,
 VALUES
 	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1);
 
+INSERT INTO `tm_employment` (`id`, `transport_manager_id`, `contact_details_id`, `employer_name`, `position`, `hours_per_week`, `created_by`, `created_on`, `version`)
+VALUES
+    (1, 1, 116, 'TESCO', 'Manager', 10, 1, '2014-01-01 10:10:10', 1),
+    (2, 1, 117, 'TESCO', 'Director', 15, 2, '2014-01-01 10:10:10', 1);
+
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
     (1,1,NULL,NULL,'GB','tm_qt_CPCSI',NULL,NULL,1,'2014-01-01','1'),
