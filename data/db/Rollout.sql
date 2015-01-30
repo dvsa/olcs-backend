@@ -259,252 +259,256 @@ INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, 
     (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1,0,0,0),
     (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0,0,0,1);
 
-INSERT INTO `country` (`id`,`country_desc`) VALUES
-    ('GB', 'United Kingdom'),
-    ('AF', 'Afghanistan'),
-    ('AX', 'Aland Islands'),
-    ('AL', 'Albania'),
-    ('DZ', 'Algeria'),
-    ('AS', 'American Samoa'),
-    ('AD', 'Andorra'),
-    ('AO', 'Angola'),
-    ('AI', 'Anguilla'),
-    ('AQ', 'Antarctica'),
-    ('AG', 'Antigua And Barbuda'),
-    ('AR', 'Argentina'),
-    ('AM', 'Armenia'),
-    ('AW', 'Aruba'),
-    ('AU', 'Australia'),
-    ('AT', 'Austria'),
-    ('AZ', 'Azerbaijan'),
-    ('BS', 'Bahamas'),
-    ('BH', 'Bahrain'),
-    ('BD', 'Bangladesh'),
-    ('BB', 'Barbados'),
-    ('BY', 'Belarus'),
-    ('BE', 'Belgium'),
-    ('BZ', 'Belize'),
-    ('BJ', 'Benin'),
-    ('BM', 'Bermuda'),
-    ('BT', 'Bhutan'),
-    ('BO', 'Bolivia'),
-    ('BA', 'Bosnia And Herzegovina'),
-    ('BW', 'Botswana'),
-    ('BV', 'Bouvet Island'),
-    ('BR', 'Brazil'),
-    ('IO', 'British Indian Ocean Territory'),
-    ('BN', 'Brunei Darussalam'),
-    ('BG', 'Bulgaria'),
-    ('BF', 'Burkina Faso'),
-    ('BI', 'Burundi'),
-    ('KH', 'Cambodia'),
-    ('CM', 'Cameroon'),
-    ('CA', 'Canada'),
-    ('CV', 'Cape Verde'),
-    ('KY', 'Cayman Islands'),
-    ('CF', 'Central African Republic'),
-    ('TD', 'Chad'),
-    ('CL', 'Chile'),
-    ('CN', 'China'),
-    ('CX', 'Christmas Island'),
-    ('CC', 'Cocos (Keeling) Islands'),
-    ('CO', 'Colombia'),
-    ('KM', 'Comoros'),
-    ('CG', 'Congo'),
-    ('CD', 'Congo, Democratic Republic'),
-    ('CK', 'Cook Islands'),
-    ('CR', 'Costa Rica'),
-    ('CI', 'Cote D''Ivoire'),
-    ('HR', 'Croatia'),
-    ('CU', 'Cuba'),
-    ('CY', 'Cyprus'),
-    ('CZ', 'Czech Republic'),
-    ('DK', 'Denmark'),
-    ('DJ', 'Djibouti'),
-    ('DM', 'Dominica'),
-    ('DO', 'Dominican Republic'),
-    ('EC', 'Ecuador'),
-    ('EG', 'Egypt'),
-    ('SV', 'El Salvador'),
-    ('GQ', 'Equatorial Guinea'),
-    ('ER', 'Eritrea'),
-    ('EE', 'Estonia'),
-    ('ET', 'Ethiopia'),
-    ('FK', 'Falkland Islands (Malvinas)'),
-    ('FO', 'Faroe Islands'),
-    ('FJ', 'Fiji'),
-    ('FI', 'Finland'),
-    ('FR', 'France'),
-    ('GF', 'French Guiana'),
-    ('PF', 'French Polynesia'),
-    ('TF', 'French Southern Territories'),
-    ('GA', 'Gabon'),
-    ('GM', 'Gambia'),
-    ('GE', 'Georgia'),
-    ('DE', 'Germany'),
-    ('GH', 'Ghana'),
-    ('GI', 'Gibraltar'),
-    ('GR', 'Greece'),
-    ('GL', 'Greenland'),
-    ('GD', 'Grenada'),
-    ('GP', 'Guadeloupe'),
-    ('GU', 'Guam'),
-    ('GT', 'Guatemala'),
-    ('GG', 'Guernsey'),
-    ('GN', 'Guinea'),
-    ('GW', 'Guinea-Bissau'),
-    ('GY', 'Guyana'),
-    ('HT', 'Haiti'),
-    ('HM', 'Heard Island & Mcdonald Islands'),
-    ('VA', 'Holy See (Vatican City State)'),
-    ('HN', 'Honduras'),
-    ('HK', 'Hong Kong'),
-    ('HU', 'Hungary'),
-    ('IS', 'Iceland'),
-    ('IN', 'India'),
-    ('ID', 'Indonesia'),
-    ('IR', 'Iran, Islamic Republic Of'),
-    ('IQ', 'Iraq'),
-    ('IE', 'Ireland'),
-    ('IM', 'Isle Of Man'),
-    ('IL', 'Israel'),
-    ('IT', 'Italy'),
-    ('JM', 'Jamaica'),
-    ('JP', 'Japan'),
-    ('JE', 'Jersey'),
-    ('JO', 'Jordan'),
-    ('KZ', 'Kazakhstan'),
-    ('KE', 'Kenya'),
-    ('KI', 'Kiribati'),
-    ('KR', 'Korea'),
-    ('KW', 'Kuwait'),
-    ('KG', 'Kyrgyzstan'),
-    ('LA', 'Lao People''s Democratic Republic'),
-    ('LV', 'Latvia'),
-    ('LB', 'Lebanon'),
-    ('LS', 'Lesotho'),
-    ('LR', 'Liberia'),
-    ('LY', 'Libyan Arab Jamahiriya'),
-    ('LI', 'Liechtenstein'),
-    ('LT', 'Lithuania'),
-    ('LU', 'Luxembourg'),
-    ('MO', 'Macao'),
-    ('MK', 'Macedonia'),
-    ('MG', 'Madagascar'),
-    ('MW', 'Malawi'),
-    ('MY', 'Malaysia'),
-    ('MV', 'Maldives'),
-    ('ML', 'Mali'),
-    ('MT', 'Malta'),
-    ('MH', 'Marshall Islands'),
-    ('MQ', 'Martinique'),
-    ('MR', 'Mauritania'),
-    ('MU', 'Mauritius'),
-    ('YT', 'Mayotte'),
-    ('MX', 'Mexico'),
-    ('FM', 'Micronesia, Federated States Of'),
-    ('MD', 'Moldova'),
-    ('MC', 'Monaco'),
-    ('MN', 'Mongolia'),
-    ('ME', 'Montenegro'),
-    ('MS', 'Montserrat'),
-    ('MA', 'Morocco'),
-    ('MZ', 'Mozambique'),
-    ('MM', 'Myanmar'),
-    ('NA', 'Namibia'),
-    ('NR', 'Nauru'),
-    ('NP', 'Nepal'),
-    ('NL', 'Netherlands'),
-    ('AN', 'Netherlands Antilles'),
-    ('NC', 'New Caledonia'),
-    ('NZ', 'New Zealand'),
-    ('NI', 'Nicaragua'),
-    ('NE', 'Niger'),
-    ('NG', 'Nigeria'),
-    ('NU', 'Niue'),
-    ('NF', 'Norfolk Island'),
-    ('MP', 'Northern Mariana Islands'),
-    ('NO', 'Norway'),
-    ('OM', 'Oman'),
-    ('PK', 'Pakistan'),
-    ('PW', 'Palau'),
-    ('PS', 'Palestinian Territory, Occupied'),
-    ('PA', 'Panama'),
-    ('PG', 'Papua New Guinea'),
-    ('PY', 'Paraguay'),
-    ('PE', 'Peru'),
-    ('PH', 'Philippines'),
-    ('PN', 'Pitcairn'),
-    ('PL', 'Poland'),
-    ('PT', 'Portugal'),
-    ('PR', 'Puerto Rico'),
-    ('QA', 'Qatar'),
-    ('RE', 'Reunion'),
-    ('RO', 'Romania'),
-    ('RU', 'Russian Federation'),
-    ('RW', 'Rwanda'),
-    ('BL', 'Saint Barthelemy'),
-    ('SH', 'Saint Helena'),
-    ('KN', 'Saint Kitts And Nevis'),
-    ('LC', 'Saint Lucia'),
-    ('MF', 'Saint Martin'),
-    ('PM', 'Saint Pierre And Miquelon'),
-    ('VC', 'Saint Vincent And Grenadines'),
-    ('WS', 'Samoa'),
-    ('SM', 'San Marino'),
-    ('ST', 'Sao Tome And Principe'),
-    ('SA', 'Saudi Arabia'),
-    ('SN', 'Senegal'),
-    ('RS', 'Serbia'),
-    ('SC', 'Seychelles'),
-    ('SL', 'Sierra Leone'),
-    ('SG', 'Singapore'),
-    ('SK', 'Slovakia'),
-    ('SI', 'Slovenia'),
-    ('SB', 'Solomon Islands'),
-    ('SO', 'Somalia'),
-    ('ZA', 'South Africa'),
-    ('GS', 'South Georgia And Sandwich Isl.'),
-    ('ES', 'Spain'),
-    ('LK', 'Sri Lanka'),
-    ('SD', 'Sudan'),
-    ('SR', 'Suriname'),
-    ('SJ', 'Svalbard And Jan Mayen'),
-    ('SZ', 'Swaziland'),
-    ('SE', 'Sweden'),
-    ('CH', 'Switzerland'),
-    ('SY', 'Syrian Arab Republic'),
-    ('TW', 'Taiwan'),
-    ('TJ', 'Tajikistan'),
-    ('TZ', 'Tanzania'),
-    ('TH', 'Thailand'),
-    ('TL', 'Timor-Leste'),
-    ('TG', 'Togo'),
-    ('TK', 'Tokelau'),
-    ('TO', 'Tonga'),
-    ('TT', 'Trinidad And Tobago'),
-    ('TN', 'Tunisia'),
-    ('TR', 'Turkey'),
-    ('TM', 'Turkmenistan'),
-    ('TC', 'Turks And Caicos Islands'),
-    ('TV', 'Tuvalu'),
-    ('UG', 'Uganda'),
-    ('UA', 'Ukraine'),
-    ('AE', 'United Arab Emirates'),
-    ('US', 'United States'),
-    ('UM', 'United States Outlying Islands'),
-    ('UY', 'Uruguay'),
-    ('UZ', 'Uzbekistan'),
-    ('VU', 'Vanuatu'),
-    ('VE', 'Venezuela'),
-    ('VN', 'Viet Nam'),
-    ('VG', 'Virgin Islands, British'),
-    ('VI', 'Virgin Islands, U.S.'),
-    ('WF', 'Wallis And Futuna'),
-    ('EH', 'Western Sahara'),
-    ('YE', 'Yemen'),
-    ('ZM', 'Zambia'),
-    ('ZW', 'Zimbabwe');
+
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AD      ','ANDORRA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AE      ','UNITED ARAB EMIRATES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AF      ','AFGHANISTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AG      ','ANTIGUA AND BARBUDA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AI      ','ANGUILLA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AL      ','ALBANIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AM      ','ARMENIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AO      ','ANGOLA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AQ      ','ANTARCTICA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AR      ','ARGENTINA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AS      ','AMERICAN SAMOA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AT      ','AUSTRIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AU      ','AUSTRALIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AW      ','ARUBA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AX      ','Ã…LAND ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('AZ      ','AZERBAIJAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BA      ','BOSNIA AND HERZEGOVINA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BB      ','BARBADOS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BD      ','BANGLADESH',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BE      ','BELGIUM',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BF      ','BURKINA FASO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BG      ','BULGARIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BH      ','BAHRAIN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BI      ','BURUNDI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BJ      ','BENIN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BL      ','SAINT BARTHÃ‰LEMY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BM      ','BERMUDA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BN      ','BRUNEI DARUSSALAM',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BO      ','BOLIVIA, PLURINATIONAL STATE OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BQ      ','BONAIRE, SAINT EUSTATIUS AND SABA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BR      ','BRAZIL',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BS      ','BAHAMAS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BT      ','BHUTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BV      ','BOUVET ISLAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BW      ','BOTSWANA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BY      ','BELARUS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('BZ      ','BELIZE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CA      ','CANADA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CC      ','COCOS (KEELING) ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CD      ','CONGO, THE DEMOCRATIC REPUBLIC OF THE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CF      ','CENTRAL AFRICAN REPUBLIC',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CG      ','CONGO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CH      ','SWITZERLAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CI      ','CÃ”TE D\'IVOIRE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CK      ','COOK ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CL      ','CHILE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CM      ','CAMEROON',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CN      ','CHINA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CO      ','COLOMBIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CR      ','COSTA RICA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CU      ','CUBA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CV      ','CAPE VERDE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CW      ','CURAÃ‡AO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CX      ','CHRISTMAS ISLAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CY      ','CYPRUS',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('CZ      ','CZECH REPUBLIC',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DE      ','GERMANY',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DJ      ','DJIBOUTI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DK      ','DENMARK',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DM      ','DOMINICA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DO      ','DOMINICAN REPUBLIC',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('DZ      ','ALGERIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('EC      ','ECUADOR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('EE      ','ESTONIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('EG      ','EGYPT',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('EH      ','WESTERN SAHARA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ER      ','ERITREA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ES      ','SPAIN',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ET      ','ETHIOPIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FI      ','FINLAND',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FJ      ','FIJI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FK      ','FALKLAND ISLANDS (MALVINAS)',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FM      ','MICRONESIA, FEDERATED STATES OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FO      ','FAROE ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('FR      ','FRANCE',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GA      ','GABON',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GB      ','UNITED KINGDOM',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GD      ','GRENADA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GE      ','GEORGIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GF      ','FRENCH GUIANA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GG      ','GUERNSEY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GH      ','GHANA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GI      ','GIBRALTAR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GL      ','GREENLAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GM      ','GAMBIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GN      ','GUINEA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GP      ','GUADELOUPE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GQ      ','EQUATORIAL GUINEA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GR      ','GREECE',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GS      ','SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GT      ','GUATEMALA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GU      ','GUAM',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GW      ','GUINEA-BISSAU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('GY      ','GUYANA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HK      ','HONG KONG',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HM      ','HEARD ISLAND AND MCDONALD ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HN      ','HONDURAS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HR      ','CROATIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HT      ','HAITI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('HU      ','HUNGARY',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ID      ','INDONESIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IE      ','IRELAND',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IL      ','ISRAEL',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IM      ','ISLE OF MAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IN      ','INDIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IO      ','BRITISH INDIAN OCEAN TERRITORY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IQ      ','IRAQ',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IR      ','IRAN, ISLAMIC REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IS      ','ICELAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('IT      ','ITALY',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('JE      ','JERSEY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('JM      ','JAMAICA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('JO      ','JORDAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('JP      ','JAPAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KE      ','KENYA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KG      ','KYRGYZSTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KH      ','CAMBODIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KI      ','KIRIBATI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KM      ','COMOROS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KN      ','SAINT KITTS AND NEVIS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KP      ','KOREA, DEMOCRATIC PEOPLE\'S REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KR      ','KOREA, REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KW      ','KUWAIT',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KY      ','CAYMAN ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('KZ      ','KAZAKHSTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LA      ','LAO PEOPLE\'S DEMOCRATIC REPUBLIC',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LB      ','LEBANON',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LC      ','SAINT LUCIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LI      ','LIECHTENSTEIN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LK      ','SRI LANKA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LR      ','LIBERIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LS      ','LESOTHO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LT      ','LITHUANIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LU      ','LUXEMBOURG',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LV      ','LATVIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('LY      ','LIBYAN ARAB JAMAHIRIYA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MA      ','MOROCCO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MC      ','MONACO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MD      ','MOLDOVA, REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ME      ','MONTENEGRO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MF      ','SAINT MARTIN (FRENCH PART)',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MG      ','MADAGASCAR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MH      ','MARSHALL ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MK      ','MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ML      ','MALI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MM      ','MYANMAR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MN      ','MONGOLIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MO      ','MACAO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MP      ','NORTHERN MARIANA ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MQ      ','MARTINIQUE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MR      ','MAURITANIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MS      ','MONTSERRAT',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MT      ','MALTA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MU      ','MAURITIUS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MV      ','MALDIVES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MW      ','MALAWI',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MX      ','MEXICO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MY      ','MALAYSIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('MZ      ','MOZAMBIQUE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NA      ','NAMIBIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NC      ','NEW CALEDONIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NE      ','NIGER',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NF      ','NORFOLK ISLAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NG      ','NIGERIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NI      ','NICARAGUA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NL      ','NETHERLANDS',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NO      ','NORWAY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NP      ','NEPAL',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NR      ','NAURU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NU      ','NIUE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('NZ      ','NEW ZEALAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('OM      ','OMAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PA      ','PANAMA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PE      ','PERU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PF      ','FRENCH POLYNESIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PG      ','PAPUA NEW GUINEA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PH      ','PHILIPPINES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PK      ','PAKISTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PL      ','POLAND',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PM      ','SAINT PIERRE AND MIQUELON',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PN      ','PITCAIRN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PR      ','PUERTO RICO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PS      ','PALESTINIAN TERRITORY, OCCUPIED',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PT      ','PORTUGAL',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PW      ','PALAU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('PY      ','PARAGUAY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('QA      ','QATAR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('RE      ','RÃ‰UNION',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('RO      ','ROMANIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('RS      ','SERBIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('RU      ','RUSSIAN FEDERATION',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('RW      ','RWANDA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SA      ','SAUDI ARABIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SB      ','SOLOMON ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SC      ','SEYCHELLES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SD      ','SUDAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SE      ','SWEDEN',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SG      ','SINGAPORE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SH      ','SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SI      ','SLOVENIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SJ      ','SVALBARD AND JAN MAYEN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SK      ','SLOVAKIA',1,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SL      ','SIERRA LEONE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SM      ','SAN MARINO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SN      ','SENEGAL',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SO      ','SOMALIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SR      ','SURINAME',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ST      ','SAO TOME AND PRINCIPE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SV      ','EL SALVADOR',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SX      ','SINT MAARTEN (DUTCH PART)',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SY      ','SYRIAN ARAB REPUBLIC',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('SZ      ','SWAZILAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TC      ','TURKS AND CAICOS ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TD      ','CHAD',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TF      ','FRENCH SOUTHERN TERRITORIES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TG      ','TOGO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TH      ','THAILAND',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TJ      ','TAJIKISTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TK      ','TOKELAU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TL      ','TIMOR-LESTE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TM      ','TURKMENISTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TN      ','TUNISIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TO      ','TONGA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TR      ','TURKEY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TT      ','TRINIDAD AND TOBAGO',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TV      ','TUVALU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TW      ','TAIWAN, PROVINCE OF CHINA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('TZ      ','TANZANIA, UNITED REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('UA      ','UKRAINE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('UG      ','UGANDA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('UM      ','UNITED STATES MINOR OUTLYING ISLANDS',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('US      ','UNITED STATES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('UY      ','URUGUAY',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('UZ      ','UZBEKISTAN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VA      ','HOLY SEE (VATICAN CITY STATE)',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VC      ','SAINT VINCENT AND THE GRENADINES',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VE      ','VENEZUELA, BOLIVARIAN REPUBLIC OF',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VG      ','VIRGIN ISLANDS, BRITISH',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VI      ','VIRGIN ISLANDS, U.S.',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VN      ','VIET NAM',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('VU      ','VANUATU',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('WF      ','WALLIS AND FUTUNA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('WS      ','SAMOA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('YE      ','YEMEN',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('YT      ','MAYOTTE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ZA      ','SOUTH AFRICA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ZM      ','ZAMBIA',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+INSERT INTO `country` (`id`,`country_desc`,`is_member_state`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES ('ZW      ','ZIMBABWE',0,1,1,'2011-01-31 09:59:05','2011-01-31 09:59:05',1);
+
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
