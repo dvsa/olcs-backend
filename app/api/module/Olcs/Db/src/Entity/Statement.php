@@ -15,7 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="statement",
  *    indexes={
  *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_address1_idx", columns={"requestors_address_id"}),
+ *        @ORM\Index(name="fk_statement_contact_details1_idx", columns={"requestors_contact_details_id"}),
  *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"}),
@@ -101,16 +101,6 @@ class Statement implements Interfaces\EntityInterface
     protected $requestedDate;
 
     /**
-     * Requestors address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
-     * @ORM\JoinColumn(name="requestors_address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $requestorsAddress;
-
-    /**
      * Requestors body
      *
      * @var string
@@ -120,22 +110,14 @@ class Statement implements Interfaces\EntityInterface
     protected $requestorsBody;
 
     /**
-     * Requestors family name
+     * Requestors contact details
      *
-     * @var string
+     * @var \Olcs\Db\Entity\ContactDetails
      *
-     * @ORM\Column(type="string", name="requestors_family_name", length=35, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
+     * @ORM\JoinColumn(name="requestors_contact_details_id", referencedColumnName="id", nullable=true)
      */
-    protected $requestorsFamilyName;
-
-    /**
-     * Requestors forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="requestors_forename", length=35, nullable=true)
-     */
-    protected $requestorsForename;
+    protected $requestorsContactDetails;
 
     /**
      * Statement type
@@ -318,29 +300,6 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requestors address
-     *
-     * @param \Olcs\Db\Entity\Address $requestorsAddress
-     * @return Statement
-     */
-    public function setRequestorsAddress($requestorsAddress)
-    {
-        $this->requestorsAddress = $requestorsAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getRequestorsAddress()
-    {
-        return $this->requestorsAddress;
-    }
-
-    /**
      * Set the requestors body
      *
      * @param string $requestorsBody
@@ -364,49 +323,26 @@ class Statement implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the requestors family name
+     * Set the requestors contact details
      *
-     * @param string $requestorsFamilyName
+     * @param \Olcs\Db\Entity\ContactDetails $requestorsContactDetails
      * @return Statement
      */
-    public function setRequestorsFamilyName($requestorsFamilyName)
+    public function setRequestorsContactDetails($requestorsContactDetails)
     {
-        $this->requestorsFamilyName = $requestorsFamilyName;
+        $this->requestorsContactDetails = $requestorsContactDetails;
 
         return $this;
     }
 
     /**
-     * Get the requestors family name
+     * Get the requestors contact details
      *
-     * @return string
+     * @return \Olcs\Db\Entity\ContactDetails
      */
-    public function getRequestorsFamilyName()
+    public function getRequestorsContactDetails()
     {
-        return $this->requestorsFamilyName;
-    }
-
-    /**
-     * Set the requestors forename
-     *
-     * @param string $requestorsForename
-     * @return Statement
-     */
-    public function setRequestorsForename($requestorsForename)
-    {
-        $this->requestorsForename = $requestorsForename;
-
-        return $this;
-    }
-
-    /**
-     * Get the requestors forename
-     *
-     * @return string
-     */
-    public function getRequestorsForename()
-    {
-        return $this->requestorsForename;
+        return $this->requestorsContactDetails;
     }
 
     /**
