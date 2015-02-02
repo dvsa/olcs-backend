@@ -1267,6 +1267,14 @@ return array(
             )
         )
     ),
+    'role_permission' => array(
+        'role_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Role',
+                'property' => 'rolePermission'
+            )
+        )
+    ),
     'transport_manager_application' => array(
         'application_id' => array(
             'inversedBy' => array(
