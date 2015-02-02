@@ -59,6 +59,7 @@ class ExpressionBuilder
         $queries = array();
 
         foreach ($query as $field => $value) {
+
             $queries[] = $this->buildExpression($field, $value, $prefix);
         }
 
@@ -72,7 +73,18 @@ class ExpressionBuilder
         if (is_array($values)) {
             $queries = array();
 
-            foreach ($values as $value) {
+            $findField = false;
+
+            if (is_numeric($field)) {
+                $findField = true;
+            }
+
+            foreach ($values as $foundField => $value) {
+
+                if ($findField) {
+                    $field = $foundField;
+                }
+
                 $queries[] = $this->buildExpression($field, $value, $prefix, !$or);
             }
 
@@ -83,6 +95,10 @@ class ExpressionBuilder
 
         if ($values === 'NULL') {
             return $this->qb->expr()->isNull($field);
+        }
+
+        if ($values === 'NOT NULL') {
+            return $this->qb->expr()->isNotNull($field);
         }
 
         if (substr($values, 0, 4) == 'IN [') {
