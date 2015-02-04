@@ -135,6 +135,31 @@ class BusRegSearchView implements Interfaces\EntityInterface
     protected $variationNo;
 
     /**
+     * date_1st_reg
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="date_1st_reg")
+     */
+    protected $date1stReg;
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate1stReg()
+    {
+        return $this->date1stReg;
+    }
+
+    /**
+     * @param \DateTime $date1stReg
+     */
+    public function setDate1stReg($date1stReg)
+    {
+        $this->date1stReg = $date1stReg;
+    }
+
+    /**
      * @return int
      */
     public function getId()
