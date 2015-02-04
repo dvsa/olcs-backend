@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -48,6 +49,23 @@ class Role implements Interfaces\EntityInterface
     protected $role;
 
     /**
+     * Role permission
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\RolePermission", mappedBy="role")
+     */
+    protected $rolePermissions;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->rolePermissions = new ArrayCollection();
+    }
+
+    /**
      * Set the code
      *
      * @param string $code
@@ -91,5 +109,65 @@ class Role implements Interfaces\EntityInterface
     public function getRole()
     {
         return $this->role;
+    }
+
+    /**
+     * Set the role permission
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @return Role
+     */
+    public function setRolePermissions($rolePermissions)
+    {
+        $this->rolePermissions = $rolePermissions;
+
+        return $this;
+    }
+
+    /**
+     * Get the role permissions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRolePermissions()
+    {
+        return $this->rolePermissions;
+    }
+
+    /**
+     * Add a role permissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @return Role
+     */
+    public function addRolePermissions($rolePermissions)
+    {
+        if ($rolePermissions instanceof ArrayCollection) {
+            $this->rolePermissions = new ArrayCollection(
+                array_merge(
+                    $this->rolePermissions->toArray(),
+                    $rolePermissions->toArray()
+                )
+            );
+        } elseif (!$this->rolePermissions->contains($rolePermissions)) {
+            $this->rolePermissions->add($rolePermissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a role permissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @return Role
+     */
+    public function removeRolePermissions($rolePermissions)
+    {
+        if ($this->rolePermissions->contains($rolePermissions)) {
+            $this->rolePermissions->removeElement($rolePermissions);
+        }
+
+        return $this;
     }
 }
