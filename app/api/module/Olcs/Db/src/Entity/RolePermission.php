@@ -29,7 +29,6 @@ class RolePermission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\RoleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -41,6 +40,16 @@ class RolePermission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="permission_id", referencedColumnName="id", nullable=false)
      */
     protected $permission;
+
+    /**
+     * Role
+     *
+     * @var \Olcs\Db\Entity\Role
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Role", inversedBy="rolePermissions")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
+     */
+    protected $role;
 
     /**
      * Set the permission
@@ -63,5 +72,28 @@ class RolePermission implements Interfaces\EntityInterface
     public function getPermission()
     {
         return $this->permission;
+    }
+
+    /**
+     * Set the role
+     *
+     * @param \Olcs\Db\Entity\Role $role
+     * @return RolePermission
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get the role
+     *
+     * @return \Olcs\Db\Entity\Role
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }
