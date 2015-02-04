@@ -6913,6 +6913,7 @@ SELECT
     org.name AS `organisation_name`,
     br1.start_point AS `start_point`,
     br1.finish_point AS `finish_point`,
+    '2015-01-01' AS `date_1st_reg`,
     CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
         THEN 'Expired'
         ELSE rd_bus_status.description END as bus_reg_status,
