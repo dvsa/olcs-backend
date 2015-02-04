@@ -21,9 +21,116 @@ use Olcs\Db\Entity\Interfaces;
  * Bus Reg List View
  *
  * @ORM\Entity(readOnly=true)
- * @ORM\Table(name="bus_reg_list_view")
+ * @ORM\Table(name="bus_reg_search_view")
  */
 class BusRegListView implements Interfaces\EntityInterface
 {
-    //
+    /**
+     * Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     */
+    protected $id;
+
+    /**
+     * Service Number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="service_no")
+     */
+    protected $serviceNo;
+
+    /**
+     * Reg No
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="reg_no")
+     */
+    protected $regNo;
+
+    /**
+     * Licence ID
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_id")
+     */
+    protected $licenceId;
+
+    /**
+     * Licence Number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no")
+     */
+    protected $licNo;
+
+    /**
+     * Licence Status
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_status")
+     */
+    protected $licenceStatus;
+
+    /**
+     * Organisation name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="organisation_name")
+     */
+    protected $organisationName;
+
+    /**
+     * Start Point
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="start_point")
+     */
+    protected $startPoint;
+
+    /**
+     * Start Point
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="finish_point")
+     */
+    protected $finishPoint;
+
+    /**
+     * Bus Reg Status
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bus_reg_status")
+     */
+    protected $busRegStatus;
+
+    /**
+     * Route Number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="route_no")
+     */
+    protected $routeNumber;
+
+    /**
+     * Variation Number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="variation_no")
+     */
+    protected $variationNumber;
 }
