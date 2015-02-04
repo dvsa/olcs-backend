@@ -18,6 +18,7 @@ TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_paragraph`;
 TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
+TRUNCATE TABLE `variation_reason`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -6800,6 +6801,13 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (6,9,1),
     (7,10,1);
 */
+
+INSERT INTO `variation_reason` (`id`, `description`)
+VALUES
+  (1, 'Route'),
+  (2, 'Start & finish point'),
+  (3, 'Stopping places'),
+  (4, 'Timetable');
 
 SET foreign_key_checks = 1;
 
