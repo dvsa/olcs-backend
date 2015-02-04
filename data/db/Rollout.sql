@@ -6933,6 +6933,8 @@ CREATE VIEW vehicle_history_view AS
     inner join licence l on vl.licence_id = l.id;
 
 -- Bus reg search view
+DROP TABLE IF EXISTS bus_reg_search_view;
+DROP VIEW IF EXISTS bus_reg_search_view;
 
 CREATE VIEW bus_reg_search_view AS
 SELECT
