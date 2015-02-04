@@ -1350,5 +1350,10 @@ VALUES
   (4, 'cm_tel', 123, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
   '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
 
+INSERT INTO `previous_conviction` (`id`, `conviction_date`, `transport_manager_id`, `category_text`, `notes`,
+   `court_fpn`, `penalty`, `version`)
+VALUES
+  (1, '2014-10-30 10:00:00', 1, 'Offence 1', 'Offence 1 details', 'Court 1', 'Penalty 1', 1),
+  (2, '2014-11-30 11:00:00', 1, 'Offence 2', 'Offence 2 details', 'Court 2', 'Penalty 2', 1);
 
 SET foreign_key_checks = 1;
