@@ -14,10 +14,12 @@ class SearchController extends AbstractController
     {
         $params = array_merge($this->params()->fromRoute(), $this->params()->fromQuery());
 
+        $indices = explode('|', $params['index']);
+
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
         $resultSet = $elastic->search(
             urldecode($params['query']),
-            [$params['index']],
+            $indices,
             $params['page'],
             $params['limit']
         );
