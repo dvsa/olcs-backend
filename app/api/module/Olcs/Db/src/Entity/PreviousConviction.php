@@ -14,7 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="previous_conviction",
  *    indexes={
- *        @ORM\Index(name="fk_previous_convictions_application1_idx", columns={"application_id"})
+ *        @ORM\Index(name="fk_previous_convictions_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_previous_convictions_transport_manager1_idx", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -23,10 +24,13 @@ class PreviousConviction implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\BirthDateField,
         Traits\CategoryText1024Field,
+        Traits\FamilyName35Field,
+        Traits\Forename35Field,
         Traits\IdIdentity,
         Traits\Notes4000Field,
         Traits\Penalty255Field,
         Traits\Title32Field,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -35,7 +39,7 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="previousConvictions")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
 
@@ -56,24 +60,6 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
     protected $courtFpn;
-
-    /**
-     * Family name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="family_name", length=35, nullable=false)
-     */
-    protected $familyName;
-
-    /**
-     * Forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="forename", length=35, nullable=false)
-     */
-    protected $forename;
 
     /**
      * Set the application
@@ -142,51 +128,5 @@ class PreviousConviction implements Interfaces\EntityInterface
     public function getCourtFpn()
     {
         return $this->courtFpn;
-    }
-
-    /**
-     * Set the family name
-     *
-     * @param string $familyName
-     * @return PreviousConviction
-     */
-    public function setFamilyName($familyName)
-    {
-        $this->familyName = $familyName;
-
-        return $this;
-    }
-
-    /**
-     * Get the family name
-     *
-     * @return string
-     */
-    public function getFamilyName()
-    {
-        return $this->familyName;
-    }
-
-    /**
-     * Set the forename
-     *
-     * @param string $forename
-     * @return PreviousConviction
-     */
-    public function setForename($forename)
-    {
-        $this->forename = $forename;
-
-        return $this;
-    }
-
-    /**
-     * Get the forename
-     *
-     * @return string
-     */
-    public function getForename()
-    {
-        return $this->forename;
     }
 }
