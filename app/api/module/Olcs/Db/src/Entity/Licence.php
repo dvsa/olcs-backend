@@ -250,6 +250,15 @@ class Licence implements Interfaces\EntityInterface
     protected $cases;
 
     /**
+     * Condition undertaking
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="licence")
+     */
+    protected $conditionUndertakings;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -320,6 +329,7 @@ class Licence implements Interfaces\EntityInterface
     {
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
+        $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
@@ -858,6 +868,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->cases->contains($cases)) {
             $this->cases->removeElement($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the condition undertaking
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Licence
+     */
+    public function setConditionUndertakings($conditionUndertakings)
+    {
+        $this->conditionUndertakings = $conditionUndertakings;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition undertakings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditionUndertakings()
+    {
+        return $this->conditionUndertakings;
+    }
+
+    /**
+     * Add a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Licence
+     */
+    public function addConditionUndertakings($conditionUndertakings)
+    {
+        if ($conditionUndertakings instanceof ArrayCollection) {
+            $this->conditionUndertakings = new ArrayCollection(
+                array_merge(
+                    $this->conditionUndertakings->toArray(),
+                    $conditionUndertakings->toArray()
+                )
+            );
+        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->add($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return Licence
+     */
+    public function removeConditionUndertakings($conditionUndertakings)
+    {
+        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->removeElement($conditionUndertakings);
         }
 
         return $this;
