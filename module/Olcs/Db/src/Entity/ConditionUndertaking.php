@@ -41,7 +41,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\CustomVersionField;
 
@@ -141,6 +140,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
 
     /**
      * Notes
@@ -404,6 +413,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getLicConditionVariation()
     {
         return $this->licConditionVariation;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return ConditionUndertaking
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

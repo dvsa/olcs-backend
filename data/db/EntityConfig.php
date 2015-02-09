@@ -764,6 +764,12 @@ return array(
                 'property' => 'conditionUndertaking'
             )
         ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
