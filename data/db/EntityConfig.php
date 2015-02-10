@@ -1260,6 +1260,12 @@ return array(
         )
     ),
     'publication_link' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'publicationLink'
+            )
+        ),
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
