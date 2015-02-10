@@ -2144,7 +2144,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`) VALUES
     ('SIC_CODE','22190','Manufacture of other rubber products'),
     ('SIC_CODE','22210','Manufacture of plastic plates, sheets, tubes and profiles'),
     ('SIC_CODE','22220','Manufacture of plastic packing goods'),
-    ('SIC_CODE','22230','Manufacture of builders’ ware of plastic'),
+    ('SIC_CODE','22230','Manufacture of builders'' ware of plastic'),
     ('SIC_CODE','22290','Manufacture of other plastic products'),
     ('SIC_CODE','23110','Manufacture of flat glass'),
     ('SIC_CODE','23120','Shaping and processing of flat glass'),
