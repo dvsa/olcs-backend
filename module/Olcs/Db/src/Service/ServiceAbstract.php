@@ -398,7 +398,15 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     protected function pickValidKeys(array $data, array $keys)
     {
-        return array_intersect_key($data, array_flip($keys));
+        $validKeys = [];
+
+        foreach ($data as $key => $val) {
+            if (is_numeric($key) || in_array($key, $keys)) {
+                $validKeys[$key] = $val;
+            }
+        }
+
+        return $validKeys;
     }
 
     /**
