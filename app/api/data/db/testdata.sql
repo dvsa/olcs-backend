@@ -90,6 +90,7 @@ TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
 TRUNCATE TABLE `community_lic`;
+TRUNCATE TABLE `previous_conviction`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
