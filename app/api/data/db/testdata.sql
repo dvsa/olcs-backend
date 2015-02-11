@@ -736,14 +736,14 @@ VALUES
 	(1, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
 	(2, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL, NULL, 1);
 
-INSERT INTO `tm_application_oc` (`id`, `transport_manager_application_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
 VALUES
-	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1),
-	(2, 2, NULL, NULL, 16, NULL, NULL, NULL, 1);
+	(1, 16),
+	(2, 16);
 
-INSERT INTO `tm_licence_oc` (`id`, `transport_manager_licence_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+INSERT INTO `tm_licence_oc` (`transport_manager_licence_id`, `operating_centre_id`)
 VALUES
-	(1, 1, NULL, NULL, 16, NULL, NULL, NULL, 1);
+	(1, 16);
 
 INSERT INTO `tm_employment` (`id`, `transport_manager_id`, `contact_details_id`, `employer_name`, `position`, `hours_per_week`, `created_by`, `created_on`, `version`)
 VALUES

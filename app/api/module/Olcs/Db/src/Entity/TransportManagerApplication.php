@@ -59,12 +59,29 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $application;
 
     /**
+     * Operating centre
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="transportManagerApplications")
+     * @ORM\JoinTable(name="tm_application_oc",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $operatingCentres;
+
+    /**
      * Tm application status
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
      */
     protected $tmApplicationStatus;
 
@@ -79,20 +96,11 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $tmType;
 
     /**
-     * Tm application oc
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmApplicationOc", mappedBy="transportManagerApplication")
-     */
-    protected $tmApplicationOcs;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->tmApplicationOcs = new ArrayCollection();
+        $this->operatingCentres = new ArrayCollection();
     }
 
     /**
@@ -116,6 +124,66 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
+     * Add a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function addOperatingCentres($operatingCentres)
+    {
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
+                array_merge(
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
+                )
+            );
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function removeOperatingCentres($operatingCentres)
+    {
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
     }
 
     /**
@@ -162,65 +230,5 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getTmType()
     {
         return $this->tmType;
-    }
-
-    /**
-     * Set the tm application oc
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
-     * @return TransportManagerApplication
-     */
-    public function setTmApplicationOcs($tmApplicationOcs)
-    {
-        $this->tmApplicationOcs = $tmApplicationOcs;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm application ocs
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTmApplicationOcs()
-    {
-        return $this->tmApplicationOcs;
-    }
-
-    /**
-     * Add a tm application ocs
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
-     * @return TransportManagerApplication
-     */
-    public function addTmApplicationOcs($tmApplicationOcs)
-    {
-        if ($tmApplicationOcs instanceof ArrayCollection) {
-            $this->tmApplicationOcs = new ArrayCollection(
-                array_merge(
-                    $this->tmApplicationOcs->toArray(),
-                    $tmApplicationOcs->toArray()
-                )
-            );
-        } elseif (!$this->tmApplicationOcs->contains($tmApplicationOcs)) {
-            $this->tmApplicationOcs->add($tmApplicationOcs);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a tm application ocs
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
-     * @return TransportManagerApplication
-     */
-    public function removeTmApplicationOcs($tmApplicationOcs)
-    {
-        if ($this->tmApplicationOcs->contains($tmApplicationOcs)) {
-            $this->tmApplicationOcs->removeElement($tmApplicationOcs);
-        }
-
-        return $this;
     }
 }
