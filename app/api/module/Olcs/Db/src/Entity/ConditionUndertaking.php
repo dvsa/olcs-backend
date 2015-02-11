@@ -136,7 +136,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", inversedBy="variationRecords")
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
@@ -178,11 +178,21 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $s4s;
 
     /**
+     * Variation record
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="licConditionVariation")
+     */
+    protected $variationRecords;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->s4s = new ArrayCollection();
+        $this->variationRecords = new ArrayCollection();
     }
 
     /**
@@ -516,6 +526,66 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         if ($this->s4s->contains($s4s)) {
             $this->s4s->removeElement($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the variation record
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function setVariationRecords($variationRecords)
+    {
+        $this->variationRecords = $variationRecords;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation records
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getVariationRecords()
+    {
+        return $this->variationRecords;
+    }
+
+    /**
+     * Add a variation records
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function addVariationRecords($variationRecords)
+    {
+        if ($variationRecords instanceof ArrayCollection) {
+            $this->variationRecords = new ArrayCollection(
+                array_merge(
+                    $this->variationRecords->toArray(),
+                    $variationRecords->toArray()
+                )
+            );
+        } elseif (!$this->variationRecords->contains($variationRecords)) {
+            $this->variationRecords->add($variationRecords);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation records
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function removeVariationRecords($variationRecords)
+    {
+        if ($this->variationRecords->contains($variationRecords)) {
+            $this->variationRecords->removeElement($variationRecords);
         }
 
         return $this;

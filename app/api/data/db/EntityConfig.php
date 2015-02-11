@@ -787,6 +787,12 @@ return array(
         ),
         'is_approved' => array(
             'type' => 'yesno'
+        ),
+        'lic_condition_variation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ConditionUndertaking',
+                'property' => 'variationRecord'
+            )
         )
     ),
     'previous_licence' => array(
