@@ -58,7 +58,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
