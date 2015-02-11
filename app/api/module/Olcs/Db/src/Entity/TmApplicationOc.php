@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TmApplicationOc Entity
@@ -13,27 +12,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_application_oc",
  *    indexes={
- *        @ORM\Index(name="fk_tm_application_oc_application1_idx", columns={"transport_manager_application_id"}),
- *        @ORM\Index(name="fk_tm_application_oc_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_tm_application_oc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_application_oc_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_tm_application_oc_transport_manager_application1_idx", columns={"transport_manager_application_id"}),
+ *        @ORM\Index(name="fk_tm_application_oc_operating_centre1_idx", columns={"operating_centre_id"})
  *    }
  * )
  */
 class TmApplicationOc implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CreatedByManyToOne,
-        Traits\CustomCreatedOnField,
-        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
-        Traits\CustomLastModifiedOnField,
-        Traits\OperatingCentreManyToOne,
-        Traits\CustomVersionField;
+        Traits\OperatingCentreManyToOne;
 
     /**
      * Transport manager application
