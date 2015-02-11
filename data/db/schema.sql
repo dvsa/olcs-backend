@@ -7042,7 +7042,7 @@ CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
   `tm_type` varchar(32) DEFAULT NULL,
-  `tm_application_status` varchar(32) NOT NULL,
+  `tm_application_status` varchar(32) DEFAULT NULL,
   `application_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
   `hours_mon` int(11) DEFAULT NULL,
@@ -7139,10 +7139,9 @@ DROP TABLE IF EXISTS `tm_application_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_application_oc` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_application_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`transport_manager_application_id`, `operating_centre_id`),
   KEY `fk_tm_application_oc_transport_manager_application1_idx` (`transport_manager_application_id`),
   KEY `fk_tm_application_oc_operating_centre1_idx` (`operating_centre_id`),
   CONSTRAINT `fk_tm_application_oc_transport_manager_application1_idx` FOREIGN KEY (`transport_manager_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7154,10 +7153,9 @@ DROP TABLE IF EXISTS `tm_licence_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_licence_oc` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_licence_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`transport_manager_licence_id`, `operating_centre_id`),
   KEY `fk_tm_licence_oc_transport_manager_licence1_idx` (`transport_manager_licence_id`),
   KEY `fk_tm_licence_oc_operating_centre1_idx` (`operating_centre_id`),
   CONSTRAINT `fk_tm_licence_oc_transport_manager_licence1_idx` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

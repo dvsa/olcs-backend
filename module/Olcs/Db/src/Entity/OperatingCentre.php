@@ -52,6 +52,24 @@ class OperatingCentre implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Transport manager application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TransportManagerApplication", mappedBy="operatingCentres")
+     */
+    protected $transportManagerApplications;
+
+    /**
+     * Transport manager licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TransportManagerLicence", mappedBy="operatingCentres")
+     */
+    protected $transportManagerLicences;
+
+    /**
      * Ad document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -65,7 +83,9 @@ class OperatingCentre implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->transportManagerLicences = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
+        $this->transportManagerApplications = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
     }
 
@@ -147,6 +167,126 @@ class OperatingCentre implements Interfaces\EntityInterface
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the transport manager application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @return OperatingCentre
+     */
+    public function setTransportManagerApplications($transportManagerApplications)
+    {
+        $this->transportManagerApplications = $transportManagerApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTransportManagerApplications()
+    {
+        return $this->transportManagerApplications;
+    }
+
+    /**
+     * Add a transport manager applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @return OperatingCentre
+     */
+    public function addTransportManagerApplications($transportManagerApplications)
+    {
+        if ($transportManagerApplications instanceof ArrayCollection) {
+            $this->transportManagerApplications = new ArrayCollection(
+                array_merge(
+                    $this->transportManagerApplications->toArray(),
+                    $transportManagerApplications->toArray()
+                )
+            );
+        } elseif (!$this->transportManagerApplications->contains($transportManagerApplications)) {
+            $this->transportManagerApplications->add($transportManagerApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a transport manager applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @return OperatingCentre
+     */
+    public function removeTransportManagerApplications($transportManagerApplications)
+    {
+        if ($this->transportManagerApplications->contains($transportManagerApplications)) {
+            $this->transportManagerApplications->removeElement($transportManagerApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the transport manager licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @return OperatingCentre
+     */
+    public function setTransportManagerLicences($transportManagerLicences)
+    {
+        $this->transportManagerLicences = $transportManagerLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTransportManagerLicences()
+    {
+        return $this->transportManagerLicences;
+    }
+
+    /**
+     * Add a transport manager licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @return OperatingCentre
+     */
+    public function addTransportManagerLicences($transportManagerLicences)
+    {
+        if ($transportManagerLicences instanceof ArrayCollection) {
+            $this->transportManagerLicences = new ArrayCollection(
+                array_merge(
+                    $this->transportManagerLicences->toArray(),
+                    $transportManagerLicences->toArray()
+                )
+            );
+        } elseif (!$this->transportManagerLicences->contains($transportManagerLicences)) {
+            $this->transportManagerLicences->add($transportManagerLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a transport manager licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @return OperatingCentre
+     */
+    public function removeTransportManagerLicences($transportManagerLicences)
+    {
+        if ($this->transportManagerLicences->contains($transportManagerLicences)) {
+            $this->transportManagerLicences->removeElement($transportManagerLicences);
         }
 
         return $this;
