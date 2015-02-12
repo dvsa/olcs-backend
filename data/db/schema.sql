@@ -5225,7 +5225,7 @@ CREATE TABLE `publication_link` (
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `pi_id` int(11) DEFAULT NULL,
-  `tm_pi_hearing_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
   `text1` text,
   `text2` text,
@@ -5247,7 +5247,7 @@ CREATE TABLE `publication_link` (
   KEY `fk_licence_publication_publication_section1_idx` (`publication_section_id`),
   KEY `fk_licence_publication_user1_idx` (`created_by`),
   KEY `fk_licence_publication_user2_idx` (`last_modified_by`),
-  KEY `fk_licence_publication_tm_pi_hearing1_idx` (`tm_pi_hearing_id`),
+  KEY `fk_licence_publication_transport_manager_id1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_publication_has_licence_publication1` FOREIGN KEY (`publication_id`) REFERENCES `publication` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_has_licence_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_pi_detail1` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5257,7 +5257,7 @@ CREATE TABLE `publication_link` (
   CONSTRAINT `fk_licence_publication_publication_section1` FOREIGN KEY (`publication_section_id`) REFERENCES `publication_section` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_publication_tm_pi_hearing1` FOREIGN KEY (`tm_pi_hearing_id`) REFERENCES `tm_pi_hearing` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_licence_publication_transport_manager_id1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
