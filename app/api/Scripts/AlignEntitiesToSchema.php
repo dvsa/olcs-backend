@@ -163,11 +163,11 @@ class AlignEntitiesToSchema
 
         if (isset($this->options['help'])) {
             $this->exitResponse(
-                'Usage \'php AlignEntitiesToSchema.php --import-schema /workspace/OLCS/olcs-backend/data/db/schema.sql '
-                . '--mapping-files /workspace/OLCS/olcs-backend/data/mapping/ --entity-files '
-                . '/workspace/OLCS/olcs-backend/module/Olcs/Db/src/Entity/ --test-files '
-                . '/workspace/OLCS/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config '
-                . '/workspace/OLCS/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\''
+                'Usage \'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-backend/data/db/schema.sql '
+                . '--mapping-files /var/www/olcs/olcs-backend/data/mapping/ --entity-files '
+                . '/var/www/olcs/olcs-backend/module/Olcs/Db/src/Entity/ --test-files '
+                . '/var/www/olcs/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config '
+                . '/var/www/olcs/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\''
             );
         }
 
