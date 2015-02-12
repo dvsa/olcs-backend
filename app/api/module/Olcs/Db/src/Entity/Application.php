@@ -100,6 +100,15 @@ class Application implements Interfaces\EntityInterface
     protected $disqualified;
 
     /**
+     * Financial evidence uploaded
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="financial_evidence_uploaded", nullable=true)
+     */
+    protected $financialEvidenceUploaded;
+
+    /**
      * Has entered reg
      *
      * @var string
@@ -600,6 +609,29 @@ class Application implements Interfaces\EntityInterface
     public function getDisqualified()
     {
         return $this->disqualified;
+    }
+
+    /**
+     * Set the financial evidence uploaded
+     *
+     * @param string $financialEvidenceUploaded
+     * @return Application
+     */
+    public function setFinancialEvidenceUploaded($financialEvidenceUploaded)
+    {
+        $this->financialEvidenceUploaded = $financialEvidenceUploaded;
+
+        return $this;
+    }
+
+    /**
+     * Get the financial evidence uploaded
+     *
+     * @return string
+     */
+    public function getFinancialEvidenceUploaded()
+    {
+        return $this->financialEvidenceUploaded;
     }
 
     /**
