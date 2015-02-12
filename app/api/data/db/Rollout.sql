@@ -18,6 +18,7 @@ TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_paragraph`;
 TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
+TRUNCATE TABLE `variation_reason`;
 TRUNCATE TABLE `role`;
 TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
@@ -515,7 +516,7 @@ VALUES
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
     ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
-    ('com_lic_sts', 'cl_sts_valid', 'Active', null),
+    ('com_lic_sts', 'cl_sts_active', 'Active', null),
     ('com_lic_sts', 'cl_sts_expired', 'Expired', null),
     ('com_lic_sts', 'cl_sts_withdrawn', 'Withdrawn', null),
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
@@ -6804,6 +6805,13 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (7,10,1);
 */
 
+INSERT INTO `variation_reason` (`id`, `description`)
+VALUES
+  (1, 'Route'),
+  (2, 'Start & finish point'),
+  (3, 'Stopping places'),
+  (4, 'Timetable');
+
 INSERT INTO `role` (`id`, `role`) VALUES
     (1, 'limited-read-only'),
     (2, 'read-only'),
@@ -6937,35 +6945,35 @@ DROP TABLE IF EXISTS bus_reg_search_view;
 DROP VIEW IF EXISTS bus_reg_search_view;
 
 CREATE VIEW bus_reg_search_view AS
-SELECT
-    br1.id AS `id`,
-    IFNULL(CONCAT(br1.service_no, '(',
-        (SELECT GROUP_CONCAT(COALESCE(service_no,'NULL'),'') AS other FROM bus_reg_other_service
-        WHERE bus_reg_id = br1.id),
-        ')'), br1.service_no) as `service_no`,
-    br1.reg_no AS `reg_no`,
-    lic.id AS `lic_id`,
-    lic.lic_no AS `lic_no`,
-    rd_lic_status.description AS `lic_status`,
-    org.name AS `organisation_name`,
-    br1.start_point AS `start_point`,
-    br1.finish_point AS `finish_point`,
-    '2015-01-01' AS `date_1st_reg`,
-    CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
+    SELECT
+        br1.id AS `id`,
+        IFNULL(CONCAT(br1.service_no, '(',
+                      (SELECT GROUP_CONCAT(COALESCE(service_no,'NULL'),'') AS other FROM bus_reg_other_service
+                      WHERE bus_reg_id = br1.id),
+                      ')'), br1.service_no) as `service_no`,
+        br1.reg_no AS `reg_no`,
+        lic.id AS `lic_id`,
+        lic.lic_no AS `lic_no`,
+        rd_lic_status.description AS `lic_status`,
+        org.name AS `organisation_name`,
+        br1.start_point AS `start_point`,
+        br1.finish_point AS `finish_point`,
+        '2015-01-01' AS `date_1st_reg`,
+        CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
         THEN 'Expired'
         ELSE rd_bus_status.description END as bus_reg_status,
-    br1.route_no,
-    br1.variation_no
-FROM bus_reg AS br1
-INNER JOIN licence lic ON lic.id = br1.licence_id
-INNER JOIN organisation AS org ON org.id = lic.organisation_ID
-INNER JOIN ref_data AS rd_lic_status ON (rd_lic_status.id = lic.status)
-INNER JOIN ref_data AS rd_bus_status ON (rd_bus_status.id = br1.status)
-WHERE br1.variation_no =
-    coalesce((
-        SELECT MAX(variation_no) FROM bus_reg br2
-        WHERE
-            (br2.reg_no = br1.reg_no
-            AND br2.status NOT IN('breg_s_refused','breg_s_withdrawn')
-            AND (br2.end_date is null or br2.end_date > Now())))
-    , 0);
+        br1.route_no,
+        br1.variation_no
+    FROM bus_reg AS br1
+        INNER JOIN licence lic ON lic.id = br1.licence_id
+        INNER JOIN organisation AS org ON org.id = lic.organisation_ID
+        INNER JOIN ref_data AS rd_lic_status ON (rd_lic_status.id = lic.status)
+        INNER JOIN ref_data AS rd_bus_status ON (rd_bus_status.id = br1.status)
+    WHERE br1.variation_no =
+          coalesce((
+                       SELECT MAX(variation_no) FROM bus_reg br2
+                       WHERE
+                           (br2.reg_no = br1.reg_no
+                            AND br2.status NOT IN('breg_s_refused','breg_s_withdrawn')
+                            AND (br2.end_date is null or br2.end_date > Now())))
+          , 0);

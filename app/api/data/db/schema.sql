@@ -4786,18 +4786,21 @@ CREATE TABLE `previous_conviction` (
   `id` int(11) NOT NULL,
   `conviction_date` date DEFAULT NULL,
   `title` varchar(32) DEFAULT NULL,
-  `forename` varchar(35) NOT NULL,
-  `family_name` varchar(35) NOT NULL,
+  `forename` varchar(35) DEFAULT NULL,
+  `family_name` varchar(35) DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
   `category_text` varchar(1024) DEFAULT NULL,
   `notes` varchar(4000) DEFAULT NULL,
   `court_fpn` varchar(70) DEFAULT NULL,
   `penalty` varchar(255) DEFAULT NULL,
-  `application_id` int(11) NOT NULL,
+  `application_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_previous_convictions_application1_idx` (`application_id`),
-  CONSTRAINT `fk_previous_convictions_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_previous_convictions_transport_manager1_idx` (`transport_manager_id`),
+  CONSTRAINT `fk_previous_convictions_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_previous_convictions_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7228,7 +7231,7 @@ CREATE TABLE `other_licence` (
   `will_surrender` TINYINT(1) DEFAULT NULL,
   `disqualification_date` DATE DEFAULT NULL,
   `disqualification_length` VARCHAR(255) NULL,
-  `previous_licence_type` VARCHAR(32) NOT NULL,
+  `previous_licence_type` VARCHAR(32) DEFAULT NULL,
   `additional_information` VARCHAR(4000) DEFAULT NULL,
   `total_auth_vehicles` int(11) DEFAULT NULL,
   `hours_per_week` int(11) DEFAULT NULL COMMENT 'If on transport manager',

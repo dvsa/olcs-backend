@@ -41,7 +41,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOneAlt1,
         Traits\OperatingCentreManyToOneAlt1,
         Traits\CustomVersionField;
 
@@ -137,10 +136,20 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ConditionUndertaking", inversedBy="variationRecords")
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
 
     /**
      * Notes
@@ -169,11 +178,21 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $s4s;
 
     /**
+     * Variation record
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="licConditionVariation")
+     */
+    protected $variationRecords;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->s4s = new ArrayCollection();
+        $this->variationRecords = new ArrayCollection();
     }
 
     /**
@@ -407,6 +426,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return ConditionUndertaking
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
      * Set the notes
      *
      * @param string $notes
@@ -484,6 +526,66 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     {
         if ($this->s4s->contains($s4s)) {
             $this->s4s->removeElement($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the variation record
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function setVariationRecords($variationRecords)
+    {
+        $this->variationRecords = $variationRecords;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation records
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getVariationRecords()
+    {
+        return $this->variationRecords;
+    }
+
+    /**
+     * Add a variation records
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function addVariationRecords($variationRecords)
+    {
+        if ($variationRecords instanceof ArrayCollection) {
+            $this->variationRecords = new ArrayCollection(
+                array_merge(
+                    $this->variationRecords->toArray(),
+                    $variationRecords->toArray()
+                )
+            );
+        } elseif (!$this->variationRecords->contains($variationRecords)) {
+            $this->variationRecords->add($variationRecords);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a variation records
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords
+     * @return ConditionUndertaking
+     */
+    public function removeVariationRecords($variationRecords)
+    {
+        if ($this->variationRecords->contains($variationRecords)) {
+            $this->variationRecords->removeElement($variationRecords);
         }
 
         return $this;
