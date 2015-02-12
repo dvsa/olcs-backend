@@ -151,6 +151,9 @@ return array(
         'declaration_confirmation' => array(
             'type' => 'yesno'
         ),
+        'financial_evidence_uploaded' => array(
+            'type' => 'yesnonull'
+        ),
         'prev_has_licence' => array(
             'type' => 'yesnonull'
         ),
@@ -1272,6 +1275,12 @@ return array(
         )
     ),
     'publication_link' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'publicationLink'
+            )
+        ),
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
