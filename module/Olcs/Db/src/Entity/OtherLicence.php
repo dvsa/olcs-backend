@@ -38,9 +38,18 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicNo18Field,
-        Traits\PreviousLicenceTypeManyToOne,
         Traits\PurchaseDateField,
         Traits\CustomVersionField;
+
+    /**
+     * Previous licence type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=true)
+     */
+    protected $previousLicenceType;
 
     /**
      * Total auth vehicles
@@ -79,6 +88,29 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="will_surrender", nullable=true)
      */
     protected $willSurrender;
+
+    /**
+     * Set the previous licence type
+     *
+     * @param \Olcs\Db\Entity\RefData $previousLicenceType
+     * @return OtherLicence
+     */
+    public function setPreviousLicenceType($previousLicenceType)
+    {
+        $this->previousLicenceType = $previousLicenceType;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous licence type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPreviousLicenceType()
+    {
+        return $this->previousLicenceType;
+    }
 
     /**
      * Set the total auth vehicles
