@@ -516,7 +516,7 @@ VALUES
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
     ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
-    ('com_lic_sts', 'cl_sts_valid', 'Active', null),
+    ('com_lic_sts', 'cl_sts_active', 'Active', null),
     ('com_lic_sts', 'cl_sts_expired', 'Expired', null),
     ('com_lic_sts', 'cl_sts_withdrawn', 'Withdrawn', null),
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
