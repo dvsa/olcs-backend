@@ -151,6 +151,9 @@ return array(
         'declaration_confirmation' => array(
             'type' => 'yesno'
         ),
+        'financial_evidence_uploaded' => array(
+            'type' => 'yesnonull'
+        ),
         'prev_has_licence' => array(
             'type' => 'yesnonull'
         ),
