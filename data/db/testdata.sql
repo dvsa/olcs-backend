@@ -1161,7 +1161,9 @@ VALUES
   (1, 1, 1, 'OOO test 1', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (3, 1, 1, 'OOO test 2', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
+  (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
+  (27, 1, 1, 'TM PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
+  (28, 1, 1, 'TM PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
 
 INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
