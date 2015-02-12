@@ -178,6 +178,7 @@ CREATE TABLE `application` (
   `insolvency_details` varchar(4000) DEFAULT NULL COMMENT 'Details of previous bankrupcy, insolvency, administration, receivership of people linked to application',
   `safety_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read safety information in application and will comply',
   `declaration_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read undertakings and declarations and will comply',
+  `financial_evidence_uploaded` tinyint(1) DEFAULT NULL COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
   `received_date` datetime DEFAULT NULL COMMENT 'Submitted date.  Was date_entered in OLBS',
   `target_completion_date` datetime DEFAULT NULL COMMENT 'SLA for application to be processed.',
   `granted_date` datetime DEFAULT NULL COMMENT 'Date application granted.',
