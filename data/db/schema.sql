@@ -178,6 +178,7 @@ CREATE TABLE `application` (
   `insolvency_details` varchar(4000) DEFAULT NULL COMMENT 'Details of previous bankrupcy, insolvency, administration, receivership of people linked to application',
   `safety_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read safety information in application and will comply',
   `declaration_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read undertakings and declarations and will comply',
+  `financial_evidence_uploaded` tinyint(1) DEFAULT NULL COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
   `received_date` datetime DEFAULT NULL COMMENT 'Submitted date.  Was date_entered in OLBS',
   `target_completion_date` datetime DEFAULT NULL COMMENT 'SLA for application to be processed.',
   `granted_date` datetime DEFAULT NULL COMMENT 'Date application granted.',
@@ -446,6 +447,7 @@ CREATE TABLE `bus_reg` (
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -5224,7 +5226,7 @@ CREATE TABLE `publication_link` (
   `licence_id` int(11) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
   `pi_id` int(11) DEFAULT NULL,
-  `tm_pi_hearing_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
   `text1` text,
   `text2` text,
@@ -5246,7 +5248,7 @@ CREATE TABLE `publication_link` (
   KEY `fk_licence_publication_publication_section1_idx` (`publication_section_id`),
   KEY `fk_licence_publication_user1_idx` (`created_by`),
   KEY `fk_licence_publication_user2_idx` (`last_modified_by`),
-  KEY `fk_licence_publication_tm_pi_hearing1_idx` (`tm_pi_hearing_id`),
+  KEY `fk_licence_publication_transport_manager_id1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_publication_has_licence_publication1` FOREIGN KEY (`publication_id`) REFERENCES `publication` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_has_licence_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_pi_detail1` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5256,7 +5258,7 @@ CREATE TABLE `publication_link` (
   CONSTRAINT `fk_licence_publication_publication_section1` FOREIGN KEY (`publication_section_id`) REFERENCES `publication_section` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_publication_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_licence_publication_tm_pi_hearing1` FOREIGN KEY (`tm_pi_hearing_id`) REFERENCES `tm_pi_hearing` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_licence_publication_transport_manager_id1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
