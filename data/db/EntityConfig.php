@@ -1105,7 +1105,13 @@ return array(
     'tm_case_decision' => array(
         'is_msi' => array(
             'type' => 'yesno'
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'tmDecision'
+            )
+        ),
     ),
     'tm_grace_period' => array(
         'is_active' => array(
