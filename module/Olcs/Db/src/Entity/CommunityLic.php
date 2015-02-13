@@ -29,7 +29,6 @@ class CommunityLic implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
         Traits\SpecifiedDateField,
         Traits\StatusManyToOne,
         Traits\CustomVersionField;
@@ -51,6 +50,16 @@ class CommunityLic implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="issue_no", nullable=true)
      */
     protected $issueNo;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="communityLics")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Licence expired date
@@ -123,6 +132,29 @@ class CommunityLic implements Interfaces\EntityInterface
     public function getIssueNo()
     {
         return $this->issueNo;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return CommunityLic
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

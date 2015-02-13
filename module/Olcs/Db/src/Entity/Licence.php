@@ -250,6 +250,15 @@ class Licence implements Interfaces\EntityInterface
     protected $cases;
 
     /**
+     * Community lic
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CommunityLic", mappedBy="licence")
+     */
+    protected $communityLics;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -329,6 +338,7 @@ class Licence implements Interfaces\EntityInterface
     {
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
+        $this->communityLics = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
@@ -868,6 +878,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->cases->contains($cases)) {
             $this->cases->removeElement($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the community lic
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLics
+     * @return Licence
+     */
+    public function setCommunityLics($communityLics)
+    {
+        $this->communityLics = $communityLics;
+
+        return $this;
+    }
+
+    /**
+     * Get the community lics
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCommunityLics()
+    {
+        return $this->communityLics;
+    }
+
+    /**
+     * Add a community lics
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLics
+     * @return Licence
+     */
+    public function addCommunityLics($communityLics)
+    {
+        if ($communityLics instanceof ArrayCollection) {
+            $this->communityLics = new ArrayCollection(
+                array_merge(
+                    $this->communityLics->toArray(),
+                    $communityLics->toArray()
+                )
+            );
+        } elseif (!$this->communityLics->contains($communityLics)) {
+            $this->communityLics->add($communityLics);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a community lics
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLics
+     * @return Licence
+     */
+    public function removeCommunityLics($communityLics)
+    {
+        if ($this->communityLics->contains($communityLics)) {
+            $this->communityLics->removeElement($communityLics);
         }
 
         return $this;
