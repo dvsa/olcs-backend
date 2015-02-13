@@ -27,7 +27,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmCaseDecision implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\DecisionDateField,
@@ -36,6 +35,16 @@ class TmCaseDecision implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="tmDecisions")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Decision
@@ -55,6 +64,15 @@ class TmCaseDecision implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_msi", nullable=false)
      */
     protected $isMsi = 0;
+
+    /**
+     * No further action reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="no_further_action_reason", length=4000, nullable=true)
+     */
+    protected $noFurtherActionReason;
 
     /**
      * Notified date
@@ -136,6 +154,29 @@ class TmCaseDecision implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return TmCaseDecision
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
      * Set the decision
      *
      * @param \Olcs\Db\Entity\RefData $decision
@@ -179,6 +220,29 @@ class TmCaseDecision implements Interfaces\EntityInterface
     public function getIsMsi()
     {
         return $this->isMsi;
+    }
+
+    /**
+     * Set the no further action reason
+     *
+     * @param string $noFurtherActionReason
+     * @return TmCaseDecision
+     */
+    public function setNoFurtherActionReason($noFurtherActionReason)
+    {
+        $this->noFurtherActionReason = $noFurtherActionReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the no further action reason
+     *
+     * @return string
+     */
+    public function getNoFurtherActionReason()
+    {
+        return $this->noFurtherActionReason;
     }
 
     /**

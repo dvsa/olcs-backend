@@ -19,6 +19,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_other_licence_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_other_licence_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_other_licence_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_other_licence_transport_manager_licence1_idx", columns={"transport_manager_licence_id"}),
  *        @ORM\Index(name="fk_other_licence_transport_manager_application1_idx", columns={"transport_manager_application_id"})
  *    }
  * )
@@ -38,9 +39,18 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicNo18Field,
-        Traits\PreviousLicenceTypeManyToOne,
         Traits\PurchaseDateField,
         Traits\CustomVersionField;
+
+    /**
+     * Previous licence type
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=true)
+     */
+    protected $previousLicenceType;
 
     /**
      * Total auth vehicles
@@ -66,10 +76,20 @@ class OtherLicence implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\TransportManagerApplication
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerApplication")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerApplication", inversedBy="otherLicences")
      * @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManagerApplication;
+
+    /**
+     * Transport manager licence
+     *
+     * @var \Olcs\Db\Entity\TransportManagerLicence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManagerLicence", inversedBy="otherLicences")
+     * @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManagerLicence;
 
     /**
      * Will surrender
@@ -79,6 +99,29 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="will_surrender", nullable=true)
      */
     protected $willSurrender;
+
+    /**
+     * Set the previous licence type
+     *
+     * @param \Olcs\Db\Entity\RefData $previousLicenceType
+     * @return OtherLicence
+     */
+    public function setPreviousLicenceType($previousLicenceType)
+    {
+        $this->previousLicenceType = $previousLicenceType;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous licence type
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getPreviousLicenceType()
+    {
+        return $this->previousLicenceType;
+    }
 
     /**
      * Set the total auth vehicles
@@ -147,6 +190,29 @@ class OtherLicence implements Interfaces\EntityInterface
     public function getTransportManagerApplication()
     {
         return $this->transportManagerApplication;
+    }
+
+    /**
+     * Set the transport manager licence
+     *
+     * @param \Olcs\Db\Entity\TransportManagerLicence $transportManagerLicence
+     * @return OtherLicence
+     */
+    public function setTransportManagerLicence($transportManagerLicence)
+    {
+        $this->transportManagerLicence = $transportManagerLicence;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager licence
+     *
+     * @return \Olcs\Db\Entity\TransportManagerLicence
+     */
+    public function getTransportManagerLicence()
+    {
+        return $this->transportManagerLicence;
     }
 
     /**

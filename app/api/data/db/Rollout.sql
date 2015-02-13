@@ -18,6 +18,10 @@ TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_paragraph`;
 TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
+TRUNCATE TABLE `variation_reason`;
+TRUNCATE TABLE `role`;
+TRUNCATE TABLE `role_permission`;
+TRUNCATE TABLE `permission`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -512,7 +516,7 @@ VALUES
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
     ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
-    ('com_lic_sts', 'cl_sts_valid', 'Active', null),
+    ('com_lic_sts', 'cl_sts_active', 'Active', null),
     ('com_lic_sts', 'cl_sts_expired', 'Expired', null),
     ('com_lic_sts', 'cl_sts_withdrawn', 'Withdrawn', null),
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
@@ -523,7 +527,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
  -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
  -- ('com_lic_sts', 'cl_sts_revoked', 'Revoked', 'Revoked'),
  -- ('com_lic_sts', 'cl_sts_surrender', 'Surrender', 'Surrender'),
-    
+
     ('accrual_rule', 'acr_licence_start', 'From licence start date', null),
     ('accrual_rule', 'acr_continuation', 'From continuation date', null),
     ('accrual_rule', 'acr_immediate', 'Immediate', null),
@@ -966,14 +970,14 @@ VALUES
     ('case_cat_compl_comp_comp',    'case_cat_compl',   'Compliance Complaints',        'case_category', NULL, '11'),
     ('case_cat_compl_ior',          'case_cat_compl',   'In-Office revocation',         'case_category', NULL, '12'),
     ('case_cat_compl_ath',          'case_cat_compl',   'Annual test history',          'case_category', NULL, '13'),
-    
-    
+
+
     ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL, '20'),
     ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL, '21'),
     ('case_cat_trans_compet_tm','case_cat_trans','Repute / professional competence of TM','case_category', NULL, '22'),
     ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL, '23'),
-    
-    
+
+
     ('case_cat_lic_app',        NULL,               'Licensing application',            'case_category', NULL, '40'),
     ('case_cat_lic_app_interim','case_cat_lic_app', 'Interim with / without submission','case_category', NULL, '41'),
     ('case_cat_lic_app_non_env','case_cat_lic_app', 'Non-ENV Objection',                'case_category', NULL, '42'),
@@ -982,8 +986,8 @@ VALUES
     ('case_cat_lic_app_4_1',    'case_cat_lic_app', 'Schedule 4/1',                     'case_category', NULL, '45'),
     ('case_cat_lic_app_cv',     'case_cat_lic_app', 'Chargeable variation',             'case_category', NULL, '46'),
     ('case_cat_lic_app_na',     'case_cat_lic_app', 'New application',                  'case_category', NULL, '47'),
-    
-    
+
+
     ('case_cat_lic_ref',        NULL,               'Licence referral',                 'case_category', NULL, '60'),
     ('case_cat_lic_ref_sur',    'case_cat_lic_ref', 'Surrender',                        'case_category', NULL, '61'),
     ('case_cat_lic_ref_narm',   'case_cat_lic_ref', 'Non application related maintenance issue',    'case_category', NULL, '62'),
@@ -993,27 +997,27 @@ VALUES
     ('case_cat_lic_ref_grace',  'case_cat_lic_ref', 'Period of grace',                  'case_category', NULL, '66'),
     ('case_cat_lic_ref_conduct','case_cat_lic_ref', 'Driver Conduct',                   'case_category', NULL, '67'),
     ('case_cat_lic_ref_proj_co','case_cat_lic_ref', 'Professional Competence',          'case_category', NULL, '68'),
-    
-    
+
+
     ('case_cat_bus_reg',        NULL,               'Bus Registration',                 'case_category', NULL, '75'),
     ('case_cat_bus_reg_sht_n',  'case_cat_bus_reg', 'Short Notice',                     'case_category', NULL, '76'),
     ('case_cat_bus_reg_rt_rv',  'case_cat_bus_reg', 'Route Review',                     'case_category', NULL, '77'),
     ('case_cat_bus_reg_ebsr',   'case_cat_bus_reg', 'EBSR',                             'case_category', NULL, '78'),
     ('case_cat_bus_reg_ncom',   'case_cat_bus_reg', 'Non-compliance',                   'case_category', NULL, '79'),
-    
-    
+
+
     ('case_cat_irfo',           NULL,               'IRFO',                             'case_category', NULL, '84'),
     ('case_cat_irfo_girfo',     'case_cat_irfo',    'General IRFO',                     'case_category', NULL, '85'),
-    
-    
+
+
     ('case_cat_env',            NULL,               'Environmental',                    'case_category', NULL, '91'),
     ('case_cat_env_repr',       'case_cat_env',     'Representation',                   'case_category', NULL, '92'),
     ('case_cat_env_obj',        'case_cat_env',     'Objection',                        'case_category', NULL, '93'),
     ('case_cat_env_compl',      'case_cat_env',     'Complaint',                        'case_category', NULL, '94'),
     ('case_cat_env_revw',       'case_cat_env',     'Review',                           'case_category', NULL, '95'),
     ('case_cat_env_prev',       'case_cat_env',     'Previous History',                 'case_category', NULL, '96'),
-    
-    
+
+
     ('case_cat_other',          NULL,               'Other',                            'case_category', NULL, '98'),
     ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL, '99');
 -- Case categories
@@ -2141,7 +2145,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`) VALUES
     ('SIC_CODE','22190','Manufacture of other rubber products'),
     ('SIC_CODE','22210','Manufacture of plastic plates, sheets, tubes and profiles'),
     ('SIC_CODE','22220','Manufacture of plastic packing goods'),
-    ('SIC_CODE','22230','Manufacture of builders’ ware of plastic'),
+    ('SIC_CODE','22230','Manufacture of builders'' ware of plastic'),
     ('SIC_CODE','22290','Manufacture of other plastic products'),
     ('SIC_CODE','23110','Manufacture of flat glass'),
     ('SIC_CODE','23120','Shaping and processing of flat glass'),
@@ -6801,6 +6805,45 @@ INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VAL
     (7,10,1);
 */
 
+INSERT INTO `variation_reason` (`id`, `description`)
+VALUES
+  (1, 'Route'),
+  (2, 'Start & finish point'),
+  (3, 'Stopping places'),
+  (4, 'Timetable');
+
+INSERT INTO `role` (`id`, `role`) VALUES
+    (1, 'limited-read-only'),
+    (2, 'read-only'),
+    (3, 'case-worker'),
+    (4, 'admin');
+
+INSERT INTO `permission` (`id`, `name`) VALUES
+    (1, 'admin'),
+    (2, 'documents'),
+    (3, 'case'),
+    (4, 'notes'),
+    (5, 'edit'),
+    (6, 'view');
+
+INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
+    (1, 6), -- all roles have view
+    (2, 6), -- all roles have view
+    (3, 6), -- all roles have view
+    (4, 6), -- all roles have view
+    (2, 2), -- read only sees docs
+    (2, 3), -- read only sees case
+    (2, 4), -- read only sees notes
+    (3, 2), -- case worker sees docs
+    (3, 3), -- case worker sees case
+    (3, 4), -- case worker sees notes
+    (3, 5), -- case worker can edit
+    (4, 2), -- admin sees docs
+    (4, 3), -- admin  sees case
+    (4, 4), -- admin  sees notes
+    (4, 5), -- admin can edit
+    (4, 1); -- admin is admin
+
 SET foreign_key_checks = 1;
 
 DROP TABLE IF EXISTS task_search_view;
@@ -6896,3 +6939,43 @@ CREATE VIEW vehicle_history_view AS
     inner join licence_vehicle vl on vl.vehicle_id = v.id
     left outer join goods_disc d on vl.id = d.licence_vehicle_id
     inner join licence l on vl.licence_id = l.id;
+
+-- Bus reg search view
+DROP TABLE IF EXISTS bus_reg_search_view;
+DROP VIEW IF EXISTS bus_reg_search_view;
+
+CREATE VIEW bus_reg_search_view AS
+    SELECT
+        br1.id AS `id`,
+        IFNULL(CONCAT(br1.service_no, '(',
+                      (SELECT GROUP_CONCAT(COALESCE(service_no,'NULL'),'') AS other FROM bus_reg_other_service
+                      WHERE bus_reg_id = br1.id),
+                      ')'), br1.service_no) as `service_no`,
+        br1.reg_no AS `reg_no`,
+        lic.id AS `lic_id`,
+        lic.lic_no AS `lic_no`,
+        rd_lic_status.description AS `lic_status`,
+        org.name AS `organisation_name`,
+        br1.start_point AS `start_point`,
+        br1.finish_point AS `finish_point`,
+        '2015-01-01' AS `date_1st_reg`,
+        CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
+        THEN 'Expired'
+        ELSE rd_bus_status.description END as bus_reg_status,
+        br1.route_no,
+        br1.variation_no
+    FROM bus_reg AS br1
+        INNER JOIN licence lic ON lic.id = br1.licence_id
+        INNER JOIN organisation AS org ON org.id = lic.organisation_ID
+        INNER JOIN ref_data AS rd_lic_status ON (rd_lic_status.id = lic.status)
+        INNER JOIN ref_data AS rd_bus_status ON (rd_bus_status.id = br1.status)
+    WHERE br1.variation_no =
+          coalesce((
+                       SELECT MAX(variation_no) FROM bus_reg br2
+                       WHERE
+                           (br2.reg_no = br1.reg_no
+                            AND br2.status NOT IN('breg_s_refused','breg_s_withdrawn')
+                            AND (br2.end_date is null or br2.end_date > Now())
+                            AND br2.deleted_date is null))
+          , 0)
+            AND br1.deleted_date is null;
