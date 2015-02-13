@@ -1334,5 +1334,13 @@ return array(
                 'persist'
             )
         )
+    ),
+    'community_lic' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'communityLic'
+            )
+        ),
     )
 );
