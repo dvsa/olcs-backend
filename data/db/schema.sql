@@ -7203,6 +7203,7 @@ CREATE TABLE `other_licence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `application_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
+  `transport_manager_licence_id` int(11) DEFAULT NULL,
   `transport_manager_application_id` int(11) DEFAULT NULL,
   `lic_no` VARCHAR(18) NULL,
   `holder_name` VARCHAR(90) DEFAULT NULL,
@@ -7225,6 +7226,7 @@ CREATE TABLE `other_licence` (
   KEY `fk_other_licence_user1_idx` (`created_by` ASC),
   KEY `fk_other_licence_user2_idx` (`last_modified_by` ASC),
   KEY `fk_other_licence_transport_manager1_idx` (`transport_manager_id` ASC),
+  KEY `fk_other_licence_transport_manager_licence1_idx` (`transport_manager_licence_id` ASC),
   KEY `fk_other_licence_transport_manager_application1_idx` (`transport_manager_application_id` ASC),
   CONSTRAINT `fk_other_licence_application1` FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7236,6 +7238,8 @@ CREATE TABLE `other_licence` (
     REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_transport_manager1` FOREIGN KEY (`transport_manager_id`)
     REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_transport_manager_licence1` FOREIGN KEY (`transport_manager_licence_id`)
+    REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_transport_manager_application1` FOREIGN KEY (`transport_manager_application_id`)
     REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

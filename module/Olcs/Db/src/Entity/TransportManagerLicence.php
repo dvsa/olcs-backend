@@ -75,11 +75,21 @@ class TransportManagerLicence implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
+     * Other licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OtherLicence", mappedBy="transportManagerLicence")
+     */
+    protected $otherLicences;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->operatingCentres = new ArrayCollection();
+        $this->otherLicences = new ArrayCollection();
     }
 
     /**
@@ -160,6 +170,66 @@ class TransportManagerLicence implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the other licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function setOtherLicences($otherLicences)
+    {
+        $this->otherLicences = $otherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the other licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOtherLicences()
+    {
+        return $this->otherLicences;
+    }
+
+    /**
+     * Add a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function addOtherLicences($otherLicences)
+    {
+        if ($otherLicences instanceof ArrayCollection) {
+            $this->otherLicences = new ArrayCollection(
+                array_merge(
+                    $this->otherLicences->toArray(),
+                    $otherLicences->toArray()
+                )
+            );
+        } elseif (!$this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->add($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function removeOtherLicences($otherLicences)
+    {
+        if ($this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->removeElement($otherLicences);
         }
 
         return $this;
