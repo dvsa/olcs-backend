@@ -259,6 +259,15 @@ class Cases implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Public inquiry
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Pi", mappedBy="case")
+     */
+    protected $publicInquirys;
+
+    /**
      * Prohibition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -307,6 +316,7 @@ class Cases implements Interfaces\EntityInterface
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
+        $this->publicInquirys = new ArrayCollection();
         $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
         $this->statements = new ArrayCollection();
@@ -1110,6 +1120,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the public inquiry
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
+     * @return Cases
+     */
+    public function setPublicInquirys($publicInquirys)
+    {
+        $this->publicInquirys = $publicInquirys;
+
+        return $this;
+    }
+
+    /**
+     * Get the public inquirys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPublicInquirys()
+    {
+        return $this->publicInquirys;
+    }
+
+    /**
+     * Add a public inquirys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
+     * @return Cases
+     */
+    public function addPublicInquirys($publicInquirys)
+    {
+        if ($publicInquirys instanceof ArrayCollection) {
+            $this->publicInquirys = new ArrayCollection(
+                array_merge(
+                    $this->publicInquirys->toArray(),
+                    $publicInquirys->toArray()
+                )
+            );
+        } elseif (!$this->publicInquirys->contains($publicInquirys)) {
+            $this->publicInquirys->add($publicInquirys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a public inquirys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
+     * @return Cases
+     */
+    public function removePublicInquirys($publicInquirys)
+    {
+        if ($this->publicInquirys->contains($publicInquirys)) {
+            $this->publicInquirys->removeElement($publicInquirys);
         }
 
         return $this;

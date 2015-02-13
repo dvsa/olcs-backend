@@ -849,7 +849,13 @@ return array(
         ),
         'licence_curtailed_at_pi' => array(
             'type' => 'yesno'
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'publicInquiry'
+            )
+        ),
     ),
     'legacy_case_action' => array(
         'is_driver' => array(

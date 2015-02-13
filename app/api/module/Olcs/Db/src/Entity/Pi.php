@@ -34,7 +34,6 @@ class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AgreedDateField,
-        Traits\CaseManyToOne,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,
@@ -95,6 +94,16 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="call_up_letter_date", nullable=true)
      */
     protected $callUpLetterDate;
+
+    /**
+     * Case
+     *
+     * @var \Olcs\Db\Entity\Cases
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="publicInquirys")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
+     */
+    protected $case;
 
     /**
      * Dec sent after written dec date
@@ -438,6 +447,29 @@ class Pi implements Interfaces\EntityInterface
     public function getCallUpLetterDate()
     {
         return $this->callUpLetterDate;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Olcs\Db\Entity\Cases $case
+     * @return Pi
+     */
+    public function setCase($case)
+    {
+        $this->case = $case;
+
+        return $this;
+    }
+
+    /**
+     * Get the case
+     *
+     * @return \Olcs\Db\Entity\Cases
+     */
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
