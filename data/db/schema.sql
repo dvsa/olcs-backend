@@ -6606,6 +6606,7 @@ CREATE TABLE `tm_case_decision` (
   `decision` varchar(32) NOT NULL,
   `is_msi` tinyint(1) NOT NULL DEFAULT '0',
   `repute_not_lost_reason` varchar(4000) DEFAULT NULL,
+  `no_further_action_reason` varchar(4000) DEFAULT NULL,
   `unfitness_start_date` date DEFAULT NULL,
   `unfitness_end_date` date DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
