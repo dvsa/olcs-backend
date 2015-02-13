@@ -793,11 +793,11 @@ INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_
     (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
-  `repute_not_lost_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
+  `repute_not_lost_reason`,`no_further_action_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
   `last_modified_on`,`version`) VALUES
-  (1,'tm_decision_rl',82,1,1,0,'2015-01-12',NULL,'2015-03-31','2015-01-20',NULL,'2015-01-10',NULL,NULL,1),
-  (2,'tm_decision_rnl',83,1,1,1,'2014-12-10','Reason why repute not lost',NULL,NULL,NULL,'2014-12-06',NULL,NULL,1),
-  (3,'tm_decision_noa',84,1,1,1,'2014-09-30',NULL,NULL,NULL,NULL,'2014-10-06',NULL,NULL,1);
+  (1,'tm_decision_rl',82,1,1,0,'2015-01-12',NULL,NULL,'2015-03-31','2015-01-20',NULL,'2015-01-10',NULL,NULL,1),
+  (2,'tm_decision_rnl',83,1,1,1,'2014-12-10','Reason why repute not lost',NULL,NULL,NULL,NULL,'2014-12-06',NULL,NULL,1),
+  (3,'tm_decision_noa',84,1,1,1,'2014-09-30',NULL,'Reason no further action',NULL,NULL,NULL,'2014-10-06',NULL,NULL,1);
 
 INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_rehab_id`,`rehab_measure_id`) VALUES
   (1,'tm_rehab_adc');
