@@ -151,6 +151,9 @@ return array(
         'declaration_confirmation' => array(
             'type' => 'yesno'
         ),
+        'financial_evidence_uploaded' => array(
+            'type' => 'yesnonull'
+        ),
         'prev_has_licence' => array(
             'type' => 'yesnonull'
         ),
@@ -764,6 +767,12 @@ return array(
                 'property' => 'conditionUndertaking'
             )
         ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
@@ -778,6 +787,12 @@ return array(
         ),
         'is_approved' => array(
             'type' => 'yesno'
+        ),
+        'lic_condition_variation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ConditionUndertaking',
+                'property' => 'variationRecord'
+            )
         )
     ),
     'previous_licence' => array(
@@ -1084,7 +1099,13 @@ return array(
     'tm_case_decision' => array(
         'is_msi' => array(
             'type' => 'yesno'
-        )
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'tmDecision'
+            )
+        ),
     ),
     'tm_grace_period' => array(
         'is_active' => array(
@@ -1252,6 +1273,18 @@ return array(
         )
     ),
     'other_licence' => array(
+        'transport_manager_licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerLicence',
+                'property' => 'otherLicence'
+            ),
+        ),
+        'transport_manager_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerApplication',
+                'property' => 'otherLicence'
+            ),
+        ),
         'transport_manager_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
@@ -1260,10 +1293,24 @@ return array(
         )
     ),
     'publication_link' => array(
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'publicationLink'
+            )
+        ),
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
                 'property' => 'publicationLink'
+            )
+        )
+    ),
+    'role_permission' => array(
+        'role_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Role',
+                'property' => 'rolePermission'
             )
         )
     ),
@@ -1287,5 +1334,13 @@ return array(
                 'persist'
             )
         )
+    ),
+    'community_lic' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'communityLic'
+            )
+        ),
     )
 );

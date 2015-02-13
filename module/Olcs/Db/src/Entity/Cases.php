@@ -295,6 +295,15 @@ class Cases implements Interfaces\EntityInterface
     protected $stays;
 
     /**
+     * Tm decision
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmCaseDecision", mappedBy="case")
+     */
+    protected $tmDecisions;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -311,6 +320,7 @@ class Cases implements Interfaces\EntityInterface
         $this->seriousInfringements = new ArrayCollection();
         $this->statements = new ArrayCollection();
         $this->stays = new ArrayCollection();
+        $this->tmDecisions = new ArrayCollection();
     }
 
     /**
@@ -1350,6 +1360,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->stays->contains($stays)) {
             $this->stays->removeElement($stays);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm decision
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Cases
+     */
+    public function setTmDecisions($tmDecisions)
+    {
+        $this->tmDecisions = $tmDecisions;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm decisions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmDecisions()
+    {
+        return $this->tmDecisions;
+    }
+
+    /**
+     * Add a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Cases
+     */
+    public function addTmDecisions($tmDecisions)
+    {
+        if ($tmDecisions instanceof ArrayCollection) {
+            $this->tmDecisions = new ArrayCollection(
+                array_merge(
+                    $this->tmDecisions->toArray(),
+                    $tmDecisions->toArray()
+                )
+            );
+        } elseif (!$this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->add($tmDecisions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Cases
+     */
+    public function removeTmDecisions($tmDecisions)
+    {
+        if ($this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->removeElement($tmDecisions);
         }
 
         return $this;

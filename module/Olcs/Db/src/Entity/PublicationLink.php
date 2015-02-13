@@ -25,7 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_licence_publication_publication_section1_idx", columns={"publication_section_id"}),
  *        @ORM\Index(name="fk_licence_publication_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_licence_publication_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_publication_tm_pi_hearing1_idx", columns={"tm_pi_hearing_id"})
+ *        @ORM\Index(name="fk_licence_publication_transport_manager_id1_idx", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -41,6 +41,7 @@ class PublicationLink implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
         Traits\TrafficAreaManyToOne,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -58,7 +59,7 @@ class PublicationLink implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Pi", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
@@ -109,16 +110,6 @@ class PublicationLink implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="text3", length=65535, nullable=true)
      */
     protected $text3;
-
-    /**
-     * Tm pi hearing
-     *
-     * @var \Olcs\Db\Entity\TmPiHearing
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TmPiHearing")
-     * @ORM\JoinColumn(name="tm_pi_hearing_id", referencedColumnName="id", nullable=true)
-     */
-    protected $tmPiHearing;
 
     /**
      * Set the application
@@ -279,28 +270,5 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getText3()
     {
         return $this->text3;
-    }
-
-    /**
-     * Set the tm pi hearing
-     *
-     * @param \Olcs\Db\Entity\TmPiHearing $tmPiHearing
-     * @return PublicationLink
-     */
-    public function setTmPiHearing($tmPiHearing)
-    {
-        $this->tmPiHearing = $tmPiHearing;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm pi hearing
-     *
-     * @return \Olcs\Db\Entity\TmPiHearing
-     */
-    public function getTmPiHearing()
-    {
-        return $this->tmPiHearing;
     }
 }
