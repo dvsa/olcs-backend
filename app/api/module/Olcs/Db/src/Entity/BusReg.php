@@ -5,6 +5,7 @@ namespace Olcs\Db\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * BusReg Entity
@@ -13,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="bus_reg",
  *    indexes={
  *        @ORM\Index(name="fk_bus_reg_licence1_idx", columns={"licence_id"}),
@@ -33,6 +35,7 @@ class BusReg implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\EffectiveDateField,
         Traits\EndDateField,
         Traits\IdIdentity,
