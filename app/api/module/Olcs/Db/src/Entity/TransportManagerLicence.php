@@ -58,20 +58,38 @@ class TransportManagerLicence implements Interfaces\EntityInterface
     protected $licence;
 
     /**
-     * Tm licence oc
+     * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmLicenceOc", mappedBy="transportManagerLicence")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="transportManagerLicences")
+     * @ORM\JoinTable(name="tm_licence_oc",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $tmLicenceOcs;
+    protected $operatingCentres;
+
+    /**
+     * Other licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OtherLicence", mappedBy="transportManagerLicence")
+     */
+    protected $otherLicences;
 
     /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->tmLicenceOcs = new ArrayCollection();
+        $this->operatingCentres = new ArrayCollection();
+        $this->otherLicences = new ArrayCollection();
     }
 
     /**
@@ -98,60 +116,120 @@ class TransportManagerLicence implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the tm licence oc
+     * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicenceOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
      * @return TransportManagerLicence
      */
-    public function setTmLicenceOcs($tmLicenceOcs)
+    public function setOperatingCentres($operatingCentres)
     {
-        $this->tmLicenceOcs = $tmLicenceOcs;
+        $this->operatingCentres = $operatingCentres;
 
         return $this;
     }
 
     /**
-     * Get the tm licence ocs
+     * Get the operating centres
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTmLicenceOcs()
+    public function getOperatingCentres()
     {
-        return $this->tmLicenceOcs;
+        return $this->operatingCentres;
     }
 
     /**
-     * Add a tm licence ocs
+     * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicenceOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
      * @return TransportManagerLicence
      */
-    public function addTmLicenceOcs($tmLicenceOcs)
+    public function addOperatingCentres($operatingCentres)
     {
-        if ($tmLicenceOcs instanceof ArrayCollection) {
-            $this->tmLicenceOcs = new ArrayCollection(
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
                 array_merge(
-                    $this->tmLicenceOcs->toArray(),
-                    $tmLicenceOcs->toArray()
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
                 )
             );
-        } elseif (!$this->tmLicenceOcs->contains($tmLicenceOcs)) {
-            $this->tmLicenceOcs->add($tmLicenceOcs);
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
         }
 
         return $this;
     }
 
     /**
-     * Remove a tm licence ocs
+     * Remove a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicenceOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
      * @return TransportManagerLicence
      */
-    public function removeTmLicenceOcs($tmLicenceOcs)
+    public function removeOperatingCentres($operatingCentres)
     {
-        if ($this->tmLicenceOcs->contains($tmLicenceOcs)) {
-            $this->tmLicenceOcs->removeElement($tmLicenceOcs);
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the other licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function setOtherLicences($otherLicences)
+    {
+        $this->otherLicences = $otherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the other licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOtherLicences()
+    {
+        return $this->otherLicences;
+    }
+
+    /**
+     * Add a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function addOtherLicences($otherLicences)
+    {
+        if ($otherLicences instanceof ArrayCollection) {
+            $this->otherLicences = new ArrayCollection(
+                array_merge(
+                    $this->otherLicences->toArray(),
+                    $otherLicences->toArray()
+                )
+            );
+        } elseif (!$this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->add($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return TransportManagerLicence
+     */
+    public function removeOtherLicences($otherLicences)
+    {
+        if ($this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->removeElement($otherLicences);
         }
 
         return $this;
