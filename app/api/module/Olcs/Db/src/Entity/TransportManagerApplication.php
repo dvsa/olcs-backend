@@ -59,12 +59,29 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $application;
 
     /**
+     * Operating centre
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="transportManagerApplications")
+     * @ORM\JoinTable(name="tm_application_oc",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $operatingCentres;
+
+    /**
      * Tm application status
      *
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
      */
     protected $tmApplicationStatus;
 
@@ -79,20 +96,21 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $tmType;
 
     /**
-     * Tm application oc
+     * Other licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmApplicationOc", mappedBy="transportManagerApplication")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OtherLicence", mappedBy="transportManagerApplication")
      */
-    protected $tmApplicationOcs;
+    protected $otherLicences;
 
     /**
      * Initialise the collections
      */
     public function __construct()
     {
-        $this->tmApplicationOcs = new ArrayCollection();
+        $this->operatingCentres = new ArrayCollection();
+        $this->otherLicences = new ArrayCollection();
     }
 
     /**
@@ -116,6 +134,66 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
+     * Add a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function addOperatingCentres($operatingCentres)
+    {
+        if ($operatingCentres instanceof ArrayCollection) {
+            $this->operatingCentres = new ArrayCollection(
+                array_merge(
+                    $this->operatingCentres->toArray(),
+                    $operatingCentres->toArray()
+                )
+            );
+        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->add($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a operating centres
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @return TransportManagerApplication
+     */
+    public function removeOperatingCentres($operatingCentres)
+    {
+        if ($this->operatingCentres->contains($operatingCentres)) {
+            $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
     }
 
     /**
@@ -165,60 +243,60 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the tm application oc
+     * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
      * @return TransportManagerApplication
      */
-    public function setTmApplicationOcs($tmApplicationOcs)
+    public function setOtherLicences($otherLicences)
     {
-        $this->tmApplicationOcs = $tmApplicationOcs;
+        $this->otherLicences = $otherLicences;
 
         return $this;
     }
 
     /**
-     * Get the tm application ocs
+     * Get the other licences
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTmApplicationOcs()
+    public function getOtherLicences()
     {
-        return $this->tmApplicationOcs;
+        return $this->otherLicences;
     }
 
     /**
-     * Add a tm application ocs
+     * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
      * @return TransportManagerApplication
      */
-    public function addTmApplicationOcs($tmApplicationOcs)
+    public function addOtherLicences($otherLicences)
     {
-        if ($tmApplicationOcs instanceof ArrayCollection) {
-            $this->tmApplicationOcs = new ArrayCollection(
+        if ($otherLicences instanceof ArrayCollection) {
+            $this->otherLicences = new ArrayCollection(
                 array_merge(
-                    $this->tmApplicationOcs->toArray(),
-                    $tmApplicationOcs->toArray()
+                    $this->otherLicences->toArray(),
+                    $otherLicences->toArray()
                 )
             );
-        } elseif (!$this->tmApplicationOcs->contains($tmApplicationOcs)) {
-            $this->tmApplicationOcs->add($tmApplicationOcs);
+        } elseif (!$this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->add($otherLicences);
         }
 
         return $this;
     }
 
     /**
-     * Remove a tm application ocs
+     * Remove a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplicationOcs
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
      * @return TransportManagerApplication
      */
-    public function removeTmApplicationOcs($tmApplicationOcs)
+    public function removeOtherLicences($otherLicences)
     {
-        if ($this->tmApplicationOcs->contains($tmApplicationOcs)) {
-            $this->tmApplicationOcs->removeElement($tmApplicationOcs);
+        if ($this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->removeElement($otherLicences);
         }
 
         return $this;

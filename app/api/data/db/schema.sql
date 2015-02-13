@@ -7044,7 +7044,7 @@ CREATE TABLE `transport_manager_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_id` int(11) NOT NULL,
   `tm_type` varchar(32) DEFAULT NULL,
-  `tm_application_status` varchar(32) NOT NULL,
+  `tm_application_status` varchar(32) DEFAULT NULL,
   `application_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
   `hours_mon` int(11) DEFAULT NULL,
@@ -7141,23 +7141,12 @@ DROP TABLE IF EXISTS `tm_application_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_application_oc` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_application_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_application_oc_application1_idx` (`transport_manager_application_id`),
+  PRIMARY KEY (`transport_manager_application_id`, `operating_centre_id`),
+  KEY `fk_tm_application_oc_transport_manager_application1_idx` (`transport_manager_application_id`),
   KEY `fk_tm_application_oc_operating_centre1_idx` (`operating_centre_id`),
-  KEY `fk_tm_application_oc_user1_idx` (`created_by`),
-  KEY `fk_tm_application_oc_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_application_oc_user1_idx` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_application_oc_user2_idx` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_application_oc_application1_idx` FOREIGN KEY (`transport_manager_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_application_oc_transport_manager_application1_idx` FOREIGN KEY (`transport_manager_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_application_oc_operating_centre1_idx` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7166,23 +7155,12 @@ DROP TABLE IF EXISTS `tm_licence_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_licence_oc` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `transport_manager_licence_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `fk_tm_licence_oc_licence1_idx` (`transport_manager_licence_id`),
+  PRIMARY KEY (`transport_manager_licence_id`, `operating_centre_id`),
+  KEY `fk_tm_licence_oc_transport_manager_licence1_idx` (`transport_manager_licence_id`),
   KEY `fk_tm_licence_oc_operating_centre1_idx` (`operating_centre_id`),
-  KEY `fk_tm_licence_oc_user1_idx` (`created_by`),
-  KEY `fk_tm_licence_oc_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_tm_licence_oc_user1_idx` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_licence_oc_user2_idx` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_licence_oc_application1_idx` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_licence_oc_transport_manager_licence1_idx` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_licence_oc_operating_centre1_idx` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7226,6 +7204,7 @@ CREATE TABLE `other_licence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `application_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
+  `transport_manager_licence_id` int(11) DEFAULT NULL,
   `transport_manager_application_id` int(11) DEFAULT NULL,
   `lic_no` VARCHAR(18) NULL,
   `holder_name` VARCHAR(90) DEFAULT NULL,
@@ -7248,6 +7227,7 @@ CREATE TABLE `other_licence` (
   KEY `fk_other_licence_user1_idx` (`created_by` ASC),
   KEY `fk_other_licence_user2_idx` (`last_modified_by` ASC),
   KEY `fk_other_licence_transport_manager1_idx` (`transport_manager_id` ASC),
+  KEY `fk_other_licence_transport_manager_licence1_idx` (`transport_manager_licence_id` ASC),
   KEY `fk_other_licence_transport_manager_application1_idx` (`transport_manager_application_id` ASC),
   CONSTRAINT `fk_other_licence_application1` FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7259,6 +7239,8 @@ CREATE TABLE `other_licence` (
     REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_transport_manager1` FOREIGN KEY (`transport_manager_id`)
     REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_transport_manager_licence1` FOREIGN KEY (`transport_manager_licence_id`)
+    REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_transport_manager_application1` FOREIGN KEY (`transport_manager_application_id`)
     REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
