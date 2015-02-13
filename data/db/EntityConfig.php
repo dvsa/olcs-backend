@@ -1267,6 +1267,18 @@ return array(
         )
     ),
     'other_licence' => array(
+        'transport_manager_licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerLicence',
+                'property' => 'otherLicence'
+            ),
+        ),
+        'transport_manager_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManagerApplication',
+                'property' => 'otherLicence'
+            ),
+        ),
         'transport_manager_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
