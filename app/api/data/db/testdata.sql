@@ -545,7 +545,7 @@ INSERT INTO `opposer`
 (`id`, `opposer_type`, `last_modified_by`, `created_by`, `contact_details_id`, `created_on`, `last_modified_on`,
  `version`)
 VALUES
-  (1, 'obj_t_local_auth', 1, 1, 7, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
+  (1, 'obj_t_local_auth', 1, 1, 8, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
   (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
 
 INSERT INTO `opposition`
@@ -565,6 +565,12 @@ VALUES
   (1, 'ogf_parking'),
   (2, 'ogf_safety'),
   (2, 'ogf_size');
+
+INSERT INTO `operating_centre_opposition`
+(`opposition_id`, `operating_centre_id`)
+VALUES
+  (1, 16),
+  (2, 16);
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
 `company_or_llp_no`, `name`,`is_mlh`, `type`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -590,6 +596,7 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `title`, `birth_date`, `forename`, `family_name`,
     `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`, `birth_place`) VALUES
     (4,NULL,NULL,'Mr','1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL, NULL),
+    (8,NULL,NULL,'Mr','1960-02-01 00:00:00','Simon','Fish',NULL,NULL,NULL,1,NULL, NULL),
     (9,NULL,NULL,'Mr','1960-02-15 00:00:00','John','Smith',NULL,NULL,NULL,1,NULL, NULL),
     (10,NULL,NULL,'Mr','1965-07-12 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL, NULL),
     (11,NULL,NULL,'Mr','1970-04-14 00:00:00','Joe','Lambert',NULL,NULL,NULL,1,NULL, NULL),
@@ -625,7 +632,8 @@ INSERT INTO `disqualification` (`id`, `created_by`, `last_modified_by`, `is_disq
 
 INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
-    (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1);
+    (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1),
+    (2,'phone_t_tel','0113 123 1234','',8,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
