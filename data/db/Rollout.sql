@@ -6975,5 +6975,7 @@ CREATE VIEW bus_reg_search_view AS
                        WHERE
                            (br2.reg_no = br1.reg_no
                             AND br2.status NOT IN('breg_s_refused','breg_s_withdrawn')
-                            AND (br2.end_date is null or br2.end_date > Now())))
-          , 0);
+                            AND (br2.end_date is null or br2.end_date > Now())
+                            AND br2.deleted_date is null))
+          , 0)
+            AND br1.deleted_date is null;
