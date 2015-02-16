@@ -353,9 +353,9 @@ INSERT INTO `legacy_offence` (`id`, `case_id`,`created_by`, `last_modified_by`, 
     `offence_authority`, `offence_date`, `offence_to_date`, `offender_name`, `points`, `position`, `offence_type`,
     `notes`, `vrm`, `created_on`, `last_modified_on`, `version`)
 VALUES
-    (1, 24,1, 1, 'Some Definition', 1, 1, 'Authority 1', '2014-09-26', '2015-09-26', 'Some Offender', 3,
+    (1, 24,1, 1, 'Some Definition', 1, 1, 'Authority 1', '2014-09-26', '2015-09-26', 'Ronnie Biggs', 3,
     'Some Position', 'Some Offence Type', 'Some Notes for Offence (case 24)', 'VRM12', NOW(), NOW(), 1),
-    (2, 29,1, 1, 'Some Definition', 1, 1, 'Authority 1', '2014-09-26', '2015-09-26', 'Some Offender', 3,
+    (2, 29,1, 1, 'Some different definition', 1, 1, 'Authority 2', '2012-05-12', '2012-05-26', 'Al Capone', 3,
     'Some Position', 'Some Offence Type', 'Some Notes for Offence (case 29)', 'VRM12', NOW(), NOW(), 1);
 
 INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
