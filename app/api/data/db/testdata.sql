@@ -6,6 +6,8 @@ TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
+TRUNCATE TABLE `bus_reg_traffic_area`;
+TRUNCATE TABLE `bus_reg_local_auth`;
 TRUNCATE TABLE `bus_short_notice`;
 TRUNCATE TABLE `bus_notice_period`;
 TRUNCATE TABLE `bus_service_type`;
@@ -21,6 +23,7 @@ TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_operating_centre`;
+TRUNCATE TABLE `local_authority`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
 TRUNCATE TABLE `oc_complaint`;
@@ -176,6 +179,16 @@ VALUES
   (14, 2, 13, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 5', 15711, 0, 'Leeds', 'Stopping arrangements change 4', '', 0, 0, 'Trc notes', '1', 0, 5, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1),
   (15, 2, 14, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 6', 15711, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 6, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1);
 
+INSERT INTO `bus_reg_traffic_area` (`bus_reg_id`, `traffic_area_id`)
+VALUES
+  (2, 'B'),
+  (2, 'G');
+
+INSERT INTO `bus_reg_local_auth` (`bus_reg_id`, `local_authority_id`)
+VALUES
+  (2, 3),
+  (2, 6),
+  (2, 8);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -480,6 +493,27 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     '2014-02-20 00:00:00',1),
     (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1);
+
+INSERT INTO `local_authority` (`id`, `created_by`, `last_modified_by`, `traffic_area_id`, `naptan_code`, `txc_name`, `created_on`, `description`, `email_address`, `last_modified_on`, `version`)
+VALUES
+  (1, 1, 1, 'N', '639', 'N', NULL, 'Local Auth 1', NULL, NULL, 1),
+  (2, 1, 1, 'H', '639', 'H', NULL, 'Local Auth 2', NULL, NULL, 1),
+  (3, 1, 1, 'B', '639', 'B', NULL, 'Local Auth 3', NULL, NULL, 1),
+  (4, 1, 1, 'F', '639', 'F', NULL, 'Local Auth 4', NULL, NULL, 1),
+  (5, 1, 1, 'M', '639', 'M', NULL, 'Local Auth 5', NULL, NULL, 1),
+  (6, 1, 1, 'G', '639', 'G', NULL, 'Local Auth 6', NULL, NULL, 1),
+  (7, 1, 1, 'B', '639', 'B', NULL, 'Local Auth 7', NULL, NULL, 1),
+  (8, 1, 1, 'G', '639', 'G', NULL, 'Local Auth 8', NULL, NULL, 1),
+  (9, 1, 1, 'K', '639', 'K', NULL, 'Local Auth 9', NULL, NULL, 1),
+  (10, 1, 1, 'C', '639', 'C', NULL, 'Local Auth 10', NULL, NULL, 1),
+  (11, 1, 1, 'H', '639', 'H', NULL, 'Local Auth 11', NULL, NULL, 1),
+  (12, 1, 1, 'F', '639', 'F', NULL, 'Local Auth 12', NULL, NULL, 1),
+  (13, 1, 1, 'C', '639', 'C', NULL, 'Local Auth 13', NULL, NULL, 1),
+  (14, 1, 1, 'K', '639', 'K', NULL, 'Local Auth 14', NULL, NULL, 1),
+  (15, 1, 1, 'B', '639', 'B', NULL, 'Local Auth 15', NULL, NULL, 1),
+  (16, 1, 1, 'D', '639', 'D', NULL, 'Local Auth 16', NULL, NULL, 1),
+  (17, 1, 1, 'M', '639', 'M', NULL, 'Local Auth 17', NULL, NULL, 1),
+  (18, 1, 1, 'N', '639', 'N', NULL, 'Local Auth 18', NULL, NULL, 1);
 
 INSERT INTO goods_disc (`licence_vehicle_id`, `is_copy`, `disc_no`, `issued_date`, `is_interim`, `created_on`, `last_modified_on`, `version`) VALUES
     (1, 0, NULL, NULL, 0, '2014-02-20 00:00:00', '2014-02-20 00:00:00', 1),
