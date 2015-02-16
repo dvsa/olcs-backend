@@ -1056,6 +1056,12 @@ return array(
     'legacy_offence' => array(
         'is_trailer' => array(
             'type' => 'yesnonull'
+        ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'legacyOffence'
+            )
         )
     ),
     'community_lic_suspension' => array(
