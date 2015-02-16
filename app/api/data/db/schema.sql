@@ -3241,33 +3241,6 @@ LOCK TABLES `legacy_case_action` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `legacy_case_offence`
---
-
-DROP TABLE IF EXISTS `legacy_case_offence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `legacy_case_offence` (
-  `case_id` int(11) NOT NULL,
-  `legacy_offence_id` int(11) NOT NULL,
-  PRIMARY KEY (`case_id`,`legacy_offence_id`),
-  KEY `fk_legacy_case_offence_cases1_idx` (`case_id`),
-  KEY `fk_legacy_case_offence_legacy_offence1_idx` (`legacy_offence_id`),
-  CONSTRAINT `fk_legacy_case_offence_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_legacy_case_offence_legacy_offence1` FOREIGN KEY (`legacy_offence_id`) REFERENCES `legacy_offence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `legacy_case_offence`
---
-
-LOCK TABLES `legacy_case_offence` WRITE;
-/*!40000 ALTER TABLE `legacy_case_offence` DISABLE KEYS */;
-/*!40000 ALTER TABLE `legacy_case_offence` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `legacy_offence`
 --
 
@@ -3276,6 +3249,7 @@ DROP TABLE IF EXISTS `legacy_offence`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `legacy_offence` (
   `id` int(11) NOT NULL,
+  `case_id` int(11) NOT NULL,
   `definition` varchar(1000) DEFAULT NULL,
   `is_trailer` tinyint(1) DEFAULT NULL,
   `notes` varchar(4000) DEFAULT NULL,
@@ -3296,6 +3270,8 @@ CREATE TABLE `legacy_offence` (
   PRIMARY KEY (`id`),
   KEY `fk_legacy_offence_user1_idx` (`created_by`),
   KEY `fk_legacy_offence_user2_idx` (`last_modified_by`),
+  KEY `fk_legacy_offence_cases1_idx` (`case_id`),
+  CONSTRAINT `fk_legacy_offence_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

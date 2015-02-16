@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -16,7 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="legacy_offence",
  *    indexes={
  *        @ORM\Index(name="fk_legacy_offence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_legacy_offence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_legacy_offence_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_legacy_offence_cases1_idx", columns={"case_id"})
  *    }
  * )
  */
@@ -35,11 +35,12 @@ class LegacyOffence implements Interfaces\EntityInterface
     /**
      * Case
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\Cases
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="legacyOffences")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="legacyOffences")
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
-    protected $cases;
+    protected $case;
 
     /**
      * Definition
@@ -132,71 +133,26 @@ class LegacyOffence implements Interfaces\EntityInterface
     protected $position;
 
     /**
-     * Initialise the collections
-     */
-    public function __construct()
-    {
-        $this->cases = new ArrayCollection();
-    }
-
-    /**
      * Set the case
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @param \Olcs\Db\Entity\Cases $case
      * @return LegacyOffence
      */
-    public function setCases($cases)
+    public function setCase($case)
     {
-        $this->cases = $cases;
+        $this->case = $case;
 
         return $this;
     }
 
     /**
-     * Get the cases
+     * Get the case
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Olcs\Db\Entity\Cases
      */
-    public function getCases()
+    public function getCase()
     {
-        return $this->cases;
-    }
-
-    /**
-     * Add a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return LegacyOffence
-     */
-    public function addCases($cases)
-    {
-        if ($cases instanceof ArrayCollection) {
-            $this->cases = new ArrayCollection(
-                array_merge(
-                    $this->cases->toArray(),
-                    $cases->toArray()
-                )
-            );
-        } elseif (!$this->cases->contains($cases)) {
-            $this->cases->add($cases);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a cases
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
-     * @return LegacyOffence
-     */
-    public function removeCases($cases)
-    {
-        if ($this->cases->contains($cases)) {
-            $this->cases->removeElement($cases);
-        }
-
-        return $this;
+        return $this->case;
     }
 
     /**
