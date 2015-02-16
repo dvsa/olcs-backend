@@ -33,6 +33,15 @@ class TrafficArea implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Bus reg
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="trafficAreas")
+     */
+    protected $busRegs;
+
+    /**
      * Identifier - Id
      *
      * @var string
@@ -111,7 +120,68 @@ class TrafficArea implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->recipients = new ArrayCollection();
+        $this->busRegs = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return TrafficArea
+     */
+    public function setBusRegs($busRegs)
+    {
+        $this->busRegs = $busRegs;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus regs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBusRegs()
+    {
+        return $this->busRegs;
+    }
+
+    /**
+     * Add a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return TrafficArea
+     */
+    public function addBusRegs($busRegs)
+    {
+        if ($busRegs instanceof ArrayCollection) {
+            $this->busRegs = new ArrayCollection(
+                array_merge(
+                    $this->busRegs->toArray(),
+                    $busRegs->toArray()
+                )
+            );
+        } elseif (!$this->busRegs->contains($busRegs)) {
+            $this->busRegs->add($busRegs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return TrafficArea
+     */
+    public function removeBusRegs($busRegs)
+    {
+        if ($this->busRegs->contains($busRegs)) {
+            $this->busRegs->removeElement($busRegs);
+        }
+
+        return $this;
     }
 
     /**

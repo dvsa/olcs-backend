@@ -580,25 +580,13 @@ DROP TABLE IF EXISTS `bus_reg_traffic_area`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bus_reg_traffic_area` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `traffic_area_id` varchar(1) NOT NULL,
   `bus_reg_id` int(11) NOT NULL,
-  `txc_missing` tinyint(1) DEFAULT NULL,
-  `txc_not_required` tinyint(1) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
+  `traffic_area_id` varchar(1) NOT NULL,
+  PRIMARY KEY (`bus_reg_id`,`traffic_area_id`),
   UNIQUE KEY `bus_reg_ta_unique` (`traffic_area_id`,`bus_reg_id`),
-  KEY `fk_bus_reg_traffic_area_bus_reg1_idx` (`bus_reg_id`),
-  KEY `fk_bus_reg_traffic_area_user1_idx` (`created_by`),
-  KEY `fk_bus_reg_traffic_area_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_bus_reg_traffic_area_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_bus_reg_local_auth_local_authority1_idx` (`traffic_area_id`),
   CONSTRAINT `fk_bus_reg_traffic_area_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_traffic_area_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_traffic_area_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_bus_reg_traffic_area_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
