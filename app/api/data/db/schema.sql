@@ -310,7 +310,7 @@ CREATE TABLE `application_operating_centre` (
   `application_id` int(11) NOT NULL,
   `operating_centre_id` int(11) NOT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'Flag for add, delete, update. Values A,U or D',
-  `ad_placed` tinyint(1) NOT NULL COMMENT 'An advert has been placed in a suitable publication to notify public of op centre changes.',
+  `ad_placed` tinyint(1) NULL COMMENT 'An advert has been placed in a suitable publication to notify public of op centre changes.',
   `ad_placed_in` varchar(70) DEFAULT NULL COMMENT 'Publication advert placed in.',
   `ad_placed_date` date DEFAULT NULL COMMENT 'Date advert published.',
   `publication_appropriate` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Publication deemed appropriate by caseworker.',
