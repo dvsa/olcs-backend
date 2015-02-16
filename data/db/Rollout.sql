@@ -1022,6 +1022,25 @@ VALUES
     ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL, '99');
 -- Case categories
 
+-- Case outcomes
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
+VALUES
+    ('case_outcome', 'case_o_cua', 'Conditions or Undertakings added', '', '1'),
+    ('case_outcome', 'case_o_cur', 'Curtail', '', '2'),
+    ('case_outcome', 'case_o_dun', 'Declare unfit', '', '3'),
+    ('case_outcome', 'case_o_gtd', 'Granted', '', '4'),
+    ('case_outcome', 'case_o_imp', 'Impounding', '', '5'),
+    ('case_outcome', 'case_o_inc', 'In chambers', '', '6'),
+    ('case_outcome', 'case_o_nfa', 'No further action', '', '7'),
+    ('case_outcome', 'case_o_opr', 'Office procedure', '', '8'),
+    ('case_outcome', 'case_o_pi', 'PI', '', '9'),
+    ('case_outcome', 'case_o_ptr', 'Proposal to revoke', '', '10'),
+    ('case_outcome', 'case_o_ref', 'Refused', '', '11'),
+    ('case_outcome', 'case_o_rep', 'Repute not lost', '', '12'),
+    ('case_outcome', 'case_o_rev', 'Revoke', '', '13'),
+    ('case_outcome', 'case_o_sus', 'Suspend', '', '14'),
+    ('case_outcome', 'case_o_war', 'Warning', '', '15');
+
 -- Conviction categories
 INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,display_order) VALUES
   ('conv_p_cat_1','NULL','70, 60 and 50 mph (Temporary Speed Limit) Order 1977','conv_category',1,1),

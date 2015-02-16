@@ -840,7 +840,7 @@ INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_we
 
 -- Cases
 INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application_id`,`transport_manager_id`,
-   `last_modified_by`,`created_by`,`ecms_no`,`open_date`,`close_date`,`description`,`is_impounding`,
+   `last_modified_by`,`created_by`,`ecms_no`,`open_date`,`closed_date`,`description`,`is_impounding`,
    `erru_originating_authority`,`erru_transport_undertaking_name`,`erru_vrm`,`annual_test_history`,`prohibition_note`,
    `conviction_note`,`penalties_note`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
