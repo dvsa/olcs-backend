@@ -151,23 +151,6 @@ class Cases implements Interfaces\EntityInterface
     protected $isImpounding = 0;
 
     /**
-     * Legacy offence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", inversedBy="cases")
-     * @ORM\JoinTable(name="legacy_case_offence",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="legacy_offence_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $legacyOffences;
-
-    /**
      * Licence
      *
      * @var \Olcs\Db\Entity\Licence
@@ -250,6 +233,15 @@ class Cases implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Legacy offence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LegacyOffence", mappedBy="case")
+     */
+    protected $legacyOffences;
+
+    /**
      * Opposition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -308,13 +300,13 @@ class Cases implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->legacyOffences = new ArrayCollection();
         $this->categorys = new ArrayCollection();
         $this->appeals = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->legacyOffences = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
@@ -611,66 +603,6 @@ class Cases implements Interfaces\EntityInterface
     public function getIsImpounding()
     {
         return $this->isImpounding;
-    }
-
-    /**
-     * Set the legacy offence
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function setLegacyOffences($legacyOffences)
-    {
-        $this->legacyOffences = $legacyOffences;
-
-        return $this;
-    }
-
-    /**
-     * Get the legacy offences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getLegacyOffences()
-    {
-        return $this->legacyOffences;
-    }
-
-    /**
-     * Add a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function addLegacyOffences($legacyOffences)
-    {
-        if ($legacyOffences instanceof ArrayCollection) {
-            $this->legacyOffences = new ArrayCollection(
-                array_merge(
-                    $this->legacyOffences->toArray(),
-                    $legacyOffences->toArray()
-                )
-            );
-        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->add($legacyOffences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a legacy offences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
-     * @return Cases
-     */
-    public function removeLegacyOffences($legacyOffences)
-    {
-        if ($this->legacyOffences->contains($legacyOffences)) {
-            $this->legacyOffences->removeElement($legacyOffences);
-        }
-
-        return $this;
     }
 
     /**
@@ -1060,6 +992,66 @@ class Cases implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the legacy offence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function setLegacyOffences($legacyOffences)
+    {
+        $this->legacyOffences = $legacyOffences;
+
+        return $this;
+    }
+
+    /**
+     * Get the legacy offences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLegacyOffences()
+    {
+        return $this->legacyOffences;
+    }
+
+    /**
+     * Add a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function addLegacyOffences($legacyOffences)
+    {
+        if ($legacyOffences instanceof ArrayCollection) {
+            $this->legacyOffences = new ArrayCollection(
+                array_merge(
+                    $this->legacyOffences->toArray(),
+                    $legacyOffences->toArray()
+                )
+            );
+        } elseif (!$this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->add($legacyOffences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a legacy offences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences
+     * @return Cases
+     */
+    public function removeLegacyOffences($legacyOffences)
+    {
+        if ($this->legacyOffences->contains($legacyOffences)) {
+            $this->legacyOffences->removeElement($legacyOffences);
         }
 
         return $this;
