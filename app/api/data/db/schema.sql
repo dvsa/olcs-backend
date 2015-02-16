@@ -757,7 +757,8 @@ CREATE TABLE `cases` (
   `licence_id` int(11) DEFAULT NULL,
   `ecms_no` varchar(45) DEFAULT NULL,
   `open_date` datetime NOT NULL,
-  `close_date` datetime DEFAULT NULL,
+  `closed_date` datetime DEFAULT NULL COMMENT 'Date case closed.',
+  `outcome` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `description` varchar(1024) DEFAULT NULL COMMENT 'Short summary note in old system',
   `is_impounding` tinyint(1) NOT NULL DEFAULT '0',
@@ -782,13 +783,17 @@ CREATE TABLE `cases` (
   KEY `fk_cases_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_cases_ref_data1_idx` (`case_type`),
   KEY `fk_cases_ref_data2_idx` (`erru_case_type`),
+  KEY `fk_cases_ref_data3_idx` (`outcome`),
   CONSTRAINT `fk_case_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data1` FOREIGN KEY (`case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_cases_ref_data2` FOREIGN KEY (`erru_case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_cases_ref_data2` FOREIGN KEY (`erru_case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
+  UPDATE NO ACTION,
+  CONSTRAINT `fk_cases_ref_data3` FOREIGN KEY (`outcome`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
+  UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Compliance case.  Can be for TMs or a licence. If licence can link to application and operating centres. Various types, such as public inquiry, impounding etc. Has several SLAs and a decision, stay, appeal process.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

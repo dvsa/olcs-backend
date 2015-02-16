@@ -23,7 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_case_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_cases_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"}),
- *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"})
+ *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"}),
+ *        @ORM\Index(name="fk_cases_ref_data3_idx", columns={"outcome"})
  *    }
  * )
  */
@@ -31,7 +32,7 @@ class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
-        Traits\CloseDateField,
+        Traits\ClosedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -168,6 +169,16 @@ class Cases implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="open_date", nullable=false)
      */
     protected $openDate;
+
+    /**
+     * Outcome
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="outcome", referencedColumnName="id", nullable=false)
+     */
+    protected $outcome;
 
     /**
      * Penalties note
@@ -649,6 +660,29 @@ class Cases implements Interfaces\EntityInterface
     public function getOpenDate()
     {
         return $this->openDate;
+    }
+
+    /**
+     * Set the outcome
+     *
+     * @param \Olcs\Db\Entity\RefData $outcome
+     * @return Cases
+     */
+    public function setOutcome($outcome)
+    {
+        $this->outcome = $outcome;
+
+        return $this;
+    }
+
+    /**
+     * Get the outcome
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getOutcome()
+    {
+        return $this->outcome;
     }
 
     /**
