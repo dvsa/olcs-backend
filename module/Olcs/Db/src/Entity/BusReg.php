@@ -429,6 +429,23 @@ class BusReg implements Interfaces\EntityInterface
     protected $timetableAcceptable = 0;
 
     /**
+     * Traffic area
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\TrafficArea", inversedBy="busRegs")
+     * @ORM\JoinTable(name="bus_reg_traffic_area",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $trafficAreas;
+
+    /**
      * Trc condition checked
      *
      * @var string
@@ -523,8 +540,9 @@ class BusReg implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->variationReasons = new ArrayCollection();
-        $this->busServiceTypes = new ArrayCollection();
+        $this->trafficAreas = new ArrayCollection();
         $this->localAuthoritys = new ArrayCollection();
+        $this->busServiceTypes = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -1521,6 +1539,66 @@ class BusReg implements Interfaces\EntityInterface
     public function getTimetableAcceptable()
     {
         return $this->timetableAcceptable;
+    }
+
+    /**
+     * Set the traffic area
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return BusReg
+     */
+    public function setTrafficAreas($trafficAreas)
+    {
+        $this->trafficAreas = $trafficAreas;
+
+        return $this;
+    }
+
+    /**
+     * Get the traffic areas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTrafficAreas()
+    {
+        return $this->trafficAreas;
+    }
+
+    /**
+     * Add a traffic areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return BusReg
+     */
+    public function addTrafficAreas($trafficAreas)
+    {
+        if ($trafficAreas instanceof ArrayCollection) {
+            $this->trafficAreas = new ArrayCollection(
+                array_merge(
+                    $this->trafficAreas->toArray(),
+                    $trafficAreas->toArray()
+                )
+            );
+        } elseif (!$this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->add($trafficAreas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a traffic areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @return BusReg
+     */
+    public function removeTrafficAreas($trafficAreas)
+    {
+        if ($this->trafficAreas->contains($trafficAreas)) {
+            $this->trafficAreas->removeElement($trafficAreas);
+        }
+
+        return $this;
     }
 
     /**
