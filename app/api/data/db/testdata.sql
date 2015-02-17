@@ -93,6 +93,12 @@ TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
 TRUNCATE TABLE `community_lic`;
+TRUNCATE TABLE `community_lic_suspension`;
+TRUNCATE TABLE `community_lic_suspension_reason`;
+TRUNCATE TABLE `community_lic_suspension_reason_type`;
+TRUNCATE TABLE `community_lic_withdrawal`;
+TRUNCATE TABLE `community_lic_withdrawal_reason`;
+TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
@@ -1284,17 +1290,53 @@ VALUES
     ('task.default_user', 1, NULL);
 
 INSERT INTO `community_lic` (
-    `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
+    `id`, `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
     `serial_no_prefix`, `specified_date`, `licence_expired_date`
 ) VALUES
-    ('cl_sts_active', 110, NULL, 0, NULL, 'UKGB', '2015-01-01', NULL),
-    ('cl_sts_active', 110, NULL, 1, NULL, 'UKGB', '2015-01-01', NULL),
-    ('cl_sts_expired', 110, '2014-01-01', 2, NULL, 'UKGB', '2015-01-01', NULL),
-    ('cl_sts_withdrawn', 110, '2014-03-12', 3, NULL, 'UKGB', '2015-01-01', NULL),
-    ('cl_sts_suspended', 110, '2014-06-07', 4, NULL, 'UKGB', '2015-01-01', NULL),
-    ('cl_sts_void', 110, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
-    ('cl_sts_returned', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
-    ('cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL);
+    (1, 'cl_sts_active', 110, NULL, 0, NULL, 'UKGB', '2015-01-01', NULL),
+    (2, 'cl_sts_active', 110, NULL, 1, NULL, 'UKGB', '2015-01-01', NULL),
+    (3, 'cl_sts_expired', 110, '2014-01-01', 2, NULL, 'UKGB', '2015-01-01', NULL),
+    (4, 'cl_sts_withdrawn', 110, NULL, 3, NULL, 'UKGB', NULL, NULL),
+    (5, 'cl_sts_suspended', 110, NULL, 4, NULL, 'UKGB', '2015-01-01', NULL),
+    (6, 'cl_sts_void', 110, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
+    (7, 'cl_sts_returned', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
+    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL);
+
+INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
+    `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+VALUES
+	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `reason_id`, `created_by`,
+    `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, 1, NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 2, 2, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `community_lic_suspension_reason_type` (`id`, `created_by`, `last_modified_by`, `created_on`,
+    `deleted_date`, `description`, `last_modified_on`, `version`)
+VALUES
+	(1, NULL, NULL, NULL, NULL, 'description 1', NULL, 1),
+	(2, NULL, NULL, NULL, NULL, 'description 2', NULL, 1);
+
+INSERT INTO `community_lic_withdrawal` (`id`, `community_lic_id`, `created_by`, `last_modified_by`,
+    `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+VALUES
+	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `reason_id`,
+    `created_by`, `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
+VALUES
+	(1, 1, 1, NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 2, 2, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `community_lic_withdrawal_reason_type` (`id`, `created_by`, `last_modified_by`, `created_on`,
+    `deleted_date`, `description`, `last_modified_on`, `version`)
+VALUES
+	(1, NULL, NULL, NULL, NULL, 'description 1', NULL, 1),
+	(2, NULL, NULL, NULL, NULL, 'description 2', NULL, 1);
 
 INSERT INTO `statement`
 (`id`, `contact_type`, `requestors_contact_details_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
