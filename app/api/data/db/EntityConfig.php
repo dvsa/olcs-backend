@@ -889,6 +889,12 @@ return array(
         )
     ),
     'bus_short_notice' => array(
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'shortNotice'
+            )
+        ),
         'bank_holiday_change' => array(
             'type' => 'yesno'
         ),
