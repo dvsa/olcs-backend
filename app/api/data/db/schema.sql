@@ -2516,30 +2516,14 @@ CREATE TABLE IF NOT EXISTS `financial_standing_rate` (
   `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
   `version` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
   PRIMARY KEY (`id`),
-  INDEX `fk_financial_standing_rate_ref_data1_idx` (`licence_type` ASC),
-  INDEX `fk_financial_standing_rate_ref_data2_idx` (`goods_or_psv` ASC),
-  INDEX `fk_financial_standing_rate_user1_idx` (`created_by` ASC),
-  INDEX `fk_financial_standing_rate_user2_idx` (`last_modified_by` ASC),
-  CONSTRAINT `fk_financial_standing_rate_ref_data1`
-    FOREIGN KEY (`licence_type`)
-    REFERENCES `ref_data` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_financial_standing_rate_ref_data2`
-    FOREIGN KEY (`goods_or_psv`)
-    REFERENCES `ref_data` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_financial_standing_rate_user1`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_financial_standing_rate_user2`
-    FOREIGN KEY (`last_modified_by`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+  KEY `fk_financial_standing_rate_ref_data1_idx` (`licence_type`),
+  KEY `fk_financial_standing_rate_ref_data2_idx` (`goods_or_psv`),
+  KEY `fk_financial_standing_rate_user1_idx` (`created_by`),
+  KEY `fk_financial_standing_rate_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_financial_standing_rate_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_ref_data2` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 ENGINE = InnoDB DEFAULT CHARSET=latin1
 COMMENT = 'Used to calculate financial standing requirements for an operator';
