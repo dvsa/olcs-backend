@@ -2503,7 +2503,7 @@ DROP TABLE IF EXISTS `financial_standing_rate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE IF NOT EXISTS `financial_standing_rate` (
-  `id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `licence_type` VARCHAR(32) NOT NULL COMMENT 'e.g. Special Restricted',
   `goods_or_psv` VARCHAR(32) NOT NULL COMMENT 'Goods or PSV',
   `first_vehicle_rate` DECIMAL(10,2) DEFAULT NULL,

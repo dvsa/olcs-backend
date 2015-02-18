@@ -30,6 +30,7 @@ class FinancialStandingRate implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
         Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceTypeManyToOneAlt1,
@@ -61,16 +62,6 @@ class FinancialStandingRate implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="first_vehicle_rate", precision=10, scale=2, nullable=true)
      */
     protected $firstVehicleRate;
-
-    /**
-     * Identifier - Id
-     *
-     * @var boolean
-     *
-     * @ORM\Id
-     * @ORM\Column(type="boolean", name="id")
-     */
-    protected $id;
 
     /**
      * Set the additional vehicle rate
@@ -139,28 +130,5 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     public function getFirstVehicleRate()
     {
         return $this->firstVehicleRate;
-    }
-
-    /**
-     * Set the id
-     *
-     * @param boolean $id
-     * @return FinancialStandingRate
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return boolean
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }
