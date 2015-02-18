@@ -194,7 +194,10 @@ INSERT INTO `bus_reg_local_auth` (`bus_reg_id`, `local_authority_id`)
 VALUES
   (2, 3),
   (2, 6),
-  (2, 8);
+  (2, 8),
+  (1, 3),
+  (1, 6),
+  (1, 8);
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
