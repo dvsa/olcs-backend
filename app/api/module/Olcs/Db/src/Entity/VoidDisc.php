@@ -31,6 +31,7 @@ class VoidDisc implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\LicenceTypeManyToOneAlt1,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 
@@ -51,16 +52,6 @@ class VoidDisc implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="is_self_serve", nullable=false)
      */
     protected $isSelfServe = 0;
-
-    /**
-     * Licence type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
-     */
-    protected $licenceType;
 
     /**
      * Serial end
@@ -124,29 +115,6 @@ class VoidDisc implements Interfaces\EntityInterface
     public function getIsSelfServe()
     {
         return $this->isSelfServe;
-    }
-
-    /**
-     * Set the licence type
-     *
-     * @param \Olcs\Db\Entity\RefData $licenceType
-     * @return VoidDisc
-     */
-    public function setLicenceType($licenceType)
-    {
-        $this->licenceType = $licenceType;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getLicenceType()
-    {
-        return $this->licenceType;
     }
 
     /**
