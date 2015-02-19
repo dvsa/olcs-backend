@@ -27,7 +27,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class LicenceOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\AdPlacedField,
         Traits\AdPlacedDateField,
         Traits\AdPlacedIn70Field,
         Traits\CreatedByManyToOne,
@@ -43,6 +42,15 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\S4ManyToOne,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
+
+    /**
+     * Ad placed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="ad_placed", nullable=false)
+     */
+    protected $adPlaced;
 
     /**
      * Is interim
@@ -98,6 +106,29 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking;
+
+    /**
+     * Set the ad placed
+     *
+     * @param string $adPlaced
+     * @return LicenceOperatingCentre
+     */
+    public function setAdPlaced($adPlaced)
+    {
+        $this->adPlaced = $adPlaced;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed
+     *
+     * @return string
+     */
+    public function getAdPlaced()
+    {
+        return $this->adPlaced;
+    }
 
     /**
      * Set the is interim

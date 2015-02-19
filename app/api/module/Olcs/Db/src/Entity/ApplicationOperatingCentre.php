@@ -28,7 +28,6 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Action1Field,
-        Traits\AdPlacedField,
         Traits\AdPlacedDateField,
         Traits\AdPlacedIn70Field,
         Traits\CreatedByManyToOne,
@@ -45,6 +44,15 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\S4ManyToOne,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
+
+    /**
+     * Ad placed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="ad_placed", nullable=true)
+     */
+    protected $adPlaced;
 
     /**
      * Application
@@ -73,6 +81,29 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
      */
     protected $sufficientParking = 0;
+
+    /**
+     * Set the ad placed
+     *
+     * @param string $adPlaced
+     * @return ApplicationOperatingCentre
+     */
+    public function setAdPlaced($adPlaced)
+    {
+        $this->adPlaced = $adPlaced;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad placed
+     *
+     * @return string
+     */
+    public function getAdPlaced()
+    {
+        return $this->adPlaced;
+    }
 
     /**
      * Set the application
