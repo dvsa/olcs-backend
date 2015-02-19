@@ -239,7 +239,7 @@ return array(
     ),
     'application_operating_centre' => array(
         'ad_placed' => array(
-            'type' => 'yesno'
+            'type' => 'yesnonull'
         ),
         'publication_appropriate' => array(
             'type' => 'yesno'
