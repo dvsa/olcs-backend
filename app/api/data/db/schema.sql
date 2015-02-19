@@ -2548,6 +2548,53 @@ LOCK TABLES `fee_type` WRITE;
 /*!40000 ALTER TABLE `fee_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `financial_standing_rate`
+--
+
+/* note column types for FKs on the user table have been tweaked as they must exactly match the referenced table */
+
+DROP TABLE IF EXISTS `financial_standing_rate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `financial_standing_rate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `licence_type` VARCHAR(32) NOT NULL COMMENT 'e.g. Special Restricted',
+  `goods_or_psv` VARCHAR(32) NOT NULL COMMENT 'Goods or PSV',
+  `first_vehicle_rate` DECIMAL(10,2) DEFAULT NULL,
+  `additional_vehicle_rate` DECIMAL(10,2) DEFAULT NULL,
+  `deleted_date` DATE NULL COMMENT 'Logical delete',
+  `effective_from` DATE NOT NULL COMMENT 'Effective from',
+  `created_by` INT(11) NULL COMMENT 'User id of user who created record.',
+  `last_modified_by` INT(11) NULL COMMENT 'User id of user who last modified the record.',
+  `created_on` DATETIME(6) NULL COMMENT 'Date record created.',
+  `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
+  `version` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
+  PRIMARY KEY (`id`),
+  KEY `fk_financial_standing_rate_ref_data1_idx` (`licence_type`),
+  KEY `fk_financial_standing_rate_ref_data2_idx` (`goods_or_psv`),
+  KEY `fk_financial_standing_rate_user1_idx` (`created_by`),
+  KEY `fk_financial_standing_rate_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_financial_standing_rate_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_ref_data2` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = InnoDB DEFAULT CHARSET=latin1
+COMMENT = 'Used to calculate financial standing requirements for an operator';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `financial_standing_rate`
+--
+
+LOCK TABLES `financial_standing_rate` WRITE;
+/*!40000 ALTER TABLE `financial_standing_rate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `financial_standing_rate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `goods_disc`
 --

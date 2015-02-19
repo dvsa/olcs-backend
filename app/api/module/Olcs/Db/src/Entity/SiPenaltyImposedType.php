@@ -26,41 +26,10 @@ class SiPenaltyImposedType implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\Description255FieldAlt1,
         Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate
-     * @return SiPenaltyImposedType
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate()
-    {
-        return $this->deletedDate;
-    }
 }
