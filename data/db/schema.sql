@@ -960,7 +960,7 @@ DROP TABLE IF EXISTS `community_lic_suspension_reason`;
 CREATE TABLE `community_lic_suspension_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `community_lic_suspension_id` int(11) NOT NULL,
-  `reason_id` int(11) NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -969,11 +969,11 @@ CREATE TABLE `community_lic_suspension_reason` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx` (`community_lic_suspension_id`),
-  KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx1` (`reason_id`),
+  KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx1` (`type_id`),
   KEY `fk_community_lic_suspension_reason_user1_idx` (`created_by`),
   KEY `fk_community_lic_suspension_reason_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension1` FOREIGN KEY (`community_lic_suspension_id`) REFERENCES `community_lic_suspension` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension_r1` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_suspension_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension_r1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Reasons for a suspension.';
@@ -1068,7 +1068,7 @@ DROP TABLE IF EXISTS `community_lic_withdrawal_reason`;
 CREATE TABLE `community_lic_withdrawal_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `community_lic_withdrawal_id` int(11) NOT NULL,
-  `reason_id` int(11) NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -1077,11 +1077,11 @@ CREATE TABLE `community_lic_withdrawal_reason` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx` (`community_lic_withdrawal_id`),
-  KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx1` (`reason_id`),
+  KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx1` (`type_id`),
   KEY `fk_community_lic_withdrawal_reason_user1_idx` (`created_by`),
   KEY `fk_community_lic_withdrawal_reason_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal1` FOREIGN KEY (`community_lic_withdrawal_id`) REFERENCES `community_lic_withdrawal` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal_r1` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_withdrawal_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal_r1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Reasons for com lic withdrawal.';
