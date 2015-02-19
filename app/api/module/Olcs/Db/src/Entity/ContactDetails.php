@@ -113,9 +113,9 @@ class ContactDetails implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false)
+     * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false, options={"default": 0})
      */
-    protected $writtenPermissionToEngage = 0;
+    protected $writtenPermissionToEngage;
 
     /**
      * Phone contact

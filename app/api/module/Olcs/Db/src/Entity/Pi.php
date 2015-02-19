@@ -174,27 +174,27 @@ class Pi implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceCurtailedAtPi = 0;
+    protected $licenceCurtailedAtPi;
 
     /**
      * Licence revoked at pi
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceRevokedAtPi = 0;
+    protected $licenceRevokedAtPi;
 
     /**
      * Licence suspended at pi
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceSuspendedAtPi = 0;
+    protected $licenceSuspendedAtPi;
 
     /**
      * Notification date

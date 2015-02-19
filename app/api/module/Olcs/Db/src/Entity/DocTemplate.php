@@ -42,9 +42,9 @@ class DocTemplate implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_ni", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false, options={"default": 0})
      */
-    protected $isNi = 0;
+    protected $isNi;
 
     /**
      * Suppress from op

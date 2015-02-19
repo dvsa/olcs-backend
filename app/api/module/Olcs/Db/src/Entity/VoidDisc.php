@@ -40,18 +40,18 @@ class VoidDisc implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_ni_self_serve", nullable=false)
+     * @ORM\Column(type="boolean", name="is_ni_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isNiSelfServe = 0;
+    protected $isNiSelfServe;
 
     /**
      * Is self serve
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false)
+     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isSelfServe = 0;
+    protected $isSelfServe;
 
     /**
      * Serial end

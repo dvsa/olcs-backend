@@ -39,9 +39,9 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false)
+     * @ORM\Column(type="yesnonull", name="is_copy", nullable=false, options={"default": 0})
      */
-    protected $isCopy = 0;
+    protected $isCopy;
 
     /**
      * Licence
@@ -58,9 +58,9 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false)
+     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false, options={"default": 0})
      */
-    protected $reprintRequired = 0;
+    protected $reprintRequired;
 
     /**
      * Set the is copy

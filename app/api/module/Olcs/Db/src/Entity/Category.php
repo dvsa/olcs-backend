@@ -36,27 +36,27 @@ class Category implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
+     * @ORM\Column(type="yesno", name="is_doc_category", nullable=false, options={"default": 1})
      */
-    protected $isDocCategory = 1;
+    protected $isDocCategory;
 
     /**
      * Is scan category
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_scan_category", nullable=false)
+     * @ORM\Column(type="boolean", name="is_scan_category", nullable=false, options={"default": 1})
      */
-    protected $isScanCategory = 1;
+    protected $isScanCategory;
 
     /**
      * Is task category
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
+     * @ORM\Column(type="yesno", name="is_task_category", nullable=false, options={"default": 1})
      */
-    protected $isTaskCategory = 1;
+    protected $isTaskCategory;
 
     /**
      * Task allocation type

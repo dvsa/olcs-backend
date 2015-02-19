@@ -67,9 +67,9 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="scale", nullable=false)
+     * @ORM\Column(type="integer", name="scale", nullable=false, options={"default": 0})
      */
-    protected $scale = 0;
+    protected $scale;
 
     /**
      * Set the exception name

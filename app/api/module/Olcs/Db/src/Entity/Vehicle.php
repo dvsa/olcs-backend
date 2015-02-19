@@ -85,36 +85,36 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Section26
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="section_26", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26", nullable=false, options={"default": 0})
      */
     protected $section26;
 
     /**
      * Section26 curtail
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="section_26_curtail", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_curtail", nullable=false, options={"default": 0})
      */
     protected $section26Curtail;
 
     /**
      * Section26 revoked
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="section_26_revoked", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_revoked", nullable=false, options={"default": 0})
      */
     protected $section26Revoked;
 
     /**
      * Section26 suspend
      *
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="yesno", name="section_26_suspend", nullable=false)
+     * @ORM\Column(type="boolean", name="section_26_suspend", nullable=false, options={"default": 0})
      */
     protected $section26Suspend;
 
@@ -253,7 +253,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26
      *
-     * @param string $section26
+     * @param boolean $section26
      * @return Vehicle
      */
     public function setSection26($section26)
@@ -266,7 +266,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26
      *
-     * @return string
+     * @return boolean
      */
     public function getSection26()
     {
@@ -276,7 +276,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 curtail
      *
-     * @param string $section26Curtail
+     * @param boolean $section26Curtail
      * @return Vehicle
      */
     public function setSection26Curtail($section26Curtail)
@@ -289,7 +289,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 curtail
      *
-     * @return string
+     * @return boolean
      */
     public function getSection26Curtail()
     {
@@ -299,7 +299,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 revoked
      *
-     * @param string $section26Revoked
+     * @param boolean $section26Revoked
      * @return Vehicle
      */
     public function setSection26Revoked($section26Revoked)
@@ -312,7 +312,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 revoked
      *
-     * @return string
+     * @return boolean
      */
     public function getSection26Revoked()
     {
@@ -322,7 +322,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Set the section26 suspend
      *
-     * @param string $section26Suspend
+     * @param boolean $section26Suspend
      * @return Vehicle
      */
     public function setSection26Suspend($section26Suspend)
@@ -335,7 +335,7 @@ class Vehicle implements Interfaces\EntityInterface
     /**
      * Get the section26 suspend
      *
-     * @return string
+     * @return boolean
      */
     public function getSection26Suspend()
     {

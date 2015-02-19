@@ -122,9 +122,9 @@ class Document implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_digital", nullable=false)
+     * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
      */
-    protected $isDigital = 0;
+    protected $isDigital;
 
     /**
      * Is read only
