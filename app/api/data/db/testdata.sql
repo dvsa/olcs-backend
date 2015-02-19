@@ -11,6 +11,7 @@ TRUNCATE TABLE `bus_reg_local_auth`;
 TRUNCATE TABLE `bus_short_notice`;
 TRUNCATE TABLE `bus_notice_period`;
 TRUNCATE TABLE `bus_service_type`;
+TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `complaint_oc_licence`;
@@ -31,6 +32,7 @@ TRUNCATE TABLE `operating_centre`;
 TRUNCATE TABLE `opposer`;
 TRUNCATE TABLE `opposition`;
 TRUNCATE TABLE `opposition_grounds`;
+TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `organisation`;
 TRUNCATE TABLE `other_licence`;
 TRUNCATE TABLE `organisation_nature_of_business`;
@@ -189,6 +191,16 @@ VALUES
   (2, 3),
   (2, 6),
   (2, 8);
+
+INSERT INTO `bus_reg_bus_service_type` (`bus_reg_id`, `bus_service_type_id`)
+VALUES
+  (1, 1),
+  (1, 3),
+  (1, 4),
+  (2, 5),
+  (2, 6),
+  (2, 9);
+
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -1206,6 +1218,8 @@ VALUES
   (3, 1, 1, 'OOO test 2', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
+  (21, 1, 1, 'Bus Registration', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
+  (22, 1, 1, 'Bus Registration (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (27, 1, 1, 'TM PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
   (28, 1, 1, 'TM PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
 
