@@ -333,7 +333,7 @@ CREATE TABLE `application_tracking` (
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '1',
+  `version` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `fk_application_tracking_user1_idx` (`created_by`),
   KEY `fk_application_tracking_user2_idx` (`last_modified_by`),
