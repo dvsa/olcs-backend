@@ -6873,12 +6873,12 @@ INSERT INTO `financial_standing_rate` (
     `first_vehicle_rate`,
     `additional_vehicle_rate`
 ) VALUES
-    (1, 'ltyp_sn', 'lcat_gv', null, '2015-02-01', 1, 7000.00, 3900.00),
-    (2, 'ltyp_si', 'lcat_gv', null, '2015-02-01', 1, 7000.00, 3900.00),
-    (3, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00),
-    (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 8000.00, 4900.00),
-    (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 8000.00, 4900.00),
-    (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 4100.00, 2700.00);
+    (1, 'ltyp_sn', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (2, 'ltyp_si', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (3, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 2100.00, 700.00),
+    (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00);
 
 SET foreign_key_checks = 1;
 
