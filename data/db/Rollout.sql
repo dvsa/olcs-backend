@@ -6863,6 +6863,23 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (4, 5), -- admin can edit
     (4, 1); -- admin is admin
 
+INSERT INTO `financial_standing_rate` (
+    `id`,
+    `licence_type`,
+    `goods_or_psv`,
+    `deleted_date`,
+    `effective_from`,
+    `version`,
+    `first_vehicle_rate`,
+    `additional_vehicle_rate`
+) VALUES
+    (1, 'ltyp_sn', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (2, 'ltyp_si', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (3, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 2100.00, 700.00),
+    (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00);
+
 SET foreign_key_checks = 1;
 
 DROP TABLE IF EXISTS task_search_view;
