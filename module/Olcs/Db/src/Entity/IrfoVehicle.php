@@ -36,45 +36,45 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="coc_a", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_a", nullable=false, options={"default": 0})
      */
-    protected $cocA = 0;
+    protected $cocA;
 
     /**
      * Coc b
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="coc_b", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_b", nullable=false, options={"default": 0})
      */
-    protected $cocB = 0;
+    protected $cocB;
 
     /**
      * Coc c
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="coc_c", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_c", nullable=false, options={"default": 0})
      */
-    protected $cocC = 0;
+    protected $cocC;
 
     /**
      * Coc d
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="coc_d", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_d", nullable=false, options={"default": 0})
      */
-    protected $cocD = 0;
+    protected $cocD;
 
     /**
      * Coc t
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="coc_t", nullable=false)
+     * @ORM\Column(type="yesno", name="coc_t", nullable=false, options={"default": 0})
      */
-    protected $cocT = 0;
+    protected $cocT;
 
     /**
      * Irfo gv permit
@@ -91,9 +91,9 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="version", nullable=true)
+     * @ORM\Column(type="integer", name="version", nullable=true, options={"default": 1})
      */
-    protected $version = 1;
+    protected $version;
 
     /**
      * Vrm

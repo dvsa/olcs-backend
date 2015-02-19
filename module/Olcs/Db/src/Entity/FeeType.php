@@ -70,9 +70,9 @@ class FeeType implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false)
+     * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false, options={"default": 0})
      */
-    protected $expireFeeWithLicence = 0;
+    protected $expireFeeWithLicence;
 
     /**
      * Fee type

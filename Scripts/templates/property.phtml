@@ -56,4 +56,4 @@ foreach ($columns as $key => $joinColumn): ?>
      * @Gedmo\Translatable
 <?php endif; ?>
      */
-    protected $<?php echo $this->formatPropertyName($item); ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;
+    protected $<?php echo $this->formatPropertyName($item); ?>;

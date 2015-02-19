@@ -38,18 +38,18 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false)
+     * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isNiSelfServe = 0;
+    protected $isNiSelfServe;
 
     /**
      * Is self serve
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_self_serve", nullable=false)
+     * @ORM\Column(type="yesno", name="is_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isSelfServe = 0;
+    protected $isSelfServe;
 
     /**
      * R prefix

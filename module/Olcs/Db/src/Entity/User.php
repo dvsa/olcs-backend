@@ -50,9 +50,9 @@ class User implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="account_disabled", nullable=false)
+     * @ORM\Column(type="yesno", name="account_disabled", nullable=false, options={"default": 0})
      */
-    protected $accountDisabled = 0;
+    protected $accountDisabled;
 
     /**
      * Attempts
@@ -196,9 +196,9 @@ class User implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="must_reset_password", nullable=false)
+     * @ORM\Column(type="boolean", name="must_reset_password", nullable=false, options={"default": 0})
      */
-    protected $mustResetPassword = 0;
+    protected $mustResetPassword;
 
     /**
      * Partner contact details

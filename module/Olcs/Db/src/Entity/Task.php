@@ -93,18 +93,18 @@ class Task implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_closed", nullable=false)
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
      */
-    protected $isClosed = 0;
+    protected $isClosed;
 
     /**
      * Urgent
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="urgent", nullable=false)
+     * @ORM\Column(type="yesno", name="urgent", nullable=false, options={"default": 0})
      */
-    protected $urgent = 0;
+    protected $urgent;
 
     /**
      * Set the action date

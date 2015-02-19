@@ -111,9 +111,9 @@ class Complaint implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_compliance", nullable=false)
+     * @ORM\Column(type="boolean", name="is_compliance", nullable=false, options={"default": 1})
      */
-    protected $isCompliance = 1;
+    protected $isCompliance;
 
     /**
      * Oc complaint

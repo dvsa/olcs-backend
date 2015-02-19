@@ -56,36 +56,36 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_england", nullable=false)
+     * @ORM\Column(type="boolean", name="is_england", nullable=false, options={"default": 0})
      */
-    protected $isEngland = 0;
+    protected $isEngland;
 
     /**
      * Is ni
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
+     * @ORM\Column(type="boolean", name="is_ni", nullable=false, options={"default": 0})
      */
-    protected $isNi = 0;
+    protected $isNi;
 
     /**
      * Is scotland
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_scotland", nullable=false)
+     * @ORM\Column(type="boolean", name="is_scotland", nullable=false, options={"default": 0})
      */
-    protected $isScotland = 0;
+    protected $isScotland;
 
     /**
      * Is wales
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_wales", nullable=false)
+     * @ORM\Column(type="boolean", name="is_wales", nullable=false, options={"default": 0})
      */
-    protected $isWales = 0;
+    protected $isWales;
 
     /**
      * Recipient

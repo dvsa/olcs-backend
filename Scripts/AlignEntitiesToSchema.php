@@ -507,7 +507,6 @@ class AlignEntitiesToSchema
                     'isInverse' => true,
                     'type' => $fieldDetails['relationship'],
                     'ref' => 'field',
-                    'default' => null,
                     'config' => $item,
                 );
 
@@ -1082,12 +1081,15 @@ class AlignEntitiesToSchema
 
                 $extraConfig = $this->getConfigFromComments($comments, $columnName);
 
+                if ($default !== null) {
+                    $item['@attributes']['options'] = array('default' => $default);
+                }
+
                 $fieldConfig = array(
                     'isId' => isset($associationKeys[$item['@attributes'][$key]]),
                     'isInverse' => false,
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
-                    'default' => $default,
                     'config' => $item,
                     'translatable' => false
                 );
@@ -1209,9 +1211,26 @@ class AlignEntitiesToSchema
             $name = $item['@attributes'][$key];
             $filter = new CamelCaseToSeparator('_');
             $name = strtolower($filter->filter($name));
+
+            $name = $this->processColumnFormatOverrides($name);
         }
 
         return $name;
+    }
+
+    /**
+     * Handle special cases where the formatColumnFromItem isn't enough
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function processColumnFormatOverrides($name)
+    {
+        $overrides = [
+            'section26' => 'section_26'
+        ];
+
+        return str_replace(array_keys($overrides), array_values($overrides), $name);
     }
 
     /**
@@ -1397,6 +1416,23 @@ class AlignEntitiesToSchema
         return ucfirst(strtolower($formatter->filter($name)));
     }
 
+    protected function formatOptionValue($val)
+    {
+        if (is_numeric($val)) {
+            return $val;
+        }
+
+        if (is_bool($val) && $val) {
+            return 1;
+        }
+
+        if (is_bool($val) && !$val) {
+            return 0;
+        }
+
+        return '"' . $val . '"';
+    }
+
     /**
      * Generate the option string from the attributes
      *
@@ -1409,6 +1445,21 @@ class AlignEntitiesToSchema
         $options = array();
 
         foreach ($attributes as $key => $value) {
+
+            if ($key === 'options') {
+
+                $settings = [];
+
+                foreach ($value as $label => $val) {
+                    $settings[] = '"' . $label . '": ' . $this->formatOptionValue($val);
+                }
+
+                if (!empty($settings)) {
+                    $options[] = 'options={' . implode(', ', $settings) . '}';
+                }
+
+                continue;
+            }
 
             if ($which == 'unique-constraints' && $key == 'columns') {
                 $value = explode(',', $value);

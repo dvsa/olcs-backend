@@ -38,9 +38,9 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_external", nullable=false)
+     * @ORM\Column(type="yesno", name="is_external", nullable=false, options={"default": 0})
      */
-    protected $isExternal = 0;
+    protected $isExternal;
 
     /**
      * Licence
@@ -57,18 +57,18 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="maintenance", nullable=false)
+     * @ORM\Column(type="yesno", name="maintenance", nullable=false, options={"default": 0})
      */
-    protected $maintenance = 0;
+    protected $maintenance;
 
     /**
      * Safety inspection
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="safety_inspection", nullable=false)
+     * @ORM\Column(type="yesno", name="safety_inspection", nullable=false, options={"default": 0})
      */
-    protected $safetyInspection = 0;
+    protected $safetyInspection;
 
     /**
      * Set the is external
