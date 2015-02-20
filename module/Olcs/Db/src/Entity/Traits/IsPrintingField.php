@@ -18,7 +18,7 @@ trait IsPrintingField
      *
      * @ORM\Column(type="yesno", name="is_printing", nullable=false, options={"default": 0})
      */
-    protected $isPrinting;
+    protected $isPrinting = 0;
 
     /**
      * Set the is printing

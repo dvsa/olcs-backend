@@ -95,7 +95,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
      */
-    protected $isClosed;
+    protected $isClosed = 0;
 
     /**
      * Urgent
@@ -104,7 +104,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="urgent", nullable=false, options={"default": 0})
      */
-    protected $urgent;
+    protected $urgent = 0;
 
     /**
      * Set the action date

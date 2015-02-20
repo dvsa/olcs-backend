@@ -80,7 +80,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="public_holiday", nullable=false, options={"default": 0})
      */
-    protected $publicHoliday;
+    protected $publicHoliday = 0;
 
     /**
      * Weekend
@@ -89,7 +89,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="weekend", nullable=false, options={"default": 0})
      */
-    protected $weekend;
+    protected $weekend = 0;
 
     /**
      * Set the category

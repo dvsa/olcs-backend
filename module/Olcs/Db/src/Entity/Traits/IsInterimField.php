@@ -18,7 +18,7 @@ trait IsInterimField
      *
      * @ORM\Column(type="yesno", name="is_interim", nullable=false, options={"default": 0})
      */
-    protected $isInterim;
+    protected $isInterim = 0;
 
     /**
      * Set the is interim

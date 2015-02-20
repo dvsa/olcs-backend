@@ -79,7 +79,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false, options={"default": 0})
      */
-    protected $convictionsConfirmation;
+    protected $convictionsConfirmation = 0;
 
     /**
      * Declaration confirmation
@@ -88,7 +88,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false, options={"default": 0})
      */
-    protected $declarationConfirmation;
+    protected $declarationConfirmation = 0;
 
     /**
      * Disqualified
@@ -124,7 +124,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false, options={"default": 0})
      */
-    protected $insolvencyConfirmation;
+    protected $insolvencyConfirmation = 0;
 
     /**
      * Insolvency details
@@ -216,7 +216,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="override_ooo", nullable=false, options={"default": 0})
      */
-    protected $overrideOoo;
+    protected $overrideOoo = 0;
 
     /**
      * Prev been at pi
@@ -378,7 +378,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false, options={"default": 0})
      */
-    protected $safetyConfirmation;
+    protected $safetyConfirmation = 0;
 
     /**
      * Target completion date

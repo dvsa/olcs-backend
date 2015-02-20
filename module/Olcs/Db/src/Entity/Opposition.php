@@ -86,7 +86,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_copied", nullable=false, options={"default": 0})
      */
-    protected $isCopied;
+    protected $isCopied = 0;
 
     /**
      * Is in time
@@ -95,7 +95,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_in_time", nullable=false, options={"default": 0})
      */
-    protected $isInTime;
+    protected $isInTime = 0;
 
     /**
      * Is public inquiry
@@ -104,7 +104,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false, options={"default": 0})
      */
-    protected $isPublicInquiry;
+    protected $isPublicInquiry = 0;
 
     /**
      * Is valid
@@ -113,7 +113,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_valid", nullable=false, options={"default": 0})
      */
-    protected $isValid;
+    protected $isValid = 0;
 
     /**
      * Is willing to attend pi
@@ -122,7 +122,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false, options={"default": 0})
      */
-    protected $isWillingToAttendPi;
+    protected $isWillingToAttendPi = 0;
 
     /**
      * Is withdrawn
@@ -131,7 +131,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_withdrawn", nullable=false, options={"default": 0})
      */
-    protected $isWithdrawn;
+    protected $isWithdrawn = 0;
 
     /**
      * Operating centre

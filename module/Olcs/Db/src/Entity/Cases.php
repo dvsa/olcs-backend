@@ -149,7 +149,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_impounding", nullable=false, options={"default": 0})
      */
-    protected $isImpounding;
+    protected $isImpounding = 0;
 
     /**
      * Licence

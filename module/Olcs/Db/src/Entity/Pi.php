@@ -176,7 +176,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceCurtailedAtPi;
+    protected $licenceCurtailedAtPi = 0;
 
     /**
      * Licence revoked at pi
@@ -185,7 +185,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceRevokedAtPi;
+    protected $licenceRevokedAtPi = 0;
 
     /**
      * Licence suspended at pi
@@ -194,7 +194,7 @@ class Pi implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false, options={"default": 0})
      */
-    protected $licenceSuspendedAtPi;
+    protected $licenceSuspendedAtPi = 0;
 
     /**
      * Notification date

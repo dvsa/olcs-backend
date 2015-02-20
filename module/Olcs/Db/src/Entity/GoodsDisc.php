@@ -42,7 +42,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_copy", nullable=false, options={"default": 0})
      */
-    protected $isCopy;
+    protected $isCopy = 0;
 
     /**
      * Licence vehicle
@@ -61,7 +61,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="reprint_required", nullable=false, options={"default": 0})
      */
-    protected $reprintRequired;
+    protected $reprintRequired = 0;
 
     /**
      * Set the is copy

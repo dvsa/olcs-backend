@@ -105,7 +105,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false, options={"default": 0})
      */
-    protected $isDealtWith;
+    protected $isDealtWith = 0;
 
     /**
      * Is declared
@@ -114,7 +114,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_declared", nullable=false, options={"default": 0})
      */
-    protected $isDeclared;
+    protected $isDeclared = 0;
 
     /**
      * Msi

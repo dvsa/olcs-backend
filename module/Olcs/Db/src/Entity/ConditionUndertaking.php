@@ -111,7 +111,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_approved", nullable=false, options={"default": 0})
      */
-    protected $isApproved;
+    protected $isApproved = 0;
 
     /**
      * Is draft
@@ -120,7 +120,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_draft", nullable=false, options={"default": 0})
      */
-    protected $isDraft;
+    protected $isDraft = 0;
 
     /**
      * Is fulfilled
@@ -129,7 +129,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false, options={"default": 0})
      */
-    protected $isFulfilled;
+    protected $isFulfilled = 0;
 
     /**
      * Lic condition variation
