@@ -82,6 +82,15 @@ class RefData implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Outcome case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Cases", mappedBy="outcomes")
+     */
+    protected $outcomeCases;
+
+    /**
      * Parent
      *
      * @var \Olcs\Db\Entity\RefData
@@ -135,9 +144,10 @@ class RefData implements Interfaces\EntityInterface
         $this->tmCaseDecisionRehabs = new ArrayCollection();
         $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
         $this->pis = new ArrayCollection();
-        $this->oppositions = new ArrayCollection();
-        $this->cases = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
+        $this->cases = new ArrayCollection();
+        $this->outcomeCases = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
     }
 
     /**
@@ -384,6 +394,66 @@ class RefData implements Interfaces\EntityInterface
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the outcome case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomeCases
+     * @return RefData
+     */
+    public function setOutcomeCases($outcomeCases)
+    {
+        $this->outcomeCases = $outcomeCases;
+
+        return $this;
+    }
+
+    /**
+     * Get the outcome cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOutcomeCases()
+    {
+        return $this->outcomeCases;
+    }
+
+    /**
+     * Add a outcome cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomeCases
+     * @return RefData
+     */
+    public function addOutcomeCases($outcomeCases)
+    {
+        if ($outcomeCases instanceof ArrayCollection) {
+            $this->outcomeCases = new ArrayCollection(
+                array_merge(
+                    $this->outcomeCases->toArray(),
+                    $outcomeCases->toArray()
+                )
+            );
+        } elseif (!$this->outcomeCases->contains($outcomeCases)) {
+            $this->outcomeCases->add($outcomeCases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a outcome cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomeCases
+     * @return RefData
+     */
+    public function removeOutcomeCases($outcomeCases)
+    {
+        if ($this->outcomeCases->contains($outcomeCases)) {
+            $this->outcomeCases->removeElement($outcomeCases);
         }
 
         return $this;
