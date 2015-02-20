@@ -30,7 +30,7 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Notes4000Field,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
 

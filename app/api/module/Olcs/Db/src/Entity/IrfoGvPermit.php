@@ -35,7 +35,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
         Traits\IrfoFeeId10Field,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OrganisationManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\CustomVersionField,
         Traits\WithdrawnReasonManyToOne;
 
