@@ -507,6 +507,7 @@ class AlignEntitiesToSchema
                     'isInverse' => true,
                     'type' => $fieldDetails['relationship'],
                     'ref' => 'field',
+                    'default' => null,
                     'config' => $item,
                 );
 
@@ -1090,6 +1091,7 @@ class AlignEntitiesToSchema
                     'isInverse' => false,
                     'type' => $which,
                     'ref' => ($which == 'field' ? 'name' : 'field'),
+                    'default' => $default,
                     'config' => $item,
                     'translatable' => false
                 );
