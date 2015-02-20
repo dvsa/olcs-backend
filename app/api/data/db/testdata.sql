@@ -3,6 +3,7 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `address`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
+TRUNCATE TABLE `application_tracking`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
