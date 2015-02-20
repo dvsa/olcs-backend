@@ -33,7 +33,7 @@ class OrganisationUser implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OrganisationManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\RemovedDateField,
         Traits\CustomVersionField;
 
