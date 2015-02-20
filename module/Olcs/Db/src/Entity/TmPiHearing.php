@@ -39,6 +39,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\PresidingTcManyToOneAlt1,
+        Traits\TypeManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -96,16 +97,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
      */
     protected $scheduledOn;
-
-    /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $type;
 
     /**
      * Venue
@@ -262,29 +253,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getScheduledOn()
     {
         return $this->scheduledOn;
-    }
-
-    /**
-     * Set the type
-     *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return TmPiHearing
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
