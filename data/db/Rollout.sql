@@ -866,6 +866,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('note_type', 'note_t_lic', 'Licence', null),
     ('note_type', 'note_t_irfo_gv', 'IRFO GV Permit', null),
     ('note_type', 'note_t_irfo_psv', 'IRFO PSV Auth', null),
+    ('note_type', 'note_t_tm', 'Transport Manager', null),
     ('tach_ins', 'tach_internal', 'Internal', null),
     ('tach_ins', 'tach_external', 'External', null),
     ('tach_ins', 'tach_na', 'Not Applicable', null),
