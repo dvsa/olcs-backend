@@ -802,7 +802,6 @@ CREATE TABLE `cases` (
   `ecms_no` varchar(45) DEFAULT NULL,
   `open_date` datetime NOT NULL,
   `closed_date` datetime DEFAULT NULL COMMENT 'Date case closed.',
-  `outcome` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `description` varchar(1024) DEFAULT NULL COMMENT 'Short summary note in old system',
   `is_impounding` tinyint(1) NOT NULL DEFAULT '0',
@@ -827,7 +826,6 @@ CREATE TABLE `cases` (
   KEY `fk_cases_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_cases_ref_data1_idx` (`case_type`),
   KEY `fk_cases_ref_data2_idx` (`erru_case_type`),
-  KEY `fk_cases_ref_data3_idx` (`outcome`),
   CONSTRAINT `fk_case_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -835,8 +833,6 @@ CREATE TABLE `cases` (
   CONSTRAINT `fk_cases_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data1` FOREIGN KEY (`case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data2` FOREIGN KEY (`erru_case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
-  UPDATE NO ACTION,
-  CONSTRAINT `fk_cases_ref_data3` FOREIGN KEY (`outcome`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
   UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Compliance case.  Can be for TMs or a licence. If licence can link to application and operating centres. Various types, such as public inquiry, impounding etc. Has several SLAs and a decision, stay, appeal process.';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -848,6 +844,40 @@ CREATE TABLE `cases` (
 LOCK TABLES `cases` WRITE;
 /*!40000 ALTER TABLE `cases` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cases` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `case_outcome`
+--
+
+DROP TABLE IF EXISTS `case_outcome`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE  `case_outcome` (
+  `outcome_case_id` int(11) NOT NULL COMMENT 'So called as ref_data already has a case property via case_category',
+  `outcome_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`outcome_case_id`, `outcome_id`),
+  KEY `fk_case_outcome_cases1_idx` (`outcome_case_id`),
+  KEY `fk_case_outcome_ref_data1_idx` (`outcome_id`),
+  CONSTRAINT `fk_case_outcome_cases1_idx`
+    FOREIGN KEY (`outcome_case_id`)
+    REFERENCES `cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_case_outcome_ref_data1_idx`
+    FOREIGN KEY (`outcome_id`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `case_outcome`
+--
+
+LOCK TABLES `case_outcome` WRITE;
+/*!40000 ALTER TABLE `case_outcome` DISABLE KEYS */;
+/*!40000 ALTER TABLE `case_outcome` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -7261,12 +7291,12 @@ CREATE TABLE IF NOT EXISTS `tm_employment` (
   INDEX `fk_tm_employment_contact_details1_idx` (`contact_details_id` ASC),
   CONSTRAINT `fk_tm_employment_transport_manager1`
     FOREIGN KEY (`transport_manager_id`)
-    REFERENCES `olcs`.`transport_manager` (`id`)
+    REFERENCES `transport_manager` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_employment_contact_details1`
     FOREIGN KEY (`contact_details_id`)
-    REFERENCES `olcs`.`contact_details` (`id`)
+    REFERENCES `contact_details` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB DEFAULT CHARSET=latin1;

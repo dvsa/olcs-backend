@@ -23,8 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_case_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_cases_transport_manager1_idx", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"}),
- *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"}),
- *        @ORM\Index(name="fk_cases_ref_data3_idx", columns={"outcome"})
+ *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"})
  *    }
  * )
  */
@@ -173,12 +172,19 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Outcome
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="outcome", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="outcomeCases")
+     * @ORM\JoinTable(name="case_outcome",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="outcome_case_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="outcome_id", referencedColumnName="id")
+     *     }
+     * )
      */
-    protected $outcome;
+    protected $outcomes;
 
     /**
      * Penalties note
@@ -320,6 +326,7 @@ class Cases implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->outcomes = new ArrayCollection();
         $this->categorys = new ArrayCollection();
         $this->appeals = new ArrayCollection();
         $this->complaints = new ArrayCollection();
@@ -675,24 +682,61 @@ class Cases implements Interfaces\EntityInterface
     /**
      * Set the outcome
      *
-     * @param \Olcs\Db\Entity\RefData $outcome
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomes
      * @return Cases
      */
-    public function setOutcome($outcome)
+    public function setOutcomes($outcomes)
     {
-        $this->outcome = $outcome;
+        $this->outcomes = $outcomes;
 
         return $this;
     }
 
     /**
-     * Get the outcome
+     * Get the outcomes
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getOutcome()
+    public function getOutcomes()
     {
-        return $this->outcome;
+        return $this->outcomes;
+    }
+
+    /**
+     * Add a outcomes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomes
+     * @return Cases
+     */
+    public function addOutcomes($outcomes)
+    {
+        if ($outcomes instanceof ArrayCollection) {
+            $this->outcomes = new ArrayCollection(
+                array_merge(
+                    $this->outcomes->toArray(),
+                    $outcomes->toArray()
+                )
+            );
+        } elseif (!$this->outcomes->contains($outcomes)) {
+            $this->outcomes->add($outcomes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a outcomes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $outcomes
+     * @return Cases
+     */
+    public function removeOutcomes($outcomes)
+    {
+        if ($this->outcomes->contains($outcomes)) {
+            $this->outcomes->removeElement($outcomes);
+        }
+
+        return $this;
     }
 
     /**
