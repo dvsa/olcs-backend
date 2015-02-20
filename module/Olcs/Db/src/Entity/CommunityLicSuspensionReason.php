@@ -17,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="community_lic_suspension_reason",
  *    indexes={
  *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx", columns={"community_lic_suspension_id"}),
- *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx1", columns={"reason_id"}),
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx1", columns={"type_id"}),
  *        @ORM\Index(name="fk_community_lic_suspension_reason_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_community_lic_suspension_reason_user2_idx", columns={"last_modified_by"})
  *    }
@@ -32,6 +32,7 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TypeManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -43,16 +44,6 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="community_lic_suspension_id", referencedColumnName="id", nullable=false)
      */
     protected $communityLicSuspension;
-
-    /**
-     * Reason
-     *
-     * @var \Olcs\Db\Entity\CommunityLicSuspensionReasonType
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CommunityLicSuspensionReasonType")
-     * @ORM\JoinColumn(name="reason_id", referencedColumnName="id", nullable=false)
-     */
-    protected $reason;
 
     /**
      * Set the community lic suspension
@@ -75,28 +66,5 @@ class CommunityLicSuspensionReason implements Interfaces\EntityInterface
     public function getCommunityLicSuspension()
     {
         return $this->communityLicSuspension;
-    }
-
-    /**
-     * Set the reason
-     *
-     * @param \Olcs\Db\Entity\CommunityLicSuspensionReasonType $reason
-     * @return CommunityLicSuspensionReason
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get the reason
-     *
-     * @return \Olcs\Db\Entity\CommunityLicSuspensionReasonType
-     */
-    public function getReason()
-    {
-        return $this->reason;
     }
 }
