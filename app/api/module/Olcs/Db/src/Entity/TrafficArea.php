@@ -58,7 +58,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_england", nullable=false, options={"default": 0})
      */
-    protected $isEngland;
+    protected $isEngland = 0;
 
     /**
      * Is ni
@@ -67,7 +67,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_ni", nullable=false, options={"default": 0})
      */
-    protected $isNi;
+    protected $isNi = 0;
 
     /**
      * Is scotland
@@ -76,7 +76,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_scotland", nullable=false, options={"default": 0})
      */
-    protected $isScotland;
+    protected $isScotland = 0;
 
     /**
      * Is wales
@@ -85,7 +85,7 @@ class TrafficArea implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_wales", nullable=false, options={"default": 0})
      */
-    protected $isWales;
+    protected $isWales = 0;
 
     /**
      * Recipient

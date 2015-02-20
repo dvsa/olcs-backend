@@ -39,7 +39,7 @@ class SubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_doc", nullable=false, options={"default": 0})
      */
-    protected $isDoc;
+    protected $isDoc = 0;
 
     /**
      * Is free text
@@ -48,7 +48,7 @@ class SubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_free_text", nullable=false, options={"default": 0})
      */
-    protected $isFreeText;
+    protected $isFreeText = 0;
 
     /**
      * Is task
@@ -57,7 +57,7 @@ class SubCategory implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_task", nullable=false, options={"default": 0})
      */
-    protected $isTask;
+    protected $isTask = 0;
 
     /**
      * Sub category name

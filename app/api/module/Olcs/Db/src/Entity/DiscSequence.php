@@ -40,7 +40,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_ni_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isNiSelfServe;
+    protected $isNiSelfServe = 0;
 
     /**
      * Is self serve
@@ -49,7 +49,7 @@ class DiscSequence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_self_serve", nullable=false, options={"default": 0})
      */
-    protected $isSelfServe;
+    protected $isSelfServe = 0;
 
     /**
      * R prefix

@@ -40,7 +40,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_external", nullable=false, options={"default": 0})
      */
-    protected $isExternal;
+    protected $isExternal = 0;
 
     /**
      * Licence
@@ -59,7 +59,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="maintenance", nullable=false, options={"default": 0})
      */
-    protected $maintenance;
+    protected $maintenance = 0;
 
     /**
      * Safety inspection
@@ -68,7 +68,7 @@ class Workshop implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_inspection", nullable=false, options={"default": 0})
      */
-    protected $safetyInspection;
+    protected $safetyInspection = 0;
 
     /**
      * Set the is external

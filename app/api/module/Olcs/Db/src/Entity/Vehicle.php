@@ -89,7 +89,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="section_26", nullable=false, options={"default": 0})
      */
-    protected $section26;
+    protected $section26 = 0;
 
     /**
      * Section26 curtail
@@ -98,7 +98,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="section_26_curtail", nullable=false, options={"default": 0})
      */
-    protected $section26Curtail;
+    protected $section26Curtail = 0;
 
     /**
      * Section26 revoked
@@ -107,7 +107,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="section_26_revoked", nullable=false, options={"default": 0})
      */
-    protected $section26Revoked;
+    protected $section26Revoked = 0;
 
     /**
      * Section26 suspend
@@ -116,7 +116,7 @@ class Vehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="section_26_suspend", nullable=false, options={"default": 0})
      */
-    protected $section26Suspend;
+    protected $section26Suspend = 0;
 
     /**
      * Licence vehicle

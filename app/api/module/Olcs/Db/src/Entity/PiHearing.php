@@ -91,7 +91,7 @@ class PiHearing implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_adjourned", nullable=false, options={"default": 0})
      */
-    protected $isAdjourned;
+    protected $isAdjourned = 0;
 
     /**
      * Pi

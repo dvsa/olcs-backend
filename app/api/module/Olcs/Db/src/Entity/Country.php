@@ -45,7 +45,7 @@ class Country implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_member_state", nullable=false, options={"default": 0})
      */
-    protected $isMemberState;
+    protected $isMemberState = 0;
 
     /**
      * Set the country desc

@@ -71,7 +71,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false, options={"default": 0})
      */
-    protected $publicationAppropriate;
+    protected $publicationAppropriate = 0;
 
     /**
      * Sufficient parking
@@ -80,7 +80,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false, options={"default": 0})
      */
-    protected $sufficientParking;
+    protected $sufficientParking = 0;
 
     /**
      * Set the ad placed

@@ -63,7 +63,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_msi", nullable=false, options={"default": 0})
      */
-    protected $isMsi;
+    protected $isMsi = 0;
 
     /**
      * No further action reason

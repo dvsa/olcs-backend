@@ -59,7 +59,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="processed", nullable=false, options={"default": 0})
      */
-    protected $processed;
+    protected $processed = 0;
 
     /**
      * Sender email address

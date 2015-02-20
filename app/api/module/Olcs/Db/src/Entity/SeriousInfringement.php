@@ -65,7 +65,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false, options={"default": 0})
      */
-    protected $erruResponseSent;
+    protected $erruResponseSent = 0;
 
     /**
      * Erru response time

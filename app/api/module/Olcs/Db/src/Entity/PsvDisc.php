@@ -41,7 +41,7 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="is_copy", nullable=false, options={"default": 0})
      */
-    protected $isCopy;
+    protected $isCopy = 0;
 
     /**
      * Licence
@@ -60,7 +60,7 @@ class PsvDisc implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false, options={"default": 0})
      */
-    protected $reprintRequired;
+    protected $reprintRequired = 0;
 
     /**
      * Set the is copy

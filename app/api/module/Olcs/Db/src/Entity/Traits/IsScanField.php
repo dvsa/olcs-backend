@@ -18,7 +18,7 @@ trait IsScanField
      *
      * @ORM\Column(type="boolean", name="is_scan", nullable=false, options={"default": 0})
      */
-    protected $isScan;
+    protected $isScan = 0;
 
     /**
      * Set the is scan

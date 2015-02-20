@@ -40,7 +40,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="bank_holiday_change", nullable=false, options={"default": 0})
      */
-    protected $bankHolidayChange;
+    protected $bankHolidayChange = 0;
 
     /**
      * Connection change
@@ -49,7 +49,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="connection_change", nullable=false, options={"default": 0})
      */
-    protected $connectionChange;
+    protected $connectionChange = 0;
 
     /**
      * Connection detail
@@ -67,7 +67,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="holiday_change", nullable=false, options={"default": 0})
      */
-    protected $holidayChange;
+    protected $holidayChange = 0;
 
     /**
      * Holiday detail
@@ -85,7 +85,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="not_available_change", nullable=false, options={"default": 0})
      */
-    protected $notAvailableChange;
+    protected $notAvailableChange = 0;
 
     /**
      * Not available detail
@@ -103,7 +103,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="police_change", nullable=false, options={"default": 0})
      */
-    protected $policeChange;
+    protected $policeChange = 0;
 
     /**
      * Police detail
@@ -121,7 +121,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="replacement_change", nullable=false, options={"default": 0})
      */
-    protected $replacementChange;
+    protected $replacementChange = 0;
 
     /**
      * Replacement detail
@@ -139,7 +139,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="special_occasion_change", nullable=false, options={"default": 0})
      */
-    protected $specialOccasionChange;
+    protected $specialOccasionChange = 0;
 
     /**
      * Special occasion detail
@@ -157,7 +157,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="timetable_change", nullable=false, options={"default": 0})
      */
-    protected $timetableChange;
+    protected $timetableChange = 0;
 
     /**
      * Timetable detail
@@ -175,7 +175,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="trc_change", nullable=false, options={"default": 0})
      */
-    protected $trcChange;
+    protected $trcChange = 0;
 
     /**
      * Trc detail
@@ -193,7 +193,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="unforseen_change", nullable=false, options={"default": 0})
      */
-    protected $unforseenChange;
+    protected $unforseenChange = 0;
 
     /**
      * Unforseen detail

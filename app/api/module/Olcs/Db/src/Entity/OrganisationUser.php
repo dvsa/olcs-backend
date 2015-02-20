@@ -44,7 +44,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_administrator", nullable=false, options={"default": 0})
      */
-    protected $isAdministrator;
+    protected $isAdministrator = 0;
 
     /**
      * Sftp access
@@ -53,7 +53,7 @@ class OrganisationUser implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="sftp_access", nullable=false, options={"default": 0})
      */
-    protected $sftpAccess;
+    protected $sftpAccess = 0;
 
     /**
      * User

@@ -52,7 +52,7 @@ class User implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="account_disabled", nullable=false, options={"default": 0})
      */
-    protected $accountDisabled;
+    protected $accountDisabled = 0;
 
     /**
      * Attempts
@@ -198,7 +198,7 @@ class User implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="must_reset_password", nullable=false, options={"default": 0})
      */
-    protected $mustResetPassword;
+    protected $mustResetPassword = 0;
 
     /**
      * Partner contact details

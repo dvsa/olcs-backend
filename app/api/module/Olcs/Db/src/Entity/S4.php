@@ -60,7 +60,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_true_s4", nullable=false, options={"default": 0})
      */
-    protected $isTrueS4;
+    protected $isTrueS4 = 0;
 
     /**
      * Outcome
@@ -78,7 +78,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="surrender_licence", nullable=false, options={"default": 0})
      */
-    protected $surrenderLicence;
+    protected $surrenderLicence = 0;
 
     /**
      * Initialise the collections

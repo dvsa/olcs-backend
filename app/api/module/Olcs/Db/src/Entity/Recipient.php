@@ -58,7 +58,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_objector", nullable=false, options={"default": 0})
      */
-    protected $isObjector;
+    protected $isObjector = 0;
 
     /**
      * Is police
@@ -67,7 +67,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_police", nullable=false, options={"default": 0})
      */
-    protected $isPolice;
+    protected $isPolice = 0;
 
     /**
      * Send app decision
@@ -76,7 +76,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_app_decision", nullable=false, options={"default": 0})
      */
-    protected $sendAppDecision;
+    protected $sendAppDecision = 0;
 
     /**
      * Send notices procs
@@ -85,7 +85,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false, options={"default": 0})
      */
-    protected $sendNoticesProcs;
+    protected $sendNoticesProcs = 0;
 
     /**
      * Traffic area

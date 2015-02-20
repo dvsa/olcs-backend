@@ -115,7 +115,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="witnesses", nullable=false, options={"default": 0})
      */
-    protected $witnesses;
+    protected $witnesses = 0;
 
     /**
      * Set the adjourned date

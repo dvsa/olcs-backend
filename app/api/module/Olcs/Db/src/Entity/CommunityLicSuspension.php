@@ -43,7 +43,7 @@ class CommunityLicSuspension implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="is_actioned", nullable=true, options={"default": 0})
      */
-    protected $isActioned;
+    protected $isActioned = 0;
 
     /**
      * Set the is actioned

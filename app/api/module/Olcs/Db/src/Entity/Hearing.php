@@ -84,7 +84,7 @@ class Hearing implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="witness_count", nullable=false, options={"default": 0})
      */
-    protected $witnessCount;
+    protected $witnessCount = 0;
 
     /**
      * Set the agreed by tc date

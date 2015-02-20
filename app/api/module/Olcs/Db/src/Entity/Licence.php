@@ -146,7 +146,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="safety_ins", nullable=false, options={"default": 0})
      */
-    protected $safetyIns;
+    protected $safetyIns = 0;
 
     /**
      * Safety ins trailers
@@ -219,7 +219,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false, options={"default": 0})
      */
-    protected $translateToWelsh;
+    protected $translateToWelsh = 0;
 
     /**
      * Transport consultant cd

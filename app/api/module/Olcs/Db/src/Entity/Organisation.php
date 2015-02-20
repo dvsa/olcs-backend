@@ -43,7 +43,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="allow_email", nullable=false, options={"default": 0})
      */
-    protected $allowEmail;
+    protected $allowEmail = 0;
 
     /**
      * Company cert seen
@@ -52,7 +52,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false, options={"default": 0})
      */
-    protected $companyCertSeen;
+    protected $companyCertSeen = 0;
 
     /**
      * Company or llp no
@@ -88,7 +88,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_irfo", nullable=false, options={"default": 0})
      */
-    protected $isIrfo;
+    protected $isIrfo = 0;
 
     /**
      * Is mlh
@@ -97,7 +97,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="is_mlh", nullable=false, options={"default": 0})
      */
-    protected $isMlh;
+    protected $isMlh = 0;
 
     /**
      * Lead tc area

@@ -38,7 +38,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_a", nullable=false, options={"default": 0})
      */
-    protected $cocA;
+    protected $cocA = 0;
 
     /**
      * Coc b
@@ -47,7 +47,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_b", nullable=false, options={"default": 0})
      */
-    protected $cocB;
+    protected $cocB = 0;
 
     /**
      * Coc c
@@ -56,7 +56,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_c", nullable=false, options={"default": 0})
      */
-    protected $cocC;
+    protected $cocC = 0;
 
     /**
      * Coc d
@@ -65,7 +65,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_d", nullable=false, options={"default": 0})
      */
-    protected $cocD;
+    protected $cocD = 0;
 
     /**
      * Coc t
@@ -74,7 +74,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesno", name="coc_t", nullable=false, options={"default": 0})
      */
-    protected $cocT;
+    protected $cocT = 0;
 
     /**
      * Irfo gv permit
@@ -93,7 +93,7 @@ class IrfoVehicle implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="version", nullable=true, options={"default": 1})
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Vrm

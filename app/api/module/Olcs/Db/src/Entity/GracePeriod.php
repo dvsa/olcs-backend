@@ -59,7 +59,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="integer", name="grace_period_no", nullable=false, options={"default": 1})
      */
-    protected $gracePeriodNo;
+    protected $gracePeriodNo = 1;
 
     /**
      * Is active
@@ -68,7 +68,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_active", nullable=false, options={"default": 0})
      */
-    protected $isActive;
+    protected $isActive = 0;
 
     /**
      * Period type

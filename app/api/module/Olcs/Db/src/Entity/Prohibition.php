@@ -67,7 +67,7 @@ class Prohibition implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="yesnonull", name="is_trailer", nullable=false, options={"default": 0})
      */
-    protected $isTrailer;
+    protected $isTrailer = 0;
 
     /**
      * Prohibition date

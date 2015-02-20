@@ -124,7 +124,7 @@ class Document implements Interfaces\EntityInterface
      *
      * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
      */
-    protected $isDigital;
+    protected $isDigital = 0;
 
     /**
      * Is read only
