@@ -3,6 +3,7 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `address`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
+TRUNCATE TABLE `application_tracking`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
@@ -151,6 +152,11 @@ INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modi
 (1,NULL,NULL,NULL,NULL,NULL,1),
 (2,NULL,NULL,NULL,NULL,NULL,1),
 (3,NULL,NULL,NULL,NULL,NULL,1);
+
+INSERT INTO `application_tracking` (`application_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES
+(1,NULL,NULL,NULL,NULL,1),
+(2,NULL,NULL,NULL,NULL,1),
+(3,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
