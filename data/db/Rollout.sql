@@ -3,6 +3,7 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `traffic_area`;
 TRUNCATE TABLE `category`;
+TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
