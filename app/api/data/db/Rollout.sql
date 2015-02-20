@@ -523,6 +523,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('com_lic_sts', 'cl_sts_void', 'Voided', null),
     ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
 
+    ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null),
+
  -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
  -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
  -- ('com_lic_sts', 'cl_sts_revoked', 'Revoked', 'Revoked'),

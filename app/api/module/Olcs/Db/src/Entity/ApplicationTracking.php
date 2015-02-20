@@ -6,23 +6,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
 
 /**
- * ApplicationCompletion Entity
+ * ApplicationTracking Entity
  *
  * Auto-Generated
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="application_completion",
+ * @ORM\Table(name="application_tracking",
  *    indexes={
- *        @ORM\Index(name="fk_application_completion_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_completion_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_application_tracking_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_tracking_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="fk_application_completion_application_id_udx", columns={"application_id"})
+ *        @ORM\UniqueConstraint(name="fk_application_tracking_application_id_udx", columns={"application_id"})
  *    }
  * )
  */
-class ApplicationCompletion implements Interfaces\EntityInterface
+class ApplicationTracking implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AddressesStatusField,
@@ -57,25 +57,16 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="applicationCompletions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
 
     /**
-     * Last section
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="last_section", length=255, nullable=true)
-     */
-    protected $lastSection;
-
-    /**
      * Set the application
      *
      * @param \Olcs\Db\Entity\Application $application
-     * @return ApplicationCompletion
+     * @return ApplicationTracking
      */
     public function setApplication($application)
     {
@@ -92,28 +83,5 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the last section
-     *
-     * @param string $lastSection
-     * @return ApplicationCompletion
-     */
-    public function setLastSection($lastSection)
-    {
-        $this->lastSection = $lastSection;
-
-        return $this;
-    }
-
-    /**
-     * Get the last section
-     *
-     * @return string
-     */
-    public function getLastSection()
-    {
-        return $this->lastSection;
     }
 }
