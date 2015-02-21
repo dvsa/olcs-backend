@@ -3,6 +3,7 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `traffic_area`;
 TRUNCATE TABLE `category`;
+TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
@@ -522,6 +523,12 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
     ('com_lic_sts', 'cl_sts_void', 'Voided', null),
     ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
+
+    ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
+    ('com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null),
 
  -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
  -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
@@ -1933,6 +1940,13 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (44, 'submission_section', 'waive-fee-late-fee', 'Waive fee / Late fee', NULL),
     (45, 'submission_section', 'surrender', 'Surrender', NULL),
     (46, 'submission_section', 'annex', 'Annex', NULL),
+
+    (47, 'submission_section', 'tm-details', 'TM details', NULL),
+    (48, 'submission_section', 'tm-qualifications', 'TM qualifications', NULL),
+    (49, 'submission_section', 'tm-responsibilities', 'TM responsibilities', NULL),
+    (50, 'submission_section', 'tm-other-employment', 'TM other employment', NULL),
+    (51, 'submission_section', 'tm-previous-history', 'TM previous history', NULL),
+
     (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
     (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
     (3, 'submission_type', 'submission_type_o_clo_psv', 'CLO (PSV)', NULL),
@@ -6862,6 +6876,23 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (4, 4), -- admin  sees notes
     (4, 5), -- admin can edit
     (4, 1); -- admin is admin
+
+INSERT INTO `financial_standing_rate` (
+    `id`,
+    `licence_type`,
+    `goods_or_psv`,
+    `deleted_date`,
+    `effective_from`,
+    `version`,
+    `first_vehicle_rate`,
+    `additional_vehicle_rate`
+) VALUES
+    (1, 'ltyp_sn', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (2, 'ltyp_si', 'lcat_gv', null, '2015-02-01', 1, 6000.00, 2900.00),
+    (3, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 2100.00, 700.00),
+    (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
+    (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00);
 
 SET foreign_key_checks = 1;
 

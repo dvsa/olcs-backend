@@ -3,6 +3,7 @@ SET foreign_key_checks = 0;
 TRUNCATE TABLE `address`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
+TRUNCATE TABLE `application_tracking`;
 TRUNCATE TABLE `application_operating_centre`;
 TRUNCATE TABLE `bus_reg`;
 TRUNCATE TABLE `bus_reg_other_service`;
@@ -103,6 +104,7 @@ TRUNCATE TABLE `community_lic_withdrawal`;
 TRUNCATE TABLE `community_lic_withdrawal_reason`;
 TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
+TRUNCATE TABLE `case_outcome`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -154,6 +156,11 @@ INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modi
 (1,NULL,NULL,NULL,NULL,NULL,1),
 (2,NULL,NULL,NULL,NULL,NULL,1),
 (3,NULL,NULL,NULL,NULL,NULL,1);
+
+INSERT INTO `application_tracking` (`application_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`) VALUES
+(1,NULL,NULL,NULL,NULL,1),
+(2,NULL,NULL,NULL,NULL,1),
+(3,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -1349,17 +1356,11 @@ VALUES
 	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `reason_id`, `created_by`,
+INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `type_id`, `created_by`,
     `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
 VALUES
-	(1, 1, 1, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 2, 2, NULL, NULL, NULL, NULL, NULL, 1);
-
-INSERT INTO `community_lic_suspension_reason_type` (`id`, `created_by`, `last_modified_by`, `created_on`,
-    `deleted_date`, `description`, `last_modified_on`, `version`)
-VALUES
-	(1, NULL, NULL, NULL, NULL, 'description 1', NULL, 1),
-	(2, NULL, NULL, NULL, NULL, 'description 2', NULL, 1);
+	(1, 1, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 2, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `community_lic_withdrawal` (`id`, `community_lic_id`, `created_by`, `last_modified_by`,
     `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
@@ -1367,17 +1368,11 @@ VALUES
 	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `reason_id`,
+INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `type_id`,
     `created_by`, `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
 VALUES
-	(1, 1, 1, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 2, 2, NULL, NULL, NULL, NULL, NULL, 1);
-
-INSERT INTO `community_lic_withdrawal_reason_type` (`id`, `created_by`, `last_modified_by`, `created_on`,
-    `deleted_date`, `description`, `last_modified_on`, `version`)
-VALUES
-	(1, NULL, NULL, NULL, NULL, 'description 1', NULL, 1),
-	(2, NULL, NULL, NULL, NULL, 'description 2', NULL, 1);
+	(1, 1, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 2, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `statement`
 (`id`, `contact_type`, `requestors_contact_details_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
