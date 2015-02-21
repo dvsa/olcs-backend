@@ -298,6 +298,62 @@ LOCK TABLES `application_completion` WRITE;
 /*!40000 ALTER TABLE `application_completion` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `application_tracking`
+--
+
+DROP TABLE IF EXISTS `application_tracking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `application_tracking` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Tracking status of each section of an online application.',
+  `application_id` int(11) NOT NULL,
+  `type_of_licence_status` int(11) DEFAULT NULL,
+  `business_type_status` int(11) DEFAULT NULL,
+  `business_details_status` int(11) DEFAULT NULL,
+  `addresses_status` int(11) DEFAULT NULL,
+  `people_status` int(11) DEFAULT NULL,
+  `taxi_phv_status` int(11) DEFAULT NULL,
+  `operating_centres_status` int(11) DEFAULT NULL,
+  `financial_evidence_status` int(11) DEFAULT NULL,
+  `transport_managers_status` int(11) DEFAULT NULL,
+  `vehicles_status` int(11) DEFAULT NULL,
+  `vehicles_psv_status` int(11) DEFAULT NULL,
+  `vehicles_declarations_status` int(11) DEFAULT NULL,
+  `discs_status` int(11) DEFAULT NULL,
+  `community_licences_status` int(11) DEFAULT NULL,
+  `safety_status` int(11) DEFAULT NULL,
+  `conditions_undertakings_status` int(11) DEFAULT NULL,
+  `financial_history_status` int(11) DEFAULT NULL,
+  `licence_history_status` int(11) DEFAULT NULL,
+  `convictions_penalties_status` int(11) DEFAULT NULL,
+  `undertakings_status` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `last_modified_by` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `fk_application_tracking_user1_idx` (`created_by`),
+  KEY `fk_application_tracking_user2_idx` (`last_modified_by`),
+  UNIQUE KEY `fk_application_tracking_application_id_udx` (`application_id`),
+  CONSTRAINT `fk_application_tracking_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `application_tracking`
+--
+
+LOCK TABLES `application_tracking` WRITE;
+/*!40000 ALTER TABLE `application_tracking` DISABLE KEYS */;
+/*!40000 ALTER TABLE `application_tracking` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `application_operating_centre`
 --
@@ -746,7 +802,6 @@ CREATE TABLE `cases` (
   `ecms_no` varchar(45) DEFAULT NULL,
   `open_date` datetime NOT NULL,
   `closed_date` datetime DEFAULT NULL COMMENT 'Date case closed.',
-  `outcome` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `description` varchar(1024) DEFAULT NULL COMMENT 'Short summary note in old system',
   `is_impounding` tinyint(1) NOT NULL DEFAULT '0',
@@ -771,7 +826,6 @@ CREATE TABLE `cases` (
   KEY `fk_cases_transport_manager1_idx` (`transport_manager_id`),
   KEY `fk_cases_ref_data1_idx` (`case_type`),
   KEY `fk_cases_ref_data2_idx` (`erru_case_type`),
-  KEY `fk_cases_ref_data3_idx` (`outcome`),
   CONSTRAINT `fk_case_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_case_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -779,8 +833,6 @@ CREATE TABLE `cases` (
   CONSTRAINT `fk_cases_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data1` FOREIGN KEY (`case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_cases_ref_data2` FOREIGN KEY (`erru_case_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
-  UPDATE NO ACTION,
-  CONSTRAINT `fk_cases_ref_data3` FOREIGN KEY (`outcome`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON
   UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Compliance case.  Can be for TMs or a licence. If licence can link to application and operating centres. Various types, such as public inquiry, impounding etc. Has several SLAs and a decision, stay, appeal process.';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -792,6 +844,40 @@ CREATE TABLE `cases` (
 LOCK TABLES `cases` WRITE;
 /*!40000 ALTER TABLE `cases` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cases` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `case_outcome`
+--
+
+DROP TABLE IF EXISTS `case_outcome`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE  `case_outcome` (
+  `outcome_case_id` int(11) NOT NULL COMMENT 'So called as ref_data already has a case property via case_category',
+  `outcome_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`outcome_case_id`, `outcome_id`),
+  KEY `fk_case_outcome_cases1_idx` (`outcome_case_id`),
+  KEY `fk_case_outcome_ref_data1_idx` (`outcome_id`),
+  CONSTRAINT `fk_case_outcome_cases1_idx`
+    FOREIGN KEY (`outcome_case_id`)
+    REFERENCES `cases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_case_outcome_ref_data1_idx`
+    FOREIGN KEY (`outcome_id`)
+    REFERENCES `ref_data` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `case_outcome`
+--
+
+LOCK TABLES `case_outcome` WRITE;
+/*!40000 ALTER TABLE `case_outcome` DISABLE KEYS */;
+/*!40000 ALTER TABLE `case_outcome` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -960,7 +1046,7 @@ DROP TABLE IF EXISTS `community_lic_suspension_reason`;
 CREATE TABLE `community_lic_suspension_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `community_lic_suspension_id` int(11) NOT NULL,
-  `reason_id` int(11) NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -969,11 +1055,11 @@ CREATE TABLE `community_lic_suspension_reason` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx` (`community_lic_suspension_id`),
-  KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx1` (`reason_id`),
+  KEY `fk_community_lic_suspension_reason_community_lic_suspension_idx1` (`type_id`),
   KEY `fk_community_lic_suspension_reason_user1_idx` (`created_by`),
   KEY `fk_community_lic_suspension_reason_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension1` FOREIGN KEY (`community_lic_suspension_id`) REFERENCES `community_lic_suspension` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension_r1` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_suspension_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_suspension_reason_community_lic_suspension_r1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Reasons for a suspension.';
@@ -1068,7 +1154,7 @@ DROP TABLE IF EXISTS `community_lic_withdrawal_reason`;
 CREATE TABLE `community_lic_withdrawal_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `community_lic_withdrawal_id` int(11) NOT NULL,
-  `reason_id` int(11) NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -1077,11 +1163,11 @@ CREATE TABLE `community_lic_withdrawal_reason` (
   `version` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx` (`community_lic_withdrawal_id`),
-  KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx1` (`reason_id`),
+  KEY `fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx1` (`type_id`),
   KEY `fk_community_lic_withdrawal_reason_user1_idx` (`created_by`),
   KEY `fk_community_lic_withdrawal_reason_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal1` FOREIGN KEY (`community_lic_withdrawal_id`) REFERENCES `community_lic_withdrawal` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal_r1` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_withdrawal_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_withdrawal_reason_community_lic_withdrawal_r1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Reasons for com lic withdrawal.';
@@ -2491,6 +2577,53 @@ LOCK TABLES `fee_type` WRITE;
 /*!40000 ALTER TABLE `fee_type` DISABLE KEYS */;
 /*!40000 ALTER TABLE `fee_type` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `financial_standing_rate`
+--
+
+/* note column types for FKs on the user table have been tweaked as they must exactly match the referenced table */
+
+DROP TABLE IF EXISTS `financial_standing_rate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `financial_standing_rate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `licence_type` VARCHAR(32) NOT NULL COMMENT 'e.g. Special Restricted',
+  `goods_or_psv` VARCHAR(32) NOT NULL COMMENT 'Goods or PSV',
+  `first_vehicle_rate` DECIMAL(10,2) DEFAULT NULL,
+  `additional_vehicle_rate` DECIMAL(10,2) DEFAULT NULL,
+  `deleted_date` DATE NULL COMMENT 'Logical delete',
+  `effective_from` DATE NOT NULL COMMENT 'Effective from',
+  `created_by` INT(11) NULL COMMENT 'User id of user who created record.',
+  `last_modified_by` INT(11) NULL COMMENT 'User id of user who last modified the record.',
+  `created_on` DATETIME(6) NULL COMMENT 'Date record created.',
+  `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
+  `version` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
+  PRIMARY KEY (`id`),
+  KEY `fk_financial_standing_rate_ref_data1_idx` (`licence_type`),
+  KEY `fk_financial_standing_rate_ref_data2_idx` (`goods_or_psv`),
+  KEY `fk_financial_standing_rate_user1_idx` (`created_by`),
+  KEY `fk_financial_standing_rate_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_financial_standing_rate_ref_data1` FOREIGN KEY (`licence_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_ref_data2` FOREIGN KEY (`goods_or_psv`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_financial_standing_rate_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = InnoDB DEFAULT CHARSET=latin1
+COMMENT = 'Used to calculate financial standing requirements for an operator';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `financial_standing_rate`
+--
+
+LOCK TABLES `financial_standing_rate` WRITE;
+/*!40000 ALTER TABLE `financial_standing_rate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `financial_standing_rate` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `goods_disc`
@@ -7158,12 +7291,12 @@ CREATE TABLE IF NOT EXISTS `tm_employment` (
   INDEX `fk_tm_employment_contact_details1_idx` (`contact_details_id` ASC),
   CONSTRAINT `fk_tm_employment_transport_manager1`
     FOREIGN KEY (`transport_manager_id`)
-    REFERENCES `olcs`.`transport_manager` (`id`)
+    REFERENCES `transport_manager` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_employment_contact_details1`
     FOREIGN KEY (`contact_details_id`)
-    REFERENCES `olcs`.`contact_details` (`id`)
+    REFERENCES `contact_details` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB DEFAULT CHARSET=latin1;
