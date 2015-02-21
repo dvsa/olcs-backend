@@ -521,7 +521,7 @@ CREATE TABLE `bus_reg_local_auth` (
   `bus_reg_id` int(11) NOT NULL,
   `local_authority_id` int(11) NOT NULL,
   PRIMARY KEY (`bus_reg_id`,`local_authority_id`),
-  UNIQUE KEY `bus_reg_la_unique` (`local_authority_id`,`bus_reg_id`),
+  KEY `fk_bus_reg_local_auth_bus_reg1_idx` (`bus_reg_id`),
   KEY `fk_bus_reg_local_auth_local_authority1_idx` (`local_authority_id`),
   CONSTRAINT `fk_bus_reg_local_auth_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_local_auth_local_authority1` FOREIGN KEY (`local_authority_id`) REFERENCES `local_authority` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -583,8 +583,8 @@ CREATE TABLE `bus_reg_traffic_area` (
   `bus_reg_id` int(11) NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
   PRIMARY KEY (`bus_reg_id`,`traffic_area_id`),
-  UNIQUE KEY `bus_reg_ta_unique` (`traffic_area_id`,`bus_reg_id`),
-  KEY `fk_bus_reg_local_auth_local_authority1_idx` (`traffic_area_id`),
+  KEY `fk_bus_reg_traffic_area_bus_reg_idx` (`bus_reg_id`),
+  KEY `fk_bus_reg_traffic_area_traffic_area1_idx` (`traffic_area_id`),
   CONSTRAINT `fk_bus_reg_traffic_area_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_traffic_area_traffic_area1` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
