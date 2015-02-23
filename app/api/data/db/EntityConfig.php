@@ -1272,12 +1272,24 @@ return array(
                 'entity' => 'Licence',
                 'property' => 'tmLicence'
             ),
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'tmLicence'
+            ),
         )
     ),
     'transport_manager_application' => array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
+                'property' => 'tmApplication'
+            ),
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
                 'property' => 'tmApplication'
             ),
         )
