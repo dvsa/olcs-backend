@@ -33,7 +33,8 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OrganisationManyToOne,
-        Traits\PersonManyToOne;
+        Traits\PersonManyToOne,
+        Traits\Position45Field;
 
     /**
      * Action
