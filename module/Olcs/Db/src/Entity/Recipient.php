@@ -56,7 +56,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_objector", nullable=false)
+     * @ORM\Column(type="yesno", name="is_objector", nullable=false, options={"default": 0})
      */
     protected $isObjector = 0;
 
@@ -65,7 +65,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_police", nullable=false)
+     * @ORM\Column(type="yesno", name="is_police", nullable=false, options={"default": 0})
      */
     protected $isPolice = 0;
 
@@ -74,7 +74,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="send_app_decision", nullable=false)
+     * @ORM\Column(type="yesno", name="send_app_decision", nullable=false, options={"default": 0})
      */
     protected $sendAppDecision = 0;
 
@@ -83,7 +83,7 @@ class Recipient implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false)
+     * @ORM\Column(type="yesno", name="send_notices_procs", nullable=false, options={"default": 0})
      */
     protected $sendNoticesProcs = 0;
 

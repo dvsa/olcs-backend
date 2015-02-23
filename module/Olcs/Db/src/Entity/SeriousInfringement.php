@@ -63,7 +63,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false)
+     * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false, options={"default": 0})
      */
     protected $erruResponseSent = 0;
 

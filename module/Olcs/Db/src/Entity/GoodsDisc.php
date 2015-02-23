@@ -40,7 +40,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_copy", nullable=false)
+     * @ORM\Column(type="yesno", name="is_copy", nullable=false, options={"default": 0})
      */
     protected $isCopy = 0;
 
@@ -59,7 +59,7 @@ class GoodsDisc implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="reprint_required", nullable=false)
+     * @ORM\Column(type="yesno", name="reprint_required", nullable=false, options={"default": 0})
      */
     protected $reprintRequired = 0;
 

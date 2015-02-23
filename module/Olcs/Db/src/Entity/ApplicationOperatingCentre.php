@@ -69,7 +69,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false)
+     * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false, options={"default": 0})
      */
     protected $publicationAppropriate = 0;
 
@@ -78,7 +78,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
+     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false, options={"default": 0})
      */
     protected $sufficientParking = 0;
 

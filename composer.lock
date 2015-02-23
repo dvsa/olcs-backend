@@ -872,7 +872,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
-                "reference": "f310df1afae7427175be33df788c5fb71717c079"
+                "reference": "17c4f3d14b9b27a9fe633acc4ae9c3a944b42d92"
             },
             "require": {
                 "php": ">=5.4",
@@ -895,7 +895,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2014-12-12 09:17:49"
+            "time": "2015-02-18 11:17:23"
         },
         {
             "name": "psr/log",
@@ -941,27 +941,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "241d707e1409419ff527bf005268376c226b2a83"
+                "reference": "7f62b40e58a76be0f5b16fe2f7d09a4d2080899e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/241d707e1409419ff527bf005268376c226b2a83",
-                "reference": "241d707e1409419ff527bf005268376c226b2a83",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/7f62b40e58a76be0f5b16fe2f7d09a4d2080899e",
+                "reference": "7f62b40e58a76be0f5b16fe2f7d09a4d2080899e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.3.3",
                 "psr/log": "~1.0"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.4",
-                "guzzlehttp/guzzle": "4.2.*",
                 "munkie/elasticsearch-thrift-php": "1.4.*",
                 "phpunit/phpunit": "4.1.*"
             },
             "suggest": {
                 "egeloen/http-adapter": "Allow using httpadapter transport",
-                "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport",
+                "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport (Requires php 5.4)",
                 "monolog/monolog": "Logging request",
                 "munkie/elasticsearch-thrift-php": "Allow using thrift transport"
             },
@@ -993,7 +992,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-15 00:08:59"
+            "time": "2015-02-19 09:51:36"
         },
         {
             "name": "symfony/console",
@@ -1054,16 +1053,16 @@
         },
         {
             "name": "zendframework/zendframework",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "c878e047ab1c5dcfb201974bdff607be54ccb54b"
+                "reference": "886063aa5aee7476b77c380e25ecfacb2ee5ff4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/c878e047ab1c5dcfb201974bdff607be54ccb54b",
-                "reference": "c878e047ab1c5dcfb201974bdff607be54ccb54b",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/886063aa5aee7476b77c380e25ecfacb2ee5ff4c",
+                "reference": "886063aa5aee7476b77c380e25ecfacb2ee5ff4c",
                 "shasum": ""
             },
             "require": {
@@ -1168,7 +1167,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2015-01-14 16:44:17"
+            "time": "2015-02-18 19:48:16"
         },
         {
             "name": "zendframework/zendxml",
