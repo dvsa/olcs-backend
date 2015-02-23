@@ -413,6 +413,7 @@ CREATE TABLE IF NOT EXISTS `application_organisation_person` (
   `organisation_id` INT NOT NULL,
   `application_id` INT NOT NULL,
   `action` VARCHAR(1) NOT NULL,
+  `position` varchar(45) DEFAULT NULL,
   `last_modified_by` INT NULL COMMENT 'User id of user who last modified the record.',
   `created_by` INT NULL COMMENT 'User id of user who created record.',
   `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
