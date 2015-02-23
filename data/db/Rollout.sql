@@ -4082,7 +4082,7 @@ VALUES
     (113, 999999, 479, 113, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: In-Chambers Invitation Letter', '2002-05-14 17:45:01', 1),
     (114, 999999, 479, 114, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: In-Chambers Confirmation Letter', '2002-05-14 17:45:01', 1),
     (115, 999999, 479, 115, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Public Inquiry Adjournment Letter', '2002-05-14 17:45:01', 1),
-    (116, 999999, 479, 116, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Public Inquiry Call-up letter', '2002-05-14 17:45:01', 1),
+    (116, 2, 479, 116, 479, 49, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Public Inquiry Call-up letter', '2002-05-14 17:45:01', 1),
     (117, 999999, 479, 117, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Annex D', '2002-05-14 17:45:01', 1),
     (118, 999999, 479, 118, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Schedule of Prohibitions', '2002-05-14 17:45:01', 1),
     (119, 999999, 479, 119, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Vehicles Currently Used under Operators Licence PSV Annex E', '2002-05-14 17:45:01', 1),
@@ -4132,7 +4132,7 @@ VALUES
     (163, 999999, 479, 163, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes B', '2002-05-14 17:45:01', 1),
     (164, 999999, 479, 164, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes C', '2002-05-14 17:45:01', 1),
     (165, 999999, 479, 165, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes D', '2002-05-14 17:45:01', 1),
-    (166, 999999, 479, 166, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex B', '2002-05-14 17:45:01', 1),
+    (166, 2, 479, 166, 479, 49, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex B', '2002-05-14 17:45:01', 1),
     (167, 999999, 479, 167, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex C', '2002-05-14 17:45:01', 1),
     (168, 999999, 479, 168, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex D', '2002-05-14 17:45:01', 1),
     (169, 999999, 479, 169, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Request Further Investigation  Letter', '2002-05-14 17:45:01', 1),
@@ -4463,7 +4463,7 @@ VALUES
     (563, 999999, 1, 563, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Disciplinary Annex B (NI)', '2012-09-14 00:00:00', 1),
     (564, 999999, 1, 564, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Disciplinary Annex C (NI)', '2012-09-14 00:00:00', 1),
     (565, 999999, 1, 565, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Disciplinary Annex D (NI)', '2012-09-14 00:00:00', 1),
-    (566, 999999, 1, 566, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Disciplinary Public Inquiry Call-up letter (NI)', '2012-09-14 00:00:00', 1),
+    (566, 2, 1, 566, 1, 49, 1, 1, '2012-09-14 00:00:00', 'Compliance: Disciplinary Public Inquiry Call-up letter (NI)', '2012-09-14 00:00:00', 1),
     (567, 999999, 1, 567, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Environmental Annexes A (NI)', '2012-09-14 00:00:00', 1),
     (568, 999999, 1, 568, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Environmental Annexes B (NI)', '2012-09-14 00:00:00', 1),
     (569, 999999, 1, 569, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Compliance: Environmental Annexes C (NI)', '2012-09-14 00:00:00', 1),
@@ -4565,7 +4565,7 @@ VALUES
     (665, 999999, 1, 665, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_PIDecisionLetter - PSV (NI)', '2012-09-14 00:00:00', 1),
     (666, 999999, 1, 666, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_RequestForStayDecisionLetter (NI)', '2012-09-14 00:00:00', 1),
     (667, 999999, 1, 667, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_PIDisciplinaryAnnexA (NI)', '2012-09-14 00:00:00', 1),
-    (669, 999999, 479, 669, 479, 999999, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA', '2013-06-12 15:04:50', 1),
+    (669, 2, 479, 669, 479, 49, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA', '2013-06-12 15:04:50', 1),
     (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief', '2013-09-04 10:00:47', 1);
 
 
@@ -6239,7 +6239,7 @@ VALUES
     (113, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_InChambersInvitationLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: In-Chambers Invitation Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (114, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_InChambersConfirmationLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:In-Chambers Confirmation Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (115, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIAdjournmentLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:Public Inquiry Adjournment Letter', 0, NULL, '2002-05-14 17:45:01', 1),
-    (116, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryCallUpLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Disciplinary Public Inquiry Call-up letter', 0, NULL, '2002-05-14 17:45:01', 1),
+    (116, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryCallUpLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Disciplinary Public Inquiry Call-up letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (117, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryAnnexD.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:Disciplinary Annex D', 0, NULL, '2002-05-14 17:45:01', 1),
     (118, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_ScheduleofRoadworthinessProhibitionsAnnex1.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Schedule of Prohibitions', 0, NULL, '2002-05-14 17:45:01', 1),
     (119, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_VehiclesCurrentlyUsedUnderOLPSVAnnexE.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Vehicles Currently Used under Operators Licence PSV Annex E', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6279,7 +6279,7 @@ VALUES
     (153, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIBusRegistrationCallUpLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Bus Registration: Public Inquiry Call-up Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (154, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIBusRegistrationCallUpLetterAnnexA.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Bus Registration: Public Inquiry Call-up Annex A', 0, NULL, '2002-05-14 17:45:01', 1),
     (155, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIBusRegistrationCallUpLetterScheduleServicesAnnex.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Bus Registration:Schedule of Registered Bus Services Annex 1', 0, NULL, '2002-05-14 17:45:01', 1),
-    (156, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDecisionLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Public Inquiry Decision Letter', 0, NULL, '2002-05-14 17:45:01', 1),
+    (156, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/Comp_PIDecisionLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Public Inquiry Decision Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (157, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryAnnexA.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:Disciplinary Annex A', 0, NULL, '2002-05-14 17:45:01', 1),
     (158, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryAnnexB.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:Disciplinary Annex B', 0, NULL, '2002-05-14 17:45:01', 1),
     (159, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDisciplinaryAnnexC.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance:Disciplinary Annex C', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6620,7 +6620,7 @@ VALUES
     (563, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIDisciplinaryAnnexB.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Disciplinary Annex B (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (564, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIDisciplinaryAnnexC.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Disciplinary Annex C (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (565, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIDisciplinaryAnnexD.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Disciplinary Annex D (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (566, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIDisciplinaryCallUpLetter.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Disciplinary Public Inquiry Call-up letter (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (566, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 1, NULL, 1, NULL, '/templates/Comp_PIDisciplinaryCallUpLetter.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Disciplinary Public Inquiry Call-up letter (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (567, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIEnvironmentalCallUpLetterAnnexA.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Environmental Annexes A (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (568, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIEnvironmentalCallUpLetterAnnexB.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Environmental Annexes B (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (569, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/Comp_PIEnvironmentalCallUpLetterAnnexC.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'Compliance: Environmental Annexes C (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -6722,7 +6722,7 @@ VALUES
     (665, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/TM_Comp_PIDecisionLetterPSV.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_PIDecisionLetter - PSV (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (666, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/TM_Comp_RequestForStayDecisionLetter.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_RequestForStayDecisionLetter (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (667, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/TM_Comp_PIDisciplinaryAnnexA.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_PIDisciplinaryAnnexA (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL, 'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
+    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL, 'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
     (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0, NULL, '2013-09-04 10:00:47', 1);
 
 /* Test documents */
