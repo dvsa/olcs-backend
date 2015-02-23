@@ -392,6 +392,15 @@ class BusReg implements Interfaces\EntityInterface
     protected $startPoint;
 
     /**
+     * Status change date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="status_change_date", nullable=true)
+     */
+    protected $statusChangeDate;
+
+    /**
      * Stopping arrangements
      *
      * @var string
@@ -1447,6 +1456,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getStartPoint()
     {
         return $this->startPoint;
+    }
+
+    /**
+     * Set the status change date
+     *
+     * @param \DateTime $statusChangeDate
+     * @return BusReg
+     */
+    public function setStatusChangeDate($statusChangeDate)
+    {
+        $this->statusChangeDate = $statusChangeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the status change date
+     *
+     * @return \DateTime
+     */
+    public function getStatusChangeDate()
+    {
+        return $this->statusChangeDate;
     }
 
     /**
