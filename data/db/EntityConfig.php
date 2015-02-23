@@ -1226,6 +1226,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'previousConviction'
             )
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'previousConviction'
+            )
         )
     ),
     'private_hire_licence' => array(
@@ -1281,6 +1287,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
                 'property' => 'qualification'
+            ),
+        )
+    ),
+    'tm_employment' => array(
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'employment'
             ),
         )
     ),

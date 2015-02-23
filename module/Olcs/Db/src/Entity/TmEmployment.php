@@ -31,7 +31,6 @@ class TmEmployment implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\CustomLastModifiedOnField,
         Traits\Position45Field,
-        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -60,6 +59,16 @@ class TmEmployment implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
      */
     protected $lastModifiedBy;
+
+    /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="employments")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
+     */
+    protected $transportManager;
 
     /**
      * Set the created by
@@ -128,5 +137,28 @@ class TmEmployment implements Interfaces\EntityInterface
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return TmEmployment
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
     }
 }

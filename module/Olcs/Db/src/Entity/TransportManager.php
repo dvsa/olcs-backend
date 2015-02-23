@@ -115,6 +115,24 @@ class TransportManager implements Interfaces\EntityInterface
     protected $otherLicences;
 
     /**
+     * Previous conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousConviction", mappedBy="transportManager")
+     */
+    protected $previousConvictions;
+
+    /**
+     * Employment
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmEmployment", mappedBy="transportManager")
+     */
+    protected $employments;
+
+    /**
      * Qualification
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -130,6 +148,8 @@ class TransportManager implements Interfaces\EntityInterface
     {
         $this->documents = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
+        $this->previousConvictions = new ArrayCollection();
+        $this->employments = new ArrayCollection();
         $this->qualifications = new ArrayCollection();
     }
 
@@ -386,6 +406,126 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->otherLicences->contains($otherLicences)) {
             $this->otherLicences->removeElement($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the previous conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function setPreviousConvictions($previousConvictions)
+    {
+        $this->previousConvictions = $previousConvictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousConvictions()
+    {
+        return $this->previousConvictions;
+    }
+
+    /**
+     * Add a previous convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function addPreviousConvictions($previousConvictions)
+    {
+        if ($previousConvictions instanceof ArrayCollection) {
+            $this->previousConvictions = new ArrayCollection(
+                array_merge(
+                    $this->previousConvictions->toArray(),
+                    $previousConvictions->toArray()
+                )
+            );
+        } elseif (!$this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->add($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function removePreviousConvictions($previousConvictions)
+    {
+        if ($this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->removeElement($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the employment
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function setEmployments($employments)
+    {
+        $this->employments = $employments;
+
+        return $this;
+    }
+
+    /**
+     * Get the employments
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEmployments()
+    {
+        return $this->employments;
+    }
+
+    /**
+     * Add a employments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function addEmployments($employments)
+    {
+        if ($employments instanceof ArrayCollection) {
+            $this->employments = new ArrayCollection(
+                array_merge(
+                    $this->employments->toArray(),
+                    $employments->toArray()
+                )
+            );
+        } elseif (!$this->employments->contains($employments)) {
+            $this->employments->add($employments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a employments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function removeEmployments($employments)
+    {
+        if ($this->employments->contains($employments)) {
+            $this->employments->removeElement($employments);
         }
 
         return $this;
