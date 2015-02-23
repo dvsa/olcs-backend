@@ -25,7 +25,7 @@ class LegacyCaseAction implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_driver", nullable=false)
+     * @ORM\Column(type="yesno", name="is_driver", nullable=false, options={"default": 0})
      */
     protected $isDriver = 0;
 

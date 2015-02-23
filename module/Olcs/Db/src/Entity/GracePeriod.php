@@ -57,7 +57,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="grace_period_no", nullable=false)
+     * @ORM\Column(type="integer", name="grace_period_no", nullable=false, options={"default": 1})
      */
     protected $gracePeriodNo = 1;
 
@@ -66,7 +66,7 @@ class GracePeriod implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_active", nullable=false)
+     * @ORM\Column(type="boolean", name="is_active", nullable=false, options={"default": 0})
      */
     protected $isActive = 0;
 

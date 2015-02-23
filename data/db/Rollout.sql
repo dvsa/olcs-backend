@@ -23,6 +23,7 @@ TRUNCATE TABLE `variation_reason`;
 TRUNCATE TABLE `role`;
 TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
+TRUNCATE TABLE `financial_standing_rate`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -6851,13 +6852,14 @@ INSERT INTO `role` (`id`, `role`) VALUES
     (3, 'case-worker'),
     (4, 'admin');
 
-INSERT INTO `permission` (`id`, `name`) VALUES
-    (1, 'admin'),
-    (2, 'documents'),
-    (3, 'case'),
-    (4, 'notes'),
-    (5, 'edit'),
-    (6, 'view');
+-- @TODO Added some some code values to temporarily fix strict mode errors
+INSERT INTO `permission` (`id`, `name`, `code`) VALUES
+    (1, 'admin', 'ADMIN'),
+    (2, 'documents', 'DOCUM'),
+    (3, 'case', 'CASE'),
+    (4, 'notes', 'NOTES'),
+    (5, 'edit', 'EDIT'),
+    (6, 'view', 'VIEW');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (1, 6), -- all roles have view
