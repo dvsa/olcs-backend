@@ -1280,20 +1280,6 @@ return array(
             ),
         )
     ),
-    'transport_manager_application' => array(
-        'application_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Application',
-                'property' => 'tmApplication'
-            ),
-        ),
-        'transport_manager_id' => array(
-            'inversedBy' => array(
-                'entity' => 'TransportManager',
-                'property' => 'tmApplication'
-            ),
-        )
-    ),
     'tm_qualification' => array(
         'transport_manager_id' => array(
             'inversedBy' => array(
@@ -1358,6 +1344,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'transportManager'
             )
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'tmApplication'
+            ),
         )
     ),
     'statement' => array(
