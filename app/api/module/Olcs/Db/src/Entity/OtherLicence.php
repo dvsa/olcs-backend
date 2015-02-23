@@ -28,7 +28,7 @@ class OtherLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AdditionalInformation4000Field,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\DisqualificationDateField,
