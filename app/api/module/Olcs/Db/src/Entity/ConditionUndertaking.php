@@ -109,7 +109,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false)
+     * @ORM\Column(type="yesno", name="is_approved", nullable=false, options={"default": 0})
      */
     protected $isApproved = 0;
 
@@ -118,7 +118,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_draft", nullable=false)
+     * @ORM\Column(type="yesno", name="is_draft", nullable=false, options={"default": 0})
      */
     protected $isDraft = 0;
 
@@ -127,7 +127,7 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fulfilled", nullable=false, options={"default": 0})
      */
     protected $isFulfilled = 0;
 

@@ -57,7 +57,7 @@ class InspectionEmail implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="processed", nullable=false)
+     * @ORM\Column(type="yesno", name="processed", nullable=false, options={"default": 0})
      */
     protected $processed = 0;
 
