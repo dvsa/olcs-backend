@@ -84,7 +84,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_copied", nullable=false)
+     * @ORM\Column(type="yesno", name="is_copied", nullable=false, options={"default": 0})
      */
     protected $isCopied = 0;
 
@@ -93,7 +93,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_in_time", nullable=false)
+     * @ORM\Column(type="yesno", name="is_in_time", nullable=false, options={"default": 0})
      */
     protected $isInTime = 0;
 
@@ -102,7 +102,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false)
+     * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false, options={"default": 0})
      */
     protected $isPublicInquiry = 0;
 
@@ -111,7 +111,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_valid", nullable=false)
+     * @ORM\Column(type="yesno", name="is_valid", nullable=false, options={"default": 0})
      */
     protected $isValid = 0;
 
@@ -120,7 +120,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false)
+     * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false, options={"default": 0})
      */
     protected $isWillingToAttendPi = 0;
 
@@ -129,7 +129,7 @@ class Opposition implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_withdrawn", nullable=false)
+     * @ORM\Column(type="yesno", name="is_withdrawn", nullable=false, options={"default": 0})
      */
     protected $isWithdrawn = 0;
 
