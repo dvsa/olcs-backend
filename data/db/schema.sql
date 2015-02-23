@@ -504,6 +504,7 @@ CREATE TABLE `bus_reg` (
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
+  `status_change_date` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
   `version` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
