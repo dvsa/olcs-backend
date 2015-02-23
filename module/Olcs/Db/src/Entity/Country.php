@@ -43,7 +43,7 @@ class Country implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_member_state", nullable=false)
+     * @ORM\Column(type="yesno", name="is_member_state", nullable=false, options={"default": 0})
      */
     protected $isMemberState = 0;
 

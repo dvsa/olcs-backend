@@ -16,7 +16,7 @@ trait IsCancelledField
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false)
+     * @ORM\Column(type="yesno", name="is_cancelled", nullable=false, options={"default": 0})
      */
     protected $isCancelled = 0;
 

@@ -61,7 +61,7 @@ class SystemInfoMessage implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_deleted", nullable=false)
+     * @ORM\Column(type="yesno", name="is_deleted", nullable=false, options={"default": 0})
      */
     protected $isDeleted = 0;
 

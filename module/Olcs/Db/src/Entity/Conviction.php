@@ -103,7 +103,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false)
+     * @ORM\Column(type="yesno", name="is_dealt_with", nullable=false, options={"default": 0})
      */
     protected $isDealtWith = 0;
 
@@ -112,7 +112,7 @@ class Conviction implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_declared", nullable=false)
+     * @ORM\Column(type="yesno", name="is_declared", nullable=false, options={"default": 0})
      */
     protected $isDeclared = 0;
 

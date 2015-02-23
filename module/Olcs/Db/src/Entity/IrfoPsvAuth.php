@@ -45,7 +45,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_issued", nullable=false)
+     * @ORM\Column(type="integer", name="copies_issued", nullable=false, options={"default": 0})
      */
     protected $copiesIssued = 0;
 
@@ -54,7 +54,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_issued_total", nullable=false)
+     * @ORM\Column(type="integer", name="copies_issued_total", nullable=false, options={"default": 0})
      */
     protected $copiesIssuedTotal = 0;
 
@@ -63,7 +63,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_required", nullable=false)
+     * @ORM\Column(type="integer", name="copies_required", nullable=false, options={"default": 0})
      */
     protected $copiesRequired = 0;
 
@@ -72,7 +72,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_required_total", nullable=false)
+     * @ORM\Column(type="integer", name="copies_required_total", nullable=false, options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
 
@@ -109,7 +109,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false, options={"default": 0})
      */
     protected $isFeeExemptAnnual = 0;
 
@@ -118,7 +118,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false, options={"default": 0})
      */
     protected $isFeeExemptApplication = 0;
 
