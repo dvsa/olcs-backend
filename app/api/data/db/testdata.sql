@@ -796,7 +796,7 @@ VALUES
 	(1, NULL, NULL, 7, '', 1, NULL, NULL, NULL, 2, 2, 2, 2, 2, NULL, NULL, NULL, NULL, 1),
 	(2, NULL, NULL, 7, '', 2, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1),
 	(3, NULL, NULL, 7, '', 3, NULL, NULL, NULL, 2, 2, 2, 2, 2, NULL, NULL, NULL, NULL, 1),
-	(4, NULL, NULL, 7, '', 3, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
+	(4, NULL, NULL, 41, '', 3, NULL, NULL, NULL, 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
@@ -811,16 +811,25 @@ VALUES
 INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
 VALUES
 	(1, 16),
-	(2, 16);
+	(2, 16),
+	(3, 21),
+	(4, 37),
+	(4, 39),
+	(4, 48);
 
 INSERT INTO `tm_licence_oc` (`transport_manager_licence_id`, `operating_centre_id`)
 VALUES
-	(1, 16);
+	(1, 16),
+	(3, 16),
+	(3, 21),
+	(4, 16);
 
 INSERT INTO `tm_employment` (`id`, `transport_manager_id`, `contact_details_id`, `employer_name`, `position`, `hours_per_week`, `created_by`, `created_on`, `version`)
 VALUES
-    (1, 1, 116, 'TESCO', 'Manager', 10, 1, '2014-01-01 10:10:10', 1),
-    (2, 1, 117, 'TESCO', 'Director', 15, 2, '2014-01-01 10:10:10', 1);
+    (1, 1, 116, 'TESCO', 'Manager', '10 hrs /  3 days per week', 1, '2014-01-01 10:10:10', 1),
+    (2, 1, 117, 'TESCO', 'Director', '15 hours over 4 days/wk', 2, '2014-01-01 10:10:10', 1),
+    (3, 3, 118, 'Sainsburys', 'Manager', '4 hours over 2 days / wk', 1, '2014-01-01 10:10:10', 1),
+    (4, 3, 119, 'Asda', 'Director', '15 hrs 3 days per week', 2, '2014-01-01 10:10:10', 1);
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
