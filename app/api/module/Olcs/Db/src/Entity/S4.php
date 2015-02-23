@@ -58,7 +58,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_true_s4", nullable=false)
+     * @ORM\Column(type="yesno", name="is_true_s4", nullable=false, options={"default": 0})
      */
     protected $isTrueS4 = 0;
 
@@ -76,7 +76,7 @@ class S4 implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="surrender_licence", nullable=false)
+     * @ORM\Column(type="yesno", name="surrender_licence", nullable=false, options={"default": 0})
      */
     protected $surrenderLicence = 0;
 

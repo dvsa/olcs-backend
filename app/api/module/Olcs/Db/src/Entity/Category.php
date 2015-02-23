@@ -36,7 +36,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_doc_category", nullable=false)
+     * @ORM\Column(type="yesno", name="is_doc_category", nullable=false, options={"default": 1})
      */
     protected $isDocCategory = 1;
 
@@ -45,7 +45,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_scan_category", nullable=false)
+     * @ORM\Column(type="boolean", name="is_scan_category", nullable=false, options={"default": 1})
      */
     protected $isScanCategory = 1;
 
@@ -54,7 +54,7 @@ class Category implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_task_category", nullable=false)
+     * @ORM\Column(type="yesno", name="is_task_category", nullable=false, options={"default": 1})
      */
     protected $isTaskCategory = 1;
 

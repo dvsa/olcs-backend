@@ -77,7 +77,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false, options={"default": 0})
      */
     protected $convictionsConfirmation = 0;
 
@@ -86,7 +86,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false, options={"default": 0})
      */
     protected $declarationConfirmation = 0;
 
@@ -122,7 +122,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false, options={"default": 0})
      */
     protected $insolvencyConfirmation = 0;
 
@@ -214,7 +214,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="override_ooo", nullable=false)
+     * @ORM\Column(type="yesno", name="override_ooo", nullable=false, options={"default": 0})
      */
     protected $overrideOoo = 0;
 
@@ -376,7 +376,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false)
+     * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false, options={"default": 0})
      */
     protected $safetyConfirmation = 0;
 

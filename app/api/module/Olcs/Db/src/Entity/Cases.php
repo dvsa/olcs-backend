@@ -146,7 +146,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_impounding", nullable=false)
+     * @ORM\Column(type="yesno", name="is_impounding", nullable=false, options={"default": 0})
      */
     protected $isImpounding = 0;
 
