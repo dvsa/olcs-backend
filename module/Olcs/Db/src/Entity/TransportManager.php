@@ -142,6 +142,15 @@ class TransportManager implements Interfaces\EntityInterface
     protected $qualifications;
 
     /**
+     * Tm application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerApplication", mappedBy="transportManager")
+     */
+    protected $tmApplications;
+
+    /**
      * Tm licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -160,6 +169,7 @@ class TransportManager implements Interfaces\EntityInterface
         $this->previousConvictions = new ArrayCollection();
         $this->employments = new ArrayCollection();
         $this->qualifications = new ArrayCollection();
+        $this->tmApplications = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
     }
 
@@ -596,6 +606,66 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->qualifications->contains($qualifications)) {
             $this->qualifications->removeElement($qualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function setTmApplications($tmApplications)
+    {
+        $this->tmApplications = $tmApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmApplications()
+    {
+        return $this->tmApplications;
+    }
+
+    /**
+     * Add a tm applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function addTmApplications($tmApplications)
+    {
+        if ($tmApplications instanceof ArrayCollection) {
+            $this->tmApplications = new ArrayCollection(
+                array_merge(
+                    $this->tmApplications->toArray(),
+                    $tmApplications->toArray()
+                )
+            );
+        } elseif (!$this->tmApplications->contains($tmApplications)) {
+            $this->tmApplications->add($tmApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function removeTmApplications($tmApplications)
+    {
+        if ($this->tmApplications->contains($tmApplications)) {
+            $this->tmApplications->removeElement($tmApplications);
         }
 
         return $this;
