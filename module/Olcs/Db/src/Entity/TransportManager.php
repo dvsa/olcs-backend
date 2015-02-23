@@ -142,6 +142,15 @@ class TransportManager implements Interfaces\EntityInterface
     protected $qualifications;
 
     /**
+     * Tm licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerLicence", mappedBy="transportManager")
+     */
+    protected $tmLicences;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -151,6 +160,7 @@ class TransportManager implements Interfaces\EntityInterface
         $this->previousConvictions = new ArrayCollection();
         $this->employments = new ArrayCollection();
         $this->qualifications = new ArrayCollection();
+        $this->tmLicences = new ArrayCollection();
     }
 
     /**
@@ -586,6 +596,66 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->qualifications->contains($qualifications)) {
             $this->qualifications->removeElement($qualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function setTmLicences($tmLicences)
+    {
+        $this->tmLicences = $tmLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmLicences()
+    {
+        return $this->tmLicences;
+    }
+
+    /**
+     * Add a tm licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function addTmLicences($tmLicences)
+    {
+        if ($tmLicences instanceof ArrayCollection) {
+            $this->tmLicences = new ArrayCollection(
+                array_merge(
+                    $this->tmLicences->toArray(),
+                    $tmLicences->toArray()
+                )
+            );
+        } elseif (!$this->tmLicences->contains($tmLicences)) {
+            $this->tmLicences->add($tmLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function removeTmLicences($tmLicences)
+    {
+        if ($this->tmLicences->contains($tmLicences)) {
+            $this->tmLicences->removeElement($tmLicences);
         }
 
         return $this;
