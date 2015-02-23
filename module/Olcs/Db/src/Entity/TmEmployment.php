@@ -27,7 +27,7 @@ class TmEmployment implements Interfaces\EntityInterface
         Traits\ContactDetailsManyToOneAlt1,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
-        Traits\HoursPerWeekField,
+        Traits\HoursPerWeek80Field,
         Traits\IdIdentity,
         Traits\CustomLastModifiedOnField,
         Traits\Position45Field,
