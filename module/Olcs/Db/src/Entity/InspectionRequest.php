@@ -31,7 +31,7 @@ use Olcs\Db\Entity\Traits;
 class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

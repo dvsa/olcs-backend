@@ -409,22 +409,29 @@ UNLOCK TABLES;
 CREATE TABLE IF NOT EXISTS `application_organisation_person` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `person_id` INT NOT NULL,
+  `original_person_id` INT NULL,
   `organisation_id` INT NOT NULL,
   `application_id` INT NOT NULL,
   `action` VARCHAR(1) NOT NULL,
-  `last_modified_by` INT NOT NULL COMMENT 'User id of user who last modified the record.',
-  `created_by` INT NOT NULL COMMENT 'User id of user who created record.',
+  `last_modified_by` INT NULL COMMENT 'User id of user who last modified the record.',
+  `created_by` INT NULL COMMENT 'User id of user who created record.',
   `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
   `created_on` DATETIME(6) NULL COMMENT 'Date record created.',
   `version` SMALLINT NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
   PRIMARY KEY (`id`),
   INDEX `ix_application_organisation_person_person_id` (`person_id` ASC),
+  INDEX `ix_application_organisation_person_original_person_id` (`original_person_id` ASC),
   INDEX `ix_application_organisation_person_organisation_id` (`organisation_id` ASC),
   INDEX `ix_application_organisation_person_application_id` (`application_id` ASC),
   INDEX `ix_application_organisation_person_last_modified_by` (`last_modified_by` ASC),
   INDEX `ix_application_organisation_person_created_by` (`created_by` ASC),
   CONSTRAINT `fk_application_organisation_person_person_id_person_id`
     FOREIGN KEY (`person_id`)
+    REFERENCES `person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_original_person_id`
+    FOREIGN KEY (`original_person_id`)
     REFERENCES `person` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

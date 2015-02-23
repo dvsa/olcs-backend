@@ -15,6 +15,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="application_organisation_person",
  *    indexes={
  *        @ORM\Index(name="ix_application_organisation_person_person_id", columns={"person_id"}),
+ *        @ORM\Index(name="ix_application_organisation_person_original_person_id", columns={"original_person_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_last_modified_by", columns={"last_modified_by"}),
@@ -25,8 +26,11 @@ use Olcs\Db\Entity\Traits;
 class ApplicationOrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\ApplicationManyToOne,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne;
@@ -41,34 +45,14 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
     protected $action;
 
     /**
-     * Application
+     * Original person
      *
-     * @var \Olcs\Db\Entity\Application
+     * @var \Olcs\Db\Entity\Person
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
+     * @ORM\JoinColumn(name="original_person_id", referencedColumnName="id", nullable=true)
      */
-    protected $application;
-
-    /**
-     * Created by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=false)
-     */
-    protected $createdBy;
-
-    /**
-     * Last modified by
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=false)
-     */
-    protected $lastModifiedBy;
+    protected $originalPerson;
 
     /**
      * Version
@@ -103,72 +87,26 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the application
+     * Set the original person
      *
-     * @param \Olcs\Db\Entity\Application $application
+     * @param \Olcs\Db\Entity\Person $originalPerson
      * @return ApplicationOrganisationPerson
      */
-    public function setApplication($application)
+    public function setOriginalPerson($originalPerson)
     {
-        $this->application = $application;
+        $this->originalPerson = $originalPerson;
 
         return $this;
     }
 
     /**
-     * Get the application
+     * Get the original person
      *
-     * @return \Olcs\Db\Entity\Application
+     * @return \Olcs\Db\Entity\Person
      */
-    public function getApplication()
+    public function getOriginalPerson()
     {
-        return $this->application;
-    }
-
-    /**
-     * Set the created by
-     *
-     * @param \Olcs\Db\Entity\User $createdBy
-     * @return ApplicationOrganisationPerson
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param \Olcs\Db\Entity\User $lastModifiedBy
-     * @return ApplicationOrganisationPerson
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
+        return $this->originalPerson;
     }
 
     /**

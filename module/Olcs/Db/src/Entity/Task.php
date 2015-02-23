@@ -33,7 +33,7 @@ use Olcs\Db\Entity\Traits;
 class Task implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\CategoryManyToOne,
