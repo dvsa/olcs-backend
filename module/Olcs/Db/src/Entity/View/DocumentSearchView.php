@@ -11,15 +11,20 @@ namespace Olcs\Db\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Interfaces;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Olcs\Db\Entity\Traits\CustomDeletedDateField;
 
 /**
  * Document Search View
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="document_search_view")
  */
 class DocumentSearchView implements Interfaces\EntityInterface
 {
+    use CustomDeletedDateField;
+
     /**
      * Id
      *

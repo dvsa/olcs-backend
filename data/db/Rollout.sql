@@ -6954,7 +6954,7 @@ CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.sub_category_id, d.description,
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital, r.description as document_type,
+		d.file_extension, d.is_digital, d.deleted_date, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id
     FROM `document` d
@@ -6970,7 +6970,9 @@ CREATE VIEW document_search_view AS
 
     LEFT JOIN cases c ON d.case_id = c.id
 
-    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id;
+    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
+
+    WHERE d.deleted_date is NULL;
 
 DROP TABLE IF EXISTS vehicle_history_view;
 DROP VIEW IF EXISTS vehicle_history_view;
