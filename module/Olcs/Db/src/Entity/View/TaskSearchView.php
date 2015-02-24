@@ -84,6 +84,15 @@ class TaskSearchView implements Interfaces\EntityInterface
     protected $description;
 
     /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="team_name")
+     */
+    protected $teamName;
+
+    /**
      * Operator name
      *
      * @var string
@@ -311,13 +320,13 @@ class TaskSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the name
+     * Get the team name
      *
      * @return string
      */
-    public function getName()
+    public function getTeamName()
     {
-        return $this->name;
+        return $this->teamName;
     }
 
     /**
@@ -328,6 +337,16 @@ class TaskSearchView implements Interfaces\EntityInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

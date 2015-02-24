@@ -1077,7 +1077,7 @@ INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assi
     (5,24,2,44,null,4,'A case task','2010-02-01',1);
 /* Unlinked task */
 INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,67,null,null,'Unassigned task','2010-07-03',1);
+    (6,7,67,null,4,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
     (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
