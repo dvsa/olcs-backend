@@ -41,7 +41,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="allow_email", nullable=false)
+     * @ORM\Column(type="yesno", name="allow_email", nullable=false, options={"default": 0})
      */
     protected $allowEmail = 0;
 
@@ -50,7 +50,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false)
+     * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false, options={"default": 0})
      */
     protected $companyCertSeen = 0;
 
@@ -86,7 +86,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_irfo", nullable=false)
+     * @ORM\Column(type="yesno", name="is_irfo", nullable=false, options={"default": 0})
      */
     protected $isIrfo = 0;
 
@@ -95,7 +95,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_mlh", nullable=false)
+     * @ORM\Column(type="yesno", name="is_mlh", nullable=false, options={"default": 0})
      */
     protected $isMlh = 0;
 

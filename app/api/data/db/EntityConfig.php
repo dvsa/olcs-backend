@@ -888,14 +888,6 @@ return array(
             'type' => 'yesno'
         )
     ),
-    'bus_reg_traffic_area' => array(
-        'txc_missing' => array(
-            'type' => 'yesnonull'
-        ),
-        'txc_not_required' => array(
-            'type' => 'yesnonull'
-        )
-    ),
     'bus_short_notice' => array(
         'bank_holiday_change' => array(
             'type' => 'yesno'

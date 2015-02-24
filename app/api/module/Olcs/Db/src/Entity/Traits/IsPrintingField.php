@@ -16,7 +16,7 @@ trait IsPrintingField
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_printing", nullable=false)
+     * @ORM\Column(type="yesno", name="is_printing", nullable=false, options={"default": 0})
      */
     protected $isPrinting = 0;
 
