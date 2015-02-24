@@ -144,7 +144,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="safety_ins", nullable=false)
+     * @ORM\Column(type="yesno", name="safety_ins", nullable=false, options={"default": 0})
      */
     protected $safetyIns = 0;
 
@@ -217,7 +217,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false)
+     * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false, options={"default": 0})
      */
     protected $translateToWelsh = 0;
 

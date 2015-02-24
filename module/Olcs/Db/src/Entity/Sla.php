@@ -78,7 +78,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="public_holiday", nullable=false)
+     * @ORM\Column(type="boolean", name="public_holiday", nullable=false, options={"default": 0})
      */
     protected $publicHoliday = 0;
 
@@ -87,7 +87,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="weekend", nullable=false)
+     * @ORM\Column(type="boolean", name="weekend", nullable=false, options={"default": 0})
      */
     protected $weekend = 0;
 
