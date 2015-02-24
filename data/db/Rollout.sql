@@ -1942,11 +1942,11 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (45, 'submission_section', 'surrender', 'Surrender', NULL),
     (46, 'submission_section', 'annex', 'Annex', NULL),
 
-    (47, 'submission_section', 'tm-details', 'TM details', NULL),
-    (48, 'submission_section', 'tm-qualifications', 'TM qualifications', NULL),
-    (49, 'submission_section', 'tm-responsibilities', 'TM responsibilities', NULL),
-    (50, 'submission_section', 'tm-other-employment', 'TM other employment', NULL),
-    (51, 'submission_section', 'tm-previous-history', 'TM previous history', NULL),
+    (47, 'submission_section', 'tm-details', 'Transport Manager details', NULL),
+    (48, 'submission_section', 'tm-qualifications', 'Qualifications', NULL),
+    (49, 'submission_section', 'tm-responsibilities', 'Responsibilities', NULL),
+    (50, 'submission_section', 'tm-other-employment', 'Other employment', NULL),
+    (51, 'submission_section', 'tm-previous-history', 'Previous history', NULL),
 
     (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
     (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
