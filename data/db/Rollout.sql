@@ -6910,6 +6910,7 @@ CREATE VIEW task_search_view AS
        tsc.sub_category_name task_sub_type,
        t.sub_category_id sub_category_id,
        t.description,
+       te.name as team_name,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
        case when t.irfo_organisation_id is not null then 'IRFO Organisation'
@@ -6945,6 +6946,7 @@ CREATE VIEW task_search_view AS
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
    left join contact_details cd on (u.contact_details_id = cd.id)
+   left join team te on (t.assigned_to_team_id = te.id)
 ;
 
 DROP TABLE IF EXISTS document_search_view;
