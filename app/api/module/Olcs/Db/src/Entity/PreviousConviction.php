@@ -30,7 +30,6 @@ class PreviousConviction implements Interfaces\EntityInterface
         Traits\Notes4000Field,
         Traits\Penalty255Field,
         Traits\Title32Field,
-        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -60,6 +59,16 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
     protected $courtFpn;
+
+    /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="previousConvictions")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $transportManager;
 
     /**
      * Set the application
@@ -128,5 +137,28 @@ class PreviousConviction implements Interfaces\EntityInterface
     public function getCourtFpn()
     {
         return $this->courtFpn;
+    }
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return PreviousConviction
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
     }
 }
