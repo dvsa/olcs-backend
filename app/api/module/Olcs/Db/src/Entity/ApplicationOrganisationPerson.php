@@ -34,7 +34,8 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
-        Traits\Position45Field;
+        Traits\Position45Field,
+        Traits\CustomVersionField;
 
     /**
      * Action
@@ -54,15 +55,6 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="original_person_id", referencedColumnName="id", nullable=true)
      */
     protected $originalPerson;
-
-    /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
-     */
-    protected $version = 1;
 
     /**
      * Set the action
@@ -108,28 +100,5 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
     public function getOriginalPerson()
     {
         return $this->originalPerson;
-    }
-
-    /**
-     * Set the version
-     *
-     * @param int $version
-     * @return ApplicationOrganisationPerson
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the version
-     *
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
     }
 }
