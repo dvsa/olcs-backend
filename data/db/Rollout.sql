@@ -6970,9 +6970,7 @@ CREATE VIEW document_search_view AS
 
     LEFT JOIN cases c ON d.case_id = c.id
 
-    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-
-    WHERE d.deleted_date is NULL;
+    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id;
 
 DROP TABLE IF EXISTS vehicle_history_view;
 DROP VIEW IF EXISTS vehicle_history_view;
