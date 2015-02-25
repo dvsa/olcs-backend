@@ -115,6 +115,24 @@ class TransportManager implements Interfaces\EntityInterface
     protected $otherLicences;
 
     /**
+     * Previous conviction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousConviction", mappedBy="transportManager")
+     */
+    protected $previousConvictions;
+
+    /**
+     * Employment
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TmEmployment", mappedBy="transportManager")
+     */
+    protected $employments;
+
+    /**
      * Qualification
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -124,13 +142,35 @@ class TransportManager implements Interfaces\EntityInterface
     protected $qualifications;
 
     /**
+     * Tm application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerApplication", mappedBy="transportManager")
+     */
+    protected $tmApplications;
+
+    /**
+     * Tm licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TransportManagerLicence", mappedBy="transportManager")
+     */
+    protected $tmLicences;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
+        $this->previousConvictions = new ArrayCollection();
+        $this->employments = new ArrayCollection();
         $this->qualifications = new ArrayCollection();
+        $this->tmApplications = new ArrayCollection();
+        $this->tmLicences = new ArrayCollection();
     }
 
     /**
@@ -392,6 +432,126 @@ class TransportManager implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the previous conviction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function setPreviousConvictions($previousConvictions)
+    {
+        $this->previousConvictions = $previousConvictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the previous convictions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPreviousConvictions()
+    {
+        return $this->previousConvictions;
+    }
+
+    /**
+     * Add a previous convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function addPreviousConvictions($previousConvictions)
+    {
+        if ($previousConvictions instanceof ArrayCollection) {
+            $this->previousConvictions = new ArrayCollection(
+                array_merge(
+                    $this->previousConvictions->toArray(),
+                    $previousConvictions->toArray()
+                )
+            );
+        } elseif (!$this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->add($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a previous convictions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @return TransportManager
+     */
+    public function removePreviousConvictions($previousConvictions)
+    {
+        if ($this->previousConvictions->contains($previousConvictions)) {
+            $this->previousConvictions->removeElement($previousConvictions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the employment
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function setEmployments($employments)
+    {
+        $this->employments = $employments;
+
+        return $this;
+    }
+
+    /**
+     * Get the employments
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEmployments()
+    {
+        return $this->employments;
+    }
+
+    /**
+     * Add a employments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function addEmployments($employments)
+    {
+        if ($employments instanceof ArrayCollection) {
+            $this->employments = new ArrayCollection(
+                array_merge(
+                    $this->employments->toArray(),
+                    $employments->toArray()
+                )
+            );
+        } elseif (!$this->employments->contains($employments)) {
+            $this->employments->add($employments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a employments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $employments
+     * @return TransportManager
+     */
+    public function removeEmployments($employments)
+    {
+        if ($this->employments->contains($employments)) {
+            $this->employments->removeElement($employments);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the qualification
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $qualifications
@@ -446,6 +606,126 @@ class TransportManager implements Interfaces\EntityInterface
     {
         if ($this->qualifications->contains($qualifications)) {
             $this->qualifications->removeElement($qualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function setTmApplications($tmApplications)
+    {
+        $this->tmApplications = $tmApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmApplications()
+    {
+        return $this->tmApplications;
+    }
+
+    /**
+     * Add a tm applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function addTmApplications($tmApplications)
+    {
+        if ($tmApplications instanceof ArrayCollection) {
+            $this->tmApplications = new ArrayCollection(
+                array_merge(
+                    $this->tmApplications->toArray(),
+                    $tmApplications->toArray()
+                )
+            );
+        } elseif (!$this->tmApplications->contains($tmApplications)) {
+            $this->tmApplications->add($tmApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmApplications
+     * @return TransportManager
+     */
+    public function removeTmApplications($tmApplications)
+    {
+        if ($this->tmApplications->contains($tmApplications)) {
+            $this->tmApplications->removeElement($tmApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the tm licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function setTmLicences($tmLicences)
+    {
+        $this->tmLicences = $tmLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmLicences()
+    {
+        return $this->tmLicences;
+    }
+
+    /**
+     * Add a tm licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function addTmLicences($tmLicences)
+    {
+        if ($tmLicences instanceof ArrayCollection) {
+            $this->tmLicences = new ArrayCollection(
+                array_merge(
+                    $this->tmLicences->toArray(),
+                    $tmLicences->toArray()
+                )
+            );
+        } elseif (!$this->tmLicences->contains($tmLicences)) {
+            $this->tmLicences->add($tmLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmLicences
+     * @return TransportManager
+     */
+    public function removeTmLicences($tmLicences)
+    {
+        if ($this->tmLicences->contains($tmLicences)) {
+            $this->tmLicences->removeElement($tmLicences);
         }
 
         return $this;

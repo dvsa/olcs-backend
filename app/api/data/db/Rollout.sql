@@ -1943,11 +1943,11 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (45, 'submission_section', 'surrender', 'Surrender', NULL),
     (46, 'submission_section', 'annex', 'Annex', NULL),
 
-    (47, 'submission_section', 'tm-details', 'TM details', NULL),
-    (48, 'submission_section', 'tm-qualifications', 'TM qualifications', NULL),
-    (49, 'submission_section', 'tm-responsibilities', 'TM responsibilities', NULL),
-    (50, 'submission_section', 'tm-other-employment', 'TM other employment', NULL),
-    (51, 'submission_section', 'tm-previous-history', 'TM previous history', NULL),
+    (47, 'submission_section', 'tm-details', 'Transport Manager details', NULL),
+    (48, 'submission_section', 'tm-qualifications', 'Qualifications', NULL),
+    (49, 'submission_section', 'tm-responsibilities', 'Responsibilities', NULL),
+    (50, 'submission_section', 'tm-other-employment', 'Other employment', NULL),
+    (51, 'submission_section', 'tm-previous-history', 'Previous history', NULL),
 
     (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
     (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
@@ -6911,6 +6911,7 @@ CREATE VIEW task_search_view AS
        tsc.sub_category_name task_sub_type,
        t.sub_category_id sub_category_id,
        t.description,
+       te.name as team_name,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
        case when t.irfo_organisation_id is not null then 'IRFO Organisation'
@@ -6946,6 +6947,7 @@ CREATE VIEW task_search_view AS
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
    left join contact_details cd on (u.contact_details_id = cd.id)
+   left join team te on (t.assigned_to_team_id = te.id)
 ;
 
 DROP TABLE IF EXISTS document_search_view;

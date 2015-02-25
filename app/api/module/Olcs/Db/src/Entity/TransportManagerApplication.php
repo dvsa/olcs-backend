@@ -45,7 +45,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
-        Traits\TransportManagerManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -94,6 +93,16 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=true)
      */
     protected $tmType;
+
+    /**
+     * Transport manager
+     *
+     * @var \Olcs\Db\Entity\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\TransportManager", inversedBy="tmApplications")
+     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
+     */
+    protected $transportManager;
 
     /**
      * Other licence
@@ -240,6 +249,29 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getTmType()
     {
         return $this->tmType;
+    }
+
+    /**
+     * Set the transport manager
+     *
+     * @param \Olcs\Db\Entity\TransportManager $transportManager
+     * @return TransportManagerApplication
+     */
+    public function setTransportManager($transportManager)
+    {
+        $this->transportManager = $transportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport manager
+     *
+     * @return \Olcs\Db\Entity\TransportManager
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
     }
 
     /**
