@@ -4001,6 +4001,7 @@ CREATE TABLE `note` (
   `irfo_gv_permit_id` int(11) DEFAULT NULL,
   `irfo_psv_auth_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -4016,6 +4017,7 @@ CREATE TABLE `note` (
   KEY `fk_note_user2_idx` (`last_modified_by`),
   KEY `fk_note_ref_data1_idx` (`note_type`),
   KEY `fk_note_bus_reg1_idx` (`bus_reg_id`),
+  KEY `fk_note_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_note_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_case1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -4024,7 +4026,8 @@ CREATE TABLE `note` (
   CONSTRAINT `fk_note_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_ref_data1` FOREIGN KEY (`note_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_note_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_note_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_note_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
