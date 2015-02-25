@@ -5,11 +5,11 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Application many to one trait
+ * Application many to one alt1 trait
  *
- * Auto-Generated (Shared between 2 entities)
+ * Auto-Generated (Shared between 9 entities)
  */
-trait ApplicationManyToOne
+trait ApplicationManyToOneAlt1
 {
     /**
      * Application
@@ -17,7 +17,7 @@ trait ApplicationManyToOne
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
 

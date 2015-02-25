@@ -30,7 +30,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Cases implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

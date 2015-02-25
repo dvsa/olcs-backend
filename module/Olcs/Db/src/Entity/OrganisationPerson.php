@@ -32,6 +32,7 @@ class OrganisationPerson implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\PersonManyToOne,
         Traits\Position45Field,
         Traits\CustomVersionField;
 
@@ -53,16 +54,6 @@ class OrganisationPerson implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
-
-    /**
-     * Person
-     *
-     * @var \Olcs\Db\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
-     */
-    protected $person;
 
     /**
      * Set the added date
@@ -108,28 +99,5 @@ class OrganisationPerson implements Interfaces\EntityInterface
     public function getOrganisation()
     {
         return $this->organisation;
-    }
-
-    /**
-     * Set the person
-     *
-     * @param \Olcs\Db\Entity\Person $person
-     * @return OrganisationPerson
-     */
-    public function setPerson($person)
-    {
-        $this->person = $person;
-
-        return $this;
-    }
-
-    /**
-     * Get the person
-     *
-     * @return \Olcs\Db\Entity\Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
     }
 }
