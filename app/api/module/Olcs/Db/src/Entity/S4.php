@@ -25,7 +25,7 @@ use Olcs\Db\Entity\Traits;
 class S4 implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,

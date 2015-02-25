@@ -22,14 +22,15 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_note_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_note_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_note_ref_data1_idx", columns={"note_type"}),
- *        @ORM\Index(name="fk_note_bus_reg1_idx", columns={"bus_reg_id"})
+ *        @ORM\Index(name="fk_note_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="fk_note_transport_manager1_idx", columns={"transport_manager_id"})
  *    }
  * )
  */
 class Note implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
@@ -40,6 +41,7 @@ class Note implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
     /**

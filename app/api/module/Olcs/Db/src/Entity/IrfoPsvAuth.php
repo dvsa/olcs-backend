@@ -35,7 +35,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\InForceDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OrganisationManyToOneAlt1,
+        Traits\OrganisationManyToOne,
         Traits\StatusManyToOne,
         Traits\CustomVersionField,
         Traits\WithdrawnReasonManyToOne;

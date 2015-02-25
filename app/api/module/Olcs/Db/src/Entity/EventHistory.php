@@ -27,7 +27,7 @@ use Olcs\Db\Entity\Traits;
 class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
+        Traits\ApplicationManyToOneAlt1,
         Traits\IdIdentity,
         Traits\LicenceManyToOneAlt1,
         Traits\TransportManagerManyToOne,

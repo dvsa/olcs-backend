@@ -31,6 +31,6 @@ class IrfoPartner implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
-        Traits\OrganisationManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\CustomVersionField;
 }

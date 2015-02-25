@@ -406,6 +406,64 @@ LOCK TABLES `application_operating_centre` WRITE;
 /*!40000 ALTER TABLE `application_operating_centre` ENABLE KEYS */;
 UNLOCK TABLES;
 
+CREATE TABLE IF NOT EXISTS `application_organisation_person` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `person_id` INT NOT NULL,
+  `original_person_id` INT NULL,
+  `organisation_id` INT NOT NULL,
+  `application_id` INT NOT NULL,
+  `action` VARCHAR(1) NOT NULL,
+  `position` varchar(45) DEFAULT NULL,
+  `last_modified_by` INT NULL COMMENT 'User id of user who last modified the record.',
+  `created_by` INT NULL COMMENT 'User id of user who created record.',
+  `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
+  `created_on` DATETIME(6) NULL COMMENT 'Date record created.',
+  `version` SMALLINT NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
+  PRIMARY KEY (`id`),
+  INDEX `ix_application_organisation_person_person_id` (`person_id` ASC),
+  INDEX `ix_application_organisation_person_original_person_id` (`original_person_id` ASC),
+  INDEX `ix_application_organisation_person_organisation_id` (`organisation_id` ASC),
+  INDEX `ix_application_organisation_person_application_id` (`application_id` ASC),
+  INDEX `ix_application_organisation_person_last_modified_by` (`last_modified_by` ASC),
+  INDEX `ix_application_organisation_person_created_by` (`created_by` ASC),
+  CONSTRAINT `fk_application_organisation_person_person_id_person_id`
+    FOREIGN KEY (`person_id`)
+    REFERENCES `person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_original_person_id`
+    FOREIGN KEY (`original_person_id`)
+    REFERENCES `person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_org_person_org_id_org_id`
+    FOREIGN KEY (`organisation_id`)
+    REFERENCES `organisation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_application_id_application_id`
+    FOREIGN KEY (`application_id`)
+    REFERENCES `application` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_last_modified_by_user_id`
+    FOREIGN KEY (`last_modified_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_created_by_user_id`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Stores organisation people on an application. When application is granted they get copied into main organisation_person table';
+
+LOCK TABLES `application_organisation_person` WRITE;
+/*!40000 ALTER TABLE `application_organisation_person` DISABLE KEYS */;
+/*!40000 ALTER TABLE `application_organisation_person` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `bus_notice_period`
 --
@@ -3943,6 +4001,7 @@ CREATE TABLE `note` (
   `irfo_gv_permit_id` int(11) DEFAULT NULL,
   `irfo_psv_auth_id` int(11) DEFAULT NULL,
   `bus_reg_id` int(11) DEFAULT NULL,
+  `transport_manager_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -3958,6 +4017,7 @@ CREATE TABLE `note` (
   KEY `fk_note_user2_idx` (`last_modified_by`),
   KEY `fk_note_ref_data1_idx` (`note_type`),
   KEY `fk_note_bus_reg1_idx` (`bus_reg_id`),
+  KEY `fk_note_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_note_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_case1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -3966,7 +4026,8 @@ CREATE TABLE `note` (
   CONSTRAINT `fk_note_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_ref_data1` FOREIGN KEY (`note_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_note_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_note_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_note_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7279,7 +7340,7 @@ CREATE TABLE IF NOT EXISTS `tm_employment` (
   `transport_manager_id` INT NOT NULL,
   `contact_details_id` INT NOT NULL,
   `position` VARCHAR(45) NULL,
-  `hours_per_week` INT NULL,
+  `hours_per_week` varchar(80) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
@@ -7321,7 +7382,7 @@ CREATE TABLE `other_licence` (
   `previous_licence_type` VARCHAR(32) DEFAULT NULL,
   `additional_information` VARCHAR(4000) DEFAULT NULL,
   `total_auth_vehicles` int(11) DEFAULT NULL,
-  `hours_per_week` int(11) DEFAULT NULL COMMENT 'If on transport manager',
+  `hours_per_week` varchar(80) DEFAULT NULL COMMENT 'If on transport manager',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,

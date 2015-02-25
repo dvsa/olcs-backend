@@ -868,6 +868,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('note_type', 'note_t_lic', 'Licence', null),
     ('note_type', 'note_t_irfo_gv', 'IRFO GV Permit', null),
     ('note_type', 'note_t_irfo_psv', 'IRFO PSV Auth', null),
+    ('note_type', 'note_t_tm', 'Transport Manager', null),
     ('tach_ins', 'tach_internal', 'Internal', null),
     ('tach_ins', 'tach_external', 'External', null),
     ('tach_ins', 'tach_na', 'Not Applicable', null),
@@ -1942,11 +1943,11 @@ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `descript
     (45, 'submission_section', 'surrender', 'Surrender', NULL),
     (46, 'submission_section', 'annex', 'Annex', NULL),
 
-    (47, 'submission_section', 'tm-details', 'TM details', NULL),
-    (48, 'submission_section', 'tm-qualifications', 'TM qualifications', NULL),
-    (49, 'submission_section', 'tm-responsibilities', 'TM responsibilities', NULL),
-    (50, 'submission_section', 'tm-other-employment', 'TM other employment', NULL),
-    (51, 'submission_section', 'tm-previous-history', 'TM previous history', NULL),
+    (47, 'submission_section', 'tm-details', 'Transport Manager details', NULL),
+    (48, 'submission_section', 'tm-qualifications', 'Qualifications', NULL),
+    (49, 'submission_section', 'tm-responsibilities', 'Responsibilities', NULL),
+    (50, 'submission_section', 'tm-other-employment', 'Other employment', NULL),
+    (51, 'submission_section', 'tm-previous-history', 'Previous history', NULL),
 
     (1, 'submission_type', 'submission_type_o_mlh', 'MLH', NULL),
     (2, 'submission_type', 'submission_type_o_clo_g', 'CLO (G)', NULL),
@@ -4122,7 +4123,7 @@ VALUES
     (153, 999999, 479, 153, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Letter', '2002-05-14 17:45:01', 1),
     (154, 999999, 479, 154, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex A', '2002-05-14 17:45:01', 1),
     (155, 999999, 479, 155, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Schedule of Registered Bus Services Annex 1', '2002-05-14 17:45:01', 1),
-    (156, 999999, 479, 156, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Public Inquiry Decision Letter', '2002-05-14 17:45:01', 1),
+    (156, 2, 479, 156, 479, 49, 0, 1, '2002-05-14 17:45:01', 'Compliance: Public Inquiry Decision Letter', '2002-05-14 17:45:01', 1),
     (157, 999999, 479, 157, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Annex A', '2002-05-14 17:45:01', 1),
     (158, 999999, 479, 158, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Annex B', '2002-05-14 17:45:01', 1),
     (159, 999999, 479, 159, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Disciplinary Annex C', '2002-05-14 17:45:01', 1),
@@ -4132,7 +4133,7 @@ VALUES
     (163, 999999, 479, 163, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes B', '2002-05-14 17:45:01', 1),
     (164, 999999, 479, 164, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes C', '2002-05-14 17:45:01', 1),
     (165, 999999, 479, 165, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Review Annexes D', '2002-05-14 17:45:01', 1),
-    (166, 2, 479, 166, 479, 49, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex B', '2002-05-14 17:45:01', 1),
+    (166, 999999, 479, 166, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex B', '2002-05-14 17:45:01', 1),
     (167, 999999, 479, 167, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex C', '2002-05-14 17:45:01', 1),
     (168, 999999, 479, 168, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Bus Registration: Public Inquiry Call-up Annex D', '2002-05-14 17:45:01', 1),
     (169, 999999, 479, 169, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Request Further Investigation  Letter', '2002-05-14 17:45:01', 1),
@@ -6910,6 +6911,7 @@ CREATE VIEW task_search_view AS
        tsc.sub_category_name task_sub_type,
        t.sub_category_id sub_category_id,
        t.description,
+       te.name as team_name,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
        coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
        case when t.irfo_organisation_id is not null then 'IRFO Organisation'
@@ -6945,6 +6947,7 @@ CREATE VIEW task_search_view AS
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
    left join contact_details cd on (u.contact_details_id = cd.id)
+   left join team te on (t.assigned_to_team_id = te.id)
 ;
 
 DROP TABLE IF EXISTS document_search_view;
@@ -6954,7 +6957,7 @@ CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.sub_category_id, d.description,
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital, r.description as document_type,
+		d.file_extension, d.is_digital, d.deleted_date, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id
     FROM `document` d
