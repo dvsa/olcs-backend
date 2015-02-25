@@ -31,6 +31,7 @@ TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
 TRUNCATE TABLE `oc_complaint`;
 TRUNCATE TABLE `operating_centre`;
+TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `opposer`;
 TRUNCATE TABLE `opposition`;
 TRUNCATE TABLE `opposition_grounds`;
