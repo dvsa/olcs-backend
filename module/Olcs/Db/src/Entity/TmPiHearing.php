@@ -113,7 +113,7 @@ class TmPiHearing implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="witnesses", nullable=false)
+     * @ORM\Column(type="integer", name="witnesses", nullable=false, options={"default": 0})
      */
     protected $witnesses = 0;
 

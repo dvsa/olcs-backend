@@ -66,7 +66,7 @@ class Note implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="priority", nullable=false)
+     * @ORM\Column(type="yesno", name="priority", nullable=false, options={"default": 0})
      */
     protected $priority = 0;
 

@@ -60,7 +60,7 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=false)
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      */
     protected $version = 1;
 

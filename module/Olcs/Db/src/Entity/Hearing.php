@@ -82,7 +82,7 @@ class Hearing implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="witness_count", nullable=false)
+     * @ORM\Column(type="integer", name="witness_count", nullable=false, options={"default": 0})
      */
     protected $witnessCount = 0;
 
