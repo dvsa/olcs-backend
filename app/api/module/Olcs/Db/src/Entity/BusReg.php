@@ -53,7 +53,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="application_signed", nullable=false)
+     * @ORM\Column(type="yesno", name="application_signed", nullable=false, options={"default": 0})
      */
     protected $applicationSigned = 0;
 
@@ -89,7 +89,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false)
+     * @ORM\Column(type="yesno", name="copied_to_la_pte", nullable=false, options={"default": 0})
      */
     protected $copiedToLaPte = 0;
 
@@ -98,7 +98,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="ebsr_refresh", nullable=false)
+     * @ORM\Column(type="boolean", name="ebsr_refresh", nullable=false, options={"default": 0})
      */
     protected $ebsrRefresh = 0;
 
@@ -116,7 +116,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false)
+     * @ORM\Column(type="yesno", name="has_manoeuvre", nullable=false, options={"default": 0})
      */
     protected $hasManoeuvre = 0;
 
@@ -125,7 +125,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false)
+     * @ORM\Column(type="yesno", name="has_not_fixed_stop", nullable=false, options={"default": 0})
      */
     protected $hasNotFixedStop = 0;
 
@@ -134,7 +134,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_quality_contract", nullable=false)
+     * @ORM\Column(type="yesno", name="is_quality_contract", nullable=false, options={"default": 0})
      */
     protected $isQualityContract = 0;
 
@@ -143,7 +143,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false)
+     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false, options={"default": 0})
      */
     protected $isQualityPartnership = 0;
 
@@ -152,7 +152,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_short_notice", nullable=false)
+     * @ORM\Column(type="yesno", name="is_short_notice", nullable=false, options={"default": 0})
      */
     protected $isShortNotice = 0;
 
@@ -161,7 +161,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_txc_app", nullable=false)
+     * @ORM\Column(type="yesno", name="is_txc_app", nullable=false, options={"default": 0})
      */
     protected $isTxcApp = 0;
 
@@ -170,7 +170,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="la_short_note", nullable=false)
+     * @ORM\Column(type="yesno", name="la_short_note", nullable=false, options={"default": 0})
      */
     protected $laShortNote = 0;
 
@@ -205,7 +205,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="map_supplied", nullable=false)
+     * @ORM\Column(type="yesno", name="map_supplied", nullable=false, options={"default": 0})
      */
     protected $mapSupplied = 0;
 
@@ -214,7 +214,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="need_new_stop", nullable=false)
+     * @ORM\Column(type="yesno", name="need_new_stop", nullable=false, options={"default": 0})
      */
     protected $needNewStop = 0;
 
@@ -241,7 +241,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false)
+     * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false, options={"default": 0})
      */
     protected $opNotifiedLaPte = 0;
 
@@ -296,7 +296,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false)
+     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false, options={"default": 0})
      */
     protected $qualityPartnershipFacilitiesUsed = 0;
 
@@ -378,7 +378,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false)
+     * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false, options={"default": 0})
      */
     protected $shortNoticeRefused = 0;
 
@@ -390,6 +390,15 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="start_point", length=100, nullable=true)
      */
     protected $startPoint;
+
+    /**
+     * Status change date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="status_change_date", nullable=true)
+     */
+    protected $statusChangeDate;
 
     /**
      * Stopping arrangements
@@ -424,7 +433,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false)
+     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false, options={"default": 0})
      */
     protected $timetableAcceptable = 0;
 
@@ -450,7 +459,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false)
+     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false, options={"default": 0})
      */
     protected $trcConditionChecked = 0;
 
@@ -477,7 +486,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="use_all_stops", nullable=false)
+     * @ORM\Column(type="yesno", name="use_all_stops", nullable=false, options={"default": 0})
      */
     protected $useAllStops = 0;
 
@@ -486,7 +495,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="variation_no", nullable=false)
+     * @ORM\Column(type="integer", name="variation_no", nullable=false, options={"default": 0})
      */
     protected $variationNo = 0;
 
@@ -1447,6 +1456,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getStartPoint()
     {
         return $this->startPoint;
+    }
+
+    /**
+     * Set the status change date
+     *
+     * @param \DateTime $statusChangeDate
+     * @return BusReg
+     */
+    public function setStatusChangeDate($statusChangeDate)
+    {
+        $this->statusChangeDate = $statusChangeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the status change date
+     *
+     * @return \DateTime
+     */
+    public function getStatusChangeDate()
+    {
+        return $this->statusChangeDate;
     }
 
     /**

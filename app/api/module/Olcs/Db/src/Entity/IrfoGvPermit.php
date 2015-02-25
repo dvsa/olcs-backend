@@ -64,7 +64,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fee_exempt", nullable=false)
+     * @ORM\Column(type="yesno", name="is_fee_exempt", nullable=false, options={"default": 0})
      */
     protected $isFeeExempt = 0;
 
@@ -73,7 +73,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="no_of_copies", nullable=false)
+     * @ORM\Column(type="integer", name="no_of_copies", nullable=false, options={"default": 0})
      */
     protected $noOfCopies = 0;
 
@@ -91,7 +91,7 @@ class IrfoGvPermit implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="permit_printed", nullable=false)
+     * @ORM\Column(type="yesno", name="permit_printed", nullable=false, options={"default": 0})
      */
     protected $permitPrinted = 0;
 

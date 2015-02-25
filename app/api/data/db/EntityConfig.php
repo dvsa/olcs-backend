@@ -888,14 +888,6 @@ return array(
             'type' => 'yesno'
         )
     ),
-    'bus_reg_traffic_area' => array(
-        'txc_missing' => array(
-            'type' => 'yesnonull'
-        ),
-        'txc_not_required' => array(
-            'type' => 'yesnonull'
-        )
-    ),
     'bus_short_notice' => array(
         'bank_holiday_change' => array(
             'type' => 'yesno'
@@ -1226,6 +1218,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'previousConviction'
             )
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'previousConviction'
+            )
         )
     ),
     'private_hire_licence' => array(
@@ -1266,13 +1264,11 @@ return array(
                 'entity' => 'Licence',
                 'property' => 'tmLicence'
             ),
-        )
-    ),
-    'transport_manager_application' => array(
-        'application_id' => array(
+        ),
+        'transport_manager_id' => array(
             'inversedBy' => array(
-                'entity' => 'Application',
-                'property' => 'tmApplication'
+                'entity' => 'TransportManager',
+                'property' => 'tmLicence'
             ),
         )
     ),
@@ -1281,6 +1277,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
                 'property' => 'qualification'
+            ),
+        )
+    ),
+    'tm_employment' => array(
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'employment'
             ),
         )
     ),
@@ -1332,6 +1336,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'transportManager'
             )
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'tmApplication'
+            ),
         )
     ),
     'statement' => array(

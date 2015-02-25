@@ -93,7 +93,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_closed", nullable=false)
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
      */
     protected $isClosed = 0;
 
@@ -102,7 +102,7 @@ class Task implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="urgent", nullable=false)
+     * @ORM\Column(type="yesno", name="urgent", nullable=false, options={"default": 0})
      */
     protected $urgent = 0;
 

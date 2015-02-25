@@ -107,7 +107,7 @@ class EbsrSubmission implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false)
+     * @ORM\Column(type="yesno", name="is_from_ftp", nullable=false, options={"default": 0})
      */
     protected $isFromFtp = 0;
 
