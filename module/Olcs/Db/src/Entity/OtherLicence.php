@@ -34,7 +34,7 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\DisqualificationDateField,
         Traits\DisqualificationLength255Field,
         Traits\HolderName90Field,
-        Traits\HoursPerWeekField,
+        Traits\HoursPerWeek80Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
