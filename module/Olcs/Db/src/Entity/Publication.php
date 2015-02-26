@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -77,6 +78,23 @@ class Publication implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="publication_no", nullable=false)
      */
     protected $publicationNo;
+
+    /**
+     * Publication link
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PublicationLink", mappedBy="publication")
+     */
+    protected $publicationLinks;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->publicationLinks = new ArrayCollection();
+    }
 
     /**
      * Set the doc name
@@ -191,5 +209,65 @@ class Publication implements Interfaces\EntityInterface
     public function getPublicationNo()
     {
         return $this->publicationNo;
+    }
+
+    /**
+     * Set the publication link
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Publication
+     */
+    public function setPublicationLinks($publicationLinks)
+    {
+        $this->publicationLinks = $publicationLinks;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication links
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPublicationLinks()
+    {
+        return $this->publicationLinks;
+    }
+
+    /**
+     * Add a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Publication
+     */
+    public function addPublicationLinks($publicationLinks)
+    {
+        if ($publicationLinks instanceof ArrayCollection) {
+            $this->publicationLinks = new ArrayCollection(
+                array_merge(
+                    $this->publicationLinks->toArray(),
+                    $publicationLinks->toArray()
+                )
+            );
+        } elseif (!$this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->add($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Publication
+     */
+    public function removePublicationLinks($publicationLinks)
+    {
+        if ($this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
     }
 }
