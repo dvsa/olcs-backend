@@ -428,17 +428,18 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
     `conviction_category`) VALUES
     (25,24,3,4,'Test Category text 1',NULL,NULL,'1971-11-05','2012-03-10','2012-06-15','FPN','3 points on licence',
     '60',0,
-    'John Smith Haulage Ltd.','def_t_op',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_1'),
+    'John Smith Haulage Ltd.','def_t_op','Some notes 1',NULL, NOW(),NOW(), 1, 'conv_c_cat_1'),
     (26,24,0,4,'Conviction Child Category 1','John','Smith','1980-02-20','2012-04-10','2012-05-15',
     'Leeds Magistrate court',
-    '3 points on licence','60',0,'','def_t_owner',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_2'),
+    '3 points on licence','60',0,'','def_t_owner','Some notes 2',NULL, NOW(),NOW(), 1, 'conv_c_cat_2'),
     (27,24,1,3,'Conviction Child Category 3','Boris','Johnson','1962-08-12','2012-12-17','2013-03-02','FPN',
     '3 points on licence',
     '60',0,'',
-    'def_t_owner',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_4'),
+    'def_t_owner','Some notes 3',NULL,NOW(),NOW(),1, 'conv_c_cat_4'),
     (29,24,3,3,'Conviction Child Category 4',NULL,NULL,'1976-03-11', '2012-03-10','2012-06-15',
     'Leeds Magistrate court',
-    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_2');
+    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op','Some notes 4',NULL,NOW(),NOW(),1,
+    'conv_c_cat_2');
 
 INSERT INTO `legacy_offence` (`id`, `case_id`,`created_by`, `last_modified_by`, `definition`, `is_trailer`,
 `num_of_offences`,
