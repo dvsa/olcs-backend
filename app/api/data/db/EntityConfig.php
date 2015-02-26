@@ -1320,6 +1320,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'publicationLink'
             )
+        ),
+        'publication_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Publication',
+                'property' => 'publicationLink'
+            )
         )
     ),
     'role_permission' => array(
