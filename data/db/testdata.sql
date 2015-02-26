@@ -428,17 +428,18 @@ INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `ca
     `conviction_category`) VALUES
     (25,24,3,4,'Test Category text 1',NULL,NULL,'1971-11-05','2012-03-10','2012-06-15','FPN','3 points on licence',
     '60',0,
-    'John Smith Haulage Ltd.','def_t_op',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_1'),
+    'John Smith Haulage Ltd.','def_t_op','Some notes 1',NULL, NOW(),NOW(), 1, 'conv_c_cat_1'),
     (26,24,0,4,'Conviction Child Category 1','John','Smith','1980-02-20','2012-04-10','2012-05-15',
     'Leeds Magistrate court',
-    '3 points on licence','60',0,'','def_t_owner',NULL,NULL, NOW(),NOW(), 1, 'conv_c_cat_2'),
+    '3 points on licence','60',0,'','def_t_owner','Some notes 2',NULL, NOW(),NOW(), 1, 'conv_c_cat_2'),
     (27,24,1,3,'Conviction Child Category 3','Boris','Johnson','1962-08-12','2012-12-17','2013-03-02','FPN',
     '3 points on licence',
     '60',0,'',
-    'def_t_owner',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_4'),
+    'def_t_owner','Some notes 3',NULL,NOW(),NOW(),1, 'conv_c_cat_4'),
     (29,24,3,3,'Conviction Child Category 4',NULL,NULL,'1976-03-11', '2012-03-10','2012-06-15',
     'Leeds Magistrate court',
-    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op',NULL,NULL,NOW(),NOW(),1, 'conv_c_cat_2');
+    '6 monthly investigation','2000',1,'John Smith Haulage Ltd.','def_t_op','Some notes 4',NULL,NOW(),NOW(),1,
+    'conv_c_cat_2');
 
 INSERT INTO `legacy_offence` (`id`, `case_id`,`created_by`, `last_modified_by`, `definition`, `is_trailer`,
 `num_of_offences`,
@@ -995,7 +996,8 @@ INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application
    `conviction_note`,`penalties_note`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
   (24,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'E123456','2012-03-21',NULL,'Case for convictions against company
-  directors',0,NULL,NULL,NULL,'Annual test history for case 24','prohibition test notes',NULL,NULL,NULL,'2013-11-12 12:27:33',NULL,1),
+  directors',0,NULL,NULL,NULL,'Annual test history for case 24','prohibition test notes','test comments',NULL,NULL,
+  '2013-11-12 12:27:33',NULL,1),
   (28,'case_t_app',NULL,7,1,NULL,NULL,NULL,'E123444','2012-06-13',NULL,'Convictions against operator',0,NULL,NULL,
   NULL,'Annual Test History for case 28',NULL,NULL,NULL,NULL,'2014-01-01 11:11:11',NULL,1),
   (29,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,'Polish Transport Authority','Polish Transport Authority','GH52 ABC',NULL,NULL,NULL,'comment',NULL,'2014-01-11 11:11:11','2014-11-07 12:47:07',3),
