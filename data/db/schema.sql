@@ -418,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `application_organisation_person` (
   `created_by` INT NULL COMMENT 'User id of user who created record.',
   `last_modified_on` DATETIME(6) NULL COMMENT 'Date record last modified.',
   `created_on` DATETIME(6) NULL COMMENT 'Date record created.',
-  `version` SMALLINT NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
+  `version` INT(11) NOT NULL DEFAULT 1 COMMENT 'Optimistic Locking',
   PRIMARY KEY (`id`),
   INDEX `ix_application_organisation_person_person_id` (`person_id` ASC),
   INDEX `ix_application_organisation_person_original_person_id` (`original_person_id` ASC),
