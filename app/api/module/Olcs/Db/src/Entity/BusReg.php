@@ -530,7 +530,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusRegOtherService", mappedBy="busReg")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusRegOtherService", mappedBy="busReg", cascade={"persist"})
      */
     protected $otherServices;
 
@@ -539,7 +539,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusShortNotice", mappedBy="busReg")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusShortNotice", mappedBy="busReg", cascade={"persist"})
      */
     protected $shortNotices;
 

@@ -391,7 +391,10 @@ return array(
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',
-                'property' => 'otherService'
+                'property' => 'otherService',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),
@@ -892,7 +895,10 @@ return array(
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',
-                'property' => 'shortNotice'
+                'property' => 'shortNotice',
+                'cascade' => array(
+                    'persist'
+                )
             )
         ),
         'bank_holiday_change' => array(
