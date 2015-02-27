@@ -25,7 +25,6 @@ use Olcs\Db\Entity\Traits;
 class BusShortNotice implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\BusRegManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -41,6 +40,16 @@ class BusShortNotice implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="bank_holiday_change", nullable=false, options={"default": 0})
      */
     protected $bankHolidayChange = 0;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="shortNotices")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
+     */
+    protected $busReg;
 
     /**
      * Connection change
@@ -225,6 +234,29 @@ class BusShortNotice implements Interfaces\EntityInterface
     public function getBankHolidayChange()
     {
         return $this->bankHolidayChange;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return BusShortNotice
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 
     /**

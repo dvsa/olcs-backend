@@ -11,7 +11,6 @@ TRUNCATE TABLE `bus_reg_traffic_area`;
 TRUNCATE TABLE `bus_reg_local_auth`;
 TRUNCATE TABLE `bus_short_notice`;
 TRUNCATE TABLE `bus_notice_period`;
-TRUNCATE TABLE `bus_service_type`;
 TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
 TRUNCATE TABLE `ebsr_submission`;
@@ -250,18 +249,19 @@ VALUES
   (1, 6),
   (1, 8);
 
+
 INSERT INTO `bus_reg_bus_service_type` (`bus_reg_id`, `bus_service_type_id`)
 VALUES
-  (1, 1),
-  (1, 3),
-  (1, 4),
-  (2, 5),
-  (2, 6),
-  (2, 9),
-  (12, 2),
-  (12, 4),
-  (12, 10),
-  (15, 5);
+ (1, 1),
+ (1, 3),
+ (1, 4),
+ (2, 5),
+ (2, 6),
+ (2, 9),
+ (12, 2),
+ (12, 4),
+ (12, 10),
+ (15, 5);
 
 INSERT INTO `bus_reg_variation_reason` (`bus_reg_id`, `variation_reason_id`)
 VALUES
@@ -301,19 +301,6 @@ INSERT INTO `bus_notice_period`
 VALUES
   (1,'Scotland',56,90,NULL,NULL,NULL,NULL,1),
   (2,'Other',56,0,NULL,NULL,NULL,NULL,1);
-
-INSERT INTO `bus_service_type` (`id`,`description`,`txc_service_type_name`)
-VALUES
-  (1,'Normal Stopping','NormalStopping'),
-  (2,'Limited Stop','LimitedStops'),
-  (3,'Frequent Service',NULL),
-  (4,'Hail & Ride','HailAndRide'),
-  (5,'Excursion or Tour','ExcursionOrTour'),
-  (6,'School or Works','SchoolOrWorks'),
-  (7,'Dial-a-ride','DialARide'),
-  (8,'Circular',NULL),
-  (9,'Rural Bus Service','RuralService'),
-  (10,'Flexible Registration','Flexible');
 
 INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
