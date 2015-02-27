@@ -1892,18 +1892,18 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_129','conv_p_cat_7','With intent to deceive made / an operators licence / a document, plate or mark or other thing by which a vehicle is to be identified as being authorised to be used or as being used under an operators licence','conv_category',129,799),
   ('conv_c_cat_294','conv_p_cat_14','Withholding information to obtain insurance.','conv_category',294,800);
 
- INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
-  (1,'Licensing',1,1,1,1,'task_at_simple')
- ,(2,'Compliance',1,1,1,1,'task_at_simple')
- ,(3,'Bus Registration',1,1,1,1,'task_at_simple')
- ,(4,'Permits',1,1,0,1,NULL)
- ,(5,'Transport Manager',1,1,1,1,'task_at_simple')
- ,(7,'Environmental',1,1,1,1,'task_at_simple')
- ,(8,'IRFO',1,1,1,1,'task_at_simple')
- ,(9,'Application',1,1,1,1,'task_at_simple')
- ,(10,'Submission',0,1,0,1,NULL)
- ,(999999,'Templates (remove before go live)',0,0,0,0,NULL)
-;
+INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
+  (1,'Licensing',1,1,1,1,'task_at_simple'),
+  (2,'Compliance',1,1,1,1,'task_at_simple'),
+  (3,'Bus Registration',1,1,1,1,'task_at_simple'),
+  (4,'Permits',1,1,0,1,NULL),
+  (5,'Transport Manager',1,1,1,1,'task_at_simple'),
+  (7,'Environmental',1,1,1,1,'task_at_simple'),
+  (8,'IRFO',1,1,1,1,'task_at_simple'),
+  (9,'Application',1,1,1,1,'task_at_simple'),
+  (10,'Submission',0,1,0,1,NULL),
+  (11,'Publication',0,0,0,1,NULL),
+  (999999,'Templates (remove before go live)',0,0,0,0,NULL);
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'submission_section', 'introduction', 'Introduction', NULL),
@@ -3860,6 +3860,7 @@ VALUES
  ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
  ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital')
+ ,(11, 113, 0, 0, 0, 0, 'Publication')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 INSERT INTO sub_category_description
@@ -6745,8 +6746,22 @@ VALUES
     'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
     (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL,
     '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,
-    NULL, '2013-09-04 10:00:47', 1);
-
+    NULL, '2013-09-04 10:00:47', 1),
+    (683, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (684, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_London and the South East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D London and the South East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (685, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_North East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D North East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (686, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_North West of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D North West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (687, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/NI/A&D_Northern Ireland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Northern Ireland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (688, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Scotland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Scotland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (689, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_West Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
+    (690, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_West of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (691, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (692, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_London and the South East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P London and the South East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (693, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_North East of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P North East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (694, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_North West of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P North West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (695, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Scotland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Scotland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (696, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
+    (697, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West of England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1);
 /* Test documents */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
     (671,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
