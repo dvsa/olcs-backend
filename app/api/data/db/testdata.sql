@@ -138,8 +138,14 @@ INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `pao
     (106,NULL,NULL,'Unit 2','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (107,NULL,NULL,'Unit 3','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (108,NULL,NULL,'Unit 4','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
-    (109,NULL,NULL,'A Place','123 Some Street','Some Area','','WM5 2FA','Birmingham','GB',NOW(),NOW(),1);
-
+    (109,NULL,NULL,'A Place','123 Some Street','Some Area','','WM5 2FA','Birmingham','GB',NOW(),NOW(),1),
+    (110,NULL,NULL,'Park Cottage','Coldcotes Avenue','','','LS9 6NE','Leeds','GB',NOW(),NOW(),1),
+    (111,NULL,NULL,'Unit 4','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
+    (112,NULL,NULL,'A Place','123 Some Street','Some Area','','WM5 2FA','Birmingham','GB',NOW(),NOW(),1),
+    (113,NULL,NULL,'Solway Business Centre','Kingstown','','','CA6 4BY','Carlisle','GB',NOW(),NOW(),1),
+    (114,NULL,NULL,'Unit 10','10 High Street','Alwoodley','','LS7 9SD','Leeds','GB',NOW(),NOW(),1),
+    (115,NULL,NULL,'123 House','A Street','An Area','','LS12 1BB','Leeds','GB',NOW(),NOW(),1);
+ 
 INSERT INTO `application` (
     `id`, `licence_id`, `created_by`, `last_modified_by`, `status`,
     `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_large_vehicles`, `tot_community_licences`,
@@ -390,7 +396,7 @@ VALUES
     (101,'ct_team_user',26,NULL,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (104,'ct_tm',104,NULL,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (104,'ct_tm',110,NULL,1,1,NULL,NULL,NULL,0,'one@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (105,'ct_team_user',26,NULL,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -407,11 +413,11 @@ VALUES
     (113,'ct_complainant',26,77,4,1,NULL,NULL,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
     (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (115,'ct_tm',104,NULL,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (116,'ct_tm',104,NULL,1,1,NULL,NULL,NULL,0,'some@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (117,'ct_tm',55,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (118,'ct_tm',63,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (119,'ct_tm',72,80,1,1,NULL,NULL,NULL,0,'anotherone@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (115,'ct_tm',111,NULL,1,1,NULL,NULL,NULL,0,'two@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (116,'ct_tm',112,NULL,1,1,NULL,NULL,NULL,0,'three@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (117,'ct_tm',113,65,1,1,NULL,NULL,NULL,0,'four@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (118,'ct_tm',114,66,1,1,NULL,NULL,NULL,0,'five@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (119,'ct_tm',115,77,1,1,NULL,NULL,NULL,0,'six@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (120,'ct_corr',105,4,1,1,NULL,NULL,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
     (121,'ct_corr',106,9,1,1,NULL,NULL,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
