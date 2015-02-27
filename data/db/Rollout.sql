@@ -24,6 +24,7 @@ TRUNCATE TABLE `role`;
 TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
 TRUNCATE TABLE `financial_standing_rate`;
+TRUNCATE TABLE `bus_service_type`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -265,6 +266,18 @@ INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, 
     (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1,0,0,0),
     (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0,0,0,1);
 
+INSERT INTO `bus_service_type` (`id`,`description`,`txc_name`)
+VALUES
+    (1,'Normal Stopping','NormalStopping'),
+    (2,'Limited Stop','LimitedStops'),
+    (3,'Frequent Service',NULL),
+    (4,'Hail & Ride','HailAndRide'),
+    (5,'Excursion or Tour','ExcursionOrTour'),
+    (6,'School or Works','SchoolOrWorks'),
+    (7,'Dial-a-ride','DialARide'),
+    (8,'Circular',NULL),
+    (9,'Rural Bus Service','RuralService'),
+    (10,'Flexible Registration','Flexible');
 
 INSERT INTO `country` (`id`, `created_by`, `last_modified_by`, `country_desc`, `is_member_state`, `created_on`, `last_modified_on`, `version`)
 VALUES

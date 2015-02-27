@@ -751,7 +751,7 @@ DROP TABLE IF EXISTS `bus_service_type`;
 CREATE TABLE `bus_service_type` (
   `id` int(11) NOT NULL,
   `description` varchar(70) DEFAULT NULL,
-  `txc_service_type_name` varchar(70) DEFAULT NULL,
+  `txc_name` varchar(70) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
