@@ -885,9 +885,9 @@ VALUES
 	(1, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
 	(2, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
 	NULL, 1),
-  (3, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL,
+  (3, 1, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
-	(4, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
+	(4, 2, 'apsts_not_submitted', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
 	NULL, 1);
 
 INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
