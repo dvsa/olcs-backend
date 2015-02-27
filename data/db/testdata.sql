@@ -243,6 +243,20 @@ VALUES
   (1, 6),
   (1, 8);
 
+
+INSERT INTO `bus_reg_bus_service_type` (`bus_reg_id`, `bus_service_type_id`)
+VALUES
+ (1, 1),
+ (1, 3),
+ (1, 4),
+ (2, 5),
+ (2, 6),
+ (2, 9),
+ (12, 2),
+ (12, 4),
+ (12, 10),
+ (15, 5);
+
 INSERT INTO `bus_reg_variation_reason` (`bus_reg_id`, `variation_reason_id`)
 VALUES
   (12, 1),
