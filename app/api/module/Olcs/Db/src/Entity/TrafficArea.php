@@ -30,6 +30,7 @@ class TrafficArea implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
+        Traits\TxcName70Field,
         Traits\CustomVersionField;
 
     /**
@@ -95,15 +96,6 @@ class TrafficArea implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Recipient", mappedBy="trafficAreas")
      */
     protected $recipients;
-
-    /**
-     * Txc name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="txc_name", length=70, nullable=true)
-     */
-    protected $txcName;
 
     /**
      * Document
@@ -357,29 +349,6 @@ class TrafficArea implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the txc name
-     *
-     * @param string $txcName
-     * @return TrafficArea
-     */
-    public function setTxcName($txcName)
-    {
-        $this->txcName = $txcName;
-
-        return $this;
-    }
-
-    /**
-     * Get the txc name
-     *
-     * @return string
-     */
-    public function getTxcName()
-    {
-        return $this->txcName;
     }
 
     /**
