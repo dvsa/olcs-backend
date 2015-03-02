@@ -19,7 +19,8 @@ class BusServiceType implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Description70Field,
-        Traits\IdIdentity;
+        Traits\IdIdentity,
+        Traits\TxcName70Field;
 
     /**
      * Bus reg
@@ -29,15 +30,6 @@ class BusServiceType implements Interfaces\EntityInterface
      * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="busServiceTypes")
      */
     protected $busRegs;
-
-    /**
-     * Txc service type name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="txc_service_type_name", length=70, nullable=true)
-     */
-    protected $txcServiceTypeName;
 
     /**
      * Initialise the collections
@@ -105,28 +97,5 @@ class BusServiceType implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the txc service type name
-     *
-     * @param string $txcServiceTypeName
-     * @return BusServiceType
-     */
-    public function setTxcServiceTypeName($txcServiceTypeName)
-    {
-        $this->txcServiceTypeName = $txcServiceTypeName;
-
-        return $this;
-    }
-
-    /**
-     * Get the txc service type name
-     *
-     * @return string
-     */
-    public function getTxcServiceTypeName()
-    {
-        return $this->txcServiceTypeName;
     }
 }
