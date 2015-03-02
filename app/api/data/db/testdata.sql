@@ -475,11 +475,11 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_stat
     (87,1,110,NULL,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason',1),
     (88,1,110,NULL,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL,1),
     (89,3,210,NULL,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes',1),
-    (90,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (91,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (93,1,110,8,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (94,1,110,3,'lfs_ot',NULL,1,NULL,'Bus Route Application Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,188);
+    (90,1,110,3,'lfs_ot',NULL,1,NULL,'Bus Route Application Fee PD2737280/43542 Variation 0','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,188),
+    (91,1,110,8,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 1','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
