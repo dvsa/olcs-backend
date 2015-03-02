@@ -2,6 +2,7 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -64,6 +65,21 @@ class Search
         $elasticaQuery->setSize($limit);
         $elasticaQuery->setFrom($limit * ($page - 1));
 
+        $orgNamesTermsAgg = new Terms("orgNames");
+        $orgNamesTermsAgg->setName("Organisation Names");
+        $orgNamesTermsAgg->setField("orgName");
+        $orgNamesTermsAgg->setSize(10);
+        $orgNamesTermsAgg->setMinimumDocumentCount(0);
+
+        $elasticaQuery->addAggregation($orgNamesTermsAgg);
+
+        $taTermsAgg = new Terms("licenceTrafficArea");
+        $taTermsAgg->setName("Traffic Area");
+        $taTermsAgg->setField("licenceTrafficArea");
+        $taTermsAgg->setSize(10);
+
+        $elasticaQuery->addAggregation($taTermsAgg);
+
         //Search on the index.
         $es    = new \Elastica\Search($this->getClient());
 
@@ -90,6 +106,8 @@ class Search
 
             $response['Results'][] = $refined;
         }
+
+        $response['Results'][] = $resultSet->getAggregations();
 
         return $response;
     }
