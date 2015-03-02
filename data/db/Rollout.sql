@@ -4579,9 +4579,12 @@ VALUES
     (665, 999999, 1, 665, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_PIDecisionLetter - PSV (NI)', '2012-09-14 00:00:00', 1),
     (666, 999999, 1, 666, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_RequestForStayDecisionLetter (NI)', '2012-09-14 00:00:00', 1),
     (667, 999999, 1, 667, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_PIDisciplinaryAnnexA (NI)', '2012-09-14 00:00:00', 1),
-    (669, 2, 479, 669, 479, 49, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA', '2013-06-12 15:04:50', 1),
-    (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief', '2013-09-04 10:00:47', 1);
-
+    (669, 999999, 479, 669, 479, 999999, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA',
+    '2013-06-12 15:04:50', 1),
+    (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief',
+    '2013-09-04 10:00:47', 1),
+    (671, 2, 1, 671, 1, 55, 1, 0, '2013-09-04 10:00:47', 'Compliance: Proforma 38-36 statement (NI)',
+    '2013-09-04 10:00:47', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -6740,16 +6743,14 @@ VALUES
     (665, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_PIDecisionLetterPSV.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_PIDecisionLetter - PSV (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (666, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_RequestForStayDecisionLetter.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_RequestForStayDecisionLetter (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (667, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_PIDisciplinaryAnnexA.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_PIDisciplinaryAnnexA (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 479, NULL, 479, NULL,
-    '/templates/GB/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL,
-    'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
-    (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL,
-    '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,
-    NULL, '2013-09-04 10:00:47', 1);
+    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL,
+    '/templates/GB/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL, 'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
+    (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,NULL, '2013-09-04 10:00:47', 1),
+    (671, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55    , NULL, NULL, 2     , 1, NULL, 1, NULL, '/templates/NI/proforma 38-36 statement (NI).rtf',1, NULL, NULL, '2012-09-14 00:00:00', NULL,'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1);
 
 /* Test documents */
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
-    (671,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
+issued_date,document_store_id) VALUES
     (672,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (673,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
     (674,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
