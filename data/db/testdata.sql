@@ -107,6 +107,7 @@ TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
+TRUNCATE TABLE `trailer`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -1463,5 +1464,13 @@ VALUES
   (2, '2014-11-30 11:00:00', 1, 'Offence 2', 'Offence 2 details', 'Court 2', 'Penalty 2', 1),
   (3, '2012-10-30 10:00:00', 3, 'Offence 3', 'Offence 3 details', 'Court 3', 'Penalty 3', 1),
   (4, '2011-11-30 11:00:00', 3, 'Offence 4', 'Offence 4 details', 'Court 4', 'Penalty 4', 1);
+
+INSERT INTO `trailer` (`id`, `created_by`, `last_modified_by`, `licence_id`, `trailer_no`, `created_on`,
+  `deleted_date`, `last_modified_on`, `specified_date`, `version`)
+VALUES
+  (1, 1, 1, 7, "A0001", "2015-01-01", NULL, "2015-01-04", "2015-01-04", 1),
+  (2, 1, 1, 7, "B0020", "2015-01-01", NULL, "2015-02-03", "2015-02-03", 1),
+  (3, 1, 1, 7, "C0300", "2015-01-01", NULL, "2015-03-02", "2015-03-02", 1),
+  (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
 
 SET foreign_key_checks = 1;
