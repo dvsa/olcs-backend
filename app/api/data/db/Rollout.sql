@@ -6746,7 +6746,9 @@ VALUES
     (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL,
     '/templates/GB/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL, 'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
     (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,NULL, '2013-09-04 10:00:47', 1),
-    (671, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55    , NULL, NULL, 2     , 1, NULL, 1, NULL, '/templates/NI/proforma 38-36 statement (NI).rtf',1, NULL, NULL, '2012-09-14 00:00:00', NULL,'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1);
+    (671, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55    , NULL, NULL, 2     , 1, NULL, 1, NULL,
+    '/templates/NI/proforma_38-36_statement_(NI).rtf',1, NULL, NULL, '2012-09-14 00:00:00', NULL,
+    'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1);
 
 /* Test documents */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
