@@ -3,7 +3,9 @@
 namespace Olcs\Db\Service\Search;
 
 use Elastica\Aggregation\Terms;
+use Elastica\Aggregation\Range;
 use Elastica\Query;
+use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
@@ -16,6 +18,11 @@ class Search
      * @var
      */
     protected $client;
+
+    /**
+     * @var array
+     */
+    protected $filters = [];
 
     /**
      * @param mixed $client
@@ -38,6 +45,7 @@ class Search
      * @param array $indexes
      * @param int $page
      * @param int $limit
+     * @param array $filters
      * @return array
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
@@ -65,20 +73,21 @@ class Search
         $elasticaQuery->setSize($limit);
         $elasticaQuery->setFrom($limit * ($page - 1));
 
-        $orgNamesTermsAgg = new Terms("orgNames");
-        $orgNamesTermsAgg->setName("Organisation Names");
-        $orgNamesTermsAgg->setField("orgName");
-        $orgNamesTermsAgg->setSize(10);
-        $orgNamesTermsAgg->setMinimumDocumentCount(0);
+        /**
+         * This deals with asking elastic for the filters / aggregation terms we want.
+         */
+        $filterNames = $this->getFilterNames();
+        if (isset($filterNames)) {
+            foreach ($filterNames as $filterName) {
 
-        $elasticaQuery->addAggregation($orgNamesTermsAgg);
+                $terms = new Terms($filterName);
+                $terms->setField($filterName);
+                $terms->setSize(30);
+                $terms->setMinimumDocumentCount(1);
 
-        $taTermsAgg = new Terms("licenceTrafficArea");
-        $taTermsAgg->setName("Traffic Area");
-        $taTermsAgg->setField("licenceTrafficArea");
-        $taTermsAgg->setSize(10);
-
-        $elasticaQuery->addAggregation($taTermsAgg);
+                $elasticaQuery->addAggregation($terms);
+            }
+        }
 
         //Search on the index.
         $es    = new \Elastica\Search($this->getClient());
@@ -107,8 +116,58 @@ class Search
             $response['Results'][] = $refined;
         }
 
-        $response['Results'][] = $resultSet->getAggregations();
+        $response['Filters'] = $this->processFilters($resultSet->getAggregations());
 
         return $response;
     }
+
+    public function processFilters(array $aggregations)
+    {
+        $return = [];
+
+        foreach ($aggregations as $aggregation => $value) {
+            $return[$aggregation] = $value['buckets'];
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * Sets the filters.
+     *
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function setFilters(array $filters)
+    {
+        $f = new CamelCaseToUnderscore();
+
+        foreach ($filters as $filterName => $value) {
+
+            $this->filters[mb_strtolower($f->filter($filterName))] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns an array of filter names (array keys from the $this->requiredFilters array)
+     *
+     * @return array
+     */
+    public function getFilterNames()
+    {
+        return array_keys($this->getFilters());
+    }
+
+
 }

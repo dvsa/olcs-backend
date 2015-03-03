@@ -17,6 +17,18 @@ class SearchController extends AbstractController
         $indices = explode('|', $params['index']);
 
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
+
+        $params['filters'] = [
+            'orgTypeDesc' => '',
+            'orgName' => '',
+            'licenceTrafficArea' => ''
+        ];
+
+        if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
+
+            $elastic->setFilters($params['filters']);
+        }
+
         $resultSet = $elastic->search(
             urldecode($params['query']),
             $indices,
