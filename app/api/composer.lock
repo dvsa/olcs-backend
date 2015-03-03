@@ -872,10 +872,11 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
-                "reference": "17c4f3d14b9b27a9fe633acc4ae9c3a944b42d92"
+                "reference": "fa05b2e971fcee7ed21b6a2f2c1015041447a699"
             },
             "require": {
                 "php": ">=5.4",
+                "psr/log": "~1.0",
                 "zendframework/zend-eventmanager": "~2.3.1",
                 "zendframework/zend-http": "~2.3.1",
                 "zendframework/zend-log": "~2.3.1",
@@ -895,7 +896,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2015-02-18 11:17:23"
+            "time": "2015-02-27 15:25:19"
         },
         {
             "name": "psr/log",
