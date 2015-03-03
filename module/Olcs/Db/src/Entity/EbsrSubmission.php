@@ -25,7 +25,8 @@ class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\BusRegManyToOneAlt1,
-        Traits\IdIdentity;
+        Traits\IdIdentity,
+        Traits\CustomVersionField;
 
     /**
      * Application classification
