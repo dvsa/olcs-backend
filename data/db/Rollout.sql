@@ -6933,7 +6933,7 @@ CREATE VIEW task_search_view AS
        t.assigned_to_user_id,
        cat.description category_name,
        tsc.sub_category_name task_sub_type,
-       t.sub_category_id sub_category_id,
+       t.sub_category_id task_sub_category_id,
        t.description,
        te.name as team_name,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
@@ -6959,14 +6959,14 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(cd.forename,''), ' ', ifnull(cd.family_name,'')) user_name,
+      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
    left join organisation irfo on (t.irfo_organisation_id = irfo.id)
    left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
-     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.work_cd_id)
+     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.home_cd_id)
    left join cases c on (t.case_id = c.id)
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
