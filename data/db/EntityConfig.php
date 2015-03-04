@@ -460,7 +460,13 @@ return array(
         ),
         'suppress_from_op' => array(
             'type' => 'yesno'
-        )
+        ),
+        'document_id' => [
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'template'
+            )
+        ]
     ),
     'doc_template_bookmark' => array(
         'doc_template_id' => array(
