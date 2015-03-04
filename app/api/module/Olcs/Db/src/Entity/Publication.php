@@ -16,10 +16,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="publication",
  *    indexes={
  *        @ORM\Index(name="fk_publication_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_publication_document1_idx", columns={"document_id"}),
  *        @ORM\Index(name="fk_publication_ref_data1_idx", columns={"pub_status"}),
  *        @ORM\Index(name="fk_publication_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_publication_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_publication_document1", columns={"document_id"})
+ *        @ORM\Index(name="fk_publication_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
