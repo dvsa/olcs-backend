@@ -41,7 +41,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OperatingCentreManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -159,6 +158,16 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="notes", length=8000, nullable=true)
      */
     protected $notes;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="conditionUndertakings")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
 
     /**
      * S4
@@ -469,6 +478,29 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return ConditionUndertaking
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
     }
 
     /**
