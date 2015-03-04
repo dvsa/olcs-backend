@@ -679,6 +679,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('document_type', 'doc_txt', 'TXT', null),
     ('document_type', 'doc_rtf', 'RTF', null),
     ('document_type', 'doc_tiff', 'TIFF', null),
+    ('document_type', 'doc_html', 'HTML', null),
 
     -- task allocation rules
 
@@ -4087,8 +4088,8 @@ VALUES
     (96, 999999, 479, 96, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Further Information from Complainant Letter', '2002-05-14 17:45:01', 1),
     (97, 2, 479, 97, 479, 55, 0, 1, '2002-05-14 17:45:01', 'Compliance: Covering Letter Section 9 Statement', '2002-05-14 17:45:01', 1),
     (98, 2, 479, 98, 479, 55, 0, 1, '2002-05-14 17:45:01', 'Compliance: Statement of Witness', '2002-05-14 17:45:01', 1),
-    (99, 999999, 479, 99, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Covering Letter Section 43 Statement', '2002-05-14 17:45:01', 1),
-    (100, 999999, 479, 100, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Section 43 Certificate', '2002-05-14 17:45:01', 1),
+    (99, 2, 479, 99, 479, 55, 0, 1, '2002-05-14 17:45:01', 'Compliance: Covering Letter Section 43 Statement', '2002-05-14 17:45:01', 1),
+    (100, 2, 479, 100, 479, 55, 0, 1, '2002-05-14 17:45:01', 'Compliance: Section 43 Certificate', '2002-05-14 17:45:01', 1),
     (107, 2, 479, 107, 479, 57, 0, 1, '2002-05-14 17:45:01', 'Compliance: No Further Action Letter', '2002-05-14 17:45:01', 1),
     (108, 999999, 479, 108, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Request Explanation Letter', '2002-05-14 17:45:01', 1),
     (109, 2, 479, 109, 479, 57, 0, 1, '2002-05-14 17:45:01', 'Compliance: Warning Letter', '2002-05-14 17:45:01', 1),
@@ -4581,8 +4582,12 @@ VALUES
     (665, 999999, 1, 665, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_PIDecisionLetter - PSV (NI)', '2012-09-14 00:00:00', 1),
     (666, 999999, 1, 666, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_Comp_RequestForStayDecisionLetter (NI)', '2012-09-14 00:00:00', 1),
     (667, 999999, 1, 667, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'TM_PIDisciplinaryAnnexA (NI)', '2012-09-14 00:00:00', 1),
-    (669, 2, 479, 669, 479, 49, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA', '2013-06-12 15:04:50', 1),
-    (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief', '2013-09-04 10:00:47', 1),
+    (669, 999999, 479, 669, 479, 999999, 0, 1, '2013-06-12 15:04:50', 'Compliance: Public Inquiry Decision Letter SEMTA',
+    '2013-06-12 15:04:50', 1),
+    (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief',
+    '2013-09-04 10:00:47', 1),
+    (671, 2, 1, 671, 1, 55, 1, 0, '2013-09-04 10:00:47', 'Compliance: Proforma 38-36 statement (NI)',
+    '2013-09-04 10:00:47', 1),
     (683, 11, 1, 683, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D East of England', '2015-02-27 10:00:47', 1),
     (684, 11, 1, 683, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D London and the South East of England', '2015-02-27 10:00:47', 1),
     (685, 11, 1, 683, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D North East of England', '2015-02-27 10:00:47', 1),
@@ -6260,8 +6265,8 @@ VALUES
     (96, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_FurtherInfoFromComplainantLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Further Information from Complainant Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (97, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_Section9CoveringLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Covering Letter Section 9 Statement', 0, NULL, '2002-05-14 17:45:01', 1),
     (98, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_Section9Statement.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Statement of Witness', 0, NULL, '2002-05-14 17:45:01', 1),
-    (99, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_Section43CoveringLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Covering Letter Section 43 Statement', 0, NULL, '2002-05-14 17:45:01', 1),
-    (100, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_Section43Certificate.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Section 43 Certificate', 0, NULL, '2002-05-14 17:45:01', 1),
+    (99, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_Section43CoveringLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Covering Letter Section 43 Statement', 0, NULL, '2002-05-14 17:45:01', 1),
+    (100, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_Section43Certificate.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Section 43 Certificate', 0, NULL, '2002-05-14 17:45:01', 1),
     (107, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 57, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_NoFurtherActionLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: No Further Action Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (108, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_RequestExplanationLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Request Explanation Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (109, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 57, NULL, NULL, 2, 479, NULL, 479, NULL, '/templates/GB/Comp_WarningLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Warning Letter', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6758,12 +6763,12 @@ VALUES
     (665, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_PIDecisionLetterPSV.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_PIDecisionLetter - PSV (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (666, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_RequestForStayDecisionLetter.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_Comp_RequestForStayDecisionLetter (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (667, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/TM_Comp_PIDisciplinaryAnnexA.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'TM_PIDisciplinaryAnnexA (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 49, NULL, NULL, 2, 479, NULL, 479, NULL,
-    '/templates/GB/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL,
-    'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
-    (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL,
-    '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,
-    NULL, '2013-09-04 10:00:47', 1),
+    (669, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL,
+    '/templates/GB/Comp_PIDecisionLetterSEMTA.rtf', 0, NULL, NULL, '2013-06-12 15:04:50', NULL, 'Compliance: Public Inquiry Decision Letter SEMTA', 0, NULL, '2013-06-12 15:04:50', 1),
+    (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,NULL, '2013-09-04 10:00:47', 1),
+    (671, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55    , NULL, NULL, 2     , 1, NULL, 1, NULL,
+    '/templates/NI/proforma_38-36_statement_(NI).rtf',1, NULL, NULL, '2012-09-14 00:00:00', NULL,
+    'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (683, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D East of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (684, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_London_and_the_South_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D London and the South East of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (685, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_North_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D North East of England', 0, NULL, '2015-02-27 10:00:47', 1),
@@ -6783,8 +6788,8 @@ VALUES
     (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1);
 
 /* Test documents */
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
-    (671,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
+INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
+issued_date,document_store_id) VALUES
     (672,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (673,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
     (674,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
@@ -6999,7 +7004,7 @@ CREATE VIEW task_search_view AS
        t.assigned_to_user_id,
        cat.description category_name,
        tsc.sub_category_name task_sub_type,
-       t.sub_category_id sub_category_id,
+       t.sub_category_id task_sub_category_id,
        t.description,
        te.name as team_name,
        coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
@@ -7025,14 +7030,14 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(cd.forename,''), ' ', ifnull(cd.family_name,'')) user_name,
+      concat(ifnull(cd.family_name,''), ', ', ifnull(cd.forename,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
    left join organisation irfo on (t.irfo_organisation_id = irfo.id)
    left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
-     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.work_cd_id)
+     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.home_cd_id)
    left join cases c on (t.case_id = c.id)
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)

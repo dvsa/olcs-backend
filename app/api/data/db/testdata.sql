@@ -105,6 +105,7 @@ TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
+TRUNCATE TABLE `trailer`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -451,28 +452,33 @@ INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
   (1, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
    null, 0, null);
 
-INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
+INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`, `payment_method`, `waive_reason`, `fee_type_id`) VALUES
-    (7,NULL,7,'lfs_ot',NULL,1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (30,NULL,110,'lfs_pd','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL,1),
-    (41,NULL,110,'lfs_wr','345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (54,NULL,110,'lfs_ot','829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (63,NULL,110,'lfs_ot','481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (75,NULL,110,'lfs_ot','964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (76,1,110,'lfs_wr','234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL,1),
-    (77,1,110,'lfs_wr','836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL,1),
-    (78,1,110,'lfs_wr','561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL,1),
-    (79,1,110,'lfs_wr','634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (80,1,110,'lfs_pd','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL,1),
-    (81,1,110,'lfs_ot','837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (82,1,30,'lfs_ot','354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (83,1,110,'lfs_wr','435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (84,1,110,'lfs_ot','435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (85,1,110,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (86,1,110,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (87,1,110,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason',1),
-    (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL,1),
-    (89,3,210,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes',1);
+    (7,NULL,7,NULL,'lfs_ot',NULL,1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (30,NULL,110,NULL,'lfs_pd','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL,1),
+    (41,NULL,110,NULL,'lfs_wr','345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (54,NULL,110,NULL,'lfs_ot','829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (63,NULL,110,NULL,'lfs_ot','481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (75,NULL,110,NULL,'lfs_ot','964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (76,1,110,NULL,'lfs_wr','234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL,1),
+    (77,1,110,NULL,'lfs_wr','836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL,1),
+    (78,1,110,NULL,'lfs_wr','561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL,1),
+    (79,1,110,NULL,'lfs_wr','634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (80,1,110,NULL,'lfs_pd','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL,1),
+    (81,1,110,NULL,'lfs_ot','837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (82,1,30,NULL,'lfs_ot','354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (83,1,110,NULL,'lfs_wr','435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (84,1,110,NULL,'lfs_ot','435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (85,1,110,NULL,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (86,1,110,NULL,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (87,1,110,NULL,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason',1),
+    (88,1,110,NULL,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL,1),
+    (89,3,210,NULL,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes',1),
+    (90,1,110,3,'lfs_ot',NULL,1,NULL,'Bus Route Application Fee PD2737280/43542 Variation 0','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,188),
+    (91,1,110,8,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 1','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/43542 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -1437,5 +1443,13 @@ VALUES
   (2, '2014-11-30 11:00:00', 1, 'Offence 2', 'Offence 2 details', 'Court 2', 'Penalty 2', 1),
   (3, '2012-10-30 10:00:00', 3, 'Offence 3', 'Offence 3 details', 'Court 3', 'Penalty 3', 1),
   (4, '2011-11-30 11:00:00', 3, 'Offence 4', 'Offence 4 details', 'Court 4', 'Penalty 4', 1);
+
+INSERT INTO `trailer` (`id`, `created_by`, `last_modified_by`, `licence_id`, `trailer_no`, `created_on`,
+  `deleted_date`, `last_modified_on`, `specified_date`, `version`)
+VALUES
+  (1, 1, 1, 7, "A0001", "2015-01-01", NULL, "2015-01-04", "2015-01-04", 1),
+  (2, 1, 1, 7, "B0020", "2015-01-01", NULL, "2015-02-03", "2015-02-03", 1),
+  (3, 1, 1, 7, "C0300", "2015-01-01", NULL, "2015-03-02", "2015-03-02", 1),
+  (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
 
 SET foreign_key_checks = 1;
