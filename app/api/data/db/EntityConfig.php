@@ -1382,5 +1382,13 @@ return array(
                 'property' => 'communityLic'
             )
         ),
+    ),
+    'company_subsidiary_licence' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'companySubsidiarie'
+            )
+        )
     )
 );

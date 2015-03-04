@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Licence many to one trait
  *
- * Auto-Generated (Shared between 12 entities)
+ * Auto-Generated (Shared between 11 entities)
  */
 trait LicenceManyToOne
 {
