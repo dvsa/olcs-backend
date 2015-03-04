@@ -6188,7 +6188,6 @@ CREATE TABLE `statement` (
   `vrm` varchar(20) DEFAULT NULL,
   `stopped_date` datetime DEFAULT NULL,
   `requested_date` datetime DEFAULT NULL,
-  `authorisers_title` varchar(40) DEFAULT NULL,
   `authorisers_decision` varchar(4000) DEFAULT NULL,
   `contact_type` varchar(32) DEFAULT NULL,
   `issued_date` datetime DEFAULT NULL,
