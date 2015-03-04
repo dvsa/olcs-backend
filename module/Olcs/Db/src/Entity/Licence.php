@@ -259,6 +259,15 @@ class Licence implements Interfaces\EntityInterface
     protected $communityLics;
 
     /**
+     * Company subsidiarie
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompanySubsidiaryLicence", mappedBy="licence")
+     */
+    protected $companySubsidiaries;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -339,6 +348,7 @@ class Licence implements Interfaces\EntityInterface
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->communityLics = new ArrayCollection();
+        $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
@@ -938,6 +948,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->communityLics->contains($communityLics)) {
             $this->communityLics->removeElement($communityLics);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the company subsidiarie
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function setCompanySubsidiaries($companySubsidiaries)
+    {
+        $this->companySubsidiaries = $companySubsidiaries;
+
+        return $this;
+    }
+
+    /**
+     * Get the company subsidiaries
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCompanySubsidiaries()
+    {
+        return $this->companySubsidiaries;
+    }
+
+    /**
+     * Add a company subsidiaries
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function addCompanySubsidiaries($companySubsidiaries)
+    {
+        if ($companySubsidiaries instanceof ArrayCollection) {
+            $this->companySubsidiaries = new ArrayCollection(
+                array_merge(
+                    $this->companySubsidiaries->toArray(),
+                    $companySubsidiaries->toArray()
+                )
+            );
+        } elseif (!$this->companySubsidiaries->contains($companySubsidiaries)) {
+            $this->companySubsidiaries->add($companySubsidiaries);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a company subsidiaries
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function removeCompanySubsidiaries($companySubsidiaries)
+    {
+        if ($this->companySubsidiaries->contains($companySubsidiaries)) {
+            $this->companySubsidiaries->removeElement($companySubsidiaries);
         }
 
         return $this;
