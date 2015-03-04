@@ -2178,6 +2178,7 @@ CREATE TABLE `ebsr_submission` (
   `distribute_expire` datetime DEFAULT NULL,
   `is_from_ftp` tinyint(1) NOT NULL DEFAULT 0,
   `organisation_id` int(11) DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `fk_ebsr_submission_document1_idx` (`document_id`),
   KEY `fk_ebsr_submission_bus_reg1_idx` (`bus_reg_id`),
