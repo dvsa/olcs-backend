@@ -45,15 +45,6 @@ class Statement implements Interfaces\EntityInterface
     protected $authorisersDecision;
 
     /**
-     * Authorisers title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="authorisers_title", length=40, nullable=true)
-     */
-    protected $authorisersTitle;
-
-    /**
      * Case
      *
      * @var \Olcs\Db\Entity\Cases
@@ -159,29 +150,6 @@ class Statement implements Interfaces\EntityInterface
     public function getAuthorisersDecision()
     {
         return $this->authorisersDecision;
-    }
-
-    /**
-     * Set the authorisers title
-     *
-     * @param string $authorisersTitle
-     * @return Statement
-     */
-    public function setAuthorisersTitle($authorisersTitle)
-    {
-        $this->authorisersTitle = $authorisersTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get the authorisers title
-     *
-     * @return string
-     */
-    public function getAuthorisersTitle()
-    {
-        return $this->authorisersTitle;
     }
 
     /**
