@@ -963,6 +963,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
     ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
 
+ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),
+    (2, 'other_lic_role', 'ol_role_lic_holder', 'Licence Holder', NULL),
+    (3, 'other_lic_role', 'ol_role_applicant', 'Applicant', NULL);
+
 -- TM qualifications
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
 VALUES
