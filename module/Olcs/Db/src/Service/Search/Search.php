@@ -3,8 +3,8 @@
 namespace Olcs\Db\Service\Search;
 
 use Elastica\Aggregation\Terms;
-use Elastica\Aggregation\Range;
 use Elastica\Query;
+use Elastica\ResultSet;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -50,23 +50,34 @@ class Search
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
+        $elasticaQueryBool = new Query\Bool();
+
         $elasticaQueryString  = new Query\Match();
         $elasticaQueryString->setField('_all', $query);
+        $elasticaQueryBool->addShould($elasticaQueryString);
+
+        $filters = $this->getFilters();
+        foreach ($filters as $field => $value) {
+
+            if (!empty($value)) {
+
+                $elasticaQueryString = new Query\Match();
+                $elasticaQueryString->setField($field, $value);
+                $elasticaQueryBool->addShould($elasticaQueryString);
+            }
+        }
 
         $vrmQuery = new Query\Match();
         $vrmQuery->setField('vrm', $query);
+        $elasticaQueryBool->addShould($vrmQuery);
 
         $postcodeQuery = new Query\Match();
         $postcodeQuery->setField('correspondence_postcode', $query);
+        $elasticaQueryBool->addShould($postcodeQuery);
 
         $wildcardQuery = strtolower(rtrim($query, '*') . '*');
         $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-
-        $elasticaQueryBool = new Query\Bool();
         $elasticaQueryBool->addShould($elasticaQueryWildcard);
-        $elasticaQueryBool->addShould($vrmQuery);
-        $elasticaQueryBool->addShould($postcodeQuery);
-        $elasticaQueryBool->addShould($elasticaQueryString);
 
         $elasticaQuery        = new Query();
         $elasticaQuery->setQuery($elasticaQueryBool);
@@ -82,7 +93,7 @@ class Search
 
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
-                $terms->setSize(30);
+                $terms->setSize(100);
                 $terms->setMinimumDocumentCount(1);
 
                 $elasticaQuery->addAggregation($terms);
@@ -101,32 +112,42 @@ class Search
         $resultSet = $es->search($elasticaQuery);
 
         $response['Count'] = $resultSet->getTotalHits();
-        $response['Results'] = [];
 
-        $filter = new UnderscoreToCamelCase();
-
-        foreach ($resultSet as $result) {
-            /** @var \Elastica\Result $result */
-            $raw = $result->getSource();
-            $refined  = [];
-            foreach ($raw as $key => $value) {
-                $refined[lcfirst($filter->filter($key))] = $value;
-            }
-
-            $response['Results'][] = $refined;
-        }
+        $response['Results'] = $this->processResults($resultSet);
 
         $response['Filters'] = $this->processFilters($resultSet->getAggregations());
 
         return $response;
     }
 
-    public function processFilters(array $aggregations)
+    protected function processResults(ResultSet $resultSet)
+    {
+        $f = new UnderscoreToCamelCase();
+
+        $response = [];
+
+        foreach ($resultSet as $result) {
+            /** @var \Elastica\Result $result */
+            $raw = $result->getSource();
+            $refined  = [];
+            foreach ($raw as $key => $value) {
+                $refined[lcfirst($f->filter($key))] = $value;
+            }
+
+            $response[] = $refined;
+        }
+
+        return $response;
+    }
+
+    protected function processFilters(array $aggregations)
     {
         $return = [];
 
+        $f = new UnderscoreToCamelCase();
+
         foreach ($aggregations as $aggregation => $value) {
-            $return[$aggregation] = $value['buckets'];
+            $return[lcfirst($f->filter($aggregation))] = $value['buckets'];
         }
 
         return $return;

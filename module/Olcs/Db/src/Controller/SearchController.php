@@ -18,13 +18,16 @@ class SearchController extends AbstractController
 
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
 
-        $params['filters'] = [
+        /*$params['filters'] = [
             'orgTypeDesc' => '',
-            'orgName' => '',
-            'licenceTrafficArea' => ''
-        ];
+            'orgName' => 'ANDREW ROBERT SMITHURST',
+            'licenceTrafficArea' => '',
+            'licNo' => 'PK0000325',
+        ];*/
 
         if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
+
+            error_log(print_r($params['filters'], 1));
 
             $elastic->setFilters($params['filters']);
         }
