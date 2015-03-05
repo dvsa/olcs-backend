@@ -937,10 +937,25 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (3,NULL,NULL,'tm_st_A','tm_t_I',104,119,NULL,NULL,NULL,1);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
-`created_on`, `last_modified_on`, `version`) VALUES
-    (1,3,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (2,3,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
+`created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,
+`transport_manager_application_id`,`transport_manager_licence_id`) VALUES
+    (1,3,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (2,3,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (4,1,1,'AA111111',1,NULL,'2014-10-01 21:58:52',NULL,1,'ol_role_tm','oc1',2,10,1,NULL),
+    (5,1,1,'AB122222',1,NULL,'2014-10-02 21:58:52',NULL,1,'ol_role_tm','oc2',2,10,1,NULL),
+    (6,2,1,'AA133333',1,NULL,'2014-10-03 21:58:52',NULL,1,'ol_role_tm','oc3',3,11,2,NULL),
+    (7,2,1,'AB144444',1,NULL,'2014-10-04 21:58:52',NULL,1,'ol_role_tm','oc4',3,11,2,NULL),
+    (8,1,3,'AA311111',1,NULL,'2014-10-05 21:58:52',NULL,1,'ol_role_tm','oc5',4,12,3,NULL),
+    (9,1,3,'AB322222',1,NULL,'2014-10-06 21:58:52',NULL,1,'ol_role_tm','oc6',4,12,3,NULL),
+    (10,2,3,'AA333333',1,NULL,'2014-10-07 21:58:52',NULL,1,'ol_role_tm','oc7',5,13,4,NULL),
+    (11,2,3,'AB344444',1,NULL,'2014-10-08 21:58:52',NULL,1,'ol_role_tm','oc8',5,13,4,NULL),
+    (12,NULL,1,'CC11111',1,NULL,'2014-10-09 21:58:52',NULL,1,'ol_role_tm','oc9',6,14,NULL,1),
+    (13,NULL,1,'CD12222',1,NULL,'2014-10-10 21:58:52',NULL,1,'ol_role_tm','oc10',6,14,NULL,1),
+    (14,NULL,2,'CC11111',1,NULL,'2014-10-11 21:58:52',NULL,1,'ol_role_tm','oc11',7,15,NULL,2),
+    (15,NULL,2,'CD12222',1,NULL,'2014-10-12 21:58:52',NULL,1,'ol_role_tm','oc12',7,15,NULL,2),
+    (16,NULL,3,'CC33333',1,NULL,'2014-10-13 21:58:52',NULL,1,'ol_role_tm','oc13',8,16,NULL,3),
+    (17,NULL,3,'CD44444',1,NULL,'2014-10-14 21:58:52',NULL,1,'ol_role_tm','oc14',8,16,NULL,3);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`no_further_action_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
