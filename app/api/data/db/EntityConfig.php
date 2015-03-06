@@ -1390,5 +1390,13 @@ return array(
                 'property' => 'companySubsidiarie'
             )
         )
+    ),
+    'application_organisation_person' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'applicationOrganisationPerson'
+            )
+        )
     )
 );
