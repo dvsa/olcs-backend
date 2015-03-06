@@ -16,6 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_previous_licence_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_other_licence_ref_data1_idx", columns={"previous_licence_type"}),
+ *        @ORM\Index(name="fk_other_licence_ref_data2_idx", columns={"role"}),
  *        @ORM\Index(name="fk_other_licence_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_other_licence_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_other_licence_transport_manager1_idx", columns={"transport_manager_id"}),
@@ -28,7 +29,7 @@ class OtherLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AdditionalInformation4000Field,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\DisqualificationDateField,
@@ -43,6 +44,15 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Operating centres
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="operating_centres", length=100, nullable=true)
+     */
+    protected $operatingCentres;
+
+    /**
      * Previous licence type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -51,6 +61,16 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=true)
      */
     protected $previousLicenceType;
+
+    /**
+     * Role
+     *
+     * @var \Olcs\Db\Entity\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="role", referencedColumnName="id", nullable=true)
+     */
+    protected $role;
 
     /**
      * Total auth vehicles
@@ -101,6 +121,29 @@ class OtherLicence implements Interfaces\EntityInterface
     protected $willSurrender;
 
     /**
+     * Set the operating centres
+     *
+     * @param string $operatingCentres
+     * @return OtherLicence
+     */
+    public function setOperatingCentres($operatingCentres)
+    {
+        $this->operatingCentres = $operatingCentres;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres
+     *
+     * @return string
+     */
+    public function getOperatingCentres()
+    {
+        return $this->operatingCentres;
+    }
+
+    /**
      * Set the previous licence type
      *
      * @param \Olcs\Db\Entity\RefData $previousLicenceType
@@ -121,6 +164,29 @@ class OtherLicence implements Interfaces\EntityInterface
     public function getPreviousLicenceType()
     {
         return $this->previousLicenceType;
+    }
+
+    /**
+     * Set the role
+     *
+     * @param \Olcs\Db\Entity\RefData $role
+     * @return OtherLicence
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get the role
+     *
+     * @return \Olcs\Db\Entity\RefData
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 
     /**
