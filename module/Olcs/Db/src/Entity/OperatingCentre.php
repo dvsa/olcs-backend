@@ -70,6 +70,15 @@ class OperatingCentre implements Interfaces\EntityInterface
     protected $transportManagerLicences;
 
     /**
+     * Condition undertaking
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ConditionUndertaking", mappedBy="operatingCentre")
+     */
+    protected $conditionUndertakings;
+
+    /**
      * Ad document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -86,6 +95,7 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->transportManagerLicences = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->transportManagerApplications = new ArrayCollection();
+        $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
     }
 
@@ -287,6 +297,66 @@ class OperatingCentre implements Interfaces\EntityInterface
     {
         if ($this->transportManagerLicences->contains($transportManagerLicences)) {
             $this->transportManagerLicences->removeElement($transportManagerLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the condition undertaking
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return OperatingCentre
+     */
+    public function setConditionUndertakings($conditionUndertakings)
+    {
+        $this->conditionUndertakings = $conditionUndertakings;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition undertakings
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConditionUndertakings()
+    {
+        return $this->conditionUndertakings;
+    }
+
+    /**
+     * Add a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return OperatingCentre
+     */
+    public function addConditionUndertakings($conditionUndertakings)
+    {
+        if ($conditionUndertakings instanceof ArrayCollection) {
+            $this->conditionUndertakings = new ArrayCollection(
+                array_merge(
+                    $this->conditionUndertakings->toArray(),
+                    $conditionUndertakings->toArray()
+                )
+            );
+        } elseif (!$this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->add($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a condition undertakings
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @return OperatingCentre
+     */
+    public function removeConditionUndertakings($conditionUndertakings)
+    {
+        if ($this->conditionUndertakings->contains($conditionUndertakings)) {
+            $this->conditionUndertakings->removeElement($conditionUndertakings);
         }
 
         return $this;

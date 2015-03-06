@@ -782,6 +782,12 @@ return array(
                 'property' => 'conditionUndertaking'
             )
         ),
+        'operating_centre_id' => array(
+            'inversedBy' => array(
+                'entity' => 'OperatingCentre',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'is_draft' => array(
             'type' => 'yesno'
         ),
