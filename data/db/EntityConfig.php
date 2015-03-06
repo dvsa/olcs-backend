@@ -1344,7 +1344,13 @@ return array(
                 'entity' => 'Publication',
                 'property' => 'publicationLink'
             )
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'publicationLink'
+            )
+        ),
     ),
     'role_permission' => array(
         'role_id' => array(
