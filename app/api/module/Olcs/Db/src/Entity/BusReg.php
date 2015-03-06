@@ -42,7 +42,6 @@ class BusReg implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
-        Traits\OperatingCentreManyToOneAlt1,
         Traits\ServiceNo70Field,
         Traits\StatusManyToOne,
         Traits\CustomVersionField,
@@ -244,6 +243,16 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false, options={"default": 0})
      */
     protected $opNotifiedLaPte = 0;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
 
     /**
      * Organisation email
@@ -1098,6 +1107,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return BusReg
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
     }
 
     /**
