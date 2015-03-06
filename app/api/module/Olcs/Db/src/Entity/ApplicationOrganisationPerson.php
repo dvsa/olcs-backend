@@ -26,7 +26,6 @@ use Olcs\Db\Entity\Traits;
 class ApplicationOrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -45,6 +44,16 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="action", length=1, nullable=false)
      */
     protected $action;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="applicationOrganisationPersons")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $application;
 
     /**
      * Original person
@@ -77,6 +86,29 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return ApplicationOrganisationPerson
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**
