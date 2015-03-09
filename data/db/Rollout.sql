@@ -750,6 +750,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('interim_status', 'int_sts_refused', 'Refused', 'Refused'),
     ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked'),
     ('interim_status', 'int_sts_saved', 'Saved', 'Saved'),
+    ('interim_status', 'int_sts_requested', 'Requested', 'Requested'),
 
     ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV'),
     ('lic_cat', 'lcat_permit', 'Permit', 'Permit'),
