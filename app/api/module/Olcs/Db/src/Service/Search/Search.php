@@ -192,6 +192,4 @@ class Search
     {
         return array_keys($this->getFilters());
     }
-
-
 }
