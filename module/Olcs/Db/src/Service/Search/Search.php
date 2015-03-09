@@ -56,6 +56,9 @@ class Search
         $elasticaQueryString->setField('_all', $query);
         $elasticaQueryBool->addShould($elasticaQueryString);
 
+        /**
+         * Here we send the filter values selected to the search query
+         */
         $filters = $this->getFilters();
         foreach ($filters as $field => $value) {
 
@@ -93,7 +96,7 @@ class Search
 
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
-                $terms->setSize(100);
+                $terms->setSize(5);
                 $terms->setMinimumDocumentCount(1);
 
                 $elasticaQuery->addAggregation($terms);
