@@ -17,6 +17,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="fk_publication_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_publication_document1_idx", columns={"document_id"}),
+ *        @ORM\Index(name="fk_publication_doc_template1_idx", columns={"doc_template_id"}),
  *        @ORM\Index(name="fk_publication_ref_data1_idx", columns={"pub_status"}),
  *        @ORM\Index(name="fk_publication_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_publication_user2_idx", columns={"last_modified_by"})
@@ -28,7 +29,7 @@ class Publication implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\DocumentManyToOne,
+        Traits\DocumentManyToOneAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -43,6 +44,16 @@ class Publication implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="doc_name", length=255, nullable=true)
      */
     protected $docName;
+
+    /**
+     * Doc template
+     *
+     * @var \Olcs\Db\Entity\DocTemplate
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\DocTemplate")
+     * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
+     */
+    protected $docTemplate;
 
     /**
      * Pub date
@@ -119,6 +130,29 @@ class Publication implements Interfaces\EntityInterface
     public function getDocName()
     {
         return $this->docName;
+    }
+
+    /**
+     * Set the doc template
+     *
+     * @param \Olcs\Db\Entity\DocTemplate $docTemplate
+     * @return Publication
+     */
+    public function setDocTemplate($docTemplate)
+    {
+        $this->docTemplate = $docTemplate;
+
+        return $this;
+    }
+
+    /**
+     * Get the doc template
+     *
+     * @return \Olcs\Db\Entity\DocTemplate
+     */
+    public function getDocTemplate()
+    {
+        return $this->docTemplate;
     }
 
     /**
