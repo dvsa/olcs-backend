@@ -152,7 +152,8 @@ INSERT INTO `application` (
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`,
     `disqualified`, `insolvency_details`, `received_date`,
     `target_completion_date`, `prev_conviction`, `created_on`, `last_modified_on`,
-    `version`, `is_variation`, `goods_or_psv`, `ni_flag`, `licence_type`
+    `version`, `is_variation`, `goods_or_psv`, `ni_flag`, `licence_type`,
+    `interim_status`, `interim_reason`, `interim_start`, `interim_end`, `interim_auth_vehicles`, `interim_auth_trailers`
 ) VALUES
     (
         1,7,NULL,NULL,'apsts_not_submitted',
@@ -160,7 +161,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2010-12-15 10:48:00',
         NULL,NULL,NOW(),NULL,
-        1,0,'lcat_gv',0, 'ltyp_r'
+        1,0,'lcat_gv',0, 'ltyp_r',
+        'int_sts_requested', 'Interim reason', '2014-01-01', '2015-01-01', 10, 20
     ),
     (
         2,7,NULL,NULL,'apsts_not_submitted',
@@ -168,7 +170,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2014-12-15 10:48:00',
         '2015-02-16 10:48:00',NULL,NULL,NULL,
-        1,1,'lcat_gv',0, NULL
+        1,1,'lcat_gv',0, NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     ),
     (
         3,210,NULL,NULL,'apsts_not_submitted',
@@ -176,7 +179,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,NULL,
         NULL,NULL,NOW(),NULL,
-        1,0,'lcat_gv',0, NULL
+        1,0,'lcat_gv',0, NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     ),
     (
         6,114,NULL,NULL,'apsts_not_submitted',
@@ -184,7 +188,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2014-12-15 10:48:00',
         '2015-02-16 10:48:00',NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',
-        1,0,'lcat_psv',1,NULL
+        1,0,'lcat_psv',1,NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     );
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -199,10 +204,10 @@ INSERT INTO `application_tracking` (`application_id`, `created_by`, `last_modifi
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
-    `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16),
-(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16),
-(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16);
+    `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`, `action`, `is_interim`) VALUES
+(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16, 'A', 1),
+(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16, NULL, NULL),
+(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16, 'U', NULL);
 
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -541,37 +546,37 @@ INSERT INTO `licence` (
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
     `specified_date`, `removal_date`, `created_on`,
-    `last_modified_on`, `version`) VALUES
+    `last_modified_on`, `version`, `application_id`, `interim_application_id`) VALUES
     (1,7,1,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,2),
     (2,7,2,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,2),
     (3,7,3,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,NULL),
     (4,7,4,NULL,4,'2013-02-20 00:00:00','2013-03-20 15:40:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (5,30,4,NULL,4,'2013-04-20 00:00:00','2013-05-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (6,41,4,NULL,4,'2013-05-22 00:00:00','2013-06-10 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (7,54,4,NULL,4,'2013-06-20 00:00:00','2013-07-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (8,63,4,NULL,4,'2013-07-24 00:00:00','2013-09-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (9,75,4,NULL,4,'2013-10-20 00:00:00','2013-11-02 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (10,100,4,NULL,4,'2014-11-14 00:00:00','2013-11-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (11,110,4,NULL,4,'2014-11-25 00:00:00','2013-11-26 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (12,114,4,NULL,4,'2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (13,115,4,NULL,4,'2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (14,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1);
+    '2014-02-20 00:00:00',1,NULL,NULL);
 
 INSERT INTO `local_authority` (`id`, `created_by`, `last_modified_by`, `traffic_area_id`, `naptan_code`, `txc_name`, `created_on`, `description`, `email_address`, `last_modified_on`, `version`)
 VALUES

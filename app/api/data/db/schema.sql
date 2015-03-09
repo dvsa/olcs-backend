@@ -207,6 +207,7 @@ CREATE TABLE `application` (
   `interim_auth_vehicles` int(11) DEFAULT NULL COMMENT 'Number of vehicles authorised on interim licence.',
   `interim_auth_trailers` int(11) DEFAULT NULL COMMENT 'Number of trailers authorised on interim licence.',
   `interim_status` varchar(32) DEFAULT NULL COMMENT 'Interim licence status.',
+  `interim_reason` varchar(1000) DEFAULT NULL COMMENT 'Interim reason.',
   `is_maintenance_suitable` tinyint(1) DEFAULT NULL COMMENT 'User confirmation that maintenance agreements are suitable and guidence notes read.',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
