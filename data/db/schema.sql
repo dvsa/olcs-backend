@@ -6194,7 +6194,6 @@ CREATE TABLE `statement` (
   `vrm` varchar(20) DEFAULT NULL,
   `stopped_date` datetime DEFAULT NULL,
   `requested_date` datetime DEFAULT NULL,
-  `authorisers_title` varchar(40) DEFAULT NULL,
   `authorisers_decision` varchar(4000) DEFAULT NULL,
   `contact_type` varchar(32) DEFAULT NULL,
   `issued_date` datetime DEFAULT NULL,
@@ -7390,6 +7389,8 @@ CREATE TABLE `other_licence` (
   `additional_information` VARCHAR(4000) DEFAULT NULL,
   `total_auth_vehicles` int(11) DEFAULT NULL,
   `hours_per_week` varchar(80) DEFAULT NULL COMMENT 'If on transport manager',
+  `role` VARCHAR(32) DEFAULT NULL,
+  `operating_centres` VARCHAR(100) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
@@ -7398,6 +7399,7 @@ CREATE TABLE `other_licence` (
   INDEX `fk_previous_licence_application1_idx` (`application_id` ASC),
   PRIMARY KEY (`id`),
   KEY `fk_other_licence_ref_data1_idx` (`previous_licence_type` ASC),
+  KEY `fk_other_licence_ref_data2_idx` (`role` ASC),
   KEY `fk_other_licence_user1_idx` (`created_by` ASC),
   KEY `fk_other_licence_user2_idx` (`last_modified_by` ASC),
   KEY `fk_other_licence_transport_manager1_idx` (`transport_manager_id` ASC),
@@ -7406,6 +7408,8 @@ CREATE TABLE `other_licence` (
   CONSTRAINT `fk_other_licence_application1` FOREIGN KEY (`application_id`)
     REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_ref_data1` FOREIGN KEY (`previous_licence_type`)
+    REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_other_licence_ref_data2` FOREIGN KEY (`role`)
     REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_other_licence_user1` FOREIGN KEY (`created_by`)
     REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

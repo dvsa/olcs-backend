@@ -26,7 +26,6 @@ class ApplicationTracking implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AddressesStatusField,
-        Traits\ApplicationManyToOne,
         Traits\BusinessDetailsStatusField,
         Traits\BusinessTypeStatusField,
         Traits\CommunityLicencesStatusField,
@@ -52,4 +51,37 @@ class ApplicationTracking implements Interfaces\EntityInterface
         Traits\VehiclesPsvStatusField,
         Traits\VehiclesStatusField,
         Traits\CustomVersionField;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $application;
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return ApplicationTracking
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 }
