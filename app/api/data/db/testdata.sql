@@ -1424,18 +1424,18 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`
     (5,3,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
-INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
+INSERT INTO `organisation_nature_of_business` (`organisation_id`, `ref_data_id`)
 VALUES
-	(1, 1, '01120', '2014-11-26 10:39:46', 1),
-	(2, 1, '01150', '2014-11-26 10:39:47', 1),
-	(3, 30, '01150', '2014-11-26 10:39:47', 1),
-	(4, 41, '01150', '2014-11-26 10:39:47', 1),
-	(5, 54, '01150', '2014-11-26 10:39:47', 1),
-	(6, 63, '01150', '2014-11-26 10:39:47', 1),
-	(7, 75, '01150', '2014-11-26 10:39:47', 1),
-	(8, 100, '01150', '2014-11-26 10:39:47', 1),
-	(9, 104, '01150', '2014-11-26 10:39:47', 1),
-	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+	(1, '01120'),
+	(1, '01150'),
+	(30, '01150'),
+	(41, '01150'),
+	(54, '01150'),
+	(63, '01150'),
+	(75, '01150'),
+	(100, '01150'),
+	(104, '01150'),
+	(105, '01150');
 
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
