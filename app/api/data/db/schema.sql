@@ -2463,6 +2463,7 @@ CREATE TABLE `fee` (
   `payment_method` varchar(32) DEFAULT NULL COMMENT 'The method of the successful payment. There could have been several attempts to pay with differing methods, but only one successful.',
   `payer_name` VARCHAR(100) NULL COMMENT 'Name on cheque or POs',
   `cheque_po_number` VARCHAR(100) NULL,
+  `cheque_po_date` datetime DEFAULT NULL,
   `paying_in_slip_number` VARCHAR(100) NULL COMMENT 'Paying in slip from DVSA employee paying cheque or PO into bank.',
   `created_by` int(11) DEFAULT NULL,
   `last_modified_by` int(11) DEFAULT NULL,
