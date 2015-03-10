@@ -202,6 +202,8 @@ CREATE TABLE `application` (
   `psv_limousines` tinyint(1) DEFAULT NULL COMMENT 'Are any vehicles on licence limos or novelty.Section 15F PSV421',
   `psv_no_limousine_confirmation` tinyint(1) DEFAULT NULL COMMENT 'If no limos on licence user confirms they will not put any on licence. Section 15F PSV421',
   `psv_only_limousines_confirmation` tinyint(1) DEFAULT NULL COMMENT 'Licence is only for limos and no other vehicle types. Section 15G PSV 421',
+  `psv_medium_vhl_confirmation` tinyint(1) DEFAULT NULL,
+  `psv_medium_vhl_notes` varchar(4000) DEFAULT NULL,
   `interim_start` date DEFAULT NULL COMMENT 'Date interim licence is to start.',
   `interim_end` date DEFAULT NULL COMMENT 'Date interim licence is to end.',
   `interim_auth_vehicles` int(11) DEFAULT NULL COMMENT 'Number of vehicles authorised on interim licence.',
