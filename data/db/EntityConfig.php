@@ -782,6 +782,12 @@ return array(
                 'property' => 'conditionUndertaking'
             )
         ),
+        'operating_centre_id' => array(
+            'inversedBy' => array(
+                'entity' => 'OperatingCentre',
+                'property' => 'conditionUndertaking'
+            )
+        ),
         'is_draft' => array(
             'type' => 'yesno'
         ),
@@ -1338,7 +1344,13 @@ return array(
                 'entity' => 'Publication',
                 'property' => 'publicationLink'
             )
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'publicationLink'
+            )
+        ),
     ),
     'role_permission' => array(
         'role_id' => array(
@@ -1388,6 +1400,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'companySubsidiarie'
+            )
+        )
+    ),
+    'application_organisation_person' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'applicationOrganisationPerson'
             )
         )
     )

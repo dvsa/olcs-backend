@@ -417,6 +417,15 @@ class Application implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
+     * Application organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationOrganisationPerson", mappedBy="application")
+     */
+    protected $applicationOrganisationPersons;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -495,6 +504,7 @@ class Application implements Interfaces\EntityInterface
     {
         $this->applicationCompletions = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->applicationOrganisationPersons = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
@@ -1494,6 +1504,66 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the application organisation person
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function setApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        $this->applicationOrganisationPersons = $applicationOrganisationPersons;
+
+        return $this;
+    }
+
+    /**
+     * Get the application organisation persons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationOrganisationPersons()
+    {
+        return $this->applicationOrganisationPersons;
+    }
+
+    /**
+     * Add a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function addApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($applicationOrganisationPersons instanceof ArrayCollection) {
+            $this->applicationOrganisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->applicationOrganisationPersons->toArray(),
+                    $applicationOrganisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->add($applicationOrganisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function removeApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->removeElement($applicationOrganisationPersons);
         }
 
         return $this;
