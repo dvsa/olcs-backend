@@ -163,6 +163,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimEnd;
 
     /**
+     * Interim reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="interim_reason", length=1000, nullable=true)
+     */
+    protected $interimReason;
+
+    /**
      * Interim start
      *
      * @var \DateTime
@@ -780,6 +789,29 @@ class Application implements Interfaces\EntityInterface
     public function getInterimEnd()
     {
         return $this->interimEnd;
+    }
+
+    /**
+     * Set the interim reason
+     *
+     * @param string $interimReason
+     * @return Application
+     */
+    public function setInterimReason($interimReason)
+    {
+        $this->interimReason = $interimReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim reason
+     *
+     * @return string
+     */
+    public function getInterimReason()
+    {
+        return $this->interimReason;
     }
 
     /**
