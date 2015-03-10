@@ -1341,24 +1341,13 @@ DROP TABLE IF EXISTS `company_subsidiary_licence`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `company_subsidiary_licence` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_subsidiary_id` int(11) NOT NULL,
   `licence_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `company_subsid_licence_unique` (`company_subsidiary_id`,`licence_id`),
+  PRIMARY KEY (`company_subsidiary_id`, `licence_id`),
   KEY `fk_company_subsidiary_has_licence_licence1_idx` (`licence_id`),
   KEY `fk_company_subsidiary_has_licence_company_subsidiary1_idx` (`company_subsidiary_id`),
-  KEY `fk_company_subsidiary_licence_user1_idx` (`created_by`),
-  KEY `fk_company_subsidiary_licence_user2_idx` (`last_modified_by`),
   CONSTRAINT `fk_company_subsidiary_has_licence_company_subsidiary1` FOREIGN KEY (`company_subsidiary_id`) REFERENCES `company_subsidiary` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_has_licence_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_company_subsidiary_has_licence_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4304,24 +4293,13 @@ DROP TABLE IF EXISTS `organisation_nature_of_business`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organisation_nature_of_business` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ref_data_id` varchar(32) NOT NULL,
   `organisation_id` int(11) NOT NULL,
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `last_modified_by` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  KEY `fk_org_nob_ref_data1_idx` (`ref_data_id`),
+  `ref_data_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`organisation_id`, `ref_data_id`),
   KEY `fk_org_nob_organisation1_idx` (`organisation_id`),
-  KEY `fk_org_nob_user1_idx` (`created_by`),
-  KEY `fk_org_nob_user2_idx` (`last_modified_by`),
-  CONSTRAINT `fk_org_nob_ref_data1` FOREIGN KEY (`ref_data_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_org_nob_ref_data1_idx` (`ref_data_id`),
   CONSTRAINT `fk_org_nob_organisation1` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_org_nob_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_org_nob_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_org_nob_ref_data1` FOREIGN KEY (`ref_data_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

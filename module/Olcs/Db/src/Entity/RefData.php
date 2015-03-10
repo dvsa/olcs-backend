@@ -82,6 +82,15 @@ class RefData implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Organisation
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Organisation", mappedBy="refDatas")
+     */
+    protected $organisations;
+
+    /**
      * Outcome case
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -141,13 +150,14 @@ class RefData implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->pis = new ArrayCollection();
         $this->tmCaseDecisionRehabs = new ArrayCollection();
         $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
-        $this->pis = new ArrayCollection();
-        $this->impoundings = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->outcomeCases = new ArrayCollection();
-        $this->oppositions = new ArrayCollection();
+        $this->impoundings = new ArrayCollection();
     }
 
     /**
@@ -394,6 +404,66 @@ class RefData implements Interfaces\EntityInterface
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisations
+     * @return RefData
+     */
+    public function setOrganisations($organisations)
+    {
+        $this->organisations = $organisations;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisations
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
+    }
+
+    /**
+     * Add a organisations
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisations
+     * @return RefData
+     */
+    public function addOrganisations($organisations)
+    {
+        if ($organisations instanceof ArrayCollection) {
+            $this->organisations = new ArrayCollection(
+                array_merge(
+                    $this->organisations->toArray(),
+                    $organisations->toArray()
+                )
+            );
+        } elseif (!$this->organisations->contains($organisations)) {
+            $this->organisations->add($organisations);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisations
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisations
+     * @return RefData
+     */
+    public function removeOrganisations($organisations)
+    {
+        if ($this->organisations->contains($organisations)) {
+            $this->organisations->removeElement($organisations);
         }
 
         return $this;

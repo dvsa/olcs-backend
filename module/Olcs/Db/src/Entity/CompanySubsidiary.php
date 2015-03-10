@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -39,6 +40,23 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     protected $companyNo;
 
     /**
+     * Licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Licence", inversedBy="companySubsidiarys")
+     * @ORM\JoinTable(name="company_subsidiary_licence",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="company_subsidiary_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $licences;
+
+    /**
      * Name
      *
      * @var string
@@ -46,6 +64,14 @@ class CompanySubsidiary implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=70, nullable=true)
      */
     protected $name;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->licences = new ArrayCollection();
+    }
 
     /**
      * Set the company no
@@ -68,6 +94,66 @@ class CompanySubsidiary implements Interfaces\EntityInterface
     public function getCompanyNo()
     {
         return $this->companyNo;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return CompanySubsidiary
+     */
+    public function setLicences($licences)
+    {
+        $this->licences = $licences;
+
+        return $this;
+    }
+
+    /**
+     * Get the licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLicences()
+    {
+        return $this->licences;
+    }
+
+    /**
+     * Add a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return CompanySubsidiary
+     */
+    public function addLicences($licences)
+    {
+        if ($licences instanceof ArrayCollection) {
+            $this->licences = new ArrayCollection(
+                array_merge(
+                    $this->licences->toArray(),
+                    $licences->toArray()
+                )
+            );
+        } elseif (!$this->licences->contains($licences)) {
+            $this->licences->add($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return CompanySubsidiary
+     */
+    public function removeLicences($licences)
+    {
+        if ($this->licences->contains($licences)) {
+            $this->licences->removeElement($licences);
+        }
+
+        return $this;
     }
 
     /**
