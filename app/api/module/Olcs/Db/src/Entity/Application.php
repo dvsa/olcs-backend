@@ -300,6 +300,24 @@ class Application implements Interfaces\EntityInterface
     protected $psvLimousines;
 
     /**
+     * Psv medium vhl confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_medium_vhl_confirmation", nullable=true)
+     */
+    protected $psvMediumVhlConfirmation;
+
+    /**
+     * Psv medium vhl notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="psv_medium_vhl_notes", length=4000, nullable=true)
+     */
+    protected $psvMediumVhlNotes;
+
+    /**
      * Psv no limousine confirmation
      *
      * @var string
@@ -1125,6 +1143,52 @@ class Application implements Interfaces\EntityInterface
     public function getPsvLimousines()
     {
         return $this->psvLimousines;
+    }
+
+    /**
+     * Set the psv medium vhl confirmation
+     *
+     * @param string $psvMediumVhlConfirmation
+     * @return Application
+     */
+    public function setPsvMediumVhlConfirmation($psvMediumVhlConfirmation)
+    {
+        $this->psvMediumVhlConfirmation = $psvMediumVhlConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl confirmation
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlConfirmation()
+    {
+        return $this->psvMediumVhlConfirmation;
+    }
+
+    /**
+     * Set the psv medium vhl notes
+     *
+     * @param string $psvMediumVhlNotes
+     * @return Application
+     */
+    public function setPsvMediumVhlNotes($psvMediumVhlNotes)
+    {
+        $this->psvMediumVhlNotes = $psvMediumVhlNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl notes
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlNotes()
+    {
+        return $this->psvMediumVhlNotes;
     }
 
     /**
