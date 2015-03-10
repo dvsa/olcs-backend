@@ -313,7 +313,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="psv_medium_vhl_notes", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="psv_medium_vhl_notes", length=1000, nullable=true)
      */
     protected $psvMediumVhlNotes;
 
