@@ -163,6 +163,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimEnd;
 
     /**
+     * Interim reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="interim_reason", length=1000, nullable=true)
+     */
+    protected $interimReason;
+
+    /**
      * Interim start
      *
      * @var \DateTime
@@ -298,6 +307,24 @@ class Application implements Interfaces\EntityInterface
      * @ORM\Column(type="yesnonull", name="psv_limousines", nullable=true)
      */
     protected $psvLimousines;
+
+    /**
+     * Psv medium vhl confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_medium_vhl_confirmation", nullable=true)
+     */
+    protected $psvMediumVhlConfirmation;
+
+    /**
+     * Psv medium vhl notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="psv_medium_vhl_notes", length=1000, nullable=true)
+     */
+    protected $psvMediumVhlNotes;
 
     /**
      * Psv no limousine confirmation
@@ -783,6 +810,29 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the interim reason
+     *
+     * @param string $interimReason
+     * @return Application
+     */
+    public function setInterimReason($interimReason)
+    {
+        $this->interimReason = $interimReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim reason
+     *
+     * @return string
+     */
+    public function getInterimReason()
+    {
+        return $this->interimReason;
+    }
+
+    /**
      * Set the interim start
      *
      * @param \DateTime $interimStart
@@ -1125,6 +1175,52 @@ class Application implements Interfaces\EntityInterface
     public function getPsvLimousines()
     {
         return $this->psvLimousines;
+    }
+
+    /**
+     * Set the psv medium vhl confirmation
+     *
+     * @param string $psvMediumVhlConfirmation
+     * @return Application
+     */
+    public function setPsvMediumVhlConfirmation($psvMediumVhlConfirmation)
+    {
+        $this->psvMediumVhlConfirmation = $psvMediumVhlConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl confirmation
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlConfirmation()
+    {
+        return $this->psvMediumVhlConfirmation;
+    }
+
+    /**
+     * Set the psv medium vhl notes
+     *
+     * @param string $psvMediumVhlNotes
+     * @return Application
+     */
+    public function setPsvMediumVhlNotes($psvMediumVhlNotes)
+    {
+        $this->psvMediumVhlNotes = $psvMediumVhlNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl notes
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlNotes()
+    {
+        return $this->psvMediumVhlNotes;
     }
 
     /**
