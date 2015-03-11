@@ -212,7 +212,10 @@ return array(
         ),
         'is_maintenance_suitable' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'psv_medium_vhl_confirmation' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     's4' => array(
         'surrender_licence' => array(
