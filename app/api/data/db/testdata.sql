@@ -771,6 +771,7 @@ INSERT INTO `disqualification` (
 INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1),
+    (10,'phone_t_tel','0113 123 1234','',1,NULL,NULL,NULL,NULL,1),
     (2,'phone_t_tel','0113 123 1234','',8,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
