@@ -24,8 +24,7 @@ use Olcs\Db\Entity\Traits;
 class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\BusRegManyToOneAlt1,
-        Traits\DocumentManyToOneAlt1
+        Traits\DocumentManyToOneAlt1,
         Traits\IdIdentity,
         Traits\CustomVersionField;
 
