@@ -456,16 +456,16 @@ INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
     `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
     `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
     `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, 1, 1, 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, null, '1111', null, null, null, null, null,
+  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, null, '1111', null,
+  null, null, null, null, null, null, null,null, 0, null),
+  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, null, '1112', null, null, null, null, null,
   null, null, null,null, 0, null),
-  (2, null, 1, 1, 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, null, '1112', null, null, null, null, null,
-  null, null, null,null, 0, null),
-  (3, null, 1, 1, 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, null, '1113', null, null, null, null, null,
-  null, null, null,null, 0, null),
-  (4, null, 1, 1, 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, null, '1114', null, null, null, null, null,
-  null, null, null,null, 0, null),
-  (5, null, 1, 1, 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, null, '1115', null, null, null, null, null,
-  null, null, null,null, 0, null);
+  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, null, '1113',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, null, '1114', null,
+  null, null, null, null, null, null, null,null, 0, null),
+  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null);
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`, `payment_method`, `waive_reason`, `fee_type_id`) VALUES
