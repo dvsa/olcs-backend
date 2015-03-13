@@ -204,7 +204,10 @@ return array(
         ),
         'is_maintenance_suitable' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'psv_medium_vhl_confirmation' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     's4' => array(
         'surrender_licence' => array(
@@ -460,7 +463,13 @@ return array(
         ),
         'suppress_from_op' => array(
             'type' => 'yesno'
-        )
+        ),
+        'document_id' => [
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'template'
+            )
+        ]
     ),
     'doc_template_bookmark' => array(
         'doc_template_id' => array(
@@ -779,6 +788,12 @@ return array(
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
+                'property' => 'conditionUndertaking'
+            )
+        ),
+        'operating_centre_id' => array(
+            'inversedBy' => array(
+                'entity' => 'OperatingCentre',
                 'property' => 'conditionUndertaking'
             )
         ),
@@ -1338,7 +1353,13 @@ return array(
                 'entity' => 'Publication',
                 'property' => 'publicationLink'
             )
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'publicationLink'
+            )
+        ),
     ),
     'role_permission' => array(
         'role_id' => array(
@@ -1382,5 +1403,21 @@ return array(
                 'property' => 'communityLic'
             )
         ),
+    ),
+    'company_subsidiary_licence' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'companySubsidiarie'
+            )
+        )
+    ),
+    'application_organisation_person' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'applicationOrganisationPerson'
+            )
+        )
     )
 );

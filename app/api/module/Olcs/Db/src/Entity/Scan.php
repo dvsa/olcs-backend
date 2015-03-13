@@ -30,7 +30,7 @@ use Olcs\Db\Entity\Traits;
 class Scan implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\CaseManyToOneAlt1,
         Traits\CategoryManyToOne,

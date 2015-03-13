@@ -32,7 +32,6 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -44,6 +43,16 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="company_subsidiary_id", referencedColumnName="id", nullable=false)
      */
     protected $companySubsidiary;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="companySubsidiaries")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Set the company subsidiary
@@ -66,5 +75,28 @@ class CompanySubsidiaryLicence implements Interfaces\EntityInterface
     public function getCompanySubsidiary()
     {
         return $this->companySubsidiary;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return CompanySubsidiaryLicence
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 }
