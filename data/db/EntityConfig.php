@@ -984,6 +984,12 @@ return array(
     'ebsr_submission' => array(
         'is_from_ftp' => array(
             'type' => 'yesno'
+        ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'ebsrSubmission'
+            )
         )
     ),
     'alpha_split' => array(
