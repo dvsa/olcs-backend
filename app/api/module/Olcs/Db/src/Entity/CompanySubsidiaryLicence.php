@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="company_subsidiary_licence",
  *    indexes={
- *        @ORM\Index(name="fk_company_subsidiary_has_licence_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_company_subsidiary_has_licence_company_subsidiary1_idx", columns={"company_subsidiary_id"}),
- *        @ORM\Index(name="fk_company_subsidiary_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_company_subsidiary_licence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_company_subsidiary_licence_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_company_subsidiary_licence_company_subsidiary_id", columns={"company_subsidiary_id"}),
+ *        @ORM\Index(name="ix_company_subsidiary_licence_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_company_subsidiary_licence_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="company_subsid_licence_unique", columns={"company_subsidiary_id","licence_id"})
+ *        @ORM\UniqueConstraint(name="uk_company_subsidiary_licence_company_subsidiary_id_licence_id", columns={"company_subsidiary_id","licence_id"})
  *    }
  * )
  */

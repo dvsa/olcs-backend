@@ -14,14 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="other_licence",
  *    indexes={
- *        @ORM\Index(name="fk_previous_licence_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_other_licence_ref_data1_idx", columns={"previous_licence_type"}),
- *        @ORM\Index(name="fk_other_licence_ref_data2_idx", columns={"role"}),
- *        @ORM\Index(name="fk_other_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_other_licence_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_other_licence_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_other_licence_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_other_licence_previous_licence_type", columns={"previous_licence_type"}),
+ *        @ORM\Index(name="ix_other_licence_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_other_licence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_other_licence_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_other_licence_transport_manager_application_id", columns={"transport_manager_application_id"}),
  *        @ORM\Index(name="fk_other_licence_transport_manager_licence1_idx", columns={"transport_manager_licence_id"}),
- *        @ORM\Index(name="fk_other_licence_transport_manager_application1_idx", columns={"transport_manager_application_id"})
+ *        @ORM\Index(name="fk_other_licence_ref_data1_idx", columns={"role"})
  *    }
  * )
  */
@@ -35,7 +35,6 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\DisqualificationDateField,
         Traits\DisqualificationLength255Field,
         Traits\HolderName90Field,
-        Traits\HoursPerWeek80Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -44,11 +43,20 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Hours per week
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hours_per_week", length=80, nullable=true)
+     */
+    protected $hoursPerWeek;
+
+    /**
      * Operating centres
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="operating_centres", length=100, nullable=true)
+     * @ORM\Column(type="string", name="operating_centres", length=255, nullable=true)
      */
     protected $operatingCentres;
 
@@ -77,7 +85,7 @@ class OtherLicence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="total_auth_vehicles", nullable=true)
+     * @ORM\Column(type="smallint", name="total_auth_vehicles", nullable=true)
      */
     protected $totalAuthVehicles;
 
@@ -119,6 +127,29 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="will_surrender", nullable=true)
      */
     protected $willSurrender;
+
+    /**
+     * Set the hours per week
+     *
+     * @param string $hoursPerWeek
+     * @return OtherLicence
+     */
+    public function setHoursPerWeek($hoursPerWeek)
+    {
+        $this->hoursPerWeek = $hoursPerWeek;
+
+        return $this;
+    }
+
+    /**
+     * Get the hours per week
+     *
+     * @return string
+     */
+    public function getHoursPerWeek()
+    {
+        return $this->hoursPerWeek;
+    }
 
     /**
      * Set the operating centres

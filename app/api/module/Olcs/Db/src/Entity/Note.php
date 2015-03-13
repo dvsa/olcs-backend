@@ -14,16 +14,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="note",
  *    indexes={
- *        @ORM\Index(name="fk_note_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_note_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_note_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_note_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="fk_note_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_note_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_note_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_note_ref_data1_idx", columns={"note_type"}),
- *        @ORM\Index(name="fk_note_bus_reg1_idx", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_note_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_note_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_note_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_note_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="ix_note_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_note_note_type", columns={"note_type"}),
+ *        @ORM\Index(name="ix_note_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="fk_note_transport_manager1_idx", columns={"transport_manager_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_note_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -41,6 +44,8 @@ class Note implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 

@@ -17,13 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="cases",
  *    indexes={
- *        @ORM\Index(name="fk_case_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_case_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_case_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_case_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_cases_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_cases_ref_data1_idx", columns={"case_type"}),
- *        @ORM\Index(name="fk_cases_ref_data2_idx", columns={"erru_case_type"})
+ *        @ORM\Index(name="ix_cases_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_cases_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_cases_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_cases_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_cases_case_type", columns={"case_type"}),
+ *        @ORM\Index(name="ix_cases_erru_case_type", columns={"erru_case_type"}),
+ *        @ORM\Index(name="ix_cases_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_cases_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -38,6 +39,8 @@ class Cases implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 

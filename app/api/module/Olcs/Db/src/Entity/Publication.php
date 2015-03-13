@@ -15,10 +15,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="publication",
  *    indexes={
- *        @ORM\Index(name="fk_publication_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_publication_ref_data1_idx", columns={"pub_status"}),
- *        @ORM\Index(name="fk_publication_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_publication_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_publication_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_publication_pub_status", columns={"pub_status"}),
+ *        @ORM\Index(name="ix_publication_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_publication_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -75,7 +75,7 @@ class Publication implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="publication_no", nullable=false)
+     * @ORM\Column(type="smallint", name="publication_no", nullable=false)
      */
     protected $publicationNo;
 

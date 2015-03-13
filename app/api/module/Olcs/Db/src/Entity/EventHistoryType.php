@@ -16,8 +16,7 @@ use Olcs\Db\Entity\Traits;
  */
 class EventHistoryType implements Interfaces\EntityInterface
 {
-    use Traits\CustomBaseEntity,
-        Traits\IdIdentity;
+    use Traits\CustomBaseEntity;
 
     /**
      * Description
@@ -36,6 +35,16 @@ class EventHistoryType implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="event_type", length=3, nullable=false)
      */
     protected $eventType;
+
+    /**
+     * Identifier - Id
+     *
+     * @var string
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string", name="id", length=3)
+     */
+    protected $id;
 
     /**
      * Set the description
@@ -81,5 +90,28 @@ class EventHistoryType implements Interfaces\EntityInterface
     public function getEventType()
     {
         return $this->eventType;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return EventHistoryType
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

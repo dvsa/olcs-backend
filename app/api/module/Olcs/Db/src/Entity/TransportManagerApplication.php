@@ -17,12 +17,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_application",
  *    indexes={
- *        @ORM\Index(name="fk_transport_manager_application_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_transport_manager_application_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_transport_manager_application_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_transport_manager_application_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_transport_manager_application_ref_data1_idx", columns={"tm_type"}),
- *        @ORM\Index(name="fk_transport_manager_application_ref_data2_idx", columns={"tm_application_status"})
+ *        @ORM\Index(name="ix_transport_manager_application_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_transport_manager_application_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_transport_manager_application_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_transport_manager_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_transport_manager_application_tm_type", columns={"tm_type"}),
+ *        @ORM\Index(name="ix_transport_manager_application_tm_application_status", columns={"tm_application_status"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_transport_manager_application_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -45,6 +48,7 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
+        Traits\TmTypeManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -83,16 +87,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
      */
     protected $tmApplicationStatus;
-
-    /**
-     * Tm type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=true)
-     */
-    protected $tmType;
 
     /**
      * Transport manager
@@ -226,29 +220,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getTmApplicationStatus()
     {
         return $this->tmApplicationStatus;
-    }
-
-    /**
-     * Set the tm type
-     *
-     * @param \Olcs\Db\Entity\RefData $tmType
-     * @return TransportManagerApplication
-     */
-    public function setTmType($tmType)
-    {
-        $this->tmType = $tmType;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTmType()
-    {
-        return $this->tmType;
     }
 
     /**

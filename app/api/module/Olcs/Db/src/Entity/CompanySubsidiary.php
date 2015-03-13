@@ -14,8 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="company_subsidiary",
  *    indexes={
- *        @ORM\Index(name="fk_company_subsidiary_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_company_subsidiary_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_company_subsidiary_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_company_subsidiary_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_company_subsidiary_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -27,6 +30,7 @@ class CompanySubsidiary implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disqualification",
  *    indexes={
- *        @ORM\Index(name="fk_disqualification_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_disqualification_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_disqualification_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_disqualification_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_disqualification_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_disqualification_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_disqualification_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_disqualification_person_id", columns={"person_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_disqualification_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -30,6 +33,7 @@ class Disqualification implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Notes4000Field,
+        Traits\OlbsKeyField,
         Traits\OrganisationManyToOneAlt1,
         Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
@@ -46,9 +50,9 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Period
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="period", length=255, nullable=false)
+     * @ORM\Column(type="smallint", name="period", nullable=false)
      */
     protected $period;
 
@@ -88,7 +92,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Set the period
      *
-     * @param string $period
+     * @param int $period
      * @return Disqualification
      */
     public function setPeriod($period)
@@ -101,7 +105,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Get the period
      *
-     * @return string
+     * @return int
      */
     public function getPeriod()
     {

@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="private_hire_licence",
  *    indexes={
- *        @ORM\Index(name="fk_hackney_licence_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_hackney_licence_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_hackney_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_hackney_licence_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_private_hire_licence_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_private_hire_licence_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_private_hire_licence_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_private_hire_licence_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_private_hire_licence_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -30,6 +33,7 @@ class PrivateHireLicence implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

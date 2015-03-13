@@ -15,10 +15,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="propose_to_revoke",
  *    indexes={
- *        @ORM\Index(name="fk_propose_to_revoke_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_propose_to_revoke_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_propose_to_revoke_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_propose_to_revoke_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_propose_to_revoke_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_propose_to_revoke_presiding_tc_id", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="ix_propose_to_revoke_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_propose_to_revoke_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

@@ -15,12 +15,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation",
  *    indexes={
- *        @ORM\Index(name="fk_organisation_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
- *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
- *        @ORM\Index(name="organisation_name_idx", columns={"name"}),
- *        @ORM\Index(name="fk_organisation_contact_details1_idx", columns={"contact_details_id"})
+ *        @ORM\Index(name="ix_organisation_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_organisation_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_organisation_type", columns={"type"}),
+ *        @ORM\Index(name="ix_organisation_lead_tc_area_id", columns={"lead_tc_area_id"}),
+ *        @ORM\Index(name="ix_organisation_name", columns={"name"}),
+ *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"})
  *    }
  * )
  */

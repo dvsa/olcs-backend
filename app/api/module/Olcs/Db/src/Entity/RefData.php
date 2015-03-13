@@ -16,8 +16,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ref_data",
  *    indexes={
- *        @ORM\Index(name="fk_ref_data_ref_data1_idx", columns={"parent_id"}),
- *        @ORM\Index(name="ref_data_category_id_idx", columns={"ref_data_category_id"})
+ *        @ORM\Index(name="ix_ref_data_parent_id", columns={"parent_id"}),
+ *        @ORM\Index(name="ix_ref_data_ref_data_category_id", columns={"ref_data_category_id"})
  *    }
  * )
  */
@@ -25,6 +25,15 @@ class RefData implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\Id32Identity;
+
+    /**
+     * Bus reg
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\BusReg", mappedBy="variationReasons")
+     */
+    protected $busRegs;
 
     /**
      * Case
@@ -50,7 +59,7 @@ class RefData implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="display_order", nullable=true)
+     * @ORM\Column(type="smallint", name="display_order", nullable=true)
      */
     protected $displayOrder;
 
@@ -141,13 +150,74 @@ class RefData implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->pis = new ArrayCollection();
         $this->tmCaseDecisionRehabs = new ArrayCollection();
         $this->tmCaseDecisionUnfitnesss = new ArrayCollection();
-        $this->pis = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
         $this->impoundings = new ArrayCollection();
+        $this->busRegs = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->outcomeCases = new ArrayCollection();
-        $this->oppositions = new ArrayCollection();
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return RefData
+     */
+    public function setBusRegs($busRegs)
+    {
+        $this->busRegs = $busRegs;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus regs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBusRegs()
+    {
+        return $this->busRegs;
+    }
+
+    /**
+     * Add a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return RefData
+     */
+    public function addBusRegs($busRegs)
+    {
+        if ($busRegs instanceof ArrayCollection) {
+            $this->busRegs = new ArrayCollection(
+                array_merge(
+                    $this->busRegs->toArray(),
+                    $busRegs->toArray()
+                )
+            );
+        } elseif (!$this->busRegs->contains($busRegs)) {
+            $this->busRegs->add($busRegs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return RefData
+     */
+    public function removeBusRegs($busRegs)
+    {
+        if ($this->busRegs->contains($busRegs)) {
+            $this->busRegs->removeElement($busRegs);
+        }
+
+        return $this;
     }
 
     /**

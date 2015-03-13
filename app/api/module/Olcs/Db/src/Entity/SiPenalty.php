@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty",
  *    indexes={
- *        @ORM\Index(name="fk_si_penalty_serious_infringement1_idx", columns={"serious_infringement_id"}),
- *        @ORM\Index(name="fk_si_penalty_si_penalty_type1_idx", columns={"si_penalty_type_id"}),
- *        @ORM\Index(name="fk_si_penalty_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_si_penalty_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_si_penalty_serious_infringement_id", columns={"serious_infringement_id"}),
+ *        @ORM\Index(name="ix_si_penalty_si_penalty_type_id", columns={"si_penalty_type_id"}),
+ *        @ORM\Index(name="ix_si_penalty_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_si_penalty_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -33,6 +33,7 @@ class SiPenalty implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\StartDateFieldAlt1,
         Traits\CustomVersionField;
 

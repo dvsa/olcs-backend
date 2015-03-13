@@ -17,15 +17,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="user",
  *    indexes={
- *        @ORM\Index(name="fk_user_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_user_local_authority1_idx", columns={"local_authority_id"}),
- *        @ORM\Index(name="fk_user_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_user_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_user_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_user_contact_details2_idx", columns={"partner_contact_details_id"}),
+ *        @ORM\Index(name="ix_user_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_user_local_authority_id", columns={"local_authority_id"}),
+ *        @ORM\Index(name="ix_user_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_user_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_user_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_user_partner_contact_details_id", columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="fk_user_hint_questions1_idx", columns={"hint_questions_id1"}),
  *        @ORM\Index(name="fk_user_hint_questions2_idx", columns={"hint_questions_id2"}),
- *        @ORM\Index(name="fk_user_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    }
  * )
  */

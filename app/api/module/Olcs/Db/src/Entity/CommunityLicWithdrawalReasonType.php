@@ -16,8 +16,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal_reason_type",
  *    indexes={
- *        @ORM\Index(name="fk_community_lic_withdrawal_reason_type_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_community_lic_withdrawal_reason_type_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_type_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_type_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

@@ -14,20 +14,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation_user",
  *    indexes={
- *        @ORM\Index(name="fk_organisation_has_user_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_organisation_has_user_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_organisation_user_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_organisation_user_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_organisation_user_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_organisation_user_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_organisation_user_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="IDX_CFD7D6519E6B1585", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="organisation_user_unique", columns={"organisation_id","user_id"})
+ *        @ORM\UniqueConstraint(name="uk_organisation_user_organisation_id_user_id", columns={"organisation_id","user_id"})
  *    }
  * )
  */
 class OrganisationUser implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\AddedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -36,6 +35,15 @@ class OrganisationUser implements Interfaces\EntityInterface
         Traits\OrganisationManyToOne,
         Traits\RemovedDateField,
         Traits\CustomVersionField;
+
+    /**
+     * Added date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="added_date", nullable=true)
+     */
+    protected $addedDate;
 
     /**
      * Is administrator
@@ -64,6 +72,29 @@ class OrganisationUser implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;
+
+    /**
+     * Set the added date
+     *
+     * @param \DateTime $addedDate
+     * @return OrganisationUser
+     */
+    public function setAddedDate($addedDate)
+    {
+        $this->addedDate = $addedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the added date
+     *
+     * @return \DateTime
+     */
+    public function getAddedDate()
+    {
+        return $this->addedDate;
+    }
 
     /**
      * Set the is administrator

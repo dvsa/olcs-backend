@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="payment",
  *    indexes={
- *        @ORM\Index(name="fk_payment_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_payment_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_payment_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_payment_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_payment_ref_data1_idx", columns={"status"})
  *    }
  * )

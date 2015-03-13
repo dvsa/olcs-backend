@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="system_info_message",
  *    indexes={
- *        @ORM\Index(name="fk_system_info_message_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_system_info_message_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_system_info_message_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_system_info_message_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -50,9 +50,9 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Importance
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="importance", nullable=true)
+     * @ORM\Column(type="boolean", name="importance", nullable=true)
      */
     protected $importance;
 
@@ -123,7 +123,7 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Set the importance
      *
-     * @param int $importance
+     * @param boolean $importance
      * @return SystemInfoMessage
      */
     public function setImportance($importance)
@@ -136,7 +136,7 @@ class SystemInfoMessage implements Interfaces\EntityInterface
     /**
      * Get the importance
      *
-     * @return int
+     * @return boolean
      */
     public function getImportance()
     {

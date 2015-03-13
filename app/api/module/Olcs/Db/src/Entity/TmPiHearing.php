@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_tm_pi_hearing_ref_data2_idx", columns={"reason_id"}),
  *        @ORM\Index(name="fk_tm_pi_hearing_ref_data3_idx", columns={"type_id"}),
  *        @ORM\Index(name="fk_tm_pi_hearing_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_tm_pi_hearing_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_pi_hearing_user2_idx", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_tm_pi_hearing_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_tm_pi_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_tm_pi_hearing_pi_venue1_idx", columns={"venue_id"})
  *    }
  * )
@@ -40,6 +40,7 @@ class TmPiHearing implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\PresidingTcManyToOneAlt1,
         Traits\TypeManyToOne,
+        Traits\VenueManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -97,16 +98,6 @@ class TmPiHearing implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="scheduled_on", nullable=true)
      */
     protected $scheduledOn;
-
-    /**
-     * Venue
-     *
-     * @var \Olcs\Db\Entity\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
-     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=false)
-     */
-    protected $venue;
 
     /**
      * Witnesses
@@ -253,29 +244,6 @@ class TmPiHearing implements Interfaces\EntityInterface
     public function getScheduledOn()
     {
         return $this->scheduledOn;
-    }
-
-    /**
-     * Set the venue
-     *
-     * @param \Olcs\Db\Entity\PiVenue $venue
-     * @return TmPiHearing
-     */
-    public function setVenue($venue)
-    {
-        $this->venue = $venue;
-
-        return $this;
-    }
-
-    /**
-     * Get the venue
-     *
-     * @return \Olcs\Db\Entity\PiVenue
-     */
-    public function getVenue()
-    {
-        return $this->venue;
     }
 
     /**
