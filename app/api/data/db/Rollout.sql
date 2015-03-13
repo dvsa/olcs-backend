@@ -25,6 +25,7 @@ TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
 TRUNCATE TABLE `financial_standing_rate`;
 TRUNCATE TABLE `bus_service_type`;
+TRUNCATE TABLE `publication_section`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -1899,18 +1900,18 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_129','conv_p_cat_7','With intent to deceive made / an operators licence / a document, plate or mark or other thing by which a vehicle is to be identified as being authorised to be used or as being used under an operators licence','conv_category',129,799),
   ('conv_c_cat_294','conv_p_cat_14','Withholding information to obtain insurance.','conv_category',294,800);
 
- INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
-  (1,'Licensing',1,1,1,1,'task_at_simple')
- ,(2,'Compliance',1,1,1,1,'task_at_simple')
- ,(3,'Bus Registration',1,1,1,1,'task_at_simple')
- ,(4,'Permits',1,1,0,1,NULL)
- ,(5,'Transport Manager',1,1,1,1,'task_at_simple')
- ,(7,'Environmental',1,1,1,1,'task_at_simple')
- ,(8,'IRFO',1,1,1,1,'task_at_simple')
- ,(9,'Application',1,1,1,1,'task_at_simple')
- ,(10,'Submission',0,1,0,1,NULL)
- ,(999999,'Templates (remove before go live)',0,0,0,0,NULL)
-;
+INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_category,version,task_allocation_type) VALUES
+  (1,'Licensing',1,1,1,1,'task_at_simple'),
+  (2,'Compliance',1,1,1,1,'task_at_simple'),
+  (3,'Bus Registration',1,1,1,1,'task_at_simple'),
+  (4,'Permits',1,1,0,1,NULL),
+  (5,'Transport Manager',1,1,1,1,'task_at_simple'),
+  (7,'Environmental',1,1,1,1,'task_at_simple'),
+  (8,'IRFO',1,1,1,1,'task_at_simple'),
+  (9,'Application',1,1,1,1,'task_at_simple'),
+  (10,'Submission',0,1,0,1,NULL),
+  (11,'Publication',0,0,0,1,NULL),
+  (999999,'Templates (remove before go live)',0,0,0,0,NULL);
 
 INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'submission_section', 'introduction', 'Introduction', NULL),
@@ -3867,6 +3868,7 @@ VALUES
  ,( 1, 110, 1, 1, 1, 0, 'Fee Request')
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
  ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital')
+ ,(11, 113, 0, 0, 0, 0, 'Publication')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 INSERT INTO sub_category_description
@@ -4591,7 +4593,24 @@ VALUES
     (670, 999999, 1, 670, 1, 999999, 0, 1, '2013-09-04 10:00:47', 'Compliance: Public Inquiry Brief',
     '2013-09-04 10:00:47', 1),
     (671, 2, 1, 671, 1, 55, 1, 0, '2013-09-04 10:00:47', 'Compliance: Proforma 38-36 statement (NI)',
-    '2013-09-04 10:00:47', 1);
+    '2013-09-04 10:00:47', 1),
+    (683, 11, 1, 683, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D East of England', '2015-02-27 10:00:47', 1),
+    (684, 11, 1, 684, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D London and the South East of England', '2015-02-27 10:00:47', 1),
+    (685, 11, 1, 685, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D North East of England', '2015-02-27 10:00:47', 1),
+    (686, 11, 1, 686, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D North West of England', '2015-02-27 10:00:47', 1),
+    (687, 11, 1, 687, 1, 113, 1, 1, '2015-02-27 10:00:47', 'Publication: A&D Northern Ireland', '2015-02-27 10:00:47', 1),
+    (688, 11, 1, 688, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Scotland', '2015-02-27 10:00:47', 1),
+    (689, 11, 1, 689, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D West Midlands', '2015-02-27 10:00:47', 1),
+    (690, 11, 1, 690, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D West of England', '2015-02-27 10:00:47', 1),
+    (691, 11, 1, 691, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P East of England', '2015-02-27 10:00:47', 1),
+    (692, 11, 1, 692, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P London and the South East of England', '2015-02-27 10:00:47', 1),
+    (693, 11, 1, 693, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P North East of England', '2015-02-27 10:00:47', 1),
+    (694, 11, 1, 694, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P North West of England', '2015-02-27 10:00:47', 1),
+    (695, 11, 1, 695, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Scotland', '2015-02-27 10:00:47', 1),
+    (696, 11, 1, 696, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West Midlands', '2015-02-27 10:00:47', 1),
+    (697, 11, 1, 697, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West of England', '2015-02-27 10:00:47', 1),
+    (698, 11, 1, 698, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Wales', '2015-02-27 10:00:47', 1),
+    (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -6755,7 +6774,24 @@ VALUES
     (670, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PI Brief.rtf', 0, NULL, NULL, '2013-09-04 10:00:47', NULL, 'Compliance: Public Inquiry Brief', 0,NULL, '2013-09-04 10:00:47', 1),
     (671, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 55    , NULL, NULL, 2     , 1, NULL, 1, NULL,
     '/templates/NI/proforma_38-36_statement_(NI).rtf',1, NULL, NULL, '2012-09-14 00:00:00', NULL,
-    'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1);
+    'Compliance: Proforma 38-36 statement (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (683, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (684, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_London_and_the_South_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D London and the South East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (685, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_North_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D North East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (686, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_North_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D North West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (687, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/NI/A&D_Northern_Ireland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Northern Ireland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (688, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Scotland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Scotland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (689, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_West_Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
+    (690, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (691, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (692, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_London_and_the_South_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P London and the South East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (693, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_North_East_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P North East of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (694, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_North_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P North West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (695, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Scotland.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Scotland', 0, NULL, '2015-02-27 10:00:47', 1),
+    (696, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
+    (697, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1),
+    (698, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
+    (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1);
 
 /* Test documents */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -6927,6 +6963,40 @@ INSERT INTO `financial_standing_rate` (
     (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
     (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
     (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00);
+
+INSERT INTO `publication_section` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+VALUES
+  (1, 'New Application', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (2, NULL, 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (3, 'New Variation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (4, 'Application Granted', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (5, 'Application Refused', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (6, 'Application Withdrawn', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (7, 'Grant Not Taken Up', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (8, 'Variation Granted', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (9, 'Variation Refused', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (10, 'Licence Surrendered', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (11, 'Licence Terminated', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (12, 'Licence Revoked', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (13, 'Notice of PI to be held', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (14, 'Decisions taken at PI', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (15, 'Decisions taken at Review', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (16, 'New Schedule 4 Application', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (17, 'Schedule 4 Variation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (18, 'True Schedule 4', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (19, 'Errata', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (20, 'Continuation Not Sought', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (21, 'New Bus Registration Application', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (22, 'New Short Notice Bus Registration Application', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (23, 'Bus Registration Variation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (24, 'Short Notice Bus Registration Variation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (25, 'Bus Registration Cancellation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (26, 'Short Notice Bus Registration Cancellation', 1, 1, '2001-10-10 00:00:00', '2001-10-10 00:00:00', 1),
+  (27, 'Notice of TM PI to be held', 1, 1, '2011-11-04 17:50:09', '2011-11-04 17:50:09', 1),
+  (28, 'Decisions taken at TM PI', 1, 1, '2011-11-04 17:50:09', '2011-11-04 17:50:09', 1),
+  (29, 'New Schedule 1 (NI) Application', 1, 1, '2012-10-26 00:00:00', '2012-10-26 00:00:00', 1),
+  (30, 'Schedule 1 (NI) Variation', 1, 1, '2012-10-26 00:00:00', '2012-10-26 00:00:00', 1),
+  (31, 'True Schedule 1 (NI)', 1, 1, '2012-10-26 00:00:00', '2012-10-26 00:00:00', 1);
 
 SET foreign_key_checks = 1;
 
