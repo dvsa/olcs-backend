@@ -259,6 +259,15 @@ class Licence implements Interfaces\EntityInterface
     protected $communityLics;
 
     /**
+     * Company subsidiarie
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompanySubsidiaryLicence", mappedBy="licence")
+     */
+    protected $companySubsidiaries;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -314,6 +323,15 @@ class Licence implements Interfaces\EntityInterface
     protected $psvDiscs;
 
     /**
+     * Publication link
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PublicationLink", mappedBy="licence")
+     */
+    protected $publicationLinks;
+
+    /**
      * Tm licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -339,12 +357,14 @@ class Licence implements Interfaces\EntityInterface
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->communityLics = new ArrayCollection();
+        $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
+        $this->publicationLinks = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
         $this->workshops = new ArrayCollection();
     }
@@ -944,6 +964,66 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the company subsidiarie
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function setCompanySubsidiaries($companySubsidiaries)
+    {
+        $this->companySubsidiaries = $companySubsidiaries;
+
+        return $this;
+    }
+
+    /**
+     * Get the company subsidiaries
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCompanySubsidiaries()
+    {
+        return $this->companySubsidiaries;
+    }
+
+    /**
+     * Add a company subsidiaries
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function addCompanySubsidiaries($companySubsidiaries)
+    {
+        if ($companySubsidiaries instanceof ArrayCollection) {
+            $this->companySubsidiaries = new ArrayCollection(
+                array_merge(
+                    $this->companySubsidiaries->toArray(),
+                    $companySubsidiaries->toArray()
+                )
+            );
+        } elseif (!$this->companySubsidiaries->contains($companySubsidiaries)) {
+            $this->companySubsidiaries->add($companySubsidiaries);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a company subsidiaries
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $companySubsidiaries
+     * @return Licence
+     */
+    public function removeCompanySubsidiaries($companySubsidiaries)
+    {
+        if ($this->companySubsidiaries->contains($companySubsidiaries)) {
+            $this->companySubsidiaries->removeElement($companySubsidiaries);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the condition undertaking
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
@@ -1298,6 +1378,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->psvDiscs->contains($psvDiscs)) {
             $this->psvDiscs->removeElement($psvDiscs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the publication link
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Licence
+     */
+    public function setPublicationLinks($publicationLinks)
+    {
+        $this->publicationLinks = $publicationLinks;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication links
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPublicationLinks()
+    {
+        return $this->publicationLinks;
+    }
+
+    /**
+     * Add a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Licence
+     */
+    public function addPublicationLinks($publicationLinks)
+    {
+        if ($publicationLinks instanceof ArrayCollection) {
+            $this->publicationLinks = new ArrayCollection(
+                array_merge(
+                    $this->publicationLinks->toArray(),
+                    $publicationLinks->toArray()
+                )
+            );
+        } elseif (!$this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->add($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return Licence
+     */
+    public function removePublicationLinks($publicationLinks)
+    {
+        if ($this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->removeElement($publicationLinks);
         }
 
         return $this;

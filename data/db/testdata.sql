@@ -92,7 +92,6 @@ TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
-TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
@@ -106,6 +105,7 @@ TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
+TRUNCATE TABLE `trailer`;
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -151,7 +151,8 @@ INSERT INTO `application` (
     `tot_auth_trailers`, `bankrupt`, `liquidation`, `receivership`, `administration`,
     `disqualified`, `insolvency_details`, `received_date`,
     `target_completion_date`, `prev_conviction`, `created_on`, `last_modified_on`,
-    `version`, `is_variation`, `goods_or_psv`, `ni_flag`, `licence_type`
+    `version`, `is_variation`, `goods_or_psv`, `ni_flag`, `licence_type`,
+    `interim_status`, `interim_reason`, `interim_start`, `interim_end`, `interim_auth_vehicles`, `interim_auth_trailers`
 ) VALUES
     (
         1,7,NULL,NULL,'apsts_not_submitted',
@@ -159,7 +160,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2010-12-15 10:48:00',
         NULL,NULL,NOW(),NULL,
-        1,0,'lcat_gv',0, 'ltyp_r'
+        1,0,'lcat_gv',0, 'ltyp_si',
+        'int_sts_requested', 'Interim reason', '2014-01-01', '2015-01-01', 10, 20
     ),
     (
         2,7,NULL,NULL,'apsts_not_submitted',
@@ -167,7 +169,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2014-12-15 10:48:00',
         '2015-02-16 10:48:00',NULL,NULL,NULL,
-        1,1,'lcat_gv',0, NULL
+        1,1,'lcat_gv',0, NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     ),
     (
         3,210,NULL,NULL,'apsts_not_submitted',
@@ -175,7 +178,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,NULL,
         NULL,NULL,NOW(),NULL,
-        1,0,'lcat_gv',0, NULL
+        1,0,'lcat_gv',0, NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     ),
     (
         6,114,NULL,NULL,'apsts_not_submitted',
@@ -183,7 +187,8 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2014-12-15 10:48:00',
         '2015-02-16 10:48:00',NULL,'2014-04-30 12:09:37','2014-04-30 12:09:39',
-        1,0,'lcat_psv',1,NULL
+        1,0,'lcat_psv',1,NULL,
+        NULL,NULL,NULL,NULL,NULL,NULL
     );
 
 INSERT INTO `application_completion` (`application_id`, `created_by`, `last_modified_by`, `last_section`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -198,10 +203,10 @@ INSERT INTO `application_tracking` (`application_id`, `created_by`, `last_modifi
 
 INSERT INTO `application_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
-    `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`) VALUES
-(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16),
-(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16),
-(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16);
+    `created_on`, `last_modified_on`, `version`, `application_id`, `operating_centre_id`, `action`, `is_interim`) VALUES
+(1,NULL,NULL,34,23,1,0,NULL,'2014-03-13',1,NULL,NULL,1,1,16, 'A', 1),
+(2,NULL,NULL,34,23,1,0,NULL,'2014-03-21',1,NULL,NULL,1,1,16, NULL, 0),
+(3,NULL,NULL,34,23,1,0,NULL,'2014-04-01',1,NULL,NULL,1,1,16, 'U', 0);
 
 INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, `no_of_vehicles_required`,
     `no_of_trailers_required`, `sufficient_parking`, `ad_placed`, `ad_placed_in`, `ad_placed_date`, `permission`,
@@ -213,21 +218,21 @@ INSERT INTO `licence_operating_centre` (`id`, `created_by`, `last_modified_by`, 
 
 INSERT INTO `bus_reg` (`id`, `bus_notice_period_id`, `parent_id`, `revert_status`, `subsidised`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `status`, `withdrawn_reason`, `application_signed`, `copied_to_la_pte`, `ebsr_refresh`, `finish_point`, `has_manoeuvre`, `has_not_fixed_stop`, `is_quality_contract`, `is_quality_partnership`, `is_short_notice`, `is_txc_app`, `la_short_note`, `manoeuvre_detail`, `map_supplied`, `need_new_stop`, `new_stop_detail`, `not_fixed_stop_detail`, `op_notified_la_pte`, `organisation_email`, `other_details`, `quality_contract_details`, `quality_partnership_details`, `quality_partnership_facilities_used`, `reason_cancelled`, `reason_refused`, `reason_sn_refused`, `received_date`, `reg_no`, `route_description`, `route_no`, `short_notice_refused`, `start_point`, `stopping_arrangements`, `subsidy_detail`, `timetable_acceptable`, `trc_condition_checked`, `trc_notes`, `txc_app_type`, `use_all_stops`, `variation_no`, `via`, `created_on`, `effective_date`, `end_date`, `last_modified_on`, `service_no`, `version`)
 VALUES
-  (1, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 1, 'Sheffield', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-13', 'PD2737280/14686', 'Route description', 14686, 0, 'Doncaster', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'York', NULL, '2014-03-15', NULL, NULL, '90839', 1),
-  (2, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description', 15711, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 0, 'York', NULL, '2014-03-05', '2015-03-05', NULL, '46474', 1),
-  (3, 1, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-11', 'PD2737280/43542', 'Scotish Route description', 43542, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
-  (4, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-05-24', 'PD2737280/13245', 'Non-scottish Route description cancelled', 13245, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'York', NULL, '2014-05-31', NULL, NULL, '26453', 1),
-  (5, 2, 2, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 1', 15711, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 1, 'York', NULL, '2014-03-05', '2015-03-05', NULL, '46474', 1),
-  (6, 2, 5, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 2', 15711, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 2, 'York', NULL, '2014-03-08', '2015-03-05', NULL, '46474', 1),
-  (7, 2, 6, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 3', 15711, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 3, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1),
-  (8, 1, 3, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-15', 'PD2737280/43542', 'Scotish Route description', 43542, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 1, 'Dundee', NULL, '2014-03-15', NULL, NULL, '34254', 1),
-  (9, 1, 8, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-11', 'PD2737280/43542', 'Scotish Route description', 43542, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 2, 'Dundee', NULL, '2014-03-11', NULL, NULL, '34254', 1),
-  (10, 1, 9, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-12', 'PD2737280/43542', 'Scotish Route description', 43542, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 3, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
-  (11, 1, 10, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-13', 'PD2737280/43542', 'Scotish Route description', 43542, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 4, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
-  (12, 2, 4, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_var', '', 0, 0, 0, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-05-27', 'PD2737280/13245', 'Non-scottish Route description cancelled', 13245, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 1, 'York', NULL, '2014-05-27', NULL, NULL, '26453', 1),
-  (13, 2, 7, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 4', 15711, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 4, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1),
-  (14, 2, 13, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 5', 15711, 0, 'Leeds', 'Stopping arrangements change 4', '', 0, 0, 'Trc notes', '1', 0, 5, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1),
-  (15, 2, 14, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_cancellation', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/15711', 'Route description change 6', 15711, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 6, 'York', NULL, '2014-03-10', '2015-03-05', NULL, '46474', 1);
+  (1, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 1, 'Sheffield', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-13', 'PD2737280/1', 'Route description', 1, 0, 'Doncaster', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'York', NULL, '2014-03-15', NULL, NULL, '90839', 1),
+  (2, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description', 2, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 0, 'York', NULL, '2014-03-05', NULL, NULL, '46474', 1),
+  (3, 1, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-11', 'PD2737280/3', 'Scotish Route description', 3, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
+  (4, 2, NULL, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_new', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-05-24', 'PD2737280/4', 'Non-scottish Route description cancelled', 4, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 0, 'York', NULL, '2014-05-31', NULL, NULL, '26453', 1),
+  (5, 2, 2, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 1', 2, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 1, 'York', NULL, '2014-03-05', NULL, NULL, '46474', 1),
+  (6, 2, 5, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 2', 2, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '1', 0, 2, 'York', NULL, '2014-03-08', NULL, NULL, '46474', 1),
+  (7, 2, 6, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 3', 2, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 3, 'York', NULL, '2014-03-10', NULL, NULL, '46474', 1),
+  (8, 1, 3, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-15', 'PD2737280/3', 'Scotish Route description', 3, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 1, 'Dundee', NULL, '2014-03-15', NULL, NULL, '34254', 1),
+  (9, 1, 8, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-11', 'PD2737280/3', 'Scotish Route description', 3, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 2, 'Dundee', NULL, '2014-03-11', NULL, NULL, '34254', 1),
+  (10, 1, 9, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-12', 'PD2737280/3', 'Scotish Route description', 3, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 3, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
+  (11, 1, 10, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 0, 'Edinburgh', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-03-13', 'PD2737280/3', 'Scotish Route description', 3, 0, 'Aberdeen', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 4, 'Dundee', NULL, '2014-03-14', NULL, NULL, '34254', 1),
+  (12, 2, 4, 'breg_s_new', 'bs_no', 1, 1, 110, 1, 'breg_s_var', '', 0, 0, 0, 'Doncaster', 0, 0, 0, 0, 0, 1, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-05-27', 'PD2737280/4', 'Non-scottish Route description cancelled', 4, 0, 'Leeds', 'Stopping arrangements', '', 0, 0, 'Trc notes', '0', 0, 1, 'York', NULL, '2014-05-27', NULL, NULL, '26453', 1),
+  (13, 2, 7, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 4', 2, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 4, 'York', NULL, '2014-03-10', NULL, NULL, '46474', 1),
+  (14, 2, 13, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_registered', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 5', 2, 0, 'Leeds', 'Stopping arrangements change 4', '', 0, 0, 'Trc notes', '1', 0, 5, 'York', NULL, '2014-03-10', NULL, NULL, '46474', 1),
+  (15, 2, 14, 'breg_s_var', 'bs_no', 1, 1, 110, 1, 'breg_s_cancellation', '', 0, 0, 1, 'Doncaster', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', 0, '', 'Other details', NULL, NULL, 0, '', '', '', '2014-02-27', 'PD2737280/2', 'Route description change 6', 2, 0, 'Leeds', 'Stopping arrangements change 3', '', 0, 0, 'Trc notes', '1', 0, 6, 'York', NULL, '2014-03-10', NULL, NULL, '46474', 1);
 
 INSERT INTO `bus_reg_traffic_area` (`bus_reg_id`, `traffic_area_id`)
 VALUES
@@ -235,8 +240,10 @@ VALUES
   (1, 'G'),
   (2, 'B'),
   (2, 'G'),
+  (12, 'B'),
   (12, 'D'),
   (12, 'F'),
+  (15, 'B'),
   (15, 'H'),
   (15, 'M');
 
@@ -452,28 +459,33 @@ INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
   (1, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
    null, 0, null);
 
-INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
+INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`, `payment_method`, `waive_reason`, `fee_type_id`) VALUES
-    (7,NULL,7,'lfs_ot',NULL,1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (30,NULL,110,'lfs_pd','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL,1),
-    (41,NULL,110,'lfs_wr','345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (54,NULL,110,'lfs_ot','829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (63,NULL,110,'lfs_ot','481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (75,NULL,110,'lfs_ot','964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (76,1,110,'lfs_wr','234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL,1),
-    (77,1,110,'lfs_wr','836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL,1),
-    (78,1,110,'lfs_wr','561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL,1),
-    (79,1,110,'lfs_wr','634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (80,1,110,'lfs_pd','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL,1),
-    (81,1,110,'lfs_ot','837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (82,1,30,'lfs_ot','354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (83,1,110,'lfs_wr','435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (84,1,110,'lfs_ot','435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (85,1,110,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
-    (86,1,110,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
-    (87,1,110,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason',1),
-    (88,1,110,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL,1),
-    (89,3,210,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes',1);
+    (7,NULL,7,NULL,'lfs_ot',NULL,1,NULL,'Application fee','2013-11-25 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (30,NULL,110,NULL,'lfs_pd','654321',1,2,'Application fee','2013-11-22 00:00:00','2014-01-13 00:00:00',251.00,251.00,NULL,NULL,1,'fpm_card_online',NULL,1),
+    (41,NULL,110,NULL,'lfs_wr','345253',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (54,NULL,110,NULL,'lfs_ot','829485',1,NULL,'Application fee','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (63,NULL,110,NULL,'lfs_ot','481024',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (75,NULL,110,NULL,'lfs_ot','964732',1,NULL,'Application fee','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (76,1,110,NULL,'lfs_wr','234343',1,NULL,'Application fee 1','2013-11-25 00:00:00',NULL,250.50,0.50,NULL,NULL,2,NULL,NULL,1),
+    (77,1,110,NULL,'lfs_wr','836724',1,NULL,'Application fee 2','2013-11-22 00:00:00',NULL,251.75,0.00,NULL,NULL,2,NULL,NULL,1),
+    (78,1,110,NULL,'lfs_wr','561023',1,NULL,'Grant fee','2013-11-21 00:00:00',NULL,150.00,0.00,NULL,NULL,3,NULL,NULL,1),
+    (79,1,110,NULL,'lfs_wr','634820',1,NULL,'Application fee 3','2013-11-12 00:00:00',NULL,250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (80,1,110,NULL,'lfs_pd','458750',1,2,'Application fee 4','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash',NULL,1),
+    (81,1,110,NULL,'lfs_ot','837495',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (82,1,30,NULL,'lfs_ot','354784',1,NULL,'Bus route 1','2013-10-23 00:00:00',NULL,500.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (83,1,110,NULL,'lfs_wr','435235',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (84,1,110,NULL,'lfs_ot','435563',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (85,1,110,NULL,'lfs_wr','534633',1,NULL,'Application fee 4','2013-11-10 00:00:00',NULL,250.00,0.00,NULL,NULL,1,NULL,NULL,1),
+    (86,1,110,NULL,'lfs_ot','426786',1,NULL,'Application fee 5','2013-11-10 00:00:00',NULL,1250.00,0.00,NULL,NULL,2,NULL,NULL,1),
+    (87,1,110,NULL,'lfs_w','68750',1,2,'Application fee 6','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_cash','some waive reason',1),
+    (88,1,110,NULL,'lfs_cn','78750',1,2,'Application fee 7','2013-11-10 00:00:00','2014-01-04 00:00:00',250.00,250.00,NULL,NULL,1,'fpm_card_online',NULL,1),
+    (89,3,210,NULL,'lfs_w', '87654',1,2,'Application fee 8','2013-11-10 00:00:00','2015-01-09 00:00:00',254.40,254.40,NULL,NULL,1,'fpm_waive','waived for demo purposes',1),
+    (90,1,110,3,'lfs_ot',NULL,1,NULL,'Bus Route Application Fee PD2737280/3 Variation 0','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,188),
+    (91,1,110,8,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 1','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -483,7 +495,7 @@ INSERT INTO `licence` (
     `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
     `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`, `expiry_date`, `tot_community_licences`) VALUES
-    (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12',
+    (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_si','2010-01-12','2010-01-12','2010-01-12',
     '',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL),
 
@@ -535,37 +547,37 @@ INSERT INTO `licence` (
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
     `specified_date`, `removal_date`, `created_on`,
-    `last_modified_on`, `version`) VALUES
+    `last_modified_on`, `version`, `application_id`, `interim_application_id`) VALUES
     (1,7,1,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,2),
     (2,7,2,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,2),
     (3,7,3,NULL,4,'2014-02-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,1,NULL),
     (4,7,4,NULL,4,'2013-02-20 00:00:00','2013-03-20 15:40:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (5,30,4,NULL,4,'2013-04-20 00:00:00','2013-05-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (6,41,4,NULL,4,'2013-05-22 00:00:00','2013-06-10 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (7,54,4,NULL,4,'2013-06-20 00:00:00','2013-07-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (8,63,4,NULL,4,'2013-07-24 00:00:00','2013-09-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (9,75,4,NULL,4,'2013-10-20 00:00:00','2013-11-02 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (10,100,4,NULL,4,'2014-11-14 00:00:00','2013-11-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (11,110,4,NULL,4,'2014-11-25 00:00:00','2013-11-26 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (12,114,4,NULL,4,'2014-02-20 00:00:00','2014-05-20 09:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (13,115,4,NULL,4,'2014-06-20 00:00:00',NULL,'2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (14,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1),
+    '2014-02-20 00:00:00',1,NULL,NULL),
     (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
-    '2014-02-20 00:00:00',1);
+    '2014-02-20 00:00:00',1,NULL,NULL);
 
 INSERT INTO `local_authority` (`id`, `created_by`, `last_modified_by`, `traffic_area_id`, `naptan_code`, `txc_name`, `created_on`, `description`, `email_address`, `last_modified_on`, `version`)
 VALUES
@@ -760,6 +772,7 @@ INSERT INTO `disqualification` (
 INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
     (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1),
+    (10,'phone_t_tel','0113 123 1234','',1,NULL,NULL,NULL,NULL,1),
     (2,'phone_t_tel','0113 123 1234','',8,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
@@ -931,10 +944,25 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (3,NULL,NULL,'tm_st_A','tm_t_I',104,119,NULL,NULL,NULL,1);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
-`created_on`, `last_modified_on`, `version`) VALUES
-    (1,3,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (2,3,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1),
-    (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1);
+`created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,
+`transport_manager_application_id`,`transport_manager_licence_id`) VALUES
+    (1,3,1,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (2,3,1,'YX654321',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (3,6,2,'AB123456',1,NULL,'2014-11-23 21:58:52',NULL,1,NULL,NULL,NULL,NULL,NULL,NULL),
+    (4,1,1,'AA111111',1,NULL,'2014-10-01 21:58:52',NULL,1,'ol_role_tm','oc1',2,10,1,NULL),
+    (5,1,1,'AB122222',1,NULL,'2014-10-02 21:58:52',NULL,1,'ol_role_tm','oc2',2,10,1,NULL),
+    (6,2,1,'AA133333',1,NULL,'2014-10-03 21:58:52',NULL,1,'ol_role_tm','oc3',3,11,2,NULL),
+    (7,2,1,'AB144444',1,NULL,'2014-10-04 21:58:52',NULL,1,'ol_role_tm','oc4',3,11,2,NULL),
+    (8,1,3,'AA311111',1,NULL,'2014-10-05 21:58:52',NULL,1,'ol_role_tm','oc5',4,12,3,NULL),
+    (9,1,3,'AB322222',1,NULL,'2014-10-06 21:58:52',NULL,1,'ol_role_tm','oc6',4,12,3,NULL),
+    (10,2,3,'AA333333',1,NULL,'2014-10-07 21:58:52',NULL,1,'ol_role_tm','oc7',5,13,4,NULL),
+    (11,2,3,'AB344444',1,NULL,'2014-10-08 21:58:52',NULL,1,'ol_role_tm','oc8',5,13,4,NULL),
+    (12,NULL,1,'CC11111',1,NULL,'2014-10-09 21:58:52',NULL,1,'ol_role_tm','oc9',6,14,NULL,1),
+    (13,NULL,1,'CD12222',1,NULL,'2014-10-10 21:58:52',NULL,1,'ol_role_tm','oc10',6,14,NULL,1),
+    (14,NULL,2,'CC11111',1,NULL,'2014-10-11 21:58:52',NULL,1,'ol_role_tm','oc11',7,15,NULL,2),
+    (15,NULL,2,'CD12222',1,NULL,'2014-10-12 21:58:52',NULL,1,'ol_role_tm','oc12',7,15,NULL,2),
+    (16,NULL,3,'CC33333',1,NULL,'2014-10-13 21:58:52',NULL,1,'ol_role_tm','oc13',8,16,NULL,3),
+    (17,NULL,3,'CD44444',1,NULL,'2014-10-14 21:58:52',NULL,1,'ol_role_tm','oc14',8,16,NULL,3);
 
 INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_modified_by`,`is_msi`,`notified_date`,
   `repute_not_lost_reason`,`no_further_action_reason`,`unfitness_end_date`,`unfitness_start_date`,`created_on`,`decision_date`,`deleted_date`,
@@ -1309,66 +1337,50 @@ VALUES
   (37,1,1,'2016-12-26 00:00:00',1,1,1,1,now(),now(),1),
   (38,1,1,'2016-12-27 00:00:00',1,1,0,0,now(),now(),1);
 
-INSERT INTO `publication_section` (`id`, `last_modified_by`, `created_by`, `description`, `created_on`,
-   `last_modified_on`, `version`)
+INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`doc_template_id`,`document_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
-  (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (21, 1, 1, 'Bus Registration New Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (22, 1, 1, 'Bus Registration New Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (23, 1, 1, 'Bus Registration Variation Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (24, 1, 1, 'Bus Registration Variation Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (25, 1, 1, 'Bus Registration Cancellation Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (26, 1, 1, 'Bus Registration Cancellation Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (27, 1, 1, 'TM PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (28, 1, 1, 'TM PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
+  (3,'pub_s_new',1,1,'B',685,NULL,'2014-10-30',NULL,6129,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (4,'pub_s_new',1,1,'B',693,NULL,'2014-10-30',NULL,2156,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (5,'pub_s_new',1,1,'C',686,NULL,'2014-10-30',NULL,6576,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (6,'pub_s_new',1,1,'C',694,NULL,'2014-10-30',NULL,2648,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (7,'pub_s_new',1,1,'D',689,NULL,'2014-10-30',NULL,2624,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (8,'pub_s_new',1,1,'D',696,NULL,'2014-10-30',NULL,2181,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (9,'pub_s_new',1,1,'F',683,NULL,'2014-10-30',NULL,5008,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (10,'pub_s_new',1,1,'F',691,NULL,'2014-10-30',NULL,2160,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (11,'pub_s_new',1,1,'G',698,NULL,'2014-10-30',NULL,8377,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (12,'pub_s_new',1,1,'G',699,NULL,'2014-10-30',NULL,1986,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (13,'pub_s_new',1,1,'H',690,NULL,'2014-10-30',NULL,5379,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (14,'pub_s_new',1,1,'H',697,NULL,'2014-10-30',NULL,2484,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (15,'pub_s_new',1,1,'K',684,NULL,'2014-10-30',NULL,3889,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (16,'pub_s_new',1,1,'K',692,NULL,'2014-10-30',NULL,2283,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (21,'pub_s_new',1,1,'M',688,NULL,'2014-10-30',NULL,6666,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (22,'pub_s_new',1,1,'M',695,NULL,'2014-10-20',NULL,7777,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (23,'pub_s_new',1,1,'N',687,NULL,'2014-10-31',NULL,8888,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
 
-INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
+INSERT INTO `publication_link` (`id`, `application_id`, `licence_id`, `pi_id`, `publication_id`, `publication_section_id`, `bus_reg_id`, `created_by`, `last_modified_by`, `traffic_area_id`, `transport_manager_id`, `text1`, `text2`, `text3`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
 VALUES
-  (1,'pub_s_printed',1,1,'B','2014-09-30',NULL,6128,'A&D','2014-09-30 00:00:00','2014-09-30 00:00:00',1),
-  (2,'pub_s_printed',1,1,'B','2014-09-30',NULL,2155,'N&P','2014-09-30 00:00:00','2014-09-30 00:00:00',1),
-  (3,'pub_s_new',1,1,'B','2014-10-30',NULL,6129,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (4,'pub_s_new',1,1,'B','2014-10-30',NULL,2156,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (5,'pub_s_new',1,1,'C','2014-10-30',NULL,6576,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (6,'pub_s_new',1,1,'C','2014-10-30',NULL,2648,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (7,'pub_s_new',1,1,'D','2014-10-30',NULL,2624,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (8,'pub_s_new',1,1,'D','2014-10-30',NULL,2181,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (9,'pub_s_new',1,1,'F','2014-10-30',NULL,5008,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (10,'pub_s_new',1,1,'F','2014-10-30',NULL,2160,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (11,'pub_s_new',1,1,'G','2014-10-30',NULL,8377,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (12,'pub_s_new',1,1,'G','2014-10-30',NULL,1986,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (13,'pub_s_new',1,1,'H','2014-10-30',NULL,5379,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (14,'pub_s_new',1,1,'H','2014-10-30',NULL,2484,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (15,'pub_s_new',1,1,'K','2014-10-30',NULL,3889,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (16,'pub_s_new',1,1,'K','2014-10-30',NULL,2283,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (17,'pub_s_printed',1,1,'M','2014-10-30',NULL,1891,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (18,'pub_s_printed',1,1,'M','2014-10-30',NULL,2014,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (19,'pub_s_printed',1,1,'N','2014-10-30',NULL,30,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (20,'pub_s_printed',1,1,'N','2014-10-30',NULL,2,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-
-  (21,'pub_s_new',1,1,'M','2014-10-30',NULL,6666,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (22,'pub_s_new',1,1,'M','2014-10-20',NULL,7777,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (23,'pub_s_new',1,1,'N','2014-10-31',NULL,8888,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (24,'pub_s_new',1,1,'N','2014-10-21',NULL,9999,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
-
-INSERT INTO `publication_link` (`id`,`pi_id`,`publication_id`,`publication_section_id`,`application_id`,`bus_reg_id`,`created_by`,`last_modified_by`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,`created_on`,`deleted_date`,`last_modified_on`,`version`)
-  VALUES
-    (1,1,1,13,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
-    (2,1,3,13,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
-    (3,1,3,14,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-
-    (4,1,21,3,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (5,1,22,14,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (6,1,23,1,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (7,1,24,1,2,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1);
+  (1, NULL, 7, NULL, 3, 13, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26', NULL, '2014-11-25 15:47:03', NULL, NULL, 1),
+  (2, NULL, 7, NULL, 3, 14, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (3, 1, 7, 1, 3, 3, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN\n    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (4, 1, 7, 1, 3, 1, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN\n    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (5, 1, 7, 1, 3, 4, NULL, NULL, NULL, 'B', NULL, 'New applications granted text 1 (test data)', 'New applications granted text 2 (test data)', 'New applications granted text 3 (test data)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (6, 1, 7, 1, 3, 5, NULL, NULL, NULL, 'B', NULL, 'New applications refused text 1', 'New applications refused text 2', 'New applications refused text 3', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (7, NULL, 110, NULL, 4, 23, 12, NULL, NULL, 'B', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:52', NULL, NULL, 1),
+  (8, NULL, 110, NULL, 8, 23, 12, NULL, NULL, 'D', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:53', NULL, NULL, 1),
+  (9, NULL, 110, NULL, 10, 23, 12, NULL, NULL, 'F', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:54', NULL, NULL, 1),
+  (13, NULL, 110, NULL, 4, 25, 15, NULL, NULL, 'B', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:52', NULL, NULL, 1),
+  (14, NULL, 110, NULL, 14, 25, 15, NULL, NULL, 'H', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:53', NULL, NULL, 1),
+  (15, NULL, 110, NULL, 22, 25, 15, NULL, NULL, 'M', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:54', NULL, NULL, 1),
+  (16, NULL, 110, NULL, 4, 21, 1, NULL, NULL, 'B', NULL, 'PD2737280/14686', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'From: Doncaster\nTo: Sheffield\nVia: York\nName or No.: 90839 / 90840 / 90841\nService type: Normal Stopping, Frequent Service, Hail & Ride\nEffective date: 15 March 2014\nOther details: Other details', '2015-03-06 13:09:19', NULL, NULL, 1),
+  (17, NULL, 110, NULL, 12, 21, 1, NULL, NULL, 'G', NULL, 'PD2737280/14686', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'From: Doncaster\nTo: Sheffield\nVia: York\nName or No.: 90839 / 90840 / 90841\nService type: Normal Stopping, Frequent Service, Hail & Ride\nEffective date: 15 March 2014\nOther details: Other details', '2015-03-06 13:09:20', NULL, NULL, 1),
+  (18, 1, 7, 1, 4, 4, NULL, NULL, NULL, 'B', NULL, 'New applications granted text 1 (test data)', 'New applications granted text 2 (test data)', 'New applications granted text 3 (test data)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (19, 1, 7, 1, 4, 5, NULL, NULL, NULL, 'B', NULL, 'New applications refused text 1', 'New applications refused text 2', 'New applications refused text 3', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (20, NULL, 7, NULL, 4, 10, NULL, NULL, NULL, 'B', NULL, 'Licences surrendered text 1 (test data line 1)', 'Licences surrendered text 2 (test data line 1)', 'Licences surrendered text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (21, NULL, 7, NULL, 4, 10, NULL, NULL, NULL, 'B', NULL, 'Licences surrendered text 1 (test data line 2)', 'Licences surrendered text 2 (test data line 2)', 'Licences surrendered text 3 (test data line 2)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (22, NULL, 7, NULL, 4, 11, NULL, NULL, NULL, 'B', NULL, 'Licences terminated text 1 (test data line 1)', 'Licences terminated text 2 (test data line 1)', 'Licences terminated text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (23, NULL, 7, NULL, 4, 11, NULL, NULL, NULL, 'B', NULL, 'Licences terminated text 1 (test data line 2)', 'Licences terminated text 2 (test data line 2\n)', 'Licences terminated text 3 (test data line 2)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (24, NULL, 7, NULL, 4, 12, NULL, NULL, NULL, 'B', NULL, 'Licence revoked text 1', 'Licence revoked text 2', 'Licence revoked text 3\n', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (25, NULL, 7, NULL, 4, 20, NULL, NULL, NULL, 'B', NULL, 'Licence CNS text 1 (test data line 1)', 'Licence CNS text 2 (test data line 1)', 'Licence CNS text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1);
 
 INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`olbs_id`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
   VALUES
@@ -1408,7 +1420,9 @@ INSERT INTO `community_lic` (
     (5, 'cl_sts_suspended', 110, NULL, 4, NULL, 'UKGB', '2015-01-01', NULL),
     (6, 'cl_sts_void', 110, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
     (7, 'cl_sts_returned', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
-    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL);
+    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL),
+    (9, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL),
+    (10, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
     `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
@@ -1436,16 +1450,16 @@ VALUES
 
 INSERT INTO `statement`
 (`id`, `contact_type`, `requestors_contact_details_id`, `statement_type`, `case_id`, `created_by`,`last_modified_by`,
-`authorisers_decision`, `authorisers_title`, `stopped_date`, `requested_date`, `requestors_body`, `issued_date`,
+`authorisers_decision`, `stopped_date`, `requested_date`, `requestors_body`, `issued_date`,
 `created_on`, `last_modified_on`, `version`, `vrm`)
 VALUES
-  (1, 'cm_letter', 120, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', 'Authorisers title 1', '2014-05-01',
+  (1, 'cm_letter', 120, 'statement_t_43', 24, 1, 1, 'Authorisers decision 1', '2014-05-01',
   '2014-01-01', 'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1, 'VRM 1'),
-  (2, 'cm_fax', 121, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', 'Authorisers title 2', '2014-06-02',
+  (2, 'cm_fax', 121, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', '2014-06-02',
   '2014-02-02', 'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1, 'VRM 2'),
-  (3, 'cm_email', 122, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', 'Authorisers title 3', '2014-07-03',
+  (3, 'cm_email', 122, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', '2014-07-03',
   '2014-03-03', 'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1, 'VRM 3'),
-  (4, 'cm_tel', 123, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', 'Authorisers title 4', '2014-08-04',
+  (4, 'cm_tel', 123, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', '2014-08-04',
   '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
 
 INSERT INTO `previous_conviction` (`id`, `conviction_date`, `transport_manager_id`, `category_text`, `notes`,
@@ -1455,5 +1469,13 @@ VALUES
   (2, '2014-11-30 11:00:00', 1, 'Offence 2', 'Offence 2 details', 'Court 2', 'Penalty 2', 1),
   (3, '2012-10-30 10:00:00', 3, 'Offence 3', 'Offence 3 details', 'Court 3', 'Penalty 3', 1),
   (4, '2011-11-30 11:00:00', 3, 'Offence 4', 'Offence 4 details', 'Court 4', 'Penalty 4', 1);
+
+INSERT INTO `trailer` (`id`, `created_by`, `last_modified_by`, `licence_id`, `trailer_no`, `created_on`,
+  `deleted_date`, `last_modified_on`, `specified_date`, `version`)
+VALUES
+  (1, 1, 1, 7, "A0001", "2015-01-01", NULL, "2015-01-04", "2015-01-04", 1),
+  (2, 1, 1, 7, "B0020", "2015-01-01", NULL, "2015-02-03", "2015-02-03", 1),
+  (3, 1, 1, 7, "C0300", "2015-01-01", NULL, "2015-03-02", "2015-03-02", 1),
+  (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
 
 SET foreign_key_checks = 1;

@@ -12,11 +12,18 @@ class SearchController extends AbstractController
 {
     public function getList()
     {
-        $params = array_merge($this->params()->fromRoute(), $this->params()->fromQuery());
+        $params = array_merge((array)$this->params()->fromRoute(), (array)$this->params()->fromQuery());
 
         $indices = explode('|', $params['index']);
 
+        /** @var \Olcs\Db\Service\Search\Search $elastic */
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
+
+        if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
+
+            $elastic->setFilters($params['filters']);
+        }
+
         $resultSet = $elastic->search(
             urldecode($params['query']),
             $indices,

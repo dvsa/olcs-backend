@@ -34,7 +34,7 @@ use Olcs\Db\Entity\Traits;
 class Fee implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ApplicationManyToOneAlt1,
+        Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
@@ -57,6 +57,15 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="amount", precision=10, scale=2, nullable=false)
      */
     protected $amount;
+
+    /**
+     * Cheque po date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cheque_po_date", nullable=true)
+     */
+    protected $chequePoDate;
 
     /**
      * Cheque po number
@@ -264,6 +273,29 @@ class Fee implements Interfaces\EntityInterface
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Set the cheque po date
+     *
+     * @param \DateTime $chequePoDate
+     * @return Fee
+     */
+    public function setChequePoDate($chequePoDate)
+    {
+        $this->chequePoDate = $chequePoDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cheque po date
+     *
+     * @return \DateTime
+     */
+    public function getChequePoDate()
+    {
+        return $this->chequePoDate;
     }
 
     /**

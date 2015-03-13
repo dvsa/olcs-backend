@@ -5,11 +5,11 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Document many to one trait
+ * Document many to one alt1 trait
  *
  * Auto-Generated (Shared between 2 entities)
  */
-trait DocumentManyToOne
+trait DocumentManyToOneAlt1
 {
     /**
      * Document
@@ -17,7 +17,7 @@ trait DocumentManyToOne
      * @var \Olcs\Db\Entity\Document
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;
 

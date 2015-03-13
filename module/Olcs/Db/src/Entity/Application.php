@@ -163,6 +163,15 @@ class Application implements Interfaces\EntityInterface
     protected $interimEnd;
 
     /**
+     * Interim reason
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="interim_reason", length=1000, nullable=true)
+     */
+    protected $interimReason;
+
+    /**
      * Interim start
      *
      * @var \DateTime
@@ -300,6 +309,24 @@ class Application implements Interfaces\EntityInterface
     protected $psvLimousines;
 
     /**
+     * Psv medium vhl confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="psv_medium_vhl_confirmation", nullable=true)
+     */
+    protected $psvMediumVhlConfirmation;
+
+    /**
+     * Psv medium vhl notes
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="psv_medium_vhl_notes", length=1000, nullable=true)
+     */
+    protected $psvMediumVhlNotes;
+
+    /**
      * Psv no limousine confirmation
      *
      * @var string
@@ -408,6 +435,15 @@ class Application implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
+     * Application organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationOrganisationPerson", mappedBy="application")
+     */
+    protected $applicationOrganisationPersons;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -486,6 +522,7 @@ class Application implements Interfaces\EntityInterface
     {
         $this->applicationCompletions = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->applicationOrganisationPersons = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
@@ -770,6 +807,29 @@ class Application implements Interfaces\EntityInterface
     public function getInterimEnd()
     {
         return $this->interimEnd;
+    }
+
+    /**
+     * Set the interim reason
+     *
+     * @param string $interimReason
+     * @return Application
+     */
+    public function setInterimReason($interimReason)
+    {
+        $this->interimReason = $interimReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim reason
+     *
+     * @return string
+     */
+    public function getInterimReason()
+    {
+        return $this->interimReason;
     }
 
     /**
@@ -1118,6 +1178,52 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the psv medium vhl confirmation
+     *
+     * @param string $psvMediumVhlConfirmation
+     * @return Application
+     */
+    public function setPsvMediumVhlConfirmation($psvMediumVhlConfirmation)
+    {
+        $this->psvMediumVhlConfirmation = $psvMediumVhlConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl confirmation
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlConfirmation()
+    {
+        return $this->psvMediumVhlConfirmation;
+    }
+
+    /**
+     * Set the psv medium vhl notes
+     *
+     * @param string $psvMediumVhlNotes
+     * @return Application
+     */
+    public function setPsvMediumVhlNotes($psvMediumVhlNotes)
+    {
+        $this->psvMediumVhlNotes = $psvMediumVhlNotes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv medium vhl notes
+     *
+     * @return string
+     */
+    public function getPsvMediumVhlNotes()
+    {
+        return $this->psvMediumVhlNotes;
+    }
+
+    /**
      * Set the psv no limousine confirmation
      *
      * @param string $psvNoLimousineConfirmation
@@ -1462,6 +1568,66 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the application organisation person
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function setApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        $this->applicationOrganisationPersons = $applicationOrganisationPersons;
+
+        return $this;
+    }
+
+    /**
+     * Get the application organisation persons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationOrganisationPersons()
+    {
+        return $this->applicationOrganisationPersons;
+    }
+
+    /**
+     * Add a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function addApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($applicationOrganisationPersons instanceof ArrayCollection) {
+            $this->applicationOrganisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->applicationOrganisationPersons->toArray(),
+                    $applicationOrganisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->add($applicationOrganisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Application
+     */
+    public function removeApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->removeElement($applicationOrganisationPersons);
         }
 
         return $this;

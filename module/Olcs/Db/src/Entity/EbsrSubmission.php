@@ -25,7 +25,9 @@ class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\BusRegManyToOneAlt1,
-        Traits\IdIdentity;
+        Traits\DocumentManyToOneAlt1,
+        Traits\IdIdentity,
+        Traits\CustomVersionField;
 
     /**
      * Application classification
@@ -62,16 +64,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="distribute_start", nullable=true)
      */
     protected $distributeStart;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $document;
 
     /**
      * Ebsr submission result
@@ -318,29 +310,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getDistributeStart()
     {
         return $this->distributeStart;
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return EbsrSubmission
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * Get the document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
     }
 
     /**

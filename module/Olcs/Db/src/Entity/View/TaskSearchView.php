@@ -141,7 +141,7 @@ class TaskSearchView implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="sub_category_id")
+     * @ORM\Column(type="string", name="task_sub_category_id")
      */
     protected $taskSubCategory;
 
