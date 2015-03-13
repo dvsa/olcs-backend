@@ -14,17 +14,20 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_request",
  *    indexes={
- *        @ORM\Index(name="fk_inspection_request_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_inspection_request_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_inspection_request_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_inspection_request_task1_idx", columns={"task_id"}),
- *        @ORM\Index(name="fk_inspection_request_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_inspection_request_ref_data1_idx", columns={"report_type"}),
- *        @ORM\Index(name="fk_inspection_request_ref_data2_idx", columns={"request_type"}),
- *        @ORM\Index(name="fk_inspection_request_ref_data3_idx", columns={"result_type"}),
- *        @ORM\Index(name="fk_inspection_request_user1_idx", columns={"requestor_user_id"}),
- *        @ORM\Index(name="fk_inspection_request_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_inspection_request_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_inspection_request_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_inspection_request_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_inspection_request_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_inspection_request_task_id", columns={"task_id"}),
+ *        @ORM\Index(name="ix_inspection_request_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_inspection_request_report_type", columns={"report_type"}),
+ *        @ORM\Index(name="ix_inspection_request_request_type", columns={"request_type"}),
+ *        @ORM\Index(name="ix_inspection_request_result_type", columns={"result_type"}),
+ *        @ORM\Index(name="ix_inspection_request_requestor_user_id", columns={"requestor_user_id"}),
+ *        @ORM\Index(name="ix_inspection_request_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_inspection_request_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_inspection_request_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -39,6 +42,7 @@ class InspectionRequest implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\OperatingCentreManyToOne,
         Traits\TaskManyToOne,
         Traits\CustomVersionField;
@@ -178,7 +182,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="trailors_examined_no", nullable=true)
+     * @ORM\Column(type="smallint", name="trailors_examined_no", nullable=true)
      */
     protected $trailorsExaminedNo;
 
@@ -187,7 +191,7 @@ class InspectionRequest implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="vehicles_examined_no", nullable=true)
+     * @ORM\Column(type="smallint", name="vehicles_examined_no", nullable=true)
      */
     protected $vehiclesExaminedNo;
 

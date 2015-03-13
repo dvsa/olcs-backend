@@ -14,43 +14,33 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application_completion",
  *    indexes={
- *        @ORM\Index(name="fk_application_completion_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_completion_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_application_completion_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_completion_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_completion_application_id", columns={"application_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="fk_application_completion_application_id_udx", columns={"application_id"})
+ *        @ORM\UniqueConstraint(name="uk_application_completion_application_id", columns={"application_id"})
  *    }
  * )
  */
 class ApplicationCompletion implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\AddressesStatusField,
-        Traits\BusinessDetailsStatusField,
-        Traits\BusinessTypeStatusField,
-        Traits\CommunityLicencesStatusField,
-        Traits\ConditionsUndertakingsStatusField,
-        Traits\ConvictionsPenaltiesStatusField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\DiscsStatusField,
-        Traits\FinancialEvidenceStatusField,
-        Traits\FinancialHistoryStatusField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceHistoryStatusField,
-        Traits\OperatingCentresStatusField,
-        Traits\PeopleStatusField,
-        Traits\SafetyStatusField,
-        Traits\TaxiPhvStatusField,
-        Traits\TransportManagersStatusField,
-        Traits\TypeOfLicenceStatusField,
-        Traits\UndertakingsStatusField,
-        Traits\VehiclesDeclarationsStatusField,
-        Traits\VehiclesPsvStatusField,
-        Traits\VehiclesStatusField,
         Traits\CustomVersionField;
+
+    /**
+     * Addresses status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="addresses_status", nullable=true)
+     */
+    protected $addressesStatus;
 
     /**
      * Application
@@ -63,6 +53,78 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     protected $application;
 
     /**
+     * Business details status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="business_details_status", nullable=true)
+     */
+    protected $businessDetailsStatus;
+
+    /**
+     * Business type status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="business_type_status", nullable=true)
+     */
+    protected $businessTypeStatus;
+
+    /**
+     * Community licences status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="community_licences_status", nullable=true)
+     */
+    protected $communityLicencesStatus;
+
+    /**
+     * Conditions undertakings status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="conditions_undertakings_status", nullable=true)
+     */
+    protected $conditionsUndertakingsStatus;
+
+    /**
+     * Convictions penalties status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="convictions_penalties_status", nullable=true)
+     */
+    protected $convictionsPenaltiesStatus;
+
+    /**
+     * Discs status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="discs_status", nullable=true)
+     */
+    protected $discsStatus;
+
+    /**
+     * Financial evidence status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="financial_evidence_status", nullable=true)
+     */
+    protected $financialEvidenceStatus;
+
+    /**
+     * Financial history status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="financial_history_status", nullable=true)
+     */
+    protected $financialHistoryStatus;
+
+    /**
      * Last section
      *
      * @var string
@@ -70,6 +132,128 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="last_section", length=255, nullable=true)
      */
     protected $lastSection;
+
+    /**
+     * Licence history status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="licence_history_status", nullable=true)
+     */
+    protected $licenceHistoryStatus;
+
+    /**
+     * Operating centres status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="operating_centres_status", nullable=true)
+     */
+    protected $operatingCentresStatus;
+
+    /**
+     * People status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="people_status", nullable=true)
+     */
+    protected $peopleStatus;
+
+    /**
+     * Safety status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="safety_status", nullable=true)
+     */
+    protected $safetyStatus;
+
+    /**
+     * Taxi phv status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="taxi_phv_status", nullable=true)
+     */
+    protected $taxiPhvStatus;
+
+    /**
+     * Transport managers status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="transport_managers_status", nullable=true)
+     */
+    protected $transportManagersStatus;
+
+    /**
+     * Type of licence status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="type_of_licence_status", nullable=true)
+     */
+    protected $typeOfLicenceStatus;
+
+    /**
+     * Undertakings status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="undertakings_status", nullable=true)
+     */
+    protected $undertakingsStatus;
+
+    /**
+     * Vehicles declarations status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="vehicles_declarations_status", nullable=true)
+     */
+    protected $vehiclesDeclarationsStatus;
+
+    /**
+     * Vehicles psv status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="vehicles_psv_status", nullable=true)
+     */
+    protected $vehiclesPsvStatus;
+
+    /**
+     * Vehicles status
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="vehicles_status", nullable=true)
+     */
+    protected $vehiclesStatus;
+
+    /**
+     * Set the addresses status
+     *
+     * @param boolean $addressesStatus
+     * @return ApplicationCompletion
+     */
+    public function setAddressesStatus($addressesStatus)
+    {
+        $this->addressesStatus = $addressesStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the addresses status
+     *
+     * @return boolean
+     */
+    public function getAddressesStatus()
+    {
+        return $this->addressesStatus;
+    }
 
     /**
      * Set the application
@@ -95,6 +279,190 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the business details status
+     *
+     * @param boolean $businessDetailsStatus
+     * @return ApplicationCompletion
+     */
+    public function setBusinessDetailsStatus($businessDetailsStatus)
+    {
+        $this->businessDetailsStatus = $businessDetailsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the business details status
+     *
+     * @return boolean
+     */
+    public function getBusinessDetailsStatus()
+    {
+        return $this->businessDetailsStatus;
+    }
+
+    /**
+     * Set the business type status
+     *
+     * @param boolean $businessTypeStatus
+     * @return ApplicationCompletion
+     */
+    public function setBusinessTypeStatus($businessTypeStatus)
+    {
+        $this->businessTypeStatus = $businessTypeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the business type status
+     *
+     * @return boolean
+     */
+    public function getBusinessTypeStatus()
+    {
+        return $this->businessTypeStatus;
+    }
+
+    /**
+     * Set the community licences status
+     *
+     * @param boolean $communityLicencesStatus
+     * @return ApplicationCompletion
+     */
+    public function setCommunityLicencesStatus($communityLicencesStatus)
+    {
+        $this->communityLicencesStatus = $communityLicencesStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the community licences status
+     *
+     * @return boolean
+     */
+    public function getCommunityLicencesStatus()
+    {
+        return $this->communityLicencesStatus;
+    }
+
+    /**
+     * Set the conditions undertakings status
+     *
+     * @param boolean $conditionsUndertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setConditionsUndertakingsStatus($conditionsUndertakingsStatus)
+    {
+        $this->conditionsUndertakingsStatus = $conditionsUndertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the conditions undertakings status
+     *
+     * @return boolean
+     */
+    public function getConditionsUndertakingsStatus()
+    {
+        return $this->conditionsUndertakingsStatus;
+    }
+
+    /**
+     * Set the convictions penalties status
+     *
+     * @param boolean $convictionsPenaltiesStatus
+     * @return ApplicationCompletion
+     */
+    public function setConvictionsPenaltiesStatus($convictionsPenaltiesStatus)
+    {
+        $this->convictionsPenaltiesStatus = $convictionsPenaltiesStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the convictions penalties status
+     *
+     * @return boolean
+     */
+    public function getConvictionsPenaltiesStatus()
+    {
+        return $this->convictionsPenaltiesStatus;
+    }
+
+    /**
+     * Set the discs status
+     *
+     * @param boolean $discsStatus
+     * @return ApplicationCompletion
+     */
+    public function setDiscsStatus($discsStatus)
+    {
+        $this->discsStatus = $discsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the discs status
+     *
+     * @return boolean
+     */
+    public function getDiscsStatus()
+    {
+        return $this->discsStatus;
+    }
+
+    /**
+     * Set the financial evidence status
+     *
+     * @param boolean $financialEvidenceStatus
+     * @return ApplicationCompletion
+     */
+    public function setFinancialEvidenceStatus($financialEvidenceStatus)
+    {
+        $this->financialEvidenceStatus = $financialEvidenceStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the financial evidence status
+     *
+     * @return boolean
+     */
+    public function getFinancialEvidenceStatus()
+    {
+        return $this->financialEvidenceStatus;
+    }
+
+    /**
+     * Set the financial history status
+     *
+     * @param boolean $financialHistoryStatus
+     * @return ApplicationCompletion
+     */
+    public function setFinancialHistoryStatus($financialHistoryStatus)
+    {
+        $this->financialHistoryStatus = $financialHistoryStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the financial history status
+     *
+     * @return boolean
+     */
+    public function getFinancialHistoryStatus()
+    {
+        return $this->financialHistoryStatus;
+    }
+
+    /**
      * Set the last section
      *
      * @param string $lastSection
@@ -115,5 +483,258 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     public function getLastSection()
     {
         return $this->lastSection;
+    }
+
+    /**
+     * Set the licence history status
+     *
+     * @param boolean $licenceHistoryStatus
+     * @return ApplicationCompletion
+     */
+    public function setLicenceHistoryStatus($licenceHistoryStatus)
+    {
+        $this->licenceHistoryStatus = $licenceHistoryStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence history status
+     *
+     * @return boolean
+     */
+    public function getLicenceHistoryStatus()
+    {
+        return $this->licenceHistoryStatus;
+    }
+
+    /**
+     * Set the operating centres status
+     *
+     * @param boolean $operatingCentresStatus
+     * @return ApplicationCompletion
+     */
+    public function setOperatingCentresStatus($operatingCentresStatus)
+    {
+        $this->operatingCentresStatus = $operatingCentresStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centres status
+     *
+     * @return boolean
+     */
+    public function getOperatingCentresStatus()
+    {
+        return $this->operatingCentresStatus;
+    }
+
+    /**
+     * Set the people status
+     *
+     * @param boolean $peopleStatus
+     * @return ApplicationCompletion
+     */
+    public function setPeopleStatus($peopleStatus)
+    {
+        $this->peopleStatus = $peopleStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the people status
+     *
+     * @return boolean
+     */
+    public function getPeopleStatus()
+    {
+        return $this->peopleStatus;
+    }
+
+    /**
+     * Set the safety status
+     *
+     * @param boolean $safetyStatus
+     * @return ApplicationCompletion
+     */
+    public function setSafetyStatus($safetyStatus)
+    {
+        $this->safetyStatus = $safetyStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the safety status
+     *
+     * @return boolean
+     */
+    public function getSafetyStatus()
+    {
+        return $this->safetyStatus;
+    }
+
+    /**
+     * Set the taxi phv status
+     *
+     * @param boolean $taxiPhvStatus
+     * @return ApplicationCompletion
+     */
+    public function setTaxiPhvStatus($taxiPhvStatus)
+    {
+        $this->taxiPhvStatus = $taxiPhvStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the taxi phv status
+     *
+     * @return boolean
+     */
+    public function getTaxiPhvStatus()
+    {
+        return $this->taxiPhvStatus;
+    }
+
+    /**
+     * Set the transport managers status
+     *
+     * @param boolean $transportManagersStatus
+     * @return ApplicationCompletion
+     */
+    public function setTransportManagersStatus($transportManagersStatus)
+    {
+        $this->transportManagersStatus = $transportManagersStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the transport managers status
+     *
+     * @return boolean
+     */
+    public function getTransportManagersStatus()
+    {
+        return $this->transportManagersStatus;
+    }
+
+    /**
+     * Set the type of licence status
+     *
+     * @param boolean $typeOfLicenceStatus
+     * @return ApplicationCompletion
+     */
+    public function setTypeOfLicenceStatus($typeOfLicenceStatus)
+    {
+        $this->typeOfLicenceStatus = $typeOfLicenceStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the type of licence status
+     *
+     * @return boolean
+     */
+    public function getTypeOfLicenceStatus()
+    {
+        return $this->typeOfLicenceStatus;
+    }
+
+    /**
+     * Set the undertakings status
+     *
+     * @param boolean $undertakingsStatus
+     * @return ApplicationCompletion
+     */
+    public function setUndertakingsStatus($undertakingsStatus)
+    {
+        $this->undertakingsStatus = $undertakingsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the undertakings status
+     *
+     * @return boolean
+     */
+    public function getUndertakingsStatus()
+    {
+        return $this->undertakingsStatus;
+    }
+
+    /**
+     * Set the vehicles declarations status
+     *
+     * @param boolean $vehiclesDeclarationsStatus
+     * @return ApplicationCompletion
+     */
+    public function setVehiclesDeclarationsStatus($vehiclesDeclarationsStatus)
+    {
+        $this->vehiclesDeclarationsStatus = $vehiclesDeclarationsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicles declarations status
+     *
+     * @return boolean
+     */
+    public function getVehiclesDeclarationsStatus()
+    {
+        return $this->vehiclesDeclarationsStatus;
+    }
+
+    /**
+     * Set the vehicles psv status
+     *
+     * @param boolean $vehiclesPsvStatus
+     * @return ApplicationCompletion
+     */
+    public function setVehiclesPsvStatus($vehiclesPsvStatus)
+    {
+        $this->vehiclesPsvStatus = $vehiclesPsvStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicles psv status
+     *
+     * @return boolean
+     */
+    public function getVehiclesPsvStatus()
+    {
+        return $this->vehiclesPsvStatus;
+    }
+
+    /**
+     * Set the vehicles status
+     *
+     * @param boolean $vehiclesStatus
+     * @return ApplicationCompletion
+     */
+    public function setVehiclesStatus($vehiclesStatus)
+    {
+        $this->vehiclesStatus = $vehiclesStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicles status
+     *
+     * @return boolean
+     */
+    public function getVehiclesStatus()
+    {
+        return $this->vehiclesStatus;
     }
 }

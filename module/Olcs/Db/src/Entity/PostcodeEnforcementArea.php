@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcode_enforcement_area",
  *    indexes={
- *        @ORM\Index(name="fk_PostcodeVehicleInspectorate_VehicleInspectorate1_idx", columns={"enforcement_area_id"}),
- *        @ORM\Index(name="fk_postcode_enforcement_area_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_postcode_enforcement_area_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_postcode_enforcement_area_enforcement_area_id", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="ix_postcode_enforcement_area_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_postcode_enforcement_area_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="postcode_enforcement_area_unique", columns={"enforcement_area_id","postcode_id"})
+ *        @ORM\UniqueConstraint(name="uk_postcode_enforcement_area_enforcement_area_id_postcode_id", columns={"enforcement_area_id","postcode_id"})
  *    }
  * )
  */

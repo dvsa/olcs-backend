@@ -14,13 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="event_history",
  *    indexes={
+ *        @ORM\Index(name="ix_event_history_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_event_history_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_event_history_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_event_history_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_event_history_event_history_type1_idx", columns={"event_history_type_id"}),
- *        @ORM\Index(name="fk_event_history_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_event_history_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_event_history_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"})
  *    }
  * )
  */
@@ -32,15 +32,6 @@ class EventHistory implements Interfaces\EntityInterface
         Traits\LicenceManyToOneAlt1,
         Traits\TransportManagerManyToOne,
         Traits\UserManyToOne;
-
-    /**
-     * Entity data
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="entity_data", length=65535, nullable=true)
-     */
-    protected $entityData;
 
     /**
      * Entity pk
@@ -68,6 +59,15 @@ class EventHistory implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="entity_version", nullable=true)
      */
     protected $entityVersion;
+
+    /**
+     * Event data
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="event_data", length=255, nullable=true)
+     */
+    protected $eventData;
 
     /**
      * Event datetime
@@ -125,29 +125,6 @@ class EventHistory implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
      */
     protected $team;
-
-    /**
-     * Set the entity data
-     *
-     * @param string $entityData
-     * @return EventHistory
-     */
-    public function setEntityData($entityData)
-    {
-        $this->entityData = $entityData;
-
-        return $this;
-    }
-
-    /**
-     * Get the entity data
-     *
-     * @return string
-     */
-    public function getEntityData()
-    {
-        return $this->entityData;
-    }
 
     /**
      * Set the entity pk
@@ -216,6 +193,29 @@ class EventHistory implements Interfaces\EntityInterface
     public function getEntityVersion()
     {
         return $this->entityVersion;
+    }
+
+    /**
+     * Set the event data
+     *
+     * @param string $eventData
+     * @return EventHistory
+     */
+    public function setEventData($eventData)
+    {
+        $this->eventData = $eventData;
+
+        return $this;
+    }
+
+    /**
+     * Get the event data
+     *
+     * @return string
+     */
+    public function getEventData()
+    {
+        return $this->eventData;
     }
 
     /**

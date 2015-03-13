@@ -1463,7 +1463,7 @@ class AlignEntitiesToSchema
                 continue;
             }
 
-            if ($which == 'unique-constraints' && $key == 'columns') {
+            if (in_array($which, ['indexes', 'unique-constraints']) && $key == 'columns') {
                 $value = explode(',', $value);
             }
 

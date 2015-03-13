@@ -16,7 +16,7 @@ trait TotCommunityLicencesField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
+     * @ORM\Column(type="smallint", name="tot_community_licences", nullable=true)
      */
     protected $totCommunityLicences;
 

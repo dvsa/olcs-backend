@@ -14,11 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_short_notice",
  *    indexes={
- *        @ORM\Index(name="fk_bus_short_notice_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_short_notice_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_bus_short_notice_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_bus_short_notice_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="bus_reg_id_UNIQUE", columns={"bus_reg_id"})
+ *        @ORM\UniqueConstraint(name="uk_bus_short_notice_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\UniqueConstraint(name="uk_bus_short_notice_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -30,6 +31,7 @@ class BusShortNotice implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

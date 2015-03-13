@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence_status_rule",
  *    indexes={
- *        @ORM\Index(name="fk_licence_status_rule_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_licence_status_rule_ref_data1_idx", columns={"licence_status"}),
- *        @ORM\Index(name="fk_licence_status_rule_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_status_rule_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_licence_status_rule_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_licence_status_rule_licence_status", columns={"licence_status"}),
+ *        @ORM\Index(name="ix_licence_status_rule_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_licence_status_rule_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -34,6 +34,7 @@ class LicenceStatusRule implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

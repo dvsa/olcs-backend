@@ -15,32 +15,27 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="operating_centre",
  *    indexes={
- *        @ORM\Index(name="fk_OperatingCentre_Address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_operating_centre_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_operating_centre_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_operating_centre_address_id", columns={"address_id"}),
+ *        @ORM\Index(name="ix_operating_centre_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_operating_centre_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_operating_centre_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
 class OperatingCentre implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\AddressManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
-
-    /**
-     * Address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
-     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
-     */
-    protected $address;
 
     /**
      * Opposition
@@ -97,29 +92,6 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->transportManagerApplications = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
-    }
-
-    /**
-     * Set the address
-     *
-     * @param \Olcs\Db\Entity\Address $address
-     * @return OperatingCentre
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get the address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**

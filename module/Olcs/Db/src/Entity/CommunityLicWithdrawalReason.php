@@ -16,10 +16,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal_reason",
  *    indexes={
- *        @ORM\Index(name="fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx", columns={"community_lic_withdrawal_id"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_community_lic_withdrawal_id", columns={"community_lic_withdrawal_id"}),
  *        @ORM\Index(name="fk_community_lic_withdrawal_reason_community_lic_withdrawal_idx1", columns={"type_id"}),
- *        @ORM\Index(name="fk_community_lic_withdrawal_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_community_lic_withdrawal_reason_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_community_lic_withdrawal_reason_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +35,7 @@ class CommunityLicWithdrawalReason implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\TypeManyToOne,
         Traits\CustomVersionField;
 

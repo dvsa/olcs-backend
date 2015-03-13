@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_offence",
  *    indexes={
- *        @ORM\Index(name="fk_legacy_offence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_legacy_offence_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_legacy_offence_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="ix_legacy_offence_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_legacy_offence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_legacy_offence_cases_id", columns={"case_id"})
  *    }
  * )
  */
@@ -65,7 +65,7 @@ class LegacyOffence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="num_of_offences", nullable=true)
+     * @ORM\Column(type="smallint", name="num_of_offences", nullable=true)
      */
     protected $numOfOffences;
 
@@ -119,7 +119,7 @@ class LegacyOffence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="points", nullable=true)
+     * @ORM\Column(type="smallint", name="points", nullable=true)
      */
     protected $points;
 

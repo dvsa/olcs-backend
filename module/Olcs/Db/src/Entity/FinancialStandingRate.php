@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="financial_standing_rate",
  *    indexes={
- *        @ORM\Index(name="fk_financial_standing_rate_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_financial_standing_rate_ref_data2_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_financial_standing_rate_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_financial_standing_rate_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_financial_standing_rate_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_financial_standing_rate_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_financial_standing_rate_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_financial_standing_rate_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -39,9 +39,9 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     /**
      * Additional vehicle rate
      *
-     * @var float
+     * @var int
      *
-     * @ORM\Column(type="decimal", name="additional_vehicle_rate", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="integer", name="additional_vehicle_rate", nullable=true)
      */
     protected $additionalVehicleRate;
 
@@ -57,16 +57,16 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     /**
      * First vehicle rate
      *
-     * @var float
+     * @var int
      *
-     * @ORM\Column(type="decimal", name="first_vehicle_rate", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="integer", name="first_vehicle_rate", nullable=true)
      */
     protected $firstVehicleRate;
 
     /**
      * Set the additional vehicle rate
      *
-     * @param float $additionalVehicleRate
+     * @param int $additionalVehicleRate
      * @return FinancialStandingRate
      */
     public function setAdditionalVehicleRate($additionalVehicleRate)
@@ -79,7 +79,7 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     /**
      * Get the additional vehicle rate
      *
-     * @return float
+     * @return int
      */
     public function getAdditionalVehicleRate()
     {
@@ -112,7 +112,7 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     /**
      * Set the first vehicle rate
      *
-     * @param float $firstVehicleRate
+     * @param int $firstVehicleRate
      * @return FinancialStandingRate
      */
     public function setFirstVehicleRate($firstVehicleRate)
@@ -125,7 +125,7 @@ class FinancialStandingRate implements Interfaces\EntityInterface
     /**
      * Get the first vehicle rate
      *
-     * @return float
+     * @return int
      */
     public function getFirstVehicleRate()
     {

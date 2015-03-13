@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Olbs key field trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 74 entities)
  */
 trait OlbsKeyField
 {

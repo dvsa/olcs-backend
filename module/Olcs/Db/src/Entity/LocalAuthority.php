@@ -15,9 +15,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="local_authority",
  *    indexes={
- *        @ORM\Index(name="fk_local_authority_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_local_authority_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_local_authority_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="ix_local_authority_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_local_authority_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_local_authority_traffic_area_id", columns={"traffic_area_id"})
  *    }
  * )
  */

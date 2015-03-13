@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_recommendation_pi_reason",
  *    indexes={
- *        @ORM\Index(name="fk_legacy_recommendation_pi_reason_legacy_recommendation1_idx", columns={"legacy_recommendation_id"}),
- *        @ORM\Index(name="fk_legacy_recommendation_pi_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_legacy_recommendation_pi_reason_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_legacy_recommendation_pi_reason_legacy_pi_reason1_idx", columns={"legacy_pi_reason_id"})
+ *        @ORM\Index(name="ix_legacy_recommendation_pi_reason_legacy_recommendation_id", columns={"legacy_recommendation_id"}),
+ *        @ORM\Index(name="ix_legacy_recommendation_pi_reason_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_legacy_recommendation_pi_reason_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_legacy_recommendation_pi_reason_legacy_pi_reason_id", columns={"legacy_pi_reason_id"})
  *    }
  * )
  */

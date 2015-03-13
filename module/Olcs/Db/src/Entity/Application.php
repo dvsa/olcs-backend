@@ -17,14 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application",
  *    indexes={
- *        @ORM\Index(name="fk_application_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_application_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
- *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="fk_application_ref_data5_idx", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_application_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_application_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_application_status", columns={"status"}),
+ *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
+ *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -140,7 +140,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="interim_auth_trailers", nullable=true)
+     * @ORM\Column(type="smallint", name="interim_auth_trailers", nullable=true)
      */
     protected $interimAuthTrailers;
 
@@ -149,7 +149,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="interim_auth_vehicles", nullable=true)
+     * @ORM\Column(type="smallint", name="interim_auth_vehicles", nullable=true)
      */
     protected $interimAuthVehicles;
 

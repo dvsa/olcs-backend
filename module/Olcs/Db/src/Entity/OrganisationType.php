@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation_type",
  *    indexes={
- *        @ORM\Index(name="fk_organisation_type_ref_data1_idx", columns={"org_type_id"}),
- *        @ORM\Index(name="fk_organisation_type_ref_data2_idx", columns={"org_person_type_id"})
+ *        @ORM\Index(name="ix_organisation_type_org_type_id", columns={"org_type_id"}),
+ *        @ORM\Index(name="ix_organisation_type_org_person_type_id", columns={"org_person_type_id"})
  *    }
  * )
  */

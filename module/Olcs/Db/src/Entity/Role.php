@@ -15,14 +15,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="role",
  *    indexes={
- *        @ORM\Index(name="fk_role_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_role_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_role_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_role_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
 class Role implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Code5Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -31,20 +32,11 @@ class Role implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="code", length=5, nullable=true)
-     */
-    protected $code;
-
-    /**
      * Role
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="role", length=100, nullable=true)
+     * @ORM\Column(type="string", name="role", length=100, nullable=false)
      */
     protected $role;
 
@@ -63,29 +55,6 @@ class Role implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->rolePermissions = new ArrayCollection();
-    }
-
-    /**
-     * Set the code
-     *
-     * @param string $code
-     * @return Role
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get the code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**

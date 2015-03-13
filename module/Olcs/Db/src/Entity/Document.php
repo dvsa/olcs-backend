@@ -3,7 +3,6 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -17,20 +16,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="fk_document_ref_data1_idx", columns={"file_extension"}),
- *        @ORM\Index(name="fk_document_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_document_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_document_sub_category1_idx", columns={"sub_category_id"}),
- *        @ORM\Index(name="fk_document_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_document_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_document_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_document_irfo_organisation1_idx", columns={"irfo_organisation_id"}),
- *        @ORM\Index(name="fk_document_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_document_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_document_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_document_opposition1_idx", columns={"opposition_id"}),
- *        @ORM\Index(name="fk_document_bus_reg1_idx", columns={"bus_reg_id"})
+ *        @ORM\Index(name="ix_document_file_extension", columns={"file_extension"}),
+ *        @ORM\Index(name="ix_document_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_document_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_document_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_document_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_document_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_document_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_document_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_document_opposition_id", columns={"opposition_id"}),
+ *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -48,6 +50,8 @@ class Document implements Interfaces\EntityInterface
         Traits\IssuedDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\CustomVersionField;
 
     /**
@@ -79,15 +83,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
-
-    /**
-     * Email
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Email", mappedBy="documents")
-     */
-    protected $emails;
 
     /**
      * File extension
@@ -205,14 +200,6 @@ class Document implements Interfaces\EntityInterface
     protected $transportManager;
 
     /**
-     * Initialise the collections
-     */
-    public function __construct()
-    {
-        $this->emails = new ArrayCollection();
-    }
-
-    /**
      * Set the application
      *
      * @param \Olcs\Db\Entity\Application $application
@@ -279,66 +266,6 @@ class Document implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the email
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $emails
-     * @return Document
-     */
-    public function setEmails($emails)
-    {
-        $this->emails = $emails;
-
-        return $this;
-    }
-
-    /**
-     * Get the emails
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getEmails()
-    {
-        return $this->emails;
-    }
-
-    /**
-     * Add a emails
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $emails
-     * @return Document
-     */
-    public function addEmails($emails)
-    {
-        if ($emails instanceof ArrayCollection) {
-            $this->emails = new ArrayCollection(
-                array_merge(
-                    $this->emails->toArray(),
-                    $emails->toArray()
-                )
-            );
-        } elseif (!$this->emails->contains($emails)) {
-            $this->emails->add($emails);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a emails
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $emails
-     * @return Document
-     */
-    public function removeEmails($emails)
-    {
-        if ($this->emails->contains($emails)) {
-            $this->emails->removeElement($emails);
-        }
-
-        return $this;
     }
 
     /**

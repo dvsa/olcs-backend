@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="correspondence_inbox",
  *    indexes={
- *        @ORM\Index(name="fk_correspondence_inbox_document1_idx", columns={"document_id"}),
- *        @ORM\Index(name="fk_correspondence_inbox_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_correspondence_inbox_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_correspondence_inbox_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_correspondence_inbox_document_id", columns={"document_id"}),
+ *        @ORM\Index(name="ix_correspondence_inbox_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_correspondence_inbox_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_correspondence_inbox_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_correspondence_inbox_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -31,6 +34,7 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

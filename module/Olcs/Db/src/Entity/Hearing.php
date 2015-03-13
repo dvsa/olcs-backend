@@ -16,12 +16,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="hearing",
  *    indexes={
- *        @ORM\Index(name="fk_hearing_hearing_type_idx", columns={"hearing_type"}),
- *        @ORM\Index(name="fk_hearing_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_hearing_pi_venue1_idx", columns={"venue_id"}),
- *        @ORM\Index(name="fk_hearing_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_hearing_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_hearing_presiding_tc1_idx", columns={"presiding_tc_id"})
+ *        @ORM\Index(name="ix_hearing_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_hearing_venue_id", columns={"venue_id"}),
+ *        @ORM\Index(name="ix_hearing_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_hearing_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_hearing_presiding_tc_id", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="ix_hearing_hearing_type", columns={"hearing_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -36,7 +39,10 @@ class Hearing implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\PresidingTcManyToOne,
+        Traits\VenueManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -59,16 +65,6 @@ class Hearing implements Interfaces\EntityInterface
     protected $hearingType;
 
     /**
-     * Venue
-     *
-     * @var \Olcs\Db\Entity\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
-     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
-     */
-    protected $venue;
-
-    /**
      * Venue other
      *
      * @var string
@@ -80,11 +76,11 @@ class Hearing implements Interfaces\EntityInterface
     /**
      * Witness count
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="witness_count", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="witness_count", nullable=true)
      */
-    protected $witnessCount = 0;
+    protected $witnessCount;
 
     /**
      * Set the agreed by tc date
@@ -133,29 +129,6 @@ class Hearing implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the venue
-     *
-     * @param \Olcs\Db\Entity\PiVenue $venue
-     * @return Hearing
-     */
-    public function setVenue($venue)
-    {
-        $this->venue = $venue;
-
-        return $this;
-    }
-
-    /**
-     * Get the venue
-     *
-     * @return \Olcs\Db\Entity\PiVenue
-     */
-    public function getVenue()
-    {
-        return $this->venue;
-    }
-
-    /**
      * Set the venue other
      *
      * @param string $venueOther
@@ -181,7 +154,7 @@ class Hearing implements Interfaces\EntityInterface
     /**
      * Set the witness count
      *
-     * @param int $witnessCount
+     * @param boolean $witnessCount
      * @return Hearing
      */
     public function setWitnessCount($witnessCount)
@@ -194,7 +167,7 @@ class Hearing implements Interfaces\EntityInterface
     /**
      * Get the witness count
      *
-     * @return int
+     * @return boolean
      */
     public function getWitnessCount()
     {

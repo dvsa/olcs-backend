@@ -14,9 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="team",
  *    indexes={
- *        @ORM\Index(name="fk_team_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_team_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_team_user1_idx", columns={"created_by"})
+ *        @ORM\Index(name="ix_team_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_team_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_team_created_by", columns={"created_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_team_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -30,6 +33,7 @@ class Team implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
+        Traits\OlbsKeyField,
         Traits\TrafficAreaManyToOne,
         Traits\CustomVersionField;
 }

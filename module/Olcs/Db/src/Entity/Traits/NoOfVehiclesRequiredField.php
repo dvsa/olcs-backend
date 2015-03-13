@@ -16,7 +16,7 @@ trait NoOfVehiclesRequiredField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="no_of_vehicles_required", nullable=true)
+     * @ORM\Column(type="smallint", name="no_of_vehicles_required", nullable=true)
      */
     protected $noOfVehiclesRequired;
 
