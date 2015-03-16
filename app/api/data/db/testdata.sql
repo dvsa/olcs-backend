@@ -20,6 +20,8 @@ TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
+TRUNCATE TABLE `event_history_type`;
+TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
@@ -1504,5 +1506,17 @@ VALUES
   (2, 1, 1, 7, "B0020", "2015-01-01", NULL, "2015-02-03", "2015-02-03", 1),
   (3, 1, 1, 7, "C0300", "2015-01-01", NULL, "2015-03-02", "2015-03-02", 1),
   (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
+
+-- Start: Event History Test Data
+
+INSERT INTO `event_history_type` (`id`, `description`, `event_type`)
+VALUES
+	(1, 'Type 1', 'ABC');
+
+INSERT INTO `event_history` (`id`, `event_history_type_id`, `licence_vehicle_id`, `team_id`, `application_id`, `licence_id`, `transport_manager_id`, `user_id`, `entity_data`, `entity_pk`, `entity_type`, `entity_version`, `event_datetime`, `event_description`, `operation`)
+VALUES
+	(8, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1', 'O');
+
+-- End: Event History Test Data
 
 SET foreign_key_checks = 1;
