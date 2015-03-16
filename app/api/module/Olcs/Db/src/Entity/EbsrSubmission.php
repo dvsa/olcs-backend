@@ -24,7 +24,6 @@ use Olcs\Db\Entity\Traits;
 class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\BusRegManyToOneAlt1,
         Traits\DocumentManyToOneAlt1,
         Traits\IdIdentity,
         Traits\CustomVersionField;
@@ -37,6 +36,16 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="application_classification", length=32, nullable=true)
      */
     protected $applicationClassification;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="ebsrSubmissions")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
 
     /**
      * Distribute end
@@ -241,6 +250,29 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getApplicationClassification()
     {
         return $this->applicationClassification;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return EbsrSubmission
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 
     /**

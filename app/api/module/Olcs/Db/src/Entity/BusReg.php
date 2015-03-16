@@ -562,6 +562,15 @@ class BusReg implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Ebsr submission
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\EbsrSubmission", mappedBy="busReg")
+     */
+    protected $ebsrSubmissions;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -573,6 +582,7 @@ class BusReg implements Interfaces\EntityInterface
         $this->otherServices = new ArrayCollection();
         $this->shortNotices = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->ebsrSubmissions = new ArrayCollection();
     }
 
     /**
@@ -2048,6 +2058,66 @@ class BusReg implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the ebsr submission
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return BusReg
+     */
+    public function setEbsrSubmissions($ebsrSubmissions)
+    {
+        $this->ebsrSubmissions = $ebsrSubmissions;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submissions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEbsrSubmissions()
+    {
+        return $this->ebsrSubmissions;
+    }
+
+    /**
+     * Add a ebsr submissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return BusReg
+     */
+    public function addEbsrSubmissions($ebsrSubmissions)
+    {
+        if ($ebsrSubmissions instanceof ArrayCollection) {
+            $this->ebsrSubmissions = new ArrayCollection(
+                array_merge(
+                    $this->ebsrSubmissions->toArray(),
+                    $ebsrSubmissions->toArray()
+                )
+            );
+        } elseif (!$this->ebsrSubmissions->contains($ebsrSubmissions)) {
+            $this->ebsrSubmissions->add($ebsrSubmissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ebsr submissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return BusReg
+     */
+    public function removeEbsrSubmissions($ebsrSubmissions)
+    {
+        if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
+            $this->ebsrSubmissions->removeElement($ebsrSubmissions);
         }
 
         return $this;
