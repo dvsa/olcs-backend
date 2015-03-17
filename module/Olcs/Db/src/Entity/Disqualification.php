@@ -17,7 +17,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_disqualification_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_disqualification_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_disqualification_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_disqualification_person_id", columns={"person_id"})
+ *        @ORM\Index(name="ix_disqualification_officer_cd_id", columns={"officer_cd_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_disqualification_olbs_key", columns={"olbs_key"})
@@ -48,6 +48,16 @@ class Disqualification implements Interfaces\EntityInterface
     protected $isDisqualified;
 
     /**
+     * Officer cd
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="officer_cd_id", referencedColumnName="id", nullable=true)
+     */
+    protected $officerCd;
+
+    /**
      * Period
      *
      * @var int
@@ -55,16 +65,6 @@ class Disqualification implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="period", nullable=false)
      */
     protected $period;
-
-    /**
-     * Person
-     *
-     * @var \Olcs\Db\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Person")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
-     */
-    protected $person;
 
     /**
      * Set the is disqualified
@@ -90,6 +90,29 @@ class Disqualification implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the officer cd
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $officerCd
+     * @return Disqualification
+     */
+    public function setOfficerCd($officerCd)
+    {
+        $this->officerCd = $officerCd;
+
+        return $this;
+    }
+
+    /**
+     * Get the officer cd
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getOfficerCd()
+    {
+        return $this->officerCd;
+    }
+
+    /**
      * Set the period
      *
      * @param int $period
@@ -110,28 +133,5 @@ class Disqualification implements Interfaces\EntityInterface
     public function getPeriod()
     {
         return $this->period;
-    }
-
-    /**
-     * Set the person
-     *
-     * @param \Olcs\Db\Entity\Person $person
-     * @return Disqualification
-     */
-    public function setPerson($person)
-    {
-        $this->person = $person;
-
-        return $this;
-    }
-
-    /**
-     * Get the person
-     *
-     * @return \Olcs\Db\Entity\Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
     }
 }

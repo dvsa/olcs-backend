@@ -36,7 +36,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Pi implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\AgreedDateField,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,
@@ -71,6 +70,15 @@ class Pi implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
      */
     protected $agreedByTcRole;
+
+    /**
+     * Agreed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="agreed_date", nullable=true)
+     */
+    protected $agreedDate;
 
     /**
      * Assigned to
@@ -383,6 +391,29 @@ class Pi implements Interfaces\EntityInterface
     public function getAgreedByTcRole()
     {
         return $this->agreedByTcRole;
+    }
+
+    /**
+     * Set the agreed date
+     *
+     * @param \DateTime $agreedDate
+     * @return Pi
+     */
+    public function setAgreedDate($agreedDate)
+    {
+        $this->agreedDate = $agreedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed date
+     *
+     * @return \DateTime
+     */
+    public function getAgreedDate()
+    {
+        return $this->agreedDate;
     }
 
     /**

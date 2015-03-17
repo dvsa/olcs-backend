@@ -295,9 +295,6 @@ return array(
         'is_public_inquiry' => array(
             'type' => 'yesno'
         ),
-        'is_valid' => array(
-            'type' => 'yesno'
-        ),
         'is_withdrawn' => array(
             'type' => 'yesno'
         ),
@@ -463,7 +460,13 @@ return array(
         ),
         'suppress_from_op' => array(
             'type' => 'yesno'
-        )
+        ),
+        'document_id' => [
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'template'
+            )
+        ]
     ),
     'doc_template_bookmark' => array(
         'doc_template_id' => array(
@@ -978,6 +981,12 @@ return array(
     'ebsr_submission' => array(
         'is_from_ftp' => array(
             'type' => 'yesno'
+        ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'ebsrSubmission'
+            )
         )
     ),
     'alpha_split' => array(

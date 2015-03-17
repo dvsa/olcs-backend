@@ -4,7 +4,6 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CommunityLicWithdrawal Entity
@@ -13,7 +12,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal",
  *    indexes={
  *        @ORM\Index(name="ix_community_lic_withdrawal_community_lic_id", columns={"community_lic_id"}),
@@ -31,7 +29,6 @@ class CommunityLicWithdrawal implements Interfaces\EntityInterface
         Traits\CommunityLicManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\CustomDeletedDateField,
         Traits\EndDateFieldAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,

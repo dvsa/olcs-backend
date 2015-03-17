@@ -26,6 +26,7 @@ class Role implements Interfaces\EntityInterface
         Traits\Code5Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\Description255FieldAlt1,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,

@@ -28,8 +28,7 @@ use Olcs\Db\Entity\Traits;
 class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
-        Traits\CloseDateField,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\HearingDateField,
@@ -52,6 +51,15 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="application_receipt_date", nullable=true)
      */
     protected $applicationReceiptDate;
+
+    /**
+     * Close date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="close_date", nullable=true)
+     */
+    protected $closeDate;
 
     /**
      * Impounding legislation type
@@ -118,6 +126,29 @@ class Impounding implements Interfaces\EntityInterface
     public function getApplicationReceiptDate()
     {
         return $this->applicationReceiptDate;
+    }
+
+    /**
+     * Set the close date
+     *
+     * @param \DateTime $closeDate
+     * @return Impounding
+     */
+    public function setCloseDate($closeDate)
+    {
+        $this->closeDate = $closeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the close date
+     *
+     * @return \DateTime
+     */
+    public function getCloseDate()
+    {
+        return $this->closeDate;
     }
 
     /**

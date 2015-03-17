@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Type many to one trait
  *
- * Auto-Generated (Shared between 3 entities)
+ * Auto-Generated (Shared between 2 entities)
  */
 trait TypeManyToOne
 {

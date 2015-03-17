@@ -27,7 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Submission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

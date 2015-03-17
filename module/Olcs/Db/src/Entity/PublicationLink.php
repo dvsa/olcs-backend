@@ -69,6 +69,15 @@ class PublicationLink implements Interfaces\EntityInterface
     protected $licence;
 
     /**
+     * Orig pub date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="orig_pub_date", nullable=true)
+     */
+    protected $origPubDate;
+
+    /**
      * Pi
      *
      * @var \Olcs\Db\Entity\Pi
@@ -169,6 +178,29 @@ class PublicationLink implements Interfaces\EntityInterface
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the orig pub date
+     *
+     * @param \DateTime $origPubDate
+     * @return PublicationLink
+     */
+    public function setOrigPubDate($origPubDate)
+    {
+        $this->origPubDate = $origPubDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the orig pub date
+     *
+     * @return \DateTime
+     */
+    public function getOrigPubDate()
+    {
+        return $this->origPubDate;
     }
 
     /**

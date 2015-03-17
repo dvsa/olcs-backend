@@ -24,6 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_opposition_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_opposition_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
+ *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"}),
  *        @ORM\Index(name="ix_opposition_status", columns={"status"})
  *    },
  *    uniqueConstraints={
@@ -114,11 +115,12 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is valid
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="yesno", name="is_valid", nullable=false, options={"default": 0})
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="is_valid", referencedColumnName="id", nullable=false)
      */
-    protected $isValid = 0;
+    protected $isValid;
 
     /**
      * Is willing to attend pi
@@ -390,7 +392,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Set the is valid
      *
-     * @param string $isValid
+     * @param \Olcs\Db\Entity\RefData $isValid
      * @return Opposition
      */
     public function setIsValid($isValid)
@@ -403,7 +405,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is valid
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getIsValid()
     {

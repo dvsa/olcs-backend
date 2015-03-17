@@ -45,9 +45,9 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Hours per week
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="hours_per_week", length=80, nullable=true)
+     * @ORM\Column(type="smallint", name="hours_per_week", nullable=true)
      */
     protected $hoursPerWeek;
 
@@ -131,7 +131,7 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Set the hours per week
      *
-     * @param string $hoursPerWeek
+     * @param int $hoursPerWeek
      * @return OtherLicence
      */
     public function setHoursPerWeek($hoursPerWeek)
@@ -144,7 +144,7 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Get the hours per week
      *
-     * @return string
+     * @return int
      */
     public function getHoursPerWeek()
     {

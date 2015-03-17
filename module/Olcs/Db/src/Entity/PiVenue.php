@@ -30,11 +30,13 @@ class PiVenue implements Interfaces\EntityInterface
         Traits\AddressManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\EndDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
         Traits\OlbsKeyField,
+        Traits\StartDateFieldAlt1,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 }

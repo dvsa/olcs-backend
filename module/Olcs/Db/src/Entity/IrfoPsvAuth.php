@@ -177,7 +177,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="validity_period", nullable=false)
+     * @ORM\Column(type="smallint", name="validity_period", nullable=false)
      */
     protected $validityPeriod;
 

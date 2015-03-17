@@ -35,7 +35,7 @@ class InspectionRequest implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -91,15 +91,6 @@ class InspectionRequest implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="inspector_notes", length=65535, nullable=true)
      */
     protected $inspectorNotes;
-
-    /**
-     * Local services no
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="local_services_no", nullable=true)
-     */
-    protected $localServicesNo;
 
     /**
      * Report type
@@ -308,29 +299,6 @@ class InspectionRequest implements Interfaces\EntityInterface
     public function getInspectorNotes()
     {
         return $this->inspectorNotes;
-    }
-
-    /**
-     * Set the local services no
-     *
-     * @param int $localServicesNo
-     * @return InspectionRequest
-     */
-    public function setLocalServicesNo($localServicesNo)
-    {
-        $this->localServicesNo = $localServicesNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the local services no
-     *
-     * @return int
-     */
-    public function getLocalServicesNo()
-    {
-        return $this->localServicesNo;
     }
 
     /**

@@ -31,7 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Hearing implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -42,7 +42,6 @@ class Hearing implements Interfaces\EntityInterface
         Traits\OlbsKeyField,
         Traits\OlbsType32Field,
         Traits\PresidingTcManyToOne,
-        Traits\VenueManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -63,6 +62,16 @@ class Hearing implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="hearing_type", referencedColumnName="id", nullable=false)
      */
     protected $hearingType;
+
+    /**
+     * Venue
+     *
+     * @var \Olcs\Db\Entity\PiVenue
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PiVenue")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=false)
+     */
+    protected $venue;
 
     /**
      * Venue other
@@ -126,6 +135,29 @@ class Hearing implements Interfaces\EntityInterface
     public function getHearingType()
     {
         return $this->hearingType;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Olcs\Db\Entity\PiVenue $venue
+     * @return Hearing
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Olcs\Db\Entity\PiVenue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
     }
 
     /**

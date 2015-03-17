@@ -20,6 +20,8 @@ TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `disc_sequence`;
+TRUNCATE TABLE `event_history_type`;
+TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
@@ -92,7 +94,6 @@ TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
-TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `publication_link`;
 TRUNCATE TABLE `publication_police_data`;
 TRUNCATE TABLE `public_holiday`;
@@ -176,7 +177,7 @@ INSERT INTO `application` (
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,'2010-12-15 10:48:00',
         NULL,NULL,NOW(),NULL,
-        1,0,'lcat_gv',0, 'ltyp_r',
+        1,0,'lcat_gv',0, 'ltyp_si',
         'int_sts_requested', 'Interim reason', '2014-01-01', '2015-01-01', 10, 20
     ),
     (
@@ -256,8 +257,10 @@ VALUES
   (1, 'G'),
   (2, 'B'),
   (2, 'G'),
+  (12, 'B'),
   (12, 'D'),
   (12, 'F'),
+  (15, 'B'),
   (15, 'H'),
   (15, 'M');
 
@@ -470,8 +473,35 @@ INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
     `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
     `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
     `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, 1, 1, 1, null, 110, null, null, null, null, null, null, null, null, null, null, null, null, null,
-   null, 0, null);
+  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, null, '1111', null,
+  null, null, null, null, null, null, null,null, 0, null),
+  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, null, '1112', null, null, null, null, null,
+  null, null, null,null, 0, null),
+  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, null, '1113',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, null, '1114', null,
+  null, null, null, null, null, null, null,null, 0, null),
+  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+
+  (6, null, 'ebsrt_new', 'ebsrs_processing', 6, '2013-01-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (7, null, 'ebsrt_refresh', 'ebsrs_validated', 7, '2013-08-24 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (8, null, 'ebsrt_unknown', 'ebsrs_expired', 99, '2011-09-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (9, null, 'ebsrt_new', 'ebsrs_processing', 99, '2009-11-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (10, null, 'ebsrt_refresh', 'ebsrs_validated', 5, '2015-01-04 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (11, null, 'ebsrt_unknown', 'ebsrs_validated', 3, '2014-09-30 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  null, null, null, null, null, null, null, null,null, 0, null)
+
+  ;
 
 INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_status`, `receipt_no`, `created_by`, `last_modified_by`, `description`,
     `invoiced_date`, `received_date`, `amount`, `received_amount`, `created_on`, `last_modified_on`, `version`, `payment_method`, `waive_reason`, `fee_type_id`) VALUES
@@ -509,7 +539,7 @@ INSERT INTO `licence` (
     `tot_auth_trailers`, `tot_auth_vehicles`, `tot_auth_small_vehicles`, `tot_auth_medium_vehicles`,
     `safety_ins_vehicles`, `safety_ins_trailers`, `safety_ins_varies`,
     `tachograph_ins`, `tachograph_ins_name`, `created_on`, `last_modified_on`, `version`, `expiry_date`, `tot_community_licences`) VALUES
-    (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12',
+    (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_si','2010-01-12','2010-01-12','2010-01-12',
     '',4,12,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL),
 
@@ -1351,90 +1381,50 @@ VALUES
   (37,1,1,'2016-12-26 00:00:00',1,1,1,1,now(),now(),1),
   (38,1,1,'2016-12-27 00:00:00',1,1,0,0,now(),now(),1);
 
-INSERT INTO `publication_section` (`id`, `last_modified_by`, `created_by`, `description`, `created_on`,
-   `last_modified_on`, `version`)
+INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`doc_template_id`,`document_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
-  (13, 1, 1, 'PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (14, 1, 1, 'PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (21, 1, 1, 'Bus Registration New Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (22, 1, 1, 'Bus Registration New Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (23, 1, 1, 'Bus Registration Variation Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (24, 1, 1, 'Bus Registration Variation Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (25, 1, 1, 'Bus Registration Cancellation Granted', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (26, 1, 1, 'Bus Registration Cancellation Granted (SN)', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (27, 1, 1, 'TM PI Hearing', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1),
-  (28, 1, 1, 'TM PI Decision', '2014-10-30 00:00:00', '2014-10-30 00:00:00', 1);
+  (3,'pub_s_new',1,1,'B',685,NULL,'2014-10-30',NULL,6129,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (4,'pub_s_new',1,1,'B',693,NULL,'2014-10-30',NULL,2156,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (5,'pub_s_new',1,1,'C',686,NULL,'2014-10-30',NULL,6576,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (6,'pub_s_new',1,1,'C',694,NULL,'2014-10-30',NULL,2648,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (7,'pub_s_new',1,1,'D',689,NULL,'2014-10-30',NULL,2624,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (8,'pub_s_new',1,1,'D',696,NULL,'2014-10-30',NULL,2181,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (9,'pub_s_new',1,1,'F',683,NULL,'2014-10-30',NULL,5008,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (10,'pub_s_new',1,1,'F',691,NULL,'2014-10-30',NULL,2160,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (11,'pub_s_new',1,1,'G',698,NULL,'2014-10-30',NULL,8377,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (12,'pub_s_new',1,1,'G',699,NULL,'2014-10-30',NULL,1986,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (13,'pub_s_new',1,1,'H',690,NULL,'2014-10-30',NULL,5379,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (14,'pub_s_new',1,1,'H',697,NULL,'2014-10-30',NULL,2484,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (15,'pub_s_new',1,1,'K',684,NULL,'2014-10-30',NULL,3889,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (16,'pub_s_new',1,1,'K',692,NULL,'2014-10-30',NULL,2283,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (21,'pub_s_new',1,1,'M',688,NULL,'2014-10-30',NULL,6666,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (22,'pub_s_new',1,1,'M',695,NULL,'2014-10-20',NULL,7777,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
+  (23,'pub_s_new',1,1,'N',687,NULL,'2014-10-31',NULL,8888,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
 
-INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
+INSERT INTO `publication_link` (`id`, `application_id`, `licence_id`, `pi_id`, `publication_id`, `publication_section_id`, `bus_reg_id`, `created_by`, `last_modified_by`, `traffic_area_id`, `transport_manager_id`, `text1`, `text2`, `text3`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
 VALUES
-  (1,'pub_s_printed',1,1,'B','2014-09-30',NULL,6128,'A&D','2014-09-30 00:00:00','2014-09-30 00:00:00',1),
-  (2,'pub_s_printed',1,1,'B','2014-09-30',NULL,2155,'N&P','2014-09-30 00:00:00','2014-09-30 00:00:00',1),
-  (3,'pub_s_new',1,1,'B','2014-10-30',NULL,6129,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (4,'pub_s_new',1,1,'B','2014-10-30',NULL,2156,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (5,'pub_s_new',1,1,'C','2014-10-30',NULL,6576,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (6,'pub_s_new',1,1,'C','2014-10-30',NULL,2648,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (7,'pub_s_new',1,1,'D','2014-10-30',NULL,2624,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (8,'pub_s_new',1,1,'D','2014-10-30',NULL,2181,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (9,'pub_s_new',1,1,'F','2014-10-30',NULL,5008,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (10,'pub_s_new',1,1,'F','2014-10-30',NULL,2160,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (11,'pub_s_new',1,1,'G','2014-10-30',NULL,8377,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (12,'pub_s_new',1,1,'G','2014-10-30',NULL,1986,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (13,'pub_s_new',1,1,'H','2014-10-30',NULL,5379,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (14,'pub_s_new',1,1,'H','2014-10-30',NULL,2484,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (15,'pub_s_new',1,1,'K','2014-10-30',NULL,3889,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (16,'pub_s_new',1,1,'K','2014-10-30',NULL,2283,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (17,'pub_s_printed',1,1,'M','2014-10-30',NULL,1891,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (18,'pub_s_printed',1,1,'M','2014-10-30',NULL,2014,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (19,'pub_s_printed',1,1,'N','2014-10-30',NULL,30,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (20,'pub_s_printed',1,1,'N','2014-10-30',NULL,2,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-
-  (21,'pub_s_new',1,1,'M','2014-10-30',NULL,6666,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (22,'pub_s_new',1,1,'M','2014-10-20',NULL,7777,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (23,'pub_s_new',1,1,'N','2014-10-31',NULL,8888,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (24,'pub_s_new',1,1,'N','2014-10-21',NULL,9999,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-
-
-  (25,'pub_s_new',1,1,'N','2014-10-22',NULL,7071,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (26,'pub_s_new',1,1,'N','2014-10-24',NULL,7072,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (27,'pub_s_new',1,1,'N','2014-10-23',NULL,7073,'N&P','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (28,'pub_s_new',1,1,'N','2014-10-25',NULL,7074,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1),
-  (29,'pub_s_new',1,1,'N','2014-10-19',NULL,7075,'A&D','2014-10-30 00:00:00','2014-10-30 00:00:00',1);
-
-INSERT INTO `publication_link` (`id`,`pi_id`,`publication_id`,`publication_section_id`,`application_id`,`bus_reg_id`,`created_by`,`last_modified_by`,`licence_id`,`traffic_area_id`,`text1`,`text2`,`text3`,`created_on`,`deleted_date`,`last_modified_on`,`version`)
-  VALUES
-    (1,1,1,13,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 16 March 2014 commencing at 14:30 \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
-    (2,1,3,13,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',NULL,'2014-11-25 15:47:03',NULL,NULL,1),
-    (3,1,3,14,NULL,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-
-    (4,1,21,3,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (5,1,22,14,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (6,1,23,1,1,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (7,1,24,1,2,NULL,NULL,NULL,7,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-
-    (8,1,25,1,NULL,1,1,1,110,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (9,1,26,1,NULL,1,1,1,110,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (10,1,27,1,NULL,1,1,1,110,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (11,1,28,1,NULL,1,1,1,110,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1),
-    (12,1,29,1,NULL,1,1,1,110,'B','Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,
-    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN
-    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE,
-    KINGSTOWN, CARLISLE, CA6 4BY','S13 - Consideration of new application under Section 13',NULL,'2014-12-11 10:03:15',NULL,NULL,1);
+  (1, NULL, 7, NULL, 3, 13, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) to be held at venue_1, Unit 9, Shapely Industrial Estate, Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) Previous hearing on 16 March 2014 was adjourned. \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26', NULL, '2014-11-25 15:47:03', NULL, NULL, 1),
+  (2, NULL, 7, NULL, 3, 14, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (3, 1, 7, 1, 3, 3, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN\n    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (4, 1, 7, 1, 3, 1, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (1) held at venue_1, Unit 9, Shapely Industrial Estate,\n    Harehills, Leeds, LS9 2FA, on 5 April 2014 commencing at 14:30 (Previous Publication:(6128)) \nOB1234567 SN\n    \nJOHN SMITH HAULAGE LTD.\nT/A JSH LOGISTICS \nDirector(s): TOM JONES, KEITH WINNARD \nSOLWAY BUSINESS CENTRE, KINGSTOWN, CARLISLE, CA6 4BY', 'S13 - Consideration of new application under Section 13', NULL, '2014-12-11 10:03:15', NULL, NULL, 1),
+  (5, 1, 7, 1, 3, 4, NULL, NULL, NULL, 'B', NULL, 'New applications granted text 1 (test data)', 'New applications granted text 2 (test data)', 'New applications granted text 3 (test data)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (6, 1, 7, 1, 3, 5, NULL, NULL, NULL, 'B', NULL, 'New applications refused text 1', 'New applications refused text 2', 'New applications refused text 3', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (7, NULL, 110, NULL, 4, 23, 12, NULL, NULL, 'B', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:52', NULL, NULL, 1),
+  (8, NULL, 110, NULL, 8, 23, 12, NULL, NULL, 'D', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:53', NULL, NULL, 1),
+  (9, NULL, 110, NULL, 10, 23, 12, NULL, NULL, 'F', NULL, 'PD2737280/13245', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 26453 / 13249 / 13355 effective from 27 May 2014. To amend Start & finish point and Stopping places.', '2015-03-06 11:47:54', NULL, NULL, 1),
+  (13, NULL, 110, NULL, 4, 25, 15, NULL, NULL, 'B', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:52', NULL, NULL, 1),
+  (14, NULL, 110, NULL, 14, 25, 15, NULL, NULL, 'H', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:53', NULL, NULL, 1),
+  (15, NULL, 110, NULL, 22, 25, 15, NULL, NULL, 'M', NULL, 'PD2737280/15711', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'Operating between Leeds and Doncaster given service number 46474 / 15712 / 15719 effective from 10 March 2014.', '2015-03-06 13:07:54', NULL, NULL, 1),
+  (16, NULL, 110, NULL, 4, 21, 1, NULL, NULL, 'B', NULL, 'PD2737280/14686', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'From: Doncaster\nTo: Sheffield\nVia: York\nName or No.: 90839 / 90840 / 90841\nService type: Normal Stopping, Frequent Service, Hail & Ride\nEffective date: 15 March 2014\nOther details: Other details', '2015-03-06 13:09:19', NULL, NULL, 1),
+  (17, NULL, 110, NULL, 12, 21, 1, NULL, NULL, 'G', NULL, 'PD2737280/14686', 'PD2737280 LEEDS CITY COUNCIL, UNIT 5, 12 ALBERT STREET, WESTPOINT, LEEDS, LS9 6NA', 'From: Doncaster\nTo: Sheffield\nVia: York\nName or No.: 90839 / 90840 / 90841\nService type: Normal Stopping, Frequent Service, Hail & Ride\nEffective date: 15 March 2014\nOther details: Other details', '2015-03-06 13:09:20', NULL, NULL, 1),
+  (18, 1, 7, 1, 4, 4, NULL, NULL, NULL, 'B', NULL, 'New applications granted text 1 (test data)', 'New applications granted text 2 (test data)', 'New applications granted text 3 (test data)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (19, 1, 7, 1, 4, 5, NULL, NULL, NULL, 'B', NULL, 'New applications refused text 1', 'New applications refused text 2', 'New applications refused text 3', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (20, NULL, 7, NULL, 4, 10, NULL, NULL, NULL, 'B', NULL, 'Licences surrendered text 1 (test data line 1)', 'Licences surrendered text 2 (test data line 1)', 'Licences surrendered text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (21, NULL, 7, NULL, 4, 10, NULL, NULL, NULL, 'B', NULL, 'Licences surrendered text 1 (test data line 2)', 'Licences surrendered text 2 (test data line 2)', 'Licences surrendered text 3 (test data line 2)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (22, NULL, 7, NULL, 4, 11, NULL, NULL, NULL, 'B', NULL, 'Licences terminated text 1 (test data line 1)', 'Licences terminated text 2 (test data line 1)', 'Licences terminated text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (23, NULL, 7, NULL, 4, 11, NULL, NULL, NULL, 'B', NULL, 'Licences terminated text 1 (test data line 2)', 'Licences terminated text 2 (test data line 2\n)', 'Licences terminated text 3 (test data line 2)', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (24, NULL, 7, NULL, 4, 12, NULL, NULL, NULL, 'B', NULL, 'Licence revoked text 1', 'Licence revoked text 2', 'Licence revoked text 3\n', '2014-12-11 10:03:15', NULL, NULL, 1),
+  (25, NULL, 7, NULL, 4, 20, NULL, NULL, NULL, 'B', NULL, 'Licence CNS text 1 (test data line 1)', 'Licence CNS text 2 (test data line 1)', 'Licence CNS text 3 (test data line 1)', '2014-12-11 10:03:15', NULL, NULL, 1);
 
 INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`olbs_id`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
   VALUES
@@ -1474,7 +1464,9 @@ INSERT INTO `community_lic` (
     (5, 'cl_sts_suspended', 110, NULL, 4, NULL, 'UKGB', '2015-01-01', NULL),
     (6, 'cl_sts_void', 110, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
     (7, 'cl_sts_returned', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
-    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL);
+    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL),
+    (9, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL),
+    (10, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
     `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
@@ -1529,5 +1521,39 @@ VALUES
   (2, 1, 1, 7, "B0020", "2015-01-01", NULL, "2015-02-03", "2015-02-03", 1),
   (3, 1, 1, 7, "C0300", "2015-01-01", NULL, "2015-03-02", "2015-03-02", 1),
   (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
+
+-- Start: Event History Test Data
+
+INSERT INTO `event_history_type` (`id`, `description`, `event_type`)
+VALUES
+	(1, 'Type 1', 'ABC');
+
+INSERT INTO `event_history` (`id`, `event_history_type_id`, `licence_vehicle_id`, `team_id`, `application_id`, `licence_id`, `transport_manager_id`, `user_id`, `entity_data`, `entity_pk`, `entity_type`, `entity_version`, `event_datetime`, `event_description`, `operation`)
+VALUES
+	(8, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1', 'O'),
+	(9, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2', 'O'),
+	(10, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3', 'O'),
+	(11, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4', 'O'),
+	(12, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5', 'O'),
+	(13, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6', 'O'),
+	(14, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7', 'O'),
+	(15, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8', 'O'),
+	(16, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9', 'O'),
+	(17, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10', 'O'),
+	(18, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11', 'O'),
+	(19, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12', 'O'),
+	(20, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13', 'O'),
+	(21, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14', 'O'),
+	(22, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15', 'O'),
+	(23, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16', 'O'),
+	(24, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17', 'O'),
+	(25, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18', 'O'),
+	(26, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19', 'O'),
+	(27, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20', 'O'),
+	(28, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21', 'O'),
+	(29, 1, NULL, NULL, NULL, 7, NULL, 1, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22', 'O');
+
+
+-- End: Event History Test Data
 
 SET foreign_key_checks = 1;

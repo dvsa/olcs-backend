@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -198,6 +199,23 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
+
+    /**
+     * Template
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\DocTemplate", mappedBy="document")
+     */
+    protected $templates;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->templates = new ArrayCollection();
+    }
 
     /**
      * Set the application
@@ -542,5 +560,65 @@ class Document implements Interfaces\EntityInterface
     public function getTransportManager()
     {
         return $this->transportManager;
+    }
+
+    /**
+     * Set the template
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $templates
+     * @return Document
+     */
+    public function setTemplates($templates)
+    {
+        $this->templates = $templates;
+
+        return $this;
+    }
+
+    /**
+     * Get the templates
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * Add a templates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $templates
+     * @return Document
+     */
+    public function addTemplates($templates)
+    {
+        if ($templates instanceof ArrayCollection) {
+            $this->templates = new ArrayCollection(
+                array_merge(
+                    $this->templates->toArray(),
+                    $templates->toArray()
+                )
+            );
+        } elseif (!$this->templates->contains($templates)) {
+            $this->templates->add($templates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a templates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $templates
+     * @return Document
+     */
+    public function removeTemplates($templates)
+    {
+        if ($this->templates->contains($templates)) {
+            $this->templates->removeElement($templates);
+        }
+
+        return $this;
     }
 }

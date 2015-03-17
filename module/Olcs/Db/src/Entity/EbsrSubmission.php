@@ -27,7 +27,7 @@ use Olcs\Db\Entity\Traits;
 class EbsrSubmission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\BusRegManyToOneAlt1,
+        Traits\DocumentManyToOneAlt1,
         Traits\IdIdentity,
         Traits\OlbsKeyField,
         Traits\CustomVersionField;
@@ -40,6 +40,16 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="application_classification", length=32, nullable=true)
      */
     protected $applicationClassification;
+
+    /**
+     * Bus reg
+     *
+     * @var \Olcs\Db\Entity\BusReg
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="ebsrSubmissions")
+     * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
+     */
+    protected $busReg;
 
     /**
      * Distribute end
@@ -67,16 +77,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="distribute_start", nullable=true)
      */
     protected $distributeStart;
-
-    /**
-     * Document
-     *
-     * @var \Olcs\Db\Entity\Document
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
-     */
-    protected $document;
 
     /**
      * Ebsr submission result
@@ -257,6 +257,29 @@ class EbsrSubmission implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the bus reg
+     *
+     * @param \Olcs\Db\Entity\BusReg $busReg
+     * @return EbsrSubmission
+     */
+    public function setBusReg($busReg)
+    {
+        $this->busReg = $busReg;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus reg
+     *
+     * @return \Olcs\Db\Entity\BusReg
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+    /**
      * Set the distribute end
      *
      * @param \DateTime $distributeEnd
@@ -323,29 +346,6 @@ class EbsrSubmission implements Interfaces\EntityInterface
     public function getDistributeStart()
     {
         return $this->distributeStart;
-    }
-
-    /**
-     * Set the document
-     *
-     * @param \Olcs\Db\Entity\Document $document
-     * @return EbsrSubmission
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * Get the document
-     *
-     * @return \Olcs\Db\Entity\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
     }
 
     /**
