@@ -20,7 +20,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_bus_reg_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_bus_reg_bus_notice_period1_idx", columns={"bus_notice_period_id"}),
  *        @ORM\Index(name="fk_bus_reg_ref_data1_idx", columns={"subsidised"}),
- *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
  *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
@@ -243,16 +242,6 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false, options={"default": 0})
      */
     protected $opNotifiedLaPte = 0;
-
-    /**
-     * Operating centre
-     *
-     * @var \Olcs\Db\Entity\OperatingCentre
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre")
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
-     */
-    protected $operatingCentre;
 
     /**
      * Organisation email
@@ -1117,29 +1106,6 @@ class BusReg implements Interfaces\EntityInterface
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
-     * @return BusReg
-     */
-    public function setOperatingCentre($operatingCentre)
-    {
-        $this->operatingCentre = $operatingCentre;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centre
-     *
-     * @return \Olcs\Db\Entity\OperatingCentre
-     */
-    public function getOperatingCentre()
-    {
-        return $this->operatingCentre;
     }
 
     /**
