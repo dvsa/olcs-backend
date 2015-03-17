@@ -23,8 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_user_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_user_contact_details_id", columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_user_partner_contact_details_id", columns={"partner_contact_details_id"}),
- *        @ORM\Index(name="fk_user_hint_questions1_idx", columns={"hint_questions_id1"}),
- *        @ORM\Index(name="fk_user_hint_questions2_idx", columns={"hint_questions_id2"}),
+ *        @ORM\Index(name="ix_user_hint_question_id1", columns={"hint_question_id1"}),
+ *        @ORM\Index(name="ix_user_hint_question_id2", columns={"hint_question_id2"}),
  *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    }
  * )
@@ -59,27 +59,9 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="attempts", nullable=true)
+     * @ORM\Column(type="smallint", name="attempts", nullable=true)
      */
     protected $attempts;
-
-    /**
-     * Department name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="department_name", length=100, nullable=true)
-     */
-    protected $departmentName;
-
-    /**
-     * Division group
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
-     */
-    protected $divisionGroup;
 
     /**
      * Hint answer1
@@ -100,33 +82,24 @@ class User implements Interfaces\EntityInterface
     protected $hintAnswer2;
 
     /**
-     * Hint questions1
+     * Hint question1
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
-     * @ORM\JoinColumn(name="hint_questions_id1", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="hint_question_id1", referencedColumnName="id", nullable=true)
      */
-    protected $hintQuestions1;
+    protected $hintQuestion1;
 
     /**
-     * Hint questions2
+     * Hint question2
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
-     * @ORM\JoinColumn(name="hint_questions_id2", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="hint_question_id2", referencedColumnName="id", nullable=true)
      */
-    protected $hintQuestions2;
-
-    /**
-     * Job title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="job_title", length=100, nullable=true)
-     */
-    protected $jobTitle;
+    protected $hintQuestion2;
 
     /**
      * Last successful login date
@@ -145,15 +118,6 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="locked_date", nullable=true)
      */
     protected $lockedDate;
-
-    /**
-     * Locked datetime
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="locked_datetime", nullable=true)
-     */
-    protected $lockedDatetime;
 
     /**
      * Login id
@@ -178,7 +142,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="memorable_word_digit1", nullable=true)
+     * @ORM\Column(type="smallint", name="memorable_word_digit1", nullable=true)
      */
     protected $memorableWordDigit1;
 
@@ -187,7 +151,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="memorable_word_digit2", nullable=true)
+     * @ORM\Column(type="smallint", name="memorable_word_digit2", nullable=true)
      */
     protected $memorableWordDigit2;
 
@@ -231,9 +195,9 @@ class User implements Interfaces\EntityInterface
     /**
      * Pid
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="pid", nullable=true)
+     * @ORM\Column(type="string", name="pid", length=255, nullable=true)
      */
     protected $pid;
 
@@ -310,52 +274,6 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the department name
-     *
-     * @param string $departmentName
-     * @return User
-     */
-    public function setDepartmentName($departmentName)
-    {
-        $this->departmentName = $departmentName;
-
-        return $this;
-    }
-
-    /**
-     * Get the department name
-     *
-     * @return string
-     */
-    public function getDepartmentName()
-    {
-        return $this->departmentName;
-    }
-
-    /**
-     * Set the division group
-     *
-     * @param string $divisionGroup
-     * @return User
-     */
-    public function setDivisionGroup($divisionGroup)
-    {
-        $this->divisionGroup = $divisionGroup;
-
-        return $this;
-    }
-
-    /**
-     * Get the division group
-     *
-     * @return string
-     */
-    public function getDivisionGroup()
-    {
-        return $this->divisionGroup;
-    }
-
-    /**
      * Set the hint answer1
      *
      * @param string $hintAnswer1
@@ -402,72 +320,49 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the hint questions1
+     * Set the hint question1
      *
-     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions1
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestion1
      * @return User
      */
-    public function setHintQuestions1($hintQuestions1)
+    public function setHintQuestion1($hintQuestion1)
     {
-        $this->hintQuestions1 = $hintQuestions1;
+        $this->hintQuestion1 = $hintQuestion1;
 
         return $this;
     }
 
     /**
-     * Get the hint questions1
+     * Get the hint question1
      *
      * @return \Olcs\Db\Entity\HintQuestion
      */
-    public function getHintQuestions1()
+    public function getHintQuestion1()
     {
-        return $this->hintQuestions1;
+        return $this->hintQuestion1;
     }
 
     /**
-     * Set the hint questions2
+     * Set the hint question2
      *
-     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions2
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestion2
      * @return User
      */
-    public function setHintQuestions2($hintQuestions2)
+    public function setHintQuestion2($hintQuestion2)
     {
-        $this->hintQuestions2 = $hintQuestions2;
+        $this->hintQuestion2 = $hintQuestion2;
 
         return $this;
     }
 
     /**
-     * Get the hint questions2
+     * Get the hint question2
      *
      * @return \Olcs\Db\Entity\HintQuestion
      */
-    public function getHintQuestions2()
+    public function getHintQuestion2()
     {
-        return $this->hintQuestions2;
-    }
-
-    /**
-     * Set the job title
-     *
-     * @param string $jobTitle
-     * @return User
-     */
-    public function setJobTitle($jobTitle)
-    {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get the job title
-     *
-     * @return string
-     */
-    public function getJobTitle()
-    {
-        return $this->jobTitle;
+        return $this->hintQuestion2;
     }
 
     /**
@@ -514,29 +409,6 @@ class User implements Interfaces\EntityInterface
     public function getLockedDate()
     {
         return $this->lockedDate;
-    }
-
-    /**
-     * Set the locked datetime
-     *
-     * @param \DateTime $lockedDatetime
-     * @return User
-     */
-    public function setLockedDatetime($lockedDatetime)
-    {
-        $this->lockedDatetime = $lockedDatetime;
-
-        return $this;
-    }
-
-    /**
-     * Get the locked datetime
-     *
-     * @return \DateTime
-     */
-    public function getLockedDatetime()
-    {
-        return $this->lockedDatetime;
     }
 
     /**
@@ -726,7 +598,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Set the pid
      *
-     * @param int $pid
+     * @param string $pid
      * @return User
      */
     public function setPid($pid)
@@ -739,7 +611,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the pid
      *
-     * @return int
+     * @return string
      */
     public function getPid()
     {

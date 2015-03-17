@@ -54,7 +54,7 @@ class Payment implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="legacy_choice", nullable=true)
+     * @ORM\Column(type="smallint", name="legacy_choice", nullable=true)
      */
     protected $legacyChoice;
 
@@ -72,7 +72,7 @@ class Payment implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="legacy_method", nullable=true)
+     * @ORM\Column(type="smallint", name="legacy_method", nullable=true)
      */
     protected $legacyMethod;
 
@@ -81,7 +81,7 @@ class Payment implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="legacy_status", nullable=true)
+     * @ORM\Column(type="smallint", name="legacy_status", nullable=true)
      */
     protected $legacyStatus;
 

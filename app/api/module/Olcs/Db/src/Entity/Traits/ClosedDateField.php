@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Closed date field trait
  *
- * Auto-Generated (Shared between 4 entities)
+ * Auto-Generated (Shared between 5 entities)
  */
 trait ClosedDateField
 {

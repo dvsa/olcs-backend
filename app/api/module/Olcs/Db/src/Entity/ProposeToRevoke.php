@@ -25,7 +25,7 @@ use Olcs\Db\Entity\Traits;
 class ProposeToRevoke implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\Comment4000Field,
         Traits\CreatedByManyToOne,
@@ -33,8 +33,17 @@ class ProposeToRevoke implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\PresidingTcManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Presiding tc
+     *
+     * @var \Olcs\Db\Entity\PresidingTc
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\PresidingTc")
+     * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
+     */
+    protected $presidingTc;
 
     /**
      * Ptr agreed date
@@ -68,6 +77,29 @@ class ProposeToRevoke implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->reasons = new ArrayCollection();
+    }
+
+    /**
+     * Set the presiding tc
+     *
+     * @param \Olcs\Db\Entity\PresidingTc $presidingTc
+     * @return ProposeToRevoke
+     */
+    public function setPresidingTc($presidingTc)
+    {
+        $this->presidingTc = $presidingTc;
+
+        return $this;
+    }
+
+    /**
+     * Get the presiding tc
+     *
+     * @return \Olcs\Db\Entity\PresidingTc
+     */
+    public function getPresidingTc()
+    {
+        return $this->presidingTc;
     }
 
     /**

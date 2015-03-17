@@ -32,7 +32,7 @@ class Scan implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

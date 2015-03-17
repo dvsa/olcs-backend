@@ -28,15 +28,6 @@ class EventHistoryType implements Interfaces\EntityInterface
     protected $description;
 
     /**
-     * Event type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="event_type", length=3, nullable=false)
-     */
-    protected $eventType;
-
-    /**
      * Identifier - Id
      *
      * @var string
@@ -67,29 +58,6 @@ class EventHistoryType implements Interfaces\EntityInterface
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set the event type
-     *
-     * @param string $eventType
-     * @return EventHistoryType
-     */
-    public function setEventType($eventType)
-    {
-        $this->eventType = $eventType;
-
-        return $this;
-    }
-
-    /**
-     * Get the event type
-     *
-     * @return string
-     */
-    public function getEventType()
-    {
-        return $this->eventType;
     }
 
     /**

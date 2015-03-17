@@ -109,15 +109,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     protected $conditionType;
 
     /**
-     * Is approved
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false, options={"default": 0})
-     */
-    protected $isApproved = 0;
-
-    /**
      * Is draft
      *
      * @var string
@@ -345,29 +336,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
-    }
-
-    /**
-     * Set the is approved
-     *
-     * @param string $isApproved
-     * @return ConditionUndertaking
-     */
-    public function setIsApproved($isApproved)
-    {
-        $this->isApproved = $isApproved;
-
-        return $this;
-    }
-
-    /**
-     * Get the is approved
-     *
-     * @return string
-     */
-    public function getIsApproved()
-    {
-        return $this->isApproved;
     }
 
     /**
