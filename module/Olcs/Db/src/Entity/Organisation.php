@@ -130,7 +130,7 @@ class Organisation implements Interfaces\EntityInterface
     protected $name;
 
     /**
-     * Ref data
+     * Nature of businesse
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
@@ -144,7 +144,7 @@ class Organisation implements Interfaces\EntityInterface
      *     }
      * )
      */
-    protected $refDatas;
+    protected $natureOfBusinesses;
 
     /**
      * Type
@@ -188,7 +188,7 @@ class Organisation implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->refDatas = new ArrayCollection();
+        $this->natureOfBusinesses = new ArrayCollection();
         $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
@@ -425,60 +425,60 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the ref data
+     * Set the nature of businesse
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $refDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
      * @return Organisation
      */
-    public function setRefDatas($refDatas)
+    public function setNatureOfBusinesses($natureOfBusinesses)
     {
-        $this->refDatas = $refDatas;
+        $this->natureOfBusinesses = $natureOfBusinesses;
 
         return $this;
     }
 
     /**
-     * Get the ref datas
+     * Get the nature of businesses
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getRefDatas()
+    public function getNatureOfBusinesses()
     {
-        return $this->refDatas;
+        return $this->natureOfBusinesses;
     }
 
     /**
-     * Add a ref datas
+     * Add a nature of businesses
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $refDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
      * @return Organisation
      */
-    public function addRefDatas($refDatas)
+    public function addNatureOfBusinesses($natureOfBusinesses)
     {
-        if ($refDatas instanceof ArrayCollection) {
-            $this->refDatas = new ArrayCollection(
+        if ($natureOfBusinesses instanceof ArrayCollection) {
+            $this->natureOfBusinesses = new ArrayCollection(
                 array_merge(
-                    $this->refDatas->toArray(),
-                    $refDatas->toArray()
+                    $this->natureOfBusinesses->toArray(),
+                    $natureOfBusinesses->toArray()
                 )
             );
-        } elseif (!$this->refDatas->contains($refDatas)) {
-            $this->refDatas->add($refDatas);
+        } elseif (!$this->natureOfBusinesses->contains($natureOfBusinesses)) {
+            $this->natureOfBusinesses->add($natureOfBusinesses);
         }
 
         return $this;
     }
 
     /**
-     * Remove a ref datas
+     * Remove a nature of businesses
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $refDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
      * @return Organisation
      */
-    public function removeRefDatas($refDatas)
+    public function removeNatureOfBusinesses($natureOfBusinesses)
     {
-        if ($this->refDatas->contains($refDatas)) {
-            $this->refDatas->removeElement($refDatas);
+        if ($this->natureOfBusinesses->contains($natureOfBusinesses)) {
+            $this->natureOfBusinesses->removeElement($natureOfBusinesses);
         }
 
         return $this;
