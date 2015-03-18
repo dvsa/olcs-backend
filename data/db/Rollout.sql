@@ -6915,37 +6915,57 @@ VALUES
   (4, 'Timetable');
 
 INSERT INTO `role` (`id`, `role`) VALUES
-    (1, 'limited-read-only'),
-    (2, 'read-only'),
-    (3, 'case-worker'),
-    (4, 'admin');
+    (1, 'internal-limited-read-only'), -- internal only
+    (2, 'internal-read-only'), -- internal only
+    (3, 'internal-case-worker'), -- internal only
+    (4, 'internal-admin'), -- internal only
+    (5, 'operator-admin'), -- selfserve
+    (6, 'operator-user'), -- selfserve
+    (7, 'operator-tm'), -- selfserve
+    (8, 'operator-ebsr'), -- selfserve
+    (9, 'partner-admin'), -- selfserve
+    (10, 'partner-user'), -- selfserve
+    (11, 'local-authority-admin'), -- selfserve
+    (12, 'local-authority-user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
-    (1, 'admin', 'ADMIN'),
-    (2, 'documents', 'DOCUM'),
-    (3, 'case', 'CASE'),
-    (4, 'notes', 'NOTES'),
-    (5, 'edit', 'EDIT'),
-    (6, 'view', 'VIEW');
+    (1, 'internal-admin', 'ADMIN'),
+    (2, 'internal-documents', 'DOCUM'),
+    (3, 'internal-case', 'CASE'),
+    (4, 'internal-notes', 'NOTES'),
+    (5, 'internal-edit', 'EDIT'),
+    (6, 'internal-view', 'VIEW'),
+    (7, 'selfserve-view', 'SVIEW'),
+    (8, 'selfserve-ebsr', 'SEBSR');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
-    (1, 6), -- all roles have view
-    (2, 6), -- all roles have view
-    (3, 6), -- all roles have view
-    (4, 6), -- all roles have view
-    (2, 2), -- read only sees docs
-    (2, 3), -- read only sees case
-    (2, 4), -- read only sees notes
-    (3, 2), -- case worker sees docs
-    (3, 3), -- case worker sees case
-    (3, 4), -- case worker sees notes
-    (3, 5), -- case worker can edit
-    (4, 2), -- admin sees docs
-    (4, 3), -- admin  sees case
-    (4, 4), -- admin  sees notes
-    (4, 5), -- admin can edit
-    (4, 1); -- admin is admin
+    (1, 6), -- all internal roles have internal view
+    (2, 6), -- all internal roles have internal view
+    (3, 6), -- all internal roles have internal view
+    (4, 6), -- all internal roles have internal view
+    (5, 6), -- all internal roles have internal view
+    (2, 2), -- internal read only sees docs
+    (2, 3), -- internal read only sees case
+    (2, 4), -- internal read only sees notes
+    (3, 2), -- internal case worker sees docs
+    (3, 3), -- internal case worker sees case
+    (3, 4), -- internal case worker sees notes
+    (3, 5), -- internal case worker can edit
+    (4, 2), -- internal admin sees docs
+    (4, 3), -- internal admin sees case
+    (4, 4), -- internal admin sees notes
+    (4, 5), -- internal admin can edit
+    (4, 1), -- internal admin is admin,
+    (5,7), -- all selfserve roles can view selfserve
+    (6,7), -- all selfserve roles can view selfserve
+    (7,7), -- all selfserve roles can view selfserve
+    (8,7), -- all selfserve roles can view selfserve
+    (9,7), -- all selfserve roles can view selfserve
+    (10,7), -- all selfserve roles can view selfserve
+    (11,7), -- all selfserve roles can view selfserve
+    (12,7), -- all selfserve roles can view selfserve
+    (8, 8); -- selfserve EBSR sees ebsr
 
 INSERT INTO `financial_standing_rate` (
     `id`,
