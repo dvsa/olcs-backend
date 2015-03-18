@@ -2411,7 +2411,7 @@ DROP TABLE IF EXISTS `event_history_type`;
 CREATE TABLE `event_history_type` (
   `id` int(11) NOT NULL,
   `description` varchar(50) NOT NULL,
-  `event_type` varchar(3) NOT NULL,
+  `event_code` varchar(3) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
