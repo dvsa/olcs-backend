@@ -36,9 +36,9 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Addresses status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="addresses_status", nullable=true)
+     * @ORM\Column(type="smallint", name="addresses_status", nullable=true)
      */
     protected $addressesStatus;
 
@@ -55,72 +55,72 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Business details status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="business_details_status", nullable=true)
+     * @ORM\Column(type="smallint", name="business_details_status", nullable=true)
      */
     protected $businessDetailsStatus;
 
     /**
      * Business type status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="business_type_status", nullable=true)
+     * @ORM\Column(type="smallint", name="business_type_status", nullable=true)
      */
     protected $businessTypeStatus;
 
     /**
      * Community licences status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="community_licences_status", nullable=true)
+     * @ORM\Column(type="smallint", name="community_licences_status", nullable=true)
      */
     protected $communityLicencesStatus;
 
     /**
      * Conditions undertakings status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="conditions_undertakings_status", nullable=true)
+     * @ORM\Column(type="smallint", name="conditions_undertakings_status", nullable=true)
      */
     protected $conditionsUndertakingsStatus;
 
     /**
      * Convictions penalties status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="convictions_penalties_status", nullable=true)
+     * @ORM\Column(type="smallint", name="convictions_penalties_status", nullable=true)
      */
     protected $convictionsPenaltiesStatus;
 
     /**
      * Discs status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="discs_status", nullable=true)
+     * @ORM\Column(type="smallint", name="discs_status", nullable=true)
      */
     protected $discsStatus;
 
     /**
      * Financial evidence status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="financial_evidence_status", nullable=true)
+     * @ORM\Column(type="smallint", name="financial_evidence_status", nullable=true)
      */
     protected $financialEvidenceStatus;
 
     /**
      * Financial history status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="financial_history_status", nullable=true)
+     * @ORM\Column(type="smallint", name="financial_history_status", nullable=true)
      */
     protected $financialHistoryStatus;
 
@@ -136,106 +136,106 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Licence history status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="licence_history_status", nullable=true)
+     * @ORM\Column(type="smallint", name="licence_history_status", nullable=true)
      */
     protected $licenceHistoryStatus;
 
     /**
      * Operating centres status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="operating_centres_status", nullable=true)
+     * @ORM\Column(type="smallint", name="operating_centres_status", nullable=true)
      */
     protected $operatingCentresStatus;
 
     /**
      * People status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="people_status", nullable=true)
+     * @ORM\Column(type="smallint", name="people_status", nullable=true)
      */
     protected $peopleStatus;
 
     /**
      * Safety status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="safety_status", nullable=true)
+     * @ORM\Column(type="smallint", name="safety_status", nullable=true)
      */
     protected $safetyStatus;
 
     /**
      * Taxi phv status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="taxi_phv_status", nullable=true)
+     * @ORM\Column(type="smallint", name="taxi_phv_status", nullable=true)
      */
     protected $taxiPhvStatus;
 
     /**
      * Transport managers status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="transport_managers_status", nullable=true)
+     * @ORM\Column(type="smallint", name="transport_managers_status", nullable=true)
      */
     protected $transportManagersStatus;
 
     /**
      * Type of licence status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="type_of_licence_status", nullable=true)
+     * @ORM\Column(type="smallint", name="type_of_licence_status", nullable=true)
      */
     protected $typeOfLicenceStatus;
 
     /**
      * Undertakings status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="undertakings_status", nullable=true)
+     * @ORM\Column(type="smallint", name="undertakings_status", nullable=true)
      */
     protected $undertakingsStatus;
 
     /**
      * Vehicles declarations status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="vehicles_declarations_status", nullable=true)
+     * @ORM\Column(type="smallint", name="vehicles_declarations_status", nullable=true)
      */
     protected $vehiclesDeclarationsStatus;
 
     /**
      * Vehicles psv status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="vehicles_psv_status", nullable=true)
+     * @ORM\Column(type="smallint", name="vehicles_psv_status", nullable=true)
      */
     protected $vehiclesPsvStatus;
 
     /**
      * Vehicles status
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="vehicles_status", nullable=true)
+     * @ORM\Column(type="smallint", name="vehicles_status", nullable=true)
      */
     protected $vehiclesStatus;
 
     /**
      * Set the addresses status
      *
-     * @param boolean $addressesStatus
+     * @param int $addressesStatus
      * @return ApplicationCompletion
      */
     public function setAddressesStatus($addressesStatus)
@@ -248,7 +248,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the addresses status
      *
-     * @return boolean
+     * @return int
      */
     public function getAddressesStatus()
     {
@@ -281,7 +281,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the business details status
      *
-     * @param boolean $businessDetailsStatus
+     * @param int $businessDetailsStatus
      * @return ApplicationCompletion
      */
     public function setBusinessDetailsStatus($businessDetailsStatus)
@@ -294,7 +294,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the business details status
      *
-     * @return boolean
+     * @return int
      */
     public function getBusinessDetailsStatus()
     {
@@ -304,7 +304,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the business type status
      *
-     * @param boolean $businessTypeStatus
+     * @param int $businessTypeStatus
      * @return ApplicationCompletion
      */
     public function setBusinessTypeStatus($businessTypeStatus)
@@ -317,7 +317,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the business type status
      *
-     * @return boolean
+     * @return int
      */
     public function getBusinessTypeStatus()
     {
@@ -327,7 +327,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the community licences status
      *
-     * @param boolean $communityLicencesStatus
+     * @param int $communityLicencesStatus
      * @return ApplicationCompletion
      */
     public function setCommunityLicencesStatus($communityLicencesStatus)
@@ -340,7 +340,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the community licences status
      *
-     * @return boolean
+     * @return int
      */
     public function getCommunityLicencesStatus()
     {
@@ -350,7 +350,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the conditions undertakings status
      *
-     * @param boolean $conditionsUndertakingsStatus
+     * @param int $conditionsUndertakingsStatus
      * @return ApplicationCompletion
      */
     public function setConditionsUndertakingsStatus($conditionsUndertakingsStatus)
@@ -363,7 +363,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the conditions undertakings status
      *
-     * @return boolean
+     * @return int
      */
     public function getConditionsUndertakingsStatus()
     {
@@ -373,7 +373,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the convictions penalties status
      *
-     * @param boolean $convictionsPenaltiesStatus
+     * @param int $convictionsPenaltiesStatus
      * @return ApplicationCompletion
      */
     public function setConvictionsPenaltiesStatus($convictionsPenaltiesStatus)
@@ -386,7 +386,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the convictions penalties status
      *
-     * @return boolean
+     * @return int
      */
     public function getConvictionsPenaltiesStatus()
     {
@@ -396,7 +396,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the discs status
      *
-     * @param boolean $discsStatus
+     * @param int $discsStatus
      * @return ApplicationCompletion
      */
     public function setDiscsStatus($discsStatus)
@@ -409,7 +409,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the discs status
      *
-     * @return boolean
+     * @return int
      */
     public function getDiscsStatus()
     {
@@ -419,7 +419,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the financial evidence status
      *
-     * @param boolean $financialEvidenceStatus
+     * @param int $financialEvidenceStatus
      * @return ApplicationCompletion
      */
     public function setFinancialEvidenceStatus($financialEvidenceStatus)
@@ -432,7 +432,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the financial evidence status
      *
-     * @return boolean
+     * @return int
      */
     public function getFinancialEvidenceStatus()
     {
@@ -442,7 +442,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the financial history status
      *
-     * @param boolean $financialHistoryStatus
+     * @param int $financialHistoryStatus
      * @return ApplicationCompletion
      */
     public function setFinancialHistoryStatus($financialHistoryStatus)
@@ -455,7 +455,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the financial history status
      *
-     * @return boolean
+     * @return int
      */
     public function getFinancialHistoryStatus()
     {
@@ -488,7 +488,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the licence history status
      *
-     * @param boolean $licenceHistoryStatus
+     * @param int $licenceHistoryStatus
      * @return ApplicationCompletion
      */
     public function setLicenceHistoryStatus($licenceHistoryStatus)
@@ -501,7 +501,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the licence history status
      *
-     * @return boolean
+     * @return int
      */
     public function getLicenceHistoryStatus()
     {
@@ -511,7 +511,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the operating centres status
      *
-     * @param boolean $operatingCentresStatus
+     * @param int $operatingCentresStatus
      * @return ApplicationCompletion
      */
     public function setOperatingCentresStatus($operatingCentresStatus)
@@ -524,7 +524,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the operating centres status
      *
-     * @return boolean
+     * @return int
      */
     public function getOperatingCentresStatus()
     {
@@ -534,7 +534,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the people status
      *
-     * @param boolean $peopleStatus
+     * @param int $peopleStatus
      * @return ApplicationCompletion
      */
     public function setPeopleStatus($peopleStatus)
@@ -547,7 +547,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the people status
      *
-     * @return boolean
+     * @return int
      */
     public function getPeopleStatus()
     {
@@ -557,7 +557,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the safety status
      *
-     * @param boolean $safetyStatus
+     * @param int $safetyStatus
      * @return ApplicationCompletion
      */
     public function setSafetyStatus($safetyStatus)
@@ -570,7 +570,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the safety status
      *
-     * @return boolean
+     * @return int
      */
     public function getSafetyStatus()
     {
@@ -580,7 +580,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the taxi phv status
      *
-     * @param boolean $taxiPhvStatus
+     * @param int $taxiPhvStatus
      * @return ApplicationCompletion
      */
     public function setTaxiPhvStatus($taxiPhvStatus)
@@ -593,7 +593,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the taxi phv status
      *
-     * @return boolean
+     * @return int
      */
     public function getTaxiPhvStatus()
     {
@@ -603,7 +603,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the transport managers status
      *
-     * @param boolean $transportManagersStatus
+     * @param int $transportManagersStatus
      * @return ApplicationCompletion
      */
     public function setTransportManagersStatus($transportManagersStatus)
@@ -616,7 +616,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the transport managers status
      *
-     * @return boolean
+     * @return int
      */
     public function getTransportManagersStatus()
     {
@@ -626,7 +626,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the type of licence status
      *
-     * @param boolean $typeOfLicenceStatus
+     * @param int $typeOfLicenceStatus
      * @return ApplicationCompletion
      */
     public function setTypeOfLicenceStatus($typeOfLicenceStatus)
@@ -639,7 +639,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the type of licence status
      *
-     * @return boolean
+     * @return int
      */
     public function getTypeOfLicenceStatus()
     {
@@ -649,7 +649,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the undertakings status
      *
-     * @param boolean $undertakingsStatus
+     * @param int $undertakingsStatus
      * @return ApplicationCompletion
      */
     public function setUndertakingsStatus($undertakingsStatus)
@@ -662,7 +662,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the undertakings status
      *
-     * @return boolean
+     * @return int
      */
     public function getUndertakingsStatus()
     {
@@ -672,7 +672,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the vehicles declarations status
      *
-     * @param boolean $vehiclesDeclarationsStatus
+     * @param int $vehiclesDeclarationsStatus
      * @return ApplicationCompletion
      */
     public function setVehiclesDeclarationsStatus($vehiclesDeclarationsStatus)
@@ -685,7 +685,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the vehicles declarations status
      *
-     * @return boolean
+     * @return int
      */
     public function getVehiclesDeclarationsStatus()
     {
@@ -695,7 +695,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the vehicles psv status
      *
-     * @param boolean $vehiclesPsvStatus
+     * @param int $vehiclesPsvStatus
      * @return ApplicationCompletion
      */
     public function setVehiclesPsvStatus($vehiclesPsvStatus)
@@ -708,7 +708,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the vehicles psv status
      *
-     * @return boolean
+     * @return int
      */
     public function getVehiclesPsvStatus()
     {
@@ -718,7 +718,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Set the vehicles status
      *
-     * @param boolean $vehiclesStatus
+     * @param int $vehiclesStatus
      * @return ApplicationCompletion
      */
     public function setVehiclesStatus($vehiclesStatus)
@@ -731,7 +731,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
     /**
      * Get the vehicles status
      *
-     * @return boolean
+     * @return int
      */
     public function getVehiclesStatus()
     {

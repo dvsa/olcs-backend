@@ -367,7 +367,7 @@ class AlignEntitiesToSchema
 
         // Run the command
         $cli->run($argv, $output);
-        //$output->fetch();
+        $content = $output->fetch();
 
         $this->respond('Generated new files', 'success');
     }
