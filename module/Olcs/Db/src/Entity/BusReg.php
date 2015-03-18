@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="bus_reg",
  *    indexes={
- *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"}),
  *        @ORM\Index(name="ix_bus_reg_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_bus_reg_bus_notice_period_id", columns={"bus_notice_period_id"}),
  *        @ORM\Index(name="ix_bus_reg_subsidised", columns={"subsidised"}),
@@ -26,7 +25,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
- *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"})
+ *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
+ *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"}),
+ *        @ORM\Index(name="fk_bus_reg_operating_centre1", columns={"operating_centre_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
@@ -256,6 +257,16 @@ class BusReg implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false, options={"default": 0})
      */
     protected $opNotifiedLaPte = 0;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
+     */
+    protected $operatingCentre;
 
     /**
      * Organisation email
@@ -1143,6 +1154,29 @@ class BusReg implements Interfaces\EntityInterface
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return BusReg
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
     }
 
     /**

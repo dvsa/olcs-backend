@@ -20,7 +20,6 @@ TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_paragraph`;
 TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
-TRUNCATE TABLE `variation_reason`;
 TRUNCATE TABLE `role`;
 TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
@@ -539,6 +538,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
     ('com_lic_sts', 'cl_sts_void', 'Voided', null),
     ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
+
+    ('bus_reg_var_reason', 'brvr_timetable', 'Timetable', '1'),
+    ('bus_reg_var_reason', 'brvr_route', 'Route', '2'),
+    ('bus_reg_var_reason', 'brvr_start_end', 'Start & Finish Point', '3'),
+    ('bus_reg_var_reason', 'brvr_stops', 'Stopping Places', '4'),
 
     ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
     ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
@@ -6787,13 +6791,6 @@ VALUES
     (697, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (698, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
     (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1);
-
-INSERT INTO `variation_reason` (`id`, `description`)
-VALUES
-  (1, 'Route'),
-  (2, 'Start & finish point'),
-  (3, 'Stopping places'),
-  (4, 'Timetable');
 
 INSERT INTO `role` (`id`, `role`) VALUES
     (1, 'limited-read-only'),

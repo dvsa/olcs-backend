@@ -29,18 +29,50 @@ class OtherLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\AdditionalInformation4000Field,
-        Traits\ApplicationManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\DisqualificationDateField,
-        Traits\DisqualificationLength255Field,
-        Traits\HolderName90Field,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicNo18Field,
-        Traits\PurchaseDateField,
         Traits\CustomVersionField;
+
+    /**
+     * Application
+     *
+     * @var \Olcs\Db\Entity\Application
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="otherLicences")
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $application;
+
+    /**
+     * Disqualification date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="disqualification_date", nullable=true)
+     */
+    protected $disqualificationDate;
+
+    /**
+     * Disqualification length
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="disqualification_length", length=255, nullable=true)
+     */
+    protected $disqualificationLength;
+
+    /**
+     * Holder name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="holder_name", length=90, nullable=true)
+     */
+    protected $holderName;
 
     /**
      * Hours per week
@@ -69,6 +101,15 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=true)
      */
     protected $previousLicenceType;
+
+    /**
+     * Purchase date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="purchase_date", nullable=true)
+     */
+    protected $purchaseDate;
 
     /**
      * Role
@@ -122,11 +163,103 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Will surrender
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="will_surrender", nullable=true)
+     * @ORM\Column(type="yesnonull", name="will_surrender", nullable=true)
      */
     protected $willSurrender;
+
+    /**
+     * Set the application
+     *
+     * @param \Olcs\Db\Entity\Application $application
+     * @return OtherLicence
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get the application
+     *
+     * @return \Olcs\Db\Entity\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Set the disqualification date
+     *
+     * @param \DateTime $disqualificationDate
+     * @return OtherLicence
+     */
+    public function setDisqualificationDate($disqualificationDate)
+    {
+        $this->disqualificationDate = $disqualificationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the disqualification date
+     *
+     * @return \DateTime
+     */
+    public function getDisqualificationDate()
+    {
+        return $this->disqualificationDate;
+    }
+
+    /**
+     * Set the disqualification length
+     *
+     * @param string $disqualificationLength
+     * @return OtherLicence
+     */
+    public function setDisqualificationLength($disqualificationLength)
+    {
+        $this->disqualificationLength = $disqualificationLength;
+
+        return $this;
+    }
+
+    /**
+     * Get the disqualification length
+     *
+     * @return string
+     */
+    public function getDisqualificationLength()
+    {
+        return $this->disqualificationLength;
+    }
+
+    /**
+     * Set the holder name
+     *
+     * @param string $holderName
+     * @return OtherLicence
+     */
+    public function setHolderName($holderName)
+    {
+        $this->holderName = $holderName;
+
+        return $this;
+    }
+
+    /**
+     * Get the holder name
+     *
+     * @return string
+     */
+    public function getHolderName()
+    {
+        return $this->holderName;
+    }
 
     /**
      * Set the hours per week
@@ -195,6 +328,29 @@ class OtherLicence implements Interfaces\EntityInterface
     public function getPreviousLicenceType()
     {
         return $this->previousLicenceType;
+    }
+
+    /**
+     * Set the purchase date
+     *
+     * @param \DateTime $purchaseDate
+     * @return OtherLicence
+     */
+    public function setPurchaseDate($purchaseDate)
+    {
+        $this->purchaseDate = $purchaseDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the purchase date
+     *
+     * @return \DateTime
+     */
+    public function getPurchaseDate()
+    {
+        return $this->purchaseDate;
     }
 
     /**
@@ -315,7 +471,7 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Set the will surrender
      *
-     * @param boolean $willSurrender
+     * @param string $willSurrender
      * @return OtherLicence
      */
     public function setWillSurrender($willSurrender)
@@ -328,7 +484,7 @@ class OtherLicence implements Interfaces\EntityInterface
     /**
      * Get the will surrender
      *
-     * @return boolean
+     * @return string
      */
     public function getWillSurrender()
     {

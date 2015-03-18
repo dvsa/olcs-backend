@@ -92,10 +92,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionRehabs")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisions")
      * @ORM\JoinTable(name="tm_case_decision_rehab",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="tm_case_decision_rehab_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(name="rehab_measure_id", referencedColumnName="id")
@@ -127,10 +127,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionUnfitnesss")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisions")
      * @ORM\JoinTable(name="tm_case_decision_unfitness",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="tm_case_decision_unfitness_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")

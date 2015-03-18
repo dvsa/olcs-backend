@@ -183,7 +183,7 @@ CREATE TABLE `application` (
   `insolvency_details` varchar(4000) DEFAULT NULL COMMENT 'Details of previous bankrupcy, insolvency, administration, receivership of people linked to application',
   `safety_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read safety information in application and will comply',
   `declaration_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read undertakings and declarations and will comply',
-  `financial_evidence_uploaded` tinyint(1) DEFAULT NULL COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
+  `financial_evidence_upladed` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
   `received_date` datetime DEFAULT NULL COMMENT 'Submitted date.  Was date_entered in OLBS',
   `target_completion_date` datetime DEFAULT NULL COMMENT 'SLA for application to be processed.',
   `granted_date` datetime DEFAULT NULL COMMENT 'Date application granted.',
@@ -214,7 +214,6 @@ CREATE TABLE `application` (
   `interim_auth_vehicles` smallint(5) unsigned DEFAULT NULL COMMENT 'Number of vehicles authorised on interim licence.',
   `interim_auth_trailers` smallint(5) unsigned DEFAULT NULL COMMENT 'Number of trailers authorised on interim licence.',
   `interim_status` varchar(32) DEFAULT NULL COMMENT 'Interim licence status.',
-  `interim_requested` tinyint(1) NOT NULL DEFAULT '0',
   `interim_reason` varchar(1000) DEFAULT NULL,
   `is_maintenance_suitable` tinyint(1) DEFAULT NULL COMMENT 'User confirmation that maintenance agreements are suitable and guidence notes read.',
   `ni_flag` tinyint(1) DEFAULT NULL,
@@ -373,9 +372,11 @@ DROP TABLE IF EXISTS `application_organisation_person`;
 CREATE TABLE `application_organisation_person` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `person_id` int(10) unsigned NOT NULL,
+  `original_person_id` int(10) unsigned DEFAULT NULL COMMENT 'Populated if change is an edit of a person record on a licence.',
   `organisation_id` int(10) unsigned NOT NULL,
   `application_id` int(10) unsigned NOT NULL,
   `action` varchar(1) NOT NULL,
+  `position` varchar(45) DEFAULT NULL COMMENT 'Populated if org type is other.  For Ltd companies derived from company type.',
   `last_modified_by` int(10) unsigned NOT NULL COMMENT 'User id of user who last modified the record.',
   `created_by` int(10) unsigned NOT NULL COMMENT 'User id of user who created record.',
   `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
@@ -387,10 +388,12 @@ CREATE TABLE `application_organisation_person` (
   KEY `ix_application_organisation_person_application_id` (`application_id`),
   KEY `ix_application_organisation_person_last_modified_by` (`last_modified_by`),
   KEY `ix_application_organisation_person_created_by` (`created_by`),
+  KEY `fk_application_organisation_person_person1_idx` (`original_person_id`),
   CONSTRAINT `fk_application_org_person_org_id_org_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_person1` FOREIGN KEY (`original_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_person_id_person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores organisation people on an application. When application is granted they get copied into main organisation_person table';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -402,6 +405,61 @@ CREATE TABLE `application_organisation_person` (
 LOCK TABLES `application_organisation_person` WRITE;
 /*!40000 ALTER TABLE `application_organisation_person` DISABLE KEYS */;
 /*!40000 ALTER TABLE `application_organisation_person` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `application_tracking`
+--
+
+DROP TABLE IF EXISTS `application_tracking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `application_tracking` (
+  `id` int(10) unsigned NOT NULL,
+  `application_id` int(10) unsigned NOT NULL,
+  `type_of_licence_status` int(11) DEFAULT NULL,
+  `business_type_status` int(11) DEFAULT NULL,
+  `business_details_status` int(11) DEFAULT NULL,
+  `addresses_status` int(11) DEFAULT NULL,
+  `people_status` int(11) DEFAULT NULL,
+  `taxi_phv_status` int(11) DEFAULT NULL,
+  `operating_centres_status` int(11) DEFAULT NULL,
+  `financial_evidence_status` int(11) DEFAULT NULL,
+  `transport_managers_status` int(11) DEFAULT NULL,
+  `vehicles_status` int(11) DEFAULT NULL,
+  `vehicles_psv_status` int(11) DEFAULT NULL,
+  `vehicles_declarations_status` int(11) DEFAULT NULL,
+  `discs_status` int(11) DEFAULT NULL,
+  `community_licences_status` int(11) DEFAULT NULL,
+  `safety_status` int(11) DEFAULT NULL,
+  `conditions_undertakings_status` int(11) DEFAULT NULL,
+  `financial_history_status` int(11) DEFAULT NULL,
+  `licence_history_status` int(11) DEFAULT NULL,
+  `convictions_penalties_status` int(11) DEFAULT NULL,
+  `undertakings_status` int(11) DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `last_modified_by` int(10) unsigned DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `application_id_UNIQUE` (`application_id`),
+  KEY `fk_application_tracking_application1_idx` (`application_id`),
+  KEY `fk_application_tracking_user1_idx` (`created_by`),
+  KEY `fk_application_tracking_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_application_tracking_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Used to track status of an application for display to internal users.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `application_tracking`
+--
+
+LOCK TABLES `application_tracking` WRITE;
+/*!40000 ALTER TABLE `application_tracking` DISABLE KEYS */;
+/*!40000 ALTER TABLE `application_tracking` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -449,7 +507,7 @@ CREATE TABLE `bus_reg` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `parent_id` int(10) unsigned DEFAULT NULL,
   `status` varchar(32) NOT NULL,
-  `state_changed_date` datetime DEFAULT NULL COMMENT 'Used for reporting on SLAs. Updated whenever state changes.',
+  `status_change_date` datetime DEFAULT NULL COMMENT 'Used for reporting on SLAs. Updated whenever state changes.',
   `revert_status` varchar(32) NOT NULL,
   `licence_id` int(10) unsigned NOT NULL,
   `bus_notice_period_id` int(10) unsigned NOT NULL COMMENT 'Scottish or other',
@@ -499,6 +557,7 @@ CREATE TABLE `bus_reg` (
   `quality_partnership_facilities_used` tinyint(1) NOT NULL DEFAULT '0',
   `is_quality_contract` tinyint(1) NOT NULL DEFAULT '0',
   `quality_contract_details` varchar(4000) DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
@@ -507,7 +566,6 @@ CREATE TABLE `bus_reg` (
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_bus_reg_olbs_key` (`olbs_key`),
-  UNIQUE KEY `uk_bus_reg_parent_id` (`parent_id`),
   KEY `ix_bus_reg_licence_id` (`licence_id`),
   KEY `ix_bus_reg_bus_notice_period_id` (`bus_notice_period_id`),
   KEY `ix_bus_reg_subsidised` (`subsidised`),
@@ -517,6 +575,7 @@ CREATE TABLE `bus_reg` (
   KEY `ix_bus_reg_status` (`status`),
   KEY `ix_bus_reg_revert_status` (`revert_status`),
   KEY `ix_bus_reg_reg_no` (`reg_no`),
+  KEY `fk_bus_reg_parent_id_bus_reg_id` (`parent_id`),
   CONSTRAINT `fk_bus_reg_bus_notice_period_id_bus_notice_period_id` FOREIGN KEY (`bus_notice_period_id`) REFERENCES `bus_notice_period` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -634,29 +693,6 @@ LOCK TABLES `bus_reg_other_service` WRITE;
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `bus_reg_search_view`
---
-
-DROP TABLE IF EXISTS `bus_reg_search_view`;
-/*!50001 DROP VIEW IF EXISTS `bus_reg_search_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `bus_reg_search_view` AS SELECT 
- 1 AS `bus_reg_id`,
- 1 AS `service_no`,
- 1 AS `reg_no`,
- 1 AS `lic_id`,
- 1 AS `lic_no`,
- 1 AS `lic_status`,
- 1 AS `name`,
- 1 AS `start_point`,
- 1 AS `finish_point`,
- 1 AS `bus_reg_status`,
- 1 AS `route_no`,
- 1 AS `variation_no`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `bus_reg_traffic_area`
 --
 
@@ -705,12 +741,11 @@ DROP TABLE IF EXISTS `bus_reg_variation_reason`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bus_reg_variation_reason` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `bus_reg_id` int(10) unsigned NOT NULL,
   `variation_reason_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   `olbs_type` int(10) unsigned DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`bus_reg_id`,`variation_reason_id`),
   UNIQUE KEY `uk_bus_reg_variation_reason_bus_reg_id_variation_reason_id` (`bus_reg_id`,`variation_reason_id`),
   KEY `ix_bus_reg_variation_reason_bus_reg_id` (`bus_reg_id`),
   KEY `ix_bus_reg_variation_reason_variation_reason_id` (`variation_reason_id`),
@@ -739,7 +774,7 @@ DROP TABLE IF EXISTS `bus_service_type`;
 CREATE TABLE `bus_service_type` (
   `id` int(10) unsigned NOT NULL COMMENT 'Primary key.  Auto incremented if numeric.',
   `description` varchar(70) DEFAULT NULL,
-  `txc_service_type_name` varchar(70) DEFAULT NULL COMMENT 'TransXChange name.',
+  `txc_name` varchar(70) DEFAULT NULL COMMENT 'TransXChange name.',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Bus service types such as hail and ride, normal stopping, circular etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -836,6 +871,33 @@ LOCK TABLES `case_category` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `case_outcome`
+--
+
+DROP TABLE IF EXISTS `case_outcome`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `case_outcome` (
+  `cases_id` int(10) unsigned NOT NULL,
+  `outcome_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`cases_id`,`outcome_id`),
+  KEY `fk_case_outcome_cases1_idx` (`cases_id`),
+  KEY `fk_case_outcome_ref_data1_idx` (`outcome_id`),
+  CONSTRAINT `fk_case_outcome_cases1` FOREIGN KEY (`cases_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_case_outcome_ref_data1` FOREIGN KEY (`outcome_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `case_outcome`
+--
+
+LOCK TABLES `case_outcome` WRITE;
+/*!40000 ALTER TABLE `case_outcome` DISABLE KEYS */;
+/*!40000 ALTER TABLE `case_outcome` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cases`
 --
 
@@ -850,7 +912,7 @@ CREATE TABLE `cases` (
   `licence_id` int(10) unsigned DEFAULT NULL,
   `ecms_no` varchar(45) DEFAULT NULL,
   `open_date` datetime NOT NULL,
-  `close_date` datetime DEFAULT NULL,
+  `closed_date` datetime DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `description` varchar(1024) DEFAULT NULL COMMENT 'Short summary note in old system',
   `is_impounding` tinyint(1) NOT NULL DEFAULT '0',
@@ -1068,7 +1130,7 @@ DROP TABLE IF EXISTS `community_lic_suspension_reason`;
 CREATE TABLE `community_lic_suspension_reason` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `community_lic_suspension_id` int(10) unsigned NOT NULL,
-  `reason_id` int(10) unsigned NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -1079,13 +1141,13 @@ CREATE TABLE `community_lic_suspension_reason` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_community_lic_suspension_reason_olbs_key` (`olbs_key`),
   KEY `ix_community_lic_suspension_reason_community_lic_suspension_id` (`community_lic_suspension_id`),
-  KEY `ix_community_lic_suspension_reason_reason_id` (`reason_id`),
   KEY `ix_community_lic_suspension_reason_created_by` (`created_by`),
   KEY `ix_community_lic_suspension_reason_last_modified_by` (`last_modified_by`),
+  KEY `fk_community_lic_suspension_reason_ref_data1_idx` (`type_id`),
   CONSTRAINT `fk_com_lic_susp_reason_com_lic_susp_id_com_lic_susp_id` FOREIGN KEY (`community_lic_suspension_id`) REFERENCES `community_lic_suspension` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_com_lic_susp_reason_reason_id_com_lic_susp_reason_type_id` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_suspension_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_suspension_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_suspension_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_suspension_reason_ref_data1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Reasons for a suspension.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1096,39 +1158,6 @@ CREATE TABLE `community_lic_suspension_reason` (
 LOCK TABLES `community_lic_suspension_reason` WRITE;
 /*!40000 ALTER TABLE `community_lic_suspension_reason` DISABLE KEYS */;
 /*!40000 ALTER TABLE `community_lic_suspension_reason` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `community_lic_suspension_reason_type`
---
-
-DROP TABLE IF EXISTS `community_lic_suspension_reason_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `community_lic_suspension_reason_type` (
-  `id` int(10) unsigned NOT NULL COMMENT 'Primary key.  Auto incremented if numeric.',
-  `description` varchar(255) DEFAULT NULL,
-  `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
-  KEY `ix_community_lic_suspension_reason_type_created_by` (`created_by`),
-  KEY `ix_community_lic_suspension_reason_type_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_community_lic_suspension_reason_type_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_suspension_reason_type_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Possible suspension reasons.';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `community_lic_suspension_reason_type`
---
-
-LOCK TABLES `community_lic_suspension_reason_type` WRITE;
-/*!40000 ALTER TABLE `community_lic_suspension_reason_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `community_lic_suspension_reason_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1179,7 +1208,7 @@ DROP TABLE IF EXISTS `community_lic_withdrawal_reason`;
 CREATE TABLE `community_lic_withdrawal_reason` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `community_lic_withdrawal_id` int(10) unsigned NOT NULL,
-  `reason_id` int(10) unsigned NOT NULL,
+  `type_id` varchar(32) NOT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -1190,13 +1219,13 @@ CREATE TABLE `community_lic_withdrawal_reason` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_community_lic_withdrawal_reason_olbs_key` (`olbs_key`),
   KEY `ix_community_lic_withdrawal_reason_community_lic_withdrawal_id` (`community_lic_withdrawal_id`),
-  KEY `ix_community_lic_withdrawal_reason_reason_id` (`reason_id`),
   KEY `ix_community_lic_withdrawal_reason_created_by` (`created_by`),
   KEY `ix_community_lic_withdrawal_reason_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_com_lic_withdrw_reasn_reasn_id_com_lic_withdrw_reasn_type_id` FOREIGN KEY (`reason_id`) REFERENCES `community_lic_withdrawal_reason_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_community_lic_withdrawal_reason_ref_data1_idx` (`type_id`),
   CONSTRAINT `fk_com_lic_withdrw_reason_com_lic_withdrw_id_com_lic_withdrw_id` FOREIGN KEY (`community_lic_withdrawal_id`) REFERENCES `community_lic_withdrawal` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_withdrawal_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_withdrawal_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_community_lic_withdrawal_reason_ref_data1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Reasons for com lic withdrawal.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1207,39 +1236,6 @@ CREATE TABLE `community_lic_withdrawal_reason` (
 LOCK TABLES `community_lic_withdrawal_reason` WRITE;
 /*!40000 ALTER TABLE `community_lic_withdrawal_reason` DISABLE KEYS */;
 /*!40000 ALTER TABLE `community_lic_withdrawal_reason` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `community_lic_withdrawal_reason_type`
---
-
-DROP TABLE IF EXISTS `community_lic_withdrawal_reason_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `community_lic_withdrawal_reason_type` (
-  `id` int(10) unsigned NOT NULL COMMENT 'Primary key.  Auto incremented if numeric.',
-  `description` varchar(255) DEFAULT NULL,
-  `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
-  KEY `ix_community_lic_withdrawal_reason_type_created_by` (`created_by`),
-  KEY `ix_community_lic_withdrawal_reason_type_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_community_lic_withdrawal_reason_type_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_withdrawal_reason_type_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Possibly community licence withdrawal reasons.';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `community_lic_withdrawal_reason_type`
---
-
-LOCK TABLES `community_lic_withdrawal_reason_type` WRITE;
-/*!40000 ALTER TABLE `community_lic_withdrawal_reason_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `community_lic_withdrawal_reason_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1277,6 +1273,7 @@ DROP TABLE IF EXISTS `company_subsidiary`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `company_subsidiary` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `licence_id` int(10) unsigned NOT NULL,
   `name` varchar(70) DEFAULT NULL,
   `company_no` varchar(12) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -1289,8 +1286,10 @@ CREATE TABLE `company_subsidiary` (
   UNIQUE KEY `uk_company_subsidiary_olbs_key` (`olbs_key`),
   KEY `ix_company_subsidiary_created_by` (`created_by`),
   KEY `ix_company_subsidiary_last_modified_by` (`last_modified_by`),
+  KEY `fk_company_subsidiary_licence1_idx` (`licence_id`),
   CONSTRAINT `fk_company_subsidiary_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_company_subsidiary_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_company_subsidiary_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subsidiaries of a company.  Business requirement is only to store name number, hence not stored in organisation table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1301,44 +1300,6 @@ CREATE TABLE `company_subsidiary` (
 LOCK TABLES `company_subsidiary` WRITE;
 /*!40000 ALTER TABLE `company_subsidiary` DISABLE KEYS */;
 /*!40000 ALTER TABLE `company_subsidiary` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `company_subsidiary_licence`
---
-
-DROP TABLE IF EXISTS `company_subsidiary_licence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `company_subsidiary_licence` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
-  `company_subsidiary_id` int(10) unsigned NOT NULL,
-  `licence_id` int(10) unsigned NOT NULL,
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_company_subsidiary_licence_company_subsidiary_id_licence_id` (`company_subsidiary_id`,`licence_id`),
-  KEY `ix_company_subsidiary_licence_licence_id` (`licence_id`),
-  KEY `ix_company_subsidiary_licence_company_subsidiary_id` (`company_subsidiary_id`),
-  KEY `ix_company_subsidiary_licence_created_by` (`created_by`),
-  KEY `ix_company_subsidiary_licence_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_comp_subsid_licence_comp_subsid_id_comp_subsid_id` FOREIGN KEY (`company_subsidiary_id`) REFERENCES `company_subsidiary` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_licence_id_licence_id` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subsidiaries linked to licence.';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `company_subsidiary_licence`
---
-
-LOCK TABLES `company_subsidiary_licence` WRITE;
-/*!40000 ALTER TABLE `company_subsidiary_licence` DISABLE KEYS */;
-/*!40000 ALTER TABLE `company_subsidiary_licence` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2035,34 +1996,6 @@ LOCK TABLES `document` WRITE;
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `document_search_view`
---
-
-DROP TABLE IF EXISTS `document_search_view`;
-/*!50001 DROP VIEW IF EXISTS `document_search_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `document_search_view` AS SELECT 
- 1 AS `id`,
- 1 AS `issued_date`,
- 1 AS `category_id`,
- 1 AS `document_sub_category_id`,
- 1 AS `description`,
- 1 AS `category_name`,
- 1 AS `document_sub_category_name`,
- 1 AS `filename`,
- 1 AS `is_scan`,
- 1 AS `is_digital`,
- 1 AS `id_col`,
- 1 AS `lic_no`,
- 1 AS `licence_id`,
- 1 AS `family_name`,
- 1 AS `case_id`,
- 1 AS `bus_reg_id`,
- 1 AS `tm_id`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `ebsr_route_reprint`
 --
 
@@ -2128,6 +2061,7 @@ CREATE TABLE `ebsr_submission` (
   `distribute_expire` datetime DEFAULT NULL,
   `is_from_ftp` tinyint(1) NOT NULL DEFAULT '0',
   `organisation_id` int(10) unsigned DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '1',
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ebsr_submission_olbs_key` (`olbs_key`),
@@ -2285,35 +2219,6 @@ LOCK TABLES `event_history_type` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ext_translations`
---
-
-DROP TABLE IF EXISTS `ext_translations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ext_translations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
-  `locale` varchar(8) NOT NULL,
-  `object_class` varchar(255) NOT NULL,
-  `field` varchar(32) NOT NULL,
-  `foreign_key` varchar(64) NOT NULL,
-  `content` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_ext_translations_locale_object_class_field_foreign_key` (`locale`,`object_class`,`field`,`foreign_key`),
-  KEY `ix_ext_translations_locale_object_class_foreign_key` (`locale`,`object_class`,`foreign_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ext_translations`
---
-
-LOCK TABLES `ext_translations` WRITE;
-/*!40000 ALTER TABLE `ext_translations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ext_translations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `fee`
 --
 
@@ -2348,6 +2253,7 @@ CREATE TABLE `fee` (
   `payment_method` varchar(32) DEFAULT NULL COMMENT 'The method of the successful payment. There could have been several attempts to pay with differing methods, but only one successful.',
   `payer_name` varchar(100) DEFAULT NULL COMMENT 'Name on cheque or POs',
   `cheque_po_number` varchar(100) DEFAULT NULL,
+  `cheque_po_date` datetime DEFAULT NULL,
   `paying_in_slip_number` varchar(100) DEFAULT NULL COMMENT 'Paying in slip from DVSA employee paying cheque or PO into bank.',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -2534,7 +2440,7 @@ DROP TABLE IF EXISTS `financial_standing_rate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `financial_standing_rate` (
-  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `licence_type` varchar(32) NOT NULL COMMENT 'e.g. Special Restricted',
   `goods_or_psv` varchar(32) NOT NULL COMMENT 'Goods or PSV',
   `additional_vehicle_rate` int(11) DEFAULT NULL,
@@ -2668,7 +2574,7 @@ CREATE TABLE `hearing` (
   `case_id` int(10) unsigned NOT NULL,
   `venue_id` int(10) unsigned NOT NULL,
   `venue_other` varchar(255) DEFAULT NULL COMMENT 'Freetext if venue is not in list of common venues',
-  `presiding_tc_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `presiding_tc_id` int(10) unsigned DEFAULT NULL,
   `hearing_type` varchar(32) NOT NULL COMMENT 'In chambers or office procedure.',
   `hearing_date` datetime DEFAULT NULL,
   `agreed_by_tc_date` date DEFAULT NULL,
@@ -3156,7 +3062,7 @@ CREATE TABLE `irfo_psv_auth` (
   `renewal_date` date DEFAULT NULL,
   `service_route_from` varchar(30) NOT NULL,
   `service_route_to` varchar(30) NOT NULL,
-  `validity_period` tinyint(4) NOT NULL COMMENT 'Years valid for.  Some negative numbers in legacy hence signed.',
+  `validity_period` smallint(6) NOT NULL COMMENT 'Years valid for.  Some negative numbers in legacy hence signed.',
   `withdrawn_reason` varchar(32) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -3332,35 +3238,6 @@ LOCK TABLES `legacy_case_action` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `legacy_case_offence`
---
-
-DROP TABLE IF EXISTS `legacy_case_offence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `legacy_case_offence` (
-  `case_id` int(10) unsigned NOT NULL,
-  `legacy_offence_id` int(10) unsigned NOT NULL,
-  `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  PRIMARY KEY (`case_id`,`legacy_offence_id`),
-  UNIQUE KEY `uk_legacy_case_offence_olbs_key_legacy_offence_id` (`olbs_key`,`legacy_offence_id`),
-  KEY `ix_legacy_case_offence_case_id` (`case_id`),
-  KEY `ix_legacy_case_offence_legacy_offence_id` (`legacy_offence_id`),
-  CONSTRAINT `fk_legacy_case_offence_case_id_cases_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_legacy_case_offence_legacy_offence_id_legacy_offence_id` FOREIGN KEY (`legacy_offence_id`) REFERENCES `legacy_offence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `legacy_case_offence`
---
-
-LOCK TABLES `legacy_case_offence` WRITE;
-/*!40000 ALTER TABLE `legacy_case_offence` DISABLE KEYS */;
-/*!40000 ALTER TABLE `legacy_case_offence` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `legacy_offence`
 --
 
@@ -3369,6 +3246,7 @@ DROP TABLE IF EXISTS `legacy_offence`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `legacy_offence` (
   `id` int(10) unsigned NOT NULL COMMENT 'Primary key.  Auto incremented if numeric.',
+  `case_id` int(10) unsigned NOT NULL,
   `definition` varchar(1000) DEFAULT NULL,
   `is_trailer` tinyint(1) DEFAULT NULL,
   `notes` varchar(4000) DEFAULT NULL,
@@ -3389,6 +3267,8 @@ CREATE TABLE `legacy_offence` (
   PRIMARY KEY (`id`),
   KEY `ix_legacy_offence_created_by` (`created_by`),
   KEY `ix_legacy_offence_last_modified_by` (`last_modified_by`),
+  KEY `fk_legacy_offence_cases1_idx` (`case_id`),
+  CONSTRAINT `fk_legacy_offence_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Legacy table holding offence information. Read only until can be dropped';
@@ -3892,6 +3772,7 @@ CREATE TABLE `note` (
   `irfo_gv_permit_id` int(10) unsigned DEFAULT NULL,
   `irfo_psv_auth_id` int(10) unsigned DEFAULT NULL,
   `bus_reg_id` int(10) unsigned DEFAULT NULL,
+  `transport_manager_id` int(10) unsigned NOT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
@@ -3910,6 +3791,7 @@ CREATE TABLE `note` (
   KEY `ix_note_last_modified_by` (`last_modified_by`),
   KEY `ix_note_note_type` (`note_type`),
   KEY `ix_note_bus_reg_id` (`bus_reg_id`),
+  KEY `fk_note_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_note_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_bus_reg_id_bus_reg_id` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_case_id_cases_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -3918,7 +3800,8 @@ CREATE TABLE `note` (
   CONSTRAINT `fk_note_irfo_psv_auth_id_irfo_psv_auth_id` FOREIGN KEY (`irfo_psv_auth_id`) REFERENCES `irfo_psv_auth` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_note_licence_id_licence_id` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_note_note_type_ref_data_id` FOREIGN KEY (`note_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_note_note_type_ref_data_id` FOREIGN KEY (`note_type`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_note_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Notes and their context.  Usage is to for example list all notes linked to a licence or an application.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4005,26 +3888,16 @@ DROP TABLE IF EXISTS `operating_centre_opposition`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `operating_centre_opposition` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `opposition_id` int(10) unsigned NOT NULL,
   `operating_centre_id` int(10) unsigned NOT NULL,
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
   `olbs_oc_id` int(10) unsigned DEFAULT NULL,
   `olbs_opp_id` int(10) unsigned DEFAULT NULL,
   `olbs_type` varchar(32) DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`opposition_id`,`operating_centre_id`),
   UNIQUE KEY `uk_operating_centre_opposition_olbs_oc_id_olbs_opp_id_olbs_type` (`olbs_oc_id`,`olbs_opp_id`,`olbs_type`),
   KEY `ix_operating_centre_opposition_opposition_id` (`opposition_id`),
   KEY `ix_operating_centre_opposition_operating_centre_id` (`operating_centre_id`),
-  KEY `ix_operating_centre_opposition_created_by` (`created_by`),
-  KEY `ix_operating_centre_opposition_last_modified_by` (`last_modified_by`),
   CONSTRAINT `fk_oc_opposition_oc_id_oc_id` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_operating_centre_opposition_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_operating_centre_opposition_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_operating_centre_opposition_opposition_id_opposition_id` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4150,15 +4023,14 @@ DROP TABLE IF EXISTS `opposition_grounds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `opposition_grounds` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `opposition_id` int(10) unsigned NOT NULL,
-  `grounds` varchar(32) NOT NULL,
+  `ground_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`opposition_id`,`ground_id`),
   UNIQUE KEY `uk_opposition_grounds_olbs_key` (`olbs_key`),
   KEY `ix_opposition_grounds_opposition_id` (`opposition_id`),
-  KEY `ix_opposition_grounds_grounds` (`grounds`),
-  CONSTRAINT `fk_opposition_grounds_grounds_ref_data_id` FOREIGN KEY (`grounds`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `ix_opposition_grounds_grounds` (`ground_id`),
+  CONSTRAINT `fk_opposition_grounds_grounds_ref_data_id` FOREIGN KEY (`ground_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_grounds_opposition_id_opposition_id` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4232,22 +4104,12 @@ DROP TABLE IF EXISTS `organisation_nature_of_business`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organisation_nature_of_business` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `organisation_id` int(10) unsigned NOT NULL,
   `ref_data_id` varchar(32) NOT NULL COMMENT 'Companies House SIC code in ref data',
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`organisation_id`,`ref_data_id`),
   KEY `ix_organisation_nature_of_business_ref_data_id` (`ref_data_id`),
   KEY `ix_organisation_nature_of_business_organisation_id` (`organisation_id`),
-  KEY `ix_organisation_nature_of_business_created_by` (`created_by`),
-  KEY `ix_organisation_nature_of_business_last_modified_by` (`last_modified_by`),
   CONSTRAINT `fk_org_nature_of_business_org_id_org_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_nature_of_business_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_organisation_nature_of_business_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_nature_of_business_ref_data_id_ref_data_id` FOREIGN KEY (`ref_data_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores companies house sic codes for an organisation';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4392,11 +4254,11 @@ CREATE TABLE `other_licence` (
   `will_surrender` tinyint(1) DEFAULT NULL,
   `disqualification_date` date DEFAULT NULL,
   `disqualification_length` varchar(255) DEFAULT NULL,
-  `previous_licence_type` varchar(32) NOT NULL,
+  `previous_licence_type` varchar(32) DEFAULT NULL,
   `additional_information` varchar(4000) DEFAULT NULL,
   `operating_centres` varchar(255) DEFAULT NULL,
   `total_auth_vehicles` smallint(5) unsigned DEFAULT NULL,
-  `hours_per_week` tinyint(3) unsigned DEFAULT NULL COMMENT 'If on transport manager',
+  `hours_per_week` smallint(5) unsigned DEFAULT NULL COMMENT 'If on transport manager',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
@@ -4440,11 +4302,11 @@ DROP TABLE IF EXISTS `payment`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `payment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
-  `legacy_status` tinyint(3) unsigned DEFAULT NULL COMMENT 'OLBS payment status',
-  `legacy_method` tinyint(3) unsigned DEFAULT NULL COMMENT 'OLBS payment method',
-  `legacy_choice` tinyint(3) unsigned DEFAULT NULL,
+  `legacy_status` smallint(5) unsigned DEFAULT NULL COMMENT 'OLBS payment status',
+  `legacy_method` smallint(5) unsigned DEFAULT NULL COMMENT 'OLBS payment method',
+  `legacy_choice` smallint(5) unsigned DEFAULT NULL,
   `legacy_guid` varchar(255) DEFAULT NULL COMMENT 'OLBS payment reference',
-  `payment_status` varchar(32) NOT NULL COMMENT 'Failed, Cancelled, Paid or Legacy. Legacy to allow not null.',
+  `status` varchar(32) NOT NULL COMMENT 'Failed, Cancelled, Paid or Legacy. Legacy to allow not null.',
   `completed_date` datetime DEFAULT NULL,
   `guid` varchar(255) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -4455,10 +4317,10 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`id`),
   KEY `ix_payment_created_by` (`created_by`),
   KEY `ix_payment_last_modified_by` (`last_modified_by`),
-  KEY `ix_payment_payment_status` (`payment_status`),
+  KEY `ix_payment_payment_status` (`status`),
   CONSTRAINT `fk_payment_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_payment_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_payment_status_ref_data_id` FOREIGN KEY (`payment_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_payment_payment_status_ref_data_id` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8 COMMENT='A payment attempt';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4606,7 +4468,7 @@ CREATE TABLE `pi` (
   `agreed_by_tc_role` varchar(32) DEFAULT NULL COMMENT 'e.g. Traffic Commissioner or Deputy Traffic Commissioner',
   `decided_by_tc_role` varchar(32) DEFAULT NULL COMMENT 'e.g. Traffic Commissioner or Deputy Traffic Commissioner',
   `agreed_date` date DEFAULT NULL,
-  `witnesses` tinyint(3) unsigned DEFAULT NULL COMMENT 'Witnesses for the PI decision',
+  `witnesses` smallint(5) unsigned DEFAULT NULL COMMENT 'Witnesses for the PI decision',
   `is_cancelled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'PI is cancelled',
   `pi_status` varchar(32) NOT NULL,
   `section_code_text` varchar(1024) DEFAULT NULL COMMENT 'Populated from definitions. Can be edited by user.',
@@ -4750,7 +4612,7 @@ CREATE TABLE `pi_hearing` (
   `presided_by_role` varchar(32) DEFAULT NULL,
   `pi_venue_other` varchar(255) DEFAULT NULL,
   `pi_venue_id` int(10) unsigned DEFAULT NULL COMMENT 'The venue at the time of selection is stored in pi_venue_other. If venue data changes, other still stores data at time of selection.',
-  `witnesses` tinyint(3) unsigned DEFAULT NULL,
+  `witnesses` smallint(5) unsigned DEFAULT NULL,
   `is_cancelled` tinyint(1) NOT NULL DEFAULT '0',
   `cancelled_reason` varchar(4000) DEFAULT NULL,
   `cancelled_date` date DEFAULT NULL,
@@ -4826,25 +4688,15 @@ DROP TABLE IF EXISTS `pi_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pi_type` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `pi_id` int(10) unsigned NOT NULL,
   `pi_type_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   `olbs_type` varchar(32) DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`pi_id`,`pi_type_id`),
   UNIQUE KEY `uk_pi_type_pi_id_pi_type_id` (`pi_id`,`pi_type_id`),
   KEY `ix_pi_type_pi_id` (`pi_id`),
   KEY `ix_pi_type_pi_type_id` (`pi_type_id`),
   KEY `ix_pi_type_olbs_key_olbs_type` (`olbs_key`,`olbs_type`),
-  KEY `ix_pi_type_created_by` (`created_by`),
-  KEY `ix_pi_type_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_pi_type_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pi_type_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_type_pi_id_pi_id` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_pi_type_pi_type_id_ref_data_id` FOREIGN KEY (`pi_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5331,9 +5183,9 @@ CREATE TABLE `publication` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `publication_no` smallint(5) unsigned NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
+  `document_id` int(10) unsigned DEFAULT NULL,
   `pub_status` varchar(32) NOT NULL,
   `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
-  `document_id` int(10) unsigned DEFAULT NULL,
   `pub_date` date DEFAULT NULL,
   `doc_name` varchar(255) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -5374,13 +5226,11 @@ DROP TABLE IF EXISTS `publication_link`;
 CREATE TABLE `publication_link` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `publication_id` int(10) unsigned NOT NULL,
-  `publication_no` smallint(5) unsigned NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
-  `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
+  `transport_manager_id` int(10) unsigned DEFAULT NULL,
   `licence_id` int(10) unsigned DEFAULT NULL,
   `application_id` int(10) unsigned DEFAULT NULL,
   `pi_id` int(10) unsigned DEFAULT NULL,
-  `tm_pi_hearing_id` int(10) unsigned DEFAULT NULL,
   `bus_reg_id` int(10) unsigned DEFAULT NULL,
   `text1` text,
   `text2` text,
@@ -5406,6 +5256,7 @@ CREATE TABLE `publication_link` (
   KEY `ix_publication_link_publication_section_id` (`publication_section_id`),
   KEY `ix_publication_link_created_by` (`created_by`),
   KEY `ix_publication_link_last_modified_by` (`last_modified_by`),
+  KEY `fk_publication_link_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_publication_link_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_bus_reg_id_bus_reg_id` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5414,6 +5265,7 @@ CREATE TABLE `publication_link` (
   CONSTRAINT `fk_publication_link_pi_id_pi_id` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_publication_id_publication_id` FOREIGN KEY (`publication_id`) REFERENCES `publication` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_traffic_area_id_traffic_area_id` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_link_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_lnk_publication_section_id_publication_section_id` FOREIGN KEY (`publication_section_id`) REFERENCES `publication_section` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Link between publication and its sections and licences it refers to etc..';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6225,7 +6077,6 @@ CREATE TABLE `statement` (
   `vrm` varchar(20) DEFAULT NULL,
   `stopped_date` datetime DEFAULT NULL,
   `requested_date` datetime DEFAULT NULL,
-  `authorisers_title` varchar(40) DEFAULT NULL,
   `authorisers_decision` varchar(4000) DEFAULT NULL,
   `contact_type` varchar(32) DEFAULT NULL,
   `issued_date` datetime DEFAULT NULL,
@@ -6360,6 +6211,7 @@ CREATE TABLE `sub_category_description` (
   `sub_category_id` int(10) unsigned NOT NULL,
   `description` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_sub_category_description` (`sub_category_id`,`description`),
   KEY `ix_sub_category_description_sub_category_id` (`sub_category_id`),
   CONSTRAINT `fk_sub_category_description_sub_category_id_sub_category_id` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Possible values to be used in task or document description field for the sub category.';
@@ -6724,44 +6576,6 @@ LOCK TABLES `task_alpha_split` WRITE;
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `task_search_view`
---
-
-DROP TABLE IF EXISTS `task_search_view`;
-/*!50001 DROP VIEW IF EXISTS `task_search_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `task_search_view` AS SELECT 
- 1 AS `id`,
- 1 AS `assigned_to_team_id`,
- 1 AS `application_id`,
- 1 AS `assigned_to_user_id`,
- 1 AS `category_name`,
- 1 AS `task_sub_type`,
- 1 AS `task_sub_category_id`,
- 1 AS `description`,
- 1 AS `link_display`,
- 1 AS `link_id`,
- 1 AS `link_type`,
- 1 AS `name_display`,
- 1 AS `lic_no`,
- 1 AS `lic_id`,
- 1 AS `tm_id`,
- 1 AS `irfo_op_name`,
- 1 AS `op_name`,
- 1 AS `family_name`,
- 1 AS `case_id`,
- 1 AS `bus_reg_id`,
- 1 AS `action_date`,
- 1 AS `urgent`,
- 1 AS `is_closed`,
- 1 AS `category_id`,
- 1 AS `task_sub_category_name`,
- 1 AS `user_name`,
- 1 AS `licence_count`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `team`
 --
 
@@ -6836,22 +6650,11 @@ DROP TABLE IF EXISTS `tm_application_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_application_oc` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `transport_manager_application_id` int(10) unsigned NOT NULL,
   `operating_centre_id` int(10) unsigned NOT NULL,
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` int(10) unsigned DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`transport_manager_application_id`,`operating_centre_id`),
   KEY `ix_tm_application_oc_transport_manager_application_id` (`transport_manager_application_id`),
   KEY `ix_tm_application_oc_operating_centre_id` (`operating_centre_id`),
-  KEY `ix_tm_application_oc_created_by` (`created_by`),
-  KEY `ix_tm_application_oc_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_tm_application_oc_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_application_oc_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_application_oc_operating_centre_id_operating_centre_id` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_application_oc_tm_application_id_tm_application_id` FOREIGN KEY (`transport_manager_application_id`) REFERENCES `transport_manager_application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -6884,6 +6687,7 @@ CREATE TABLE `tm_case_decision` (
   `repute_not_lost_reason` varchar(500) DEFAULT NULL,
   `unfitness_start_date` date DEFAULT NULL,
   `unfitness_end_date` date DEFAULT NULL,
+  `no_further_action_reason` varchar(4000) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
@@ -6920,11 +6724,10 @@ DROP TABLE IF EXISTS `tm_case_decision_rehab`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_case_decision_rehab` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `tm_case_decision_id` int(10) unsigned NOT NULL,
   `rehab_measure_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`tm_case_decision_id`,`rehab_measure_id`),
   UNIQUE KEY `uk_tm_case_decision_rehab_olbs_key` (`olbs_key`),
   KEY `ix_tm_case_decision_rehab_tm_case_decision_id` (`tm_case_decision_id`),
   KEY `ix_tm_case_decision_rehab_rehab_measure_id` (`rehab_measure_id`),
@@ -6950,11 +6753,10 @@ DROP TABLE IF EXISTS `tm_case_decision_unfitness`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_case_decision_unfitness` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `tm_case_decision_id` int(10) unsigned NOT NULL,
   `unfitness_reason_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`tm_case_decision_id`,`unfitness_reason_id`),
   UNIQUE KEY `uk_tm_case_decision_unfitness_olbs_key` (`olbs_key`),
   KEY `ix_tm_case_decision_unfitness_tm_case_decision_id` (`tm_case_decision_id`),
   KEY `ix_tm_case_decision_unfitness_unfitness_reason_id` (`unfitness_reason_id`),
@@ -7021,22 +6823,11 @@ DROP TABLE IF EXISTS `tm_licence_oc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tm_licence_oc` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `transport_manager_licence_id` int(10) unsigned NOT NULL,
   `operating_centre_id` int(10) unsigned NOT NULL,
-  `deleted_date` datetime DEFAULT NULL,
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` int(10) unsigned DEFAULT '1' COMMENT 'Optimistic Locking',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`transport_manager_licence_id`,`operating_centre_id`),
   KEY `ix_tm_licence_oc_transport_manager_licence_id` (`transport_manager_licence_id`),
   KEY `ix_tm_licence_oc_operating_centre_id` (`operating_centre_id`),
-  KEY `ix_tm_licence_oc_created_by` (`created_by`),
-  KEY `ix_tm_licence_oc_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_tm_licence_oc_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_licence_oc_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_licence_oc_operating_centre_id_operating_centre_id` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tm_licence_oc_tm_licence_id_tm_licence_id` FOREIGN KEY (`transport_manager_licence_id`) REFERENCES `transport_manager_licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -7364,13 +7155,13 @@ CREATE TABLE `transport_manager_application` (
   `tm_type` varchar(32) DEFAULT NULL,
   `tm_application_status` varchar(32) DEFAULT NULL,
   `action` varchar(1) DEFAULT NULL COMMENT 'A or D for Add or Delete',
-  `hours_mon` tinyint(3) unsigned DEFAULT NULL,
-  `hours_tue` tinyint(3) unsigned DEFAULT NULL,
-  `hours_wed` tinyint(3) unsigned DEFAULT NULL,
-  `hours_thu` tinyint(3) unsigned DEFAULT NULL,
-  `hours_fri` tinyint(3) unsigned DEFAULT NULL,
-  `hours_sat` tinyint(3) unsigned DEFAULT NULL,
-  `hours_sun` tinyint(3) unsigned DEFAULT NULL,
+  `hours_mon` smallint(5) unsigned DEFAULT NULL,
+  `hours_tue` smallint(5) unsigned DEFAULT NULL,
+  `hours_wed` smallint(5) unsigned DEFAULT NULL,
+  `hours_thu` smallint(5) unsigned DEFAULT NULL,
+  `hours_fri` smallint(5) unsigned DEFAULT NULL,
+  `hours_sat` smallint(5) unsigned DEFAULT NULL,
+  `hours_sun` smallint(5) unsigned DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `additional_information` varchar(4000) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -7417,13 +7208,13 @@ CREATE TABLE `transport_manager_licence` (
   `transport_manager_id` int(10) unsigned NOT NULL,
   `licence_id` int(10) unsigned NOT NULL,
   `tm_type` varchar(32) DEFAULT NULL,
-  `hours_mon` tinyint(3) unsigned DEFAULT NULL,
-  `hours_tue` tinyint(3) unsigned DEFAULT NULL,
-  `hours_wed` tinyint(3) unsigned DEFAULT NULL,
-  `hours_thu` tinyint(3) unsigned DEFAULT NULL,
-  `hours_fri` tinyint(3) unsigned DEFAULT NULL,
-  `hours_sat` tinyint(3) unsigned DEFAULT NULL,
-  `hours_sun` tinyint(3) unsigned DEFAULT NULL,
+  `hours_mon` smallint(5) unsigned DEFAULT NULL,
+  `hours_tue` smallint(5) unsigned DEFAULT NULL,
+  `hours_wed` smallint(5) unsigned DEFAULT NULL,
+  `hours_thu` smallint(5) unsigned DEFAULT NULL,
+  `hours_fri` smallint(5) unsigned DEFAULT NULL,
+  `hours_sat` smallint(5) unsigned DEFAULT NULL,
+  `hours_sun` smallint(5) unsigned DEFAULT NULL,
   `additional_information` varchar(4000) DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -7526,16 +7317,16 @@ CREATE TABLE `user` (
   `login_id` varchar(40) DEFAULT NULL,
   `account_disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Account locked by DVSA. Cannot be unlocked by non DVSA user.',
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
-  `locked_datetime` datetime DEFAULT NULL COMMENT 'To stop brute force password attack.  When number of attemps greate than X date set. User cant attempt again until date plus X number of minutes.',
-  `attempts` tinyint(3) unsigned DEFAULT NULL COMMENT 'Count of unsuccessful login attempts. Resets on successful login.',
+  `locked_date` datetime DEFAULT NULL COMMENT 'To stop brute force password attack.  When number of attemps greate than X date set. User cant attempt again until date plus X number of minutes.',
+  `attempts` smallint(5) unsigned DEFAULT NULL COMMENT 'Count of unsuccessful login attempts. Resets on successful login.',
   `last_successful_login_date` datetime DEFAULT NULL,
   `hint_question_id1` int(10) unsigned DEFAULT NULL COMMENT 'Question for user self password reset.',
   `hint_question_id2` int(10) unsigned DEFAULT NULL COMMENT 'Question for user self password reset.',
   `hint_answer_1` varchar(50) DEFAULT NULL COMMENT 'Password reset answer.',
   `hint_answer_2` varchar(50) DEFAULT NULL COMMENT 'Password reset answer.',
   `memorable_word` varchar(10) DEFAULT NULL COMMENT 'Part of non internal user login. User challenged to enter 2 letters of word.',
-  `memorable_word_digit1` tinyint(3) unsigned DEFAULT NULL COMMENT 'Letter used in last user login challenge. Used to ensure different challenge on next login.',
-  `memorable_word_digit2` tinyint(3) unsigned DEFAULT NULL COMMENT 'Letter used in last user login challenge. Used to ensure different challenge on next login.',
+  `memorable_word_digit1` smallint(5) unsigned DEFAULT NULL COMMENT 'Letter used in last user login challenge. Used to ensure different challenge on next login.',
+  `memorable_word_digit2` smallint(5) unsigned DEFAULT NULL COMMENT 'Letter used in last user login challenge. Used to ensure different challenge on next login.',
   `must_reset_password` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'On next login user must reset password.',
   `password_expiry_date` datetime DEFAULT NULL COMMENT 'Typically a year after account created.',
   `reset_password_expiry_date` datetime DEFAULT NULL COMMENT 'After password reset by admin user has x number of days to login and change password or account is locked.',
@@ -7634,7 +7425,6 @@ CREATE TABLE `vehicle` (
   `section_26_revoked` tinyint(1) NOT NULL DEFAULT '0',
   `section_26_suspend` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
-  `specified_date` datetime DEFAULT NULL,
   `psv_type` varchar(32) DEFAULT NULL COMMENT 'small, medium or large',
   `make_model` varchar(100) DEFAULT NULL COMMENT 'For small PSV vehicles the make and model are recorded.',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
@@ -7662,61 +7452,6 @@ LOCK TABLES `vehicle` WRITE;
 /*!40000 ALTER TABLE `vehicle` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehicle` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `vi_oc_vw`
---
-
-DROP TABLE IF EXISTS `vi_oc_vw`;
-/*!50001 DROP VIEW IF EXISTS `vi_oc_vw`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vi_oc_vw` AS SELECT 
- 1 AS `lic_id`,
- 1 AS `oc_id`,
- 1 AS `Col_placeholder1`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary view structure for view `vi_op_vw`
---
-
-DROP TABLE IF EXISTS `vi_op_vw`;
-/*!50001 DROP VIEW IF EXISTS `vi_op_vw`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vi_op_vw` AS SELECT 
- 1 AS `lic_id`,
- 1 AS `vi_line`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary view structure for view `vi_tnm_vw`
---
-
-DROP TABLE IF EXISTS `vi_tnm_vw`;
-/*!50001 DROP VIEW IF EXISTS `vi_tnm_vw`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vi_tnm_vw` AS SELECT 
- 1 AS `lic_id`,
- 1 AS `trading_name_id`,
- 1 AS `vi_line`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary view structure for view `vi_vhl_vw`
---
-
-DROP TABLE IF EXISTS `vi_vhl_vw`;
-/*!50001 DROP VIEW IF EXISTS `vi_vhl_vw`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vi_vhl_vw` AS SELECT 
- 1 AS `lic_id`,
- 1 AS `vhl_id`,
- 1 AS `vi_line`*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `void_disc`
@@ -7806,132 +7541,6 @@ LOCK TABLES `workshop` WRITE;
 /*!40000 ALTER TABLE `workshop` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workshop` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Final view structure for view `bus_reg_search_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `bus_reg_search_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `bus_reg_search_view` AS select `br1`.`id` AS `bus_reg_id`,ifnull(concat(`br1`.`service_no`,'(',(select group_concat(coalesce(`bus_reg_other_service`.`service_no`,'NULL'),'' separator ',') AS `other` from `bus_reg_other_service` where (`bus_reg_other_service`.`bus_reg_id` = `br1`.`id`)),')'),`br1`.`service_no`) AS `service_no`,`br1`.`reg_no` AS `reg_no`,`lic`.`id` AS `lic_id`,`lic`.`lic_no` AS `lic_no`,`rd_lic_status`.`description` AS `lic_status`,`org`.`name` AS `name`,`br1`.`start_point` AS `start_point`,`br1`.`finish_point` AS `finish_point`,(case when ((`br1`.`status` = 'breg_s_registered') and (`br1`.`end_date` <= now())) then 'Expired' else `rd_bus_status`.`description` end) AS `bus_reg_status`,`br1`.`route_no` AS `route_no`,`br1`.`variation_no` AS `variation_no` from ((((`bus_reg` `br1` join `licence` `lic` on((`lic`.`id` = `br1`.`licence_id`))) join `organisation` `org` on((`org`.`id` = `lic`.`organisation_id`))) join `ref_data` `rd_lic_status` on((`rd_lic_status`.`id` = `lic`.`status`))) join `ref_data` `rd_bus_status` on((`rd_bus_status`.`id` = `br1`.`status`))) where (`br1`.`variation_no` = coalesce((select max(`br2`.`variation_no`) from `bus_reg` `br2` where ((`br2`.`reg_no` = `br1`.`reg_no`) and (`br2`.`status` not in ('breg_s_refused','breg_s_withdrawn')) and (isnull(`br2`.`end_date`) or (`br2`.`end_date` > now())))),0)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `document_search_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `document_search_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `document_search_view` AS select `d`.`id` AS `id`,`d`.`issued_date` AS `issued_date`,`d`.`category_id` AS `category_id`,`d`.`sub_category_id` AS `document_sub_category_id`,`d`.`description` AS `description`,`cat`.`description` AS `category_name`,`dsc`.`sub_category_name` AS `document_sub_category_name`,`d`.`filename` AS `filename`,`d`.`is_scan` AS `is_scan`,`d`.`is_digital` AS `is_digital`,coalesce(`c`.`id`,`br`.`reg_no`,`l`.`lic_no`,`tm`.`id`,'Unlinked') AS `id_col`,`l`.`lic_no` AS `lic_no`,`l`.`id` AS `licence_id`,`tmp`.`family_name` AS `family_name`,`c`.`id` AS `case_id`,`br`.`id` AS `bus_reg_id`,`tm`.`id` AS `tm_id` from (((((`document` `d` join (`category` `cat` join `sub_category` `dsc`) on(((`cat`.`id` = `d`.`category_id`) and (`dsc`.`id` = `d`.`sub_category_id`)))) left join `licence` `l` on((`d`.`licence_id` = `l`.`id`))) left join ((`transport_manager` `tm` join `person` `tmp`) join `contact_details` `tmcd`) on(((`d`.`transport_manager_id` = `tm`.`id`) and (`tmp`.`id` = `tmcd`.`person_id`) and (`tmcd`.`id` = `tm`.`home_cd_id`)))) left join `cases` `c` on((`d`.`case_id` = `c`.`id`))) left join `bus_reg` `br` on((`d`.`bus_reg_id` = `br`.`id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `task_search_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `task_search_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `task_search_view` AS select `t`.`id` AS `id`,`t`.`assigned_to_team_id` AS `assigned_to_team_id`,`t`.`application_id` AS `application_id`,`t`.`assigned_to_user_id` AS `assigned_to_user_id`,`cat`.`description` AS `category_name`,`tsc`.`sub_category_name` AS `task_sub_type`,`t`.`sub_category_id` AS `task_sub_category_id`,`t`.`description` AS `description`,coalesce(`c`.`id`,`br`.`reg_no`,`l`.`lic_no`,`irfo`.`id`,`tm`.`id`,'Unlinked') AS `link_display`,coalesce(`t`.`irfo_organisation_id`,`t`.`bus_reg_id`,`t`.`application_id`,`t`.`case_id`,`t`.`licence_id`,`t`.`transport_manager_id`) AS `link_id`,(case when (`t`.`irfo_organisation_id` is not null) then 'IRFO Organisation' when (`t`.`bus_reg_id` is not null) then 'Bus Registration' when (`t`.`application_id` is not null) then 'Application' when (`t`.`case_id` is not null) then 'Case' when (`t`.`licence_id` is not null) then 'Licence' when (`t`.`transport_manager_id` is not null) then 'Transport Manager' else 'Unlinked' end) AS `link_type`,coalesce(`o`.`name`,`irfo`.`name`,`tmp`.`family_name`,concat('Case:',`c`.`id`),'Unlinked') AS `name_display`,`l`.`lic_no` AS `lic_no`,`l`.`id` AS `lic_id`,`tm`.`id` AS `tm_id`,`irfo`.`name` AS `irfo_op_name`,`o`.`name` AS `op_name`,`tmp`.`family_name` AS `family_name`,`c`.`id` AS `case_id`,`br`.`id` AS `bus_reg_id`,`t`.`action_date` AS `action_date`,`t`.`urgent` AS `urgent`,`t`.`is_closed` AS `is_closed`,`t`.`category_id` AS `category_id`,`tsc`.`sub_category_name` AS `task_sub_category_name`,concat(ifnull(`cd`.`forename`,''),' ',ifnull(`cd`.`family_name`,'')) AS `user_name`,(select count(`ll`.`id`) from `licence` `ll` where ((`ll`.`organisation_id` = `o`.`id`) and (`ll`.`status` = 'lsts_valid'))) AS `licence_count` from ((((((((`task` `t` join (`category` `cat` join `sub_category` `tsc`) on(((`cat`.`id` = `t`.`category_id`) and (`tsc`.`id` = `t`.`sub_category_id`)))) left join (`licence` `l` join `organisation` `o`) on(((`t`.`licence_id` = `l`.`id`) and (`l`.`organisation_id` = `o`.`id`)))) left join `organisation` `irfo` on((`t`.`irfo_organisation_id` = `irfo`.`id`))) left join ((`transport_manager` `tm` join `person` `tmp`) join `contact_details` `tmcd`) on(((`t`.`transport_manager_id` = `tm`.`id`) and (`tmp`.`id` = `tmcd`.`person_id`) and (`tmcd`.`id` = `tm`.`home_cd_id`)))) left join `cases` `c` on((`t`.`case_id` = `c`.`id`))) left join `bus_reg` `br` on((`t`.`bus_reg_id` = `br`.`id`))) left join `user` `u` on((`t`.`assigned_to_user_id` = `u`.`id`))) left join `contact_details` `cd` on((`u`.`contact_details_id` = `cd`.`id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vi_oc_vw`
---
-
-/*!50001 DROP VIEW IF EXISTS `vi_oc_vw`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vi_oc_vw` AS select `l`.`id` AS `lic_id`,`oc`.`id` AS `oc_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),rpad(`a`.`postcode`,8,' '),rpad(left(`a`.`saon_desc`,30),30,' '),`loc`.`vi_action`,(case when (`loc`.`vi_action` in ('A','C')) then 'C' else ' ' end),rpad(left(`a`.`saon_desc`,10),10,' '),rpad(left(`a`.`town`,20),20,' '),rpad(`oc`.`id`,7,' '),rpad(left(`a`.`paon_desc`,30),30,' '),rpad(left(`a`.`street`,30),30,' '),rpad(left(`a`.`locality`,30),30,' ')) AS `Col_placeholder1` from (((`licence_operating_centre` `loc` join `licence` `l` on((`loc`.`licence_id` = `l`.`id`))) join `operating_centre` `oc` on((`loc`.`operating_centre_id` = `oc`.`id`))) join `address` `a` on((`a`.`id` = `oc`.`address_id`))) where ((`loc`.`vi_action` in ('A','C','D')) and (`l`.`status` not in ('lsts_granted','lsts_new','lsts_withdrawn','lsts_unlicenced','lsts_ntu','lsts_refused')) and (`l`.`traffic_area_id` <> 'N') and (`loc`.`id` = (select max(`loc2`.`id`) from `licence_operating_centre` `loc2` where ((`loc2`.`licence_id` = `loc`.`licence_id`) and (`loc2`.`operating_centre_id` = `loc`.`operating_centre_id`))))) union select `l`.`id` AS `lic_id`,`oc`.`id` AS `oc_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),rpad(`a`.`postcode`,8,' '),rpad(left(`a`.`saon_desc`,30),30,' '),(case when ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) then 'D' else `aoc`.`vi_action` end),(case when ((`aoc`.`vi_action` in ('A','C')) and (`app`.`interim_end` >= curdate())) then 'C' else ' ' end),rpad(left(`a`.`saon_desc`,10),10,' '),rpad(left(`a`.`town`,20),20,' '),rpad(`oc`.`id`,7,' '),rpad(left(`a`.`paon_desc`,30),30,' '),rpad(left(`a`.`street`,30),30,' '),rpad(left(`a`.`locality`,30),30,' ')) AS `Name_exp_6` from ((((`application_operating_centre` `aoc` join `application` `app` on((`aoc`.`application_id` = `app`.`id`))) join `licence` `l` on(((`l`.`id` = `app`.`licence_id`) and (`app`.`status` <> 'apsts_valid')))) join `operating_centre` `oc` on((`aoc`.`operating_centre_id` = `oc`.`id`))) join `address` `a` on((`a`.`id` = `oc`.`address_id`))) where ((`app`.`interim_status` = 'int_sts_in_force') and (((`app`.`interim_end` >= curdate()) and (((`aoc`.`vi_action` in ('A','C')) and (`aoc`.`is_interim` = 1)) or (`aoc`.`vi_action` = 'D'))) or (((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) and isnull(`aoc`.`vi_action`) and ((to_days(`aoc`.`last_modified_on`) - to_days(curdate())) >= 1))) and (`l`.`traffic_area_id` <> 'N') and (`aoc`.`id` = (select max(`aoc2`.`id`) from `application_operating_centre` `aoc2` where ((`aoc2`.`application_id` = `aoc`.`application_id`) and (`aoc2`.`operating_centre_id` = `aoc`.`operating_centre_id`))))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vi_op_vw`
---
-
-/*!50001 DROP VIEW IF EXISTS `vi_op_vw`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vi_op_vw` AS select `l`.`id` AS `lic_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),(case when ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) then 'C' else `l`.`vi_action` end),(case `l`.`status` when 'lsts_cns' then 'CNS' when 'lsts_curtailed' then 'CUR' when 'lsts_granted' then 'GRA' when 'lsts_consideration' then 'NEW' when 'lsts_ntu' then 'NTU' when 'lsts_refused' then 'REF' when 'lsts_revoked' then 'REV' when 'lsts_surrendered' then 'SUR' when 'lsts_suspended' then 'SUS' when 'lsts_terminated' then 'TER' when 'lsts_unlicenced' then 'UNL' when 'lsts_valid' then 'VAL' when 'lsts_withdrawn' then 'WIT' end),(case when (((`l`.`vi_action` in ('A','C')) or ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(cast(now() as date))) = 1)) and (`l`.`status` not in ('lsts_revoked','lsts_surrendered','lsts_cns'))) then 'C' else ' ' end),rpad(left(`rd_lic_type`.`olbs_key`,2),2,' '),lpad((ifnull((select count(`lv`.`id`) from (`licence_vehicle` `lv` join `application` `app` on((`lv`.`interim_application_id` = `app`.`id`))) where ((`app`.`licence_id` = `l`.`id`) and (`app`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn')) and (`app`.`interim_status` = 'int_sts_in_force') and (`app`.`interim_end` >= curdate()) and (`lv`.`specified_date` is not null) and isnull(`lv`.`removal_date`))),0) + ifnull(`l`.`tot_auth_vehicles`,0)),4,'0'),lpad((select count(`lv`.`licence_id`) from `licence_vehicle` `lv` where ((`lv`.`licence_id` = `l`.`id`) and isnull(`lv`.`removal_date`) and (`lv`.`specified_date` is not null))),4,'0'),lpad((ifnull((select sum(ifnull(`app`.`interim_auth_trailers`,0)) from `application` `app` where ((`app`.`licence_id` = `l`.`id`) and (`app`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn')) and (`app`.`interim_status` = 'int_sts_in_force') and (`app`.`interim_end` >= curdate()))),0) + ifnull(`l`.`tot_auth_trailers`,0)),4,'0'),lpad(`l`.`trailers_in_possession`,4,'0'),rpad(left(replace(`a`.`postcode`,' ',''),8),8,' '),rpad(left(`op`.`name`,15),15,' '),rpad(left(`a`.`saon_desc`,30),30,' '),rpad(left(`op`.`name`,70),70,' '),(case when isnull(`l`.`in_force_date`) then '        ' else date_format(`l`.`in_force_date`,'%Y%m%d') end),(case when isnull(`l`.`review_date`) then '        ' else date_format(`l`.`review_date`,'%Y%m%d') end),rpad(left(`a`.`paon_desc`,30),30,' '),rpad(left(`a`.`street`,30),30,' '),rpad(left(`a`.`locality`,30),30,' '),rpad(left(`a`.`town`,30),30,' '),ifnull((select rpad(left(`p`.`phone_number`,30),30,' ') from `phone_contact` `p` where (`p`.`id` = (select min(`p1`.`id`) from `phone_contact` `p1` where ((`p1`.`phone_contact_type` = 'phone_t_tel') and (`p1`.`contact_details_id` = `cd`.`id`))))),rpad(' ',30,' '))) AS `vi_line` from ((((`organisation` `op` join `licence` `l` on((`op`.`id` = `l`.`organisation_id`))) join (`contact_details` `cd` join `address` `a`) on(((`l`.`correspondence_cd_id` = `cd`.`id`) and (`cd`.`address_id` = `a`.`id`)))) join `ref_data` `rd_lic_type` on((`rd_lic_type`.`id` = `l`.`licence_type`))) left join `application` `app` on(((`l`.`id` = `app`.`licence_id`) and (`app`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn'))))) where ((`l`.`status` not in ('lsts_granted','lsts_new','lsts_withdrawn','lsts_unlicenced','lsts_ntu','lsts_refused','lsts_not_submitted')) and (((`app`.`interim_status` = 'int_sts_in_force') and ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) and isnull(`l`.`vi_action`)) or (`l`.`vi_action` in ('A','C','D'))) and (`l`.`traffic_area_id` <> 'N')) union select `l`.`id` AS `lic_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),(case when ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) then 'D' else `l`.`vi_action` end),(case `l`.`status` when 'lsts_cns' then 'CNS' when 'lsts_curtailed' then 'CUR' when 'lsts_granted' then 'GRA' when 'lsts_consideration' then 'NEW' when 'lsts_ntu' then 'NTU' when 'lsts_refused' then 'REF' when 'lsts_revoked' then 'REV' when 'lsts_surrendered' then 'SUR' when 'lsts_suspended' then 'SUS' when 'lsts_terminated' then 'TER' when 'lsts_unlicenced' then 'UNL' when 'lsts_valid' then 'VAL' when 'lsts_withdrawn' then 'WIT' end),(case when ((`l`.`vi_action` in ('A','C')) and (`app`.`interim_status` = 'int_sts_in_force') and (`app`.`interim_end` >= curdate())) then 'C' else ' ' end),rpad(left(`rd_lic_type`.`olbs_key`,2),2,' '),lpad(ifnull(`app`.`interim_auth_vehicles`,0),4,'0'),lpad((select count(`lv`.`licence_id`) from `licence_vehicle` `lv` where ((`lv`.`licence_id` = `l`.`id`) and isnull(`lv`.`removal_date`) and (`lv`.`interim_application_id` is not null) and (`lv`.`specified_date` is not null))),4,'0'),lpad(ifnull(`app`.`interim_auth_trailers`,0),4,'0'),lpad(`l`.`trailers_in_possession`,4,'0'),rpad(left(replace(`a`.`postcode`,' ',''),8),8,' '),rpad(left(`op`.`name`,15),15,' '),rpad(left(`a`.`saon_desc`,30),30,' '),rpad(left(`op`.`name`,70),70,' '),(case when isnull(`l`.`in_force_date`) then '        ' else date_format(`l`.`in_force_date`,'%Y%m%d') end),(case when isnull(`l`.`review_date`) then '        ' else date_format(`l`.`review_date`,'%Y%m%d') end),rpad(left(`a`.`paon_desc`,30),30,' '),rpad(left(`a`.`street`,30),30,' '),rpad(left(`a`.`locality`,30),30,' '),rpad(left(`a`.`town`,30),30,' '),ifnull((select rpad(left(`p`.`phone_number`,30),30,' ') from `phone_contact` `p` where (`p`.`id` = (select min(`p1`.`id`) from `phone_contact` `p1` where ((`p1`.`phone_contact_type` = 'phone_t_tel') and (`p1`.`contact_details_id` = `cd`.`id`))))),rpad(' ',30,' '))) AS `Name_exp_4` from ((((`organisation` `op` join `licence` `l` on((`op`.`id` = `l`.`organisation_id`))) join (`contact_details` `cd` join `address` `a`) on(((`l`.`correspondence_cd_id` = `cd`.`id`) and (`cd`.`address_id` = `a`.`id`)))) join `ref_data` `rd_lic_type` on((`rd_lic_type`.`id` = `l`.`licence_type`))) left join `application` `app` on((`l`.`id` = `app`.`licence_id`))) where ((((`l`.`status` in ('lsts_new','lsts_granted')) and (`app`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn')) and (((`l`.`vi_action` in ('A','C','D')) and (`app`.`interim_status` = 'int_sts_in_force') and (`app`.`interim_end` >= curdate())) or ((`app`.`interim_status` = 'int_sts_in_force') and ((to_days(ifnull(`app`.`interim_end`,0)) - to_days(curdate())) = 1) and isnull(`l`.`vi_action`)))) or ((`l`.`status` in ('lsts_refused','lsts_withdrawn')) and (`l`.`vi_action` = 'D') and (`app`.`interim_status` = 'int_sts_in_force'))) and (`l`.`traffic_area_id` <> 'N')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vi_tnm_vw`
---
-
-/*!50001 DROP VIEW IF EXISTS `vi_tnm_vw`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vi_tnm_vw` AS select `l`.`id` AS `lic_id`,`tn`.`id` AS `trading_name_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),rpad(left(`tn`.`name`,60),60,' '),rpad(left(`tn`.`name`,15),15,' '),`tn`.`vi_action`,(case `tn`.`vi_action` when 'A' then 'C' else `tn`.`vi_action` end)) AS `vi_line` from (`trading_name` `tn` join `licence` `l` on((`tn`.`licence_id` = `l`.`id`))) where ((`tn`.`vi_action` in ('A','C','D')) and (`l`.`status` not in ('lsts_granted','lsts_new','lsts_withdrawn','lsts_unlicenced','lsts_ntu','lsts_refused')) and (`l`.`traffic_area_id` <> 'N') and (`tn`.`id` = (select max(`tn1`.`id`) from `trading_name` `tn1` where ((`tn1`.`name` = `tn`.`name`) and (`tn1`.`licence_id` = `tn`.`licence_id`))))) union select `l`.`id` AS `lic_id`,`tn`.`id` AS `trading_name_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),rpad(left(`tn`.`name`,60),60,' '),rpad(left(`tn`.`name`,15),15,' '),(case when ((to_days(ifnull(`a`.`interim_end`,0)) - to_days(cast(now() as date))) = 1) then 'D' else `tn`.`vi_action` end),(case (case when ((to_days(ifnull(`a`.`interim_end`,0)) - to_days(cast(now() as date))) = 1) then 'D' else `tn`.`vi_action` end) when 'A' then 'C' else (case when ((to_days(ifnull(`a`.`interim_end`,0)) - to_days(cast(now() as date))) = 1) then 'D' else `tn`.`vi_action` end) end)) AS `vi_line` from ((`trading_name` `tn` join `licence` `l` on((`tn`.`licence_id` = `l`.`id`))) left join `application` `a` on((`l`.`id` = `a`.`licence_id`))) where ((((`l`.`status` in ('lsts_new','lsts_granted')) and (`a`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn')) and (((`tn`.`vi_action` in ('A','C','D')) and (`a`.`interim_status` = 'int_sts_in_force') and (`a`.`interim_end` >= cast(now() as date))) or ((`a`.`interim_status` = 'int_sts_in_force') and ((to_days(ifnull(`a`.`interim_end`,0)) - to_days(cast(now() as date))) = 1) and isnull(`tn`.`vi_action`)))) or ((`l`.`status` in ('lsts_refused','lsts_withdrawn')) and (`l`.`vi_action` = 'D') and (`a`.`interim_status` = 'int_sts_in_force'))) and (`l`.`traffic_area_id` <> 'N') and (`tn`.`id` = (select max(`tn1`.`id`) from `trading_name` `tn1` where ((`tn1`.`name` = `tn`.`name`) and (`tn1`.`licence_id` = `tn`.`licence_id`))))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vi_vhl_vw`
---
-
-/*!50001 DROP VIEW IF EXISTS `vi_vhl_vw`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vi_vhl_vw` AS select `l`.`id` AS `lic_id`,`v`.`id` AS `vhl_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),`v`.`vrm`,`lv`.`vi_action`,(case `lv`.`vi_action` when 'A' then 'C' else `lv`.`vi_action` end),date_format(`lv`.`created_on`,'%Y%m%d'),ifnull(date_format(`lv`.`specified_date`,'%Y%m%d'),'Unsp Veh'),date_format(`lv`.`last_modified_on`,'%Y%m%d%H%i%s')) AS `vi_line` from (((`vehicle` `v` join `licence_vehicle` `lv` on((`v`.`id` = `lv`.`vehicle_id`))) join `licence` `l` on((`lv`.`licence_id` = `l`.`id`))) left join `application` `a` on((`l`.`id` = `a`.`licence_id`))) where ((`lv`.`id` = (select max(`mlv`.`id`) from `licence_vehicle` `mlv` where ((`mlv`.`vehicle_id` = `lv`.`vehicle_id`) and (`mlv`.`licence_id` = `lv`.`licence_id`)))) and (((`l`.`status` not in ('lsts_granted','lsts_new','lsts_withdrawn','lsts_ntu','lsts_refused','lsts_unlicenced')) and (`lv`.`vi_action` in ('A','C','D')) and (`l`.`traffic_area_id` <> 'N')) or ((`a`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn')) and (((`lv`.`vi_action` in ('A','C')) and (`lv`.`interim_application_id` is not null)) or (`lv`.`vi_action` = 'D')) and (`a`.`interim_status` = 'int_sts_in_force') and (`a`.`interim_end` >= cast(now() as date)) and (`l`.`status` in ('lsts_granted','lsts_new')) and (`l`.`traffic_area_id` <> 'N')))) union select `l`.`id` AS `lic_id`,`v`.`id` AS `vhl_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),`v`.`vrm`,'D','D',date_format(`lv`.`created_on`,'%Y%m%d'),ifnull(date_format(`lv`.`specified_date`,'%Y%m%d'),'Unsp Veh'),date_format(`lv`.`last_modified_on`,'%Y%m%d%H%i%s')) AS `Name_exp_6` from (((`vehicle` `v` join `licence_vehicle` `lv` on((`v`.`id` = `lv`.`vehicle_id`))) join `licence` `l` on((`lv`.`licence_id` = `l`.`id`))) left join `application` `app` on((`l`.`id` = `app`.`licence_id`))) where ((`lv`.`id` = (select max(`mlv`.`id`) from `licence_vehicle` `mlv` where ((`mlv`.`vehicle_id` = `lv`.`vehicle_id`) and (`mlv`.`licence_id` = `lv`.`licence_id`)))) and (`l`.`status` in ('lsts_refused','lsts_withdrawn')) and (`l`.`vi_action` = 'D') and (`app`.`interim_status` = 'int_sts_in_force') and (`l`.`traffic_area_id` <> 'N')) union select `l`.`id` AS `lic_id`,`v`.`id` AS `vhl_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),`v`.`vrm`,`v`.`vi_action`,(case `v`.`vi_action` when 'A' then 'C' else `v`.`vi_action` end),date_format(`lv`.`created_on`,'%Y%m%d'),ifnull(date_format(`lv`.`specified_date`,'%Y%m%d'),'Unsp Veh'),date_format(`v`.`last_modified_on`,'%Y%m%d%H%i%s')) AS `Name_exp_9` from ((`vehicle` `v` join `licence_vehicle` `lv` on((`v`.`id` = `lv`.`vehicle_id`))) join `licence` `l` on((`lv`.`licence_id` = `l`.`id`))) where ((`lv`.`id` = (select max(`mlv`.`id`) from `licence_vehicle` `mlv` where ((`mlv`.`vehicle_id` = `lv`.`vehicle_id`) and (`mlv`.`licence_id` = `lv`.`licence_id`)))) and (`l`.`status` not in ('lsts_granted','lsts_new','lsts_withdrawn','lsts_ntu','lsts_refused','lsts_unlicenced')) and (`v`.`vi_action` in ('A','C')) and (ifnull(`lv`.`vi_action`,'') <> 'D') and (`v`.`last_modified_on` <> `lv`.`last_modified_on`) and isnull(`lv`.`removal_date`) and (`l`.`traffic_area_id` <> 'N')) union select `l`.`id` AS `lic_id`,`v`.`id` AS `vhl_id`,concat(`l`.`lic_no`,lpad(`l`.`id`,8,'0'),`v`.`vrm`,`v`.`vi_action`,(case `v`.`vi_action` when 'A' then 'C' else `v`.`vi_action` end),date_format(`lv`.`created_on`,'%Y%m%d'),ifnull(date_format(`lv`.`specified_date`,'%Y%m%d'),'Unsp Veh'),date_format(`v`.`last_modified_on`,'%Y%m%d%H%i%s')) AS `vi_line` from (((`vehicle` `v` join `licence_vehicle` `lv` on((`v`.`id` = `lv`.`vehicle_id`))) join `licence` `l` on((`lv`.`licence_id` = `l`.`id`))) left join `application` `app` on(((`l`.`id` = `app`.`licence_id`) and (`app`.`status` not in ('apsts_valid','apsts_refused','apsts_withdrawn'))))) where ((`lv`.`id` = (select max(`mlv`.`id`) from `licence_vehicle` `mlv` where ((`mlv`.`vehicle_id` = `lv`.`vehicle_id`) and (`mlv`.`licence_id` = `lv`.`licence_id`)))) and (`l`.`status` in ('lsts_granted','lsts_new')) and (`app`.`interim_status` = 'int_sts_in_force') and (`app`.`interim_end` >= cast(now() as date)) and (`v`.`vi_action` in ('A','C')) and (ifnull(`lv`.`vi_action`,'') <> 'D') and (`v`.`last_modified_on` <> `lv`.`last_modified_on`) and isnull(`lv`.`removal_date`) and (`lv`.`interim_application_id` is not null) and (`l`.`traffic_area_id` <> 'N')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

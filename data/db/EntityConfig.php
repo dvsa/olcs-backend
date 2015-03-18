@@ -5,8 +5,15 @@ return array(
     'mappingConfig' => array(
         // Entity namespace
         'Olcs\Db\Entity\Organisation' => [
-            // Old association name => New association name
-            'refData' => 'natureOfBusinesse'
+            'fields' => [
+                // Old association name => New association name
+                'refData' => 'natureOfBusinesse'
+            ]
+        ],
+        'Olcs\Db\Entity\RefData' => [
+            'metadata' => [
+                'skipManyToMany' => true
+            ]
         ]
     ),
     'organisation' => array(
@@ -818,17 +825,6 @@ return array(
             )
         )
     ),
-    'previous_licence' => array(
-        'application_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Application',
-                'property' => 'previousLicence'
-            )
-        ),
-        'will_surrender' => array(
-            'type' => 'yesnonull'
-        )
-    ),
     'organisation_user' => array(
         'user_id' => array(
             'inversedBy' => array(
@@ -1327,6 +1323,15 @@ return array(
         )
     ),
     'other_licence' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'otherLicence'
+            )
+        ),
+        'will_surrender' => array(
+            'type' => 'yesnonull'
+        ),
         'transport_manager_licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManagerLicence',

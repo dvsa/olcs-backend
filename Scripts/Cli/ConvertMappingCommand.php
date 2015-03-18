@@ -10,10 +10,9 @@ namespace Cli;
 use Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand as DoctrineConvertMappingCommand;
 use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\EntityGenerator;
-use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
-use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 
 /**
  * ConvertMappingCommand
@@ -43,7 +42,7 @@ class ConvertMappingCommand extends DoctrineConvertMappingCommand
 
         if ($input->getOption('from-database') === true) {
             $databaseDriver = new DatabaseDriver(
-                $em->getConnection()->getSchemaManager()
+                $em->getConnection()->getSchemaManager(), $this->mappingConfig
             );
 
             $em->getConfiguration()->setMetadataDriverImpl(
@@ -57,6 +56,7 @@ class ConvertMappingCommand extends DoctrineConvertMappingCommand
 
         $cmf = new DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($em);
+
         $metadata = $cmf->getAllMetadata();
         $metadata = MetadataFilter::filter($metadata, $input->getOption('filter'));
 
@@ -115,10 +115,11 @@ class ConvertMappingCommand extends DoctrineConvertMappingCommand
     protected function configureMetadata($metadata)
     {
         foreach ($metadata as $object) {
+
             $name = $object->getName();
 
-            if (isset($this->mappingConfig[$name])) {
-                foreach ($this->mappingConfig[$name] as $old => $new) {
+            if (isset($this->mappingConfig[$name]['fields'])) {
+                foreach ($this->mappingConfig[$name]['fields'] as $old => $new) {
                     $object->associationMappings[$old]['fieldName'] = $new;
                 }
             }

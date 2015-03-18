@@ -17,9 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="community_lic_suspension_reason",
  *    indexes={
  *        @ORM\Index(name="ix_community_lic_suspension_reason_community_lic_suspension_id", columns={"community_lic_suspension_id"}),
- *        @ORM\Index(name="fk_community_lic_suspension_reason_community_lic_suspension_idx1", columns={"type_id"}),
  *        @ORM\Index(name="ix_community_lic_suspension_reason_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_community_lic_suspension_reason_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_community_lic_suspension_reason_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_community_lic_suspension_reason_type_id", columns={"type_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_community_lic_suspension_reason_olbs_key", columns={"olbs_key"})
