@@ -7497,7 +7497,6 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email_address` varchar(45) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL COMMENT 'If user is also a transport manager.',
   `login_id` varchar(40) DEFAULT NULL,
