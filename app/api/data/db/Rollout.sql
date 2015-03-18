@@ -6936,10 +6936,17 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (4, 'internal-notes', 'NOTES'),
     (5, 'internal-edit', 'EDIT'),
     (6, 'internal-view', 'VIEW'),
-    (7, 'selfserve-view', 'SVIEW'),
-    (8, 'selfserve-ebsr', 'SEBSR');
+    (7, 'internal-user', 'IUSER'), -- used to distinguish between Internal and Selfserve users
+    (8, 'selfserve-user', 'SUSER'), -- used to distinguish between Internal and Selfserve users
+    (9, 'selfserve-ebsr', 'SEBSR'),
+    (10, 'selfserve-ebsr-documents', 'SEDOC');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
+    (1, 7), -- all internal roles are internal users
+    (2, 7), -- all internal roles are internal users
+    (3, 7), -- all internal roles are internal users
+    (4, 7), -- all internal roles are internal users
+    (5, 7), -- all internal roles are internal users
     (1, 6), -- all internal roles have internal view
     (2, 6), -- all internal roles have internal view
     (3, 6), -- all internal roles have internal view
@@ -6957,15 +6964,23 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (4, 4), -- internal admin sees notes
     (4, 5), -- internal admin can edit
     (4, 1), -- internal admin is admin,
-    (5,7), -- all selfserve roles can view selfserve
-    (6,7), -- all selfserve roles can view selfserve
-    (7,7), -- all selfserve roles can view selfserve
-    (8,7), -- all selfserve roles can view selfserve
-    (9,7), -- all selfserve roles can view selfserve
-    (10,7), -- all selfserve roles can view selfserve
-    (11,7), -- all selfserve roles can view selfserve
-    (12,7), -- all selfserve roles can view selfserve
-    (8, 8); -- selfserve EBSR sees ebsr
+    (5, 8), -- all selfserve roles are selfserve users
+    (6, 8), -- all selfserve roles are selfserve users
+    (7, 8), -- all selfserve roles are selfserve users
+    (8, 8), -- all selfserve roles are selfserve users
+    (9, 8), -- all selfserve roles are selfserve users
+    (10, 8), -- all selfserve roles are selfserve users
+    (11, 8), -- all selfserve roles are selfserve users
+    (12, 8), -- all selfserve roles are selfserve users
+    (8, 9), -- selfserve EBSR sees ebsr
+    (5, 9), -- operator admin sees ebsr
+    (6, 9), -- operator user sees ebsr
+    (11, 9), -- LA admin sees ebsr
+    (12, 9), -- LA user sees ebsr
+    (5, 10), -- operator admin sees ebsr docs
+    (6, 10), -- operator user sees ebsr docs
+    (11, 10), -- LA admin sees ebsr docs
+    (12, 10); -- LA user sees ebsr docs
 
 INSERT INTO `financial_standing_rate` (
     `id`,
