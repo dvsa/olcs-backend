@@ -1546,34 +1546,179 @@ VALUES
 
 -- Start: Event History Test Data
 
-INSERT INTO `event_history_type` (`id`, `description`, `event_type`)
-VALUES
-	(1, 'Type 1', 'ABC');
+INSERT INTO `event_history_type` (`id`,`event_code`,`description`) VALUES
+('1','2ND','Reminder Printed')
+,('2','ACN','Application Acknowledged')
+,('3','ACV','Variation Acknowledged')
+,('4','AOC','Amend OC Authorisation')
+,('5','AWD','Application Withdrawn')
+,('6','COM','Not Used')
+,('7','CUR','Licence Curtailed')
+,('8','CVE','Maintenance Checklist')
+,('9','DIP','Not Used')
+,('10','DUP','Duplicate Document Requested')
+,('11','FEE','Not Used')
+,('12','GRA','Application Granted')
+,('13','INT','Interim Granted')
+,('14','IRF','Interim Refused')
+,('15','NEW','New Application')
+,('16','NTU','Not Taken Up')
+,('17','OBJ','Objection Created')
+,('18','PIR','Not Used')
+,('19','PRM','Checklist Printed')
+,('20','PRT','Document Printed')
+,('21','PVI','Not Used')
+,('22','RAM','Licence Amended')
+,('23','REF','Application Refused')
+,('24','REG','Register Application')
+,('25','REV','Licence Revoked')
+,('26','RPT','Not Used')
+,('27','RTU','Not Taken Up Revived')
+,('28','RVI','VI Inspection Requested')
+,('29','SSD','Not Used')
+,('30','SUR','Licence Surrendered')
+,('31','SUS','Licence Suspended')
+,('32','TEX','Time Expired Set')
+,('33','TMC','Transport Manager Amended')
+,('34','TRA','Not Used')
+,('35','UNG','Application Ungranted')
+,('36','USR','Licence Unsurrendered')
+,('37','VAR','Variation Application')
+,('38','VCH','Vehicle Changed')
+,('39','VH+','Vehicle Added')
+,('40','VH-','Vehicle Removed')
+,('41','EML','Documents Emailed')
+,('42','CCA','Change Correspondence Address')
+,('43','ADI','Add Director')
+,('44','RDI','Remove Director')
+,('45','ASU','Add Subsidiary')
+,('46','RSU','Remove Subsidiary')
+,('47','APA','Add Partner')
+,('48','RPA','Remove Partner')
+,('49','ATM','Add Transport Manager')
+,('50','RTM','Remove Transport Manager')
+,('51','NOC','Add Operating Centre')
+,('52','ROC','Remove Operating Centre')
+,('53','IAU','OC Authorisation Increased')
+,('54','DAU','OC Authorisation Decreased')
+,('55','S4R','Schedule 4 Refused')
+,('56','CNS','Continuation Not Sought')
+,('57','OCN','Operator Company Name')
+,('58','OTN','Operator Trading Name Added')
+,('59','OAC','Operator Address Change')
+,('60','CRN','Company Reg Number')
+,('61','OCI','Certificate seen changed')
+,('62','OOA','Org Office Address')
+,('63','TA+','Trailer Authorisation Increased')
+,('64','TA-','Trailer Authorisation Decreased')
+,('65','VIA','Area Office Changed')
+,('66','MSI','Maintenance Safety Inspecition Changed')
+,('67','MSC','Contract Satisfactory')
+,('68','FIN','Finance Details Changed')
+,('69','CON','Condition Added')
+,('70','UND','Undertaking Added')
+,('71','INR','Revoke Interim')
+,('72','VA+','Vehicle Authorisation Increased')
+,('73','VA-','Vehicle Authorisation Decreased')
+,('74','USU','Update Subsidiary')
+,('75','RES','Reset to Valid')
+,('76','REP','Representation Created')
+,('77','OTR','Operator Trading Name Removed')
+,('78','UDI','Update Director')
+,('79','UPA','Update Partner')
+,('80','UOB','Update Objection')
+,('81','URE','Update Representation')
+,('82','CTA','Change Transport Consultant Address')
+,('83','CTM','Create Transport Manager')
+,('84','MTM','Modify Transport Manager')
+,('85','DTM','Delete Transport Manager')
+,('86','CTQ','Create Qualification')
+,('87','MTQ','Modify Qualification')
+,('88','DTQ','Delete Qualification')
+,('89','ATA','Add Transport Manager Application')
+,('90','DTA','Delete Transport Manager Application')
+,('91','ATL','Add Transport Manager Licence')
+,('92','DTL','Delete Transport Manager Licence')
+,('93','TMS','Source Of Transport Manager Merge')
+,('94','TMD','Destination Of Transport Manager Merge')
+,('95','DNM','Delete Non-PI Compliance Meeting')
+,('96','CEP','Create Compliance Episode')
+,('97','MCE','Modify Compliance Episode')
+,('98','DCE','Delete Compliance Episode')
+,('99','CLE','Close Compliance Episode')
+,('100','RCE','Re-Open Compliance Episode')
+,('101','CEN','Create Episode Note')
+,('102','MEN','Modify Episode Note')
+,('103','DEN','Delete Episode Note')
+,('104','CED','Create Episode Document')
+,('105','MED','Modify Episode Document')
+,('106','DED','Delete Episode Document')
+,('107','CER','Create Episode Recommendation')
+,('108','MER','Modify Episode Recommendation')
+,('109','DER','Delete Episode Recommendation')
+,('110','CNP','Create Episode Non PublicInquiry')
+,('111','MNP','Modify Episode Non PublicInquiry')
+,('112','DNP','Delete Episode Non PublicInquiry')
+,('113','CPI','Create Episode Public Inquiry')
+,('114','MPI','Modify Episode Public Inquiry')
+,('115','DPI','Delete Episode Public Inquiry')
+,('116','CDE','Create Episode Decision')
+,('117','MDE','Modify Episode Decision')
+,('118','DDE','Delete Episode Decision')
+,('119','CSE','Create Episode Serious Infringement')
+,('120','MSE','Modify Episode Serious Infringement')
+,('121','DSE','Delete Episode Serious Infringement')
+,('122','CES','Create Episode Stay')
+,('123','MES','Modify Episode Stay')
+,('124','DES','Delete Episode Stay')
+,('125','CEA','Create Episode Appeal')
+,('126','MEA','Modify Episode Appeal')
+,('127','DEA','Delete Episode Appeal')
+,('128','DFT','Declare Fit')
+,('129','DUF','Declare Unfit')
+,('130','STC','Set To Current')
+,('131','MTT','Modify Transport Manager Type')
+,('132','MTC','Modify Transport Manager Case Notes')
+,('133','MTA','Modify Transport Manager Address')
+,('134','MTE','Modify Transport Manager Email')
+,('135','CHR','Checklist Received')
+,('136','CHN','Checklist Not Received')
+,('137','RCN','Remove Casenote')
+,('138','ACE','Add Casenote')
+,('139','SFI','Sole Trader First Name Changed')
+,('140','SFA','Sole Trader Family Name Changed')
+,('141','SDB','Sole Trader Date of BirthChanged')
+,('142','DFI','Director First Name Changed')
+,('143','DFA','Director Family Name Changed')
+,('144','DDB','Director Date of Birth Changed')
+,('145','PFI','Partner First Name Changed')
+,('146','PFA','Partner Family Name Changed')
+,('147','PDB','Partner Date of Birth Changed');
 
 INSERT INTO `event_history` (`id`, `event_history_type_id`, `licence_vehicle_id`, `team_id`, `application_id`, `licence_id`, `transport_manager_id`, `user_id`, `entity_data`, `entity_pk`, `entity_type`, `entity_version`, `event_datetime`, `event_description`, `operation`)
 VALUES
-	(8, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1', 'O'),
-	(9, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2', 'O'),
-	(10, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3', 'O'),
-	(11, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4', 'O'),
-	(12, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5', 'O'),
-	(13, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6', 'O'),
-	(14, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7', 'O'),
-	(15, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8', 'O'),
-	(16, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9', 'O'),
-	(17, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10', 'O'),
-	(18, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11', 'O'),
-	(19, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12', 'O'),
-	(20, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13', 'O'),
-	(21, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14', 'O'),
-	(22, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15', 'O'),
-	(23, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16', 'O'),
-	(24, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17', 'O'),
-	(25, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18', 'O'),
-	(26, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19', 'O'),
-	(27, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20', 'O'),
-	(28, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21', 'O'),
-	(29, 1, NULL, NULL, NULL, 7, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22', 'O');
+	(8, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1', 'O'),
+	(9, 1, NULL, NULL, NULL, 30, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2', 'O'),
+	(10, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3', 'O'),
+	(11, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4', 'O'),
+	(12, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5', 'O'),
+	(13, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6', 'O'),
+	(14, 1, NULL, NULL, NULL, 30, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7', 'O'),
+	(15, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8', 'O'),
+	(16, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9', 'O'),
+	(17, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10', 'O'),
+	(18, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11', 'O'),
+	(19, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12', 'O'),
+	(20, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13', 'O'),
+	(21, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14', 'O'),
+	(22, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15', 'O'),
+	(23, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16', 'O'),
+	(24, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17', 'O'),
+	(25, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18', 'O'),
+	(26, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19', 'O'),
+	(27, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20', 'O'),
+	(28, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21', 'O'),
+	(29, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22', 'O');
 
 
 -- End: Event History Test Data
