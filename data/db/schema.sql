@@ -2367,6 +2367,7 @@ CREATE TABLE `event_history` (
   `licence_vehicle_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
+  `bus_reg_id` int(11) DEFAULT NULL,
   `event_datetime` datetime NOT NULL,
   `event_description` varchar(255) DEFAULT NULL,
   `entity_type` varchar(45) DEFAULT NULL,
@@ -2381,6 +2382,7 @@ CREATE TABLE `event_history` (
   KEY `fk_event_history_application1_idx` (`application_id`),
   KEY `fk_event_history_licence_vehicle1_idx` (`licence_vehicle_id`),
   KEY `fk_event_history_team1_idx` (`team_id`),
+  KEY `fk_event_history_bus_reg1_idx` (`team_id`),
   KEY `fk_event_history_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_event_history_event_history_type1` FOREIGN KEY (`event_history_type_id`) REFERENCES `event_history_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2388,6 +2390,7 @@ CREATE TABLE `event_history` (
   CONSTRAINT `fk_event_history_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_licence_vehicle1` FOREIGN KEY (`licence_vehicle_id`) REFERENCES `licence_vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_history_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
