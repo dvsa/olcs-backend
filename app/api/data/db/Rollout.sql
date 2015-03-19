@@ -6962,7 +6962,7 @@ INSERT INTO `financial_standing_rate` (
     (3, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 2100.00, 700.00),
     (4, 'ltyp_sn', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
     (5, 'ltyp_si', 'lcat_psv', null, '2015-02-01', 1, 7000.00, 3900.00),
-    (6, 'ltyp_r', 'lcat_gv', null, '2015-02-01', 1, 3100.00, 1700.00);
+    (6, 'ltyp_r', 'lcat_psv', null, '2015-02-01', 1, 3100.00, 1700.00);
 
 INSERT INTO `publication_section` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
