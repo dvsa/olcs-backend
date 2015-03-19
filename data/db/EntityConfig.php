@@ -1420,7 +1420,7 @@ return array(
             )
         ),
     ),
-    'company_subsidiary_licence' => array(
+    'company_subsidiary' => array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
