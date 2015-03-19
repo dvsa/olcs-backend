@@ -14,11 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application_tracking",
  *    indexes={
- *        @ORM\Index(name="ix_application_tracking_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_application_tracking_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_application_tracking_application1_idx", columns={"application_id"}),
+ *        @ORM\Index(name="fk_application_tracking_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_tracking_user2_idx", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_application_tracking_application_id", columns={"application_id"})
+ *        @ORM\UniqueConstraint(name="application_id_UNIQUE", columns={"application_id"})
  *    }
  * )
  */
@@ -29,8 +30,7 @@ class ApplicationTracking implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CustomLastModifiedOnField,
-        Traits\CustomVersionField;
+        Traits\CustomLastModifiedOnField;
 
     /**
      * Addresses status
@@ -221,6 +221,15 @@ class ApplicationTracking implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="vehicles_status", nullable=true)
      */
     protected $vehiclesStatus;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="version", nullable=false)
+     */
+    protected $version;
 
     /**
      * Set the addresses status
@@ -703,5 +712,28 @@ class ApplicationTracking implements Interfaces\EntityInterface
     public function getVehiclesStatus()
     {
         return $this->vehiclesStatus;
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return ApplicationTracking
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 }

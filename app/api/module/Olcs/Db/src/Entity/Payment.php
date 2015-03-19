@@ -16,7 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="ix_payment_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_payment_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_payment_status", columns={"status"})
+ *        @ORM\Index(name="ix_payment_payment_status", columns={"status"})
  *    }
  * )
  */
