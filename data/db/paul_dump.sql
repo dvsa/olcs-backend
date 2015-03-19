@@ -183,7 +183,7 @@ CREATE TABLE `application` (
   `insolvency_details` varchar(4000) DEFAULT NULL COMMENT 'Details of previous bankrupcy, insolvency, administration, receivership of people linked to application',
   `safety_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read safety information in application and will comply',
   `declaration_confirmation` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User confirms they have read undertakings and declarations and will comply',
-  `financial_evidence_upladed` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
+  `financial_evidence_uploaded` tinyint(1) DEFAULT NULL COMMENT 'User specifies whether they have uploaded financial evidence or will send by post',
   `received_date` datetime DEFAULT NULL COMMENT 'Submitted date.  Was date_entered in OLBS',
   `target_completion_date` datetime DEFAULT NULL COMMENT 'SLA for application to be processed.',
   `granted_date` datetime DEFAULT NULL COMMENT 'Date application granted.',
@@ -262,26 +262,26 @@ DROP TABLE IF EXISTS `application_completion`;
 CREATE TABLE `application_completion` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `application_id` int(10) unsigned NOT NULL,
-  `type_of_licence_status` tinyint(3) unsigned DEFAULT NULL,
-  `business_type_status` tinyint(3) unsigned DEFAULT NULL,
-  `business_details_status` tinyint(3) unsigned DEFAULT NULL,
-  `addresses_status` tinyint(3) unsigned DEFAULT NULL,
-  `people_status` tinyint(3) unsigned DEFAULT NULL,
-  `taxi_phv_status` tinyint(3) unsigned DEFAULT NULL,
-  `operating_centres_status` tinyint(3) unsigned DEFAULT NULL,
-  `financial_evidence_status` tinyint(3) unsigned DEFAULT NULL,
-  `transport_managers_status` tinyint(3) unsigned DEFAULT NULL,
-  `vehicles_status` tinyint(3) unsigned DEFAULT NULL,
-  `vehicles_psv_status` tinyint(3) unsigned DEFAULT NULL,
-  `vehicles_declarations_status` tinyint(3) unsigned DEFAULT NULL,
-  `discs_status` tinyint(3) unsigned DEFAULT NULL,
-  `community_licences_status` tinyint(3) unsigned DEFAULT NULL,
-  `safety_status` tinyint(3) unsigned DEFAULT NULL,
-  `conditions_undertakings_status` tinyint(3) unsigned DEFAULT NULL,
-  `financial_history_status` tinyint(3) unsigned DEFAULT NULL,
-  `licence_history_status` tinyint(3) unsigned DEFAULT NULL,
-  `convictions_penalties_status` tinyint(3) unsigned DEFAULT NULL,
-  `undertakings_status` tinyint(3) unsigned DEFAULT NULL,
+  `type_of_licence_status` smallint(5) unsigned DEFAULT NULL,
+  `business_type_status` smallint(5) unsigned DEFAULT NULL,
+  `business_details_status` smallint(5) unsigned DEFAULT NULL,
+  `addresses_status` smallint(5) unsigned DEFAULT NULL,
+  `people_status` smallint(5) unsigned DEFAULT NULL,
+  `taxi_phv_status` smallint(5) unsigned DEFAULT NULL,
+  `operating_centres_status` smallint(5) unsigned DEFAULT NULL,
+  `financial_evidence_status` smallint(5) unsigned DEFAULT NULL,
+  `transport_managers_status` smallint(5) unsigned DEFAULT NULL,
+  `vehicles_status` smallint(5) unsigned DEFAULT NULL,
+  `vehicles_psv_status` smallint(5) unsigned DEFAULT NULL,
+  `vehicles_declarations_status` smallint(5) unsigned DEFAULT NULL,
+  `discs_status` smallint(5) unsigned DEFAULT NULL,
+  `community_licences_status` smallint(5) unsigned DEFAULT NULL,
+  `safety_status` smallint(5) unsigned DEFAULT NULL,
+  `conditions_undertakings_status` smallint(5) unsigned DEFAULT NULL,
+  `financial_history_status` smallint(5) unsigned DEFAULT NULL,
+  `licence_history_status` smallint(5) unsigned DEFAULT NULL,
+  `convictions_penalties_status` smallint(5) unsigned DEFAULT NULL,
+  `undertakings_status` smallint(5) unsigned DEFAULT NULL,
   `last_section` varchar(255) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -415,7 +415,7 @@ DROP TABLE IF EXISTS `application_tracking`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `application_tracking` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `application_id` int(10) unsigned NOT NULL,
   `type_of_licence_status` int(11) DEFAULT NULL,
   `business_type_status` int(11) DEFAULT NULL,
@@ -746,7 +746,6 @@ CREATE TABLE `bus_reg_variation_reason` (
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   `olbs_type` int(10) unsigned DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
   PRIMARY KEY (`bus_reg_id`,`variation_reason_id`),
-  UNIQUE KEY `uk_bus_reg_variation_reason_bus_reg_id_variation_reason_id` (`bus_reg_id`,`variation_reason_id`),
   KEY `ix_bus_reg_variation_reason_bus_reg_id` (`bus_reg_id`),
   KEY `ix_bus_reg_variation_reason_variation_reason_id` (`variation_reason_id`),
   KEY `ix_bus_reg_variation_reason_olbs_key_olbs_type` (`olbs_key`,`olbs_type`),
@@ -1283,7 +1282,7 @@ CREATE TABLE `company_subsidiary` (
   `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_company_subsidiary_olbs_key` (`olbs_key`),
+  UNIQUE KEY `uk_company_subsidiary_olbs_key` (`olbs_key`,`licence_id`),
   KEY `ix_company_subsidiary_created_by` (`created_by`),
   KEY `ix_company_subsidiary_last_modified_by` (`last_modified_by`),
   KEY `fk_company_subsidiary_licence1_idx` (`licence_id`),
@@ -2152,7 +2151,7 @@ DROP TABLE IF EXISTS `event_history`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
-  `event_history_type_id` varchar(3) NOT NULL,
+  `event_history_type_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
   `licence_id` int(10) unsigned DEFAULT NULL,
   `application_id` int(10) unsigned DEFAULT NULL,
@@ -2161,7 +2160,6 @@ CREATE TABLE `event_history` (
   `case_id` int(10) unsigned DEFAULT NULL,
   `bus_reg_id` int(10) unsigned DEFAULT NULL,
   `event_datetime` datetime NOT NULL,
-  `event_description` varchar(255) DEFAULT NULL,
   `entity_type` varchar(45) DEFAULT NULL,
   `entity_pk` int(10) unsigned DEFAULT NULL,
   `entity_version` int(10) unsigned DEFAULT NULL,
@@ -2203,7 +2201,8 @@ DROP TABLE IF EXISTS `event_history_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_history_type` (
-  `id` varchar(3) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `event_code` varchar(3) NOT NULL,
   `description` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Description of events. Such as vehicle added. Licence revoked.';
@@ -3772,7 +3771,7 @@ CREATE TABLE `note` (
   `irfo_gv_permit_id` int(10) unsigned DEFAULT NULL,
   `irfo_psv_auth_id` int(10) unsigned DEFAULT NULL,
   `bus_reg_id` int(10) unsigned DEFAULT NULL,
-  `transport_manager_id` int(10) unsigned NOT NULL,
+  `transport_manager_id` int(10) unsigned DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
@@ -4177,6 +4176,7 @@ CREATE TABLE `organisation_type` (
   `org_type_id` varchar(32) NOT NULL COMMENT 'LTD, Partnership etc.',
   `org_person_type_id` varchar(32) NOT NULL COMMENT 'Type if officers in org. Partners, directors etc.',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_org_person` (`org_type_id`,`org_person_type_id`),
   KEY `ix_organisation_type_org_type_id` (`org_type_id`),
   KEY `ix_organisation_type_org_person_type_id` (`org_person_type_id`),
   CONSTRAINT `fk_organisation_type_org_person_type_id_ref_data_id` FOREIGN KEY (`org_person_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -4691,7 +4691,7 @@ CREATE TABLE `pi_type` (
   `pi_id` int(10) unsigned NOT NULL,
   `pi_type_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  `olbs_type` varchar(32) DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
+  `olbs_type` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`pi_id`,`pi_type_id`),
   UNIQUE KEY `uk_pi_type_pi_id_pi_type_id` (`pi_id`,`pi_type_id`),
   KEY `ix_pi_type_pi_id` (`pi_id`),
@@ -5184,6 +5184,7 @@ CREATE TABLE `publication` (
   `publication_no` smallint(5) unsigned NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
   `document_id` int(10) unsigned DEFAULT NULL,
+  `doc_template_id` int(10) unsigned DEFAULT NULL,
   `pub_status` varchar(32) NOT NULL,
   `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
   `pub_date` date DEFAULT NULL,
@@ -5199,7 +5200,9 @@ CREATE TABLE `publication` (
   KEY `ix_publication_created_by` (`created_by`),
   KEY `ix_publication_last_modified_by` (`last_modified_by`),
   KEY `fk_publication_document1_idx` (`document_id`),
+  KEY `fk_publication_doc_template1_idx` (`doc_template_id`),
   CONSTRAINT `fk_publication_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_doc_template1` FOREIGN KEY (`doc_template_id`) REFERENCES `doc_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_document1` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_pub_status_ref_data_id` FOREIGN KEY (`pub_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -6482,6 +6485,7 @@ CREATE TABLE `task` (
   KEY `ix_task_category_id` (`category_id`),
   KEY `ix_task_case_id` (`case_id`),
   KEY `ix_task_sub_category_id` (`sub_category_id`),
+  KEY `ix_task_etl` (`description`,`category_id`,`sub_category_id`),
   CONSTRAINT `fk_task_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_assigned_by_user_id_user_id` FOREIGN KEY (`assigned_by_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_assigned_to_team_id_team_id` FOREIGN KEY (`assigned_to_team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7312,7 +7316,6 @@ CREATE TABLE `user` (
   `local_authority_id` int(10) unsigned DEFAULT NULL COMMENT 'If user is a member of a local authority a link to the LA details.',
   `contact_details_id` int(10) unsigned DEFAULT NULL,
   `partner_contact_details_id` int(10) unsigned DEFAULT NULL COMMENT 'If user is part of a partner, such as HMRC a link to the partners details.',
-  `email_address` varchar(45) DEFAULT NULL,
   `pid` varchar(255) DEFAULT NULL,
   `login_id` varchar(40) DEFAULT NULL,
   `account_disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Account locked by DVSA. Cannot be unlocked by non DVSA user.',
@@ -7541,7 +7544,10 @@ LOCK TABLES `workshop` WRITE;
 /*!40000 ALTER TABLE `workshop` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workshop` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Final view structure for view `bus_reg_search_view`
+--
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -7551,4 +7557,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-12  9:35:10
+-- Dump completed on 2015-03-19 12:53:18

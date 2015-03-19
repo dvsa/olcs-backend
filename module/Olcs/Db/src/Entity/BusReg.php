@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
  *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
- *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"}),
+ *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"}),
  *        @ORM\Index(name="fk_bus_reg_operating_centre1", columns={"operating_centre_id"})
  *    },
  *    uniqueConstraints={

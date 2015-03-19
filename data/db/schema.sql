@@ -388,12 +388,12 @@ CREATE TABLE `application_organisation_person` (
   KEY `ix_application_organisation_person_application_id` (`application_id`),
   KEY `ix_application_organisation_person_last_modified_by` (`last_modified_by`),
   KEY `ix_application_organisation_person_created_by` (`created_by`),
-  KEY `ix_application_organisation_person_original_person_id` (`original_person_id`),  
+  KEY `fk_application_organisation_person_person1_idx` (`original_person_id`),
   CONSTRAINT `fk_application_org_person_org_id_org_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_application_organisation_person_original_person_id` FOREIGN KEY (`original_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_organisation_person_person1` FOREIGN KEY (`original_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_application_organisation_person_person_id_person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores organisation people on an application. When application is granted they get copied into main organisation_person table';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -415,7 +415,7 @@ DROP TABLE IF EXISTS `application_tracking`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `application_tracking` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Tracking status of each section of an online application.',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `application_id` int(10) unsigned NOT NULL,
   `type_of_licence_status` int(11) DEFAULT NULL,
   `business_type_status` int(11) DEFAULT NULL,
@@ -437,18 +437,19 @@ CREATE TABLE `application_tracking` (
   `licence_history_status` int(11) DEFAULT NULL,
   `convictions_penalties_status` int(11) DEFAULT NULL,
   `undertakings_status` int(11) DEFAULT NULL,
-  `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
-  `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
-  `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
-  `last_modified_on` datetime(6) DEFAULT NULL COMMENT 'Date record last modified.',
-  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `last_modified_by` int(10) unsigned DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `last_modified_on` datetime DEFAULT NULL,
+  `version` smallint(5) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_application_tracking_application_id` (`application_id`),
-  KEY `ix_application_tracking_created_by` (`created_by`),
-  KEY `ix_application_tracking_last_modified_by` (`last_modified_by`),
-  CONSTRAINT `fk_application_tracking_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_application_tracking_created_by` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_application_tracking_last_modified_by` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  UNIQUE KEY `application_id_UNIQUE` (`application_id`),
+  KEY `fk_application_tracking_application1_idx` (`application_id`),
+  KEY `fk_application_tracking_user1_idx` (`created_by`),
+  KEY `fk_application_tracking_user2_idx` (`last_modified_by`),
+  CONSTRAINT `fk_application_tracking_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_application_tracking_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Used to track status of an application for display to internal users.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -575,7 +576,7 @@ CREATE TABLE `bus_reg` (
   KEY `ix_bus_reg_status` (`status`),
   KEY `ix_bus_reg_revert_status` (`revert_status`),
   KEY `ix_bus_reg_reg_no` (`reg_no`),
-  KEY `ix_bus_reg_parent_id` (`parent_id`),
+  KEY `fk_bus_reg_parent_id_bus_reg_id` (`parent_id`),
   CONSTRAINT `fk_bus_reg_bus_notice_period_id_bus_notice_period_id` FOREIGN KEY (`bus_notice_period_id`) REFERENCES `bus_notice_period` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -584,8 +585,8 @@ CREATE TABLE `bus_reg` (
   CONSTRAINT `fk_bus_reg_revert_status_ref_data_id` FOREIGN KEY (`revert_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_status_ref_data_id` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_subsidised_ref_data_id` FOREIGN KEY (`subsidised`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_withdrawn_reason_ref_data_id` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_bus_reg_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bus_reg_withdrawn_reason_ref_data_id` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Bus registration.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -866,13 +867,13 @@ DROP TABLE IF EXISTS `case_outcome`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `case_outcome` (
-  `outcome_case_id` int(10) unsigned NOT NULL COMMENT 'So called as ref_data already has a case property via case_category',
+  `cases_id` int(10) unsigned NOT NULL,
   `outcome_id` varchar(32) NOT NULL,
-  PRIMARY KEY (`outcome_case_id`,`outcome_id`),
-  KEY `ix_case_outcome_outcome_case_id` (`outcome_case_id`),
-  KEY `ix_case_outcome_outcome_id` (`outcome_id`),
-  CONSTRAINT `fk_case_outcome_outcome_case_id` FOREIGN KEY (`outcome_case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_case_outcome_outcome_id` FOREIGN KEY (`outcome_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`cases_id`,`outcome_id`),
+  KEY `fk_case_outcome_cases1_idx` (`cases_id`),
+  KEY `fk_case_outcome_ref_data1_idx` (`outcome_id`),
+  CONSTRAINT `fk_case_outcome_cases1` FOREIGN KEY (`cases_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_case_outcome_ref_data1` FOREIGN KEY (`outcome_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1131,11 +1132,11 @@ CREATE TABLE `community_lic_suspension_reason` (
   KEY `ix_community_lic_suspension_reason_community_lic_suspension_id` (`community_lic_suspension_id`),
   KEY `ix_community_lic_suspension_reason_created_by` (`created_by`),
   KEY `ix_community_lic_suspension_reason_last_modified_by` (`last_modified_by`),
-  KEY `fk_community_lic_suspension_reason_type_id` (`type_id`),
+  KEY `fk_community_lic_suspension_reason_ref_data1_idx` (`type_id`),
   CONSTRAINT `fk_com_lic_susp_reason_com_lic_susp_id_com_lic_susp_id` FOREIGN KEY (`community_lic_suspension_id`) REFERENCES `community_lic_suspension` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_suspension_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_suspension_reason_type_id` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_suspension_reason_ref_data1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Reasons for a suspension.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1209,11 +1210,11 @@ CREATE TABLE `community_lic_withdrawal_reason` (
   KEY `ix_community_lic_withdrawal_reason_community_lic_withdrawal_id` (`community_lic_withdrawal_id`),
   KEY `ix_community_lic_withdrawal_reason_created_by` (`created_by`),
   KEY `ix_community_lic_withdrawal_reason_last_modified_by` (`last_modified_by`),
-  KEY `ix_community_lic_withdrawal_reason_type_id` (`type_id`),
+  KEY `fk_community_lic_withdrawal_reason_ref_data1_idx` (`type_id`),
   CONSTRAINT `fk_com_lic_withdrw_reason_com_lic_withdrw_id_com_lic_withdrw_id` FOREIGN KEY (`community_lic_withdrawal_id`) REFERENCES `community_lic_withdrawal` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_lic_withdrawal_reason_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_lic_withdrawal_reason_type_id` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_community_lic_withdrawal_reason_ref_data1` FOREIGN KEY (`type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Reasons for com lic withdrawal.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1271,13 +1272,13 @@ CREATE TABLE `company_subsidiary` (
   `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_company_subsidiary_olbs_key` (`olbs_key`),
+  UNIQUE KEY `uk_company_subsidiary_olbs_key` (`olbs_key`,`licence_id`),
   KEY `ix_company_subsidiary_created_by` (`created_by`),
   KEY `ix_company_subsidiary_last_modified_by` (`last_modified_by`),
-  KEY `ix_company_subsidiary_licence_id` (`licence_id`),
+  KEY `fk_company_subsidiary_licence1_idx` (`licence_id`),
   CONSTRAINT `fk_company_subsidiary_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_company_subsidiary_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_company_subsidiary_licence_id` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_company_subsidiary_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subsidiaries of a company.  Business requirement is only to store name number, hence not stored in organisation table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2143,7 +2144,7 @@ DROP TABLE IF EXISTS `event_history`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
-  `event_history_type_id` varchar(3) NOT NULL,
+  `event_history_type_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
   `licence_id` int(10) unsigned DEFAULT NULL,
   `application_id` int(10) unsigned DEFAULT NULL,
@@ -2194,7 +2195,8 @@ DROP TABLE IF EXISTS `event_history_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_history_type` (
-  `id` varchar(3) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `event_code` varchar(3) NOT NULL,
   `description` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Description of events. Such as vehicle added. Licence revoked.';
@@ -3258,8 +3260,8 @@ CREATE TABLE `legacy_offence` (
   PRIMARY KEY (`id`),
   KEY `ix_legacy_offence_created_by` (`created_by`),
   KEY `ix_legacy_offence_last_modified_by` (`last_modified_by`),
-  KEY `ix_legacy_offence_case_id` (`case_id`),
-  CONSTRAINT `fk_legacy_offence_case_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_legacy_offence_cases1_idx` (`case_id`),
+  CONSTRAINT `fk_legacy_offence_cases1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_legacy_offence_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Legacy table holding offence information. Read only until can be dropped';
@@ -4020,8 +4022,8 @@ CREATE TABLE `opposition_grounds` (
   PRIMARY KEY (`opposition_id`,`ground_id`),
   UNIQUE KEY `uk_opposition_grounds_olbs_key` (`olbs_key`),
   KEY `ix_opposition_grounds_opposition_id` (`opposition_id`),
-  KEY `ix_opposition_ground_ground_id` (`ground_id`),
-  CONSTRAINT `fk_opposition_ground_ground_id` FOREIGN KEY (`ground_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `ix_opposition_grounds_grounds` (`ground_id`),
+  CONSTRAINT `fk_opposition_grounds_grounds_ref_data_id` FOREIGN KEY (`ground_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_opposition_grounds_opposition_id_opposition_id` FOREIGN KEY (`opposition_id`) REFERENCES `opposition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4169,6 +4171,7 @@ CREATE TABLE `organisation_type` (
   `org_type_id` varchar(32) NOT NULL COMMENT 'LTD, Partnership etc.',
   `org_person_type_id` varchar(32) NOT NULL COMMENT 'Type if officers in org. Partners, directors etc.',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_org_person` (`org_type_id`,`org_person_type_id`),
   KEY `ix_organisation_type_org_type_id` (`org_type_id`),
   KEY `ix_organisation_type_org_person_type_id` (`org_person_type_id`),
   CONSTRAINT `fk_organisation_type_org_person_type_id_ref_data_id` FOREIGN KEY (`org_person_type_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -4309,10 +4312,10 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`id`),
   KEY `ix_payment_created_by` (`created_by`),
   KEY `ix_payment_last_modified_by` (`last_modified_by`),
-  KEY `ix_payment_status` (`status`),
+  KEY `ix_payment_payment_status` (`status`),
   CONSTRAINT `fk_payment_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_payment_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_payment_status` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_payment_payment_status_ref_data_id` FOREIGN KEY (`status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8 COMMENT='A payment attempt';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4683,7 +4686,7 @@ CREATE TABLE `pi_type` (
   `pi_id` int(10) unsigned NOT NULL,
   `pi_type_id` varchar(32) NOT NULL,
   `olbs_key` int(10) unsigned DEFAULT NULL COMMENT 'Used to map FKs during ETL. Can be dropped safely when OLBS decommissioned',
-  `olbs_type` varchar(32) DEFAULT NULL COMMENT 'used to differntiate source of data during ETL when one OLCS table relates to many OLBS. Can be dropped when fully live',
+  `olbs_type` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`pi_id`,`pi_type_id`),
   UNIQUE KEY `uk_pi_type_pi_id_pi_type_id` (`pi_id`,`pi_type_id`),
   KEY `ix_pi_type_pi_id` (`pi_id`),
@@ -5176,7 +5179,7 @@ CREATE TABLE `publication` (
   `publication_no` smallint(5) unsigned NOT NULL,
   `traffic_area_id` varchar(1) NOT NULL,
   `document_id` int(10) unsigned DEFAULT NULL,
-  `doc_template_id` int(10) unsigned NOT NULL,
+  `doc_template_id` int(10) unsigned DEFAULT NULL,
   `pub_status` varchar(32) NOT NULL,
   `pub_type` varchar(3) NOT NULL COMMENT 'Either A&D or N&P',
   `pub_date` date DEFAULT NULL,
@@ -5191,11 +5194,11 @@ CREATE TABLE `publication` (
   KEY `ix_publication_pub_status` (`pub_status`),
   KEY `ix_publication_created_by` (`created_by`),
   KEY `ix_publication_last_modified_by` (`last_modified_by`),
-  KEY `ix_publication_document_id` (`document_id`),
-  KEY `ix_publication_doc_template_id` (`doc_template_id`),
+  KEY `fk_publication_document1_idx` (`document_id`),
+  KEY `fk_publication_doc_template1_idx` (`doc_template_id`),
   CONSTRAINT `fk_publication_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_publication_document_id` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_publication_doc_template_id` FOREIGN KEY (`doc_template_id`) REFERENCES `doc_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_doc_template1` FOREIGN KEY (`doc_template_id`) REFERENCES `doc_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_document1` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_pub_status_ref_data_id` FOREIGN KEY (`pub_status`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_traffic_area_id_traffic_area_id` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -5251,7 +5254,7 @@ CREATE TABLE `publication_link` (
   KEY `ix_publication_link_publication_section_id` (`publication_section_id`),
   KEY `ix_publication_link_created_by` (`created_by`),
   KEY `ix_publication_link_last_modified_by` (`last_modified_by`),
-  KEY `ix_publication_link_transport_manager_id` (`transport_manager_id`),
+  KEY `fk_publication_link_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_publication_link_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_bus_reg_id_bus_reg_id` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5260,7 +5263,7 @@ CREATE TABLE `publication_link` (
   CONSTRAINT `fk_publication_link_pi_id_pi_id` FOREIGN KEY (`pi_id`) REFERENCES `pi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_publication_id_publication_id` FOREIGN KEY (`publication_id`) REFERENCES `publication` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_link_traffic_area_id_traffic_area_id` FOREIGN KEY (`traffic_area_id`) REFERENCES `traffic_area` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_publication_link_transport_manager_id` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_publication_link_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_publication_lnk_publication_section_id_publication_section_id` FOREIGN KEY (`publication_section_id`) REFERENCES `publication_section` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Link between publication and its sections and licences it refers to etc..';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6477,6 +6480,7 @@ CREATE TABLE `task` (
   KEY `ix_task_category_id` (`category_id`),
   KEY `ix_task_case_id` (`case_id`),
   KEY `ix_task_sub_category_id` (`sub_category_id`),
+  KEY `ix_task_etl` (`description`,`category_id`,`sub_category_id`),
   CONSTRAINT `fk_task_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_assigned_by_user_id_user_id` FOREIGN KEY (`assigned_by_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_task_assigned_to_team_id_team_id` FOREIGN KEY (`assigned_to_team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -6726,8 +6730,8 @@ CREATE TABLE `tm_case_decision_rehab` (
   UNIQUE KEY `uk_tm_case_decision_rehab_olbs_key` (`olbs_key`),
   KEY `ix_tm_case_decision_rehab_tm_case_decision_id` (`tm_case_decision_id`),
   KEY `ix_tm_case_decision_rehab_rehab_measure_id` (`rehab_measure_id`),
-  CONSTRAINT `fk_tm_case_decision_rehab_rehab_measure_id` FOREIGN KEY (`rehab_measure_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_rehab_tm_case_decision_id` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tm_case_decision_rehab_rehab_measure_id_ref_data_id` FOREIGN KEY (`rehab_measure_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decisn_rehab_tm_case_decisn_id_tm_case_decisn_id` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6755,8 +6759,8 @@ CREATE TABLE `tm_case_decision_unfitness` (
   UNIQUE KEY `uk_tm_case_decision_unfitness_olbs_key` (`olbs_key`),
   KEY `ix_tm_case_decision_unfitness_tm_case_decision_id` (`tm_case_decision_id`),
   KEY `ix_tm_case_decision_unfitness_unfitness_reason_id` (`unfitness_reason_id`),
-  CONSTRAINT `fk_tm_case_decision_unfitness_unfitness_reason_id` FOREIGN KEY (`unfitness_reason_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tm_case_decision_unfitness_tm_case_decision_id` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tm_case_decision_unfitness_unfitness_reason_id_ref_data_id` FOREIGN KEY (`unfitness_reason_id`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tm_case_decisn_unfitness_tm_case_decisn_id_tm_case_decisn_id` FOREIGN KEY (`tm_case_decision_id`) REFERENCES `tm_case_decision` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7536,7 +7540,10 @@ LOCK TABLES `workshop` WRITE;
 /*!40000 ALTER TABLE `workshop` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workshop` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Final view structure for view `bus_reg_search_view`
+--
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -7546,4 +7553,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-12  9:35:10
+-- Dump completed on 2015-03-19 12:53:18

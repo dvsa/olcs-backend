@@ -177,10 +177,10 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="outcomeCases")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="casess")
      * @ORM\JoinTable(name="case_outcome",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="outcome_case_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="cases_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(name="outcome_id", referencedColumnName="id")

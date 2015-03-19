@@ -26,7 +26,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_task_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_task_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_task_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_task_sub_category_id", columns={"sub_category_id"})
+ *        @ORM\Index(name="ix_task_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_task_etl", columns={"description","category_id","sub_category_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_task_olbs_key", columns={"olbs_key"})
