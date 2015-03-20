@@ -117,9 +117,9 @@ INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('ISLE OF WIGHT','H'),
     ('CITY OF LONDON','K'),
     ('CITY OF WESTMINSTER','K'),
-    ('BARKING AND DAGENHAM','F'),
+    ('BARKING AND DAGENHAM','K'),
     ('BEXLEY','K'),
-    ('BARNET','F'),
+    ('BARNET','K'),
     ('BRENT','K'),
     ('CAMDEN','K'),
     ('EALING','K'),
@@ -3944,7 +3944,6 @@ VALUES
  ,( 36, 'Official Record')
  ,( 37, 'Fee Due')
  ,( 38, 'Fee Request')
- ,( 40, 'Other Documents')
  ,( 41, 'Traffic Regulation Condition Letter')
  ,( 42, 'Bus Complaint')
  ,( 43, 'Bus Registration Letter')
@@ -3966,7 +3965,6 @@ VALUES
  ,( 49, 'Impounding Document(s)')
  ,( 51, 'Interview Letter')
  ,( 52, 'Maintenance')
- ,( 53, 'Other Documents')
  ,( 54, 'Operator Staff Conduct')
  ,( 55, 'Reports')
  ,( 55, 'Section 9/43/36/38 Statements')
@@ -4086,7 +4084,7 @@ VALUES
     (85, 999999, 479, 85, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter to operator following 3rd party notification of TM loss', '2002-05-14 17:45:01', 1),
     (86, 999999, 479, 86, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Refund Letter', '2002-05-14 17:45:01', 1),
     (90, 999999, 479, 90, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
-    (91, 999999, 479, 91, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
+    (91, 9, 479, 91, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (92, 999999, 479, 92, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV -  Var app grant set aside - bounced cheque', '2002-05-14 17:45:01', 1),
     (93, 999999, 479, 93, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Permission from Complainant Letter', '2002-05-14 17:45:01', 1),
     (94, 999999, 479, 94, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Apology/Referral to Complainant Letter', '2002-05-14 17:45:01', 1),
@@ -4249,7 +4247,7 @@ VALUES
     (326, 999999, 1, 326, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'ENV34 - letter informing obj or rep that PI to be held', '2010-01-13 13:21:06', 1),
     (327, 999999, 1, 327, 1, 999999, 0, 0, '2010-01-13 13:21:06', 'PSV - Licence continued - variation required', '2010-01-13 13:21:06', 1),
     (328, 999999, 291, 328, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'PSV - Letter informing OP of PI to be held', '2010-11-25 13:42:26', 1),
-    (329, 999999, 291, 329, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV12 - New/Var App Incomplete - final request for supporting docs', '2010-11-25 13:42:26', 1),
+    (329, 9, 291, 329, 291, 31, 0, 0, '2010-11-25 13:42:26', 'ENV12 - New/Var App Incomplete - final request for supporting docs', '2010-11-25 13:42:26', 1),
     (330, 999999, 291, 330, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV13 - GV79E reminder letter', '2010-11-25 13:42:26', 1),
     (331, 999999, 291, 331, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'GV - Initial letter advising OP of complaint', '2010-11-25 13:42:26', 1),
     (332, 999999, 291, 332, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV14 - Letter to OP with copies of reps', '2010-11-25 13:42:26', 1),
@@ -4371,7 +4369,7 @@ VALUES
     (448, 999999, 1, 448, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Reg 29 notification of death of licence holder (NI)', '2012-09-14 00:00:00', 1),
     (449, 999999, 1, 449, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV09 - New/Var App Incomplete - 1st request for supp docs (NI)', '2012-09-14 00:00:00', 1),
     (450, 999999, 1, 450, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV10 - Letter advising applicant of opposition received (NI)', '2012-09-14 00:00:00', 1),
-    (451, 999999, 1, 451, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV12 - New/Var App Incomplete - final request for supp docs (NI)', '2012-09-14 00:00:00', 1),
+    (451, 9, 1, 451, 1, 31, 1, 0, '2012-09-14 00:00:00', 'ENV12 - New/Var App Incomplete - final request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (452, 999999, 1, 452, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV20 - Letter advising applicant of proposed conditions (NI)', '2012-09-14 00:00:00', 1),
     (453, 999999, 1, 453, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV01 - Letter explaining that no application received (NI)', '2012-09-14 00:00:00', 1),
     (454, 999999, 1, 454, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV02 - Acknowledgement of objection (NI)', '2012-09-14 00:00:00', 1),
@@ -4610,7 +4608,9 @@ VALUES
     (696, 11, 1, 696, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West Midlands', '2015-02-27 10:00:47', 1),
     (697, 11, 1, 697, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West of England', '2015-02-27 10:00:47', 1),
     (698, 11, 1, 698, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Wales', '2015-02-27 10:00:47', 1),
-    (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1);
+    (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1),
+    (700, 9, 1, 700, 1, 31, 1, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2015-02-27 10:00:47', 1),
+    (701, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -6263,7 +6263,7 @@ VALUES
     (85, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_NO_TM_REQUEST_OP_COMMENTS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter to operator following 3rd party notification of TM loss', 0, NULL, '2002-05-14 17:45:01', 1),
     (86, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_REFUND_LETTER.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Refund Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (90, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
-    (91, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
+    (91, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (92, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_WITHDRAWN_BOUNCED_CHEQUE.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV -  Var app grant set aside - bounced cheque', 0, NULL, '2002-05-14 17:45:01', 1),
     (93, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_PermissionFromComplainantLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Permission from Complainant Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (94, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_ApologyReferralToComplainantLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Apology/Referral to Complainant Letter', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6426,7 +6426,7 @@ VALUES
     (326, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/INFORM_OBJ_OR_REP_OF_PI.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'ENV34 - letter informing obj or rep that PI to be held', 0, NULL, '2010-01-13 13:21:06', 1),
     (327, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSV_LIC_CONTD_VAR_REQD.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'PSV - Licence continued - variation required', 0, NULL, '2010-01-13 13:21:06', 1),
     (328, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Referred_To_PI_Letter_PSV.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'PSV - Letter informing OP of PI to be held', 0, NULL, '2010-11-25 13:42:26', 1),
-    (329, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs', 0, NULL, '2010-11-25 13:42:26', 1),
+    (329, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 291, NULL, 291, NULL, '/templates/GB/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs', 0, NULL, '2010-11-25 13:42:26', 1),
     (330, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/GV79E_Reminder_Letter.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV13 - GV79E reminder letter', 0, NULL, '2010-11-25 13:42:26', 1),
     (331, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Initial_Letter_Advising_Op_Of_Complaint.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'GV - Initial letter advising OP of complaint', 0, NULL, '2010-11-25 13:42:26', 1),
     (332, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Letter_To_Send_With_Copies_Of_Representations_To_Op.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV14 - Letter to OP with copies of reps', 0, NULL, '2010-11-25 13:42:26', 1),
@@ -6552,7 +6552,7 @@ VALUES
     (448, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/REG29_LETTER_NOTIFICATION_OF_DEATH_OF_LIC_HOLDER.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Reg 29 notification of death of licence holder (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (449, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV09 - ENV_PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV09 - New/Var App Incomplete - 1st request for supp docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (450, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV10 - PUB_APP_OPPOSITION_RECEIVED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV10 - Letter advising applicant of opposition received (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (451, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV12 - ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV12 - New/Var App Incomplete - final request for supp docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (451, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (452, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV20 - PUB_APP_PROPOSED_CONDITIONS_APP.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV20 - Letter advising applicant of proposed conditions (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (453, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV01 - REP_NO_APP_RECVD.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV01 - Letter explaining that no application received (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (454, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV02 - OBJECTION_ACKNOWLEDGEMENT_OF.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV02 - Acknowledgement of objection (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -6791,7 +6791,10 @@ VALUES
     (696, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
     (697, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (698, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
-    (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1);
+    (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1),
+    (700, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (701, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1);
+
 
 /* Test documents */
 INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -6915,37 +6918,70 @@ VALUES
   (4, 'Timetable');
 
 INSERT INTO `role` (`id`, `role`) VALUES
-    (1, 'limited-read-only'),
-    (2, 'read-only'),
-    (3, 'case-worker'),
-    (4, 'admin');
+    (1, 'internal-limited-read-only'), -- internal only
+    (2, 'internal-read-only'), -- internal only
+    (3, 'internal-case-worker'), -- internal only
+    (4, 'internal-admin'), -- internal only
+    (5, 'operator-admin'), -- selfserve
+    (6, 'operator-user'), -- selfserve
+    (7, 'operator-tm'), -- selfserve
+    (8, 'operator-ebsr'), -- selfserve
+    (9, 'partner-admin'), -- selfserve
+    (10, 'partner-user'), -- selfserve
+    (11, 'local-authority-admin'), -- selfserve
+    (12, 'local-authority-user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
-    (1, 'admin', 'ADMIN'),
-    (2, 'documents', 'DOCUM'),
-    (3, 'case', 'CASE'),
-    (4, 'notes', 'NOTES'),
-    (5, 'edit', 'EDIT'),
-    (6, 'view', 'VIEW');
+    (1, 'internal-admin', 'ADMIN'),
+    (2, 'internal-documents', 'DOCUM'),
+    (3, 'internal-case', 'CASE'),
+    (4, 'internal-notes', 'NOTES'),
+    (5, 'internal-edit', 'EDIT'),
+    (6, 'internal-view', 'VIEW'),
+    (7, 'internal-user', 'IUSER'), -- used to distinguish between Internal and Selfserve users
+    (8, 'selfserve-user', 'SUSER'), -- used to distinguish between Internal and Selfserve users
+    (9, 'selfserve-ebsr', 'SEBSR'),
+    (10, 'selfserve-ebsr-documents', 'SEDOC');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
-    (1, 6), -- all roles have view
-    (2, 6), -- all roles have view
-    (3, 6), -- all roles have view
-    (4, 6), -- all roles have view
-    (2, 2), -- read only sees docs
-    (2, 3), -- read only sees case
-    (2, 4), -- read only sees notes
-    (3, 2), -- case worker sees docs
-    (3, 3), -- case worker sees case
-    (3, 4), -- case worker sees notes
-    (3, 5), -- case worker can edit
-    (4, 2), -- admin sees docs
-    (4, 3), -- admin  sees case
-    (4, 4), -- admin  sees notes
-    (4, 5), -- admin can edit
-    (4, 1); -- admin is admin
+    (1, 7), -- all internal roles are internal users
+    (2, 7), -- all internal roles are internal users
+    (3, 7), -- all internal roles are internal users
+    (4, 7), -- all internal roles are internal users
+    (1, 6), -- all internal roles have internal view
+    (2, 6), -- all internal roles have internal view
+    (3, 6), -- all internal roles have internal view
+    (4, 6), -- all internal roles have internal view
+    (2, 2), -- internal read only sees docs
+    (2, 3), -- internal read only sees case
+    (2, 4), -- internal read only sees notes
+    (3, 2), -- internal case worker sees docs
+    (3, 3), -- internal case worker sees case
+    (3, 4), -- internal case worker sees notes
+    (3, 5), -- internal case worker can edit
+    (4, 2), -- internal admin sees docs
+    (4, 3), -- internal admin sees case
+    (4, 4), -- internal admin sees notes
+    (4, 5), -- internal admin can edit
+    (4, 1), -- internal admin is admin,
+    (5, 8), -- all selfserve roles are selfserve users
+    (6, 8), -- all selfserve roles are selfserve users
+    (7, 8), -- all selfserve roles are selfserve users
+    (8, 8), -- all selfserve roles are selfserve users
+    (9, 8), -- all selfserve roles are selfserve users
+    (10, 8), -- all selfserve roles are selfserve users
+    (11, 8), -- all selfserve roles are selfserve users
+    (12, 8), -- all selfserve roles are selfserve users
+    (8, 9), -- selfserve EBSR sees ebsr
+    (5, 9), -- operator admin sees ebsr
+    (6, 9), -- operator user sees ebsr
+    (11, 9), -- LA admin sees ebsr
+    (12, 9), -- LA user sees ebsr
+    (5, 10), -- operator admin sees ebsr docs
+    (6, 10), -- operator user sees ebsr docs
+    (11, 10), -- LA admin sees ebsr docs
+    (12, 10); -- LA user sees ebsr docs
 
 INSERT INTO `financial_standing_rate` (
     `id`,
