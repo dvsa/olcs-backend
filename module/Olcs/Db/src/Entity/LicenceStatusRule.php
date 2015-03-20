@@ -47,6 +47,16 @@ class LicenceStatusRule implements Interfaces\EntityInterface
     protected $endProcessedDate;
 
     /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceStatusRules")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
+
+    /**
      * Licence status
      *
      * @var \Olcs\Db\Entity\RefData
@@ -95,6 +105,29 @@ class LicenceStatusRule implements Interfaces\EntityInterface
     public function getEndProcessedDate()
     {
         return $this->endProcessedDate;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return LicenceStatusRule
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**
