@@ -6944,12 +6944,10 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (2, 7), -- all internal roles are internal users
     (3, 7), -- all internal roles are internal users
     (4, 7), -- all internal roles are internal users
-    (5, 7), -- all internal roles are internal users
     (1, 6), -- all internal roles have internal view
     (2, 6), -- all internal roles have internal view
     (3, 6), -- all internal roles have internal view
     (4, 6), -- all internal roles have internal view
-    (5, 6), -- all internal roles have internal view
     (2, 2), -- internal read only sees docs
     (2, 3), -- internal read only sees case
     (2, 4), -- internal read only sees notes
