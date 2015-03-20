@@ -20,7 +20,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="fk_event_history_application1_idx", columns={"application_id"}),
  *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
  *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="fk_event_history_bus_reg1_idx", columns={"team_id"}),
+ *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="fk_event_history_bus_reg1", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -28,6 +30,7 @@ class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
         Traits\IdIdentity,
         Traits\LicenceManyToOneAlt1,
         Traits\TransportManagerManyToOne,

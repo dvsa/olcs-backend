@@ -540,7 +540,6 @@ CREATE TABLE `bus_reg` (
   `copied_to_la_pte` tinyint(1) NOT NULL DEFAULT 0,
   `la_short_note` tinyint(1) NOT NULL DEFAULT 0,
   `application_signed` tinyint(1) NOT NULL DEFAULT 0,
-  `operating_centre_id` int(11) DEFAULT NULL COMMENT 'Populated if the oc address is to be used',
   `variation_no` int(11) NOT NULL DEFAULT 0 COMMENT 'Increments for each variation',
   `parent_id` int(11) NULL DEFAULT NULL,
   `op_notified_la_pte` tinyint(1) NOT NULL DEFAULT 0,
@@ -572,7 +571,6 @@ CREATE TABLE `bus_reg` (
   KEY `fk_bus_reg_licence1_idx` (`licence_id`),
   KEY `fk_bus_reg_bus_notice_period1_idx` (`bus_notice_period_id`),
   KEY `fk_bus_reg_ref_data1_idx` (`subsidised`),
-  KEY `fk_bus_reg_operating_centre1_idx` (`operating_centre_id`),
   KEY `fk_bus_reg_user1_idx` (`created_by`),
   KEY `fk_bus_reg_user2_idx` (`last_modified_by`),
   KEY `fk_bus_reg_ref_data2_idx` (`withdrawn_reason`),
@@ -582,7 +580,6 @@ CREATE TABLE `bus_reg` (
   CONSTRAINT `fk_bus_reg_licence1` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_bus_notice_period1` FOREIGN KEY (`bus_notice_period_id`) REFERENCES `bus_notice_period` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data1` FOREIGN KEY (`subsidised`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_reg_operating_centre1` FOREIGN KEY (`operating_centre_id`) REFERENCES `operating_centre` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_user2` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_reg_ref_data2` FOREIGN KEY (`withdrawn_reason`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2370,6 +2367,7 @@ CREATE TABLE `event_history` (
   `licence_vehicle_id` int(11) DEFAULT NULL,
   `transport_manager_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
+  `bus_reg_id` int(11) DEFAULT NULL,
   `event_datetime` datetime NOT NULL,
   `event_description` varchar(255) DEFAULT NULL,
   `entity_type` varchar(45) DEFAULT NULL,
@@ -2384,6 +2382,7 @@ CREATE TABLE `event_history` (
   KEY `fk_event_history_application1_idx` (`application_id`),
   KEY `fk_event_history_licence_vehicle1_idx` (`licence_vehicle_id`),
   KEY `fk_event_history_team1_idx` (`team_id`),
+  KEY `fk_event_history_bus_reg1_idx` (`team_id`),
   KEY `fk_event_history_transport_manager1_idx` (`transport_manager_id`),
   CONSTRAINT `fk_event_history_event_history_type1` FOREIGN KEY (`event_history_type_id`) REFERENCES `event_history_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2391,6 +2390,7 @@ CREATE TABLE `event_history` (
   CONSTRAINT `fk_event_history_application1` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_licence_vehicle1` FOREIGN KEY (`licence_vehicle_id`) REFERENCES `licence_vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_history_bus_reg1` FOREIGN KEY (`bus_reg_id`) REFERENCES `bus_reg` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_history_transport_manager1` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2414,7 +2414,7 @@ DROP TABLE IF EXISTS `event_history_type`;
 CREATE TABLE `event_history_type` (
   `id` int(11) NOT NULL,
   `description` varchar(50) NOT NULL,
-  `event_type` varchar(3) NOT NULL,
+  `event_code` varchar(3) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
