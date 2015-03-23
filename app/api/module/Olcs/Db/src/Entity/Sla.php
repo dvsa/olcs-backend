@@ -42,7 +42,7 @@ class Sla implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="days", nullable=true)
+     * @ORM\Column(type="smallint", name="days", nullable=true)
      */
     protected $days;
 

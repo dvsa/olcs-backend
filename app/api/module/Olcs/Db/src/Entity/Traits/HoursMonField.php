@@ -16,7 +16,7 @@ trait HoursMonField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="hours_mon", nullable=true)
+     * @ORM\Column(type="smallint", name="hours_mon", nullable=true)
      */
     protected $hoursMon;
 

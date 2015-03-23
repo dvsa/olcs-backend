@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="role_permission",
  *    indexes={
- *        @ORM\Index(name="fk_role_has_permission_permission1_idx", columns={"permission_id"}),
- *        @ORM\Index(name="fk_role_has_permission_role1_idx", columns={"role_id"}),
- *        @ORM\Index(name="fk_role_permission_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_role_permission_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_role_permission_permission_id", columns={"permission_id"}),
+ *        @ORM\Index(name="ix_role_permission_role_id", columns={"role_id"}),
+ *        @ORM\Index(name="ix_role_permission_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_role_permission_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

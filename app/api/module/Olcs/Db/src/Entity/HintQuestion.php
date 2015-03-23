@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="hint_question",
  *    indexes={
- *        @ORM\Index(name="fk_hint_questions_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_hint_questions_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_hint_question_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_hint_question_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -32,9 +32,9 @@ class HintQuestion implements Interfaces\EntityInterface
     /**
      * Category no
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="category_no", nullable=false)
+     * @ORM\Column(type="boolean", name="category_no", nullable=false)
      */
     protected $categoryNo;
 
@@ -50,7 +50,7 @@ class HintQuestion implements Interfaces\EntityInterface
     /**
      * Set the category no
      *
-     * @param int $categoryNo
+     * @param boolean $categoryNo
      * @return HintQuestion
      */
     public function setCategoryNo($categoryNo)
@@ -63,7 +63,7 @@ class HintQuestion implements Interfaces\EntityInterface
     /**
      * Get the category no
      *
-     * @return int
+     * @return boolean
      */
     public function getCategoryNo()
     {

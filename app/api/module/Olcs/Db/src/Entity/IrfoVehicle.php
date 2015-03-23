@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_vehicle",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_vehicle_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_irfo_vehicle_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_vehicle_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_vehicle_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"})
+ *        @ORM\Index(name="ix_irfo_vehicle_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_irfo_vehicle_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_vehicle_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irfo_vehicle_irfo_gv_permit_id", columns={"irfo_gv_permit_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_vehicle_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -27,9 +30,11 @@ class IrfoVehicle implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
+        Traits\IrfoGvPermitManyToOne,
         Traits\IrfoPsvAuthManyToOne,
         Traits\LastModifiedByManyToOne,
-        Traits\CustomLastModifiedOnField;
+        Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField;
 
     /**
      * Coc a
@@ -77,21 +82,11 @@ class IrfoVehicle implements Interfaces\EntityInterface
     protected $cocT = 0;
 
     /**
-     * Irfo gv permit
-     *
-     * @var \Olcs\Db\Entity\IrfoGvPermit
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoGvPermit")
-     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irfoGvPermit;
-
-    /**
      * Version
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="version", nullable=true, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
      */
     protected $version = 1;
 
@@ -217,29 +212,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
     public function getCocT()
     {
         return $this->cocT;
-    }
-
-    /**
-     * Set the irfo gv permit
-     *
-     * @param \Olcs\Db\Entity\IrfoGvPermit $irfoGvPermit
-     * @return IrfoVehicle
-     */
-    public function setIrfoGvPermit($irfoGvPermit)
-    {
-        $this->irfoGvPermit = $irfoGvPermit;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo gv permit
-     *
-     * @return \Olcs\Db\Entity\IrfoGvPermit
-     */
-    public function getIrfoGvPermit()
-    {
-        return $this->irfoGvPermit;
     }
 
     /**

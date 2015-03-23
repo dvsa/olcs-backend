@@ -16,7 +16,7 @@ trait NoOfTrailersRequiredField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="no_of_trailers_required", nullable=true)
+     * @ORM\Column(type="smallint", name="no_of_trailers_required", nullable=true)
      */
     protected $noOfTrailersRequired;
 

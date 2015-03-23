@@ -17,17 +17,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="submission",
  *    indexes={
- *        @ORM\Index(name="fk_submission_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_submission_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_submission_ref_data1_idx", columns={"submission_type"})
+ *        @ORM\Index(name="ix_submission_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_submission_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_submission_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"})
  *    }
  * )
  */
 class Submission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
+        Traits\CaseManyToOneAlt1,
         Traits\ClosedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,

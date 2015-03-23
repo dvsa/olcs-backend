@@ -14,10 +14,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="submission_section_comment",
  *    indexes={
- *        @ORM\Index(name="fk_submission_section_submission1_idx", columns={"submission_id"}),
- *        @ORM\Index(name="fk_submission_section_comments_ref_data1_idx", columns={"submission_section"}),
- *        @ORM\Index(name="fk_submission_section_comments_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_submission_section_comments_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_submission_section_comment_submission_id", columns={"submission_id"}),
+ *        @ORM\Index(name="ix_submission_section_comment_submission_section", columns={"submission_section"}),
+ *        @ORM\Index(name="ix_submission_section_comment_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_submission_section_comment_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

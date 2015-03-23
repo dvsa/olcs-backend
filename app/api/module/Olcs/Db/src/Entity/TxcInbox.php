@@ -14,14 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="txc_inbox",
  *    indexes={
- *        @ORM\Index(name="fk_txc_inbox_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_txc_inbox_local_authority1_idx", columns={"local_authority_id"}),
- *        @ORM\Index(name="fk_txc_inbox_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document1_idx", columns={"zip_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document2_idx", columns={"route_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_document3_idx", columns={"pdf_document_id"}),
- *        @ORM\Index(name="fk_txc_inbox_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_txc_inbox_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_txc_inbox_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_local_authority_id", columns={"local_authority_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_zip_document_id", columns={"zip_document_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_route_document_id", columns={"route_document_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_pdf_document_id", columns={"pdf_document_id"}),
+ *        @ORM\Index(name="ix_txc_inbox_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_txc_inbox_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -72,7 +72,7 @@ class TxcInbox implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="variation_no", nullable=false)
+     * @ORM\Column(type="smallint", name="variation_no", nullable=false)
      */
     protected $variationNo;
 
