@@ -106,6 +106,11 @@ class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
                 'a.foo1 IN(\'foo\', \'bar\', \'cake\')',
                 array()
             ),
+            'not in' => array(
+                array('foo1' => 'NOT IN ["foo","bar","cake"]'),
+                'a.foo1 NOT IN(\'foo\', \'bar\', \'cake\')',
+                array()
+            ),
             'lte' => array(
                 array('foo1' => '<= 10'),
                 'a.foo1 <= ?0',
