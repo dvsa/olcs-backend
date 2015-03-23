@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="community_lic",
  *    indexes={
- *        @ORM\Index(name="fk_community_lic_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_community_lic_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_community_lic_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_community_lic_ref_data1_idx", columns={"status"})
+ *        @ORM\Index(name="ix_community_lic_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_community_lic_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_community_lic_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_community_lic_com_lic_status", columns={"status"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_community_lic_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -29,6 +32,7 @@ class CommunityLic implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\SpecifiedDateField,
         Traits\StatusManyToOne,
         Traits\CustomVersionField;
@@ -47,7 +51,7 @@ class CommunityLic implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="issue_no", nullable=true)
+     * @ORM\Column(type="smallint", name="issue_no", nullable=true)
      */
     protected $issueNo;
 

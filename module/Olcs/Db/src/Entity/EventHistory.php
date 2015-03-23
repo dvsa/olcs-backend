@@ -14,13 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="event_history",
  *    indexes={
+ *        @ORM\Index(name="ix_event_history_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_event_history_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_event_history_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_event_history_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="fk_event_history_event_history_type1_idx", columns={"event_history_type_id"}),
- *        @ORM\Index(name="fk_event_history_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_event_history_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_event_history_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_event_history_licence_vehicle1_idx", columns={"licence_vehicle_id"}),
- *        @ORM\Index(name="fk_event_history_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_event_history_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="fk_event_history_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_event_history_cases1_idx", columns={"case_id"}),
+ *        @ORM\Index(name="fk_event_history_bus_reg1_idx", columns={"bus_reg_id"})
  *    }
  * )
  */
@@ -28,19 +29,13 @@ class EventHistory implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
+        Traits\BusRegManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\IdIdentity,
         Traits\LicenceManyToOneAlt1,
+        Traits\OrganisationManyToOneAlt1,
         Traits\TransportManagerManyToOne,
         Traits\UserManyToOne;
-
-    /**
-     * Entity data
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="entity_data", length=65535, nullable=true)
-     */
-    protected $entityData;
 
     /**
      * Entity pk
@@ -70,6 +65,15 @@ class EventHistory implements Interfaces\EntityInterface
     protected $entityVersion;
 
     /**
+     * Event data
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="event_data", length=255, nullable=true)
+     */
+    protected $eventData;
+
+    /**
      * Event datetime
      *
      * @var \DateTime
@@ -96,58 +100,6 @@ class EventHistory implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id", nullable=false)
      */
     protected $eventHistoryType;
-
-    /**
-     * Licence vehicle
-     *
-     * @var \Olcs\Db\Entity\LicenceVehicle
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\LicenceVehicle")
-     * @ORM\JoinColumn(name="licence_vehicle_id", referencedColumnName="id", nullable=true)
-     */
-    protected $licenceVehicle;
-
-    /**
-     * Operation
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="operation", length=1, nullable=true)
-     */
-    protected $operation;
-
-    /**
-     * Team
-     *
-     * @var \Olcs\Db\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
-     */
-    protected $team;
-
-    /**
-     * Set the entity data
-     *
-     * @param string $entityData
-     * @return EventHistory
-     */
-    public function setEntityData($entityData)
-    {
-        $this->entityData = $entityData;
-
-        return $this;
-    }
-
-    /**
-     * Get the entity data
-     *
-     * @return string
-     */
-    public function getEntityData()
-    {
-        return $this->entityData;
-    }
 
     /**
      * Set the entity pk
@@ -219,6 +171,29 @@ class EventHistory implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the event data
+     *
+     * @param string $eventData
+     * @return EventHistory
+     */
+    public function setEventData($eventData)
+    {
+        $this->eventData = $eventData;
+
+        return $this;
+    }
+
+    /**
+     * Get the event data
+     *
+     * @return string
+     */
+    public function getEventData()
+    {
+        return $this->eventData;
+    }
+
+    /**
      * Set the event datetime
      *
      * @param \DateTime $eventDatetime
@@ -285,74 +260,5 @@ class EventHistory implements Interfaces\EntityInterface
     public function getEventHistoryType()
     {
         return $this->eventHistoryType;
-    }
-
-    /**
-     * Set the licence vehicle
-     *
-     * @param \Olcs\Db\Entity\LicenceVehicle $licenceVehicle
-     * @return EventHistory
-     */
-    public function setLicenceVehicle($licenceVehicle)
-    {
-        $this->licenceVehicle = $licenceVehicle;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence vehicle
-     *
-     * @return \Olcs\Db\Entity\LicenceVehicle
-     */
-    public function getLicenceVehicle()
-    {
-        return $this->licenceVehicle;
-    }
-
-    /**
-     * Set the operation
-     *
-     * @param string $operation
-     * @return EventHistory
-     */
-    public function setOperation($operation)
-    {
-        $this->operation = $operation;
-
-        return $this;
-    }
-
-    /**
-     * Get the operation
-     *
-     * @return string
-     */
-    public function getOperation()
-    {
-        return $this->operation;
-    }
-
-    /**
-     * Set the team
-     *
-     * @param \Olcs\Db\Entity\Team $team
-     * @return EventHistory
-     */
-    public function setTeam($team)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * Get the team
-     *
-     * @return \Olcs\Db\Entity\Team
-     */
-    public function getTeam()
-    {
-        return $this->team;
     }
 }

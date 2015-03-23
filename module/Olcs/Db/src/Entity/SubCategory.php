@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="sub_category",
  *    indexes={
- *        @ORM\Index(name="fk_document_sub_category_document_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_document_sub_category_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_document_sub_category_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_sub_category_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_sub_category_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_sub_category_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

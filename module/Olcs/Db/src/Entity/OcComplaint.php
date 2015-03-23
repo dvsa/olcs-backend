@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="oc_complaint",
  *    indexes={
- *        @ORM\Index(name="fk_oc_complaint_complaint1_idx", columns={"complaint_id"}),
- *        @ORM\Index(name="fk_oc_complaint_operating_centre1_idx", columns={"operating_centre_id"})
+ *        @ORM\Index(name="ix_oc_complaint_complaint_id", columns={"complaint_id"}),
+ *        @ORM\Index(name="ix_oc_complaint_operating_centre_id", columns={"operating_centre_id"})
  *    }
  * )
  */
@@ -23,6 +23,7 @@ class OcComplaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
+        Traits\OlbsKeyField,
         Traits\OperatingCentreManyToOne;
 
     /**

@@ -16,11 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application_operating_centre",
  *    indexes={
- *        @ORM\Index(name="fk_ApplicationOperatingCentre_Application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_ApplicationOperatingCentre_OperatingCentre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_application_operating_centre_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_operating_centre_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_application_operating_centre_s41_idx", columns={"s4_id"})
+ *        @ORM\Index(name="ix_application_operating_centre_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_application_operating_centre_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_application_operating_centre_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_operating_centre_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_operating_centre_s4_id", columns={"s4_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_application_operating_centre_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -39,6 +42,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
+        Traits\OlbsKeyField,
         Traits\OperatingCentreManyToOne,
         Traits\PermissionField,
         Traits\S4ManyToOne,
@@ -50,7 +54,7 @@ class ApplicationOperatingCentre implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="ad_placed", nullable=true)
+     * @ORM\Column(type="yesnonull", name="ad_placed", nullable=false)
      */
     protected $adPlaced;
 
