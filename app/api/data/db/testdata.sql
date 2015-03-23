@@ -1730,7 +1730,12 @@ VALUES
 	(26, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19'),
 	(27, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20'),
 	(28, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21'),
-	(29, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22');
+	(29, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22'),
+	(30, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(33, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(34, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(35, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(36, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used');
 
 -- End: Event History Test Data
 
