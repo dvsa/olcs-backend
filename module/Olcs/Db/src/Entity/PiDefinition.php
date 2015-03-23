@@ -14,9 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_definition",
  *    indexes={
- *        @ORM\Index(name="fk_pi_definition_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_pi_definition_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_definition_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_pi_definition_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_pi_definition_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_pi_definition_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -26,7 +26,7 @@ class PiDefinition implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\Description255Field,
-        Traits\GoodsOrPsvManyToOne,
+        Traits\GoodsOrPsvManyToOneAlt1,
         Traits\IdIdentity,
         Traits\IsNiFieldAlt1,
         Traits\LastModifiedByManyToOne,

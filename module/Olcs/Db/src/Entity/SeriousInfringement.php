@@ -17,13 +17,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
- *        @ORM\Index(name="fk_serious_infringement_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user1_idx", columns={"erru_response_user_id"}),
- *        @ORM\Index(name="fk_serious_infringement_country1_idx", columns={"member_state_code"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category1_idx", columns={"si_category_id"}),
- *        @ORM\Index(name="fk_serious_infringement_si_category_type1_idx", columns={"si_category_type_id"}),
- *        @ORM\Index(name="fk_serious_infringement_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_serious_infringement_user3_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_erru_response_user_id", columns={"erru_response_user_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_member_state_code", columns={"member_state_code"}),
+ *        @ORM\Index(name="ix_serious_infringement_si_category_id", columns={"si_category_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_si_category_type_id", columns={"si_category_type_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -36,6 +39,7 @@ class SeriousInfringement implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\SiCategoryManyToOne,
         Traits\CustomVersionField;
 
@@ -113,6 +117,15 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="notification_number", length=36, nullable=true)
      */
     protected $notificationNumber;
+
+    /**
+     * Olbs type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_type", length=50, nullable=true)
+     */
+    protected $olbsType;
 
     /**
      * Reason
@@ -352,6 +365,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getNotificationNumber()
     {
         return $this->notificationNumber;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param string $olbsType
+     * @return SeriousInfringement
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return string
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 
     /**

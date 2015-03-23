@@ -17,7 +17,7 @@ trait TmTypeManyToOne
      * @var \Olcs\Db\Entity\RefData
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=true)
      */
     protected $tmType;
 

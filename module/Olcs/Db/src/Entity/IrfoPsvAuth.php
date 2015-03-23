@@ -14,13 +14,16 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_psv_auth_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data1_idx", columns={"journey_frequency"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_irfo_psv_auth_type1_idx", columns={"irfo_psv_auth_type_id"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_ref_data3_idx", columns={"withdrawn_reason"})
+ *        @ORM\Index(name="ix_irfo_psv_auth_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_journey_frequency", columns={"journey_frequency"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_irfo_psv_auth_type_id", columns={"irfo_psv_auth_type_id"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_status", columns={"status"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_withdrawn_reason", columns={"withdrawn_reason"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -35,6 +38,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\InForceDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\OrganisationManyToOne,
         Traits\StatusManyToOne,
         Traits\CustomVersionField,
@@ -45,7 +49,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_issued", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="copies_issued", nullable=false, options={"default": 0})
      */
     protected $copiesIssued = 0;
 
@@ -54,7 +58,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_issued_total", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="copies_issued_total", nullable=false, options={"default": 0})
      */
     protected $copiesIssuedTotal = 0;
 
@@ -63,7 +67,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_required", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="copies_required", nullable=false, options={"default": 0})
      */
     protected $copiesRequired = 0;
 
@@ -72,7 +76,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="copies_required_total", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="copies_required_total", nullable=false, options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
 
@@ -173,7 +177,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="validity_period", nullable=false)
+     * @ORM\Column(type="smallint", name="validity_period", nullable=false)
      */
     protected $validityPeriod;
 

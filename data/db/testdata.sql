@@ -15,7 +15,6 @@ TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
-TRUNCATE TABLE `complaint_oc_licence`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
@@ -100,14 +99,27 @@ TRUNCATE TABLE `public_holiday`;
 TRUNCATE TABLE `community_lic`;
 TRUNCATE TABLE `community_lic_suspension`;
 TRUNCATE TABLE `community_lic_suspension_reason`;
-TRUNCATE TABLE `community_lic_suspension_reason_type`;
 TRUNCATE TABLE `community_lic_withdrawal`;
 TRUNCATE TABLE `community_lic_withdrawal_reason`;
-TRUNCATE TABLE `community_lic_withdrawal_reason_type`;
 TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
+
+/* Test documents */
+INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
+issued_date,document_store_id) VALUES
+    (672,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
+    (673,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
+    (674,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
+    (675,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
+    (676,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
+    (677,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
+    (678,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
+    (679,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
+    (680,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
+    (681,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
+    (682,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00','');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -274,9 +286,9 @@ VALUES
 
 INSERT INTO `bus_reg_variation_reason` (`bus_reg_id`, `variation_reason_id`)
 VALUES
-  (12, 1),
-  (12, 3),
-  (12, 4);
+  (12, 'brvr_timetable'),
+  (12, 'brvr_start_end'),
+  (12, 'brvr_stops');
 
 INSERT INTO `bus_reg_other_service`
 (`id`, `bus_reg_id`, `last_modified_by`, `created_by`, `service_no`, `created_on`, `last_modified_on`, `version`)
@@ -313,7 +325,7 @@ VALUES
 
 INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
     `last_modified_by`, `case_id`, `complaint_date`, `driver_forename`, `driver_family_name`, `description`, `vrm`,
-    `created_on`, `last_modified_on`, `version`, `close_date`)
+    `created_on`, `last_modified_on`, `version`, `closed_date`)
 VALUES
     (103, 'cs_ack', 'ct_cov', 1, NULL, NULL, 24, '2015-01-16 10:37:10', 'Driver F John',
     'Driver L Smith', 'Some major complaint about condition of vehicle', 'VRM123T', NOW(), NOW(), 1, NULL),
@@ -785,18 +797,13 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
-    `notes`, `created_on`, `last_modified_on`, `version`, `person_id`
+    `notes`, `created_on`, `last_modified_on`, `version`, `officer_cd_id`
 ) VALUES
-    (10,NULL,NULL,1,'2 months',
-        'TBC',NOW(),NULL,1,10),
-    (13,NULL,NULL,1,'2 months',
-        'TBC',NOW(),NULL,1,13),
-    (15,NULL,NULL,1,'6 months',
-        'TBC',NOW(),NULL,1,15),
-    (32,NULL,NULL,1,'2 months',
-        'TBC',NOW(),NULL,1,32),
-    (36,NULL,NULL,1,'6 months',
-        'TBC',NOW(),NULL,1,15);
+    (10,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
+    (13,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
+    (15,NULL,NULL,1,'6 months','TBC',NOW(),NULL,1,NULL),
+    (32,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
+    (36,NULL,NULL,1,'6 months','TBC',NOW(),NULL,1,NULL);
 
 INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
@@ -1000,22 +1007,22 @@ INSERT INTO `tm_case_decision` (`id`,`decision`,`case_id`,`created_by`,`last_mod
   (2,'tm_decision_rnl',83,1,1,1,'2014-12-10','Reason why repute not lost',NULL,NULL,NULL,NULL,'2014-12-06',NULL,NULL,1),
   (3,'tm_decision_noa',84,1,1,1,'2014-09-30',NULL,'Reason no further action',NULL,NULL,NULL,'2014-10-06',NULL,NULL,1);
 
-INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_rehab_id`,`rehab_measure_id`) VALUES
+INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_id`,`rehab_measure_id`) VALUES
   (1,'tm_rehab_adc');
 
-INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_unfitness_id`,`unfitness_reason_id`) VALUES
+INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reason_id`) VALUES
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
-    `login_id`,`contact_details_id`,`job_title`,`division_group`,`department_name`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'loggedinuser',101,'Accountant','Division 1','Department X'),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'johnspellman',105,'','',''),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'stevefox',106,'','',''),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',101,'','',''),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'philjowitt',NULL,'','',''),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'kevinrooney',NULL,'','',''),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'sarahthompson',NULL,'','',''),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'anotheruser',114,'','','');
+    `login_id`,`contact_details_id`) VALUES
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'loggedinuser',101),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'johnspellman',105),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'stevefox',106),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'philjowitt',NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'kevinrooney',NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'sarahthompson',NULL),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'anotheruser',114);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -1448,27 +1455,27 @@ VALUES
   (62, NULL, 7, NULL, 4, 14, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (49473) held at The Court Room, Eastern Traffic Area, Eastbrook, Shaftesbury Road, Cambridge, CB2 8BF on 31 October 2014 at 10:00(Previous Publication:(2200)\r)PF0001624 SI\rVICEROY OF ESSEX LTD\rDIRECTOR(s): STEVEN ANDREW MOORE, AARON RICHARD MOORE.\r10 - 12 BRIDGE STREET SAFFRON WALDEN CB10 1BU', 'PSV - S17 - Licence revoked with effect from 20 March 2015.\rPSV - Sch.3 - Steven Moore found to be of good repute', NULL, '2015-03-06 11:47:52', NULL, NULL, 1),
   (63, NULL, 7, NULL, 4, 27, NULL, NULL, NULL, 'B', NULL, 'TM Public Inquiry (EpisodeId:3764 PublicInquiryId:2479) for COLIN RICHARD COLLINS to be held at The Court Room Eastern Traffic Area Eastbrook Shaftesbury Road Cambridge CB2 8BF, on 20 March 2015 commencing at 10:00 (Previous Publication:(6093))', 'Article 6 of Regulation (EC) No 1071/2009', NULL, '2015-03-06 11:47:52', NULL, NULL, 1);
 
-INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`olbs_id`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
+INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
   VALUES
-    (1,1,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
-    (2,1,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
-    (3,2,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
-    (4,2,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
-    (5,3,NULL,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
-    (6,3,NULL,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
+    (1,1,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
+    (2,1,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
+    (3,2,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
+    (4,2,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
+    (5,3,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
+    (6,3,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
-INSERT INTO `organisation_nature_of_business` (`id`, `organisation_id`, `ref_data_id`, `created_on`, `version`)
+INSERT INTO `organisation_nature_of_business` (`organisation_id`, `ref_data_id`)
 VALUES
-	(1, 1, '01120', '2014-11-26 10:39:46', 1),
-	(2, 1, '01150', '2014-11-26 10:39:47', 1),
-	(3, 30, '01150', '2014-11-26 10:39:47', 1),
-	(4, 41, '01150', '2014-11-26 10:39:47', 1),
-	(5, 54, '01150', '2014-11-26 10:39:47', 1),
-	(6, 63, '01150', '2014-11-26 10:39:47', 1),
-	(7, 75, '01150', '2014-11-26 10:39:47', 1),
-	(8, 100, '01150', '2014-11-26 10:39:47', 1),
-	(9, 104, '01150', '2014-11-26 10:39:47', 1),
-	(10, 105, '01150', '2014-11-26 10:39:47', 1);
+	(1, '01120'),
+	(1, '01150'),
+	(30, '01150'),
+	(41, '01150'),
+	(54, '01150'),
+	(63, '01150'),
+	(75, '01150'),
+	(100, '01150'),
+	(104, '01150'),
+	(105, '01150');
 
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
@@ -1695,37 +1702,40 @@ INSERT INTO `event_history_type` (`id`,`event_code`,`description`) VALUES
 ,('146','PFA','Partner Family Name Changed')
 ,('147','PDB','Partner Date of Birth Changed');
 
-INSERT INTO `event_history` (`id`, `event_history_type_id`, `licence_vehicle_id`, `team_id`, `application_id`, `licence_id`, `transport_manager_id`, `user_id`, `entity_data`, `entity_pk`, `entity_type`, `entity_version`, `event_datetime`, `event_description`, `operation`)
+INSERT INTO `event_history` (
+    `id`, `event_history_type_id`, `application_id`,
+    `licence_id`, `transport_manager_id`, `user_id`,
+    `entity_pk`, `entity_type`, `entity_version`,
+    `event_datetime`, `event_description`
+)
 VALUES
-	(8, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1', 'O'),
-	(9, 1, NULL, NULL, NULL, 30, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2', 'O'),
-	(10, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3', 'O'),
-	(11, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4', 'O'),
-	(12, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5', 'O'),
-	(13, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6', 'O'),
-	(14, 1, NULL, NULL, NULL, 30, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7', 'O'),
-	(15, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8', 'O'),
-	(16, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9', 'O'),
-	(17, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10', 'O'),
-	(18, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11', 'O'),
-	(19, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12', 'O'),
-	(20, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13', 'O'),
-	(21, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14', 'O'),
-	(22, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15', 'O'),
-	(23, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16', 'O'),
-	(24, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17', 'O'),
-	(25, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18', 'O'),
-	(26, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19', 'O'),
-	(27, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20', 'O'),
-	(28, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21', 'O'),
-	(29, 1, NULL, NULL, NULL, 7, NULL, 4, 'Test data', NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22', 'O'),
-	(30, 131, NULL, NULL, NULL, NULL, 1, 4, 'Something changed.', NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used', 'T'),
-	(33, 131, NULL, NULL, NULL, NULL, 1, 4, 'Something changed.', NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used', 'T'),
-	(34, 131, NULL, NULL, NULL, NULL, 1, 4, 'Something else changed.', NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used', 'T'),
-	(35, 131, NULL, NULL, NULL, NULL, 1, 4, 'Something more changed.', NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used', 'T'),
-	(36, 131, NULL, NULL, NULL, NULL, 1, 4, 'Something keeps changing.', NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used', 'T');
-
-
+	(8, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1'),
+	(9, 1, NULL, 30, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2'),
+	(10, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3'),
+	(11, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4'),
+	(12, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5'),
+	(13, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6'),
+	(14, 1, NULL, 30, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7'),
+	(15, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8'),
+	(16, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9'),
+	(17, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10'),
+	(18, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11'),
+	(19, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12'),
+	(20, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13'),
+	(21, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14'),
+	(22, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15'),
+	(23, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16'),
+	(24, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17'),
+	(25, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18'),
+	(26, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19'),
+	(27, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20'),
+	(28, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21'),
+	(29, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22'),
+	(30, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(33, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(34, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(35, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
+	(36, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used');
 
 -- End: Event History Test Data
 

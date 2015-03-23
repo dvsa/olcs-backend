@@ -15,21 +15,20 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="impounding",
  *    indexes={
- *        @ORM\Index(name="fk_impounding_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_impounding_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_impounding_transport_commissioner1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_impounding_ref_data1_idx", columns={"outcome"}),
- *        @ORM\Index(name="fk_impounding_ref_data2_idx", columns={"impounding_type"}),
- *        @ORM\Index(name="fk_impounding_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_impounding_pi_venue1_idx", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_impounding_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_impounding_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_impounding_presiding_tc_id", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="ix_impounding_outcome", columns={"outcome"}),
+ *        @ORM\Index(name="ix_impounding_impounding_type", columns={"impounding_type"}),
+ *        @ORM\Index(name="ix_impounding_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_impounding_pi_venue_id", columns={"pi_venue_id"})
  *    }
  * )
  */
 class Impounding implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CaseManyToOne,
-        Traits\CloseDateField,
+        Traits\CaseManyToOneAlt1,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\HearingDateField,
@@ -52,6 +51,15 @@ class Impounding implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="application_receipt_date", nullable=true)
      */
     protected $applicationReceiptDate;
+
+    /**
+     * Close date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="close_date", nullable=true)
+     */
+    protected $closeDate;
 
     /**
      * Impounding legislation type
@@ -118,6 +126,29 @@ class Impounding implements Interfaces\EntityInterface
     public function getApplicationReceiptDate()
     {
         return $this->applicationReceiptDate;
+    }
+
+    /**
+     * Set the close date
+     *
+     * @param \DateTime $closeDate
+     * @return Impounding
+     */
+    public function setCloseDate($closeDate)
+    {
+        $this->closeDate = $closeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the close date
+     *
+     * @return \DateTime
+     */
+    public function getCloseDate()
+    {
+        return $this->closeDate;
     }
 
     /**
