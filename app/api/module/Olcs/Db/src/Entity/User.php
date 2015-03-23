@@ -247,11 +247,21 @@ class User implements Interfaces\EntityInterface
     protected $organisationUsers;
 
     /**
+     * User role
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\UserRole", mappedBy="user")
+     */
+    protected $userRoles;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->organisationUsers = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     /**
@@ -792,6 +802,66 @@ class User implements Interfaces\EntityInterface
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
             $this->organisationUsers->removeElement($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the user role
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function setUserRoles($userRoles)
+    {
+        $this->userRoles = $userRoles;
+
+        return $this;
+    }
+
+    /**
+     * Get the user roles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUserRoles()
+    {
+        return $this->userRoles;
+    }
+
+    /**
+     * Add a user roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function addUserRoles($userRoles)
+    {
+        if ($userRoles instanceof ArrayCollection) {
+            $this->userRoles = new ArrayCollection(
+                array_merge(
+                    $this->userRoles->toArray(),
+                    $userRoles->toArray()
+                )
+            );
+        } elseif (!$this->userRoles->contains($userRoles)) {
+            $this->userRoles->add($userRoles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a user roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function removeUserRoles($userRoles)
+    {
+        if ($this->userRoles->contains($userRoles)) {
+            $this->userRoles->removeElement($userRoles);
         }
 
         return $this;
