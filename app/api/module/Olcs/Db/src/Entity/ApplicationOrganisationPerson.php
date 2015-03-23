@@ -15,21 +15,19 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="application_organisation_person",
  *    indexes={
  *        @ORM\Index(name="ix_application_organisation_person_person_id", columns={"person_id"}),
- *        @ORM\Index(name="ix_application_organisation_person_original_person_id", columns={"original_person_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_application_organisation_person_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_application_organisation_person_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_organisation_person_person1_idx", columns={"original_person_id"})
  *    }
  * )
  */
 class ApplicationOrganisationPerson implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
-        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OrganisationManyToOne,
         Traits\PersonManyToOne,
@@ -54,6 +52,26 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
+
+    /**
+     * Created by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=false)
+     */
+    protected $createdBy;
+
+    /**
+     * Last modified by
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=false)
+     */
+    protected $lastModifiedBy;
 
     /**
      * Original person
@@ -109,6 +127,52 @@ class ApplicationOrganisationPerson implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Olcs\Db\Entity\User $createdBy
+     * @return ApplicationOrganisationPerson
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param \Olcs\Db\Entity\User $lastModifiedBy
+     * @return ApplicationOrganisationPerson
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
     }
 
     /**

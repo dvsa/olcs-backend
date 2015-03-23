@@ -177,7 +177,7 @@ class Search
 
         foreach ($filters as $filterName => $value) {
 
-            $this->filters[mb_strtolower($f->filter($filterName))] = $value;
+            $this->filters[strtolower($f->filter($filterName))] = $value;
         }
 
         return $this;

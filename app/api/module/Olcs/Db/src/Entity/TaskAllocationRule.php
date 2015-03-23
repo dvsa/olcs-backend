@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_allocation_rule",
  *    indexes={
- *        @ORM\Index(name="fk_task_allocation_rule_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_task_allocation_rule_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_task_allocation_rule_user1_idx", columns={"user_id"}),
- *        @ORM\Index(name="fk_task_allocation_rule_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_task_allocation_rule_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_traffic_area_id", columns={"traffic_area_id"})
  *    }
  * )
  */
@@ -28,7 +28,8 @@ class TaskAllocationRule implements Interfaces\EntityInterface
         Traits\GoodsOrPsvManyToOne,
         Traits\IdIdentity,
         Traits\TeamManyToOne,
-        Traits\TrafficAreaManyToOneAlt1;
+        Traits\TrafficAreaManyToOneAlt1,
+        Traits\UserManyToOne;
 
     /**
      * Category
@@ -48,16 +49,6 @@ class TaskAllocationRule implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="is_mlh", nullable=true)
      */
     protected $isMlh;
-
-    /**
-     * User
-     *
-     * @var \Olcs\Db\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $user;
 
     /**
      * Set the category
@@ -103,28 +94,5 @@ class TaskAllocationRule implements Interfaces\EntityInterface
     public function getIsMlh()
     {
         return $this->isMlh;
-    }
-
-    /**
-     * Set the user
-     *
-     * @param \Olcs\Db\Entity\User $user
-     * @return TaskAllocationRule
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get the user
-     *
-     * @return \Olcs\Db\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 }

@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="workshop",
  *    indexes={
- *        @ORM\Index(name="fk_workshop_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_workshop_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_workshop_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_workshop_contact_details1_idx", columns={"contact_details_id"})
+ *        @ORM\Index(name="ix_workshop_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_workshop_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_workshop_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_workshop_contact_details_id", columns={"contact_details_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_workshop_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -30,6 +33,7 @@ class Workshop implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\RemovedDateField,
         Traits\CustomVersionField;
 

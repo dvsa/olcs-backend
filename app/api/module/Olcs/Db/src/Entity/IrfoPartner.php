@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_partner",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_partner_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_irfo_partner_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_irfo_partner_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_partner_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irfo_partner_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_irfo_partner_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_irfo_partner_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_partner_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_partner_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -31,6 +34,7 @@ class IrfoPartner implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
+        Traits\OlbsKeyField,
         Traits\OrganisationManyToOneAlt1,
         Traits\CustomVersionField;
 }

@@ -1,25 +1,25 @@
+-- **IMPORTANT** This file is for ROLLOUT data
+-- ROLLOUT data is STATIC data that can exist in a live environment
+-- any TEST data needs to go in the TESTDATA file
 SET foreign_key_checks = 0;
+
+START TRANSACTION;
 
 TRUNCATE TABLE `admin_area_traffic_area`;
 TRUNCATE TABLE `traffic_area`;
 TRUNCATE TABLE `category`;
-TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `ref_data`;
 TRUNCATE TABLE `country`;
 TRUNCATE TABLE `decision`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
-TRUNCATE TABLE `submission`;
-TRUNCATE TABLE `submission_section_comment`;
 TRUNCATE TABLE `sub_category`;
 TRUNCATE TABLE `fee_type`;
-TRUNCATE TABLE `document`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
 TRUNCATE TABLE `doc_paragraph`;
 TRUNCATE TABLE `doc_template_bookmark`;
 TRUNCATE TABLE `doc_paragraph_bookmark`;
-TRUNCATE TABLE `variation_reason`;
 TRUNCATE TABLE `role`;
 TRUNCATE TABLE `role_permission`;
 TRUNCATE TABLE `permission`;
@@ -117,9 +117,9 @@ INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('ISLE OF WIGHT','H'),
     ('CITY OF LONDON','K'),
     ('CITY OF WESTMINSTER','K'),
-    ('BARKING AND DAGENHAM','F'),
+    ('BARKING AND DAGENHAM','K'),
     ('BEXLEY','K'),
-    ('BARNET','F'),
+    ('BARNET','K'),
     ('BRENT','K'),
     ('CAMDEN','K'),
     ('EALING','K'),
@@ -325,7 +325,7 @@ VALUES
 	('CF', NULL, NULL, 'Central African Republic', 0, NULL, NULL, 1),
 	('CG', NULL, NULL, 'Congo', 0, NULL, NULL, 1),
 	('CH', NULL, NULL, 'Switzerland', 0, NULL, NULL, 1),
-	('CI', NULL, NULL, 'Cote D\'Ivoire', 0, NULL, NULL, 1),
+	('CI', NULL, NULL, 'Cote D''Ivoire', 0, NULL, NULL, 1),
 	('CK', NULL, NULL, 'Cook Islands', 0, NULL, NULL, 1),
 	('CL', NULL, NULL, 'Chile', 0, NULL, NULL, 1),
 	('CM', NULL, NULL, 'Cameroon', 0, NULL, NULL, 1),
@@ -405,7 +405,7 @@ VALUES
 	('KW', NULL, NULL, 'Kuwait', 0, NULL, NULL, 1),
 	('KY', NULL, NULL, 'Cayman Islands', 0, NULL, NULL, 1),
 	('KZ', NULL, NULL, 'Kazakhstan', 0, NULL, NULL, 1),
-	('LA', NULL, NULL, 'Lao People\'s Democratic Republic', 0, NULL, NULL, 1),
+	('LA', NULL, NULL, 'Lao People''s Democratic Republic', 0, NULL, NULL, 1),
 	('LB', NULL, NULL, 'Lebanon', 0, NULL, NULL, 1),
 	('LC', NULL, NULL, 'Saint Lucia', 0, NULL, NULL, 1),
 	('LI', NULL, NULL, 'Liechtenstein', 0, NULL, NULL, 1),
@@ -538,6 +538,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('com_lic_sts', 'cl_sts_suspended', 'Suspended', null),
     ('com_lic_sts', 'cl_sts_void', 'Voided', null),
     ('com_lic_sts', 'cl_sts_returned', 'Returned', null),
+
+    ('bus_reg_var_reason', 'brvr_timetable', 'Timetable', '1'),
+    ('bus_reg_var_reason', 'brvr_route', 'Route', '2'),
+    ('bus_reg_var_reason', 'brvr_start_end', 'Start & Finish Point', '3'),
+    ('bus_reg_var_reason', 'brvr_stops', 'Stopping Places', '4'),
 
     ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
     ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
@@ -746,11 +751,9 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('insp_result_type', 'insp_res_t_new', 'New', '1'),
     ('insp_result_type', 'insp_res_t_new_sat', 'Satisfactory', '2'),
     ('insp_result_type', 'insp_res_t_new_unsat', 'Unsatisfactory', '3'),
-    ('interim_status', 'int_sts_granted', 'Granted', 'Granted'),
     ('interim_status', 'int_sts_in_force', 'In-Force', 'In-Force'),
     ('interim_status', 'int_sts_refused', 'Refused', 'Refused'),
     ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked'),
-    ('interim_status', 'int_sts_saved', 'Saved', 'Saved'),
     ('interim_status', 'int_sts_requested', 'Requested', 'Requested'),
 
     ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV'),
@@ -1001,12 +1004,10 @@ VALUES
     ('case_cat_compl_ior',          'case_cat_compl',   'In-Office revocation',         'case_category', NULL, '12'),
     ('case_cat_compl_ath',          'case_cat_compl',   'Annual test history',          'case_category', NULL, '13'),
 
-
     ('case_cat_trans',          NULL,               'Transport Manager',                'case_category', NULL, '20'),
     ('case_cat_trans_dup_tm',   'case_cat_trans',   'Duplicate TM',                     'case_category', NULL, '21'),
     ('case_cat_trans_compet_tm','case_cat_trans','Repute / professional competence of TM','case_category', NULL, '22'),
     ('case_cat_trans_hours_tm', 'case_cat_trans',   'TM Hours',                         'case_category', NULL, '23'),
-
 
     ('case_cat_lic_app',        NULL,               'Licensing application',            'case_category', NULL, '40'),
     ('case_cat_lic_app_interim','case_cat_lic_app', 'Interim with / without submission','case_category', NULL, '41'),
@@ -1016,7 +1017,6 @@ VALUES
     ('case_cat_lic_app_4_1',    'case_cat_lic_app', 'Schedule 4/1',                     'case_category', NULL, '45'),
     ('case_cat_lic_app_cv',     'case_cat_lic_app', 'Chargeable variation',             'case_category', NULL, '46'),
     ('case_cat_lic_app_na',     'case_cat_lic_app', 'New application',                  'case_category', NULL, '47'),
-
 
     ('case_cat_lic_ref',        NULL,               'Licence referral',                 'case_category', NULL, '60'),
     ('case_cat_lic_ref_sur',    'case_cat_lic_ref', 'Surrender',                        'case_category', NULL, '61'),
@@ -1028,17 +1028,14 @@ VALUES
     ('case_cat_lic_ref_conduct','case_cat_lic_ref', 'Driver Conduct',                   'case_category', NULL, '67'),
     ('case_cat_lic_ref_proj_co','case_cat_lic_ref', 'Professional Competence',          'case_category', NULL, '68'),
 
-
     ('case_cat_bus_reg',        NULL,               'Bus Registration',                 'case_category', NULL, '75'),
     ('case_cat_bus_reg_sht_n',  'case_cat_bus_reg', 'Short Notice',                     'case_category', NULL, '76'),
     ('case_cat_bus_reg_rt_rv',  'case_cat_bus_reg', 'Route Review',                     'case_category', NULL, '77'),
     ('case_cat_bus_reg_ebsr',   'case_cat_bus_reg', 'EBSR',                             'case_category', NULL, '78'),
     ('case_cat_bus_reg_ncom',   'case_cat_bus_reg', 'Non-compliance',                   'case_category', NULL, '79'),
 
-
     ('case_cat_irfo',           NULL,               'IRFO',                             'case_category', NULL, '84'),
     ('case_cat_irfo_girfo',     'case_cat_irfo',    'General IRFO',                     'case_category', NULL, '85'),
-
 
     ('case_cat_env',            NULL,               'Environmental',                    'case_category', NULL, '91'),
     ('case_cat_env_repr',       'case_cat_env',     'Representation',                   'case_category', NULL, '92'),
@@ -1046,7 +1043,6 @@ VALUES
     ('case_cat_env_compl',      'case_cat_env',     'Complaint',                        'case_category', NULL, '94'),
     ('case_cat_env_revw',       'case_cat_env',     'Review',                           'case_category', NULL, '95'),
     ('case_cat_env_prev',       'case_cat_env',     'Previous History',                 'case_category', NULL, '96'),
-
 
     ('case_cat_other',          NULL,               'Other',                            'case_category', NULL, '98'),
     ('case_cat_other_cq',       'case_cat_other',   'Certificate of qualification',     'case_category', NULL, '99');
@@ -1078,9 +1074,9 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_p_cat_3','NULL','Civic Government (Scotland) Act 1982','conv_category',3,3),
   ('conv_p_cat_4','NULL','Criminal Law (Consolidation) (Scotland) Act 1995','conv_category',4,4),
   ('conv_p_cat_5','NULL','Criminal Procedure (Scotland) Act 1995','conv_category',5,5),
-  ('conv_p_cat_6','NULL','Drivers\' Hours (Goods Vehicles)(Keeping of Records) Regulations 1987','conv_category',6,6),
+  ('conv_p_cat_6','NULL','Drivers'' Hours (Goods Vehicles)(Keeping of Records) Regulations 1987','conv_category',6,6),
   ('conv_p_cat_7','NULL','Goods Vehicles (Licensing of Operators) Act 1995','conv_category',7,7),
-  ('conv_p_cat_8','NULL','Goods Vehicles (Operators\' Licences, Qualifications and Fees) Regulations 1984','conv_category',8,8),
+  ('conv_p_cat_8','NULL','Goods Vehicles (Operators'' Licences, Qualifications and Fees) Regulations 1984','conv_category',8,8),
   ('conv_p_cat_9','NULL','Hydrocarbon Oil Duties Act 1979','conv_category',9,9),
   ('conv_p_cat_10','NULL','Motor Vehicles (Driving Licences) (Heavy Goods and Public Service Vehicles) Regulations 1990','conv_category',10,10),
   ('conv_p_cat_11','NULL','Non Act','conv_category',11,11),
@@ -1099,7 +1095,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_p_cat_24','NULL','Transport Act 2000','conv_category',24,24),
   ('conv_p_cat_25','NULL','Transport and Works Act 1992','conv_category',25,25),
   ('conv_p_cat_26','NULL','Vehicle Excise and Registration Act 1994','conv_category',26,26),
-  ('conv_c_cat_668','conv_p_cat_23','[As added by Road Traffic Act 1974 s16 Sch 4 Para 1] Failing to notify conviction following application for operator\'s licence ','conv_category',668,1),
+  ('conv_c_cat_668','conv_p_cat_23','[As added by Road Traffic Act 1974 s16 Sch 4 Para 1] Failing to notify conviction following application for operator''s licence ','conv_category',668,1),
   ('conv_c_cat_138','conv_p_cat_9','Acquiring duty-free oil in deliberate contravention of restriction in Act','conv_category',138,2),
   ('conv_c_cat_337','conv_p_cat_14','Aid/abet danger of injury due to vehicle condition.','conv_category',337,3),
   ('conv_c_cat_338','conv_p_cat_14','Aid/abet danger of injury due to vehicle condition. (Condition of accessories or equipment).','conv_category',338,4),
@@ -1124,9 +1120,9 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_209','conv_p_cat_12','Allowing use of certificate of approval of type vehicle with intent to deceive','conv_category',209,23),
   ('conv_c_cat_202','conv_p_cat_12','Allowing use of certificate of initial fitness with intent to deceive','conv_category',202,24),
   ('conv_c_cat_223','conv_p_cat_12','Allowing use of certificate of qualification with intent to deceive','conv_category',223,25),
-  ('conv_c_cat_194','conv_p_cat_12','Allowing use of driver\'s licence with intent to deceive','conv_category',194,26),
-  ('conv_c_cat_219','conv_p_cat_12','Allowing use of operator\'s disc with intent to deceive','conv_category',219,27),
-  ('conv_c_cat_195','conv_p_cat_12','Allowing use of PSV operator\'s licence with intent to deceive','conv_category',195,28),
+  ('conv_c_cat_194','conv_p_cat_12','Allowing use of driver''s licence with intent to deceive','conv_category',194,26),
+  ('conv_c_cat_219','conv_p_cat_12','Allowing use of operator''s disc with intent to deceive','conv_category',219,27),
+  ('conv_c_cat_195','conv_p_cat_12','Allowing use of PSV operator''s licence with intent to deceive','conv_category',195,28),
   ('conv_c_cat_182','conv_p_cat_12','Allowing use of road service licence with intent to deceive','conv_category',182,29),
   ('conv_c_cat_230','conv_p_cat_12','Allowing use of with intent to deceive document evidencing appointment of person as certifying officer or PSV examiner','conv_category',230,30),
   ('conv_c_cat_131','conv_p_cat_7','alter a consignment note','conv_category',131,31),
@@ -1135,12 +1131,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_203','conv_p_cat_12','Altering certificate of initial fitness with intent to deceive','conv_category',203,34),
   ('conv_c_cat_228','conv_p_cat_12','Altering certificate of qualification with intent to deceive','conv_category',228,35),
   ('conv_c_cat_308','conv_p_cat_14','Altering document with intent to deceive (not otherwise coded)','conv_category',308,36),
-  ('conv_c_cat_193','conv_p_cat_12','Altering driver\'s licence with intent to deceive','conv_category',193,37),
+  ('conv_c_cat_193','conv_p_cat_12','Altering driver''s licence with intent to deceive','conv_category',193,37),
   ('conv_c_cat_309','conv_p_cat_14','Altering insurance document with intent to deceive','conv_category',309,38),
   ('conv_c_cat_310','conv_p_cat_14','Altering International Road Haulage Permit with intent to deceive','conv_category',310,39),
   ('conv_c_cat_755','conv_p_cat_26','Altering licence with intent to deceive','conv_category',755,40),
-  ('conv_c_cat_216','conv_p_cat_12','Altering operator\'s disc with intent to deceive','conv_category',216,41),
-  ('conv_c_cat_188','conv_p_cat_12','Altering PSV operator\'s licence with intent to deceive','conv_category',188,42),
+  ('conv_c_cat_216','conv_p_cat_12','Altering operator''s disc with intent to deceive','conv_category',216,41),
+  ('conv_c_cat_188','conv_p_cat_12','Altering PSV operator''s licence with intent to deceive','conv_category',188,42),
   ('conv_c_cat_701','conv_p_cat_23','Altering record sheet with intent to deceive','conv_category',701,43),
   ('conv_c_cat_183','conv_p_cat_12','Altering road service licence with intent to deceive','conv_category',183,44),
   ('conv_c_cat_702','conv_p_cat_23','Altering seal on recording equipment with intent to deceive','conv_category',702,45),
@@ -1222,7 +1218,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_820','conv_p_cat_17','Causing the use of a vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 1 and 2 metres) is not rendered clearly visible','conv_category',820,121),
   ('conv_c_cat_821','conv_p_cat_17','Causing the use of a vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 2 and 3.05 metres) is not properly marked','conv_category',821,122),
   ('conv_c_cat_558','conv_p_cat_17','Causing the use of a vehicle exceeding maximum permitted wheel and axle weights (other vehicles)','conv_category',558,123),
-  ('conv_c_cat_562','conv_p_cat_17','Causing the use of a vehicle exceeding maximum weight shown in manufacturer\'s plate (other vehicles)','conv_category',562,124),
+  ('conv_c_cat_562','conv_p_cat_17','Causing the use of a vehicle exceeding maximum weight shown in manufacturer''s plate (other vehicles)','conv_category',562,124),
   ('conv_c_cat_566','conv_p_cat_17','Causing the use of a vehicle exceeding maximum weight shown in plating certificate (other vehicles)','conv_category',566,125),
   ('conv_c_cat_548','conv_p_cat_17','Causing the use of a vehicle exceeding the maximum permitted laden weight.','conv_category',548,126),
   ('conv_c_cat_636','conv_p_cat_19','Causing the use of a vehicle fitted with a lateral overhanging load not lit.','conv_category',636,127),
@@ -1281,7 +1277,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_378','conv_p_cat_15','Causing waiting where waiting prohibited.','conv_category',378,180),
   ('conv_c_cat_620','conv_p_cat_19','Causing/Using vehicle fitted with obligatory rear fog lamp of incorrect colour','conv_category',620,181),
   ('conv_c_cat_120','conv_p_cat_7','Contravening a condition attached to a licence','conv_category',120,182),
-  ('conv_c_cat_661','conv_p_cat_22','Contravening Inspector\'s prohibition of transporting animal by rail due to illness infirmity injury fatigue or imminent calving foaling etc','conv_category',661,183),
+  ('conv_c_cat_661','conv_p_cat_22','Contravening Inspector''s prohibition of transporting animal by rail due to illness infirmity injury fatigue or imminent calving foaling etc','conv_category',661,183),
   ('conv_c_cat_412','conv_p_cat_16','Contravening or failing to comply with requirement imposed by relevant regulation concerning control documents','conv_category',412,184),
   ('conv_c_cat_170','conv_p_cat_12','Contravening PSV and Trolley Vehicles (Carrying Capacity) Regulations 1954','conv_category',170,185),
   ('conv_c_cat_33','conv_p_cat_1','Contravening temporary minimum speed limit imposed by Secretary of State (offence detected involving the use of camera devices as provided for by Road Traffic Act 1991 s40)','conv_category',33,186),
@@ -1296,22 +1292,22 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_767','conv_p_cat_17','Defective speed limiter on goods vehicle.','conv_category',767,195),
   ('conv_c_cat_700','conv_p_cat_23','Disclosing information about person trade or business after enquiry to which access was restricted','conv_category',700,196),
   ('conv_c_cat_41','conv_p_cat_3','Distribute indecent photograph of child','conv_category',41,197),
-  ('conv_c_cat_91','conv_p_cat_6','Driver correcting entry in driver\'s record book in wrong fashion','conv_category',91,198),
-  ('conv_c_cat_90','conv_p_cat_6','Driver erasing or obliterating entry in driver\'s record book','conv_category',90,199),
-  ('conv_c_cat_96','conv_p_cat_6','Driver failing to carry driver\'s record book','conv_category',96,200),
+  ('conv_c_cat_91','conv_p_cat_6','Driver correcting entry in driver''s record book in wrong fashion','conv_category',91,198),
+  ('conv_c_cat_90','conv_p_cat_6','Driver erasing or obliterating entry in driver''s record book','conv_category',90,199),
+  ('conv_c_cat_96','conv_p_cat_6','Driver failing to carry driver''s record book','conv_category',96,200),
   ('conv_c_cat_81','conv_p_cat_6','Driver failing to complete required manual record','conv_category',81,201),
-  ('conv_c_cat_84','conv_p_cat_6','Driver failing to deliver driver\'s record book to employer','conv_category',84,202),
+  ('conv_c_cat_84','conv_p_cat_6','Driver failing to deliver driver''s record book to employer','conv_category',84,202),
   ('conv_c_cat_698','conv_p_cat_23','Driver failing to keep proper written record (other than tachograph and timesheet)','conv_category',698,203),
   ('conv_c_cat_83','conv_p_cat_6','Driver failing to make duplicate entry on weekly record sheet','conv_category',83,204),
   ('conv_c_cat_697','conv_p_cat_23','Driver failing to notify employer of existence of another employer','conv_category',697,205),
-  ('conv_c_cat_94','conv_p_cat_6','Driver failing to produce driver\'s record book for inspection','conv_category',94,206),
+  ('conv_c_cat_94','conv_p_cat_6','Driver failing to produce driver''s record book for inspection','conv_category',94,206),
   ('conv_c_cat_86','conv_p_cat_6','Driver failing to retain record book in which all weekly record sheets have been used for 14 days from date on which it was last returned','conv_category',86,207),
-  ('conv_c_cat_76','conv_p_cat_6','Driver failing to return driver\'s record book to employer on ceasing employment','conv_category',76,208),
+  ('conv_c_cat_76','conv_p_cat_6','Driver failing to return driver''s record book to employer on ceasing employment','conv_category',76,208),
   ('conv_c_cat_70','conv_p_cat_6','Driver failing to return record book in which all weekly record sheets have been used to employer after 14 days from date on which it was last returned','conv_category',70,209),
-  ('conv_c_cat_92','conv_p_cat_6','Driver failing to sign correction in driver\'s record book','conv_category',92,210),
+  ('conv_c_cat_92','conv_p_cat_6','Driver failing to sign correction in driver''s record book','conv_category',92,210),
   ('conv_c_cat_323','conv_p_cat_14','Driver failing to wear seat belt.','conv_category',323,211),
   ('conv_c_cat_352','conv_p_cat_14','Driver having working day in excess of 11 hours','conv_category',352,212),
-  ('conv_c_cat_88','conv_p_cat_6','Driver making entry in second driver\'s record book','conv_category',88,213),
+  ('conv_c_cat_88','conv_p_cat_6','Driver making entry in second driver''s record book','conv_category',88,213),
   ('conv_c_cat_453','conv_p_cat_17','Driver not being in position to have full view','conv_category',453,214),
   ('conv_c_cat_454','conv_p_cat_17','Driver not being in position to have proper control','conv_category',454,215),
   ('conv_c_cat_678','conv_p_cat_23','Driver not taking minimum weekly rest period of 45, 36 or 24 consecutive hours during the week.','conv_category',678,216),
@@ -1322,8 +1318,8 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_240','conv_p_cat_14','Driver of passenger-carrying vehicle failing to produce PCV driving licence to authorised officer','conv_category',240,221),
   ('conv_c_cat_667','conv_p_cat_23','Driver taking no weekly rest period of 45, 36 or 24 consecutive hours after 6 daily driving periods.','conv_category',667,222),
   ('conv_c_cat_79','conv_p_cat_6','Driver using second record book before completion of all record sheets in first record book','conv_category',79,223),
-  ('conv_c_cat_93','conv_p_cat_6','Driver\'s second employer failing to complete front sheet of driver\'s record book','conv_category',93,224),
-  ('conv_c_cat_95','conv_p_cat_6','Driver\'s second employer failing to require production of driver\'s record book','conv_category',95,225),
+  ('conv_c_cat_93','conv_p_cat_6','Driver''s second employer failing to complete front sheet of driver''s record book','conv_category',93,224),
+  ('conv_c_cat_95','conv_p_cat_6','Driver''s second employer failing to require production of driver''s record book','conv_category',95,225),
   ('conv_c_cat_640','conv_p_cat_19','Driving a vehicle in contravention of a prohibition under ss69 or 70 of this Act','conv_category',640,226),
   ('conv_c_cat_670','conv_p_cat_23','Driving in excess of 10 hours in a working day.','conv_category',670,227),
   ('conv_c_cat_688','conv_p_cat_23','Driving in excess of 4.5 hours without a minimum break of 45 minutes.','conv_category',688,228),
@@ -1333,12 +1329,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_460','conv_p_cat_17','Driving vehicle with TV set etc visible to driver','conv_category',460,232),
   ('conv_c_cat_102','conv_p_cat_7','drove a large goods vehicle without a consignment note.','conv_category',102,233),
   ('conv_c_cat_85','conv_p_cat_6','Employer failing to detach completed duplicate record sheet','conv_category',85,234),
-  ('conv_c_cat_74','conv_p_cat_6','Employer failing to enter specified details in driver\'s record book prior to issue','conv_category',74,235),
+  ('conv_c_cat_74','conv_p_cat_6','Employer failing to enter specified details in driver''s record book prior to issue','conv_category',74,235),
   ('conv_c_cat_71','conv_p_cat_6','Employer failing to examine completed weekly record sheet','conv_category',71,236),
   ('conv_c_cat_689','conv_p_cat_23','Employer failing to issue record book to driver','conv_category',689,237),
   ('conv_c_cat_699','conv_p_cat_23','Employer failing to keep proper written record (other than tachograph and timesheet)','conv_category',699,238),
-  ('conv_c_cat_77','conv_p_cat_6','Employer failing to preserve intact driver\'s record book for a year after book was returned','conv_category',77,239),
-  ('conv_c_cat_78','conv_p_cat_6','Employer failing to preserve intact duplicate driver\'s weekly record sheets for a year after book was returned','conv_category',78,240),
+  ('conv_c_cat_77','conv_p_cat_6','Employer failing to preserve intact driver''s record book for a year after book was returned','conv_category',77,239),
+  ('conv_c_cat_78','conv_p_cat_6','Employer failing to preserve intact duplicate driver''s weekly record sheets for a year after book was returned','conv_category',78,240),
   ('conv_c_cat_72','conv_p_cat_6','Employer failing to return book to driver before he or she was next on duty','conv_category',72,241),
   ('conv_c_cat_664','conv_p_cat_23','Employer failing to secure return of record sheet within 21 days','conv_category',664,242),
   ('conv_c_cat_73','conv_p_cat_6','Employer failing to sign completed weekly or duplicate record sheet','conv_category',73,243),
@@ -1390,20 +1386,20 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_808','conv_p_cat_17','Failing to display a test date disc on a goods trailer.','conv_category',808,289),
   ('conv_c_cat_578','conv_p_cat_18','Failing to display excise licence in prescribed manner','conv_category',578,290),
   ('conv_c_cat_463','conv_p_cat_17','Failing to equip trailer with sufficient or suitable spring','conv_category',463,291),
-  ('conv_c_cat_172','conv_p_cat_12','Failing to exhibit an operator\'s disc.','conv_category',172,292),
+  ('conv_c_cat_172','conv_p_cat_12','Failing to exhibit an operator''s disc.','conv_category',172,292),
   ('conv_c_cat_252','conv_p_cat_14','Failing to give name and address and produce insurance and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',252,293),
   ('conv_c_cat_253','conv_p_cat_14','Failing to give name and address and produce insurance and plating certificate to constable after accident/suspected offence on a road','conv_category',253,294),
-  ('conv_c_cat_254','conv_p_cat_14','Failing to give name and address and produce insurance to constable after accident in a public place other than on a road by driver of goods\' vehicle.','conv_category',254,295),
+  ('conv_c_cat_254','conv_p_cat_14','Failing to give name and address and produce insurance to constable after accident in a public place other than on a road by driver of goods'' vehicle.','conv_category',254,295),
   ('conv_c_cat_662','conv_p_cat_23','Failing to give name and address and produce insurance to constable after accident/suspected offence on a road','conv_category',662,296),
   ('conv_c_cat_255','conv_p_cat_14','Failing to give name and address and produce insurance, plating certificate and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',255,297),
   ('conv_c_cat_256','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',256,298),
   ('conv_c_cat_257','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance and plating certificate to constable after accident/suspected offence on a road','conv_category',257,299),
-  ('conv_c_cat_258','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance to constable after accident in a public place other than on a road by driver of goods\' vehicle.','conv_category',258,300),
+  ('conv_c_cat_258','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance to constable after accident in a public place other than on a road by driver of goods'' vehicle.','conv_category',258,300),
   ('conv_c_cat_259','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance to constable after accident/suspected offence on a road','conv_category',259,301),
   ('conv_c_cat_260','conv_p_cat_14','Failing to give name and address of vehicle owner and produce insurance, plating certificate and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',260,302),
   ('conv_c_cat_261','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',261,303),
   ('conv_c_cat_262','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance and plating certificate to constable after accident/suspected offence on a road','conv_category',262,304),
-  ('conv_c_cat_263','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance to constable after accident in a public place other than on a road by driver of goods\' vehicle.','conv_category',263,305),
+  ('conv_c_cat_263','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance to constable after accident in a public place other than on a road by driver of goods'' vehicle.','conv_category',263,305),
   ('conv_c_cat_264','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance to constable after accident/suspected offence on a road','conv_category',264,306),
   ('conv_c_cat_265','conv_p_cat_14','Failing to give name and address, name and address of vehicle owner and produce insurance, plating certificate and goods vehicle test certificate to constable after accident/suspected offence on a road','conv_category',265,307),
   ('conv_c_cat_778','conv_p_cat_17','Failing to maintain sideguards.','conv_category',778,308),
@@ -1418,7 +1414,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_269','conv_p_cat_14','Failing to produce insurance to constable after accident/suspected offence by driver of goods vehicle on a road','conv_category',269,317),
   ('conv_c_cat_270','conv_p_cat_14','Failing to produce insurance, plating certificate and goods vehicle testing certificate to constable after accident/suspected offence by driver of goods vehicle on a road','conv_category',270,318),
   ('conv_c_cat_169','conv_p_cat_12','Failing to produce licence','conv_category',169,319),
-  ('conv_c_cat_136','conv_p_cat_8','Failing to produce operator\'s licence','conv_category',136,320),
+  ('conv_c_cat_136','conv_p_cat_8','Failing to produce operator''s licence','conv_category',136,320),
   ('conv_c_cat_271','conv_p_cat_14','Failing to produce plating and test certificate issued in respect of goods vehicle and/or of trailer drawn by it when required to do so by constable','conv_category',271,321),
   ('conv_c_cat_250','conv_p_cat_14','Failing to produce plating certificate issued in respect of goods vehicle and/or of trailer drawn by it when required to do so by constable','conv_category',250,322),
   ('conv_c_cat_150','conv_p_cat_10','Failing to produce PSV licence for examination by authorised officer','conv_category',150,323),
@@ -1468,12 +1464,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_204','conv_p_cat_12','Forging certificate of initial fitness with intent to deceive','conv_category',204,367),
   ('conv_c_cat_229','conv_p_cat_12','Forging certificate of qualification with intent to deceive','conv_category',229,368),
   ('conv_c_cat_311','conv_p_cat_14','Forging document with intent to deceive (not otherwise coded)','conv_category',311,369),
-  ('conv_c_cat_189','conv_p_cat_12','Forging driver\'s licence with intent to deceive','conv_category',189,370),
+  ('conv_c_cat_189','conv_p_cat_12','Forging driver''s licence with intent to deceive','conv_category',189,370),
   ('conv_c_cat_312','conv_p_cat_14','Forging insurance document with intent to deceive','conv_category',312,371),
   ('conv_c_cat_313','conv_p_cat_14','Forging International Road Haulage Permit with intent to deceive','conv_category',313,372),
   ('conv_c_cat_314','conv_p_cat_14','Forging licence with intent to deceive','conv_category',314,373),
-  ('conv_c_cat_217','conv_p_cat_12','Forging operator\'s disc with intent to deceive','conv_category',217,374),
-  ('conv_c_cat_190','conv_p_cat_12','Forging PSV operator\'s licence with intent to deceive','conv_category',190,375),
+  ('conv_c_cat_217','conv_p_cat_12','Forging operator''s disc with intent to deceive','conv_category',217,374),
+  ('conv_c_cat_190','conv_p_cat_12','Forging PSV operator''s licence with intent to deceive','conv_category',190,375),
   ('conv_c_cat_184','conv_p_cat_12','Forging road service licence with intent to deceive','conv_category',184,376),
   ('conv_c_cat_725','conv_p_cat_23','Forging seal on recording equipment with intent to deceive','conv_category',725,377),
   ('conv_c_cat_232','conv_p_cat_12','Forging with intent to deceive document evidencing appointment of person as certifying officer or PSV examiner','conv_category',232,378),
@@ -1482,14 +1478,14 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_212','conv_p_cat_12','Fraudulently using certificate of approval of type vehicle with intent to deceive','conv_category',212,381),
   ('conv_c_cat_205','conv_p_cat_12','Fraudulently using certificate of initial fitness with intent to deceive ','conv_category',205,382),
   ('conv_c_cat_224','conv_p_cat_12','Fraudulently using certificate of qualification with intent to receive','conv_category',224,383),
-  ('conv_c_cat_196','conv_p_cat_12','Fraudulently using driver\'s licence with intent to deceive','conv_category',196,384),
-  ('conv_c_cat_220','conv_p_cat_12','Fraudulently using operator\'s disc with intent to deceive','conv_category',220,385),
-  ('conv_c_cat_191','conv_p_cat_12','Fraudulently using PSV operator\'s licence with intent to deceive','conv_category',191,386),
+  ('conv_c_cat_196','conv_p_cat_12','Fraudulently using driver''s licence with intent to deceive','conv_category',196,384),
+  ('conv_c_cat_220','conv_p_cat_12','Fraudulently using operator''s disc with intent to deceive','conv_category',220,385),
+  ('conv_c_cat_191','conv_p_cat_12','Fraudulently using PSV operator''s licence with intent to deceive','conv_category',191,386),
   ('conv_c_cat_185','conv_p_cat_12','Fraudulently using road service licence with intent to deceive','conv_category',185,387),
   ('conv_c_cat_233','conv_p_cat_12','Fraudulently using with intent to deceive document evidencing appointment of person as certifying officer or PSV examiner','conv_category',233,388),
   ('conv_c_cat_759','conv_p_cat_26','Furnishing false particulars as to keeper of vehicle','conv_category',759,389),
   ('conv_c_cat_760','conv_p_cat_26','Furnishing false particulars as to vehicle','conv_category',760,390),
-  ('conv_c_cat_97','conv_p_cat_7','Goods Vehicle - Alter Operator\'s Disc','conv_category',97,391),
+  ('conv_c_cat_97','conv_p_cat_7','Goods Vehicle - Alter Operator''s Disc','conv_category',97,391),
   ('conv_c_cat_130','conv_p_cat_7','Goods Vehicle - Fail to display operators disc.','conv_category',130,392),
   ('conv_c_cat_98','conv_p_cat_7','Goods Vehicle - Operators disc illegible.','conv_category',98,393),
   ('conv_c_cat_103','conv_p_cat_7','having used a large goods vehicle failed to preserve the consignment note.','conv_category',103,394),
@@ -1503,7 +1499,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_750','conv_p_cat_26','Keeper of vehicle allegedly contravening s29 of Act failing to give information to Chief of Police about person who kept vehicle on the road','conv_category',750,402),
   ('conv_c_cat_751','conv_p_cat_26','Keeper of vehicle allegedly contravening ss 29 34 or 37 of Act failing to give information to Chief of Police about driver or user','conv_category',751,403),
   ('conv_c_cat_360','conv_p_cat_15','Keeper of vehicle failing to give information concerning identity of driver','conv_category',360,404),
-  ('conv_c_cat_272','conv_p_cat_14','Keeper of vehicle failing to supply information as to driver\'s identity as required by or on behalf of Chief Officer of Police ','conv_category',272,405),
+  ('conv_c_cat_272','conv_p_cat_14','Keeper of vehicle failing to supply information as to driver''s identity as required by or on behalf of Chief Officer of Police ','conv_category',272,405),
   ('conv_c_cat_749','conv_p_cat_26','Keeping trailer on which registration mark is not fixed or displayed','conv_category',749,406),
   ('conv_c_cat_743','conv_p_cat_26','Keeping vehicle without excise licence in force','conv_category',743,407),
   ('conv_c_cat_144','conv_p_cat_9','Knowingly allowing rebated heavy oil to be taken into vehicle with intent to contravene restriction in Act','conv_category',144,408),
@@ -1518,12 +1514,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_225','conv_p_cat_12','Lending certificate of qualification with intent to deceive','conv_category',225,417),
   ('conv_c_cat_126','conv_p_cat_7','Lending document to another (goods vehicles)','conv_category',126,418),
   ('conv_c_cat_324','conv_p_cat_14','Lending document with intent to deceive (not otherwise coded)','conv_category',324,419),
-  ('conv_c_cat_192','conv_p_cat_12','Lending driver\'s licence with intent to deceive','conv_category',192,420),
+  ('conv_c_cat_192','conv_p_cat_12','Lending driver''s licence with intent to deceive','conv_category',192,420),
   ('conv_c_cat_325','conv_p_cat_14','Lending insurance document with intent to deceive','conv_category',325,421),
   ('conv_c_cat_326','conv_p_cat_14','Lending International Road Haulage Permit with intent to deceive','conv_category',326,422),
   ('conv_c_cat_327','conv_p_cat_14','Lending licence with intent to deceive','conv_category',327,423),
-  ('conv_c_cat_218','conv_p_cat_12','Lending operator\'s disc with intent to deceive','conv_category',218,424),
-  ('conv_c_cat_197','conv_p_cat_12','Lending PSV operator\'s licence with intent to deceive','conv_category',197,425),
+  ('conv_c_cat_218','conv_p_cat_12','Lending operator''s disc with intent to deceive','conv_category',218,424),
+  ('conv_c_cat_197','conv_p_cat_12','Lending PSV operator''s licence with intent to deceive','conv_category',197,425),
   ('conv_c_cat_186','conv_p_cat_12','Lending road service licence with intent to deceive','conv_category',186,426),
   ('conv_c_cat_234','conv_p_cat_12','Lending with intent to deceive document evidencing appointment of person as certifying officer or PSV examiner','conv_category',234,427),
   ('conv_c_cat_742','conv_p_cat_26','Licence in force fixed to and exhibited on the vehicle.','conv_category',742,428),
@@ -1536,18 +1532,18 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_226','conv_p_cat_12','Making false certificate of qualification with intent to deceive','conv_category',226,435),
   ('conv_c_cat_758','conv_p_cat_26','Making false declaration to obtain rebate','conv_category',758,436),
   ('conv_c_cat_757','conv_p_cat_26','Making false declaration to obtain vehicle or trade excise licence','conv_category',757,437),
-  ('conv_c_cat_198','conv_p_cat_12','Making false driver\'s licence with intent to deceive','conv_category',198,438),
+  ('conv_c_cat_198','conv_p_cat_12','Making false driver''s licence with intent to deceive','conv_category',198,438),
   ('conv_c_cat_726','conv_p_cat_23','Making false entry on record sheet','conv_category',726,439),
-  ('conv_c_cat_221','conv_p_cat_12','Making false operator\'s disc with intent to deceive','conv_category',221,440),
-  ('conv_c_cat_199','conv_p_cat_12','Making false PSV operator\'s licence with intent to deceive','conv_category',199,441),
+  ('conv_c_cat_221','conv_p_cat_12','Making false operator''s disc with intent to deceive','conv_category',221,440),
+  ('conv_c_cat_199','conv_p_cat_12','Making false PSV operator''s licence with intent to deceive','conv_category',199,441),
   ('conv_c_cat_187','conv_p_cat_12','Making false road service licence with intent to deceive','conv_category',187,442),
   ('conv_c_cat_175','conv_p_cat_12','Making false statement to obtain certificate of approval of type vehicle.','conv_category',175,443),
   ('conv_c_cat_176','conv_p_cat_12','Making false statement to obtain certificate of initial fitness.','conv_category',176,444),
   ('conv_c_cat_177','conv_p_cat_12','Making false statement to obtain certificate of qualification.','conv_category',177,445),
-  ('conv_c_cat_178','conv_p_cat_12','Making false statement to obtain driver\'s licence','conv_category',178,446),
-  ('conv_c_cat_179','conv_p_cat_12','Making false statement to obtain operator\'s disc.','conv_category',179,447),
-  ('conv_c_cat_274','conv_p_cat_14','Making false statement to obtain operator\'s licence.','conv_category',274,448),
-  ('conv_c_cat_180','conv_p_cat_12','Making false statement to obtain PSV operator\'s licence','conv_category',180,449),
+  ('conv_c_cat_178','conv_p_cat_12','Making false statement to obtain driver''s licence','conv_category',178,446),
+  ('conv_c_cat_179','conv_p_cat_12','Making false statement to obtain operator''s disc.','conv_category',179,447),
+  ('conv_c_cat_274','conv_p_cat_14','Making false statement to obtain operator''s licence.','conv_category',274,448),
+  ('conv_c_cat_180','conv_p_cat_12','Making false statement to obtain PSV operator''s licence','conv_category',180,449),
   ('conv_c_cat_181','conv_p_cat_12','Making false statement to obtain road service licence.','conv_category',181,450),
   ('conv_c_cat_330','conv_p_cat_14','Making insurance document with intent to deceive','conv_category',330,451),
   ('conv_c_cat_331','conv_p_cat_14','Making International Road Haulage Permit with intent to deceive','conv_category',331,452),
@@ -1562,12 +1558,12 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_423','conv_p_cat_14','Obstructing examiner testing vehicle to ascertain if defective or unsuitable part has been fixed etc','conv_category',423,461),
   ('conv_c_cat_695','conv_p_cat_23','Obstructing officer in exercise of power of entry','conv_category',695,462),
   ('conv_c_cat_118','conv_p_cat_7','on application for an operators licence failed to notify the traffic commissioner that a notifiable conviction had occurred.','conv_category',118,463),
-  ('conv_c_cat_277','conv_p_cat_14','Operating PSV without operator\'s licence','conv_category',277,464),
+  ('conv_c_cat_277','conv_p_cat_14','Operating PSV without operator''s licence','conv_category',277,464),
   ('conv_c_cat_660','conv_p_cat_22','Owner of road vehicle in which animal transported failing to provide all reasonable facilities for cleansing and disinfecting vehicle','conv_category',660,465),
   ('conv_c_cat_292','conv_p_cat_14','Owner of vehicle failing to give information as to insurance to police','conv_category',292,466),
-  ('conv_c_cat_82','conv_p_cat_6','Owner-driver failing to complete front sheet of driver\'s record book before use','conv_category',82,467),
-  ('conv_c_cat_80','conv_p_cat_6','Owner-driver failing to preserve intact own driver\'s record book for a year after book was completed or ceased to be used','conv_category',80,468),
-  ('conv_c_cat_75','conv_p_cat_6','Owner-driver failing to preserve intact own duplicate driver\'s weekly record sheets for a year after book was completed or ceased to be used','conv_category',75,469),
+  ('conv_c_cat_82','conv_p_cat_6','Owner-driver failing to complete front sheet of driver''s record book before use','conv_category',82,467),
+  ('conv_c_cat_80','conv_p_cat_6','Owner-driver failing to preserve intact own driver''s record book for a year after book was completed or ceased to be used','conv_category',80,468),
+  ('conv_c_cat_75','conv_p_cat_6','Owner-driver failing to preserve intact own duplicate driver''s weekly record sheets for a year after book was completed or ceased to be used','conv_category',75,469),
   ('conv_c_cat_89','conv_p_cat_6','Owner-driver failing to submit duplicate of weekly record sheet','conv_category',89,470),
   ('conv_c_cat_279','conv_p_cat_14','Parking HGV on central reservation in land situated between two carriageways and which is not footway','conv_category',279,471),
   ('conv_c_cat_99','conv_p_cat_7','Parking HGV on central reservation on footway comprised on an urban road','conv_category',99,472),
@@ -1627,7 +1623,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_824','conv_p_cat_17','Permitting the use of a vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 1 and 2 metres) is not rendered clearly visible','conv_category',824,526),
   ('conv_c_cat_825','conv_p_cat_17','Permitting the use of a vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 2 and 3.05 metres) is not properly marked','conv_category',825,527),
   ('conv_c_cat_559','conv_p_cat_17','Permitting the use of a vehicle exceeding maximum permitted wheel and axle weights (other vehicles)','conv_category',559,528),
-  ('conv_c_cat_563','conv_p_cat_17','Permitting the use of a vehicle exceeding maximum weight shown in manufacturer\'s plate (other vehicles)','conv_category',563,529),
+  ('conv_c_cat_563','conv_p_cat_17','Permitting the use of a vehicle exceeding maximum weight shown in manufacturer''s plate (other vehicles)','conv_category',563,529),
   ('conv_c_cat_568','conv_p_cat_17','Permitting the use of a vehicle exceeding maximum weight shown in plating certificate (other vehicles)','conv_category',568,530),
   ('conv_c_cat_550','conv_p_cat_17','Permitting the use of a vehicle exceeding the maximum permitted laden weight.','conv_category',550,531),
   ('conv_c_cat_637','conv_p_cat_19','Permitting the use of a vehicle fitted with a lateral overhanging load not lit.','conv_category',637,532),
@@ -1693,9 +1689,9 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_215','conv_p_cat_12','Possessing false certificate of approval of type vehicle with intent to deceive','conv_category',215,592),
   ('conv_c_cat_208','conv_p_cat_12','Possessing false certificate of initial fitness with intent to deceive','conv_category',208,593),
   ('conv_c_cat_227','conv_p_cat_12','Possessing false certificate of qualification with intent to deceive','conv_category',227,594),
-  ('conv_c_cat_200','conv_p_cat_12','Possessing false driver\'s licence with intent to deceive','conv_category',200,595),
-  ('conv_c_cat_222','conv_p_cat_12','Possessing false operator\'s disc with intent to deceive','conv_category',222,596),
-  ('conv_c_cat_201','conv_p_cat_12','Possessing false PSV operator\'s licence with intent to deceive','conv_category',201,597),
+  ('conv_c_cat_200','conv_p_cat_12','Possessing false driver''s licence with intent to deceive','conv_category',200,595),
+  ('conv_c_cat_222','conv_p_cat_12','Possessing false operator''s disc with intent to deceive','conv_category',222,596),
+  ('conv_c_cat_201','conv_p_cat_12','Possessing false PSV operator''s licence with intent to deceive','conv_category',201,597),
   ('conv_c_cat_237','conv_p_cat_12','Possessing false road service licence with intent to deceive','conv_category',237,598),
   ('conv_c_cat_315','conv_p_cat_14','Possessing insurance document with intent to deceive','conv_category',315,599),
   ('conv_c_cat_334','conv_p_cat_14','Possessing International Road Haulage Permit with intent to deceive','conv_category',334,600),
@@ -1767,7 +1763,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_473','conv_p_cat_17','Using goods vehicle (maximum gross weight above 3500 kgs) with mirrors not fitted','conv_category',473,666),
   ('conv_c_cat_771','conv_p_cat_17','Using goods vehicle which was not fitted with speed limiter','conv_category',771,667),
   ('conv_c_cat_777','conv_p_cat_17','Using goods vehicle with no side guards.','conv_category',777,668),
-  ('conv_c_cat_247','conv_p_cat_14','Using goods vehicle without operator\'s licence','conv_category',247,669),
+  ('conv_c_cat_247','conv_p_cat_14','Using goods vehicle without operator''s licence','conv_category',247,669),
   ('conv_c_cat_317','conv_p_cat_14','Using insurance document with intent to deceive','conv_category',317,670),
   ('conv_c_cat_318','conv_p_cat_14','Using International Road Haulage Permit with intent to deceive','conv_category',318,671),
   ('conv_c_cat_816','conv_p_cat_17','Using laden vehicle with width and lateral projections exceeding 2.9 metres but less than 4.3 metres ','conv_category',816,672),
@@ -1802,8 +1798,8 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_500','conv_p_cat_17','Using vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 1 and 2 metres) is not rendered clearly visible','conv_category',500,701),
   ('conv_c_cat_501','conv_p_cat_17','Using vehicle carrying load/ appliance/ apparatus the rearward projection of which (between 2 and 3.05 metres) is not properly marked','conv_category',501,702),
   ('conv_c_cat_557','conv_p_cat_17','Using vehicle exceeding maximum permitted wheel and axle weights (other vehicles)','conv_category',557,703),
-  ('conv_c_cat_564','conv_p_cat_17','Using vehicle exceeding maximum weight shown in manufacturer\'s plate (goods vehicles and vehicles adapted to carry more than 8 passengers)','conv_category',564,704),
-  ('conv_c_cat_814','conv_p_cat_17','Using vehicle exceeding maximum weight shown in manufacturer\'s plate (other vehicles)','conv_category',814,705),
+  ('conv_c_cat_564','conv_p_cat_17','Using vehicle exceeding maximum weight shown in manufacturer''s plate (goods vehicles and vehicles adapted to carry more than 8 passengers)','conv_category',564,704),
+  ('conv_c_cat_814','conv_p_cat_17','Using vehicle exceeding maximum weight shown in manufacturer''s plate (other vehicles)','conv_category',814,705),
   ('conv_c_cat_569','conv_p_cat_17','Using vehicle exceeding maximum weight shown in plating certificate (goods vehicles and vehicles adapted to carry more than 8 passengers)','conv_category',569,706),
   ('conv_c_cat_565','conv_p_cat_17','Using vehicle exceeding maximum weight shown in plating certificate (other vehicles)','conv_category',565,707),
   ('conv_c_cat_646','conv_p_cat_19','Using vehicle fitted with front overhanging load not lit','conv_category',646,708),
@@ -1867,7 +1863,7 @@ INSERT INTO ref_data (id,parent_id,description,ref_data_category_id,olbs_key,dis
   ('conv_c_cat_784','conv_p_cat_17','Using vehicle with no silencer fitted ','conv_category',784,766),
   ('conv_c_cat_710','conv_p_cat_23','Using vehicle with no tachograph installation plaque','conv_category',710,767),
   ('conv_c_cat_87','conv_p_cat_6','Using vehicle with no tachograph installed','conv_category',87,768),
-  ('conv_c_cat_711','conv_p_cat_23','Using vehicle with no tachograph manufacturer\'s plaque','conv_category',711,769),
+  ('conv_c_cat_711','conv_p_cat_23','Using vehicle with no tachograph manufacturer''s plaque','conv_category',711,769),
   ('conv_c_cat_298','conv_p_cat_14','Using vehicle with no test certificate','conv_category',298,770),
   ('conv_c_cat_774','conv_p_cat_17','Using vehicle with no warning instrument fitted ','conv_category',774,771),
   ('conv_c_cat_634','conv_p_cat_19','Using vehicle with obligatory direction indicator obscured','conv_category',634,772),
@@ -2763,7 +2759,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`) VALUES
     ('SIC_CODE','99999','Dormant Company');
 
 INSERT INTO `pi_definition`
-(`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+ (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
 (1,'Considerations','S12','S12 - Objection/representation received against new application under Section 12',0,'lcat_gv',479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
 (2,'Considerations','S13','S13 - Consideration of new application under Section 13',0,'lcat_gv',479,479,'2002-05-14 17:45:00','2002-05-14 17:45:00',1),
@@ -2903,7 +2899,6 @@ VALUES
 (140,'Direction','S28','S28 - Direction made removing [....name of operating center....] from the licence with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
 (141,'Direction','S29','S29 - Direction made attaching/varying conditions to the licence as follows [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
 (142,'Withdrawn','Art. 8(3)','Art. 8(3) - Community Authorisation withdrawn with effect from [....]',1,'lcat_gv',1,1,'2012-10-29 15:47:00','2012-10-29 15:47:00',1),
-
 (143,'Regulation','Article 6','Repute Not Lost under Article 6 of Regulation (EC) No 1071/2009',1,null,1,1,NOW(),NOW(),1),
 (144,'Regulation','Article 6','Declared Unfit under Article 6 of Regulation (EC) No 1071/2009`',1,null,1,1,NOW(),NOW(),1);
 
@@ -3944,7 +3939,6 @@ VALUES
  ,( 36, 'Official Record')
  ,( 37, 'Fee Due')
  ,( 38, 'Fee Request')
- ,( 40, 'Other Documents')
  ,( 41, 'Traffic Regulation Condition Letter')
  ,( 42, 'Bus Complaint')
  ,( 43, 'Bus Registration Letter')
@@ -3966,7 +3960,6 @@ VALUES
  ,( 49, 'Impounding Document(s)')
  ,( 51, 'Interview Letter')
  ,( 52, 'Maintenance')
- ,( 53, 'Other Documents')
  ,( 54, 'Operator Staff Conduct')
  ,( 55, 'Reports')
  ,( 55, 'Section 9/43/36/38 Statements')
@@ -4037,7 +4030,7 @@ VALUES
     (4, 999999, 479, 4, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App - Wrong TAO', '2002-05-14 17:45:01', 1),
     (5, 999999, 479, 5, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no advert', '2002-05-14 17:45:01', 1),
     (6, 999999, 479, 6, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
-    (7, 1, 479, 7, 479, 85, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var App Incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
+    (7, 9, 479, 7, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var App Incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
     (8, 1, 479, 8, 479, 85, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var Incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (9, 999999, 479, 9, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - New applications - grant/refusal', '2002-05-14 17:45:01', 1),
     (10, 999999, 479, 10, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - Variation applications - grant/refusal', '2002-05-14 17:45:01', 1),
@@ -4079,14 +4072,14 @@ VALUES
     (64, 999999, 479, 64, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter advising of review of grant or refusal decision', '2002-05-14 17:45:01', 1),
     (67, 999999, 479, 67, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Change of entity - new app required', '2002-05-14 17:45:01', 1),
     (75, 999999, 479, 75, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV -  Letter confirming grant of minibus permit', '2002-05-14 17:45:01', 1),
-    (81, 1, 479, 81, 479, 85, 0, 0, '2002-05-14 17:45:01', 'PSV - New app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
+    (81, 9, 479, 81, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - New app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
     (82, 1, 479, 82, 479, 85, 0, 0, '2002-05-14 17:45:01', 'PSV - New app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (83, 999999, 479, 83, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - New app grant set aside - bounced cheque', '2002-05-14 17:45:01', 1),
     (84, 999999, 479, 84, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter allowing continuation of licence without TM', '2002-05-14 17:45:01', 1),
     (85, 999999, 479, 85, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter to operator following 3rd party notification of TM loss', '2002-05-14 17:45:01', 1),
     (86, 999999, 479, 86, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Refund Letter', '2002-05-14 17:45:01', 1),
-    (90, 999999, 479, 90, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
-    (91, 999999, 479, 91, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
+    (90, 9, 479, 90, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
+    (91, 9, 479, 91, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - Var app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (92, 999999, 479, 92, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV -  Var app grant set aside - bounced cheque', '2002-05-14 17:45:01', 1),
     (93, 999999, 479, 93, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Permission from Complainant Letter', '2002-05-14 17:45:01', 1),
     (94, 999999, 479, 94, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Compliance: Apology/Referral to Complainant Letter', '2002-05-14 17:45:01', 1),
@@ -4167,8 +4160,8 @@ VALUES
     (204, 999999, 479, 204, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Request Supporting Docs', '2002-05-14 17:45:01', 1),
     (205, 999999, 479, 205, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'Refusal', '2002-05-14 17:45:01', 1),
     (206, 999999, 479, 206, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'ENV10 - Letter advising applicant of opposition received', '2002-05-14 17:45:01', 1),
-    (207, 999999, 479, 207, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - acknowledgement of complete pub app', '2002-05-14 17:45:01', 1),
-    (208, 999999, 479, 208, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - acknowledgement of complete new app', '2002-05-14 17:45:01', 1),
+    (207, 9, 479, 207, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - acknowledgement of complete pub app', '2002-05-14 17:45:01', 1),
+    (208, 9, 479, 208, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - acknowledgement of complete new app', '2002-05-14 17:45:01', 1),
     (210, 999999, 479, 210, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - Notification to Complainant that review to be conducted', '2002-05-14 17:45:01', 1),
     (211, 999999, 479, 211, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Lic cont docs issued but finance declaration problems', '2002-05-14 17:45:01', 1),
     (212, 999999, 479, 212, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Lic cont docs issued but finance declaration problems', '2002-05-14 17:45:01', 1),
@@ -4209,10 +4202,10 @@ VALUES
     (272, 999999, 1, 272, 1, 999999, 0, 1, '2007-10-23 15:41:35', 'Multiple Licence Holder - letter to operator', '2007-10-23 15:41:35', 1),
     (275, 999999, 1, 275, 1, 999999, 0, 1, '2007-12-04 10:09:25', 'Failed credit/debit card-request for repayment', '2007-12-04 10:09:25', 1),
     (276, 999999, 1, 276, 1, 999999, 0, 1, '2007-12-04 10:09:25', 'Failed cheque-request for repayment', '2007-12-04 10:09:25', 1),
-    (281, 999999, 1, 281, 1, 999999, 0, 0, '2007-12-06 17:35:32', 'GV - blank letter template to operator', '2007-12-06 17:35:32', 1),
-    (282, 999999, 1, 282, 1, 999999, 0, 0, '2007-12-06 17:35:32', 'PSV - blank letter template to operator', '2007-12-06 17:35:32', 1),
-    (283, 999999, 1, 283, 1, 999999, 0, 1, '2007-12-06 17:35:32', 'GV - Blank letter template to other than operator', '2007-12-06 17:35:32', 1),
-    (284, 999999, 1, 284, 1, 999999, 0, 1, '2007-12-06 17:35:32', 'PSV - Blank letter template to other than operator', '2007-12-06 17:35:32', 1),
+    (281, 9, 1, 281, 1, 31, 0, 0, '2007-12-06 17:35:32', 'GV - blank letter template to operator', '2007-12-06 17:35:32', 1),
+    (282, 9, 1, 282, 1, 31, 0, 0, '2007-12-06 17:35:32', 'PSV - blank letter template to operator', '2007-12-06 17:35:32', 1),
+    (283, 9, 1, 283, 1, 31, 0, 1, '2007-12-06 17:35:32', 'GV - Blank letter template to other than operator', '2007-12-06 17:35:32', 1),
+    (284, 9, 1, 284, 1, 31, 0, 1, '2007-12-06 17:35:32', 'PSV - blank letter to other than operator', '2007-12-06 17:35:32', 1),
     (288, 999999, 1, 288, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - App Refusal', '2007-12-18 15:23:01', 1),
     (289, 999999, 1, 289, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - Propose to refuse - new app', '2007-12-18 15:23:01', 1),
     (290, 999999, 1, 290, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - Response to objection (3rd Party)', '2007-12-18 15:23:01', 1),
@@ -4243,13 +4236,13 @@ VALUES
     (320, 999999, 479, 320, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of new app', '2002-05-14 17:45:01', 1),
     (321, 999999, 479, 321, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of var app', '2002-05-14 17:45:01', 1),
     (322, 999999, 479, 322, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Letter confirming grant of pub var', '2002-05-14 17:45:01', 1),
-    (323, 999999, 1, 323, 1, 999999, 0, 1, '2010-01-13 13:19:16', 'ENV09 - New/Var App Incomplete - 1st request for supporting docs', '2010-01-13 13:19:16', 1),
+    (323, 9, 1, 323, 1, 31, 0, 1, '2010-01-13 13:19:16', 'ENV09 - New/Var App Incomplete - 1st request for supporting docs', '2010-01-13 13:19:16', 1),
     (324, 999999, 1, 324, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'GV - Letter informing OP of PI to be held-Var app', '2010-01-13 13:21:06', 1),
     (325, 999999, 1, 325, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'GV - Letter informing OP of PI to be held-New app', '2010-01-13 13:21:06', 1),
     (326, 999999, 1, 326, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'ENV34 - letter informing obj or rep that PI to be held', '2010-01-13 13:21:06', 1),
     (327, 999999, 1, 327, 1, 999999, 0, 0, '2010-01-13 13:21:06', 'PSV - Licence continued - variation required', '2010-01-13 13:21:06', 1),
     (328, 999999, 291, 328, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'PSV - Letter informing OP of PI to be held', '2010-11-25 13:42:26', 1),
-    (329, 999999, 291, 329, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV12 - New/Var App Incomplete - final request for supporting docs', '2010-11-25 13:42:26', 1),
+    (329, 9, 291, 329, 291, 31, 0, 0, '2010-11-25 13:42:26', 'ENV12 - New/Var App Incomplete - final request for supporting docs', '2010-11-25 13:42:26', 1),
     (330, 999999, 291, 330, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV13 - GV79E reminder letter', '2010-11-25 13:42:26', 1),
     (331, 999999, 291, 331, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'GV - Initial letter advising OP of complaint', '2010-11-25 13:42:26', 1),
     (332, 999999, 291, 332, 291, 999999, 0, 0, '2010-11-25 13:42:26', 'ENV14 - Letter to OP with copies of reps', '2010-11-25 13:42:26', 1),
@@ -4312,7 +4305,7 @@ VALUES
     (389, 999999, 479, 389, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV29 - letter advising invalid rep of non PI application decision', '2012-01-12 14:31:55', 1),
     (390, 999999, 479, 390, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV32 - Letter informing op of PI to be held - New app', '2012-01-12 14:31:55', 1),
     (391, 999999, 479, 391, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV33 - Letter informing op of PI to be held - var app', '2012-01-12 14:31:55', 1),
-    (392, 999999, 1, 392, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - acknowledgement of complete pub app (NI)', '2012-09-14 00:00:00', 1),
+    (392, 9, 1, 392, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - acknowledgement of complete pub app (NI)', '2012-09-14 00:00:00', 1),
     (393, 999999, 1, 393, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Change of Entity - New App required (NI)', '2012-09-14 00:00:00', 1),
     (394, 999999, 1, 394, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter advising new app grant set aside (NI)', '2012-09-14 00:00:00', 1),
     (395, 999999, 1, 395, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
@@ -4320,7 +4313,7 @@ VALUES
     (397, 999999, 1, 397, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter to op advising that grant/refusal decision reviewed (NI)', '2012-09-14 00:00:00', 1),
     (398, 999999, 1, 398, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no advert (NI)', '2012-09-14 00:00:00', 1),
     (399, 999999, 1, 399, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
-    (400, 1, 1, 400, 1, 85, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
+    (400, 9, 1, 400, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (401, 1, 1, 401, 1, 85, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (402, 999999, 1, 402, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App - O/C not in Northern Ireland (NI)', '2012-09-14 00:00:00', 1),
     (403, 999999, 1, 403, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
@@ -4369,9 +4362,9 @@ VALUES
     (446, 999999, 1, 446, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Letter confirming the Reg 29 direction given (NI)', '2012-09-14 00:00:00', 1),
     (447, 999999, 1, 447, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Letter to appointed person re possible Reg 29 direction (NI)', '2012-09-14 00:00:00', 1),
     (448, 999999, 1, 448, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Reg 29 notification of death of licence holder (NI)', '2012-09-14 00:00:00', 1),
-    (449, 999999, 1, 449, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV09 - New/Var App Incomplete - 1st request for supp docs (NI)', '2012-09-14 00:00:00', 1),
+    (449, 9, 1, 449, 1, 31, 1, 1, '2012-09-14 00:00:00', 'ENV09 - New/Var App Incomplete - 1st request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (450, 999999, 1, 450, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV10 - Letter advising applicant of opposition received (NI)', '2012-09-14 00:00:00', 1),
-    (451, 999999, 1, 451, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV12 - New/Var App Incomplete - final request for supp docs (NI)', '2012-09-14 00:00:00', 1),
+    (451, 9, 1, 451, 1, 31, 1, 0, '2012-09-14 00:00:00', 'ENV12 - New/Var App Incomplete - final request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (452, 999999, 1, 452, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'ENV20 - Letter advising applicant of proposed conditions (NI)', '2012-09-14 00:00:00', 1),
     (453, 999999, 1, 453, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV01 - Letter explaining that no application received (NI)', '2012-09-14 00:00:00', 1),
     (454, 999999, 1, 454, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV02 - Acknowledgement of objection (NI)', '2012-09-14 00:00:00', 1),
@@ -4566,8 +4559,8 @@ VALUES
     (643, 999999, 1, 643, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'Address of Establishment Letter (NI)', '2012-09-14 00:00:00', 1),
     (644, 999999, 1, 644, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'Community Licence Office Copy Cover Letter (NI)', '2012-09-14 00:00:00', 1),
     (645, 999999, 1, 645, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Goods Submission template (NI)', '2012-09-14 00:00:00', 1),
-    (646, 999999, 1, 646, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Blank letter template to operator (NI)', '2012-09-14 00:00:00', 1),
-    (647, 999999, 1, 647, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Blank letter template to other than operator (NI)', '2012-09-14 00:00:00', 1),
+    (646, 9, 1, 646, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - blank letter template to operator (NI)', '2012-09-14 00:00:00', 1),
+    (647, 9, 1, 647, 1, 31, 1, 1, '2012-09-14 00:00:00', 'GV - Blank letter template to other than operator (NI)', '2012-09-14 00:00:00', 1),
     (648, 999999, 1, 648, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'GV - Surrender request letter (NI)', '2012-09-14 00:00:00', 1),
     (649, 999999, 1, 649, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Multiple Licence Holder - letter to operator (NI)', '2012-09-14 00:00:00', 1),
     (650, 999999, 1, 650, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'Original documents send back letter (NI)', '2012-09-14 00:00:00', 1),
@@ -4610,7 +4603,9 @@ VALUES
     (696, 11, 1, 696, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West Midlands', '2015-02-27 10:00:47', 1),
     (697, 11, 1, 697, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West of England', '2015-02-27 10:00:47', 1),
     (698, 11, 1, 698, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Wales', '2015-02-27 10:00:47', 1),
-    (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1);
+    (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1),
+    (700, 9, 1, 700, 1, 31, 1, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2015-02-27 10:00:47', 1),
+    (701, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -4723,8 +4718,8 @@ VALUES
 INSERT INTO `doc_paragraph` (`id`, `para_title`, `para_text`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
     (1, 'Blank Paragraph', ' ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (2, 'for a goods vehicles operator\'s licence', ' for a goods vehicle operator\'s licence', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (3, 'to vary your goods vehicles operator\'s licence', ' to vary your goods vehicles operator\'s licence', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (2, 'for a goods vehicles operator''s licence', ' for a goods vehicle operator''s licence', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (3, 'to vary your goods vehicles operator''s licence', ' to vary your goods vehicles operator''s licence', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (4, 'Advert wording incorrect', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (5, 'The newspaper does not circulate within the vicinity of the operating centre', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (6, 'Advert published more than 21 days before application submitted', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4750,8 +4745,8 @@ VALUES
     (26, 'warning re premature operating - interim Direction decision deferred', 'A decision on your request for an interim Direction has been deferred to await your response to this letter. In the meantime, you are advised that you must continue to operate within the existing terms and conditions of your licence until you are granted authority to do otherwise.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (27, 'no written representations - Conditions imposed', 'Given your failure to submit written representations within the stated deadline regarding their effect on your business, The Traffic Commissioner has decided to attach the following conditions to your licence.  Amended licence documentation is enclosed:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (28, 'Conditions imposed despite written representations', 'The Traffic Commissioner having given full consideration to your written representations as to their effect on your business, the following conditions have been attached to your licence.  Amended licence documentation is enclosed:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (29, 'issues fall outside TC\'s remit', 'that the issues raised in the letter(s) of complaint  fall outside the Traffic Commissioner\'s jurisdiction.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (30, 'issues raised do not justify a review', 'that the issues raised in  the letter(s) of complaint, although they fall within the Traffic Commissioner\'s jurisdiction, do not justify a Review being conducted.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (29, 'issues fall outside TC''s remit', 'that the issues raised in the letter(s) of complaint  fall outside the Traffic Commissioner''s jurisdiction.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (30, 'issues raised do not justify a review', 'that the issues raised in  the letter(s) of complaint, although they fall within the Traffic Commissioner''s jurisdiction, do not justify a Review being conducted.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (31, 'complainant has not followed up complaint', 'that you have failed to confirm that the issues raised in your original letter(s) of complaint remain valid.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (32, 'issues raised are no longer relevant', 'that the issues raised in your original letter(s) of complaint are no longer relevant.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (33, 'having now surrendered his licence.', 'having now surrendered his licence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4759,7 +4754,7 @@ VALUES
     (35, 'granted as applied for.', 'granted as applied for.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (36, 'granted with Conditions', 'granted, but with the following condition(s) attached, which legislation dictates can only apply to vehicles authorised on this licence:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (37, 'granted with undertakings', 'granted, the applicant having agreed to the following undertaking(s):', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (38, 'granted with Conditions and undertakings', 'granted, but with the following condition(s) attached (which legislation dictates can only apply to vehicles authorised on this licence) and also the applicant\'s agreement to the following undertaking(s):', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (38, 'granted with Conditions and undertakings', 'granted, but with the following condition(s) attached (which legislation dictates can only apply to vehicles authorised on this licence) and also the applicant''s agreement to the following undertaking(s):', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (39, 'refused.', 'refused.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (40, 'to continue in force your licence for a further five-year period.', 'to continue in force your licence for a further five-year period.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (41, 'tendered following the grant of your licence variation application.', 'tendered following the grant of your licence variation application.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4776,21 +4771,21 @@ VALUES
     (54, 'unable to produce inspection records', 'you were unable to produce complete records of preventative maintenance inspections', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (55, 'you were not adhering to the declared inspection frequency', 'you were not adhering to the declared inspection frequency', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (56, 'change in maintenance/safety inspections', 'there had been a change to the maintenance arrangements and/or safety inspections which had not been notified to the Traffic Commissioner', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (57, 'list of prohibitions', 'the following prohibition notices have been issued to your vehicles/trailers:- [Insert Table \'Date\' Vehicle/Trailer\' \'Type of Prohibition\']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (57, 'list of prohibitions', 'the following prohibition notices have been issued to your vehicles/trailers:- [Insert Table ''Date'' Vehicle/Trailer'' ''Type of Prohibition'']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (58, '\"S\" marked prohibitions', 'the prohibition(s) endorsed \"S\" indicate(s) that in the issuing officers opinion a significant failure of the maintenance system had allowed defects to develop', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (59, 'defects indicate shortcomings', 'the defects found would appear to indicate shortcomings in the standard and/or frequency of your preventative maintenance arrangements', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (60, 'vehicles have poor test history', 'your vehicles have a poor test history', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (61, 'obtain a copy of the \"Guide to Maintaining Roadworthiness\"', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (62, 'convictions recorded against you/the partnership/the company', 'It has been noted that the following conviction(s) has been recorded against you/the partnership/the company:- [Insert Table \'Date\' \'Court\' \'Offence\' \'Penalty\']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (62, 'convictions recorded against you/the partnership/the company', 'It has been noted that the following conviction(s) has been recorded against you/the partnership/the company:- [Insert Table ''Date'' ''Court'' ''Offence'' ''Penalty'']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (63, 'convictions to be reported to Traffic Commissioner within 28 days', 'you/the partnership/the company are reminded of the condition attached to your licence which states that convictions must be notified to the Traffic Commissioner within 28 days of them being recorded.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (64, 'specified vehicles not taxed', 'a check of the records held by the Driver and Vehicle Licensing Agency shows that vehicle(s) [”¦”¦”¦.] which is/are specified on your /the partnership\'s/the company\'s licence is/are not taxed. You are required, therefore, to provide evidence that the vehicle(s) are now taxed.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (64, 'specified vehicles not taxed', 'a check of the records held by the Driver and Vehicle Licensing Agency shows that vehicle(s) [”¦”¦”¦.] which is/are specified on your /the partnership''s/the company''s licence is/are not taxed. You are required, therefore, to provide evidence that the vehicle(s) are now taxed.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (65, 'change of operating centre without authority', 'it would appear that you/the partnership/the company have changed operating centre without the required authority.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (66, 'specified vehicles not parked at nominated operating centre', 'it would appear that vehicle(s) [”¦”¦”¦.] specified on your/the partnership(\'s)/the company(\'s)  operators licence is/are not being kept at the nominated operating centre when not in use. The vehicle(s) has/have been observed parked at [”¦”¦”¦”¦..].', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (66, 'specified vehicles not parked at nominated operating centre', 'it would appear that vehicle(s) [”¦”¦”¦.] specified on your/the partnership(''s)/the company(''s)  operators licence is/are not being kept at the nominated operating centre when not in use. The vehicle(s) has/have been observed parked at [”¦”¦”¦”¦..].', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (67, 'operating centre defined as base which authorised vehicles are normally kept', 'an operating centre is defined in the Goods Vehicle (Licensing of Operators) as the base or centre at which authorised vehicles are normally kept.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (68, 'I would draw your attention to Section 7(1) of the 1995 Act which states:-', 'I would draw your attention to Section 7(1) of the 1995 Act which states:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (69, 'report indicating alleged offences against you/the partnership/the company', 'a report has been received from [”¦..] which indicates that the following alleged offences have been incurred by you/the partnership/the company and/or drivers in your employ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (70, 'report indicating that you/the partnership company being fined for VED offences', 'a report has been received from [”¦”¦”¦] which indicates that you/the partnership/the company were fined [”¦”¦..] on [”¦”¦.] for failure to have a vehicle excise licence for vehicle registration number [”¦]', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (71, 'you/the partnership/thecompany incurred convictions under LBTS', 'you/the partnership/the company has/have incurred the following convictions under the London Borough Transport Scheme:- [Insert Table \'Date\' \'Offence\' \' Penalty\']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (71, 'you/the partnership/thecompany incurred convictions under LBTS', 'you/the partnership/the company has/have incurred the following convictions under the London Borough Transport Scheme:- [Insert Table ''Date'' ''Offence'' '' Penalty'']', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (72, 'information held on file may be used in the future', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (73, 'report received regarding overloading', 'a report has been received stating that vehicle registration number [”¦”¦..] was issued with a prohibition on [”¦”¦”¦.] as a result of being overweight.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (74, 'community authorisations entitling use by Goods/Public Service/Vehicle operators', 'and in particular to the community authorisations entitling you/the partnership/the company to carry out the international carriage of goods/passengers by road.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4827,7 +4822,7 @@ VALUES
     (105, 'on the basis of the evidence available', 'It appears, on the basis of the relevant evidence available, which is set out in Annex #, that the Traffic Commissioner should consider whether or not to make a direction in respect of your licence on the following grounds:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (106, 'applications with interim in force: interim to continue with application being processed', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (107, 'disciplinary - goods', 'Disciplinary - Goods', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (108, '26(1)(a) unauthorised operating centre', '#) under Section 26(1)(a) of the Act, that a place in the Commissioner\'s area has, at a time when it was not specified in the licence as an operating centre of the licence-holder, been used as an operating centre for vehicles authorised to be used under the licence.  Namely, #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (108, '26(1)(a) unauthorised operating centre', '#) under Section 26(1)(a) of the Act, that a place in the Commissioner''s area has, at a time when it was not specified in the licence as an operating centre of the licence-holder, been used as an operating centre for vehicles authorised to be used under the licence.  Namely, #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (109, '26(1)(b) contravened condition', '#) under Section 26(1)(b) of the Act that the holder of the licence has contravened any condition attached to the licence.  Namely, #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (110, '26(1)(c)(I) licence holder has sustained convictions', '#) under Section 26(1)(c)(i) of the Act that the holder of the licence has sustained convictions for certain types of offences and activities involving goods vehicles within the last 5 years.  Conviction details are set out in the schedule to this letter;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (111, '26(1)(c)(ii) servant or agent has sustained convictions', '#) under Section 26(1)(c)(ii) of the Act that a servant or agent of the licence holder has sustained convictions for certain types of offences and activities involving goods vehicles within the last 5 years  Conviction details are set out in the schedule to this letter; ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4880,7 +4875,7 @@ VALUES
     (158, 'annex C The evidence the Traffic Commissioner will consider', 'Annex C THE EVIDENCE THE TRAFFIC COMMISSIONER WILL CONSIDER ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (159, 'The relevant evidence the Traffic Commissioner will consider is:-', 'The relevant evidence the Traffic Commissioner will consider is:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (160, 'adverse V.E. report', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (161, 'adverse T.E. report', '#) a report from the Vehicle Inspectorate #. A copy of the Traffic Examiner\'s report, which will be presented at the Inquiry, is attached to this letter, labelled #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (161, 'adverse T.E. report', '#) a report from the Vehicle Inspectorate #. A copy of the Traffic Examiner''s report, which will be presented at the Inquiry, is attached to this letter, labelled #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (162, 'list of prohibitions', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (163, 'Schedule of convictions', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (164, 'records held by the DVLA in Swansea indicate that', 'Records held by the DVLA in Swansea indicate that', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4890,8 +4885,8 @@ VALUES
     (168, 'previous administrative directors Interview', '#) an Administrative Directors Interview held on # as a consequence of #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (169, 'goods only', '$ - Goods only - $', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (170, 'statement of expectation', '#) the following Statement# of Fact or expectation which # made, or procured to be made, for the purpose of an application for the licence, appears # to have either been false or has# not been fulfilled:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (171, 'failed to declare previous licence history', '#) when making the application for your # licence, # failed to declare that you, or anyone involved with this licence application has ever had an operator\'s licence refused or revoked, in this or any other Traffic Area;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (172, 'TM\'s responsibility', '#) that # will be the Transport Manager(s) responsible for the vehicles on the operators licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (171, 'failed to declare previous licence history', '#) when making the application for your # licence, # failed to declare that you, or anyone involved with this licence application has ever had an operator''s licence refused or revoked, in this or any other Traffic Area;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (172, 'TM''s responsibility', '#) that # will be the Transport Manager(s) responsible for the vehicles on the operators licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (173, 'TM listed on other licences', '#) that # would not be responsible for vehicles on any other licences, including those held in other Traffic Areas. (It has now been brought to the attention of the Traffic Commissioner that # is the Transport Manager for #, licence number #, in the # Traffic Area);', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (174, 'vehicles normally kept at operating centre', '#) that vehicles would normally be kept (when not in use) at the operating centre# at #;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (175, 'operating centre not to be used by others', '#) that the operating centre# nominated in your application # not used by any other goods or passenger vehicle operator(s);', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4926,7 +4921,7 @@ VALUES
     (204, 'PSV unspent convictions', '#) when making the application for your licence you failed to declare that # had sustained convictions which, under the terms of the Rehabilitation of Offenders Act 1974, are/were not spent, and which were required to be notified to the Traffic Commissioner;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (205, 'PSV failed to comply with undertakings', '#) your # failure to comply with the following Undertaking# made for the purpose of obtaining a licence, i.e. that # would make proper arrangements so that:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (206, 'PSV laws relating to driving and operation of vehicles', '#) the laws relating to the driving and operation of vehicles used under the licence would be observed;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (207, 'PSV drivers hours', '#) the rules on driver\'s hours would be observed and proper records kept;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (207, 'PSV drivers hours', '#) the rules on driver''s hours would be observed and proper records kept;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (208, 'PSV permitted number of passengers', '#) vehicles would not carry more than the permitted number of passengers;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (209, 'PSV serviceable condition', '#) vehicles would be kept in a fit and serviceable condition;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (210, 'PSV fit and serviceable condition', '#) vehicles, including hired vehicles, are kept in a fit and serviceable condition;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4953,11 +4948,11 @@ VALUES
     (231, 'annex A the evidence the Traffic Commissioner will consider ', 'Annex A Environmental, The evidence the Traffic Commissioner will consider ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (232, 'the relevant evidence the Traffic Commissioner will consider is:', 'The relevant evidence the Traffic Commissioner will consider is:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (233, 'objector(s) and representor(s) environmental', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (234, 'relevant evidence available', 'On the basis of the relevant evidence available it appears that your/your partnership\'s/your company\'s application may not satisfy the following requirements:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (234, 'relevant evidence available', 'On the basis of the relevant evidence available it appears that your/your partnership''s/your company''s application may not satisfy the following requirements:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (235, 'section 13(5) and Section 14 Operating centre suitable', 'a) Under Section 13(5) and Section 14 of the Act to have an operating centre which is suitable, not only for its purpose, but if appropriate, environmentally; and', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (236, 'section 13(5)(d) operating centre which is available and suitable', 'b) Under Section 13(5)(d) of the Act to have an operating centre which is available and suitable for use as such (disregarding any respect in which it may be unsuitable on environmental grounds).', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (237, 'annex C The action the Traffic Commissioner will consider', 'Annex C The action the Traffic Commissioner will consider', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (238, 'sections 13 and 14 to grant in full or part', 'a) The Traffic Commissioner will consider whether to grant in full or in part or to refuse your/your partnership\'s/your company\'s application under the provisions of Sections 13 and 14 of the Act;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (238, 'sections 13 and 14 to grant in full or part', 'a) The Traffic Commissioner will consider whether to grant in full or in part or to refuse your/your partnership''s/your company''s application under the provisions of Sections 13 and 14 of the Act;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (239, 'section 21 Attach conditions', 'b) If the application is granted the Traffic Commissioner will consider whether it is deemed appropriate to attach conditions to the licence under Section 21 of the Act for the purpose of preventing authorised vehicles from causing a danger to the public. Such conditions relate only to:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (240, 'point where vehicles first join a public road', '   i) Any point where vehicles first join a public road on their way from an operating   centre of the licence holder, or last leave a public road on their way to such an operating centre; and', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (241, 'any Road (other than a public road) along which vehicles are driven', '   ii) Any Road (other than a public road) along which vehicles are driven between such a point and the operating centre;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -4968,40 +4963,40 @@ VALUES
     (246, 'the means of ingress to and egress', '   iv) The means of ingress to and egress from the operating centre by authorised vehicles and trailers.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (247, 'annex D immediate action', 'Annex D Environmental, Immediate action', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (248, 'you should take the following immediate action:', 'You should take the following immediate action:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (249, 'failure to attend the Inquiry', 'a) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex # to this office no later than # Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership\'s/your company\'s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (249, 'failure to attend the Inquiry', 'a) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex # to this office no later than # Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership''s/your company''s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (250, 'you/your partnership/your company  represented at the Inquiry', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (251, 'contingency plans post public inquiry', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (252, 'relevant documentary evidence', 'When attending the Inquiry you/your partnership/your company should bring with you/them all relevant documentary evidence in support of your/their case.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (253, 'complainants invited to the Inquiry', 'You/your partnership/your company should be aware that the complainant(s) will be invited to the Inquiry where they will be invited to present their case, and be available for cross examination on the evidence they present.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (254, 'consideration to remove the operating centre', 'On the basis of the relevant evidence available it appears that the Traffic Commissioner should consider whether to remove the operating centre(s) or to attach conditions to your/your partnerships/your company\'s licence on the following grounds:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (255, 'section 31(1) and (2) place specified as an operating centre unsuitable', 'a) Under Section 31(1) and (2) of the Act, that the place(s) specified as (an) operating centre(s) in your/your partnership\'s/your company\'s licence may no longer be suitable for use as such;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (254, 'consideration to remove the operating centre', 'On the basis of the relevant evidence available it appears that the Traffic Commissioner should consider whether to remove the operating centre(s) or to attach conditions to your/your partnerships/your company''s licence on the following grounds:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (255, 'section 31(1) and (2) place specified as an operating centre unsuitable', 'a) Under Section 31(1) and (2) of the Act, that the place(s) specified as (an) operating centre(s) in your/your partnership''s/your company''s licence may no longer be suitable for use as such;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (256, 'section 32(1) Vehicles may cause adverse environmental effects', 'b) Under Section 32(1) of the Act that the use of authorised vehicles at the operating centre(s) at #/and # may cause adverse effects on environmental conditions in the vicinity of the operating centre(s).', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (257, 'The Traffic Commissioner will consider whether:-', 'The Traffic Commissioner will consider whether:-', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (258, 'section 31remove the operating centre(s)', 'a) Upon review of the operating centre(s) at #/and # he/she should exercise his/her powers under Section 31 of the Act and remove the operating centre(s) from your/your partnership\'s/your company\'s licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (258, 'section 31remove the operating centre(s)', 'a) Upon review of the operating centre(s) at #/and # he/she should exercise his/her powers under Section 31 of the Act and remove the operating centre(s) from your/your partnership''s/your company''s licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (259, 'section 32 add conditions ', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (260, 'number, type and size of authorised motor vehicles or trailers ', 'i) the number, type and size of authorised motor vehicles or trailers which may, at any one time, be at the operating centre of the licence-holder for the purposes of maintenance and parking;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (261, 'parking arrangements', 'ii) the parking arrangements to be provided for authorised motor vehicles or trailers at or in the vicinity of the operating centre;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (262, 'times at which there may be carried out at the operating centre any maintenance or movement', 'iii) the times at which there may be carried out at the operating centre, any maintenance or movement of authorised vehicles or trailers, and the times at which any equipment may be used for such maintenance or movement; and', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (263, 'the means of ingress to and egress', 'iv) the means of ingress to and egress from the operating centre by authorised vehicles and trailers.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (264, 'details of all vehicles currently operated under the licence', 'a) Complete Annex # giving details of all vehicles currently operated under the licence and return to the Traffic Area Office not later than #.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (265, 'attendance at the Inquiry', 'b) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated by returning Annex # to this office no later than #.  Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership\'s/your company\'s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (265, 'attendance at the Inquiry', 'b) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated by returning Annex # to this office no later than #.  Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership''s/your company''s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (266, 'you/your partnership/your company  represented at the Inquiry', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (267, 'contingency plans post public inquiry', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (268, 'production of relevant documentary evidence', 'e) When attending the Inquiry please ensure that you/your partnership/your company bring(s) your/its operator licence documents and all documentary evidence in support of your/its case.  ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (269, 'basis of the available relevant evidence to consider taking action ', 'The Traffic Commissioner has decided on the basis of the available relevant evidence to consider taking action against your/your partnership\'s/your company\'s licence on the following grounds:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (269, 'basis of the available relevant evidence to consider taking action ', 'The Traffic Commissioner has decided on the basis of the available relevant evidence to consider taking action against your/your partnership''s/your company''s licence on the following grounds:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (270, 'section 26(1)(a) transport act 1985, failed to operate  local services ', 'a) Under section 26(1)(a) of the Transport Act 1985, that the operator has failed to operate one (or more) of its local services registered under Section 6 of that act;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (271, 'Section 26(1)(b) e operator has operated a local service in contravention of S6 ', 'b) Under Section 26(1)(b) of the Act, that the operator has operated a local service in contravention of section 6 of the Act;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (272, 'check revised wording English/Scottish re S111(1)(a)(b)', '* c) Check revised wording re S111(1)(a) * d) Check revised wording re S111(1)(b)  Check Scottish wording ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (273, ' conditions to prohibit the operation of local services', 'The Traffic Commissioner will consider whether to attach conditions to your/your partnership\'s/your company\'s licence to prohibit the operation of local services, under the provisions of Section 26 of the Transport Act 1985:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (273, ' conditions to prohibit the operation of local services', 'The Traffic Commissioner will consider whether to attach conditions to your/your partnership''s/your company''s licence to prohibit the operation of local services, under the provisions of Section 26 of the Transport Act 1985:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (274, 'local service may be cancelled under section 26(3) transport act 1985;', 'If you/your partnership/your company) is prohibited from using vehicles under the licence to provide a local service, the Traffic Commissioner may also direct that the service be cancelled under the provisions of Section 26(3) of the Transport Act 1985;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (275, 'fuel duty rebate claimed each quarter. ', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (276, 'vehicles currently operated under operator licence', 'a) Complete Annex * attached giving details of all vehicles currently operated under your/your partnership\'s/your company\'s operator licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (276, 'vehicles currently operated under operator licence', 'a) Complete Annex * attached giving details of all vehicles currently operated under your/your partnership''s/your company''s operator licence;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (277, 'details of your current registered local services;', 'b) Complete Annex *  giving details of your current registered local services;', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (278, 'return annexes  ', 'c) Return Annexes * and * to the Traffic Area Office not later than *  ', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (279, 'Confirm attendance at the Inquiry ', 'd) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex * to this office no later than * Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership\'s/your company\'s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (279, 'Confirm attendance at the Inquiry ', 'd) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex * to this office no later than * Failure to attend will result in the Traffic Commissioner determining the case in your/your partnership''s/your company''s absence.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (280, 'represented at the Inquiry and at least one of the Partners/Directors should attend ', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (281, 'contingency plans to cover any contractual obligations', '', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (282, 'you should bring with you the Operator Licence documents', 'When attending the Inquiry you should bring with you your/your partnership\'s/your company\'s Operator Licence documents, and all relevant documentary evidence in support of your/your partnership\'s/your company\'s case.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (282, 'you should bring with you the Operator Licence documents', 'When attending the Inquiry you should bring with you your/your partnership''s/your company''s Operator Licence documents, and all relevant documentary evidence in support of your/your partnership''s/your company''s case.', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (283, 'the GV act 1995  act 1995 vehicle registration mark:', 'The Goods Vehicle(Licensing of Operators) Act 1995 Vehicle Registration Mark:', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (284, 'Public Inquiry', 'Public Inquiry', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (285, 'Goods Vehicle (Licensing of Operators Act 1995 (The Act)', 'Goods Vehicle (Licensing of Operators Act 1995 (The Act)', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -5076,7 +5071,7 @@ VALUES
     (354, 'The fee of Â£45 was not enclosed', '- The fee of Â£40 was not enclosed', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (355, 'The principal points are more than 15 minutes apart', '- The principal points are more than 15 minutes apart', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (356, 'Failure to reply to our previous correspondence requesting additional information', '- Failure to reply to our previous correspondence requesting additional information', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
-    (357, 'Your PSV operator\'s licence has a condition on it, which stops you from making this application', '- Your PSV operator\'s licence has a condition on it, which stops you from making this application', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
+    (357, 'Your PSV operator''s licence has a condition on it, which stops you from making this application', '- Your PSV operator''s licence has a condition on it, which stops you from making this application', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (358, 'You have failed to supply a copy of this application to the Local Authority/PTE', '- You have failed to supply a copy of this application to the Local Authority/PTE', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (359, 'You have failed to supply the current fee of Â£40 for this application', '- You have failed to supply the current fee of Â£40 for this application', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
     (360, 'The service only operates as a specific event within set dates, and the Traffic Commissioner has refused your request for short notice', '- The service only operates as a specific event within set dates, and the Traffic Commissioner has refused your request for short notice', 479, 479, '2002-05-14 17:45:01', '2002-05-14 17:45:01', 1),
@@ -5096,12 +5091,12 @@ VALUES
     (388, 'The licence whose traffic area comes first in the alphabet', 'The licence whose traffic area comes first in the alphabet', 1, 1, '2007-10-23 15:41:35', '2007-10-23 15:41:35', 1),
     (389, 'no written representations - Conditions imposed', 'Given your failure to submit written representations within the stated deadline regarding their effect on your business, The Department has decided to attach the following conditions to your licence.  Amended licence documentation is enclosed:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (390, 'Conditions imposed despite written representations', 'The Department having given full consideration to your written representations as to their effect on your business, the following conditions have been attached to your licence.  Amended licence documentation is enclosed:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (391, 'issues fall outside Department\'s remit', 'that the issues raised in the letter(s) of complaint  fall outside the Departments jurisdiction.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (391, 'issues fall outside Department''s remit', 'that the issues raised in the letter(s) of complaint  fall outside the Departments jurisdiction.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (392, 'issues raised do not justify a review', 'that the issues raised in  the letter(s) of complaint, although they fall within the Departments jurisdiction, do not justify a Review being conducted.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (393, 'complainant has not followed up complaint', 'that you have failed to confirm that the issues raised in your original letter(s) of complaint remain valid.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (394, 'issues raised are no longer relevant', 'that the issues raised in your original letter(s) of complaint are no longer relevant.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (395, 'for a goods vehicles operator\'s licence', ' for a goods vehicle operator\'s licence', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (396, 'to vary your goods vehicles operator\'s licence', ' to vary your goods vehicles operator\'s licence', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (395, 'for a goods vehicles operator''s licence', ' for a goods vehicle operator''s licence', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (396, 'to vary your goods vehicles operator''s licence', ' to vary your goods vehicles operator''s licence', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (397, 'warning re premature operating- no interim applied for', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (398, 'warning re premature operating - interim refused - no int fee paid', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (399, 'warning re premature operating - interim refused - int fee retained', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
@@ -5286,20 +5281,20 @@ VALUES
     (578, 'the relevant evidence the Department will consider is:', 'The relevant evidence the Department will consider is:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (579, 'objector(s) and representor(s) environmental', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (580, 'annex B the statutory provisions', ' Annex B the statutory provisions', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (581, 'relevant evidence available', 'On the basis of the relevant evidence available it appears that your/your partnership\'s/your company\'s application may not satisfy the following requirements:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (581, 'relevant evidence available', 'On the basis of the relevant evidence available it appears that your/your partnership''s/your company''s application may not satisfy the following requirements:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (582, 'section 12(5) and Section 13 Operating centre suitable', 'a) Under Section 12(5) and Section 13 of the Act to have an operating centre which is suitable, not only for its purpose, but if appropriate, environmentally; and', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (583, 'section 12(5)(d) operating centre which is available and suitable', 'b) Under Section 12(5)(d) of the Act to have an operating centre which is available and suitable for use as such (disregarding any respect in which it may be unsuitable on environmental grounds).', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (584, 'annex C The action the Department will consider', 'Annex C The action the Department will consider', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (585, 'sections 12 and 13 to grant in full or part', 'a) The Department will consider whether to grant in full or in part or to refuse your/your partnership\'s/your company\'s application under the provisions of Sections 12 and 13 of the Act;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (585, 'sections 12 and 13 to grant in full or part', 'a) The Department will consider whether to grant in full or in part or to refuse your/your partnership''s/your company''s application under the provisions of Sections 12 and 13 of the Act;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (586, 'section 20 Attach conditions', 'b) If the application is granted the Department will consider whether it is deemed appropriate to attach conditions to the licence under Section 20 of the Act for the purpose of preventing authorised vehicles from causing a danger to the public. Such conditions relate only to:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (587, 'point where vehicles first join a public road', '   a) while entering or leaving any road adjoining an operating centre of the licence holder;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (588, 'inform the Department of the occurrence of any event of a kind specified in the licence which affects the licence holder', '   b) for requiring the holder of the licence to inform the Department of the occurrence of any event of a kind specified in the licence which affects the licence holder and which is relevant to the exercise by the Department of any power in relation to the licence;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (589, 'preventing or minimising any adverse effects on environmental conditions', 'c) for preventing or minimising any adverse effects on environmental conditions arising from the use of a place as an operating centre of the licence-holder;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (590, 'for any other prescribed purpose', 'd) for any other prescribed purpose.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (591, 'section 20 (2) vary or remove any condition attached to the licence ', 'On varying an operator\'s licence under section 16 the Department may vary or remove any condition attached to the licence under this section.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (591, 'section 20 (2) vary or remove any condition attached to the licence ', 'On varying an operator''s licence under section 16 the Department may vary or remove any condition attached to the licence under this section.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (592, 'annex D immediate action', 'Annex D Environmental, Immediate action', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (593, 'you should take the following immediate action:', 'You should take the following immediate action:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (594, 'failure to attend the Inquiry', 'a) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex # to this office no later than # Failure to attend will result in the Department determining the case in your/your partnership\'s/your company\'s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (594, 'failure to attend the Inquiry', 'a) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex # to this office no later than # Failure to attend will result in the Department determining the case in your/your partnership''s/your company''s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (595, 'you/your partnership/your company represented at the Inquiry', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (596, 'contingency plans post public inquiry', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (597, 'relevant documentary evidence', 'When attending the Inquiry you/your partnership/your company should bring with you/them all relevant documentary evidence in support of your/their case.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
@@ -5309,12 +5304,12 @@ VALUES
     (601, 'the relevant evidence the Department will consider is:', 'The relevant evidence the Department will consider is:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (602, 'complainants invited to the Inquiry', 'You/your partnership/your company should be aware that the complainant(s) will be invited to the Inquiry where they will be invited to present their case, and be available for cross examination on the evidence they present.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (603, 'annex B the statutory provisions', ' Annex B the statutory provisions', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (604, 'consideration to remove the operating centre', 'On the basis of the relevant evidence available it appears that the Department should consider whether to remove the operating centre(s) or to attach conditions to your/your partnerships/your company\'s licence on the following grounds:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (605, 'section 28(1) and (2) place specified as an operating centre unsuitable', 'a) Under Section 28(1) and (2) of the Act, that the place(s) specified as (an) operating centre(s) in your/your partnership\'s/your company\'s licence may no longer be suitable for use as such;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (604, 'consideration to remove the operating centre', 'On the basis of the relevant evidence available it appears that the Department should consider whether to remove the operating centre(s) or to attach conditions to your/your partnerships/your company''s licence on the following grounds:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (605, 'section 28(1) and (2) place specified as an operating centre unsuitable', 'a) Under Section 28(1) and (2) of the Act, that the place(s) specified as (an) operating centre(s) in your/your partnership''s/your company''s licence may no longer be suitable for use as such;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (606, 'section 29(1) Vehicles may cause adverse environmental effects', 'b) Under Section 29(1) of the Act that the use of authorised vehicles at the operating centre(s) at #/and # may cause adverse effects on environmental conditions in the vicinity of the operating centre(s).', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (607, 'annex C The action the Department will consider', 'Annex C The action the Department will consider', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (608, 'The Department will consider whether:-', 'The Department will consider whether:-', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (609, 'section 28 remove the operating centre(s)', 'a) Upon review of the operating centre(s) at #/and # he/she should exercise his/her powers under Section 28 of the Act and remove the operating centre(s) from your/your partnership\'s/your company\'s licence;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (609, 'section 28 remove the operating centre(s)', 'a) Upon review of the operating centre(s) at #/and # he/she should exercise his/her powers under Section 28 of the Act and remove the operating centre(s) from your/your partnership''s/your company''s licence;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (610, 'section 29 add conditions ', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (611, 'number, type and size of authorised motor vehicles or trailers ', 'i) the number, type and size of authorised motor vehicles or trailers which may, at any one time, be at the operating centre of the licence-holder for the purposes of maintenance and parking;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (612, 'parking arrangements', 'ii) the parking arrangements to be provided for authorised motor vehicles or trailers at or in the vicinity of the operating centre;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
@@ -5323,7 +5318,7 @@ VALUES
     (615, 'annex D immediate action', 'Annex D Environmental, Immediate action', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (616, 'you should take the following immediate action:', 'You should take the following immediate action:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (617, 'details of all vehicles currently operated under the licence', 'a) Complete Annex # giving details of all vehicles currently operated under the licence and return to the this office not later than #.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (618, 'attendance at the Inquiry', 'b) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated by returning Annex # to this office no later than #.  Failure to attend will result in the Department determining the case in your/your partnership\'s/your company\'s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (618, 'attendance at the Inquiry', 'b) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated by returning Annex # to this office no later than #.  Failure to attend will result in the Department determining the case in your/your partnership''s/your company''s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (619, 'you/your partnership/your company  represented at the Inquiry', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (620, 'contingency plans post public inquiry', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (621, 'production of relevant documentary evidence', 'e) When attending the Inquiry please ensure that you/your partnership/your company bring(s) your/its operator licence documents and all documentary evidence in support of your/its case.  ', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
@@ -5333,23 +5328,23 @@ VALUES
     (625, 'annex A the evidence the Department will consider ', 'Annex A Environmental, The evidence the Department will consider ', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (626, 'the relevant evidence the Department will consider is:', 'The relevant evidence the Department will consider is:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (627, 'annex B the statutory provisions', ' Annex B the statutory provisions', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (628, 'basis of the available relevant evidence to consider taking action ', 'The Department has decided on the basis of the available relevant evidence to consider taking action against your/your partnership\'s/your company\'s licence on the following grounds:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (628, 'basis of the available relevant evidence to consider taking action ', 'The Department has decided on the basis of the available relevant evidence to consider taking action against your/your partnership''s/your company''s licence on the following grounds:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (629, 'section 26(1)(a) transport act 1985, failed to operate  local services ', 'a) Under section 26(1)(a) of the Transport Act 1985, that the operator has failed to operate one (or more) of its local services registered under Section 6 of that act;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (630, 'Section 26(1)(b) e operator has operated a local service in contravention of S6 ', 'b) Under Section 26(1)(b) of the Act, that the operator has operated a local service in contravention of section 6 of the Act;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (631, 'check revised wording English/Scottish re S111(1)(a)(b)', '* c) Check revised wording re S111(1)(a) * d) Check revised wording re S111(1)(b)  Check Scottish wording ', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (632, 'annex C The action the Department will consider', 'Annex C The action the Department will consider', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (633, 'conditions to prohibit the operation of local services', 'The Department will consider whether to attach conditions to your/your partnership\'s/your company\'s licence to prohibit the operation of local services, under the provisions of Section 26 of the Transport Act 1985:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (633, 'conditions to prohibit the operation of local services', 'The Department will consider whether to attach conditions to your/your partnership''s/your company''s licence to prohibit the operation of local services, under the provisions of Section 26 of the Transport Act 1985:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (634, 'local service may be cancelled under section 26(3) transport act 1985;', 'If you/your partnership/your company) is prohibited from using vehicles under the licence to provide a local service, the Department may also direct that the service be cancelled under the provisions of Section 26(3) of the Transport Act 1985;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (635, 'fuel duty rebate claimed each quarter. ', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (636, 'annex D immediate action', 'Annex D Environmental, Immediate action', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (637, 'you should take the following immediate action:', 'You should take the following immediate action:', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (638, 'vehicles currently operated under operator licence', 'a) Complete Annex * attached giving details of all vehicles currently operated under your/your partnership\'s/your company\'s operator licence;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (638, 'vehicles currently operated under operator licence', 'a) Complete Annex * attached giving details of all vehicles currently operated under your/your partnership''s/your company''s operator licence;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (639, 'details of your current registered local services;', 'b) Complete Annex *  giving details of your current registered local services;', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (640, 'return annexes  ', 'c) Return Annexes * and * to this office not later than *  ', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (641, 'Confirm attendance at the Inquiry ', 'd) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex * to this office no later than * Failure to attend will result in the Department determining the case in your/your partnership\'s/your company\'s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (641, 'Confirm attendance at the Inquiry ', 'd) Confirm that you/your partnership/your company will attend the Inquiry at the time and place stated, by returning Annex * to this office no later than * Failure to attend will result in the Department determining the case in your/your partnership''s/your company''s absence.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (642, 'represented at the Inquiry and at least one of the Partners/Directors should attend ', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (643, 'contingency plans to cover any contractual obligations', '', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
-    (644, 'you should bring with you the Operator Licence documents', 'When attending the Inquiry you should bring with you your/your partnership\'s/your company\'s Operator Licence documents, and all relevant documentary evidence in support of your/your partnership\'s/your company\'s case.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
+    (644, 'you should bring with you the Operator Licence documents', 'When attending the Inquiry you should bring with you your/your partnership''s/your company''s Operator Licence documents, and all relevant documentary evidence in support of your/your partnership''s/your company''s case.', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (645, 'public inquiry section 32 of the Goods Vehicles (Licensing Of Operators) Act (Northern Ireland) 2010', 'Public Inquiry Under Section 32 of the Goods Vehicles (Licensing Of Operators) Act (Northern Ireland) 2010', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (646, 'public inquiry section 54 PPV act 1981 ', 'Public Inquiry Under Section 54 Of The Public Passenger Vehicles Act 1981 (The Act) As Amended', 1, 1, '2012-09-14 15:27:27', '2012-09-14 15:27:27', 1),
     (647, 'report received from DVA', 'a report has been received from DVA which indicates that ', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
@@ -5358,15 +5353,15 @@ VALUES
     (650, 'you were not adhering to the declared inspection frequency', 'you were not adhering to the declared inspection frequency', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (651, 'change in maintenance/safety inspections', 'there had been a change to the maintenance arrangements and/or safety inspections which had not been notified to the Department', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (652, 'list of prohibitions', 'the following prohibition notices have been issued to your vehicles/trailers:- [Insert Table Date Vehicle/Trailer Type of Prohibition]', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
-    (653, 'S marked prohibitions', 'the prohibition(s) endorsed \'S\' indicate(s) that in the issuing officers opinion a significant failure of the maintenance system had allowed defects to develop', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
+    (653, 'S marked prohibitions', 'the prohibition(s) endorsed ''S'' indicate(s) that in the issuing officers opinion a significant failure of the maintenance system had allowed defects to develop', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (654, 'defects indicate shortcomings', 'the defects found would appear to indicate shortcomings in the standard and/or frequency of your preventative maintenance arrangements', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (655, 'vehicles have poor test history', 'your vehicles have a poor test history', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (656, 'obtain a copy of the \"Guide to Maintaining Roadworthiness\"', 'It would be to your advantage, if you have not already done so, to obtain a copy of the \"Guide to Maintaining Roadworthiness\". The guide contains useful advice concerning maintenance systems and the keeping of records.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (657, 'convictions recorded against you/the partnership/the company', 'It has been noted that the following conviction(s) has been recorded against you/the partnership/the company:- [Insert Table \"Date\" \"Court\" \"Offence\" \"Penalty\"]', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (658, 'convictions to be reported to Department within 28 days', 'you/the partnership/the company are reminded of the condition attached to your licence which states that convictions must be notified to the Department within 28 days of them being recorded.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
-    (659, 'specified vehicles not taxed', 'a check of the records held by the Driver and Vehicle Licensing Agency shows that vehicle(s) [”¦”¦”¦.] which is/are specified on your /the partnerships/the company\'s licence is/are not taxed. You are required, therefore, to provide evidence that the vehicle(s) are now taxed.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
+    (659, 'specified vehicles not taxed', 'a check of the records held by the Driver and Vehicle Licensing Agency shows that vehicle(s) [”¦”¦”¦.] which is/are specified on your /the partnerships/the company''s licence is/are not taxed. You are required, therefore, to provide evidence that the vehicle(s) are now taxed.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (660, 'change of operating centre without authority', 'it would appear that you/the partnership/the company have changed operating centre without the required authority.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
-    (661, 'specified vehicles not parked at nominated operating centre', 'it would appear that vehicle(s) [”¦”¦”¦.] specified on your/the partnership(\'s)/the company(\'s)  operators licence is/are not being kept at the nominated operating centre when not in use. The vehicle(s) has/have been observed parked at [”¦”¦”¦”¦..].', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
+    (661, 'specified vehicles not parked at nominated operating centre', 'it would appear that vehicle(s) [”¦”¦”¦.] specified on your/the partnership(''s)/the company(''s)  operators licence is/are not being kept at the nominated operating centre when not in use. The vehicle(s) has/have been observed parked at [”¦”¦”¦”¦..].', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (662, 'operating centre defined as base which authorised vehicles are normally kept', 'an operating centre is defined in the Goods Vehicle (Licensing of Operators) as the base or centre at which authorised vehicles are normally kept.', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (663, 'I would draw your attention to Section 6(1) of the 2010 Act which states:-', 'I would draw your attention to Section 6(1) of the 2010 Act which states:-', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (664, 'report indicating alleged offences against you/the partnership/the company', 'a report has been received from [”¦..] which indicates that the following alleged offences have been incurred by you/the partnership/the company and/or drivers in your employ', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
@@ -5383,7 +5378,7 @@ VALUES
     (675, 'The fee of Â£60 was not enclosed', 'The fee of Â£60 was not enclosed', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (676, 'The principal points are more than 15 minutes apart', '- The principal points are more than 15 minutes apart', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (677, 'Failure to reply to our previous correspondence requesting additional information', 'Failure to reply to our previous correspondence requesting additional information', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
-    (678, 'Your PSV operator\'s licence has a condition on it, which stops you from making this application', '- Your PSV operators licence has a condition on it, which stops you from making this application', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
+    (678, 'Your PSV operator''s licence has a condition on it, which stops you from making this application', '- Your PSV operators licence has a condition on it, which stops you from making this application', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (679, 'You have failed to supply a copy of this application to the Local Authority/PTE', 'You have failed to supply a copy of this application to The Local Authority/PTE', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (680, 'You have failed to supply the current fee of Â£60 for this application', 'You have failed to supply the current fee of Â£60 for this application', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (681, 'The service only operates as a specific event within set dates, and the Department has refused your request for short notice', 'The service only operates as a specific event within set dates, and the Department has refused your request for short notice', 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
@@ -6207,14 +6202,16 @@ VALUES
     (166, 649, 106, 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1),
     (167, 588, 107, 1, 1, '2012-09-14 15:27:28', '2012-09-14 15:27:28', 1);
 
-INSERT INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `file_extension`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `traffic_area_id`, `transport_manager_id`, `category_id`, `created_by`, `irfo_organisation_id`, `last_modified_by`, `filename`, `document_store_id`, `is_digital`, `is_read_only`, `size`, `created_on`, `deleted_date`, `description`, `is_scan`, `issued_date`, `last_modified_on`, `version`)
+-- Here we use insert ignore, as these documents are static,
+-- but we can't truncate the table as it will remove application data
+INSERT IGNORE INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `file_extension`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `traffic_area_id`, `transport_manager_id`, `category_id`, `created_by`, `irfo_organisation_id`, `last_modified_by`, `filename`, `document_store_id`, `is_digital`, `is_read_only`, `size`, `created_on`, `deleted_date`, `description`, `is_scan`, `issued_date`, `last_modified_on`, `version`)
 VALUES
     (2, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no advert', 0, NULL, '2002-05-14 17:45:01', 1),
     (3, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
     (4, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_WRONG_TAO.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App - Wrong TAO', 0, NULL, '2002-05-14 17:45:01', 1),
     (5, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal -no advert', 0, NULL, '2002-05-14 17:45:01', 1),
     (6, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
-    (7, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 1, NULL, NULL, 85, 479, NULL, 479, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_1ST(GB).rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var App Incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
+    (7, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 1, NULL, NULL, 85, 479, NULL, 479, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var App Incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (8, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (9, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_NEW_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
     (10, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_VAR_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Variation applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6263,7 +6260,7 @@ VALUES
     (85, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_NO_TM_REQUEST_OP_COMMENTS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter to operator following 3rd party notification of TM loss', 0, NULL, '2002-05-14 17:45:01', 1),
     (86, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_REFUND_LETTER.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Refund Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (90, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
-    (91, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
+    (91, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Var app incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (92, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_WITHDRAWN_BOUNCED_CHEQUE.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV -  Var app grant set aside - bounced cheque', 0, NULL, '2002-05-14 17:45:01', 1),
     (93, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_PermissionFromComplainantLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Permission from Complainant Letter', 0, NULL, '2002-05-14 17:45:01', 1),
     (94, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/Comp_ApologyReferralToComplainantLetter.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'Compliance: Apology/Referral to Complainant Letter', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -6426,7 +6423,7 @@ VALUES
     (326, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/INFORM_OBJ_OR_REP_OF_PI.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'ENV34 - letter informing obj or rep that PI to be held', 0, NULL, '2010-01-13 13:21:06', 1),
     (327, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSV_LIC_CONTD_VAR_REQD.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'PSV - Licence continued - variation required', 0, NULL, '2010-01-13 13:21:06', 1),
     (328, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Referred_To_PI_Letter_PSV.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'PSV - Letter informing OP of PI to be held', 0, NULL, '2010-11-25 13:42:26', 1),
-    (329, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs', 0, NULL, '2010-11-25 13:42:26', 1),
+    (329, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 291, NULL, 291, NULL, '/templates/GB/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs', 0, NULL, '2010-11-25 13:42:26', 1),
     (330, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/GV79E_Reminder_Letter.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV13 - GV79E reminder letter', 0, NULL, '2010-11-25 13:42:26', 1),
     (331, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Initial_Letter_Advising_Op_Of_Complaint.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'GV - Initial letter advising OP of complaint', 0, NULL, '2010-11-25 13:42:26', 1),
     (332, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 291, NULL, 291, NULL, '/templates/GB/Letter_To_Send_With_Copies_Of_Representations_To_Op.rtf', 0, NULL, NULL, '2010-11-25 13:42:26', NULL, 'ENV14 - Letter to OP with copies of reps', 0, NULL, '2010-11-25 13:42:26', 1),
@@ -6498,7 +6495,7 @@ VALUES
     (398, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (399, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (400, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 1, NULL, NULL, 85, 1, NULL, 1, NULL,
-    '/templates/NI/PUB_APPS_SUPP_DOCS_1ST(NI).rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL,
+    '/templates/NI/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL,
     'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (401, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 1, NULL, NULL, 85, 1, NULL, 1, NULL,
     '/templates/NI/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf', 0, NULL, NULL,
@@ -6550,9 +6547,9 @@ VALUES
     (446, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/REG29_DIRECTION_GIVEN.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter confirming the Reg 29 direction given (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (447, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/REG29_LETTER_REQUESTING_INFO.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter to appointed person re possible Reg 29 direction (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (448, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/REG29_LETTER_NOTIFICATION_OF_DEATH_OF_LIC_HOLDER.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Reg 29 notification of death of licence holder (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (449, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV09 - ENV_PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV09 - New/Var App Incomplete - 1st request for supp docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (449, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV09_-_ENV_PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV09 - New/Var App Incomplete - 1st request for supp docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (450, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV10 - PUB_APP_OPPOSITION_RECEIVED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV10 - Letter advising applicant of opposition received (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (451, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV12 - ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV12 - New/Var App Incomplete - final request for supp docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (451, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV12 - New/Var App Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (452, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV20 - PUB_APP_PROPOSED_CONDITIONS_APP.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV20 - Letter advising applicant of proposed conditions (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (453, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV01 - REP_NO_APP_RECVD.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV01 - Letter explaining that no application received (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (454, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV02 - OBJECTION_ACKNOWLEDGEMENT_OF.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV02 - Acknowledgement of objection (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -6791,161 +6788,76 @@ VALUES
     (696, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_Midlands.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West Midlands', 0, NULL, '2015-02-27 10:00:47', 1),
     (697, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (698, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
-    (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1);
+    (699, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1),
+    (700, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (701, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1);
 
-/* Test documents */
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
-issued_date,document_store_id) VALUES
-    (672,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
-    (673,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
-    (674,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
-    (675,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
-    (676,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
-    (677,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
-    (678,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
-    (679,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
-    (680,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
-    (681,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
-    (682,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00','');
-
-/**
-Original test data below, leaving commented out until we're sure it can be deleted
- */
-
-/*
-INSERT INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date,document_store_id) VALUES
-    (1,7,'Test document not digital','testdocument1.doc',0,1,1,'doc_doc','2014-08-23 18:00:05',''),
-    (2,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
-    (3,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
-    (4,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
-    (5,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
-    (6,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
-    (7,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
-    (8,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
-    (9,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
-    (10,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
-    (11,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
-    (12,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
-    (13,null,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-08-28 15:03:00','/templates/PUB_APPS_SUPP_DOCS_1ST(GB).rtf'),
-    (14,null,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PUB_APPS_SUPP_DOCS_1ST(NI).rtf'),
-    (15,null,'GB PSV - New/App incomplete - 1st Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_NEW_APP_SUPP_DOCS_1ST.rtf'),
-    (16,null,'GB Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf'),
-    (17,null,'NI Goods - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf'),
-    (18,null,'GB PSV - New/App incomes - Final Request for supporting docs','',1,5,1,'doc_rtf','2014-09-09 12:00:00','/templates/PSV_New_app_incomplete_final_request_for_supporting_docs.rtf'),
-    (20,null,'GB Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter.rtf'),
-    (21,null,'NI Compliance: No Further Action Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_NoFurtherActionLetter(NI).rtf'),
-    (22,null,'GB Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_WarningLetter.rtf'),
-    (23,null,'NI Compliance: Warning Letter','',1,2,57,'doc_rtf','2014-09-09 12:00:00','/templates/Comp_WarningLetter.rtf');
-
-*/
-
-/* Transport manager document for transport_manager_id=3, note transport_manager_id=1 isn't valid as it has no contact details */
-/*INSERT INTO document (id,transport_manager_id,description,filename,is_digital,category_id,sub_category_id,file_extension,issued_date) VALUES
-    (19,3,'Test TM document','testdocument19.doc',1,5,101,'doc_doc','2014-12-11 12:34:56');*/
-/*
-INSERT INTO doc_template(id,category_id,sub_category_id,description,document_id,is_ni,suppress_from_op,version) VALUES
-    (1,1,85,'NI Goods - New/Var App Incomplete - 1st Request for supporting docs',14,0,0,1),
-    (2,1,85,'GB Goods - New/Var App Incomplete - 1st Request for supporting docs',13,0,0,1),
-    (3,1,85,'GB PSV - New/App incomplete - 1st Request for supporting docs',15,0,0,1),
-    (4,1,85,'GB Goods - New/App incomes - Final Request for supporting docs',16,0,0,1),
-    (5,1,85,'NI Goods - New/App incomes - Final Request for supporting docs',17,0,0,1),
-    (6,1,85,'GB PSV - New/App incomes - Final Request for supporting docs',18,0,0,1),
-    (7,2,57,'GB Compliance: No Further Action Letter',20,0,1,1),
-    (8,2,57,'NI Compliance: No Further Action Letter',21,1,1,1),
-    (9,2,57,'GB Compliance: Warning Letter',22,0,1,1),
-    (10,2,57,'NI Compliance: Warning Letter',23,1,1,1);
-
-INSERT INTO doc_bookmark(id,name,description,version) VALUES
-    (1,'sample_bookmark','A sample bookmark',1),
-    (2,'another_sample_bookmark','Another sample bookmark',1),
-    (3,'a_third_sample_bookmark','A third sample bookmark',1),
-    (4,'application_type','Application type',1),
-    (5,'p_unacceptable_advert','Unacceptable advert',1),
-    (6,'warning_re_early_operating','Warning RE early operating',1),
-    (7,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle',1);
-
-INSERT INTO doc_paragraph(id,para_title,para_text,version) VALUES
-    (1,'para 1','Sample paragraph 1.',1),
-    (2,'para 2','Sample Paragraph 2.',1),
-    (3,'para 3','Sample Paragraph 3.',1),
-    (4,'para 4','Sample Paragraph 4.',1),
-    (5,'app type 1','App type number one.',1),
-    (6,'app type 2','App type number two.',1),
-    (7,'unacceptable advert','Your advert was unacceptable.',1),
-    (8,'early operating 1','Early operating text one.',1),
-    (9,'early operating 2','Early operating text two!',1),
-    (10,'p_GV_OR_PSV','Goods Vehicle or Passenger Vehicle paragraph text',1);
-
-INSERT INTO doc_template_bookmark(doc_template_id,doc_bookmark_id,version) VALUES
-    (1,1,1),
-    (1,3,1),
-    (1,2,1),
-    (2,4,1),
-    (2,5,1),
-    (2,6,1),
-    (3,1,1),
-    (4,1,1),
-    (5,1,1),
-    (6,1,1),
-    (7,7,1),
-    (8,7,1),
-    (9,7,1),
-    (10,7,1);
-
-INSERT INTO doc_paragraph_bookmark(doc_bookmark_id,doc_paragraph_id,version) VALUES
-    (1,1,1),
-    (1,2,1),
-    (1,3,1),
-    (2,2,1),
-    (2,4,1),
-    (3,4,1),
-    (4,5,1),
-    (4,6,1),
-    (5,7,1),
-    (6,8,1),
-    (6,9,1),
-    (7,10,1);
-*/
-
-INSERT INTO `variation_reason` (`id`, `description`)
-VALUES
-  (1, 'Route'),
-  (2, 'Start & finish point'),
-  (3, 'Stopping places'),
-  (4, 'Timetable');
 
 INSERT INTO `role` (`id`, `role`) VALUES
-    (1, 'limited-read-only'),
-    (2, 'read-only'),
-    (3, 'case-worker'),
-    (4, 'admin');
+    (1, 'internal-limited-read-only'), -- internal only
+    (2, 'internal-read-only'), -- internal only
+    (3, 'internal-case-worker'), -- internal only
+    (4, 'internal-admin'), -- internal only
+    (5, 'operator-admin'), -- selfserve
+    (6, 'operator-user'), -- selfserve
+    (7, 'operator-tm'), -- selfserve
+    (8, 'operator-ebsr'), -- selfserve
+    (9, 'partner-admin'), -- selfserve
+    (10, 'partner-user'), -- selfserve
+    (11, 'local-authority-admin'), -- selfserve
+    (12, 'local-authority-user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
-    (1, 'admin', 'ADMIN'),
-    (2, 'documents', 'DOCUM'),
-    (3, 'case', 'CASE'),
-    (4, 'notes', 'NOTES'),
-    (5, 'edit', 'EDIT'),
-    (6, 'view', 'VIEW');
+    (1, 'internal-admin', 'ADMIN'),
+    (2, 'internal-documents', 'DOCUM'),
+    (3, 'internal-case', 'CASE'),
+    (4, 'internal-notes', 'NOTES'),
+    (5, 'internal-edit', 'EDIT'),
+    (6, 'internal-view', 'VIEW'),
+    (7, 'internal-user', 'IUSER'), -- used to distinguish between Internal and Selfserve users
+    (8, 'selfserve-user', 'SUSER'), -- used to distinguish between Internal and Selfserve users
+    (9, 'selfserve-ebsr', 'SEBSR'),
+    (10, 'selfserve-ebsr-documents', 'SEDOC');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
-    (1, 6), -- all roles have view
-    (2, 6), -- all roles have view
-    (3, 6), -- all roles have view
-    (4, 6), -- all roles have view
-    (2, 2), -- read only sees docs
-    (2, 3), -- read only sees case
-    (2, 4), -- read only sees notes
-    (3, 2), -- case worker sees docs
-    (3, 3), -- case worker sees case
-    (3, 4), -- case worker sees notes
-    (3, 5), -- case worker can edit
-    (4, 2), -- admin sees docs
-    (4, 3), -- admin  sees case
-    (4, 4), -- admin  sees notes
-    (4, 5), -- admin can edit
-    (4, 1); -- admin is admin
+    (1, 7), -- all internal roles are internal users
+    (2, 7), -- all internal roles are internal users
+    (3, 7), -- all internal roles are internal users
+    (4, 7), -- all internal roles are internal users
+    (1, 6), -- all internal roles have internal view
+    (2, 6), -- all internal roles have internal view
+    (3, 6), -- all internal roles have internal view
+    (4, 6), -- all internal roles have internal view
+    (2, 2), -- internal read only sees docs
+    (2, 3), -- internal read only sees case
+    (2, 4), -- internal read only sees notes
+    (3, 2), -- internal case worker sees docs
+    (3, 3), -- internal case worker sees case
+    (3, 4), -- internal case worker sees notes
+    (3, 5), -- internal case worker can edit
+    (4, 2), -- internal admin sees docs
+    (4, 3), -- internal admin sees case
+    (4, 4), -- internal admin sees notes
+    (4, 5), -- internal admin can edit
+    (4, 1), -- internal admin is admin,
+    (5, 8), -- all selfserve roles are selfserve users
+    (6, 8), -- all selfserve roles are selfserve users
+    (7, 8), -- all selfserve roles are selfserve users
+    (8, 8), -- all selfserve roles are selfserve users
+    (9, 8), -- all selfserve roles are selfserve users
+    (10, 8), -- all selfserve roles are selfserve users
+    (11, 8), -- all selfserve roles are selfserve users
+    (12, 8), -- all selfserve roles are selfserve users
+    (8, 9), -- selfserve EBSR sees ebsr
+    (5, 9), -- operator admin sees ebsr
+    (6, 9), -- operator user sees ebsr
+    (11, 9), -- LA admin sees ebsr
+    (12, 9), -- LA user sees ebsr
+    (5, 10), -- operator admin sees ebsr docs
+    (6, 10), -- operator user sees ebsr docs
+    (11, 10), -- LA admin sees ebsr docs
+    (12, 10); -- LA user sees ebsr docs
 
 INSERT INTO `financial_standing_rate` (
     `id`,
@@ -7135,3 +7047,7 @@ CREATE VIEW bus_reg_search_view AS
                             AND br2.deleted_date is null))
           , 0)
             AND br1.deleted_date is null;
+
+COMMIT;
+
+SET foreign_key_checks = 1;

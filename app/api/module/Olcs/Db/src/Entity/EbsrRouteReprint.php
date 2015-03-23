@@ -14,8 +14,9 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ebsr_route_reprint",
  *    indexes={
- *        @ORM\Index(name="fk_ebsr_route_reprint_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_ebsr_route_reprint_user1_idx", columns={"requested_user_id"})
+ *        @ORM\Index(name="ix_ebsr_route_reprint_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_ebsr_route_reprint_requested_user_id", columns={"requested_user_id"}),
+ *        @ORM\Index(name="ix_ebsr_route_reprint_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -23,7 +24,8 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\BusRegManyToOne,
-        Traits\IdIdentity;
+        Traits\IdIdentity,
+        Traits\OlbsKeyField;
 
     /**
      * Exception name
@@ -65,9 +67,9 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     /**
      * Scale
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="scale", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="scale", nullable=false, options={"default": 0})
      */
     protected $scale = 0;
 
@@ -166,7 +168,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     /**
      * Set the scale
      *
-     * @param int $scale
+     * @param boolean $scale
      * @return EbsrRouteReprint
      */
     public function setScale($scale)
@@ -179,7 +181,7 @@ class EbsrRouteReprint implements Interfaces\EntityInterface
     /**
      * Get the scale
      *
-     * @return int
+     * @return boolean
      */
     public function getScale()
     {

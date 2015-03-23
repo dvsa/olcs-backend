@@ -107,6 +107,12 @@ class ExpressionBuilder
             return $this->qb->expr()->in($field, $values);
         }
 
+        if (substr($values, 0, 8) == 'NOT IN [') {
+            $values = json_decode(substr($values, 7));
+
+            return $this->qb->expr()->notIn($field, $values);
+        }
+
         if (is_numeric($values) || $this->isFieldForeignKey($field)) {
             $paramIndex = $this->getNextParamIndex();
             $this->params[$paramIndex] = $values;

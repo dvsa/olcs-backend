@@ -16,8 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_employment",
  *    indexes={
- *        @ORM\Index(name="fk_tm_employment_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_tm_employment_contact_details1_idx", columns={"contact_details_id"})
+ *        @ORM\Index(name="ix_tm_employment_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_tm_employment_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="fk_tm_employment_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_tm_employment_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -25,22 +27,14 @@ class TmEmployment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\ContactDetailsManyToOneAlt1,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
-        Traits\HoursPerWeek80Field,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Position45Field,
         Traits\CustomVersionField;
-
-    /**
-     * Created by
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
-     */
-    protected $createdBy;
 
     /**
      * Employer name
@@ -52,13 +46,13 @@ class TmEmployment implements Interfaces\EntityInterface
     protected $employerName;
 
     /**
-     * Last modified by
+     * Hours per week
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\Column(type="string", name="hours_per_week", length=100, nullable=true)
      */
-    protected $lastModifiedBy;
+    protected $hoursPerWeek;
 
     /**
      * Transport manager
@@ -69,29 +63,6 @@ class TmEmployment implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
      */
     protected $transportManager;
-
-    /**
-     * Set the created by
-     *
-     * @param int $createdBy
-     * @return TmEmployment
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return int
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
 
     /**
      * Set the employer name
@@ -117,26 +88,26 @@ class TmEmployment implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the last modified by
+     * Set the hours per week
      *
-     * @param int $lastModifiedBy
+     * @param string $hoursPerWeek
      * @return TmEmployment
      */
-    public function setLastModifiedBy($lastModifiedBy)
+    public function setHoursPerWeek($hoursPerWeek)
     {
-        $this->lastModifiedBy = $lastModifiedBy;
+        $this->hoursPerWeek = $hoursPerWeek;
 
         return $this;
     }
 
     /**
-     * Get the last modified by
+     * Get the hours per week
      *
-     * @return int
+     * @return string
      */
-    public function getLastModifiedBy()
+    public function getHoursPerWeek()
     {
-        return $this->lastModifiedBy;
+        return $this->hoursPerWeek;
     }
 
     /**

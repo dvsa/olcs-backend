@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="stay",
  *    indexes={
- *        @ORM\Index(name="fk_stay_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_stay_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_stay_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_stay_ref_data1_idx", columns={"outcome"}),
- *        @ORM\Index(name="fk_stay_ref_data2_idx", columns={"stay_type"})
+ *        @ORM\Index(name="ix_stay_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_stay_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_stay_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_stay_outcome", columns={"outcome"}),
+ *        @ORM\Index(name="ix_stay_stay_type", columns={"stay_type"})
  *    }
  * )
  */

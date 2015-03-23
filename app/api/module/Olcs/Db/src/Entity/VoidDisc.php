@@ -14,11 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="void_disc",
  *    indexes={
- *        @ORM\Index(name="fk_void_disc_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_void_disc_ref_data2_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_void_disc_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_void_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_void_disc_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_void_disc_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_void_disc_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_void_disc_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_void_disc_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_void_disc_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_void_disc_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +35,7 @@ class VoidDisc implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceTypeManyToOneAlt1,
+        Traits\OlbsKeyField,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
 

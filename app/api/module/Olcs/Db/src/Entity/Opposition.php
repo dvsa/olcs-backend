@@ -17,14 +17,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="opposition",
  *    indexes={
- *        @ORM\Index(name="fk_opposition_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_opposition_opposer1_idx", columns={"opposer_id"}),
- *        @ORM\Index(name="fk_opposition_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_opposition_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_opposition_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_opposition_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_opposition_ref_data1_idx", columns={"opposition_type"}),
- *        @ORM\Index(name="fk_opposition_ref_data2_idx", columns={"status"})
+ *        @ORM\Index(name="ix_opposition_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_opposition_opposer_id", columns={"opposer_id"}),
+ *        @ORM\Index(name="ix_opposition_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_opposition_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_opposition_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_opposition_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
+ *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"}),
+ *        @ORM\Index(name="ix_opposition_status", columns={"status"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="ux_olbs_key", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -39,6 +43,8 @@ class Opposition implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
         Traits\Notes4000Field,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField;
 
@@ -48,7 +54,7 @@ class Opposition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="oppositions")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
 
@@ -109,11 +115,12 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Is valid
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="yesno", name="is_valid", nullable=false, options={"default": 0})
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="is_valid", referencedColumnName="id", nullable=false)
      */
-    protected $isValid = 0;
+    protected $isValid;
 
     /**
      * Is willing to attend pi
@@ -385,7 +392,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Set the is valid
      *
-     * @param string $isValid
+     * @param \Olcs\Db\Entity\RefData $isValid
      * @return Opposition
      */
     public function setIsValid($isValid)
@@ -398,7 +405,7 @@ class Opposition implements Interfaces\EntityInterface
     /**
      * Get the is valid
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getIsValid()
     {

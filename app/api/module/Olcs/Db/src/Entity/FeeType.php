@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_type",
  *    indexes={
- *        @ORM\Index(name="fk_fee_type_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_fee_type_ref_data3_idx", columns={"accrual_rule"}),
- *        @ORM\Index(name="fk_fee_type_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_fee_type_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_fee_type_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_fee_type_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_fee_type_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"})
  *    }
  * )
  */

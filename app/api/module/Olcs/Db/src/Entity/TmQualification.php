@@ -16,11 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_qualification",
  *    indexes={
- *        @ORM\Index(name="fk_qualification_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_qualification_country1_idx", columns={"country_code"}),
- *        @ORM\Index(name="fk_qualification_ref_data1_idx", columns={"qualification_type"}),
- *        @ORM\Index(name="fk_tm_qualification_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_qualification_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_tm_qualification_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_tm_qualification_country_code", columns={"country_code"}),
+ *        @ORM\Index(name="ix_tm_qualification_qualification_type", columns={"qualification_type"}),
+ *        @ORM\Index(name="ix_tm_qualification_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_tm_qualification_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_tm_qualification_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -33,6 +36,7 @@ class TmQualification implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
