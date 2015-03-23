@@ -106,6 +106,20 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'user_role' => array(
+        'user_id' => array(
+            'inversedBy' => array(
+                'entity' => 'User',
+                'property' => 'userRole'
+            )
+        ),
+        'role_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Role',
+                'property' => 'role'
+            )
+        )
+    ),
     'licence' => array(
         'organisation_id' => array(
             'inversedBy' => array(
