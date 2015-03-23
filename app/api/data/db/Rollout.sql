@@ -746,11 +746,9 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('insp_result_type', 'insp_res_t_new', 'New', '1'),
     ('insp_result_type', 'insp_res_t_new_sat', 'Satisfactory', '2'),
     ('insp_result_type', 'insp_res_t_new_unsat', 'Unsatisfactory', '3'),
-    ('interim_status', 'int_sts_granted', 'Granted', 'Granted'),
     ('interim_status', 'int_sts_in_force', 'In-Force', 'In-Force'),
     ('interim_status', 'int_sts_refused', 'Refused', 'Refused'),
     ('interim_status', 'int_sts_revoked', 'Revoked', 'Revoked'),
-    ('interim_status', 'int_sts_saved', 'Saved', 'Saved'),
     ('interim_status', 'int_sts_requested', 'Requested', 'Requested'),
 
     ('lic_cat', 'lcat_gv', 'Goods Vehicle', 'GV'),
