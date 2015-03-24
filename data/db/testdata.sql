@@ -1018,7 +1018,7 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'loggedinuser',101),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'johnspellman',105),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'stevefox',106),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',101),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'philjowitt',NULL),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'kevinrooney',NULL),
     (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'sarahthompson',NULL),
@@ -1736,7 +1736,7 @@ VALUES
 	(34, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
 	(35, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
 	(36, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(39, 29, 102, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL, NULL, NULL, '2015-03-23 17:09:32', 'Not used');
+	(39, 29, 102, NULL, NULL, NULL, 4, NULL, NULL, NULL, '2015-03-23 17:09:32', 'Not used');
 
 
 -- End: Event History Test Data
