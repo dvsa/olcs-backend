@@ -33,7 +33,6 @@ class LicenceStatusRule implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
         Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
