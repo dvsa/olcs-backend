@@ -1702,41 +1702,36 @@ INSERT INTO `event_history_type` (`id`,`event_code`,`description`) VALUES
 ,('146','PFA','Partner Family Name Changed')
 ,('147','PDB','Partner Date of Birth Changed');
 
-INSERT INTO `event_history` (
-    `id`, `case_id`, `event_history_type_id`, `application_id`,
-    `licence_id`, `transport_manager_id`, `user_id`,
-    `entity_pk`, `entity_type`, `entity_version`,
-    `event_datetime`, `event_description`
-)
+INSERT INTO `event_history` (`id`, `event_history_type_id`, `application_id`, `bus_reg_id`, `case_id`, `licence_id`, `organisation_id`, `transport_manager_id`, `user_id`, `entity_pk`, `entity_type`, `entity_version`, `event_data`, `event_datetime`, `event_description`)
 VALUES
-	(8, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-13 15:41:40', 'Event Description 1'),
-	(9, NULL, 1, NULL, 30, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 2'),
-	(10, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 3'),
-	(11, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 4'),
-	(12, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 5'),
-	(13, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 6'),
-	(14, NULL, 1, NULL, 30, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 7'),
-	(15, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 8'),
-	(16, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 9'),
-	(17, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 10'),
-	(18, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 11'),
-	(19, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 12'),
-	(20, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 13'),
-	(21, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 14'),
-	(22, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 15'),
-	(23, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 16'),
-	(24, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 17'),
-	(25, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 18'),
-	(26, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 19'),
-	(27, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 20'),
-	(28, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 21'),
-	(29, NULL, 1, NULL, 7, NULL, 4, NULL, NULL, NULL, '2015-03-16 10:30:18', 'Event Description 22'),
-	(30, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(33, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(34, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(35, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(36, NULL, 131, NULL, NULL, 1, 4, NULL, NULL, NULL, '2015-03-19 13:37:36', 'Not used'),
-	(39, 29, 102, NULL, NULL, NULL, 4, NULL, NULL, NULL, '2015-03-23 17:09:32', 'Not used');
+	(8, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Event Data', '2015-03-24 11:02:49', 'Event Description 1'),
+	(9, 1, NULL, NULL, NULL, 30, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 2'),
+	(10, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 3'),
+	(11, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 4'),
+	(12, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 5'),
+	(13, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 6'),
+	(14, 1, NULL, NULL, NULL, 30, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 7'),
+	(15, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 8'),
+	(16, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 9'),
+	(17, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 10'),
+	(18, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 11'),
+	(19, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 12'),
+	(20, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 13'),
+	(21, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 14'),
+	(22, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 15'),
+	(23, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 16'),
+	(24, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 17'),
+	(25, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 18'),
+	(26, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 19'),
+	(27, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 20'),
+	(28, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 21'),
+	(29, 1, NULL, NULL, NULL, 7, 1, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 22'),
+	(39, 102, NULL, NULL, 29, NULL, 1, NULL, 4, NULL, NULL, NULL, 'Case Event Data', '2015-03-24 11:02:49', 'Not used'),
+	(30, 131, NULL, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
+	(33, 131, 1, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
+	(34, 131, 1, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
+	(35, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
+	(36, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used');
 
 
 -- End: Event History Test Data
