@@ -3506,7 +3506,7 @@ CREATE TABLE `licence_no_gen` (
   `licence_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_licence_no_gen_licence_id` (`licence_id`),
-  CONSTRAINT `fk_licence_no_gen_licence_id_application_id` FOREIGN KEY (`licence_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_licence_no_gen_licence_id_licence_id` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2000000 DEFAULT CHARSET=utf8 COMMENT='Used as a sequence when generating licence numbers.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
