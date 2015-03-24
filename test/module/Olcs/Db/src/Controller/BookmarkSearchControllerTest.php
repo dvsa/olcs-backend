@@ -33,7 +33,8 @@ class BookmarkSearchControllerTest extends PHPUnit_Framework_TestCase
             array(
                 'respond',
                 'getDataFromQuery',
-                'getService'
+                'getService',
+                'getLogger'
             )
         );
     }
@@ -206,6 +207,14 @@ class BookmarkSearchControllerTest extends PHPUnit_Framework_TestCase
             ->method('getService')
             ->with('Task')
             ->will($this->returnValue($mockTaskService));
+
+        $logger = $this->getMock('\stdClass', ['info']);
+        $logger->expects($this->once())
+            ->method('info');
+
+        $this->controller->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
 
         try {
             $this->controller->getList();

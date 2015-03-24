@@ -131,6 +131,9 @@ return [
         ]
     ],
     'service_manager' => [
+        'shared' => [
+            'BundleQuery' => false
+        ],
         'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory'
