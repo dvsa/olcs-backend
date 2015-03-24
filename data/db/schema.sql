@@ -441,7 +441,7 @@ CREATE TABLE `application_tracking` (
   `last_modified_by` int(10) unsigned DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
-  `version` smallint(5) NOT NULL,
+  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
   PRIMARY KEY (`id`),
   UNIQUE KEY `application_id_UNIQUE` (`application_id`),
   KEY `fk_application_tracking_application1_idx` (`application_id`),
@@ -3506,7 +3506,7 @@ CREATE TABLE `licence_no_gen` (
   `licence_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_licence_no_gen_licence_id` (`licence_id`),
-  CONSTRAINT `fk_licence_no_gen_licence_id_application_id` FOREIGN KEY (`licence_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_licence_no_gen_licence_id_licence_id` FOREIGN KEY (`licence_id`) REFERENCES `licence` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2000000 DEFAULT CHARSET=utf8 COMMENT='Used as a sequence when generating licence numbers.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4566,7 +4566,7 @@ CREATE TABLE `pi_definition` (
   `section_code` varchar(20) NOT NULL COMMENT 'Section of related legislation',
   `description` varchar(255) NOT NULL,
   `is_ni` tinyint(1) NOT NULL,
-  `goods_or_psv` varchar(32) NOT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
