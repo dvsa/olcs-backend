@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence_no_gen",
  *    indexes={
- *        @ORM\Index(name="fk_licence_no_gen_licence1_idx", columns={"licence_id"})
+ *        @ORM\Index(name="ix_licence_no_gen_licence_id", columns={"licence_id"})
  *    }
  * )
  */

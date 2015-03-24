@@ -14,12 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="publication_police_data",
  *    indexes={
- *        @ORM\Index(name="fk_publication_police_data_publication_link1_idx", columns={"publication_link_id"}),
- *        @ORM\Index(name="fk_publication_police_data_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_publication_police_data_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_publication_police_data_publication_link_id", columns={"publication_link_id"}),
+ *        @ORM\Index(name="ix_publication_police_data_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_publication_police_data_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_olbs_id", columns={"olbs_id"})
+ *        @ORM\UniqueConstraint(name="uk_publication_police_data_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -34,6 +34,7 @@ class PublicationPoliceData implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -44,15 +45,6 @@ class PublicationPoliceData implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="olbs_dob", length=20, nullable=true)
      */
     protected $olbsDob;
-
-    /**
-     * Olbs id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_id", nullable=true)
-     */
-    protected $olbsId;
 
     /**
      * Publication link
@@ -85,29 +77,6 @@ class PublicationPoliceData implements Interfaces\EntityInterface
     public function getOlbsDob()
     {
         return $this->olbsDob;
-    }
-
-    /**
-     * Set the olbs id
-     *
-     * @param int $olbsId
-     * @return PublicationPoliceData
-     */
-    public function setOlbsId($olbsId)
-    {
-        $this->olbsId = $olbsId;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs id
-     *
-     * @return int
-     */
-    public function getOlbsId()
-    {
-        return $this->olbsId;
     }
 
     /**

@@ -14,11 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_permit_stock",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_permit_stock_irfo_gv_permit1_idx", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_irfo_country1_idx", columns={"irfo_country_id"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_ref_data1_idx", columns={"status"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_permit_stock_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irfo_permit_stock_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="ix_irfo_permit_stock_irfo_country_id", columns={"irfo_country_id"}),
+ *        @ORM\Index(name="ix_irfo_permit_stock_status", columns={"status"}),
+ *        @ORM\Index(name="ix_irfo_permit_stock_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_permit_stock_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_permit_stock_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -31,6 +34,7 @@ class IrfoPermitStock implements Interfaces\EntityInterface
         Traits\IrfoGvPermitManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\StatusManyToOne,
         Traits\CustomVersionField;
 
@@ -58,7 +62,7 @@ class IrfoPermitStock implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="valid_for_year", nullable=false)
+     * @ORM\Column(type="smallint", name="valid_for_year", nullable=false)
      */
     protected $validForYear;
 

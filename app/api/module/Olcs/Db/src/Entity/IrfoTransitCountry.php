@@ -14,9 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_transit_country",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_transit_country_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_irfo_transit_country_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_transit_country_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irfo_transit_country_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_irfo_transit_country_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_transit_country_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_transit_country_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -28,6 +31,7 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -48,6 +52,15 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuth;
+
+    /**
+     * Olbs type
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_type", nullable=true)
+     */
+    protected $olbsType;
 
     /**
      * Set the description
@@ -93,5 +106,28 @@ class IrfoTransitCountry implements Interfaces\EntityInterface
     public function getIrfoPsvAuth()
     {
         return $this->irfoPsvAuth;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param int $olbsType
+     * @return IrfoTransitCountry
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return int
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 }

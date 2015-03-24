@@ -17,8 +17,16 @@ use Olcs\Db\Entity\Traits;
 class LegacyCaseAction implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\Description45Field,
         Traits\IdIdentity;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=45, nullable=true)
+     */
+    protected $description;
 
     /**
      * Is driver
@@ -28,6 +36,29 @@ class LegacyCaseAction implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_driver", nullable=false, options={"default": 0})
      */
     protected $isDriver = 0;
+
+    /**
+     * Set the description
+     *
+     * @param string $description
+     * @return LegacyCaseAction
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
     /**
      * Set the is driver

@@ -17,17 +17,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="condition_undertaking",
  *    indexes={
- *        @ORM\Index(name="fk_Condition_ref_data1_idx", columns={"added_via"}),
- *        @ORM\Index(name="fk_Condition_ref_data2_idx", columns={"attached_to"}),
- *        @ORM\Index(name="fk_Condition_ref_data3_idx", columns={"condition_type"}),
- *        @ORM\Index(name="fk_Condition_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_Condition_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_Condition_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_condition_undertaking_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_condition_undertaking_condition_undertaking1_idx", columns={"lic_condition_variation_id"}),
- *        @ORM\Index(name="fk_condition_undertaking_user3_idx", columns={"approval_user_id"})
+ *        @ORM\Index(name="ix_condition_undertaking_added_via", columns={"added_via"}),
+ *        @ORM\Index(name="ix_condition_undertaking_attached_to", columns={"attached_to"}),
+ *        @ORM\Index(name="ix_condition_undertaking_condition_type", columns={"condition_type"}),
+ *        @ORM\Index(name="ix_condition_undertaking_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_condition_undertaking_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id", columns={"lic_condition_variation_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -41,6 +44,8 @@ class ConditionUndertaking implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\CustomVersionField;
 
     /**
@@ -102,15 +107,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="condition_type", referencedColumnName="id", nullable=false)
      */
     protected $conditionType;
-
-    /**
-     * Is approved
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_approved", nullable=false, options={"default": 0})
-     */
-    protected $isApproved = 0;
 
     /**
      * Is draft
@@ -340,29 +336,6 @@ class ConditionUndertaking implements Interfaces\EntityInterface
     public function getConditionType()
     {
         return $this->conditionType;
-    }
-
-    /**
-     * Set the is approved
-     *
-     * @param string $isApproved
-     * @return ConditionUndertaking
-     */
-    public function setIsApproved($isApproved)
-    {
-        $this->isApproved = $isApproved;
-
-        return $this;
-    }
-
-    /**
-     * Get the is approved
-     *
-     * @return string
-     */
-    public function getIsApproved()
-    {
-        return $this->isApproved;
     }
 
     /**

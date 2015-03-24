@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth_type",
  *    indexes={
- *        @ORM\Index(name="fk_irfo_psv_auth_type_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_irfo_psv_auth_type_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irfo_psv_auth_type_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_psv_auth_type_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

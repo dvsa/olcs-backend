@@ -15,12 +15,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation",
  *    indexes={
- *        @ORM\Index(name="fk_organisation_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_organisation_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_organisation_ref_data1_idx", columns={"type"}),
- *        @ORM\Index(name="fk_organisation_traffic_area1_idx", columns={"lead_tc_area_id"}),
- *        @ORM\Index(name="organisation_name_idx", columns={"name"}),
- *        @ORM\Index(name="fk_organisation_contact_details1_idx", columns={"contact_details_id"})
+ *        @ORM\Index(name="ix_organisation_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_organisation_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_organisation_type", columns={"type"}),
+ *        @ORM\Index(name="ix_organisation_lead_tc_area_id", columns={"lead_tc_area_id"}),
+ *        @ORM\Index(name="ix_organisation_name", columns={"name"}),
+ *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_organisation_irfo_contact_details_id", columns={"irfo_contact_details_id"})
  *    }
  * )
  */
@@ -62,6 +63,16 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
      */
     protected $companyOrLlpNo;
+
+    /**
+     * Irfo contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="irfo_contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoContactDetails;
 
     /**
      * Irfo name
@@ -119,6 +130,23 @@ class Organisation implements Interfaces\EntityInterface
     protected $name;
 
     /**
+     * Nature of businesse
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="organisations")
+     * @ORM\JoinTable(name="organisation_nature_of_business",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $natureOfBusinesses;
+
+    /**
      * Type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -136,15 +164,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Licence", mappedBy="organisation")
      */
     protected $licences;
-
-    /**
-     * Nature of business
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationNatureOfBusiness", mappedBy="organisation")
-     */
-    protected $natureOfBusinesss;
 
     /**
      * Organisation person
@@ -169,8 +188,8 @@ class Organisation implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->natureOfBusinesses = new ArrayCollection();
         $this->licences = new ArrayCollection();
-        $this->natureOfBusinesss = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
@@ -242,6 +261,29 @@ class Organisation implements Interfaces\EntityInterface
     public function getCompanyOrLlpNo()
     {
         return $this->companyOrLlpNo;
+    }
+
+    /**
+     * Set the irfo contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $irfoContactDetails
+     * @return Organisation
+     */
+    public function setIrfoContactDetails($irfoContactDetails)
+    {
+        $this->irfoContactDetails = $irfoContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getIrfoContactDetails()
+    {
+        return $this->irfoContactDetails;
     }
 
     /**
@@ -383,6 +425,66 @@ class Organisation implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the nature of businesse
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
+     * @return Organisation
+     */
+    public function setNatureOfBusinesses($natureOfBusinesses)
+    {
+        $this->natureOfBusinesses = $natureOfBusinesses;
+
+        return $this;
+    }
+
+    /**
+     * Get the nature of businesses
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getNatureOfBusinesses()
+    {
+        return $this->natureOfBusinesses;
+    }
+
+    /**
+     * Add a nature of businesses
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
+     * @return Organisation
+     */
+    public function addNatureOfBusinesses($natureOfBusinesses)
+    {
+        if ($natureOfBusinesses instanceof ArrayCollection) {
+            $this->natureOfBusinesses = new ArrayCollection(
+                array_merge(
+                    $this->natureOfBusinesses->toArray(),
+                    $natureOfBusinesses->toArray()
+                )
+            );
+        } elseif (!$this->natureOfBusinesses->contains($natureOfBusinesses)) {
+            $this->natureOfBusinesses->add($natureOfBusinesses);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a nature of businesses
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
+     * @return Organisation
+     */
+    public function removeNatureOfBusinesses($natureOfBusinesses)
+    {
+        if ($this->natureOfBusinesses->contains($natureOfBusinesses)) {
+            $this->natureOfBusinesses->removeElement($natureOfBusinesses);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the type
      *
      * @param \Olcs\Db\Entity\RefData $type
@@ -460,66 +562,6 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->licences->contains($licences)) {
             $this->licences->removeElement($licences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the nature of business
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
-     * @return Organisation
-     */
-    public function setNatureOfBusinesss($natureOfBusinesss)
-    {
-        $this->natureOfBusinesss = $natureOfBusinesss;
-
-        return $this;
-    }
-
-    /**
-     * Get the nature of businesss
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getNatureOfBusinesss()
-    {
-        return $this->natureOfBusinesss;
-    }
-
-    /**
-     * Add a nature of businesss
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
-     * @return Organisation
-     */
-    public function addNatureOfBusinesss($natureOfBusinesss)
-    {
-        if ($natureOfBusinesss instanceof ArrayCollection) {
-            $this->natureOfBusinesss = new ArrayCollection(
-                array_merge(
-                    $this->natureOfBusinesss->toArray(),
-                    $natureOfBusinesss->toArray()
-                )
-            );
-        } elseif (!$this->natureOfBusinesss->contains($natureOfBusinesss)) {
-            $this->natureOfBusinesss->add($natureOfBusinesss);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a nature of businesss
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesss
-     * @return Organisation
-     */
-    public function removeNatureOfBusinesss($natureOfBusinesss)
-    {
-        if ($this->natureOfBusinesss->contains($natureOfBusinesss)) {
-            $this->natureOfBusinesss->removeElement($natureOfBusinesss);
         }
 
         return $this;

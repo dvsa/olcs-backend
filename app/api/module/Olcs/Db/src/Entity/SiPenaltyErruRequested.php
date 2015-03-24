@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="si_penalty_erru_requested",
  *    indexes={
- *        @ORM\Index(name="fk_si_penalty_erru_requested_serious_infringement1_idx", columns={"serious_infringement_id"}),
- *        @ORM\Index(name="fk_si_penalty_erru_requested_si_penalty_requested_type1_idx", columns={"si_penalty_requested_type_id"}),
- *        @ORM\Index(name="fk_si_penalty_erru_requested_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_si_penalty_erru_requested_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_si_penalty_erru_requested_serious_infringement_id", columns={"serious_infringement_id"}),
+ *        @ORM\Index(name="ix_si_penalty_erru_requested_si_penalty_requested_type_id", columns={"si_penalty_requested_type_id"}),
+ *        @ORM\Index(name="ix_si_penalty_erru_requested_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_si_penalty_erru_requested_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -32,6 +32,7 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -39,7 +40,7 @@ class SiPenaltyErruRequested implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="duration", nullable=true)
+     * @ORM\Column(type="smallint", name="duration", nullable=true)
      */
     protected $duration;
 
