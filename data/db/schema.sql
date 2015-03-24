@@ -4566,7 +4566,7 @@ CREATE TABLE `pi_definition` (
   `section_code` varchar(20) NOT NULL COMMENT 'Section of related legislation',
   `description` varchar(255) NOT NULL,
   `is_ni` tinyint(1) NOT NULL,
-  `goods_or_psv` varchar(32) NOT NULL,
+  `goods_or_psv` varchar(32) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
   `created_on` datetime(6) DEFAULT NULL COMMENT 'Date record created.',
