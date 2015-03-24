@@ -60,9 +60,9 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Period
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="smallint", name="period", nullable=false)
+     * @ORM\Column(type="string", name="period", length=32, nullable=false)
      */
     protected $period;
 
@@ -115,7 +115,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Set the period
      *
-     * @param int $period
+     * @param string $period
      * @return Disqualification
      */
     public function setPeriod($period)
@@ -128,7 +128,7 @@ class Disqualification implements Interfaces\EntityInterface
     /**
      * Get the period
      *
-     * @return int
+     * @return string
      */
     public function getPeriod()
     {
