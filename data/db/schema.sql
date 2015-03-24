@@ -441,7 +441,7 @@ CREATE TABLE `application_tracking` (
   `last_modified_by` int(10) unsigned DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_on` datetime DEFAULT NULL,
-  `version` smallint(5) NOT NULL,
+  `version` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT 'Optimistic Locking',
   PRIMARY KEY (`id`),
   UNIQUE KEY `application_id_UNIQUE` (`application_id`),
   KEY `fk_application_tracking_application1_idx` (`application_id`),

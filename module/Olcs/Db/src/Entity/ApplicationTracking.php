@@ -30,7 +30,8 @@ class ApplicationTracking implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
-        Traits\CustomLastModifiedOnField;
+        Traits\CustomLastModifiedOnField,
+        Traits\CustomVersionField;
 
     /**
      * Addresses status
@@ -221,15 +222,6 @@ class ApplicationTracking implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="vehicles_status", nullable=true)
      */
     protected $vehiclesStatus;
-
-    /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="version", nullable=false)
-     */
-    protected $version;
 
     /**
      * Set the addresses status
@@ -712,28 +704,5 @@ class ApplicationTracking implements Interfaces\EntityInterface
     public function getVehiclesStatus()
     {
         return $this->vehiclesStatus;
-    }
-
-    /**
-     * Set the version
-     *
-     * @param int $version
-     * @return ApplicationTracking
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the version
-     *
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
     }
 }
