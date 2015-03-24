@@ -15,10 +15,10 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="s4",
  *    indexes={
- *        @ORM\Index(name="fk_s4_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_s4_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_s4_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_s4_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_s4_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_s4_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_s4_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_s4_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

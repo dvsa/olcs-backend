@@ -16,7 +16,7 @@ trait TotAuthTrailersField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="tot_auth_trailers", nullable=true)
+     * @ORM\Column(type="smallint", name="tot_auth_trailers", nullable=true)
      */
     protected $totAuthTrailers;
 

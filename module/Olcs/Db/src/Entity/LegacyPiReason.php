@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_pi_reason",
  *    indexes={
- *        @ORM\Index(name="fk_pi_reason_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_reason_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_legacy_pi_reason_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_legacy_pi_reason_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -45,9 +45,9 @@ class LegacyPiReason implements Interfaces\EntityInterface
     /**
      * Is decision
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="is_decision", nullable=false)
+     * @ORM\Column(type="boolean", name="is_decision", nullable=false)
      */
     protected $isDecision;
 
@@ -77,7 +77,7 @@ class LegacyPiReason implements Interfaces\EntityInterface
     /**
      * Set the is decision
      *
-     * @param int $isDecision
+     * @param boolean $isDecision
      * @return LegacyPiReason
      */
     public function setIsDecision($isDecision)
@@ -90,7 +90,7 @@ class LegacyPiReason implements Interfaces\EntityInterface
     /**
      * Get the is decision
      *
-     * @return int
+     * @return boolean
      */
     public function getIsDecision()
     {

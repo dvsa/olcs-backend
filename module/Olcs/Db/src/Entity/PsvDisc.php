@@ -14,9 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="psv_disc",
  *    indexes={
- *        @ORM\Index(name="fk_psv_disc_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_psv_disc_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_psv_disc_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_psv_disc_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_psv_disc_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_psv_disc_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_psv_disc_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +35,7 @@ class PsvDisc implements Interfaces\EntityInterface
         Traits\IssuedDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

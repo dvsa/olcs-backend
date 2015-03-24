@@ -16,10 +16,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trading_name",
  *    indexes={
- *        @ORM\Index(name="fk_trading_name_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_trading_name_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_trading_name_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_trading_name_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_trading_name_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_trading_name_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_trading_name_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_trading_name_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_trading_name_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -33,6 +36,7 @@ class TradingName implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
 

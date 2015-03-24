@@ -14,12 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="change_of_entity",
  *    indexes={
- *        @ORM\Index(name="fk_change_of_entity_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_change_of_entity_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_change_of_entity_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_change_of_entity_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_change_of_entity_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_change_of_entity_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="licence_id_UNIQUE", columns={"licence_id"})
+ *        @ORM\UniqueConstraint(name="uk_change_of_entity_licence_id", columns={"licence_id"}),
+ *        @ORM\UniqueConstraint(name="uk_change_of_entity_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +33,7 @@ class ChangeOfEntity implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
