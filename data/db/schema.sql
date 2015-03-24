@@ -1694,7 +1694,7 @@ CREATE TABLE `disqualification` (
   `is_disqualified` tinyint(1) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `notes` varchar(4000) DEFAULT NULL,
-  `period` varchar(32) NOT NULL,
+  `period` smallint(5) NOT NULL,
   `organisation_id` int(10) unsigned DEFAULT NULL,
   `officer_cd_id` int(10) unsigned DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
