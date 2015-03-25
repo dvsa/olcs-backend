@@ -4376,7 +4376,6 @@ CREATE TABLE `person` (
   `birth_place` varchar(35) DEFAULT NULL,
   `other_name` varchar(35) DEFAULT NULL,
   `title` varchar(32) DEFAULT NULL,
-  `title_other` varchar(20) DEFAULT NULL COMMENT 'Populated it title is other in dropdown',
   `deleted_date` datetime DEFAULT NULL COMMENT 'Logical delete',
   `created_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who created record.',
   `last_modified_by` int(10) unsigned DEFAULT NULL COMMENT 'User id of user who last modified the record.',
@@ -4391,6 +4390,8 @@ CREATE TABLE `person` (
   KEY `ix_person_last_modified_by` (`last_modified_by`),
   KEY `ix_person_family_name` (`family_name`),
   KEY `ix_person_forename` (`forename`),
+  KEY `ix_person_forename` (`title`),
+  CONSTRAINT `fk_person_title_ref_data_id` FOREIGN KEY (`title`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_last_modified_by_user_id` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Any business significant person in the system.';
