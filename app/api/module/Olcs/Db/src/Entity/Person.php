@@ -20,7 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_person_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_person_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_person_family_name", columns={"family_name"}),
- *        @ORM\Index(name="ix_person_forename", columns={"forename"})
+ *        @ORM\Index(name="ix_person_forename", columns={"forename"}),
+ *        @ORM\Index(name="ix_person_title", columns={"title"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_person_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -41,7 +42,6 @@ class Person implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
         Traits\OlbsType32Field,
-        Traits\Title32Field,
         Traits\CustomVersionField;
 
     /**
@@ -63,13 +63,14 @@ class Person implements Interfaces\EntityInterface
     protected $otherName;
 
     /**
-     * Title other
+     * Title
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="title_other", length=20, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="title", referencedColumnName="id", nullable=true)
      */
-    protected $titleOther;
+    protected $title;
 
     /**
      * Contact detail
@@ -135,26 +136,26 @@ class Person implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the title other
+     * Set the title
      *
-     * @param string $titleOther
+     * @param \Olcs\Db\Entity\RefData $title
      * @return Person
      */
-    public function setTitleOther($titleOther)
+    public function setTitle($title)
     {
-        $this->titleOther = $titleOther;
+        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get the title other
+     * Get the title
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
-    public function getTitleOther()
+    public function getTitle()
     {
-        return $this->titleOther;
+        return $this->title;
     }
 
     /**
