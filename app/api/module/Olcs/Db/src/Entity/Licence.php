@@ -297,6 +297,15 @@ class Licence implements Interfaces\EntityInterface
     protected $operatingCentres;
 
     /**
+     * Licence status rule
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceStatusRule", mappedBy="licence")
+     */
+    protected $licenceStatusRules;
+
+    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -363,6 +372,7 @@ class Licence implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
@@ -1200,6 +1210,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the licence status rule
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function setLicenceStatusRules($licenceStatusRules)
+    {
+        $this->licenceStatusRules = $licenceStatusRules;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence status rules
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLicenceStatusRules()
+    {
+        return $this->licenceStatusRules;
+    }
+
+    /**
+     * Add a licence status rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function addLicenceStatusRules($licenceStatusRules)
+    {
+        if ($licenceStatusRules instanceof ArrayCollection) {
+            $this->licenceStatusRules = new ArrayCollection(
+                array_merge(
+                    $this->licenceStatusRules->toArray(),
+                    $licenceStatusRules->toArray()
+                )
+            );
+        } elseif (!$this->licenceStatusRules->contains($licenceStatusRules)) {
+            $this->licenceStatusRules->add($licenceStatusRules);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence status rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function removeLicenceStatusRules($licenceStatusRules)
+    {
+        if ($this->licenceStatusRules->contains($licenceStatusRules)) {
+            $this->licenceStatusRules->removeElement($licenceStatusRules);
         }
 
         return $this;
