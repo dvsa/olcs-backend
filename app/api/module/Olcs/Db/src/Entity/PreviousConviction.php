@@ -29,7 +29,6 @@ class PreviousConviction implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\Notes4000Field,
         Traits\Penalty255Field,
-        Traits\Title32Field,
         Traits\CustomVersionField;
 
     /**
@@ -59,6 +58,15 @@ class PreviousConviction implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
     protected $courtFpn;
+
+    /**
+     * Title
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="title", length=32, nullable=true)
+     */
+    protected $title;
 
     /**
      * Transport manager
@@ -137,6 +145,29 @@ class PreviousConviction implements Interfaces\EntityInterface
     public function getCourtFpn()
     {
         return $this->courtFpn;
+    }
+
+    /**
+     * Set the title
+     *
+     * @param string $title
+     * @return PreviousConviction
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
