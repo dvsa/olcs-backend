@@ -832,12 +832,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('phone_contact_type', 'phone_t_gtn', 'GTN Code', null),
     ('phone_contact_type', 'phone_t_home', 'Home', 'Home'),
     ('phone_contact_type', 'phone_t_mobile', 'Mobile', 'Mobile'),
-    ('person_title', 'title_dr', 'Dr', null),
-    ('person_title', 'title_miss', 'Miss', null),
-    ('person_title', 'title_mr', 'Mr', null),
-    ('person_title', 'title_mrs', 'Mrs', null),
-    ('person_title', 'title_ms', 'Ms', null),
-    ('person_title', 'title_other', 'Other', null),
+
     ('pi_status', 'pi_s_schedule', 'PI Scheduled', 'SchedPI'),
     ('pi_status', 'pi_s_reg', 'PI Registered', 'RegisterPI'),
 
@@ -986,6 +981,15 @@ VALUES
     ('tm_qual_type', 'tm_qt_NIEXSI', 'NIEXSI', 'NIEXSI', '8'),
     ('tm_qual_type', 'tm_qt_EXSN', 'EXSN', 'EXSN', '9'),
     ('tm_qual_type', 'tm_qt_NIEXSN', 'NIEXSN', 'NIEXSN', '10');
+
+-- Person titles
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
+VALUES
+('person_title', 'title_mr', 'Mr', null, 1),
+('person_title', 'title_mrs', 'Mrs', null, 2),
+('person_title', 'title_ms', 'Ms', null, 3),
+('person_title', 'title_miss', 'Miss', null, 4),
+('person_title', 'title_dr', 'Dr', null, 5);
 
 -- Case categories
 INSERT INTO `ref_data` (`id`, `parent_id`, `description`, `ref_data_category_id`, `olbs_key`, `display_order`)
