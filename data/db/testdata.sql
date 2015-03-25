@@ -26,6 +26,7 @@ TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_operating_centre`;
+TRUNCATE TABLE `licence_status_rule`;
 TRUNCATE TABLE `local_authority`;
 TRUNCATE TABLE `legacy_offence`;
 TRUNCATE TABLE `note`;
@@ -76,7 +77,6 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `task_allocation_rule`;
-TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
@@ -619,6 +619,12 @@ INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `
     '2014-02-20 00:00:00',1,NULL,NULL),
     (15,208,4,NULL,4,'2014-06-20 00:00:00','2010-01-12 00:00:00','2010-01-12 00:00:00',
     '2014-02-20 00:00:00',1,NULL,NULL);
+
+-- dates for suspended/curtailed/revoked licences
+INSERT INTO `licence_status_rule` (`licence_id`, `licence_status`, `start_date`, `end_date`, `start_processed_date`) VALUES
+(207, 'lsts_suspended', '2015-03-01 00:00:00', '2025-02-28  00:00:00', '2015-03-01  01:00:00'),
+(208, 'lsts_curtailed', '2015-03-01 00:00:00', '2025-02-28  00:00:00', '2015-03-01  01:00:00'),
+(209, 'lsts_revoked', '2015-03-01 00:00:00', null, '2015-03-01  01:00:00');
 
 INSERT INTO `local_authority` (`id`, `created_by`, `last_modified_by`, `traffic_area_id`, `naptan_code`, `txc_name`, `created_on`, `description`, `email_address`, `last_modified_on`, `version`)
 VALUES

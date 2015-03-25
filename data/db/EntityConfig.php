@@ -553,6 +553,14 @@ return array(
             'type' => 'yesnonull'
         )
     ),
+    'licence_status_rule' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'licenceStatusRule'
+            )
+        ),
+    ),
     'goods_disc' => array(
         'is_copy' => array(
             'type' => 'yesno'
