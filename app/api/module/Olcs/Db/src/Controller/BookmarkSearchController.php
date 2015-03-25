@@ -50,7 +50,7 @@ class BookmarkSearchController extends AbstractBasicRestServerController
                 $results[$token] = $result;
             }
         } catch (\Exception $ex) {
-
+            $this->getLogger()->info('Trapped exception querying bookmark: ' . $ex->getMessage());
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }
 
