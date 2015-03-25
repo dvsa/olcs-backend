@@ -799,11 +799,11 @@ INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
     `notes`, `created_on`, `last_modified_on`, `version`, `officer_cd_id`
 ) VALUES
-    (10,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
-    (13,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
-    (15,NULL,NULL,1,'6 months','TBC',NOW(),NULL,1,NULL),
-    (32,NULL,NULL,1,'2 months','TBC',NOW(),NULL,1,NULL),
-    (36,NULL,NULL,1,'6 months','TBC',NOW(),NULL,1,NULL);
+    (10,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
+    (13,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
+    (15,NULL,NULL,1,6,'TBC',NOW(),NULL,1,NULL),
+    (32,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
+    (36,NULL,NULL,1,6,'TBC',NOW(),NULL,1,NULL);
 
 INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
     `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
