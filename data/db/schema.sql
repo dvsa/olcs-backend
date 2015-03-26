@@ -4833,6 +4833,8 @@ CREATE TABLE `previous_conviction` (
   PRIMARY KEY (`id`),
   KEY `ix_previous_conviction_application_id` (`application_id`),
   KEY `ix_previous_conviction_transport_manager_id` (`transport_manager_id`),
+  KEY `ix_previous_conviction_title` (`title`),
+  CONSTRAINT `fk_previous_conviction_title_ref_data_id` FOREIGN KEY (`title`) REFERENCES `ref_data` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_previous_conviction_application_id_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_previous_conviction_transport_manager_id_transport_manager_id` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores data entered in application of previous convictions.  When the app is granted this may be used to populate the conviction table.';
