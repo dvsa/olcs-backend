@@ -42,6 +42,7 @@ class Person implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
         Traits\OlbsType32Field,
+        Traits\TitleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -61,16 +62,6 @@ class Person implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_name", length=35, nullable=true)
      */
     protected $otherName;
-
-    /**
-     * Title
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="title", referencedColumnName="id", nullable=true)
-     */
-    protected $title;
 
     /**
      * Contact detail
@@ -133,29 +124,6 @@ class Person implements Interfaces\EntityInterface
     public function getOtherName()
     {
         return $this->otherName;
-    }
-
-    /**
-     * Set the title
-     *
-     * @param \Olcs\Db\Entity\RefData $title
-     * @return Person
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the title
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
