@@ -2762,6 +2762,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`) VALUES
     ('SIC_CODE','99000','Activities of extraterritorial organisations and bodies'),
     ('SIC_CODE','99999','Dormant Company');
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('validity', 'validity_yes', 'Yes', 1),
+    ('validity', 'validity_no', 'No', 0),
+    ('validity', 'validity_undecided', 'Undecided', null);
+
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
