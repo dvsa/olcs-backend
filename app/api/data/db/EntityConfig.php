@@ -124,7 +124,10 @@ return array(
         'user_id' => array(
             'inversedBy' => array(
                 'entity' => 'User',
-                'property' => 'userRole'
+                'property' => 'userRole',
+                'cascade' => array(
+                    'persist'
+                )
             )
         ),
         'role_id' => array(
