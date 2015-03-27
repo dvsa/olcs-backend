@@ -17,14 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application",
  *    indexes={
- *        @ORM\Index(name="fk_application_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_application_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_application_ref_data1_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_application_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_application_ref_data3_idx", columns={"interim_status"}),
- *        @ORM\Index(name="fk_application_ref_data4_idx", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="fk_application_ref_data5_idx", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_application_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_application_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_application_status", columns={"status"}),
+ *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
+ *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"})
  *    }
  * )
  */
@@ -140,7 +140,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="interim_auth_trailers", nullable=true)
+     * @ORM\Column(type="smallint", name="interim_auth_trailers", nullable=true)
      */
     protected $interimAuthTrailers;
 
@@ -149,7 +149,7 @@ class Application implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="interim_auth_vehicles", nullable=true)
+     * @ORM\Column(type="smallint", name="interim_auth_vehicles", nullable=true)
      */
     protected $interimAuthVehicles;
 
@@ -480,6 +480,15 @@ class Application implements Interfaces\EntityInterface
     protected $oppositions;
 
     /**
+     * Other licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OtherLicence", mappedBy="application")
+     */
+    protected $otherLicences;
+
+    /**
      * Previous conviction
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -487,15 +496,6 @@ class Application implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousConviction", mappedBy="application")
      */
     protected $previousConvictions;
-
-    /**
-     * Previous licence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\PreviousLicence", mappedBy="application")
-     */
-    protected $previousLicences;
 
     /**
      * Publication link
@@ -527,8 +527,8 @@ class Application implements Interfaces\EntityInterface
         $this->documents = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
+        $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
-        $this->previousLicences = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
         $this->transportManagers = new ArrayCollection();
     }
@@ -1874,6 +1874,66 @@ class Application implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the other licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return Application
+     */
+    public function setOtherLicences($otherLicences)
+    {
+        $this->otherLicences = $otherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the other licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOtherLicences()
+    {
+        return $this->otherLicences;
+    }
+
+    /**
+     * Add a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return Application
+     */
+    public function addOtherLicences($otherLicences)
+    {
+        if ($otherLicences instanceof ArrayCollection) {
+            $this->otherLicences = new ArrayCollection(
+                array_merge(
+                    $this->otherLicences->toArray(),
+                    $otherLicences->toArray()
+                )
+            );
+        } elseif (!$this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->add($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a other licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @return Application
+     */
+    public function removeOtherLicences($otherLicences)
+    {
+        if ($this->otherLicences->contains($otherLicences)) {
+            $this->otherLicences->removeElement($otherLicences);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the previous conviction
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
@@ -1928,66 +1988,6 @@ class Application implements Interfaces\EntityInterface
     {
         if ($this->previousConvictions->contains($previousConvictions)) {
             $this->previousConvictions->removeElement($previousConvictions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the previous licence
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
-     * @return Application
-     */
-    public function setPreviousLicences($previousLicences)
-    {
-        $this->previousLicences = $previousLicences;
-
-        return $this;
-    }
-
-    /**
-     * Get the previous licences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getPreviousLicences()
-    {
-        return $this->previousLicences;
-    }
-
-    /**
-     * Add a previous licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
-     * @return Application
-     */
-    public function addPreviousLicences($previousLicences)
-    {
-        if ($previousLicences instanceof ArrayCollection) {
-            $this->previousLicences = new ArrayCollection(
-                array_merge(
-                    $this->previousLicences->toArray(),
-                    $previousLicences->toArray()
-                )
-            );
-        } elseif (!$this->previousLicences->contains($previousLicences)) {
-            $this->previousLicences->add($previousLicences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a previous licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousLicences
-     * @return Application
-     */
-    public function removePreviousLicences($previousLicences)
-    {
-        if ($this->previousLicences->contains($previousLicences)) {
-            $this->previousLicences->removeElement($previousLicences);
         }
 
         return $this;

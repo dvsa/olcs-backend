@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="public_holiday",
  *    indexes={
- *        @ORM\Index(name="fk_public_holiday_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_public_holiday_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_public_holiday_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_public_holiday_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

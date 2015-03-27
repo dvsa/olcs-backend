@@ -16,7 +16,7 @@ trait TotAuthSmallVehiclesField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="tot_auth_small_vehicles", nullable=true)
+     * @ORM\Column(type="smallint", name="tot_auth_small_vehicles", nullable=true)
      */
     protected $totAuthSmallVehicles;
 

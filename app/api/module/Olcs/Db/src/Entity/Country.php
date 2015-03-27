@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="country",
  *    indexes={
- *        @ORM\Index(name="fk_country_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_country_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_country_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_country_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -24,7 +24,6 @@ class Country implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\Id8Identity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
@@ -34,9 +33,19 @@ class Country implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="country_desc", length=200, nullable=true)
+     * @ORM\Column(type="string", name="country_desc", length=50, nullable=true)
      */
     protected $countryDesc;
+
+    /**
+     * Identifier - Id
+     *
+     * @var string
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string", name="id", length=2)
+     */
+    protected $id;
 
     /**
      * Is member state
@@ -68,6 +77,29 @@ class Country implements Interfaces\EntityInterface
     public function getCountryDesc()
     {
         return $this->countryDesc;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param string $id
+     * @return Country
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

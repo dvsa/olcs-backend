@@ -14,11 +14,14 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="grace_period",
  *    indexes={
- *        @ORM\Index(name="fk_transport_manager_grace_period_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user1_idx", columns={"assigned_to_user_id"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user2_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_transport_manager_grace_period_user3_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_grace_period_ref_data1_idx", columns={"period_type"})
+ *        @ORM\Index(name="ix_grace_period_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_grace_period_assigned_to_user_id", columns={"assigned_to_user_id"}),
+ *        @ORM\Index(name="ix_grace_period_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_grace_period_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_grace_period_period_type", columns={"period_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_grace_period_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -31,6 +34,7 @@ class GracePeriod implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -55,9 +59,9 @@ class GracePeriod implements Interfaces\EntityInterface
     /**
      * Grace period no
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="grace_period_no", nullable=false, options={"default": 1})
+     * @ORM\Column(type="boolean", name="grace_period_no", nullable=false, options={"default": 1})
      */
     protected $gracePeriodNo = 1;
 
@@ -138,7 +142,7 @@ class GracePeriod implements Interfaces\EntityInterface
     /**
      * Set the grace period no
      *
-     * @param int $gracePeriodNo
+     * @param boolean $gracePeriodNo
      * @return GracePeriod
      */
     public function setGracePeriodNo($gracePeriodNo)
@@ -151,7 +155,7 @@ class GracePeriod implements Interfaces\EntityInterface
     /**
      * Get the grace period no
      *
-     * @return int
+     * @return boolean
      */
     public function getGracePeriodNo()
     {

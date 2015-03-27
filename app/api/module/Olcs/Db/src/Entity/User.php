@@ -17,15 +17,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="user",
  *    indexes={
- *        @ORM\Index(name="fk_user_team1_idx", columns={"team_id"}),
- *        @ORM\Index(name="fk_user_local_authority1_idx", columns={"local_authority_id"}),
- *        @ORM\Index(name="fk_user_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_user_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_user_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_user_contact_details2_idx", columns={"partner_contact_details_id"}),
- *        @ORM\Index(name="fk_user_hint_questions1_idx", columns={"hint_questions_id1"}),
- *        @ORM\Index(name="fk_user_hint_questions2_idx", columns={"hint_questions_id2"}),
- *        @ORM\Index(name="fk_user_transport_manager1_idx", columns={"transport_manager_id"})
+ *        @ORM\Index(name="ix_user_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_user_local_authority_id", columns={"local_authority_id"}),
+ *        @ORM\Index(name="ix_user_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_user_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_user_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_user_partner_contact_details_id", columns={"partner_contact_details_id"}),
+ *        @ORM\Index(name="ix_user_hint_question_id1", columns={"hint_question_id1"}),
+ *        @ORM\Index(name="ix_user_hint_question_id2", columns={"hint_question_id2"}),
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    }
  * )
  */
@@ -59,7 +59,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="attempts", nullable=true)
+     * @ORM\Column(type="smallint", name="attempts", nullable=true)
      */
     protected $attempts;
 
@@ -100,24 +100,24 @@ class User implements Interfaces\EntityInterface
     protected $hintAnswer2;
 
     /**
-     * Hint questions1
+     * Hint question1
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
-     * @ORM\JoinColumn(name="hint_questions_id1", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="hint_question_id1", referencedColumnName="id", nullable=true)
      */
-    protected $hintQuestions1;
+    protected $hintQuestion1;
 
     /**
-     * Hint questions2
+     * Hint question2
      *
      * @var \Olcs\Db\Entity\HintQuestion
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\HintQuestion")
-     * @ORM\JoinColumn(name="hint_questions_id2", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="hint_question_id2", referencedColumnName="id", nullable=true)
      */
-    protected $hintQuestions2;
+    protected $hintQuestion2;
 
     /**
      * Job title
@@ -147,15 +147,6 @@ class User implements Interfaces\EntityInterface
     protected $lockedDate;
 
     /**
-     * Locked datetime
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="locked_datetime", nullable=true)
-     */
-    protected $lockedDatetime;
-
-    /**
      * Login id
      *
      * @var string
@@ -178,7 +169,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="memorable_word_digit1", nullable=true)
+     * @ORM\Column(type="smallint", name="memorable_word_digit1", nullable=true)
      */
     protected $memorableWordDigit1;
 
@@ -187,7 +178,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="memorable_word_digit2", nullable=true)
+     * @ORM\Column(type="smallint", name="memorable_word_digit2", nullable=true)
      */
     protected $memorableWordDigit2;
 
@@ -231,9 +222,9 @@ class User implements Interfaces\EntityInterface
     /**
      * Pid
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="pid", nullable=true)
+     * @ORM\Column(type="string", name="pid", length=255, nullable=true)
      */
     protected $pid;
 
@@ -402,49 +393,49 @@ class User implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the hint questions1
+     * Set the hint question1
      *
-     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions1
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestion1
      * @return User
      */
-    public function setHintQuestions1($hintQuestions1)
+    public function setHintQuestion1($hintQuestion1)
     {
-        $this->hintQuestions1 = $hintQuestions1;
+        $this->hintQuestion1 = $hintQuestion1;
 
         return $this;
     }
 
     /**
-     * Get the hint questions1
+     * Get the hint question1
      *
      * @return \Olcs\Db\Entity\HintQuestion
      */
-    public function getHintQuestions1()
+    public function getHintQuestion1()
     {
-        return $this->hintQuestions1;
+        return $this->hintQuestion1;
     }
 
     /**
-     * Set the hint questions2
+     * Set the hint question2
      *
-     * @param \Olcs\Db\Entity\HintQuestion $hintQuestions2
+     * @param \Olcs\Db\Entity\HintQuestion $hintQuestion2
      * @return User
      */
-    public function setHintQuestions2($hintQuestions2)
+    public function setHintQuestion2($hintQuestion2)
     {
-        $this->hintQuestions2 = $hintQuestions2;
+        $this->hintQuestion2 = $hintQuestion2;
 
         return $this;
     }
 
     /**
-     * Get the hint questions2
+     * Get the hint question2
      *
      * @return \Olcs\Db\Entity\HintQuestion
      */
-    public function getHintQuestions2()
+    public function getHintQuestion2()
     {
-        return $this->hintQuestions2;
+        return $this->hintQuestion2;
     }
 
     /**
@@ -514,29 +505,6 @@ class User implements Interfaces\EntityInterface
     public function getLockedDate()
     {
         return $this->lockedDate;
-    }
-
-    /**
-     * Set the locked datetime
-     *
-     * @param \DateTime $lockedDatetime
-     * @return User
-     */
-    public function setLockedDatetime($lockedDatetime)
-    {
-        $this->lockedDatetime = $lockedDatetime;
-
-        return $this;
-    }
-
-    /**
-     * Get the locked datetime
-     *
-     * @return \DateTime
-     */
-    public function getLockedDatetime()
-    {
-        return $this->lockedDatetime;
     }
 
     /**
@@ -726,7 +694,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Set the pid
      *
-     * @param int $pid
+     * @param string $pid
      * @return User
      */
     public function setPid($pid)
@@ -739,7 +707,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the pid
      *
-     * @return int
+     * @return string
      */
     public function getPid()
     {

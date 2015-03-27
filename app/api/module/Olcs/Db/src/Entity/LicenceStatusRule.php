@@ -16,10 +16,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence_status_rule",
  *    indexes={
- *        @ORM\Index(name="fk_licence_status_rule_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_licence_status_rule_ref_data1_idx", columns={"licence_status"}),
- *        @ORM\Index(name="fk_licence_status_rule_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_status_rule_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_licence_status_rule_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_licence_status_rule_licence_status", columns={"licence_status"}),
+ *        @ORM\Index(name="ix_licence_status_rule_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_licence_status_rule_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -33,7 +33,7 @@ class LicenceStatusRule implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -44,6 +44,16 @@ class LicenceStatusRule implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="end_processed_date", nullable=true)
      */
     protected $endProcessedDate;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="licenceStatusRules")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Licence status
@@ -94,6 +104,29 @@ class LicenceStatusRule implements Interfaces\EntityInterface
     public function getEndProcessedDate()
     {
         return $this->endProcessedDate;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return LicenceStatusRule
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

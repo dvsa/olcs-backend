@@ -17,10 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="person",
  *    indexes={
- *        @ORM\Index(name="fk_person_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_person_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="person_family_name_idx", columns={"family_name"}),
- *        @ORM\Index(name="person_forename_idx", columns={"forename"})
+ *        @ORM\Index(name="ix_person_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_person_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_person_family_name", columns={"family_name"}),
+ *        @ORM\Index(name="ix_person_forename", columns={"forename"}),
+ *        @ORM\Index(name="ix_person_title", columns={"title"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_person_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -36,7 +40,9 @@ class Person implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\Title32Field,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
+        Traits\TitleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -56,15 +62,6 @@ class Person implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="other_name", length=35, nullable=true)
      */
     protected $otherName;
-
-    /**
-     * Title other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="title_other", length=20, nullable=true)
-     */
-    protected $titleOther;
 
     /**
      * Contact detail
@@ -127,29 +124,6 @@ class Person implements Interfaces\EntityInterface
     public function getOtherName()
     {
         return $this->otherName;
-    }
-
-    /**
-     * Set the title other
-     *
-     * @param string $titleOther
-     * @return Person
-     */
-    public function setTitleOther($titleOther)
-    {
-        $this->titleOther = $titleOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the title other
-     *
-     * @return string
-     */
-    public function getTitleOther()
-    {
-        return $this->titleOther;
     }
 
     /**

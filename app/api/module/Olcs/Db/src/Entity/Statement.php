@@ -14,12 +14,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="statement",
  *    indexes={
- *        @ORM\Index(name="fk_statement_case1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_statement_contact_details1_idx", columns={"requestors_contact_details_id"}),
- *        @ORM\Index(name="fk_statement_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_statement_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_statement_ref_data2_idx", columns={"contact_type"}),
- *        @ORM\Index(name="fk_statement_ref_data1_idx", columns={"statement_type"})
+ *        @ORM\Index(name="ix_statement_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_statement_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_statement_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
+ *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
+ *        @ORM\Index(name="fk_statement_contact_details1_idx", columns={"requestors_contact_details_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_statement_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +35,7 @@ class Statement implements Interfaces\EntityInterface
         Traits\IssuedDateField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField,
         Traits\Vrm20Field;
 

@@ -115,7 +115,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function create($data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $data = $this->processAddressEntity($data);
 
@@ -144,7 +144,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function get($id, array $data = array())
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
 
@@ -168,7 +168,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function getList($data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
@@ -201,7 +201,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function delete($id)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $entity = $this->getEntityById($id);
 
@@ -251,7 +251,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function update($id, $data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }
@@ -266,7 +266,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function patch($id, $data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }

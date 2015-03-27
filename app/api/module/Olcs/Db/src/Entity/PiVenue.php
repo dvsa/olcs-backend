@@ -14,55 +14,29 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_venue",
  *    indexes={
- *        @ORM\Index(name="fk_pi_venue_address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_pi_venue_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_venue_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_venue_traffic_area1_idx", columns={"traffic_area_id"})
+ *        @ORM\Index(name="ix_pi_venue_address_id", columns={"address_id"}),
+ *        @ORM\Index(name="ix_pi_venue_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_pi_venue_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_pi_venue_traffic_area_id", columns={"traffic_area_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_pi_venue_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
 class PiVenue implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\AddressManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\EndDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
+        Traits\OlbsKeyField,
+        Traits\StartDateFieldAlt1,
         Traits\TrafficAreaManyToOneAlt1,
         Traits\CustomVersionField;
-
-    /**
-     * Address
-     *
-     * @var \Olcs\Db\Entity\Address
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Address")
-     * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=false)
-     */
-    protected $address;
-
-    /**
-     * Set the address
-     *
-     * @param \Olcs\Db\Entity\Address $address
-     * @return PiVenue
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get the address
-     *
-     * @return \Olcs\Db\Entity\Address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
 }

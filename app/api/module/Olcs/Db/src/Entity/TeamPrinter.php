@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="team_printer",
  *    indexes={
- *        @ORM\Index(name="fk_team_has_printer_printer1_idx", columns={"printer_id"}),
- *        @ORM\Index(name="fk_team_has_printer_team1_idx", columns={"team_id"})
+ *        @ORM\Index(name="ix_team_printer_printer_id", columns={"printer_id"}),
+ *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"})
  *    }
  * )
  */
