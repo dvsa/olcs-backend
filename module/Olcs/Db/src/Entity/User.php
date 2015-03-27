@@ -32,7 +32,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -62,6 +61,16 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="attempts", nullable=true)
      */
     protected $attempts;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $contactDetails;
 
     /**
      * Department name
@@ -308,6 +317,29 @@ class User implements Interfaces\EntityInterface
     public function getAttempts()
     {
         return $this->attempts;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return User
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**

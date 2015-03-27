@@ -28,7 +28,6 @@ use Olcs\Db\Entity\Traits;
 class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
@@ -63,6 +62,16 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
      */
     protected $companyOrLlpNo;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails")
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $contactDetails;
 
     /**
      * Irfo contact details
@@ -261,6 +270,29 @@ class Organisation implements Interfaces\EntityInterface
     public function getCompanyOrLlpNo()
     {
         return $this->companyOrLlpNo;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return Organisation
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**
