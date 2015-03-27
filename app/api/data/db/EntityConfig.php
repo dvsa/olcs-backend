@@ -104,6 +104,20 @@ return array(
     'user' => array(
         'account_disabled' => array(
             'type' => 'yesno'
+        ),
+        'contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
+        'userRoles' => array(
+            'cascade' => array(
+                'persist'
+            ),
+            'inversedBy' => array(
+                'entity' => 'UserRole',
+                'property' => 'user'
+            )
         )
     ),
     'user_role' => array(

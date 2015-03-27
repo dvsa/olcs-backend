@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TmEmployment implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOneAlt1,
+        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
