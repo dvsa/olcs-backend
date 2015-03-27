@@ -1750,6 +1750,14 @@ VALUES
 
 -- End: Event History Test Data
 
+INSERT INTO `hint_question` (`id`,`created_by`,`last_modified_by`,`category_no`,`hint_question`,`created_on`,
+`last_modified_on`,`version`)
+  VALUES
+    (1,1,1,1,'What is your favourite colour?', '2015-03-27 00:00:00',null,1),
+    (2,1,1,1,'What is your Mother\'s maiden name?', '2015-03-27 00:00:00',null,1),
+    (3,1,1,1,'What is your memorable date?', '2015-03-27 00:00:00',null,1);
+
+
 SET foreign_key_checks = 1;
 
 -- Start: Application 7 - new Goods Vehicle Standard National application ready to submit
