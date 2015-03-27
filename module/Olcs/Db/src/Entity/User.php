@@ -260,7 +260,7 @@ class User implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\UserRole", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\UserRole", mappedBy="user", cascade={"persist"})
      */
     protected $userRoles;
 
