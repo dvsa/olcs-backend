@@ -16,11 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence_operating_centre",
  *    indexes={
- *        @ORM\Index(name="fk_LicenceOperatingCentre_licence_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_LicenceOperatingCentre_OperatingCentre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_licence_operating_centre_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_operating_centre_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_operating_centre_s41_idx", columns={"s4_id"})
+ *        @ORM\Index(name="ix_licence_operating_centre_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_s4_id", columns={"s4_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_licence_operating_centre_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -37,6 +40,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\NoOfTrailersRequiredField,
         Traits\NoOfVehiclesRequiredField,
+        Traits\OlbsKeyField,
         Traits\OperatingCentreManyToOne,
         Traits\PermissionField,
         Traits\S4ManyToOne,
@@ -76,7 +80,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="no_of_trailers_possessed", nullable=true)
+     * @ORM\Column(type="smallint", name="no_of_trailers_possessed", nullable=true)
      */
     protected $noOfTrailersPossessed;
 
@@ -85,7 +89,7 @@ class LicenceOperatingCentre implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="no_of_vehicles_possessed", nullable=true)
+     * @ORM\Column(type="smallint", name="no_of_vehicles_possessed", nullable=true)
      */
     protected $noOfVehiclesPossessed;
 

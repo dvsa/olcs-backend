@@ -15,11 +15,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="doc_template",
  *    indexes={
- *        @ORM\Index(name="fk_doc_template_document_sub_category1_idx", columns={"sub_category_id"}),
- *        @ORM\Index(name="fk_doc_template_document1_idx", columns={"document_id"}),
- *        @ORM\Index(name="fk_doc_template_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_doc_template_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_doc_template_document_category1_idx", columns={"category_id"})
+ *        @ORM\Index(name="ix_doc_template_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_doc_template_document_id", columns={"document_id"}),
+ *        @ORM\Index(name="ix_doc_template_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_doc_template_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_doc_template_category_id", columns={"category_id"})
  *    }
  * )
  */

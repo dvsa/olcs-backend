@@ -17,25 +17,27 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="fk_complaint_contact_details1_idx", columns={"complainant_contact_details_id"}),
- *        @ORM\Index(name="fk_complaint_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_complaint_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_complaint_ref_data1_idx", columns={"status"}),
- *        @ORM\Index(name="fk_complaint_ref_data2_idx", columns={"complaint_type"}),
- *        @ORM\Index(name="fk_complaint_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="ix_complaint_complainant_contact_details_id", columns={"complainant_contact_details_id"}),
+ *        @ORM\Index(name="ix_complaint_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_complaint_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_complaint_status", columns={"status"}),
+ *        @ORM\Index(name="ix_complaint_complaint_type", columns={"complaint_type"}),
+ *        @ORM\Index(name="ix_complaint_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_complaint_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
 class Complaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\CloseDateField,
+        Traits\ClosedDateField,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField,
         Traits\Vrm20Field;
@@ -46,7 +48,7 @@ class Complaint implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Cases
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Cases", inversedBy="complaints")
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
 
@@ -111,9 +113,9 @@ class Complaint implements Interfaces\EntityInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_compliance", nullable=false, options={"default": 1})
+     * @ORM\Column(type="boolean", name="is_compliance", nullable=false)
      */
-    protected $isCompliance = 1;
+    protected $isCompliance;
 
     /**
      * Oc complaint

@@ -16,9 +16,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trailer",
  *    indexes={
- *        @ORM\Index(name="fk_trailer_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_trailer_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_trailer_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_trailer_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_trailer_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_trailer_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_trailer_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -32,6 +35,7 @@ class Trailer implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\SpecifiedDateField,
         Traits\CustomVersionField;
 

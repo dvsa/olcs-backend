@@ -17,16 +17,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="bus_reg",
  *    indexes={
- *        @ORM\Index(name="fk_bus_reg_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_bus_reg_bus_notice_period1_idx", columns={"bus_notice_period_id"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data1_idx", columns={"subsidised"}),
- *        @ORM\Index(name="fk_bus_reg_operating_centre1_idx", columns={"operating_centre_id"}),
- *        @ORM\Index(name="fk_bus_reg_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_reg_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data2_idx", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data3_idx", columns={"status"}),
- *        @ORM\Index(name="fk_bus_reg_ref_data4_idx", columns={"revert_status"}),
- *        @ORM\Index(name="fk_bus_reg_bus_reg_idx", columns={"parent_id"})
+ *        @ORM\Index(name="ix_bus_reg_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_bus_reg_bus_notice_period_id", columns={"bus_notice_period_id"}),
+ *        @ORM\Index(name="ix_bus_reg_subsidised", columns={"subsidised"}),
+ *        @ORM\Index(name="ix_bus_reg_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_bus_reg_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
+ *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
+ *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
+ *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"}),
+ *        @ORM\Index(name="fk_bus_reg_operating_centre1", columns={"operating_centre_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -42,6 +46,7 @@ class BusReg implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOne,
+        Traits\OlbsKeyField,
         Traits\ServiceNo70Field,
         Traits\StatusManyToOne,
         Traits\CustomVersionField,
@@ -82,6 +87,15 @@ class BusReg implements Interfaces\EntityInterface
      * )
      */
     protected $busServiceTypes;
+
+    /**
+     * Completed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="completed_date", nullable=true)
+     */
+    protected $completedDate;
 
     /**
      * Copied to la pte
@@ -378,7 +392,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="route_no", nullable=false)
+     * @ORM\Column(type="smallint", name="route_no", nullable=false)
      */
     protected $routeNo;
 
@@ -504,7 +518,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="variation_no", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="variation_no", nullable=false, options={"default": 0})
      */
     protected $variationNo = 0;
 
@@ -513,7 +527,7 @@ class BusReg implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\VariationReason", inversedBy="busRegs")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="busRegs")
      * @ORM\JoinTable(name="bus_reg_variation_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -689,6 +703,29 @@ class BusReg implements Interfaces\EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set the completed date
+     *
+     * @param \DateTime $completedDate
+     * @return BusReg
+     */
+    public function setCompletedDate($completedDate)
+    {
+        $this->completedDate = $completedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the completed date
+     *
+     * @return \DateTime
+     */
+    public function getCompletedDate()
+    {
+        return $this->completedDate;
     }
 
     /**

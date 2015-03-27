@@ -14,29 +14,21 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="permission",
  *    indexes={
- *        @ORM\Index(name="fk_permission_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_permission_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_permission_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_permission_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
 class Permission implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\Code5Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
-
-    /**
-     * Code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="code", length=5, nullable=false)
-     */
-    protected $code;
 
     /**
      * Name
@@ -46,29 +38,6 @@ class Permission implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=45, nullable=false)
      */
     protected $name;
-
-    /**
-     * Set the code
-     *
-     * @param string $code
-     * @return Permission
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get the code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
 
     /**
      * Set the name

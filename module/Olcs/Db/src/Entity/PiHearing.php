@@ -14,12 +14,15 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="pi_hearing",
  *    indexes={
- *        @ORM\Index(name="fk_pi_reschedule_dates_pi_detail1_idx", columns={"pi_id"}),
- *        @ORM\Index(name="fk_pi_reschedule_dates_presiding_tc1_idx", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="fk_pi_reschedule_date_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_pi_reschedule_date_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_pi_hearing_ref_data1_idx", columns={"presided_by_role"}),
- *        @ORM\Index(name="fk_pi_hearing_pi_venue1_idx", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_pi_hearing_pi_id", columns={"pi_id"}),
+ *        @ORM\Index(name="ix_pi_hearing_presiding_tc_id", columns={"presiding_tc_id"}),
+ *        @ORM\Index(name="ix_pi_hearing_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_pi_hearing_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_pi_hearing_presided_by_role", columns={"presided_by_role"}),
+ *        @ORM\Index(name="ix_pi_hearing_pi_venue_id", columns={"pi_venue_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_pi_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -33,6 +36,8 @@ class PiHearing implements Interfaces\EntityInterface
         Traits\IsCancelledField,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\PiVenueManyToOne,
         Traits\PiVenueOther255Field,
         Traits\PresidingTcManyToOne,

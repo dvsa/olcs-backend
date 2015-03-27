@@ -14,10 +14,13 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="phone_contact",
  *    indexes={
- *        @ORM\Index(name="fk_phone_contact_contact_details1_idx", columns={"contact_details_id"}),
- *        @ORM\Index(name="fk_phone_contact_ref_data1_idx", columns={"phone_contact_type"}),
- *        @ORM\Index(name="fk_phone_contact_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_phone_contact_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_phone_contact_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_phone_contact_phone_contact_type", columns={"phone_contact_type"}),
+ *        @ORM\Index(name="ix_phone_contact_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_phone_contact_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_phone_contact_olbs_key_olbs_type_phone_contact_type", columns={"olbs_key","olbs_type","phone_contact_type"})
  *    }
  * )
  */
@@ -29,6 +32,8 @@ class PhoneContact implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\CustomVersionField;
 
     /**

@@ -17,10 +17,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_case_decision",
  *    indexes={
- *        @ORM\Index(name="fk_tm_case_decision_ref_data1_idx", columns={"decision"}),
- *        @ORM\Index(name="fk_tm_case_decision_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_tm_case_decision_cases1_idx", columns={"case_id"})
+ *        @ORM\Index(name="ix_tm_case_decision_decision", columns={"decision"}),
+ *        @ORM\Index(name="ix_tm_case_decision_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_tm_case_decision_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_tm_case_decision_case_id", columns={"case_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_tm_case_decision_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -34,6 +37,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**
@@ -88,10 +92,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionRehabs")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisions")
      * @ORM\JoinTable(name="tm_case_decision_rehab",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="tm_case_decision_rehab_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(name="rehab_measure_id", referencedColumnName="id")
@@ -105,7 +109,7 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="repute_not_lost_reason", length=4000, nullable=true)
+     * @ORM\Column(type="string", name="repute_not_lost_reason", length=500, nullable=true)
      */
     protected $reputeNotLostReason;
 
@@ -123,10 +127,10 @@ class TmCaseDecision implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisionUnfitnesss")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="tmCaseDecisions")
      * @ORM\JoinTable(name="tm_case_decision_unfitness",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="tm_case_decision_unfitness_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")
      *     },
      *     inverseJoinColumns={
      *         @ORM\JoinColumn(name="unfitness_reason_id", referencedColumnName="id")

@@ -14,8 +14,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="bus_notice_period",
  *    indexes={
- *        @ORM\Index(name="fk_bus_notice_period_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_bus_notice_period_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_bus_notice_period_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_bus_notice_period_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -34,7 +34,7 @@ class BusNoticePeriod implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="cancellation_period", nullable=false)
+     * @ORM\Column(type="smallint", name="cancellation_period", nullable=false)
      */
     protected $cancellationPeriod;
 
@@ -52,7 +52,7 @@ class BusNoticePeriod implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="standard_period", nullable=false)
+     * @ORM\Column(type="smallint", name="standard_period", nullable=false)
      */
     protected $standardPeriod;
 

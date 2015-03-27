@@ -16,7 +16,7 @@ trait WitnessesField
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="witnesses", nullable=true)
+     * @ORM\Column(type="smallint", name="witnesses", nullable=true)
      */
     protected $witnesses;
 

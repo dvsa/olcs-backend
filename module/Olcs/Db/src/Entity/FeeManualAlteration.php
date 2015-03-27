@@ -14,11 +14,11 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_manual_alteration",
  *    indexes={
- *        @ORM\Index(name="fk_fee_manual_alteration_fee1_idx", columns={"fee_id"}),
- *        @ORM\Index(name="fk_fee_manual_alteration_ref_data1_idx", columns={"alteration_type"}),
- *        @ORM\Index(name="fk_fee_manual_alteration_ref_data2_idx", columns={"post_fee_status"}),
- *        @ORM\Index(name="fk_fee_manual_alteration_ref_data3_idx", columns={"pre_fee_status"}),
- *        @ORM\Index(name="fk_fee_manual_alteration_user1_idx", columns={"user_id"})
+ *        @ORM\Index(name="ix_fee_manual_alteration_fee_id", columns={"fee_id"}),
+ *        @ORM\Index(name="ix_fee_manual_alteration_alteration_type", columns={"alteration_type"}),
+ *        @ORM\Index(name="ix_fee_manual_alteration_post_fee_status", columns={"post_fee_status"}),
+ *        @ORM\Index(name="ix_fee_manual_alteration_pre_fee_status", columns={"pre_fee_status"}),
+ *        @ORM\Index(name="ix_fee_manual_alteration_user_id", columns={"user_id"})
  *    }
  * )
  */
@@ -27,7 +27,7 @@ class FeeManualAlteration implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\FeeManyToOne,
         Traits\IdIdentity,
-        Traits\UserManyToOne;
+        Traits\UserManyToOneAlt1;
 
     /**
      * Actioned date

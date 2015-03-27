@@ -14,3 +14,5 @@ test/coverage-report
 data/mapping
 data/DoctrineORMModule
 data/cache/*
+data/db/Etl
+data/db/live-like-data.sql

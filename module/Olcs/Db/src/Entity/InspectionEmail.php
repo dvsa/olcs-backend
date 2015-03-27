@@ -14,7 +14,7 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="inspection_email",
  *    indexes={
- *        @ORM\Index(name="fk_ea_inspection_email_inspection_request1_idx", columns={"inspection_request_id"})
+ *        @ORM\Index(name="ix_inspection_email_inspection_request_id", columns={"inspection_request_id"})
  *    }
  * )
  */

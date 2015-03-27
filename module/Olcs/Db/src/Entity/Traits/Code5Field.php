@@ -5,41 +5,41 @@ namespace Olcs\Db\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Title32 field trait
+ * Code5 field trait
  *
  * Auto-Generated (Shared between 2 entities)
  */
-trait Title32Field
+trait Code5Field
 {
     /**
-     * Title
+     * Code
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="title", length=32, nullable=true)
+     * @ORM\Column(type="string", name="code", length=5, nullable=false)
      */
-    protected $title;
+    protected $code;
 
     /**
-     * Set the title
+     * Set the code
      *
-     * @param string $title
+     * @param string $code
      * @return \Olcs\Db\Entity\Interfaces\EntityInterface
      */
-    public function setTitle($title)
+    public function setCode($code)
     {
-        $this->title = $title;
+        $this->code = $code;
 
         return $this;
     }
 
     /**
-     * Get the title
+     * Get the code
      *
      * @return string
      */
-    public function getTitle()
+    public function getCode()
     {
-        return $this->title;
+        return $this->code;
     }
 }

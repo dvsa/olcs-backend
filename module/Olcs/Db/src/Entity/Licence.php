@@ -17,21 +17,22 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="licence",
  *    indexes={
- *        @ORM\Index(name="fk_licence_vehicle_inspectorate1_idx", columns={"enforcement_area_id"}),
- *        @ORM\Index(name="fk_licence_traffic_area1_idx", columns={"traffic_area_id"}),
- *        @ORM\Index(name="fk_licence_organisation1_idx", columns={"organisation_id"}),
- *        @ORM\Index(name="fk_licence_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_licence_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_licence_ref_data1_idx", columns={"goods_or_psv"}),
- *        @ORM\Index(name="fk_licence_ref_data2_idx", columns={"licence_type"}),
- *        @ORM\Index(name="fk_licence_ref_data3_idx", columns={"status"}),
- *        @ORM\Index(name="fk_licence_ref_data4_idx", columns={"tachograph_ins"}),
- *        @ORM\Index(name="fk_licence_contact_details1_idx", columns={"correspondence_cd_id"}),
- *        @ORM\Index(name="fk_licence_contact_details2_idx", columns={"establishment_cd_id"}),
- *        @ORM\Index(name="fk_licence_contact_details3_idx", columns={"transport_consultant_cd_id"})
+ *        @ORM\Index(name="ix_licence_enforcement_area_id", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="ix_licence_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_licence_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_licence_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_licence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_licence_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_licence_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_licence_status", columns={"status"}),
+ *        @ORM\Index(name="ix_licence_tachograph_ins", columns={"tachograph_ins"}),
+ *        @ORM\Index(name="ix_licence_correspondence_cd_id", columns={"correspondence_cd_id"}),
+ *        @ORM\Index(name="ix_licence_establishment_cd_id", columns={"establishment_cd_id"}),
+ *        @ORM\Index(name="ix_licence_transport_consultant_cd_id", columns={"transport_consultant_cd_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="licence_lic_no_idx", columns={"lic_no"})
+ *        @ORM\UniqueConstraint(name="uk_licence_lic_no", columns={"lic_no"}),
+ *        @ORM\UniqueConstraint(name="uk_licence_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -52,6 +53,7 @@ class Licence implements Interfaces\EntityInterface
         Traits\LicNo18Field,
         Traits\LicenceTypeManyToOne,
         Traits\NiFlagField,
+        Traits\OlbsKeyField,
         Traits\StatusManyToOne,
         Traits\TotAuthLargeVehiclesField,
         Traits\TotAuthMediumVehiclesField,
@@ -126,7 +128,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="psv_discs_to_be_printed_no", nullable=true)
+     * @ORM\Column(type="smallint", name="psv_discs_to_be_printed_no", nullable=true)
      */
     protected $psvDiscsToBePrintedNo;
 
@@ -153,7 +155,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="safety_ins_trailers", nullable=true)
+     * @ORM\Column(type="smallint", name="safety_ins_trailers", nullable=true)
      */
     protected $safetyInsTrailers;
 
@@ -171,7 +173,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="safety_ins_vehicles", nullable=true)
+     * @ORM\Column(type="smallint", name="safety_ins_vehicles", nullable=true)
      */
     protected $safetyInsVehicles;
 
@@ -208,7 +210,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="trailers_in_possession", nullable=true)
+     * @ORM\Column(type="smallint", name="trailers_in_possession", nullable=true)
      */
     protected $trailersInPossession;
 
@@ -263,7 +265,7 @@ class Licence implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompanySubsidiaryLicence", mappedBy="licence")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompanySubsidiary", mappedBy="licence")
      */
     protected $companySubsidiaries;
 
@@ -293,6 +295,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceOperatingCentre", mappedBy="licence")
      */
     protected $operatingCentres;
+
+    /**
+     * Licence status rule
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\LicenceStatusRule", mappedBy="licence")
+     */
+    protected $licenceStatusRules;
 
     /**
      * Licence vehicle
@@ -361,6 +372,7 @@ class Licence implements Interfaces\EntityInterface
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
@@ -1198,6 +1210,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->operatingCentres->contains($operatingCentres)) {
             $this->operatingCentres->removeElement($operatingCentres);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the licence status rule
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function setLicenceStatusRules($licenceStatusRules)
+    {
+        $this->licenceStatusRules = $licenceStatusRules;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence status rules
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLicenceStatusRules()
+    {
+        return $this->licenceStatusRules;
+    }
+
+    /**
+     * Add a licence status rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function addLicenceStatusRules($licenceStatusRules)
+    {
+        if ($licenceStatusRules instanceof ArrayCollection) {
+            $this->licenceStatusRules = new ArrayCollection(
+                array_merge(
+                    $this->licenceStatusRules->toArray(),
+                    $licenceStatusRules->toArray()
+                )
+            );
+        } elseif (!$this->licenceStatusRules->contains($licenceStatusRules)) {
+            $this->licenceStatusRules->add($licenceStatusRules);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licence status rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
+     * @return Licence
+     */
+    public function removeLicenceStatusRules($licenceStatusRules)
+    {
+        if ($this->licenceStatusRules->contains($licenceStatusRules)) {
+            $this->licenceStatusRules->removeElement($licenceStatusRules);
         }
 
         return $this;

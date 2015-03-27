@@ -17,14 +17,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="contact_details",
  *    indexes={
- *        @ORM\Index(name="fk_contact_details_person1_idx", columns={"person_id"}),
- *        @ORM\Index(name="fk_contact_details_address1_idx", columns={"address_id"}),
- *        @ORM\Index(name="fk_contact_details_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_contact_details_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_contact_details_ref_data1_idx", columns={"contact_type"})
+ *        @ORM\Index(name="ix_contact_details_person_id", columns={"person_id"}),
+ *        @ORM\Index(name="ix_contact_details_address_id", columns={"address_id"}),
+ *        @ORM\Index(name="ix_contact_details_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_contact_details_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_contact_details_contact_type", columns={"contact_type"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_olbs_key_etl", columns={"olbs_key","olbs_type"})
+ *        @ORM\UniqueConstraint(name="uk_contact_details_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -40,6 +40,7 @@ class ContactDetails implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
+        Traits\OlbsType32Field,
         Traits\CustomVersionField;
 
     /**
@@ -88,15 +89,6 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="forename", length=40, nullable=true)
      */
     protected $forename;
-
-    /**
-     * Olbs type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="olbs_type", length=32, nullable=true)
-     */
-    protected $olbsType;
 
     /**
      * Person
@@ -247,29 +239,6 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getForename()
     {
         return $this->forename;
-    }
-
-    /**
-     * Set the olbs type
-     *
-     * @param string $olbsType
-     * @return ContactDetails
-     */
-    public function setOlbsType($olbsType)
-    {
-        $this->olbsType = $olbsType;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs type
-     *
-     * @return string
-     */
-    public function getOlbsType()
-    {
-        return $this->olbsType;
     }
 
     /**

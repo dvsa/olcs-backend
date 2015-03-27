@@ -14,9 +14,12 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="prohibition_defect",
  *    indexes={
- *        @ORM\Index(name="fk_prohoibition_defect_prohibition1_idx", columns={"prohibition_id"}),
- *        @ORM\Index(name="fk_prohoibition_defect_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_prohoibition_defect_user2_idx", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_prohibition_defect_prohibition_id", columns={"prohibition_id"}),
+ *        @ORM\Index(name="ix_prohibition_defect_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_prohibition_defect_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_prohibition_defect_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -29,6 +32,7 @@ class ProhibitionDefect implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Notes4000Field,
+        Traits\OlbsKeyField,
         Traits\CustomVersionField;
 
     /**

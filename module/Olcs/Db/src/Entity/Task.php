@@ -14,19 +14,23 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task",
  *    indexes={
- *        @ORM\Index(name="fk_task_user1_idx", columns={"assigned_to_user_id"}),
- *        @ORM\Index(name="fk_task_team1_idx", columns={"assigned_to_team_id"}),
- *        @ORM\Index(name="fk_task_user2_idx", columns={"assigned_by_user_id"}),
- *        @ORM\Index(name="fk_task_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_task_application1_idx", columns={"application_id"}),
- *        @ORM\Index(name="fk_task_bus_reg1_idx", columns={"bus_reg_id"}),
- *        @ORM\Index(name="fk_task_transport_manager1_idx", columns={"transport_manager_id"}),
- *        @ORM\Index(name="fk_task_organisation1_idx", columns={"irfo_organisation_id"}),
- *        @ORM\Index(name="fk_task_user3_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_task_user4_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_task_category1_idx", columns={"category_id"}),
- *        @ORM\Index(name="fk_task_cases1_idx", columns={"case_id"}),
- *        @ORM\Index(name="fk_task_task_sub_category1_idx", columns={"sub_category_id"})
+ *        @ORM\Index(name="ix_task_assigned_to_user_id", columns={"assigned_to_user_id"}),
+ *        @ORM\Index(name="ix_task_assigned_to_team_id", columns={"assigned_to_team_id"}),
+ *        @ORM\Index(name="ix_task_assigned_by_user_id", columns={"assigned_by_user_id"}),
+ *        @ORM\Index(name="ix_task_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_task_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_task_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_task_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_task_irfo_organisation_id", columns={"irfo_organisation_id"}),
+ *        @ORM\Index(name="ix_task_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_task_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_task_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_task_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_task_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_task_etl", columns={"description","category_id","sub_category_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_task_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -35,7 +39,7 @@ class Task implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\ApplicationManyToOne,
         Traits\BusRegManyToOneAlt1,
-        Traits\CaseManyToOneAlt1,
+        Traits\CaseManyToOne,
         Traits\CategoryManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
@@ -45,6 +49,7 @@ class Task implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicenceManyToOneAlt1,
+        Traits\OlbsKeyField,
         Traits\SubCategoryManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
