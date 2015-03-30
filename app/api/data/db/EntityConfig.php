@@ -1444,18 +1444,4 @@ return array(
             )
         )
     ),
-    /*'bus_reg_history_view' => array(
-        'event_history_type_id' => array(
-            'inversedBy' => array(
-                'entity' => 'EventHistoryType',
-                'property' => 'id'
-            )
-        ),
-        'user_id' => array(
-            'inversedBy' => array(
-                'entity' => 'User',
-                'property' => 'id'
-            )
-        )
-    )*/
 );
