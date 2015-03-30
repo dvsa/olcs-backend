@@ -7311,6 +7311,7 @@ CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `team_id` int(10) unsigned NOT NULL,
   `transport_manager_id` int(10) unsigned DEFAULT NULL COMMENT 'If user is also a transport manager.',
+  `organisation_id` int(10) unsigned DEFAULT NULL,
   `local_authority_id` int(10) unsigned DEFAULT NULL COMMENT 'If user is a member of a local authority a link to the LA details.',
   `contact_details_id` int(10) unsigned DEFAULT NULL,
   `partner_contact_details_id` int(10) unsigned DEFAULT NULL COMMENT 'If user is part of a partner, such as HMRC a link to the partners details.',
@@ -7351,6 +7352,7 @@ CREATE TABLE `user` (
   KEY `ix_user_hint_question_id1` (`hint_question_id1`),
   KEY `ix_user_hint_question_id2` (`hint_question_id2`),
   KEY `ix_user_transport_manager_id` (`transport_manager_id`),
+  KEY `ix_user_organisation_id` (`organisation_id`),
   CONSTRAINT `fk_user_contact_details_id_contact_details_id` FOREIGN KEY (`contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_created_by_user_id` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_hint_question_id1_hint_question_id` FOREIGN KEY (`hint_question_id1`) REFERENCES `hint_question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -7359,7 +7361,8 @@ CREATE TABLE `user` (
   CONSTRAINT `fk_user_local_authority_id_local_authority_id` FOREIGN KEY (`local_authority_id`) REFERENCES `local_authority` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_partner_contact_details_id_contact_details_id` FOREIGN KEY (`partner_contact_details_id`) REFERENCES `contact_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,  
   CONSTRAINT `fk_user_team_id_team_id` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_transport_manager_id_transport_manager_id` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_user_transport_manager_id_transport_manager_id` FOREIGN KEY (`transport_manager_id`) REFERENCES `transport_manager` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_organisation_id_organisation_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8 COMMENT='System user.  Could be operators, DVSA staff, local authorities, government departments etc..';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

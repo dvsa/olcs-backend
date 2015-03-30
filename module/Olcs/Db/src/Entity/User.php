@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_user_partner_contact_details_id", columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="ix_user_hint_question_id1", columns={"hint_question_id1"}),
  *        @ORM\Index(name="ix_user_hint_question_id2", columns={"hint_question_id2"}),
- *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_user_organisation_id", columns={"organisation_id"})
  *    }
  * )
  */
@@ -40,6 +41,7 @@ class User implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LocalAuthorityManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\TeamManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
