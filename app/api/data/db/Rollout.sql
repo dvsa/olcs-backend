@@ -7057,6 +7057,13 @@ CREATE VIEW bus_reg_search_view AS
           , 0)
             AND br1.deleted_date is null;
 
+CREATE VIEW `bus_reg_history_view` AS
+    SELECT br1.id AS id, eh.event_datetime, eh.event_history_type_id, eh.event_data, eh.user_id
+        FROM bus_reg AS br1
+        INNER JOIN bus_reg AS br2 ON (br2.reg_no LIKE br1.reg_no)
+        INNER JOIN event_history AS eh ON (eh.bus_reg_id = br2.id);
+
 COMMIT;
+
 
 SET foreign_key_checks = 1;

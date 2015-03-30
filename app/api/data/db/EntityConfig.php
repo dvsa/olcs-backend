@@ -1443,5 +1443,5 @@ return array(
                 'property' => 'applicationOrganisationPerson'
             )
         )
-    )
+    ),
 );
