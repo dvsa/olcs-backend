@@ -7057,6 +7057,10 @@ CREATE VIEW bus_reg_search_view AS
           , 0)
             AND br1.deleted_date is null;
 
+-- Bus reg search view
+DROP TABLE IF EXISTS bus_reg_history_view;
+DROP VIEW IF EXISTS bus_reg_history_view;
+
 CREATE VIEW `bus_reg_history_view` AS
     SELECT br1.id AS id, eh.event_datetime, eh.event_history_type_id, eh.event_data, eh.user_id
         FROM bus_reg AS br1
