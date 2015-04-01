@@ -1023,16 +1023,24 @@ INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_id`,`rehab_measure_id`) 
 INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reason_id`) VALUES
   (1,'tm_unfit_inn');
 
-INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `deleted_date`,
-    `login_id`,`contact_details_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'loggedinuser',101),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'johnspellman',105),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'stevefox',106),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'amywrigg',101),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'philjowitt',NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'kevinrooney',NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'sarahthompson',NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00',1,NULL,'anotheruser',114);
+INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
+`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`) VALUES
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
+    'loggedin@test9876.com'),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
+    'john.spellman@test9876.com'),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
+    'stevefox@test9876.com'),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',101,
+    'amywrigg@test9876.com'),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',NULL,
+    'philjowitt@test9876.com'),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',NULL,
+    'kevinrooney@test9876.com'),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',NULL,
+    'sarahthompson@test9876.com'),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
+    'anotheruser@test9876.com');
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -1173,12 +1181,12 @@ INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_t
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
-    (1,9,5,NULL,NULL,NULL,NULL),
-    (2,3,6,NULL,NULL,NULL,NULL),
-    (3,2,7,NULL,NULL,NULL,NULL),
-    (4,7,8,8,   NULL,NULL,NULL),
-    (5,8,9,NULL,NULL,NULL,NULL),
-    (6,1,5,NULL,NULL,NULL,NULL);
+    (1,9,5,1,NULL,NULL,NULL),
+    (2,3,6,1,NULL,NULL,NULL),
+    (3,2,7,1,NULL,NULL,NULL),
+    (4,7,8,8,NULL,NULL,NULL),
+    (5,8,9,1,NULL,NULL,NULL),
+    (6,1,5,1,NULL,NULL,NULL);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
@@ -1745,6 +1753,14 @@ VALUES
 
 
 -- End: Event History Test Data
+
+INSERT INTO `hint_question` (`id`,`created_by`,`last_modified_by`,`category_no`,`hint_question`,`created_on`,
+`last_modified_on`,`version`)
+  VALUES
+    (1,1,1,1,'What is your favourite colour?', '2015-03-27 00:00:00',null,1),
+    (2,1,1,1,'What is your Mother\'s maiden name?', '2015-03-27 00:00:00',null,1),
+    (3,1,1,1,'What is your memorable date?', '2015-03-27 00:00:00',null,1);
+
 
 SET foreign_key_checks = 1;
 
