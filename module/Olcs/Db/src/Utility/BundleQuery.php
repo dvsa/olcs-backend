@@ -56,6 +56,12 @@ class BundleQuery implements ServiceLocatorAwareInterface
                     $joinType = 'inner';
                 }
 
+                // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
+                // back in the leftJoin, this only works when the child has an ID column
+                if (isset($childConfig['requireNone'])) {
+                    $this->qb->andWhere($childAlias . '.id IS NULL');
+                }
+
                 $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
                 $this->build($childConfig, $childName, $childAlias);

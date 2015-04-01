@@ -305,7 +305,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $expression = $eb->buildWhereExpression($criteria, 'm');
 
         if ($expression !== null) {
-            $qb->where($expression);
+            $qb->andWhere($expression);
         }
 
         return $qb->setParameters($eb->getParams());
