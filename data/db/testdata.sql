@@ -1833,3 +1833,15 @@ INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
 -- End: Application 8
+
+INSERT INTO `inspection_request` (`id`, `report_type`, `request_type`, `requestor_user_id`, `result_type`, `application_id`,
+`case_id`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `task_id`, `deferred_date`, `due_date`, `from_date`,
+`inspector_name`, `inspector_notes`, `request_date`, `requestor_notes`, `return_date`, `to_date`, `trailors_examined_no`,
+`vehicles_examined_no`, `created_on`, `last_modified_on`, `olbs_key`, `version`)
+VALUES
+	(1, 'insp_rep_t_maint', 'insp_req_t_coe', 2, 'insp_res_t_new', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-01', NULL, NULL,
+    NULL, '2015-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(2, 'insp_rep_t_bus', 'insp_req_t_comp', 2, 'insp_res_t_new_sat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-02', NULL, NULL,
+    NULL, '2015-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(3, 'insp_rep_t_TE', 'insp_req_t_new_op', 2, 'insp_res_t_new_unsat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-03', NULL, NULL,
+    NULL, '2015-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
