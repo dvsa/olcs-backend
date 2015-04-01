@@ -50,14 +50,26 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
                 $childAlias = $this->getSelectAlias($childName, $alias);
 
-                $this->addJoin($alias, $childName, $childAlias, $childConfig);
+                $joinType = 'left';
+
+                if (isset($childConfig['required'])) {
+                    $joinType = 'inner';
+                }
+
+                // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
+                // back in the leftJoin, this only works when the child has an ID column
+                if (isset($childConfig['requireNone'])) {
+                    $this->qb->andWhere($childAlias . '.id IS NULL');
+                }
+
+                $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
                 $this->build($childConfig, $childName, $childAlias);
             }
         }
     }
 
-    protected function addJoin($alias, $childName, $childAlias, $childConfig)
+    protected function addJoin($alias, $childName, $childAlias, $childConfig, $joinType = 'left')
     {
         $conditionType = null;
         $condition = null;
@@ -67,7 +79,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
             $condition = $this->buildCriteria($childAlias, $childConfig['criteria']);
         }
 
-        $this->qb->leftJoin($alias . '.' . $childName, $childAlias, $conditionType, $condition);
+        $this->qb->{$joinType . 'Join'}($alias . '.' . $childName, $childAlias, $conditionType, $condition);
     }
 
     protected function buildCriteria($alias, $criteria)

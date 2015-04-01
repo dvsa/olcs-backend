@@ -14,6 +14,7 @@ TRUNCATE TABLE `decision`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `sub_category`;
+TRUNCATE TABLE `sub_category_description`;
 TRUNCATE TABLE `fee_type`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
@@ -3757,7 +3758,10 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (20038,'acr_immediate',1,'lcat_psv',1,'ltyp_si',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SI Variation Fee','2014-03-21 17:12:07',1),
 (20039,'acr_immediate',1,'lcat_psv',1,'ltyp_sn',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SN Variation Fee','2014-03-21 17:12:07',1),
 (20040,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SR Variation Fee','2014-03-21 17:12:07',1),
-(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1);
+(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1),
+(20050,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,99.00,'2014-04-01 10:30:07','Test data: Misc. bus permit fee','2014-04-01 10:30:07',1),
+(20051,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: GV photocopying charge','2014-04-01 10:30:07',1),
+(20052,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: PSV photocopying charge','2014-04-01 10:30:07',1);
 
 INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
 VALUES
