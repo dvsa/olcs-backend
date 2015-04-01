@@ -26,14 +26,23 @@ use Olcs\Db\Entity\Interfaces;
 class BusRegHistoryView implements Interfaces\EntityInterface
 {
     /**
-     * Id
+     * ehid
      *
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
+     * @ORM\Column(type="integer", name="ehid")
      */
-    protected $id;
+    protected $identifier;
+
+    /**
+     * busRegId
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="bus_reg_id")
+     */
+    protected $busRegId;
 
     /**
      * eventDatetime
@@ -76,17 +85,9 @@ class BusRegHistoryView implements Interfaces\EntityInterface
     /**
      * @return int
      */
-    public function getId()
+    public function getBusRegId()
     {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+        return $this->busRegId;
     }
 
     /**
