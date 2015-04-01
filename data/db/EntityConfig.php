@@ -104,6 +104,40 @@ return array(
     'user' => array(
         'account_disabled' => array(
             'type' => 'yesno'
+        ),
+        'must_reset_password' => array(
+            'type' => 'yesno'
+        ),
+        'contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
+        'userRoles' => array(
+            'cascade' => array(
+                'persist'
+            ),
+            'inversedBy' => array(
+                'entity' => 'UserRole',
+                'property' => 'user'
+            )
+        )
+    ),
+    'user_role' => array(
+        'user_id' => array(
+            'inversedBy' => array(
+                'entity' => 'User',
+                'property' => 'userRole',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
+        'role_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Role',
+                'property' => 'role'
+            )
         )
     ),
     'licence' => array(

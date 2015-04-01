@@ -51,11 +51,21 @@ class Role implements Interfaces\EntityInterface
     protected $rolePermissions;
 
     /**
+     * Role
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\UserRole", mappedBy="role")
+     */
+    protected $roles;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->rolePermissions = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -136,6 +146,66 @@ class Role implements Interfaces\EntityInterface
     {
         if ($this->rolePermissions->contains($rolePermissions)) {
             $this->rolePermissions->removeElement($rolePermissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the role
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return Role
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get the roles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Add a roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return Role
+     */
+    public function addRoles($roles)
+    {
+        if ($roles instanceof ArrayCollection) {
+            $this->roles = new ArrayCollection(
+                array_merge(
+                    $this->roles->toArray(),
+                    $roles->toArray()
+                )
+            );
+        } elseif (!$this->roles->contains($roles)) {
+            $this->roles->add($roles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return Role
+     */
+    public function removeRoles($roles)
+    {
+        if ($this->roles->contains($roles)) {
+            $this->roles->removeElement($roles);
         }
 
         return $this;

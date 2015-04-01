@@ -25,14 +25,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_user_partner_contact_details_id", columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="ix_user_hint_question_id1", columns={"hint_question_id1"}),
  *        @ORM\Index(name="ix_user_hint_question_id2", columns={"hint_question_id2"}),
- *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_user_organisation_id", columns={"organisation_id"})
  *    }
  * )
  */
 class User implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\CustomDeletedDateField,
@@ -41,6 +41,7 @@ class User implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LocalAuthorityManyToOne,
+        Traits\OrganisationManyToOneAlt1,
         Traits\TeamManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
@@ -62,6 +63,16 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="attempts", nullable=true)
      */
     protected $attempts;
+
+    /**
+     * Contact details
+     *
+     * @var \Olcs\Db\Entity\ContactDetails
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\ContactDetails", cascade={"persist"})
+     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
+     */
+    protected $contactDetails;
 
     /**
      * Department name
@@ -185,9 +196,9 @@ class User implements Interfaces\EntityInterface
     /**
      * Must reset password
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="must_reset_password", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="must_reset_password", nullable=false, options={"default": 0})
      */
     protected $mustResetPassword = 0;
 
@@ -247,11 +258,21 @@ class User implements Interfaces\EntityInterface
     protected $organisationUsers;
 
     /**
+     * User role
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\UserRole", mappedBy="user", cascade={"persist"})
+     */
+    protected $userRoles;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->organisationUsers = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     /**
@@ -298,6 +319,29 @@ class User implements Interfaces\EntityInterface
     public function getAttempts()
     {
         return $this->attempts;
+    }
+
+    /**
+     * Set the contact details
+     *
+     * @param \Olcs\Db\Entity\ContactDetails $contactDetails
+     * @return User
+     */
+    public function setContactDetails($contactDetails)
+    {
+        $this->contactDetails = $contactDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the contact details
+     *
+     * @return \Olcs\Db\Entity\ContactDetails
+     */
+    public function getContactDetails()
+    {
+        return $this->contactDetails;
     }
 
     /**
@@ -602,7 +646,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Set the must reset password
      *
-     * @param boolean $mustResetPassword
+     * @param string $mustResetPassword
      * @return User
      */
     public function setMustResetPassword($mustResetPassword)
@@ -615,7 +659,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the must reset password
      *
-     * @return boolean
+     * @return string
      */
     public function getMustResetPassword()
     {
@@ -792,6 +836,66 @@ class User implements Interfaces\EntityInterface
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
             $this->organisationUsers->removeElement($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the user role
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function setUserRoles($userRoles)
+    {
+        $this->userRoles = $userRoles;
+
+        return $this;
+    }
+
+    /**
+     * Get the user roles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUserRoles()
+    {
+        return $this->userRoles;
+    }
+
+    /**
+     * Add a user roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function addUserRoles($userRoles)
+    {
+        if ($userRoles instanceof ArrayCollection) {
+            $this->userRoles = new ArrayCollection(
+                array_merge(
+                    $this->userRoles->toArray(),
+                    $userRoles->toArray()
+                )
+            );
+        } elseif (!$this->userRoles->contains($userRoles)) {
+            $this->userRoles->add($userRoles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a user roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
+     * @return User
+     */
+    public function removeUserRoles($userRoles)
+    {
+        if ($this->userRoles->contains($userRoles)) {
+            $this->userRoles->removeElement($userRoles);
         }
 
         return $this;
