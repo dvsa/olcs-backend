@@ -53,7 +53,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
                 $joinType = 'left';
 
                 if (isset($childConfig['required'])) {
-                    $joinType = 'right';
+                    $joinType = 'inner';
                 }
 
                 $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
