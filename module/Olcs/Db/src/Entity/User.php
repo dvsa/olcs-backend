@@ -196,9 +196,9 @@ class User implements Interfaces\EntityInterface
     /**
      * Must reset password
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="must_reset_password", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="must_reset_password", nullable=false, options={"default": 0})
      */
     protected $mustResetPassword = 0;
 
@@ -646,7 +646,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Set the must reset password
      *
-     * @param boolean $mustResetPassword
+     * @param string $mustResetPassword
      * @return User
      */
     public function setMustResetPassword($mustResetPassword)
@@ -659,7 +659,7 @@ class User implements Interfaces\EntityInterface
     /**
      * Get the must reset password
      *
-     * @return boolean
+     * @return string
      */
     public function getMustResetPassword()
     {

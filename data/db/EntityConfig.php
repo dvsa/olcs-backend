@@ -105,6 +105,9 @@ return array(
         'account_disabled' => array(
             'type' => 'yesno'
         ),
+        'must_reset_password' => array(
+            'type' => 'yesno'
+        ),
         'contact_details_id' => array(
             'cascade' => array(
                 'persist'
