@@ -29,7 +29,6 @@ class UserRole implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\UserManyToOneAlt1,
         Traits\CustomVersionField;
 
     /**
@@ -46,10 +45,20 @@ class UserRole implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Role
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Role")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Role", inversedBy="roles")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
      */
     protected $role;
+
+    /**
+     * User
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User", inversedBy="userRoles")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $user;
 
     /**
      * Valid from
@@ -104,6 +113,29 @@ class UserRole implements Interfaces\EntityInterface
     public function getRole()
     {
         return $this->role;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Olcs\Db\Entity\User $user
+     * @return UserRole
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
