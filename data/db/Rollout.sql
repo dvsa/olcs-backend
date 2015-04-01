@@ -14,6 +14,7 @@ TRUNCATE TABLE `decision`;
 TRUNCATE TABLE `pi_definition`;
 TRUNCATE TABLE `reason`;
 TRUNCATE TABLE `sub_category`;
+TRUNCATE TABLE `sub_category_description`;
 TRUNCATE TABLE `fee_type`;
 TRUNCATE TABLE `doc_template`;
 TRUNCATE TABLE `doc_bookmark`;
@@ -3757,7 +3758,10 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (20038,'acr_immediate',1,'lcat_psv',1,'ltyp_si',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SI Variation Fee','2014-03-21 17:12:07',1),
 (20039,'acr_immediate',1,'lcat_psv',1,'ltyp_sn',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SN Variation Fee','2014-03-21 17:12:07',1),
 (20040,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SR Variation Fee','2014-03-21 17:12:07',1),
-(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1);
+(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1),
+(20050,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,99.00,'2014-04-01 10:30:07','Test data: Misc. bus permit fee','2014-04-01 10:30:07',1),
+(20051,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: GV photocopying charge','2014-04-01 10:30:07',1),
+(20052,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: PSV photocopying charge','2014-04-01 10:30:07',1);
 
 INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
 VALUES
@@ -6802,19 +6806,19 @@ VALUES
     (701, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1);
 
 
-INSERT INTO `role` (`id`, `role`, `code`) VALUES
-    (1, 'internal-limited-read-only', ''), -- internal only
-    (2, 'internal-read-only', ''), -- internal only
-    (3, 'internal-case-worker', ''), -- internal only
-    (4, 'internal-admin', ''), -- internal only
-    (5, 'operator-admin', ''), -- selfserve
-    (6, 'operator-user', ''), -- selfserve
-    (7, 'operator-tm', ''), -- selfserve
-    (8, 'operator-ebsr', ''), -- selfserve
-    (9, 'partner-admin', ''), -- selfserve
-    (10, 'partner-user', ''), -- selfserve
-    (11, 'local-authority-admin', ''), -- selfserve
-    (12, 'local-authority-user', ''); -- selfserve
+INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
+    (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only
+    (2, 'internal-read-only', '', 'Internal - Read only'), -- internal only
+    (3, 'internal-case-worker', '', 'Internal - Case worker'), -- internal only
+    (4, 'internal-admin', '', 'Internal - Admin'), -- internal only
+    (5, 'operator-admin', '', 'Operator - Admin'), -- selfserve
+    (6, 'operator-user', '', 'Operator - User'), -- selfserve
+    (7, 'operator-tm', '', 'Operator - Transport Manager'), -- selfserve
+    (8, 'operator-ebsr', '', 'Operator - EBSR'), -- selfserve
+    (9, 'partner-admin', '', 'Partner - Admin'), -- selfserve
+    (10, 'partner-user', '', 'Partner - User'), -- selfserve
+    (11, 'local-authority-admin', '', 'Local Authority administrator'), -- selfserve
+    (12, 'local-authority-user', '', 'Local Authority user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
@@ -7057,15 +7061,21 @@ CREATE VIEW bus_reg_search_view AS
           , 0)
             AND br1.deleted_date is null;
 
--- Bus reg search view
+-- Bus reg history view
 DROP TABLE IF EXISTS bus_reg_history_view;
 DROP VIEW IF EXISTS bus_reg_history_view;
 
 CREATE VIEW `bus_reg_history_view` AS
-    SELECT br1.id AS id, eh.event_datetime, eh.event_history_type_id, eh.event_data, eh.user_id
-        FROM bus_reg AS br1
-        INNER JOIN bus_reg AS br2 ON (br2.reg_no LIKE br1.reg_no)
-        INNER JOIN event_history AS eh ON (eh.bus_reg_id = br2.id);
+    SELECT
+   `eh`.`id` AS `ehid`,
+   `br1`.`id` AS `bus_reg_id`,
+   `br2`.`id` AS `id2`,
+   `eh`.`event_datetime` AS `event_datetime`,
+   `eh`.`event_history_type_id` AS `event_history_type_id`,
+   `eh`.`event_data` AS `event_data`,
+   `eh`.`user_id` AS `user_id`,
+   `br2`.`reg_no` AS `reg_no`
+FROM ((`bus_reg` `br1` join `bus_reg` `br2` on((`br2`.`reg_no` like `br1`.`reg_no`))) join `event_history` `eh` on((`eh`.`bus_reg_id` = `br2`.`id`)));
 
 COMMIT;
 

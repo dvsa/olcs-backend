@@ -27,7 +27,7 @@ use Olcs\Db\Entity\Traits;
 class PrivateHireLicence implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
-        Traits\ContactDetailsManyToOneAlt1,
+        Traits\ContactDetailsManyToOne,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
