@@ -25,6 +25,7 @@ TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
+TRUNCATE TABLE `licence_no_gen`;
 TRUNCATE TABLE `licence_operating_centre`;
 TRUNCATE TABLE `licence_status_rule`;
 TRUNCATE TABLE `local_authority`;
@@ -105,6 +106,7 @@ TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
+TRUNCATE TABLE `workshop`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -526,7 +528,9 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_stat
     (91,1,110,8,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 1','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189);
+    (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
+    (97,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 1','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20051),
+    (98,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 2','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20052);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
