@@ -32,9 +32,18 @@ class ChangeOfEntity implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOne,
         Traits\OlbsKeyField,
         Traits\CustomVersionField;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="changeOfEntitys")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     */
+    protected $licence;
 
     /**
      * Old licence no
@@ -53,6 +62,29 @@ class ChangeOfEntity implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="old_organisation_name", length=160, nullable=false)
      */
     protected $oldOrganisationName;
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return ChangeOfEntity
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
 
     /**
      * Set the old licence no
