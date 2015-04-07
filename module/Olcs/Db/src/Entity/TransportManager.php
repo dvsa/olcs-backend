@@ -40,6 +40,7 @@ class TransportManager implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\Notes4000Field,
         Traits\OlbsKeyField,
+        Traits\TmTypeManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -88,16 +89,6 @@ class TransportManager implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="tm_status", referencedColumnName="id", nullable=false)
      */
     protected $tmStatus;
-
-    /**
-     * Tm type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=false)
-     */
-    protected $tmType;
 
     /**
      * Work cd
@@ -299,29 +290,6 @@ class TransportManager implements Interfaces\EntityInterface
     public function getTmStatus()
     {
         return $this->tmStatus;
-    }
-
-    /**
-     * Set the tm type
-     *
-     * @param \Olcs\Db\Entity\RefData $tmType
-     * @return TransportManager
-     */
-    public function setTmType($tmType)
-    {
-        $this->tmType = $tmType;
-
-        return $this;
-    }
-
-    /**
-     * Get the tm type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getTmType()
-    {
-        return $this->tmType;
     }
 
     /**
