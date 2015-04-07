@@ -252,6 +252,15 @@ class Licence implements Interfaces\EntityInterface
     protected $cases;
 
     /**
+     * Change of entity
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ChangeOfEntity", mappedBy="licence")
+     */
+    protected $changeOfEntitys;
+
+    /**
      * Community lic
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -367,6 +376,7 @@ class Licence implements Interfaces\EntityInterface
     {
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
+        $this->changeOfEntitys = new ArrayCollection();
         $this->communityLics = new ArrayCollection();
         $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
@@ -910,6 +920,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->cases->contains($cases)) {
             $this->cases->removeElement($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the change of entity
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $changeOfEntitys
+     * @return Licence
+     */
+    public function setChangeOfEntitys($changeOfEntitys)
+    {
+        $this->changeOfEntitys = $changeOfEntitys;
+
+        return $this;
+    }
+
+    /**
+     * Get the change of entitys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChangeOfEntitys()
+    {
+        return $this->changeOfEntitys;
+    }
+
+    /**
+     * Add a change of entitys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $changeOfEntitys
+     * @return Licence
+     */
+    public function addChangeOfEntitys($changeOfEntitys)
+    {
+        if ($changeOfEntitys instanceof ArrayCollection) {
+            $this->changeOfEntitys = new ArrayCollection(
+                array_merge(
+                    $this->changeOfEntitys->toArray(),
+                    $changeOfEntitys->toArray()
+                )
+            );
+        } elseif (!$this->changeOfEntitys->contains($changeOfEntitys)) {
+            $this->changeOfEntitys->add($changeOfEntitys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a change of entitys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $changeOfEntitys
+     * @return Licence
+     */
+    public function removeChangeOfEntitys($changeOfEntitys)
+    {
+        if ($this->changeOfEntitys->contains($changeOfEntitys)) {
+            $this->changeOfEntitys->removeElement($changeOfEntitys);
         }
 
         return $this;
