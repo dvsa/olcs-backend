@@ -561,6 +561,14 @@ return array(
             )
         ),
     ),
+    'change_of_entity' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'changeOfEntity'
+            )
+        ),
+    ),
     'goods_disc' => array(
         'is_copy' => array(
             'type' => 'yesno'
