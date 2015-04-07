@@ -32,7 +32,6 @@ class OrganisationUser implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\OrganisationManyToOne,
         Traits\RemovedDateField,
         Traits\CustomVersionField;
 
@@ -53,6 +52,16 @@ class OrganisationUser implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_administrator", nullable=false, options={"default": 0})
      */
     protected $isAdministrator = 0;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="organisationUsers")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $organisation;
 
     /**
      * Sftp access
@@ -117,6 +126,29 @@ class OrganisationUser implements Interfaces\EntityInterface
     public function getIsAdministrator()
     {
         return $this->isAdministrator;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return OrganisationUser
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 
     /**

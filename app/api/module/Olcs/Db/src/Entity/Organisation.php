@@ -184,6 +184,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $organisationPersons;
 
     /**
+     * Organisation user
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OrganisationUser", mappedBy="organisation")
+     */
+    protected $organisationUsers;
+
+    /**
      * Trading name
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -200,6 +209,7 @@ class Organisation implements Interfaces\EntityInterface
         $this->natureOfBusinesses = new ArrayCollection();
         $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
+        $this->organisationUsers = new ArrayCollection();
         $this->tradingNames = new ArrayCollection();
     }
 
@@ -654,6 +664,66 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->organisationPersons->contains($organisationPersons)) {
             $this->organisationPersons->removeElement($organisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the organisation user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return Organisation
+     */
+    public function setOrganisationUsers($organisationUsers)
+    {
+        $this->organisationUsers = $organisationUsers;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisationUsers()
+    {
+        return $this->organisationUsers;
+    }
+
+    /**
+     * Add a organisation users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return Organisation
+     */
+    public function addOrganisationUsers($organisationUsers)
+    {
+        if ($organisationUsers instanceof ArrayCollection) {
+            $this->organisationUsers = new ArrayCollection(
+                array_merge(
+                    $this->organisationUsers->toArray(),
+                    $organisationUsers->toArray()
+                )
+            );
+        } elseif (!$this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->add($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @return Organisation
+     */
+    public function removeOrganisationUsers($organisationUsers)
+    {
+        if ($this->organisationUsers->contains($organisationUsers)) {
+            $this->organisationUsers->removeElement($organisationUsers);
         }
 
         return $this;
