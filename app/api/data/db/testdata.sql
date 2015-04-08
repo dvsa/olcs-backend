@@ -18,6 +18,7 @@ TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
+TRUNCATE TABLE `change_of_entity`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
