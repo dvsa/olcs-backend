@@ -882,6 +882,12 @@ return array(
                 'property' => 'organisationUser'
             )
         ),
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'organisationUser'
+            )
+        ),
         'is_administrator' => array(
             'type' => 'yesno'
         ),

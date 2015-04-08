@@ -407,8 +407,8 @@ VALUES
     (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (104,'ct_tm',110,NULL,1,1,NULL,NULL,NULL,0,'one@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (105,'ct_team_user',26,NULL,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (106,'ct_team_user',26,NULL,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (105,'ct_team_user',26,81,4,1,NULL,'John','Spellman',0,'john@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (106,'ct_team_user',26,82,4,1,NULL,'Steve','Fox',0,'steve@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (108,'ct_complainant',72,34,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (109,'ct_complainant',72,35,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04',
@@ -435,7 +435,11 @@ VALUES
     (122,'ct_corr',107,10,1,1,NULL,NULL,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
     (123,'ct_corr',108,11,1,1,NULL,NULL,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1);
+    '2014-11-24 10:30:04',1),
+    (130,'ct_team_user',26,83,4,1,NULL,'Amy','Wrigg',0,'amy@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (131,'ct_team_user',26,84,4,1,NULL,'Phil','Jowitt',0,'phil@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (132,'ct_team_user',26,85,4,1,NULL,'Kevin','Rooney',0,'kevin@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (133,'ct_team_user',26,86,4,1,NULL,'Sarah','Thompson',0,'sarah@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -803,7 +807,13 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
     (77,NULL,NULL,'Leeds','title_mr','1972-02-15 00:00:00','Tom','Jones',NULL,NULL,NULL,1,NULL),
     (78,NULL,NULL,'Xanten','title_mr','1975-03-15 00:00:00','Keith','Winnard',NULL,NULL,NULL,1,NULL),
     (79,NULL,NULL,'York','title_mr','1975-04-15 00:00:00','James','Bond',NULL,NULL,NULL,1,NULL),
-    (80,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Dave','Smith',NULL,NULL,NULL,1,NULL);
+    (80,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Dave','Smith',NULL,NULL,NULL,1,NULL),
+    (81,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','John','Spellman',NULL,NULL,NULL,1,NULL),
+    (82,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Steve','Fox',NULL,NULL,NULL,1,NULL),
+    (83,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Amy','Wrigg',NULL,NULL,NULL,1,NULL),
+    (84,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Phil','Jowitt',NULL,NULL,NULL,1,NULL),
+    (85,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Kevin','Rooney',NULL,NULL,NULL,1,NULL),
+    (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL);
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
@@ -1031,13 +1041,13 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     'john.spellman@test9876.com'),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
     'stevefox@test9876.com'),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',101,
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',130,
     'amywrigg@test9876.com'),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',NULL,
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',131,
     'philjowitt@test9876.com'),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',NULL,
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',132,
     'kevinrooney@test9876.com'),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',NULL,
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
     'sarahthompson@test9876.com'),
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
     'anotheruser@test9876.com');

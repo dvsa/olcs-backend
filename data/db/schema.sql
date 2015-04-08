@@ -7103,7 +7103,7 @@ DROP TABLE IF EXISTS `transport_manager`;
 CREATE TABLE `transport_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key.  Auto incremented if numeric.',
   `tm_status` varchar(32) NOT NULL,
-  `tm_type` varchar(32) NOT NULL,
+  `tm_type` varchar(32) NULL,
   `home_cd_id` int(10) unsigned NOT NULL,
   `work_cd_id` int(10) unsigned DEFAULT NULL,
   `disqualification_tm_case_id` int(10) unsigned DEFAULT NULL,
