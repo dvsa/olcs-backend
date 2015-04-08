@@ -6818,12 +6818,15 @@ INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
     (2, 'internal-read-only', '', 'Internal - Read only'), -- internal only
     (3, 'internal-case-worker', '', 'Internal - Case worker'), -- internal only
     (4, 'internal-admin', '', 'Internal - Admin'), -- internal only
+    
     (5, 'operator-admin', '', 'Operator - Admin'), -- selfserve
     (6, 'operator-user', '', 'Operator - User'), -- selfserve
     (7, 'operator-tm', '', 'Operator - Transport Manager'), -- selfserve
     (8, 'operator-ebsr', '', 'Operator - EBSR'), -- selfserve
+    
     (9, 'partner-admin', '', 'Partner - Admin'), -- selfserve
     (10, 'partner-user', '', 'Partner - User'), -- selfserve
+    
     (11, 'local-authority-admin', '', 'Local Authority administrator'), -- selfserve
     (12, 'local-authority-user', '', 'Local Authority user'); -- selfserve
 
@@ -6836,9 +6839,14 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (5, 'internal-edit', 'EDIT'),
     (6, 'internal-view', 'VIEW'),
     (7, 'internal-user', 'IUSER'), -- used to distinguish between Internal and Selfserve users
+    
     (8, 'selfserve-user', 'SUSER'), -- used to distinguish between Internal and Selfserve users
     (9, 'selfserve-ebsr', 'SEBSR'),
-    (10, 'selfserve-ebsr-documents', 'SEDOC');
+    (10, 'selfserve-ebsr-documents', 'SEDOC'),
+    
+    (11, 'selfserve-lva', 'SLVA'),
+    (12, 'selfserve-admin', 'SADM'),
+    (13, 'selfserve-tm', 'STM');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (1, 7), -- all internal roles are internal users
@@ -6861,6 +6869,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (4, 4), -- internal admin sees notes
     (4, 5), -- internal admin can edit
     (4, 1), -- internal admin is admin,
+
     (5, 8), -- all selfserve roles are selfserve users
     (6, 8), -- all selfserve roles are selfserve users
     (7, 8), -- all selfserve roles are selfserve users
@@ -6869,6 +6878,16 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (10, 8), -- all selfserve roles are selfserve users
     (11, 8), -- all selfserve roles are selfserve users
     (12, 8), -- all selfserve roles are selfserve users
+
+    (5, 11), -- operator admin has access to lva
+    (6, 11), -- operator user has access to lva
+
+    (5, 12), -- operator admin has selfserve admin role
+
+    (5, 13), -- operator admin has access to tm
+    (6, 13), -- operator user has access to tm
+    (7, 13), -- operator tm has access to tm
+
     (8, 9), -- selfserve EBSR sees ebsr
     (5, 9), -- operator admin sees ebsr
     (6, 9), -- operator user sees ebsr
