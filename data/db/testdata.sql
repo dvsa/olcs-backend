@@ -1831,5 +1831,8 @@ VALUES (
 INSERT INTO `fee` (`id`, `fee_status`, `fee_type_id`, `parent_fee_id`, `payment_method`, `waive_approver_user_id`, `waive_recommender_user_id`, `application_id`, `bus_reg_id`, `created_by`, `irfo_gv_permit_id`, `last_modified_by`, `licence_id`, `task_id`, `amount`, `cheque_po_date`, `cheque_po_number`, `invoice_line_no`, `invoiced_date`, `irfo_fee_exempt`, `irfo_file_no`, `payer_name`, `paying_in_slip_number`, `receipt_no`, `received_amount`, `waive_approval_date`, `waive_reason`, `waive_recommendation_date`, `created_on`, `description`, `irfo_fee_id`, `last_modified_on`, `received_date`, `version`) VALUES (96,'lfs_w',338,NULL,NULL,NULL,NULL,8,NULL,NULL,NULL,NULL,212,NULL,254.40,NULL,NULL,NULL,'2015-03-27 00:00:00',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:28:08','GV/SN Application Fee for application 7',NULL,NULL,NULL,1);
 INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
+
+INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organisation_name`, `created_on`, `version`) VALUES ('1', '7', '0000000', 'Old Organisation Name', '2015-03-27 12:28:07', '1');
+
 COMMIT;
 -- End: Application 8
