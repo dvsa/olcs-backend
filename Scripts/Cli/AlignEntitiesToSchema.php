@@ -164,7 +164,7 @@ class AlignEntitiesToSchema
 
         if (isset($this->options['help'])) {
             $this->exitResponse(
-                'Usage \'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-backend/data/db/schema.sql '
+                'Usage \'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql '
                 . '--mapping-files /var/www/olcs/olcs-backend/data/mapping/ --entity-files '
                 . '/var/www/olcs/olcs-backend/module/Olcs/Db/src/Entity/ --test-files '
                 . '/var/www/olcs/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config '
