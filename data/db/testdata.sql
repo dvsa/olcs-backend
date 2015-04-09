@@ -107,6 +107,7 @@ TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
+TRUNCATE TABLE `inspection_request`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
