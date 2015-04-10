@@ -443,7 +443,9 @@ VALUES
     (130,'ct_team_user',26,83,4,1,NULL,'Amy','Wrigg',0,'amy@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (131,'ct_team_user',26,84,4,1,NULL,'Phil','Jowitt',0,'phil@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (132,'ct_team_user',26,85,4,1,NULL,'Kevin','Rooney',0,'kevin@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (133,'ct_team_user',26,86,4,1,NULL,'Sarah','Thompson',0,'sarah@example.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
+    (133,'ct_team_user',26,86,4,1,NULL,'Sarah','Thompson',0,'sarah@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    '2014-11-24 10:30:04',1),
+    (140,'ct_team_user',NULL,90,1,1,NULL,NULL,NULL,0,'ALTOBELLI.TIMON@REBECKA.COM',NULL,NULL,'2000-04-02 00:00:00',NULL,1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -818,7 +820,8 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
     (83,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Amy','Wrigg',NULL,NULL,NULL,1,NULL),
     (84,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Phil','Jowitt',NULL,NULL,NULL,1,NULL),
     (85,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Kevin','Rooney',NULL,NULL,NULL,1,NULL),
-    (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL);
+    (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL),
+    (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL);
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
@@ -1055,7 +1058,9 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
     'sarahthompson@test9876.com'),
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
-    'anotheruser@test9876.com');
+    'anotheruser@test9876.com'),
+    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
+    NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -1064,7 +1069,12 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 4),
     (1, 5),
     (1, 6),
-    (1, 7);
+    (1, 7),
+    (1, 12504);
+
+INSERT INTO `user_role` (`id`, `user_id`, `role_id`, `created_by`,`last_modified_by`,`expiry_date`,
+`valid_from`, `created_on`,`version`) VALUES
+    (1, 12504, 3, 1, 1, NULL,NULL,NULL,1);
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `psv_type`, `created_on`,
@@ -1155,7 +1165,8 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (6,1,'Bus Reg Team',''),
     (7,1,'Compliance Team',''),
     (8,1,'Environmental Team',''),
-    (9,1,'IRFO Team','');
+    (9,1,'IRFO Team',''),
+    (32,1,'Self service Operators','');
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -1871,6 +1882,7 @@ INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organ
 
 COMMIT;
 -- End: Application 8
+
 
 INSERT INTO `inspection_request` (`id`, `report_type`, `request_type`, `requestor_user_id`, `result_type`, `application_id`,
 `case_id`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `task_id`, `deferred_date`, `due_date`, `from_date`,
