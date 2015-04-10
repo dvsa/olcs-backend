@@ -42,7 +42,6 @@ class User implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\LocalAuthorityManyToOne,
         Traits\OrganisationManyToOneAlt1,
-        Traits\TeamManyToOne,
         Traits\TransportManagerManyToOne,
         Traits\CustomVersionField;
 
@@ -247,6 +246,16 @@ class User implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="reset_password_expiry_date", nullable=true)
      */
     protected $resetPasswordExpiryDate;
+
+    /**
+     * Team
+     *
+     * @var \Olcs\Db\Entity\Team
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Team")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
+     */
+    protected $team;
 
     /**
      * Organisation user
@@ -779,6 +788,29 @@ class User implements Interfaces\EntityInterface
     public function getResetPasswordExpiryDate()
     {
         return $this->resetPasswordExpiryDate;
+    }
+
+    /**
+     * Set the team
+     *
+     * @param \Olcs\Db\Entity\Team $team
+     * @return User
+     */
+    public function setTeam($team)
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * Get the team
+     *
+     * @return \Olcs\Db\Entity\Team
+     */
+    public function getTeam()
+    {
+        return $this->team;
     }
 
     /**
