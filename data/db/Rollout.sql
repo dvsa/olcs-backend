@@ -1910,7 +1910,7 @@ INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_
   (7,'Environmental',1,1,1,1,'task_at_simple'),
   (8,'IRFO',1,1,1,1,'task_at_simple'),
   (9,'Application',1,1,1,1,'task_at_simple'),
-  (10,'Submission',0,1,0,1,NULL),
+  (10,'Submission',0,1,0,1,'task_at_simple'),
   (11,'Publication',0,0,0,1,NULL),
   (999999,'Templates (remove before go live)',0,0,0,0,NULL);
 
