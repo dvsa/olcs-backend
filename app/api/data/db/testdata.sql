@@ -110,7 +110,6 @@ TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
-TRUNCATE TABLE `enforcement_area`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -553,7 +552,7 @@ INSERT INTO `licence` (
     `enforcement_area_id`) VALUES
     (7,1,'B',1,102,NULL,104,NULL,'lcat_gv','OB1234567','lsts_valid',0,'ltyp_si','2010-01-12','2010-01-12','2010-01-12',
     '',4,12,NULL,NULL,NULL,
-    NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 1),
+    NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 'V048'),
 
     -- extra licence for application 1
     (201,1,'B',0,NULL,NULL,NULL,1,NULL,'OB4234560','lsts_not_submitted',NULL,NULL,'2011-03-16','2011-03-16',
@@ -1895,7 +1894,3 @@ VALUES
     NULL, '2015-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 	(3, 'insp_rep_t_TE', 'insp_req_t_new_op', 2, 'insp_res_t_new_unsat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-03', NULL, NULL,
     NULL, '2015-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-
-INSERT INTO `enforcement_area` (`id`, `created_by`, `last_modified_by`, `created_on`, `email_address`, `last_modified_on`, `name`, `version`)
-VALUES
-	('1', NULL, NULL, NULL, 'some@email.com', NULL, 'Area name', 1);
