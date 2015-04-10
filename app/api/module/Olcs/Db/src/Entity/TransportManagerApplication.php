@@ -62,6 +62,15 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     protected $application;
 
     /**
+     * Is owner
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_owner", nullable=true)
+     */
+    protected $isOwner;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -137,6 +146,29 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Set the is owner
+     *
+     * @param string $isOwner
+     * @return TransportManagerApplication
+     */
+    public function setIsOwner($isOwner)
+    {
+        $this->isOwner = $isOwner;
+
+        return $this;
+    }
+
+    /**
+     * Get the is owner
+     *
+     * @return string
+     */
+    public function getIsOwner()
+    {
+        return $this->isOwner;
     }
 
     /**
