@@ -28,10 +28,9 @@ return [
             'ref-data' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/ref-data/:id[/:lang]',
+                    'route' => '/ref-data[/category/:category][/:id]',
                     'defaults' => [
-                        'controller' => 'ref-data',
-                        'lang' => 'en_en'
+                        'controller' => 'ref-data'
                     ]
                 ]
             ],

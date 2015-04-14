@@ -1456,6 +1456,9 @@ return array(
                 'entity' => 'TransportManager',
                 'property' => 'tmApplication'
             ),
+        ),
+        'is_owner' => array(
+            'type' => 'yesnonull'
         )
     ),
     'statement' => array(
