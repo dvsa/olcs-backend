@@ -1080,7 +1080,10 @@ return array(
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
-                'property' => 'seriousInfringement'
+                'property' => 'seriousInfringement',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),

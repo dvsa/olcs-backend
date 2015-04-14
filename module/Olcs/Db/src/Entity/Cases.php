@@ -293,7 +293,7 @@ class Cases implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SeriousInfringement", mappedBy="case")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SeriousInfringement", mappedBy="case", cascade={"persist"})
      */
     protected $seriousInfringements;
 
