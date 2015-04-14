@@ -90,7 +90,6 @@ TRUNCATE TABLE `si_penalty_erru_imposed`;
 TRUNCATE TABLE `si_penalty_imposed_type`;
 TRUNCATE TABLE `si_penalty_requested_type`;
 TRUNCATE TABLE `si_penalty_type`;
-TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
@@ -110,6 +109,7 @@ TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
+TRUNCATE TABLE `user_role`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -1262,9 +1262,9 @@ INSERT INTO `serious_infringement`
 `si_category_id`, `case_id`, `check_date`, `erru_response_sent`,`erru_response_time`, `infringement_date`,
 `notification_number`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 123456, null, null,'2014-05-04 17:50:06',
+  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 1, null, null,'2014-05-04 17:50:06',
   '2014-05-04 17:50:06', 1),
-  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 123456, null, null,'2014-05-04 17:50:06',
+  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 2, null, null,'2014-05-04 17:50:06',
   '2014-05-04 17:50:06', 1);
 
 INSERT INTO `si_penalty`
