@@ -419,11 +419,11 @@ class Application implements Interfaces\EntityInterface
     /**
      * Application completion
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\ApplicationCompletion
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ApplicationCompletion", mappedBy="application")
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\ApplicationCompletion", mappedBy="application")
      */
-    protected $applicationCompletions;
+    protected $applicationCompletion;
 
     /**
      * Operating centre
@@ -520,7 +520,6 @@ class Application implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->applicationCompletions = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->applicationOrganisationPersons = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
@@ -1456,61 +1455,24 @@ class Application implements Interfaces\EntityInterface
     /**
      * Set the application completion
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
+     * @param \Olcs\Db\Entity\ApplicationCompletion $applicationCompletion
      * @return Application
      */
-    public function setApplicationCompletions($applicationCompletions)
+    public function setApplicationCompletion($applicationCompletion)
     {
-        $this->applicationCompletions = $applicationCompletions;
+        $this->applicationCompletion = $applicationCompletion;
 
         return $this;
     }
 
     /**
-     * Get the application completions
+     * Get the application completion
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Olcs\Db\Entity\ApplicationCompletion
      */
-    public function getApplicationCompletions()
+    public function getApplicationCompletion()
     {
-        return $this->applicationCompletions;
-    }
-
-    /**
-     * Add a application completions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
-     * @return Application
-     */
-    public function addApplicationCompletions($applicationCompletions)
-    {
-        if ($applicationCompletions instanceof ArrayCollection) {
-            $this->applicationCompletions = new ArrayCollection(
-                array_merge(
-                    $this->applicationCompletions->toArray(),
-                    $applicationCompletions->toArray()
-                )
-            );
-        } elseif (!$this->applicationCompletions->contains($applicationCompletions)) {
-            $this->applicationCompletions->add($applicationCompletions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a application completions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationCompletions
-     * @return Application
-     */
-    public function removeApplicationCompletions($applicationCompletions)
-    {
-        if ($this->applicationCompletions->contains($applicationCompletions)) {
-            $this->applicationCompletions->removeElement($applicationCompletions);
-        }
-
-        return $this;
+        return $this->applicationCompletion;
     }
 
     /**
