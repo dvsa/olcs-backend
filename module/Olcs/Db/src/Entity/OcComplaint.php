@@ -23,8 +23,7 @@ class OcComplaint implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\OlbsKeyField,
-        Traits\OperatingCentreManyToOne;
+        Traits\OlbsKeyField;
 
     /**
      * Complaint
@@ -35,6 +34,16 @@ class OcComplaint implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
      */
     protected $complaint;
+
+    /**
+     * Operating centre
+     *
+     * @var \Olcs\Db\Entity\OperatingCentre
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\OperatingCentre", inversedBy="ocComplaints")
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
+     */
+    protected $operatingCentre;
 
     /**
      * Set the complaint
@@ -57,5 +66,28 @@ class OcComplaint implements Interfaces\EntityInterface
     public function getComplaint()
     {
         return $this->complaint;
+    }
+
+    /**
+     * Set the operating centre
+     *
+     * @param \Olcs\Db\Entity\OperatingCentre $operatingCentre
+     * @return OcComplaint
+     */
+    public function setOperatingCentre($operatingCentre)
+    {
+        $this->operatingCentre = $operatingCentre;
+
+        return $this;
+    }
+
+    /**
+     * Get the operating centre
+     *
+     * @return \Olcs\Db\Entity\OperatingCentre
+     */
+    public function getOperatingCentre()
+    {
+        return $this->operatingCentre;
     }
 }
