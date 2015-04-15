@@ -560,11 +560,11 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Short notice
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Olcs\Db\Entity\BusShortNotice
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\BusShortNotice", mappedBy="busReg", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\BusShortNotice", mappedBy="busReg", cascade={"persist"})
      */
-    protected $shortNotices;
+    protected $shortNotice;
 
     /**
      * Document
@@ -594,7 +594,6 @@ class BusReg implements Interfaces\EntityInterface
         $this->localAuthoritys = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
-        $this->shortNotices = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
     }
@@ -1983,61 +1982,24 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Set the short notice
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $shortNotices
+     * @param \Olcs\Db\Entity\BusShortNotice $shortNotice
      * @return BusReg
      */
-    public function setShortNotices($shortNotices)
+    public function setShortNotice($shortNotice)
     {
-        $this->shortNotices = $shortNotices;
+        $this->shortNotice = $shortNotice;
 
         return $this;
     }
 
     /**
-     * Get the short notices
+     * Get the short notice
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Olcs\Db\Entity\BusShortNotice
      */
-    public function getShortNotices()
+    public function getShortNotice()
     {
-        return $this->shortNotices;
-    }
-
-    /**
-     * Add a short notices
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $shortNotices
-     * @return BusReg
-     */
-    public function addShortNotices($shortNotices)
-    {
-        if ($shortNotices instanceof ArrayCollection) {
-            $this->shortNotices = new ArrayCollection(
-                array_merge(
-                    $this->shortNotices->toArray(),
-                    $shortNotices->toArray()
-                )
-            );
-        } elseif (!$this->shortNotices->contains($shortNotices)) {
-            $this->shortNotices->add($shortNotices);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a short notices
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $shortNotices
-     * @return BusReg
-     */
-    public function removeShortNotices($shortNotices)
-    {
-        if ($this->shortNotices->contains($shortNotices)) {
-            $this->shortNotices->removeElement($shortNotices);
-        }
-
-        return $this;
+        return $this->shortNotice;
     }
 
     /**

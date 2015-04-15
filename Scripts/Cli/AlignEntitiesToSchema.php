@@ -90,13 +90,15 @@ class AlignEntitiesToSchema
         'mapped-by' => array(
             'column' => 'mappedBy="%s"',
             'manyToOne' => 'mappedBy="%ss"',
-            'manyToMany' => 'mappedBy="%ss"'
+            'manyToMany' => 'mappedBy="%ss"',
+            'oneToOne' => 'mappedBy="%s"'
         ),
         'cascade' => 'cascade={"%s"}',
         'inversed-by' => array(
             'column' => 'inversedBy="%s"',
             'manyToOne' => 'inversedBy="%ss"',
-            'manyToMany' => 'inversedBy="%ss"'
+            'manyToMany' => 'inversedBy="%ss"',
+            'oneToOne' => 'inversedBy="%s"'
         ),
         'order-by' => '{"%s"}'
     );
@@ -469,7 +471,11 @@ class AlignEntitiesToSchema
 
             $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
 
-            $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName, $nullables);
+            try {
+                $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName, $nullables);
+            } catch (\Exception $ex) {
+                die($ex->getMessage());
+            }
 
             $this->cacheFields($fields);
 
@@ -507,7 +513,8 @@ class AlignEntitiesToSchema
 
             foreach ($this->inverseFields[$className] as $fieldDetails) {
 
-                $property = $fieldDetails['relationship'] == 'oneToMany' ? 'mapped-by' : 'inversed-by';
+                $property = $fieldDetails['relationship'] == 'oneToMany' || $fieldDetails['relationship'] == 'oneToOne'
+                    ? 'mapped-by' : 'inversed-by';
 
                 $item = array(
                     '@attributes' => array(
@@ -1073,6 +1080,34 @@ class AlignEntitiesToSchema
                 $name = $this->formatPropertyName($fieldConfig);
 
                 $fields[$name] = array_merge($fieldConfig, $extraConfig);
+            }
+        }
+
+        // This checks if any many-to-one should actually be a one-to-one
+        if (isset($config['entity']['unique-constraints']['unique-constraint'])) {
+
+            foreach ($config['entity']['unique-constraints']['unique-constraint'] as $key => $uniqueConstraint) {
+
+                if (is_numeric($key)) {
+                    $attributes = $uniqueConstraint['@attributes'];
+                } else {
+                    $attributes = $uniqueConstraint;
+                }
+
+                if (!strstr($attributes['columns'], ',')
+                    && isset($config['entity']['many-to-one'])
+                ) {
+                    $ukName = $attributes['columns'];
+
+                    foreach ($config['entity']['many-to-one'] as $key => $manyToOneItem) {
+                        if (isset($manyToOneItem['join-columns']['join-column']['@attributes']['name'])
+                            && $manyToOneItem['join-columns']['join-column']['@attributes']['name'] == $ukName) {
+
+                            $config['entity']['one-to-one'][] = $manyToOneItem;
+                            unset($config['entity']['many-to-one'][$key]);
+                        }
+                    }
+                }
             }
         }
 
