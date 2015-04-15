@@ -435,6 +435,9 @@ return array(
         'is_quality_contract' => array(
             'type' => 'yesno'
         ),
+        'ebsr_refresh' => array(
+            'type' => 'yesno'
+        )
     ),
     'bus_reg_other_service' => array(
         'bus_reg_id' => array(

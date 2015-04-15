@@ -109,9 +109,9 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Ebsr refresh
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="ebsr_refresh", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="ebsr_refresh", nullable=false, options={"default": 0})
      */
     protected $ebsrRefresh = 0;
 
@@ -753,7 +753,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Set the ebsr refresh
      *
-     * @param boolean $ebsrRefresh
+     * @param string $ebsrRefresh
      * @return BusReg
      */
     public function setEbsrRefresh($ebsrRefresh)
@@ -766,7 +766,7 @@ class BusReg implements Interfaces\EntityInterface
     /**
      * Get the ebsr refresh
      *
-     * @return boolean
+     * @return string
      */
     public function getEbsrRefresh()
     {
