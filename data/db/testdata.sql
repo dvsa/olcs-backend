@@ -539,8 +539,8 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_stat
     (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (97,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 1','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20051),
-    (98,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 2','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20052);
+    (97,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Photocopying charge','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20051),
+    (98,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Court fee','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20052);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `enforcement_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
