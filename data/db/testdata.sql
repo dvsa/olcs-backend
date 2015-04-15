@@ -743,9 +743,11 @@ INSERT INTO `opposition`
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'validity_no', 'Valid notes', 'Notes', null,
+  '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'validity_yes', 'Valid notes', 'Notes', null,
+  '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
