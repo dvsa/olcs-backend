@@ -4,6 +4,7 @@ namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ChangeOfEntity Entity
@@ -12,6 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="change_of_entity",
  *    indexes={
  *        @ORM\Index(name="ix_change_of_entity_licence_id", columns={"licence_id"}),
@@ -19,7 +21,6 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_change_of_entity_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_change_of_entity_licence_id", columns={"licence_id"}),
  *        @ORM\UniqueConstraint(name="uk_change_of_entity_olbs_key", columns={"olbs_key"})
  *    }
  * )
@@ -29,6 +30,7 @@ class ChangeOfEntity implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
