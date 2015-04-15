@@ -47,7 +47,7 @@ class ApplicationTracking implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application")
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
