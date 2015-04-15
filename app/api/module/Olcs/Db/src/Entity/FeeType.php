@@ -19,7 +19,8 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_fee_type_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"})
+ *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"}),
+ *        @ORM\Index(name="fk_fee_type_fee_type_ref_data_id", columns={"fee_type"})
  *    }
  * )
  */
@@ -77,9 +78,10 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Fee type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="fee_type", length=20, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="fee_type", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
 
@@ -196,7 +198,7 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Set the fee type
      *
-     * @param string $feeType
+     * @param \Olcs\Db\Entity\RefData $feeType
      * @return FeeType
      */
     public function setFeeType($feeType)
@@ -209,7 +211,7 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Get the fee type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getFeeType()
     {

@@ -1058,7 +1058,30 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposition_status', 'opp_pro_rec', 'Proforma received', 'B-ProfRcvd'),
     ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
     ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
-    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
+    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn'),
+
+    /* Fee types */
+    ('fee_type', 'APP', 'Application fees', 'APP'),
+    ('fee_type', 'VAR', 'Variation fees', 'VAR'),
+    ('fee_type', 'GRANT', 'Grant fees', 'GRANT'),
+    ('fee_type', 'CONT', 'Continuation fees', 'CONT'),
+    ('fee_type', 'VEH', 'Vehicle fees', 'VEH'),
+    ('fee_type', 'GRANTINT', 'Grant Interim fees', 'GRANTINT'),
+    ('fee_type', 'INTVEH', 'Interim vehicle fees', 'INTVEH'),
+    ('fee_type', 'DUP', 'Duplicate Disc fees', 'DUP'),
+    ('fee_type', 'ANN', 'Annual Reminder fees', 'ANN'),
+    ('fee_type', 'GRANTVAR', 'Grant Variation Vehicle fees', 'GRANTVAR'),
+    ('fee_type', 'BUSAPP', 'Bus Route Application fees', 'BUSAPP'),
+    ('fee_type', 'BUSVAR', 'Bus Route Variation fees', 'BUSVAR'),
+    ('fee_type', 'GVANNVEH', 'GV Annual Vehicle fees', 'GVANNVEH'),
+    ('fee_type', 'INTUPGRADEVEH', 'Interim Upgrade Vehicle fees', 'INTUPGRADEVEH'),
+    ('fee_type', 'INTAMENDED', 'GV Interim Amended Dummy Fees', 'INTAMENDED'),
+    ('fee_type', 'IRFOPSVAPP', 'IRFO PSV App fees', 'IRFOPSVAPP'),
+    ('fee_type', 'IRFOPSVANN', 'IRFO PSV Ann fees', 'IRFOPSVANN'),
+    ('fee_type', 'IRFOPSVCOPY', 'IRFO PSV Copy fees', 'IRFOPSVCOPY'),
+    ('fee_type', 'IRFOGVPERMIT', 'IRFO GV Permit fees', 'IRFOGVPERMIT'),
+    ('fee_type', 'MISC', 'Miscellaneous fees', 'MISC');
+
 
  INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),

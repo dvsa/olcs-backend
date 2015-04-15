@@ -71,6 +71,7 @@ TRUNCATE TABLE `tm_employment`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
 TRUNCATE TABLE `user`;
+TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `organisation_user`;
 TRUNCATE TABLE `vehicle`;
 TRUNCATE TABLE `cases`;
