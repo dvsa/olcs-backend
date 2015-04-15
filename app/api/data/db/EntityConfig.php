@@ -725,7 +725,13 @@ return array(
                 'entity' => 'Complaint',
                 'property' => 'ocComplaint'
             )
-        )
+        ),
+        'operating_centre_id' => array(
+            'inversedBy' => array(
+                'entity' => 'OperatingCentre',
+                'property' => 'ocComplaint'
+            )
+        ),
     ),
     'complaint_case' => array(
         'complaint_id' => array(
