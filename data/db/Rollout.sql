@@ -6991,6 +6991,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (12, 9), -- LA user sees ebsr
     (5, 10), -- operator admin sees ebsr docs
     (6, 10), -- operator user sees ebsr docs
+    (8, 10), -- operator ebsr sees ebsr docs
     (11, 10), -- LA admin sees ebsr docs
     (12, 10); -- LA user sees ebsr docs
 
