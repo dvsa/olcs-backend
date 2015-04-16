@@ -83,6 +83,15 @@ class OperatingCentre implements Interfaces\EntityInterface
     protected $adDocuments;
 
     /**
+     * Oc complaint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\OcComplaint", mappedBy="operatingCentre")
+     */
+    protected $ocComplaints;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -92,6 +101,7 @@ class OperatingCentre implements Interfaces\EntityInterface
         $this->transportManagerApplications = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
+        $this->ocComplaints = new ArrayCollection();
     }
 
     /**
@@ -389,6 +399,66 @@ class OperatingCentre implements Interfaces\EntityInterface
     {
         if ($this->adDocuments->contains($adDocuments)) {
             $this->adDocuments->removeElement($adDocuments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the oc complaint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return OperatingCentre
+     */
+    public function setOcComplaints($ocComplaints)
+    {
+        $this->ocComplaints = $ocComplaints;
+
+        return $this;
+    }
+
+    /**
+     * Get the oc complaints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOcComplaints()
+    {
+        return $this->ocComplaints;
+    }
+
+    /**
+     * Add a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return OperatingCentre
+     */
+    public function addOcComplaints($ocComplaints)
+    {
+        if ($ocComplaints instanceof ArrayCollection) {
+            $this->ocComplaints = new ArrayCollection(
+                array_merge(
+                    $this->ocComplaints->toArray(),
+                    $ocComplaints->toArray()
+                )
+            );
+        } elseif (!$this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->add($ocComplaints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a oc complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
+     * @return OperatingCentre
+     */
+    public function removeOcComplaints($ocComplaints)
+    {
+        if ($this->ocComplaints->contains($ocComplaints)) {
+            $this->ocComplaints->removeElement($ocComplaints);
         }
 
         return $this;

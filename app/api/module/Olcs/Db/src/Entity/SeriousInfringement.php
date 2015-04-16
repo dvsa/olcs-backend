@@ -26,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type", columns={"olbs_key","olbs_type"}),
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number", columns={"notification_number"})
  *    }
  * )
  */
