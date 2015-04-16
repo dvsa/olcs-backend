@@ -136,14 +136,14 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -226,14 +226,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -316,14 +316,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -403,14 +403,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -496,14 +496,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -591,14 +591,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -681,14 +681,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -762,14 +762,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
@@ -866,14 +866,14 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
+        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getTransactionId'));
 
         $mockService->expects($this->once())
             ->method('initiateRequest')
             ->will($this->returnValue($mockService));
 
         $mockService->expects($this->once())
-            ->method('getId')
+            ->method('getTransactionId')
             ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));

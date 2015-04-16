@@ -73,7 +73,10 @@ class CompaniesHouse extends ServiceAbstract
 
         $this->setCredentials();
 
-        $transactionId = $this->getService('CompaniesHouseRequest')->initiateRequest($requestType)->getId();
+        $transactionId = $this->getService('CompaniesHouseRequest')
+            ->initiateRequest($requestType)
+            ->getTransactionId();
+
         $this->setTransactionId($transactionId);
 
         $this->getLogger()->info(

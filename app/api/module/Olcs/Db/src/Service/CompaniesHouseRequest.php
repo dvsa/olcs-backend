@@ -33,6 +33,7 @@ class CompaniesHouseRequest extends ServiceAbstract
         $companiesHouseRequest->setIpAddress($serverIpAddress);
 
         $companiesHouseRequest->setRequestedOn(new \DateTime('NOW'));
+        $companiesHouseRequest->setTransactionId(microtime(true)*10000);
 
         $entityManager->persist($companiesHouseRequest);
         $entityManager->flush();
