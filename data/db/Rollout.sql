@@ -1058,7 +1058,32 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposition_status', 'opp_pro_rec', 'Proforma received', 'B-ProfRcvd'),
     ('opposition_status', 'opp_cu_prop', 'Conditions & undertakings proposed', 'C-CoUndPsd'),
     ('opposition_status', 'opp_cu_acc', 'Conditions & undertakings accepted', 'D-CoUndAcp'),
-    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn');
+    ('opposition_status', 'opp_cu_ref', 'Conditions & undertakings refused', 'E-CoUndWdn'),
+
+    /* Fee types */
+    ('fee_type', 'APP', 'Application fees', 'APP'),
+    ('fee_type', 'VAR', 'Variation fees', 'VAR'),
+    ('fee_type', 'GRANT', 'Grant fees', 'GRANT'),
+    ('fee_type', 'CONT', 'Continuation fees', 'CONT'),
+    ('fee_type', 'VEH', 'Vehicle fees', 'VEH'),
+    ('fee_type', 'GRANTINT', 'Grant Interim fees', 'GRANTINT'),
+    ('fee_type', 'INTVEH', 'Interim vehicle fees', 'INTVEH'),
+    ('fee_type', 'DUP', 'Duplicate Disc fees', 'DUP'),
+    ('fee_type', 'ANN', 'Annual Reminder fees', 'ANN'),
+    ('fee_type', 'GRANTVAR', 'Grant Variation Vehicle fees', 'GRANTVAR'),
+    ('fee_type', 'BUSAPP', 'Bus Route Application fees', 'BUSAPP'),
+    ('fee_type', 'BUSVAR', 'Bus Route Variation fees', 'BUSVAR'),
+    ('fee_type', 'GVANNVEH', 'GV Annual Vehicle fees', 'GVANNVEH'),
+    ('fee_type', 'INTUPGRADEVEH', 'Interim Upgrade Vehicle fees', 'INTUPGRADEVEH'),
+    ('fee_type', 'INTAMENDED', 'GV Interim Amended Dummy Fees', 'INTAMENDED'),
+    ('fee_type', 'IRFOPSVAPP', 'IRFO PSV App fees', 'IRFOPSVAPP'),
+    ('fee_type', 'IRFOPSVANN', 'IRFO PSV Ann fees', 'IRFOPSVANN'),
+    ('fee_type', 'IRFOPSVCOPY', 'IRFO PSV Copy fees', 'IRFOPSVCOPY'),
+    ('fee_type', 'IRFOGVPERMIT', 'IRFO GV Permit fees', 'IRFOGVPERMIT'),
+    ('fee_type', 'PHOTOCOPY', 'Photocopying fees', 'IRFOGVPERMIT'),
+    ('fee_type', 'COURT', 'Court fees', 'IRFOGVPERMIT'),
+    ('fee_type', 'MISC', 'Other Miscellaneous fees', 'MISC');
+
 
  INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),
@@ -3366,6 +3391,7 @@ NULL,1),
 (285,null,'Article 6','Declare unfit',0,0,NULL,NULL,NULL,NULL,1),
 (286,null,'Article 6','Repute not lost',0,0,NULL,NULL,NULL,NULL,1);
 
+-- standard fee types
 INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `effective_from`, `expire_fee_with_licence`, `fee_type`, `five_year_value`, `fixed_value`, `created_on`, `description`, `last_modified_on`, `version`) VALUES
 (1,'acr_immediate',479,'lcat_gv',479,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'APP',0.00,160.00,'2002-05-14 17:45:00','GV Application Fee','2002-05-14 17:45:00',1),
 (2,'acr_immediate',479,'lcat_psv',479,'ltyp_r',NULL,0.00,'1995-01-01 00:00:00',0,'APP',0.00,100.00,'2002-05-14 17:45:00','PSV/R Application Fee','2002-05-14 17:45:00',1),
@@ -3862,10 +3888,14 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (20038,'acr_immediate',1,'lcat_psv',1,'ltyp_si',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SI Variation Fee','2014-03-21 17:12:07',1),
 (20039,'acr_immediate',1,'lcat_psv',1,'ltyp_sn',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SN Variation Fee','2014-03-21 17:12:07',1),
 (20040,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',0,'VAR',0.00,123.00,'2014-03-21 17:12:07','PSV/SR Variation Fee','2014-03-21 17:12:07',1),
-(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1),
-(20050,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,99.00,'2014-04-01 10:30:07','Test data: Misc. bus permit fee','2014-04-01 10:30:07',1),
-(20051,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: GV photocopying charge','2014-04-01 10:30:07',1),
-(20052,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Test data: PSV photocopying charge','2014-04-01 10:30:07',1);
+(20041,'acr_immediate',1,'lcat_psv',1,'ltyp_sr',NULL,0.00,'2020-04-30 23:59:59',1,'CONT',0.00,62.00,'2014-03-21 17:12:07','PSV/SR Continuation Fee','2014-03-21 17:12:07',1);
+
+-- miscellaneous fee types - subject to change
+INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `effective_from`, `expire_fee_with_licence`, `fee_type`, `five_year_value`, `fixed_value`, `created_on`, `description`, `last_modified_on`, `version`) VALUES
+(20050,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'BUSPERMIT',0.00,99.00,'2014-04-01 10:30:07','Bus permit fee','2014-04-01 10:30:07',1),
+(20051,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'PHOTOCOPY',0.00,10.00,'2014-04-01 10:30:07','Photocopying charge','2014-04-01 10:30:07',1),
+(20052,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'COURT',0.00,10.00,'2014-04-01 10:30:07','Court fee','2014-04-01 10:30:07',1),
+(20053,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Other miscellaneous','2014-04-01 10:30:07',1);
 
 INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
 VALUES
