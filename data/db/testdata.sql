@@ -1056,6 +1056,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
     'anotheruser@test9876.com'),
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
+    NULL),
+    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi2',140,
     NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
@@ -1066,11 +1068,21 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 5),
     (1, 6),
     (1, 7),
-    (1, 12504);
+    (1, 12504),
+    (1, 12505);
 
-INSERT INTO `user_role` (`id`, `user_id`, `role_id`, `created_by`,`last_modified_by`,`expiry_date`,
+INSERT INTO `user_role` (`user_id`, `role_id`, `created_by`,`last_modified_by`,`expiry_date`,
 `valid_from`, `created_on`,`version`) VALUES
-    (1, 12504, 3, 1, 1, NULL,NULL,NULL,1);
+    (12504, 3, 1, 1, NOW(),NOW(),NOW(),1),
+    (12505, 5, 1, 1, NOW(),NOW(),NOW(),1),
+    (1, 1, 1, 1, NOW(),NOW(),NOW(),1), -- loggedinuser=internal-limited-read-only
+    (2, 4, 1, 1, NOW(),NOW(),NOW(),1), -- johnspellman=internal-admin
+    (3, 4, 1, 1, NOW(),NOW(),NOW(),1), -- stevefox=internal-admin
+    (4, 3, 1, 1, NOW(),NOW(),NOW(),1), -- amywrigg=internal-case-worker
+    (5, 4, 1, 1, NOW(),NOW(),NOW(),1), -- philjowitt=internal-admin
+    (6, 4, 1, 1, NOW(),NOW(),NOW(),1), -- kevinrooney=internal-admin
+    (7, 4, 1, 1, NOW(),NOW(),NOW(),1), -- sarahthompson=internal-admin
+    (8, 3, 1, 1, NOW(),NOW(),NOW(),1); -- anotheruser=internal-case-worker
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `psv_type`, `created_on`,
