@@ -47,7 +47,7 @@ class ApplicationCompletion implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Application
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="applicationCompletions")
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="applicationCompletion")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;

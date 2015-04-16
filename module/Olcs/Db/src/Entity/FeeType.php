@@ -19,7 +19,9 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_fee_type_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"})
+ *        @ORM\Index(name="ix_fee_type_accrual_rule", columns={"accrual_rule"}),
+ *        @ORM\Index(name="ix_fee_type_fee_type", columns={"fee_type"}),
+ *        @ORM\Index(name="ix_fee_type_is_miscellaneous", columns={"is_miscellaneous"})
  *    }
  * )
  */
@@ -29,7 +31,7 @@ class FeeType implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\Description255Field,
-        Traits\GoodsOrPsvManyToOneAlt1,
+        Traits\GoodsOrPsvManyToOne,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -77,9 +79,10 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Fee type
      *
-     * @var string
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="string", name="fee_type", length=20, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="fee_type", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
 
@@ -100,6 +103,15 @@ class FeeType implements Interfaces\EntityInterface
      * @ORM\Column(type="decimal", name="fixed_value", precision=10, scale=2, nullable=true)
      */
     protected $fixedValue;
+
+    /**
+     * Is miscellaneous
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_miscellaneous", nullable=false, options={"default": 0})
+     */
+    protected $isMiscellaneous = 0;
 
     /**
      * Set the accrual rule
@@ -196,7 +208,7 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Set the fee type
      *
-     * @param string $feeType
+     * @param \Olcs\Db\Entity\RefData $feeType
      * @return FeeType
      */
     public function setFeeType($feeType)
@@ -209,7 +221,7 @@ class FeeType implements Interfaces\EntityInterface
     /**
      * Get the fee type
      *
-     * @return string
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getFeeType()
     {
@@ -260,5 +272,28 @@ class FeeType implements Interfaces\EntityInterface
     public function getFixedValue()
     {
         return $this->fixedValue;
+    }
+
+    /**
+     * Set the is miscellaneous
+     *
+     * @param boolean $isMiscellaneous
+     * @return FeeType
+     */
+    public function setIsMiscellaneous($isMiscellaneous)
+    {
+        $this->isMiscellaneous = $isMiscellaneous;
+
+        return $this;
+    }
+
+    /**
+     * Get the is miscellaneous
+     *
+     * @return boolean
+     */
+    public function getIsMiscellaneous()
+    {
+        return $this->isMiscellaneous;
     }
 }

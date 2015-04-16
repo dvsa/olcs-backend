@@ -71,6 +71,7 @@ TRUNCATE TABLE `tm_employment`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
 TRUNCATE TABLE `user`;
+TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `organisation_user`;
 TRUNCATE TABLE `vehicle`;
 TRUNCATE TABLE `cases`;
@@ -90,7 +91,6 @@ TRUNCATE TABLE `si_penalty_erru_imposed`;
 TRUNCATE TABLE `si_penalty_imposed_type`;
 TRUNCATE TABLE `si_penalty_requested_type`;
 TRUNCATE TABLE `si_penalty_type`;
-TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
@@ -110,6 +110,7 @@ TRUNCATE TABLE `case_outcome`;
 TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
+TRUNCATE TABLE `user_role`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
@@ -538,8 +539,8 @@ INSERT INTO `fee` (`id`, `application_id`, `licence_id`, `bus_reg_id`, `fee_stat
     (92,1,110,9,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 2','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (93,1,110,10,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 3','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
     (94,1,110,11,'lfs_ot',NULL,1,NULL,'Bus Route Variation Fee PD2737280/3 Variation 4','2013-10-23 00:00:00',NULL,60.00,0.00,NULL,NULL,1,NULL,NULL,189),
-    (97,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 1','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20051),
-    (98,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Miscellaneous Fee 2','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20052);
+    (97,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Photocopying charge','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20051),
+    (98,NULL,NULL,NULL,'lfs_ot',NULL,1,NULL,'Court fee','2015-04-01 12:34:56',NULL,123.45,0.00,NULL,NULL,1,NULL,NULL,20052);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `enforcement_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -743,9 +744,11 @@ INSERT INTO `opposition`
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'validity_no', 'Valid notes', 'Notes', null,
+  '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 1, 'Valid notes', 'Notes', null, '2014-02-20 00:00:00',
+  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'validity_yes', 'Valid notes', 'Notes', null,
+  '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 
 INSERT INTO `opposition_grounds`
@@ -1274,9 +1277,9 @@ INSERT INTO `serious_infringement`
 `si_category_id`, `case_id`, `check_date`, `erru_response_sent`,`erru_response_time`, `infringement_date`,
 `notification_number`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 123456, null, null,'2014-05-04 17:50:06',
+  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 1, null, null,'2014-05-04 17:50:06',
   '2014-05-04 17:50:06', 1),
-  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 123456, null, null,'2014-05-04 17:50:06',
+  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 2, null, null,'2014-05-04 17:50:06',
   '2014-05-04 17:50:06', 1);
 
 INSERT INTO `si_penalty`

@@ -48,7 +48,7 @@ class BusShortNotice implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="shortNotices")
+     * @ORM\OneToOne(targetEntity="Olcs\Db\Entity\BusReg", inversedBy="shortNotice")
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */
     protected $busReg;
