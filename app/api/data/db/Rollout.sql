@@ -6945,15 +6945,15 @@ INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
     (2, 'internal-read-only', '', 'Internal - Read only'), -- internal only
     (3, 'internal-case-worker', '', 'Internal - Case worker'), -- internal only
     (4, 'internal-admin', '', 'Internal - Admin'), -- internal only
-    
+
     (5, 'operator-admin', '', 'Operator - Admin'), -- selfserve
     (6, 'operator-user', '', 'Operator - User'), -- selfserve
     (7, 'operator-tm', '', 'Operator - Transport Manager'), -- selfserve
     (8, 'operator-ebsr', '', 'Operator - EBSR'), -- selfserve
-    
+
     (9, 'partner-admin', '', 'Partner - Admin'), -- selfserve
     (10, 'partner-user', '', 'Partner - User'), -- selfserve
-    
+
     (11, 'local-authority-admin', '', 'Local Authority administrator'), -- selfserve
     (12, 'local-authority-user', '', 'Local Authority user'); -- selfserve
 
@@ -6966,14 +6966,15 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (5, 'internal-edit', 'EDIT'),
     (6, 'internal-view', 'VIEW'),
     (7, 'internal-user', 'IUSER'), -- used to distinguish between Internal and Selfserve users
-    
+
     (8, 'selfserve-user', 'SUSER'), -- used to distinguish between Internal and Selfserve users
     (9, 'selfserve-ebsr', 'SEBSR'),
     (10, 'selfserve-ebsr-documents', 'SEDOC'),
-    
+
     (11, 'selfserve-lva', 'SLVA'),
     (12, 'selfserve-admin', 'SADM'),
     (13, 'selfserve-tm', 'STM'),
+    (14, 'selfserve-tm-dashboard', 'STMD');
 
     (14, 'selfserve-manage-user', 'SSMU');
 
@@ -7027,6 +7028,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (8, 10), -- operator ebsr sees ebsr docs
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
+    (7, 14); -- operator TM has selfserver dashboard
     (5, 14); -- "operator-admin" can access "selfserve-manage-user"
 
 INSERT INTO `financial_standing_rate` (
