@@ -76,6 +76,15 @@ class Licence implements Interfaces\EntityInterface
     protected $correspondenceCd;
 
     /**
+     * Curtailed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="curtailed_date", nullable=true)
+     */
+    protected $curtailedDate;
+
+    /**
      * Enforcement area
      *
      * @var \Olcs\Db\Entity\EnforcementArea
@@ -142,6 +151,15 @@ class Licence implements Interfaces\EntityInterface
     protected $reviewDate;
 
     /**
+     * Revoked date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="revoked_date", nullable=true)
+     */
+    protected $revokedDate;
+
+    /**
      * Safety ins
      *
      * @var string
@@ -185,6 +203,15 @@ class Licence implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="surrendered_date", nullable=true)
      */
     protected $surrenderedDate;
+
+    /**
+     * Suspended date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="suspended_date", nullable=true)
+     */
+    protected $suspendedDate;
 
     /**
      * Tachograph ins
@@ -415,6 +442,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the curtailed date
+     *
+     * @param \DateTime $curtailedDate
+     * @return Licence
+     */
+    public function setCurtailedDate($curtailedDate)
+    {
+        $this->curtailedDate = $curtailedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the curtailed date
+     *
+     * @return \DateTime
+     */
+    public function getCurtailedDate()
+    {
+        return $this->curtailedDate;
+    }
+
+    /**
      * Set the enforcement area
      *
      * @param \Olcs\Db\Entity\EnforcementArea $enforcementArea
@@ -576,6 +626,29 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the revoked date
+     *
+     * @param \DateTime $revokedDate
+     * @return Licence
+     */
+    public function setRevokedDate($revokedDate)
+    {
+        $this->revokedDate = $revokedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the revoked date
+     *
+     * @return \DateTime
+     */
+    public function getRevokedDate()
+    {
+        return $this->revokedDate;
+    }
+
+    /**
      * Set the safety ins
      *
      * @param string $safetyIns
@@ -688,6 +761,29 @@ class Licence implements Interfaces\EntityInterface
     public function getSurrenderedDate()
     {
         return $this->surrenderedDate;
+    }
+
+    /**
+     * Set the suspended date
+     *
+     * @param \DateTime $suspendedDate
+     * @return Licence
+     */
+    public function setSuspendedDate($suspendedDate)
+    {
+        $this->suspendedDate = $suspendedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the suspended date
+     *
+     * @return \DateTime
+     */
+    public function getSuspendedDate()
+    {
+        return $this->suspendedDate;
     }
 
     /**
