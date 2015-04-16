@@ -2864,12 +2864,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('validity', 'validity_no', 'No', 0),
     ('validity', 'validity_undecided', 'Undecided', null);
 
-INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
-    ('tmap_status', 'tmap_st_incomplete', 'Incomplete', null),
-    ('tmap_status', 'tmap_st_awaiting_signature', 'Awaiting signature', null),
-    ('tmap_status', 'tmap_st_tm_signed', 'Transport Manager signed', null),
-    ('tmap_status', 'tmap_st_operator_signed', 'Operator signed', null),
-    ('tmap_status', 'tmap_st_postal_application', 'Postal application', null);
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_order`, `olbs_key`) VALUES
+    ('tmap_status', 'tmap_st_incomplete', 'Incomplete', 2, null),
+    ('tmap_status', 'tmap_st_awaiting_signature', 'Awaiting signature', 3, null),
+    ('tmap_status', 'tmap_st_tm_signed', 'Transport Manager signed', 4, null),
+    ('tmap_status', 'tmap_st_operator_signed', 'Operator signed', 5, null),
+    ('tmap_status', 'tmap_st_postal_application', 'Postal application', 1, null),
+    ('tmap_status', 'tmap_st_received', 'Received', 6, null);
 
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
