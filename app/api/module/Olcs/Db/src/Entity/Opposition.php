@@ -54,7 +54,7 @@ class Opposition implements Interfaces\EntityInterface
      * @var \Olcs\Db\Entity\Application
      *
      * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Application", inversedBy="oppositions")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
 
