@@ -56,6 +56,15 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     protected $requestedOn;
 
     /**
+     * Transaction id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="transaction_id", length=32, nullable=true)
+     */
+    protected $transactionId;
+
+    /**
      * Set the ip address
      *
      * @param string $ipAddress
@@ -145,5 +154,28 @@ class CompaniesHouseRequest implements Interfaces\EntityInterface
     public function getRequestedOn()
     {
         return $this->requestedOn;
+    }
+
+    /**
+     * Set the transaction id
+     *
+     * @param string $transactionId
+     * @return CompaniesHouseRequest
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+
+        return $this;
+    }
+
+    /**
+     * Get the transaction id
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
     }
 }
