@@ -161,6 +161,9 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
 
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
+
         $service->getList($data);
     }
 
@@ -247,6 +250,9 @@ XML;
             ->method('getService')
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
+
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -335,6 +341,9 @@ XML;
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
 
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
+
         $service->getList($data);
     }
 
@@ -418,6 +427,9 @@ XML;
             ->method('getService')
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
+
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -508,6 +520,9 @@ XML;
             ->method('getService')
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
+
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -601,6 +616,9 @@ XML;
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
 
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
+
         $response = $service->getList($data);
 
         $this->assertEquals($expected, $response);
@@ -688,6 +706,9 @@ XML;
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
 
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
+
         $response = $service->getList($data);
 
         $this->assertEquals($expected, $response);
@@ -765,6 +786,9 @@ XML;
             ->method('getService')
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
+
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -866,6 +890,9 @@ XML;
             ->method('getService')
             ->with('CompaniesHouseRequest')
             ->will($this->returnValue($mockService));
+
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
         $this->assertEquals($expected, $response);
