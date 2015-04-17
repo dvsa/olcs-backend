@@ -36,6 +36,7 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\AdditionalInformation4000Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\DeclarationConfirmationField,
         Traits\CustomDeletedDateField,
         Traits\HoursFriField,
         Traits\HoursMonField,
@@ -60,15 +61,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Declaration confirmation
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="declaration_confirmation", nullable=false, options={"default": 0})
-     */
-    protected $declarationConfirmation = 0;
 
     /**
      * Is owner
@@ -155,29 +147,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the declaration confirmation
-     *
-     * @param boolean $declarationConfirmation
-     * @return TransportManagerApplication
-     */
-    public function setDeclarationConfirmation($declarationConfirmation)
-    {
-        $this->declarationConfirmation = $declarationConfirmation;
-
-        return $this;
-    }
-
-    /**
-     * Get the declaration confirmation
-     *
-     * @return boolean
-     */
-    public function getDeclarationConfirmation()
-    {
-        return $this->declarationConfirmation;
     }
 
     /**
