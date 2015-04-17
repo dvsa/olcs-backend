@@ -6974,9 +6974,9 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (11, 'selfserve-lva', 'SLVA'),
     (12, 'selfserve-admin', 'SADM'),
     (13, 'selfserve-tm', 'STM'),
-    (14, 'selfserve-tm-dashboard', 'STMD');
+    (14, 'selfserve-tm-dashboard', 'STMD'),
 
-    (14, 'selfserve-manage-user', 'SSMU');
+    (15, 'selfserve-manage-user', 'SSMU');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (1, 7), -- all internal roles are internal users
@@ -7028,8 +7028,8 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (8, 10), -- operator ebsr sees ebsr docs
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
-    (7, 14); -- operator TM has selfserver dashboard
-    (5, 14); -- "operator-admin" can access "selfserve-manage-user"
+    (7, 14), -- operator TM has selfserver dashboard
+    (5, 15); -- "operator-admin" can access "selfserve-manage-user"
 
 INSERT INTO `financial_standing_rate` (
     `id`,
