@@ -799,7 +799,7 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `title`, `birth_date`, `forename`,
 `family_name`, `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
-    (4,NULL,NULL,'Aldershot','title_mr','1960-02-01 00:00:00','Jack','Da Ripper',NULL,NULL,NULL,1,NULL),
+    (4,NULL,NULL,'Aldershot','title_mr','1960-02-01 00:00:00','Terry','Barret-Edgecombe',NULL,NULL,NULL,1,NULL),
     (8,NULL,NULL,'Birmingham','title_mr','1960-02-01 00:00:00','Simon','Fish',NULL,NULL,NULL,1,NULL),
     (9,NULL,NULL,'Cheltenham','title_mr','1960-02-15 00:00:00','John','Smith',NULL,NULL,NULL,1,NULL),
     (10,NULL,NULL,'Darlington','title_mr','1965-07-12 00:00:00','Peter','Smith',NULL,NULL,NULL,1,NULL),
