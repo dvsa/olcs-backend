@@ -132,9 +132,9 @@ file_extension, issued_date,document_store_id) VALUES
 
 INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
 local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
-(1, 801, 802, 800, 2, 1, 0, 1, 0, 1, '2014-03-24 16:53:00'),
-(2, 801, 802, 800, 2, 1, 4, 1, 0, 1, '2014-03-24 16:53:00'),
-(3, 801, 802, 800, 2, 1, 13, 1, 0, 1, '2014-03-24 16:53:00');
+(1, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
+(2, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
+(3, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00');
 
 
 
