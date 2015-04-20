@@ -1468,7 +1468,10 @@ return array(
         ),
         'is_owner' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'declaration_confirmation' => array(
+            'type' => 'yesno'
+        ),
     ),
     'statement' => array(
         'case_id' => array(
