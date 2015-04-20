@@ -113,19 +113,30 @@ TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
 
 /* Test documents */
-INSERT IGNORE INTO document(id,licence_id,description,filename,is_digital,category_id,sub_category_id,file_extension,
-issued_date,document_store_id) VALUES
-    (672,7,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
-    (673,7,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
-    (674,7,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
-    (675,7,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
-    (676,7,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
-    (677,7,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
-    (678,7,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
-    (679,7,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
-    (680,7,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
-    (681,7,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
-    (682,7,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00','');
+INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_digital,category_id,sub_category_id,
+file_extension, issued_date,document_store_id) VALUES
+    (672,7,null,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
+    (673,7,null,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
+    (674,7,null,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
+    (675,7,null,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
+    (676,7,null,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
+    (677,7,null,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
+    (678,7,null,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
+    (679,7,null,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
+    (680,7,null,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
+    (681,7,null,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
+    (682,7,null,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
+    (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'doc_zip','2014-08-28 14:03:00',''),
+    (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'doc_pdf','2014-08-28 14:03:00',''),
+    (802,110,2,'Test bus route','route.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00','');
+
+INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
+local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
+(1, 801, 802, 800, 2, 1, 0, 1, 0, 1, '2014-03-24 16:53:00'),
+(2, 801, 802, 800, 2, 1, 4, 1, 0, 1, '2014-03-24 16:53:00'),
+(3, 801, 802, 800, 2, 1, 13, 1, 0, 1, '2014-03-24 16:53:00');
+
+
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
