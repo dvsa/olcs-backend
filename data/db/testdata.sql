@@ -81,6 +81,7 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `task_allocation_rule`;
+TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
@@ -1261,7 +1262,6 @@ INSERT INTO `disc_sequence` (
     (19,'lcat_gv',10231,'ON',4003,'ON',14533,'ON','N',1,0,0),
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
-ALTER TABLE companies_house_request AUTO_INCREMENT=53;
 
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`,
