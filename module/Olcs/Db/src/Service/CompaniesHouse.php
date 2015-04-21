@@ -73,9 +73,7 @@ class CompaniesHouse extends ServiceAbstract
 
         $this->setCredentials();
 
-        $transactionId = $this->getService('CompaniesHouseRequest')
-            ->initiateRequest($requestType)
-            ->getTransactionId();
+        $transactionId = $this->generateTransactionId();
 
         $this->setTransactionId($transactionId);
 
@@ -408,5 +406,13 @@ class CompaniesHouse extends ServiceAbstract
     private function setUserId($userId)
     {
         $this->userId = $userId;
+    }
+
+    /**
+     * @return int
+     */
+    protected function generateTransactionId()
+    {
+        return microtime(true)*10000;
     }
 }
