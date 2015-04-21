@@ -70,6 +70,7 @@ TRUNCATE TABLE `tm_case_decision_unfitness`;
 TRUNCATE TABLE `tm_employment`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
+TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `user`;
 TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `organisation_user`;
