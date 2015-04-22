@@ -56,7 +56,7 @@ class CompaniesHouse extends ServiceAbstract
     private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR', 'LLPDMEM'];
 
     /**
-     * Returns a list of records aftegit diffr Companies House API's call
+     * Returns a list of records after Companies House API's call
      *
      * @param array $data array with params
      * @return array
@@ -69,13 +69,24 @@ class CompaniesHouse extends ServiceAbstract
         }
 
         list($requestType, $method) = $this->getRequestType($data);
+        $value = $data['value'];
 
         $this->setCredentials();
 
-        $this->setTransactionId($this->getService('CompaniesHouseRequest')->initiateRequest($requestType)->getId());
+        $transactionId = $this->generateTransactionId();
+
+        $this->setTransactionId($transactionId);
+
+        $this->getLogger()->info(
+            'Companies House request',
+            [
+                'data' => compact('requestType', 'method', 'value', 'transactionId')
+            ]
+        );
 
         try {
-            $result = $this->$method($this->getNewGateway(), $data['value']);
+            $result = $this->$method($this->getNewGateway(), $value);
+            $this->getLogger()->info('Companies House response', ['data' => compact('result')]);
         } catch (\Exception $ex) {
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }
@@ -395,5 +406,13 @@ class CompaniesHouse extends ServiceAbstract
     private function setUserId($userId)
     {
         $this->userId = $userId;
+    }
+
+    /**
+     * @return int
+     */
+    protected function generateTransactionId()
+    {
+        return microtime(true)*10000;
     }
 }
