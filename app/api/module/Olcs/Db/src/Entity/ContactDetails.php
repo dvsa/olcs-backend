@@ -64,15 +64,6 @@ class ContactDetails implements Interfaces\EntityInterface
     protected $contactType;
 
     /**
-     * Family name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="family_name", length=40, nullable=true)
-     */
-    protected $familyName;
-
-    /**
      * Fao
      *
      * @var string
@@ -80,15 +71,6 @@ class ContactDetails implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="fao", length=90, nullable=true)
      */
     protected $fao;
-
-    /**
-     * Forename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="forename", length=40, nullable=true)
-     */
-    protected $forename;
 
     /**
      * Person
@@ -173,29 +155,6 @@ class ContactDetails implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the family name
-     *
-     * @param string $familyName
-     * @return ContactDetails
-     */
-    public function setFamilyName($familyName)
-    {
-        $this->familyName = $familyName;
-
-        return $this;
-    }
-
-    /**
-     * Get the family name
-     *
-     * @return string
-     */
-    public function getFamilyName()
-    {
-        return $this->familyName;
-    }
-
-    /**
      * Set the fao
      *
      * @param string $fao
@@ -216,29 +175,6 @@ class ContactDetails implements Interfaces\EntityInterface
     public function getFao()
     {
         return $this->fao;
-    }
-
-    /**
-     * Set the forename
-     *
-     * @param string $forename
-     * @return ContactDetails
-     */
-    public function setForename($forename)
-    {
-        $this->forename = $forename;
-
-        return $this;
-    }
-
-    /**
-     * Get the forename
-     *
-     * @return string
-     */
-    public function getForename()
-    {
-        return $this->forename;
     }
 
     /**
