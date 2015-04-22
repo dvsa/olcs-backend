@@ -6976,9 +6976,36 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (13, 'selfserve-tm', 'STM'),
     (14, 'selfserve-tm-dashboard', 'STMD'),
 
-    (15, 'selfserve-manage-user', 'SSMU');
+    (15, 'selfserve-manage-user', 'SSMU'),
+
+    -- add a permission for each role
+    (16, 'internal-limited-read-only', 'INTL'),
+    (17, 'internal-read-only', 'INTR'),
+    (18, 'internal-case-worker', 'INTC'),
+    (19, 'internal-admin', 'INTA'),
+    (20, 'operator-admin', 'OPAD'),
+    (21, 'operator-user', 'OPUS'),
+    (22, 'operator-tm', 'OPTM'),
+    (23, 'operator-ebsr', 'OEBSR'),
+    (24, 'partner-admin', 'PAAD'),
+    (25, 'partner-user', 'PAUS'),
+    (26, 'local-authority-admin', 'LAAD'),
+    (27, 'local-authority-user', 'LAUS');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
+    -- set each role to it's respective permission
+    (1, 16),
+    (2, 17),
+    (3, 18),
+    (4, 19),
+    (5, 20),
+    (6, 21),
+    (7, 22),
+    (8, 23),
+    (9, 24),
+    (10, 25),
+    (11, 26),
+    (12, 27),
     (1, 7), -- all internal roles are internal users
     (2, 7), -- all internal roles are internal users
     (3, 7), -- all internal roles are internal users

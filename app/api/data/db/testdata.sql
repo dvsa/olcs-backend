@@ -127,17 +127,29 @@ file_extension, issued_date,document_store_id) VALUES
     (680,7,null,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
     (681,7,null,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
     (682,7,null,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
+
     (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'doc_zip','2014-08-28 14:03:00',''),
     (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'doc_pdf','2014-08-28 14:03:00',''),
-    (802,110,2,'Test bus route','route.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00','');
+    (802,110,2,'Test bus route','route.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00',''),
+
+    (803,110,2,'Test bus transxchange for LA 2','transxchange_LA2.zip',1,3,107,'doc_zip',
+    '2014-08-28 14:03:00',''),
+    (804,110,2,'Test bus transxchange PDF for LA 2','transxchange_LA2.pdf',1,3,108,'doc_pdf',
+    '2014-08-28 14:03:00',
+    ''),
+    (805,110,2,'Test bus route for LA 2','route_LA2_Org1.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00',''),
+
+    (806,110,2,'Test bus transxchange for LA 1','transxchange_LA1.zip',1,3,107,'doc_zip',
+    '2014-08-28 14:03:00',''),
+    (807,110,2,'Test bus transxchange PDF for LA 1','transxchange_LA1.pdf',1,3,108,'doc_pdf',
+    '2014-08-28 14:03:00',''),
+    (808,110,2,'Test bus route for LA 1','route_LA1.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00','');
 
 INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
 local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
-(1, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
-(2, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
-(3, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00');
-
-
+(1, 801, 802, 800, 2, 1, NULL, 1, 0, 13, '2014-03-24 16:53:00'),
+(2, 804, 805, 803, 2, 1, 2, 1, 0, 14, '2014-03-24 16:53:00'),
+(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -1053,27 +1065,28 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`) VALUES
+`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`,
+`local_authority_id`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
-    'loggedin@test9876.com'),
+    'loggedin@test9876.com', 1),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
-    'john.spellman@test9876.com'),
+    'john.spellman@test9876.com', NULL),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
-    'stevefox@test9876.com'),
+    'stevefox@test9876.com', NULL),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',130,
-    'amywrigg@test9876.com'),
+    'amywrigg@test9876.com', NULL),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',131,
-    'philjowitt@test9876.com'),
+    'philjowitt@test9876.com', NULL),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',132,
-    'kevinrooney@test9876.com'),
+    'kevinrooney@test9876.com', NULL),
     (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
-    'sarahthompson@test9876.com'),
+    'sarahthompson@test9876.com', NULL),
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
-    'anotheruser@test9876.com'),
+    'anotheruser@test9876.com', NULL),
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
-    NULL),
+    NULL, NULL),
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi2',140,
-    NULL);
+    NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
