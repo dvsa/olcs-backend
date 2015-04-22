@@ -33,7 +33,6 @@ class Application implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\DeclarationConfirmationField,
         Traits\CustomDeletedDateField,
         Traits\GoodsOrPsvManyToOne,
         Traits\GrantedDateField,
@@ -81,6 +80,15 @@ class Application implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false, options={"default": 0})
      */
     protected $convictionsConfirmation = 0;
+
+    /**
+     * Declaration confirmation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false, options={"default": 0})
+     */
+    protected $declarationConfirmation = 0;
 
     /**
      * Disqualified
@@ -591,6 +599,29 @@ class Application implements Interfaces\EntityInterface
     public function getConvictionsConfirmation()
     {
         return $this->convictionsConfirmation;
+    }
+
+    /**
+     * Set the declaration confirmation
+     *
+     * @param string $declarationConfirmation
+     * @return Application
+     */
+    public function setDeclarationConfirmation($declarationConfirmation)
+    {
+        $this->declarationConfirmation = $declarationConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the declaration confirmation
+     *
+     * @return string
+     */
+    public function getDeclarationConfirmation()
+    {
+        return $this->declarationConfirmation;
     }
 
     /**
