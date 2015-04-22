@@ -36,7 +36,6 @@ class TransportManagerApplication implements Interfaces\EntityInterface
         Traits\AdditionalInformation4000Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
-        Traits\DeclarationConfirmationField,
         Traits\CustomDeletedDateField,
         Traits\HoursFriField,
         Traits\HoursMonField,

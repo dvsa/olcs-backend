@@ -625,6 +625,11 @@ VALUES
 	('ZM', NULL, NULL, 'Zambia', 0, NULL, NULL, 1),
 	('ZW', NULL, NULL, 'Zimbabwe', 0, NULL, NULL, 1);
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('queue_type', 'que_typ_sleep', 'SLEEP', null),
+    ('queue_status', 'que_sts_queued', 'Queued', null),
+    ('queue_status', 'que_sts_processing', 'Processing', null),
+    ('queue_status', 'que_sts_complete', 'Complete', null);
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
