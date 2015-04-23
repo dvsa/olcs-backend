@@ -626,6 +626,15 @@ VALUES
 
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('cont_type', 'con_typ_operator', 'Operator licences', null),
+    ('cont_type', 'con_typ_irfo', 'IRFO', null);
+
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('cont_d_status', 'con_det_sts_prepared', 'Prepared', null),
+    ('cont_d_status', 'con_det_sts_printing', 'Printing', null),
+    ('cont_d_status', 'con_det_sts_printed', 'Printed', null);
+
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
     ('com_lic_sts', 'cl_sts_pending', 'Pending', null),
     ('com_lic_sts', 'cl_sts_active', 'Active', null),
