@@ -903,7 +903,7 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('obj_type', 'otf_rep', 'Representation', null),
     ('opposer_type', 'obj_t_local_auth', 'Local Authority', '1'),
     ('opposer_type', 'obj_t_police', 'Police', '2'),
-    ('opposer_type', 'obj_t_rta', 'RTA', '3'),
+    ('opposer_type', 'obj_t_rta', 'Trade Association', '3'),
     ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4'),
     ('opposer_type', 'obj_t_other', 'Other', '5'),
 
