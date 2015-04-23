@@ -19,7 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_si_penalty_erru_imposed_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_si_penalty_erru_imposed_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_si_penalty_erru_imposed_serious_infringement_id", columns={"serious_infringement_id"}),
- *        @ORM\Index(name="ix_si_penalty_erru_imposed_si_penalty_imposed_type_id", columns={"si_penalty_imposed_type_id"})
+ *        @ORM\Index(name="ix_si_penalty_erru_imposed_si_penalty_imposed_type_id", columns={"si_penalty_imposed_type_id"}),
+ *        @ORM\Index(name="ix_si_penalty_erru_imposed_executed", columns={"executed"})
  *    }
  * )
  */
@@ -40,9 +41,10 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Executed
      *
-     * @var boolean
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\Column(type="boolean", name="executed", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
+     * @ORM\JoinColumn(name="executed", referencedColumnName="id", nullable=true)
      */
     protected $executed;
 
@@ -78,7 +80,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Set the executed
      *
-     * @param boolean $executed
+     * @param \Olcs\Db\Entity\RefData $executed
      * @return SiPenaltyErruImposed
      */
     public function setExecuted($executed)
@@ -91,7 +93,7 @@ class SiPenaltyErruImposed implements Interfaces\EntityInterface
     /**
      * Get the executed
      *
-     * @return boolean
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getExecuted()
     {
