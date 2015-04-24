@@ -10100,6 +10100,14 @@ VALUES
 (2982,'V067','ZE2',1),
 (2983,'V067','ZE3',1);
 
+
+-- Add translation information here
+
+INSERT INTO `ext_translations` (`id`, `locale`, `object_class`, `field`, `foreign_key`, `content`)
+VALUES
+	(1, 'cy-gb', 'Olcs\\Db\\Entity\\RefData', 'description', 'org_t_rc', 'Welsh Version of Registered Company\n');
+
+
 SET foreign_key_checks = 1;
 
 DROP TABLE IF EXISTS task_search_view;
