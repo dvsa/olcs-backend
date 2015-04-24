@@ -2900,6 +2900,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_or
     ('tmap_status', 'tmap_st_postal_application', 'Postal application', 1, null),
     ('tmap_status', 'tmap_st_received', 'Received', 6, null);
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_order`, `olbs_key`) VALUES
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_yes', 'Yes', 1, null),
+  ('tpen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_unknown', 'Unknown', 3, null);
+
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
