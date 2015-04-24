@@ -14,7 +14,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="continuation",
  *    indexes={
- *        @ORM\Index(name="ix_continuation_type", columns={"type"}),
  *        @ORM\Index(name="ix_continuation_month", columns={"month"}),
  *        @ORM\Index(name="ix_continuation_year", columns={"year"}),
  *        @ORM\Index(name="ix_continuation_traffic_area_id", columns={"traffic_area_id"}),
@@ -39,16 +38,6 @@ class Continuation implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="month", nullable=false)
      */
     protected $month;
-
-    /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=true)
-     */
-    protected $type;
 
     /**
      * Year
@@ -80,29 +69,6 @@ class Continuation implements Interfaces\EntityInterface
     public function getMonth()
     {
         return $this->month;
-    }
-
-    /**
-     * Set the type
-     *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return Continuation
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

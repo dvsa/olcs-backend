@@ -1511,9 +1511,6 @@ return array(
         )
     ),
     'continuation_detail' => array(
-        'acceptable' => array(
-            'type' => 'yesno'
-        ),
         'received' => array(
             'type' => 'yesno'
         )
