@@ -27,7 +27,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type", columns={"olbs_key","olbs_type"}),
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number", columns={"notification_number"})
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number", columns={"notification_number"}),
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_workflow_id", columns={"workflow_id"})
  *    }
  * )
  */
@@ -146,6 +147,15 @@ class SeriousInfringement implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategoryType;
+
+    /**
+     * Workflow id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="workflow_id", length=36, nullable=true)
+     */
+    protected $workflowId;
 
     /**
      * Applied penaltie
@@ -435,6 +445,29 @@ class SeriousInfringement implements Interfaces\EntityInterface
     public function getSiCategoryType()
     {
         return $this->siCategoryType;
+    }
+
+    /**
+     * Set the workflow id
+     *
+     * @param string $workflowId
+     * @return SeriousInfringement
+     */
+    public function setWorkflowId($workflowId)
+    {
+        $this->workflowId = $workflowId;
+
+        return $this;
+    }
+
+    /**
+     * Get the workflow id
+     *
+     * @return string
+     */
+    public function getWorkflowId()
+    {
+        return $this->workflowId;
     }
 
     /**

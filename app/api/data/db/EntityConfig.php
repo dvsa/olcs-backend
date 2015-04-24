@@ -1113,9 +1113,6 @@ return array(
                 'entity' => 'SeriousInfringement',
                 'property' => 'imposedErru'
             )
-        ),
-        'executed' => array(
-            'yesno'
         )
     ),
     'si_penalty_erru_requested' => array(
