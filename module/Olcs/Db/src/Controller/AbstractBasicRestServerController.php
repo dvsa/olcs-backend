@@ -316,7 +316,15 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             return $serviceFactory->getService('Generic')->setEntityName($entityName);
         }
 
-        return $serviceFactory->getService($name);
+        $service = $serviceFactory->getService($name);
+        $service->setLanguage($this->getLanguageFromHeader());
+
+        return $service;
+    }
+
+    protected function getLanguageFromHeader()
+    {
+        return $this->getEvent()->getRequest()->getHeaders('accept-language')->getFieldValue();
     }
 
     /**
