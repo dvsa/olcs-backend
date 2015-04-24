@@ -1578,10 +1578,10 @@ INSERT INTO `community_lic` (
     (10, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
-    `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+    `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
+	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `type_id`, `created_by`,
     `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
@@ -1590,10 +1590,10 @@ VALUES
 	(2, 2, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `community_lic_withdrawal` (`id`, `community_lic_id`, `created_by`, `last_modified_by`,
-    `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+    `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
+	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `type_id`,
     `created_by`, `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
