@@ -640,12 +640,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_reg_var_reason', 'brvr_start_end', 'Start & Finish Point', '3'),
     ('bus_reg_var_reason', 'brvr_stops', 'Stopping Places', '4'),
 
-    ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null),
-
  -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
  -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
  -- ('com_lic_sts', 'cl_sts_revoked', 'Revoked', 'Revoked'),
@@ -1088,6 +1082,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),
     (2, 'other_lic_role', 'ol_role_lic_holder', 'Licence Holder', NULL),
     (3, 'other_lic_role', 'ol_role_applicant', 'Applicant', NULL);
+
+ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
+    (2, 'com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
+    (3, 'com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
+    (4, 'com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
+    (5, 'com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null);
 
 -- TM qualifications
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
