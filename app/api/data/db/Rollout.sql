@@ -624,6 +624,10 @@ VALUES
 	('ZM', NULL, NULL, 'Zambia', 0, NULL, NULL, 1),
 	('ZW', NULL, NULL, 'Zimbabwe', 0, NULL, NULL, 1);
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('cont_d_status', 'con_det_sts_prepared', 'Prepared', null),
+    ('cont_d_status', 'con_det_sts_printing', 'Printing', null),
+    ('cont_d_status', 'con_det_sts_printed', 'Printed', null);
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
@@ -2896,6 +2900,11 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_or
     ('tmap_status', 'tmap_st_postal_application', 'Postal application', 1, null),
     ('tmap_status', 'tmap_st_received', 'Received', 6, null);
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_order`, `olbs_key`) VALUES
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_yes', 'Yes', 1, null),
+  ('tpen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_unknown', 'Unknown', 3, null);
+
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -4177,7 +4186,6 @@ VALUES
     (5, 999999, 479, 5, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no advert', '2002-05-14 17:45:01', 1),
     (6, 999999, 479, 6, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
     (7, 9, 479, 7, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var App Incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
-    (8, 1, 479, 8, 479, 85, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var Incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (9, 999999, 479, 9, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - New applications - grant/refusal', '2002-05-14 17:45:01', 1),
     (10, 999999, 479, 10, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - Variation applications - grant/refusal', '2002-05-14 17:45:01', 1),
     (11, 999999, 479, 11, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Licence continued - variation required', '2002-05-14 17:45:01', 1),
@@ -4219,7 +4227,6 @@ VALUES
     (67, 999999, 479, 67, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Change of entity - new app required', '2002-05-14 17:45:01', 1),
     (75, 999999, 479, 75, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV -  Letter confirming grant of minibus permit', '2002-05-14 17:45:01', 1),
     (81, 9, 479, 81, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - New app incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
-    (82, 1, 479, 82, 479, 85, 0, 0, '2002-05-14 17:45:01', 'PSV - New app incomplete - final request for supporting docs', '2002-05-14 17:45:01', 1),
     (83, 999999, 479, 83, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - New app grant set aside - bounced cheque', '2002-05-14 17:45:01', 1),
     (84, 999999, 479, 84, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter allowing continuation of licence without TM', '2002-05-14 17:45:01', 1),
     (85, 999999, 479, 85, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter to operator following 3rd party notification of TM loss', '2002-05-14 17:45:01', 1),
@@ -4460,7 +4467,6 @@ VALUES
     (398, 999999, 1, 398, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no advert (NI)', '2012-09-14 00:00:00', 1),
     (399, 999999, 1, 399, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
     (400, 9, 1, 400, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
-    (401, 1, 1, 401, 1, 85, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (402, 999999, 1, 402, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App - O/C not in Northern Ireland (NI)', '2012-09-14 00:00:00', 1),
     (403, 999999, 1, 403, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
     (404, 999999, 1, 404, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal -no advert (NI)', '2012-09-14 00:00:00', 1),
@@ -10140,7 +10146,7 @@ CREATE VIEW task_search_view AS
       t.is_closed is_closed,
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(tmp.family_name,''), ', ', ifnull(tmp.forename,'')) user_name,
+      concat(ifnull(cdp.family_name,''), ', ', ifnull(cdp.forename,'')) user_name,
      (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
@@ -10152,6 +10158,7 @@ CREATE VIEW task_search_view AS
    left join bus_reg br on (t.bus_reg_id = br.id)
    left join user u on (t.assigned_to_user_id = u.id)
    left join contact_details cd on (u.contact_details_id = cd.id)
+   left join person cdp on (cd.person_id = cdp.id)
    left join team te on (t.assigned_to_team_id = te.id)
 ;
 
