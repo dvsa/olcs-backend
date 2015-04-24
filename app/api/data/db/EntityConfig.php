@@ -1510,4 +1510,9 @@ return array(
             )
         )
     ),
+    'continuation_detail' => array(
+        'received' => array(
+            'type' => 'yesno'
+        )
+    )
 );

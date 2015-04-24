@@ -624,6 +624,10 @@ VALUES
 	('ZM', NULL, NULL, 'Zambia', 0, NULL, NULL, 1),
 	('ZW', NULL, NULL, 'Zimbabwe', 0, NULL, NULL, 1);
 
+INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    ('cont_d_status', 'con_det_sts_prepared', 'Prepared', null),
+    ('cont_d_status', 'con_det_sts_printing', 'Printing', null),
+    ('cont_d_status', 'con_det_sts_printed', 'Printed', null);
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 
