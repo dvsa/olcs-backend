@@ -67,6 +67,10 @@ class BundleQuery implements ServiceLocatorAwareInterface
                 $this->build($childConfig, $childName, $childAlias);
             }
         }
+
+        if (isset($config['sort']) && isset($config['order'])) {
+            $this->qb->addOrderBy($alias . '.' . $config['sort'], $config['order']);
+        }
     }
 
     protected function addJoin($alias, $childName, $childAlias, $childConfig, $joinType = 'left')

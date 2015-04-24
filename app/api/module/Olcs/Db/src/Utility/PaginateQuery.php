@@ -71,7 +71,7 @@ class PaginateQuery
         }
 
         if ($this->sort !== null) {
-            $this->qb->orderBy('m.' . $this->sort, $this->order);
+            $this->qb->addOrderBy('m.' . $this->sort, $this->order);
         }
     }
 
