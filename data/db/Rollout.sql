@@ -2902,8 +2902,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_or
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_order`, `olbs_key`) VALUES
   ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_yes', 'Yes', 1, null),
-  ('tpen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
-  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_unknown', 'Unknown', 3, null);
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_un', 'Unknown', 3, null);
 
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
