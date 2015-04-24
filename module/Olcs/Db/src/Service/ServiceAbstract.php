@@ -154,6 +154,15 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $query = $qb->getQuery();
 
+        $language = $this->getLanguage();
+        //die($language);
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
         $response = $query->getArrayResult();
 
         if (!$response) {
