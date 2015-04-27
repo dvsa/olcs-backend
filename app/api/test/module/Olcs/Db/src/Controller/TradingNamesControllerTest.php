@@ -3,90 +3,135 @@
 /**
  * Tests TradingNames
  *
- * @author Jakub Igla <jakub.igla@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace OlcsTest\Db\Controller;
 
-use PHPUnit_Framework_TestCase;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use OlcsTest\Bootstrap;
 
 /**
  * Tests TradingNames
  *
- * @author Jakub Igla <jakub.igla@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TradingNamesControllerTest extends PHPUnit_Framework_TestCase
+class TradingNamesControllerTest extends MockeryTestCase
 {
-    private $controller;
-
     /**
      * Setup the controller
      */
     protected function setUp()
     {
-        // We may want to inject the ServiceLocator in the future
-        $this->controller = $this->getMock(
-            '\Olcs\Db\Controller\TradingNamesController',
-            array(
-                'respond',
-                'getDataFromQuery',
-                'getService',
-                'formatDataFromJson',
-            )
-        );
+        $this->sm = Bootstrap::getServiceManager();
+
+        $this->sut = m::mock('\Olcs\Db\Controller\TradingNamesController')
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $this->sut->setServiceLocator($this->sm);
     }
 
+    /**
+     * @group tradingNamesController
+     */
     public function testCreateWithResponse()
     {
-        $this->controller->expects($this->once())
-            ->method('formatDataFromJson')
-            ->will($this->returnValue($this->getMock('\Zend\Http\Response')));
+        $data = [
+            'organisation' => 1
+        ];
+        $this->sut
+            ->shouldReceive('checkMethod')
+            ->once()
+            ->shouldReceive('formatDataFromJson')
+            ->andReturn(new \Zend\Http\Response)
+            ->once();
 
-        $this->controller->create([]);
+        $this->assertInstanceOf('\Zend\Http\Response', $this->sut->create($data));
     }
 
+    /**
+     * @group tradingNamesController
+     */
+    public function testCreateWithException()
+    {
+        $data = [
+            'organisation' => 1
+        ];
+        $this->sut
+            ->shouldReceive('checkMethod')
+            ->once()
+            ->shouldReceive('formatDataFromJson')
+            ->andReturn($data)
+            ->once()
+            ->shouldReceive('unknownError')
+            ->andReturn('response')
+            ->once();
+
+        $this->sm->setService(
+            'TradingName',
+            m::mock()
+            ->shouldReceive('getList')
+            ->andThrow('\Exception')
+            ->getMock()
+        );
+        $this->assertEquals('response', $this->sut->create($data));
+    }
+
+    /**
+     * @group tradingNamesController
+     */
     public function testCreateWithData()
     {
-        $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
-        $this->controller->expects($this->any())
-            ->method('getService')
-            ->will($this->returnValue($mockService));
+        $data = [
+            'organisation' => 1,
+            'licence' => 2,
+            'tradingNames' => [
+                ['name' => 'tn1'],
+                ['name' => 'tn2']
+            ]
+        ];
+        $results = [
+            'Results' => [
+                ['name' => 'tn1'],
+                ['name' => 'tn3']
+            ]
+        ];
+        $insert = [
+            'organisation' => $data['organisation'],
+            'licence' => $data['licence'],
+            'name' => 'tn2'
+        ];
+        $delete = [
+            'organisation' => $data['organisation'],
+            'name' => 'tn3'
+        ];
 
-        $this->controller->expects($this->once())
-            ->method('formatDataFromJson')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'licence' => 7,
-                        'tradingNames' => array(
-                            array('name' => 'name', 'licence' => 1)
-                        )
-                    )
-                )
-            );
-
-        $this->controller->create([]);
-    }
-
-    public function testCreateWithExc()
-    {
-        $mockService = $this->getMock('\stdClass', array('deleteList', 'create'));
-
-        $mockService->expects($this->any())
-            ->method('deleteList')
-            ->will($this->throwException(new \Exception));
-
-        $this->controller->expects($this->once())
-            ->method('getService')
-            ->will($this->returnValue($mockService));
-
-        $this->controller->expects($this->once())
-            ->method('formatDataFromJson')
-            ->will(
-                $this->returnValue(
-                    array('name' => 'name', 'licence' => 1)
-                )
-            );
-
-        $this->controller->create([]);
+        $this->sut
+            ->shouldReceive('checkMethod')
+            ->once()
+            ->shouldReceive('formatDataFromJson')
+            ->andReturn($data)
+            ->once()
+            ->shouldReceive('getService')
+            ->with('TradingName')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getList')
+                ->with(['organisation' => $data['organisation']])
+                ->andReturn($results)
+                ->once()
+                ->shouldReceive('create')
+                ->with($insert)
+                ->once()
+                ->shouldReceive('deleteList')
+                ->with($delete)
+                ->once()
+                ->getMock()
+            )
+            ->shouldReceive('respond')
+            ->andReturn('response')
+            ->once();
+        $this->assertEquals('response', $this->sut->create($data));
     }
 }
