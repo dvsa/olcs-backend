@@ -292,7 +292,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      * Get the service
      *
      * @param string $name
-     * @return object
+     * @return \Olcs\Db\Service\ServiceAbstract
      */
     public function getService($name = null)
     {
@@ -313,10 +313,22 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
             $entityName = $this->findEntityClass($name);
 
-            return $serviceFactory->getService('Generic')->setEntityName($entityName);
+            $service = $serviceFactory->getService('Generic');
+            $service->setEntityName($entityName);
+            $service->setLanguage($this->getLanguageFromHeader());
+
+            return $service;
         }
 
-        return $serviceFactory->getService($name);
+        $service = $serviceFactory->getService($name);
+        $service->setLanguage($this->getLanguageFromHeader());
+
+        return $service;
+    }
+
+    protected function getLanguageFromHeader()
+    {
+        return $this->getEvent()->getRequest()->getHeaders('accept-language')->getFieldValue();
     }
 
     /**

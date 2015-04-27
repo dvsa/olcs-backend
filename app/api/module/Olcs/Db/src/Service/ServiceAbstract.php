@@ -8,6 +8,7 @@
 
 namespace Olcs\Db\Service;
 
+use Olcs\Db\Traits\LanguageAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
@@ -26,7 +27,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait,
         EntityManagerAwareTrait,
-        OlcsLoggerAwareTrait;
+        OlcsLoggerAwareTrait,
+        LanguageAwareTrait;
 
     protected $entityNamespace = '\Olcs\Db\Entity\\';
 
@@ -152,6 +154,15 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $query = $qb->getQuery();
 
+        $language = $this->getLanguage();
+
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
         $response = $query->getArrayResult();
 
         if (!$response) {
@@ -182,7 +193,16 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         );
         $paginateQuery->filterQuery();
 
-        $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
+        $query = $qb->getQuery();
+        $query->setHydrationMode(Query::HYDRATE_ARRAY);
+
+        $language = $this->getLanguage();
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
 
         $paginator = new Paginator($query);
 
