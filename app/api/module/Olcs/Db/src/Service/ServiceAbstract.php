@@ -193,9 +193,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         );
         $paginateQuery->filterQuery();
 
-        $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
-
         $query = $qb->getQuery();
+        $query->setHydrationMode(Query::HYDRATE_ARRAY);
 
         $language = $this->getLanguage();
         $query->setHint(
