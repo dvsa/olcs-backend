@@ -15,7 +15,7 @@ use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Olcs\Db\Utility\Paginator;
 use Doctrine\ORM\Query;
 
 /**
@@ -193,14 +193,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         );
         $paginateQuery->filterQuery();
 
-        $query = $qb->getQuery();
-        $query->setHydrationMode(Query::HYDRATE_ARRAY);
+        $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
 
         $language = $this->getLanguage();
-        $query->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
-        );
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
 
