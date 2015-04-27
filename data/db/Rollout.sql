@@ -273,48 +273,48 @@ INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, 
 
 INSERT INTO `enforcement_area` (`id`, `name`, `email_address`, `version`)
 VALUES
-('N001','Featherstone','valtecholcs@gmail.com',1),
-('N002','Linc/Camb','valtecholcs@gmail.com',1),
-('N003','Livingston','valtecholcs@gmail.com',1),
-('N004','Llantrisant','valtecholcs@gmail.com',1),
-('N005','Purfleet','valtecholcs@gmail.com',1),
-('N006','Weedon','valtecholcs@gmail.com',1),
-('NI01','Northern Ireland','valtecholcs@gmail.com',1),
-('V001','Yeading','valtecholcs@gmail.com',1),
-('V003','Edmonton','valtecholcs@gmail.com',1),
-('V004','Mitcham','valtecholcs@gmail.com',1),
-('V006','Gillingham','valtecholcs@gmail.com',1),
-('V007','Hastings','valtecholcs@gmail.com',1),
-('V009','Guildford','valtecholcs@gmail.com',1),
-('V010','Southampton','valtecholcs@gmail.com',1),
-('V018','Exeter','valtecholcs@gmail.com',1),
-('V021','Hereford','valtecholcs@gmail.com',1),
-('V022','Kidderminster','valtecholcs@gmail.com',1),
-('V026','Birmingham','valtecholcs@gmail.com',1),
-('V028','Stoke','valtecholcs@gmail.com',1),
-('V029','Nottingham','valtecholcs@gmail.com',1),
-('V030','Derby','valtecholcs@gmail.com',1),
-('V031','Leicester','valtecholcs@gmail.com',1),
-('V034','Crimplesham','valtecholcs@gmail.com',1),
-('V035','Chelmsford','valtecholcs@gmail.com',1),
-('V037','Leighton Buz','valtecholcs@gmail.com',1),
-('V038','Norwich','valtecholcs@gmail.com',1),
-('V042','Beverley','valtecholcs@gmail.com',1),
-('V045','Grimsby','valtecholcs@gmail.com',1),
-('V046','Sheffield','valtecholcs@gmail.com',1),
-('V048','Leeds','valtecholcs@gmail.com',1),
-('V051','Newcastle','valtecholcs@gmail.com',1),
-('V056','Kirkham','valtecholcs@gmail.com',1),
-('V057','Carlisle','valtecholcs@gmail.com',1),
-('V058','Liverpool','valtecholcs@gmail.com',1),
-('V059','Wrexham','valtecholcs@gmail.com',1),
-('V063','Area 02 Glasgow','valtecholcs@gmail.com',1),
-('V065','Area 02 Inverness','valtecholcs@gmail.com',1),
-('V066','Area 02 Kilmarnock','valtecholcs@gmail.com',1),
-('V067','Aberdeen','valtecholcs@gmail.com',1),
-('V068','Perth','valtecholcs@gmail.com',1),
-('V096','Chadderton','valtecholcs@gmail.com',1),
-('V103','Bristol','valtecholcs@gmail.com',1);
+('N001','Featherstone','Stephen.Liversedge@valtech.co.uk',1),
+('N002','Linc/Camb','Stephen.Liversedge@valtech.co.uk',1),
+('N003','Livingston','Stephen.Liversedge@valtech.co.uk',1),
+('N004','Llantrisant','Stephen.Liversedge@valtech.co.uk',1),
+('N005','Purfleet','Stephen.Liversedge@valtech.co.uk',1),
+('N006','Weedon','Stephen.Liversedge@valtech.co.uk',1),
+('NI01','Northern Ireland','Stephen.Liversedge@valtech.co.uk',1),
+('V001','Yeading','Stephen.Liversedge@valtech.co.uk',1),
+('V003','Edmonton','Stephen.Liversedge@valtech.co.uk',1),
+('V004','Mitcham','Stephen.Liversedge@valtech.co.uk',1),
+('V006','Gillingham','Stephen.Liversedge@valtech.co.uk',1),
+('V007','Hastings','Stephen.Liversedge@valtech.co.uk',1),
+('V009','Guildford','Stephen.Liversedge@valtech.co.uk',1),
+('V010','Southampton','Stephen.Liversedge@valtech.co.uk',1),
+('V018','Exeter','Stephen.Liversedge@valtech.co.uk',1),
+('V021','Hereford','Stephen.Liversedge@valtech.co.uk',1),
+('V022','Kidderminster','Stephen.Liversedge@valtech.co.uk',1),
+('V026','Birmingham','Stephen.Liversedge@valtech.co.uk',1),
+('V028','Stoke','Stephen.Liversedge@valtech.co.uk',1),
+('V029','Nottingham','Stephen.Liversedge@valtech.co.uk',1),
+('V030','Derby','Stephen.Liversedge@valtech.co.uk',1),
+('V031','Leicester','Stephen.Liversedge@valtech.co.uk',1),
+('V034','Crimplesham','Stephen.Liversedge@valtech.co.uk',1),
+('V035','Chelmsford','Stephen.Liversedge@valtech.co.uk',1),
+('V037','Leighton Buz','Stephen.Liversedge@valtech.co.uk',1),
+('V038','Norwich','Stephen.Liversedge@valtech.co.uk',1),
+('V042','Beverley','Stephen.Liversedge@valtech.co.uk',1),
+('V045','Grimsby','Stephen.Liversedge@valtech.co.uk',1),
+('V046','Sheffield','Stephen.Liversedge@valtech.co.uk',1),
+('V048','Leeds','Stephen.Liversedge@valtech.co.uk',1),
+('V051','Newcastle','Stephen.Liversedge@valtech.co.uk',1),
+('V056','Kirkham','Stephen.Liversedge@valtech.co.uk',1),
+('V057','Carlisle','Stephen.Liversedge@valtech.co.uk',1),
+('V058','Liverpool','Stephen.Liversedge@valtech.co.uk',1),
+('V059','Wrexham','Stephen.Liversedge@valtech.co.uk',1),
+('V063','Area 02 Glasgow','Stephen.Liversedge@valtech.co.uk',1),
+('V065','Area 02 Inverness','Stephen.Liversedge@valtech.co.uk',1),
+('V066','Area 02 Kilmarnock','Stephen.Liversedge@valtech.co.uk',1),
+('V067','Aberdeen','Stephen.Liversedge@valtech.co.uk',1),
+('V068','Perth','Stephen.Liversedge@valtech.co.uk',1),
+('V096','Chadderton','Stephen.Liversedge@valtech.co.uk',1),
+('V103','Bristol','Stephen.Liversedge@valtech.co.uk',1);
 
 INSERT INTO `traffic_area_enforcement_area` (`id`, `traffic_area_id`, `enforcement_area_id`, `version`)
 VALUES
@@ -646,12 +646,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('bus_reg_var_reason', 'brvr_route', 'Route', '2'),
     ('bus_reg_var_reason', 'brvr_start_end', 'Start & Finish Point', '3'),
     ('bus_reg_var_reason', 'brvr_stops', 'Stopping Places', '4'),
-
-    ('com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
-    ('com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null),
 
  -- ('com_lic_sts', 'cl_sts_annulled', 'Annulled', 'Annulled'),
  -- ('com_lic_sts', 'cl_sts_cns', 'CNS', 'CNS'),
@@ -1095,6 +1089,13 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),
     (2, 'other_lic_role', 'ol_role_lic_holder', 'Licence Holder', NULL),
     (3, 'other_lic_role', 'ol_role_applicant', 'Applicant', NULL);
+
+ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'com_lic_sw_reason', 'cl_sw_reason_nofinst', 'No appropriate financial standing', null),
+    (2, 'com_lic_sw_reason', 'cl_sw_reason_noest', 'No effective and stable establishment', null),
+    (3, 'com_lic_sw_reason', 'cl_sw_reason_profcomp', 'No requisite professional competence', null),
+    (4, 'com_lic_sw_reason', 'cl_sw_reason_nogoodrepute', 'Not of good repute', null),
+    (5, 'com_lic_sw_reason', 'cl_sw_reason_other', 'Other', null);
 
 -- TM qualifications
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`, `display_order`)
@@ -2905,8 +2906,8 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_or
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `display_order`, `olbs_key`) VALUES
   ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_yes', 'Yes', 1, null),
-  ('tpen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
-  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_unknown', 'Unknown', 3, null);
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_no', 'No', 2, null),
+  ('pen_erru_imposed_executed', 'pen_erru_imposed_executed_un', 'Unknown', 3, null);
 
 INSERT INTO `pi_definition`
  (`id`, `pi_definition_category`, `section_code`, `description`, `is_ni`, `goods_or_psv`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
@@ -10102,6 +10103,14 @@ VALUES
 (2981,'V067','ZE1',1),
 (2982,'V067','ZE2',1),
 (2983,'V067','ZE3',1);
+
+
+-- Add translation information here
+
+INSERT INTO `ext_translations` (`id`, `locale`, `object_class`, `field`, `foreign_key`, `content`)
+VALUES
+	(1, 'cy-gb', 'Olcs\\Db\\Entity\\RefData', 'description', 'org_t_rc', 'Welsh Version of Registered Company\n');
+
 
 SET foreign_key_checks = 1;
 
