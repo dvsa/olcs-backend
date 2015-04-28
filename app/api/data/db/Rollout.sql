@@ -6358,7 +6358,7 @@ VALUES
 
 -- Here we use insert ignore, as these documents are static,
 -- but we can't truncate the table as it will remove application data
-INSERT IGNORE INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `file_extension`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `traffic_area_id`, `transport_manager_id`, `category_id`, `created_by`, `irfo_organisation_id`, `last_modified_by`, `filename`, `document_store_id`, `is_digital`, `is_read_only`, `size`, `created_on`, `deleted_date`, `description`, `is_scan`, `issued_date`, `last_modified_on`, `version`)
+INSERT IGNORE INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `file_extension`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `traffic_area_id`, `transport_manager_id`, `category_id`, `created_by`, `irfo_organisation_id`, `last_modified_by`, `filename`, `document_store_id`, `is_external`, `is_read_only`, `size`, `created_on`, `deleted_date`, `description`, `is_scan`, `issued_date`, `last_modified_on`, `version`)
 VALUES
     (2, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no advert', 0, NULL, '2002-05-14 17:45:01', 1),
     (3, NULL, NULL, NULL, 'doc_rtf', NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -10171,7 +10171,7 @@ CREATE VIEW document_search_view AS
     SELECT d.id, d.issued_date, d.category_id, d.sub_category_id, d.description,
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
-		d.file_extension, d.is_digital, d.deleted_date, r.description as document_type,
+		d.file_extension, d.is_external, d.deleted_date, r.description as document_type,
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id
     FROM `document` d
