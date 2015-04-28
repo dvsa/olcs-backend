@@ -190,6 +190,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $tmId;
 
     /**
+     * Correspondence Inbox ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="ci_id")
+     */
+    protected $ciId;
+
+    /**
      * Get the id
      *
      * @return int
@@ -387,5 +396,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getTmId()
     {
         return $this->tmId;
+    }
+
+    /**
+     * Get the Correspondence Inbox ID (if applicable)
+     *
+     * @return int
+     */
+    public function getCiId()
+    {
+        return $this->ciId;
     }
 }
