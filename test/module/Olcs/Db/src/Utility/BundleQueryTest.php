@@ -212,4 +212,33 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
         $this->sut->build($config);
     }
+
+    /**
+     * @group bundle_query
+     */
+    public function testBuildWithSimpleChildWithSortOrder()
+    {
+        $config = array(
+            'sort' => 'foo',
+            'order' => 'ASC',
+            'children' => array(
+                'foo'
+            )
+        );
+
+        $this->qb->shouldReceive('addSelect')
+            ->once()
+            ->with('m')
+            ->shouldReceive('leftJoin')
+            ->once()
+            ->with('m.foo', 'mf', null, null)
+            ->shouldReceive('addSelect')
+            ->once()
+            ->with('mf')
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('m.foo', 'ASC');
+
+        $this->sut->build($config);
+    }
 }
