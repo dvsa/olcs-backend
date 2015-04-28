@@ -204,11 +204,69 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
         );
 
         $this->qb->shouldReceive('addSelect')
+            ->once()
             ->with('m')
             ->shouldReceive('leftJoin')
+            ->once()
             ->with('m.foo', 'mf', null, null)
             ->shouldReceive('addSelect')
+            ->once()
             ->with('mf');
+
+        $this->sut->build($config);
+    }
+
+    /**
+     * @group bundle_query
+     */
+    public function testBuildWithSimpleChildRequired()
+    {
+        $config = array(
+            'children' => array(
+                'foo' => array(
+                    'required' => true,
+                )
+            )
+        );
+
+        $this->qb->shouldReceive('addSelect')
+            ->once()
+            ->with('m')
+            ->shouldReceive('innerJoin')
+            ->once()
+            ->with('m.foo', 'mf', null, null)
+            ->shouldReceive('addSelect')
+            ->once()
+            ->with('mf');
+
+        $this->sut->build($config);
+    }
+
+    /**
+     * @group bundle_query
+     */
+    public function testBuildWithSimpleChildRequireNone()
+    {
+        $config = array(
+            'children' => array(
+                'foo' => array(
+                    'requireNone' => true,
+                )
+            )
+        );
+
+        $this->qb->shouldReceive('addSelect')
+            ->once()
+            ->with('m')
+            ->shouldReceive('leftJoin')
+            ->once()
+            ->with('m.foo', 'mf', null, null)
+            ->shouldReceive('addSelect')
+            ->once()
+            ->with('mf')
+            ->shouldReceive('andWhere')
+            ->once()
+            ->with('mf.id IS NULL');
 
         $this->sut->build($config);
     }
