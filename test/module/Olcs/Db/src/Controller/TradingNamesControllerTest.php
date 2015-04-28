@@ -70,6 +70,7 @@ class TradingNamesControllerTest extends MockeryTestCase
                 m::mock()
                 ->shouldReceive('getList')
                 ->andThrow('\Exception')
+                ->once()
                 ->getMock()
             )
             ->shouldReceive('unknownError')
