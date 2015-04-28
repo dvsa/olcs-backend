@@ -64,17 +64,18 @@ class TradingNamesControllerTest extends MockeryTestCase
             ->shouldReceive('formatDataFromJson')
             ->andReturn($data)
             ->once()
+            ->shouldReceive('getService')
+            ->with('TradingName')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getList')
+                ->andThrow('\Exception')
+                ->getMock()
+            )
             ->shouldReceive('unknownError')
             ->andReturn('response')
             ->once();
 
-        $this->sm->setService(
-            'TradingName',
-            m::mock()
-            ->shouldReceive('getList')
-            ->andThrow('\Exception')
-            ->getMock()
-        );
         $this->assertEquals('response', $this->sut->create($data));
     }
 
