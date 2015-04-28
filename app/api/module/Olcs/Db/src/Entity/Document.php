@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="ix_document_file_extension", columns={"file_extension"}),
  *        @ORM\Index(name="ix_document_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_document_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
@@ -84,16 +83,6 @@ class Document implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
-
-    /**
-     * File extension
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="file_extension", referencedColumnName="id", nullable=false)
-     */
-    protected $fileExtension;
 
     /**
      * Filename
@@ -284,29 +273,6 @@ class Document implements Interfaces\EntityInterface
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the file extension
-     *
-     * @param \Olcs\Db\Entity\RefData $fileExtension
-     * @return Document
-     */
-    public function setFileExtension($fileExtension)
-    {
-        $this->fileExtension = $fileExtension;
-
-        return $this;
-    }
-
-    /**
-     * Get the file extension
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
     }
 
     /**

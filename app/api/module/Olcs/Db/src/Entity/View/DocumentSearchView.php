@@ -118,15 +118,6 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $filename;
 
     /**
-     * File Extension
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="file_extension")
-     */
-    protected $fileExtension;
-
-    /**
      * Is digital or not
      *
      * @var bool
@@ -134,15 +125,6 @@ class DocumentSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="boolean", name="is_external")
      */
     protected $isExternal;
-
-    /**
-     * Document type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_type")
-     */
-    protected $documentType;
 
     /**
      * Identifier
