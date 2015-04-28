@@ -115,7 +115,7 @@ TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
 
 /* Test documents */
-INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_digital,category_id,sub_category_id,
+INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
 file_extension, issued_date,document_store_id) VALUES
     (672,7,null,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
     (673,7,null,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),

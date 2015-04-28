@@ -131,9 +131,9 @@ class DocumentSearchView implements Interfaces\EntityInterface
      *
      * @var bool
      *
-     * @ORM\Column(type="boolean", name="is_digital")
+     * @ORM\Column(type="boolean", name="is_external")
      */
-    protected $isDigital;
+    protected $isExternal;
 
     /**
      * Document type

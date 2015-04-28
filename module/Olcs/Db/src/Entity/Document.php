@@ -114,13 +114,13 @@ class Document implements Interfaces\EntityInterface
     protected $identifier;
 
     /**
-     * Is digital
+     * Is external
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="is_external", nullable=false, options={"default": 0})
      */
-    protected $isDigital = 0;
+    protected $isExternal = 0;
 
     /**
      * Is read only
@@ -356,26 +356,26 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is digital
+     * Set the is external
      *
-     * @param boolean $isDigital
+     * @param boolean $isExternal
      * @return Document
      */
-    public function setIsDigital($isDigital)
+    public function setIsExternal($isExternal)
     {
-        $this->isDigital = $isDigital;
+        $this->isExternal = $isExternal;
 
         return $this;
     }
 
     /**
-     * Get the is digital
+     * Get the is external
      *
      * @return boolean
      */
-    public function getIsDigital()
+    public function getIsExternal()
     {
-        return $this->isDigital;
+        return $this->isExternal;
     }
 
     /**
