@@ -4,6 +4,7 @@
  * Trading Names REST controller
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
 namespace Olcs\Db\Controller;
@@ -14,6 +15,7 @@ use Zend\Http\Response;
  * Trading Names REST controller
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class TradingNamesController extends AbstractBasicRestServerController
 {
@@ -37,20 +39,39 @@ class TradingNamesController extends AbstractBasicRestServerController
         }
 
         try {
+            $query = [
+                'organisation' => $data['organisation']
+            ];
 
-            if (!empty($data['licence'])) {
-                $this->getService('TradingName')->deleteList(array('licence' => $data['licence']));
-            }
-            if (!empty($data['organisation'])) {
-                $this->getService('TradingName')->deleteList(array('organisation' => $data['organisation']));
-            }
+            $existingRecords = $this->getService('TradingName')->getList($query);
 
-            foreach ($data['tradingNames'] as $tradingName) {
-                $tradingName['licence'] = $data['licence'];
-                $tradingName['organisation'] = $data['organisation'];
-                $this->getService('TradingName')->create($tradingName);
+            $existedNormalised = [];
+            foreach ($existingRecords['Results'] as $record) {
+                $existedNormalised[] = $record['name'];
             }
-
+            $newNormalised = [];
+            foreach ($data['tradingNames'] as $record) {
+                $newNormalised[] = $record['name'];
+            }
+            $recordsToDelete = array_diff($existedNormalised, $newNormalised);
+            $recordsToInsert = array_diff($newNormalised, $existedNormalised);
+            foreach ($recordsToInsert as $record) {
+                $dataToInsert = [
+                    'licence' => $data['licence'],
+                    'organisation' => $data['organisation'],
+                    'name' => $record
+                ];
+                $this->getService('TradingName')->create($dataToInsert);
+            }
+            foreach ($recordsToDelete as $record) {
+                $this->getService('TradingName')
+                    ->deleteList(
+                        [
+                            'organisation' => $data['organisation'],
+                            'name' => $record
+                        ]
+                    );
+            }
             return $this->respond(Response::STATUS_CODE_201, 'Entities Created', true);
 
         } catch (\Exception $ex) {
