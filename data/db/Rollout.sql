@@ -909,12 +909,6 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('opposer_type', 'obj_t_trade_union', 'Trade Union', '4'),
     ('opposer_type', 'obj_t_other', 'Other', '5'),
 
-    ('org_type', 'org_t_p', 'Partnership', 'P'),
-    ('org_type', 'org_t_pa', 'Other (e.g. public authority, charity, trust, university)', 'PA'),
-    ('org_type', 'org_t_rc', 'Registered Company', 'RC'),
-    ('org_type', 'org_t_st', 'Sole Trader', 'ST'),
-    ('org_type', 'org_t_llp', 'LLP', 'LLP'),
-
     ('org_person_type', 'org_pt_p', 'Partner', null),
     ('org_person_type', 'org_pt_d', 'Director', null),
     ('org_person_type', 'org_pt_st', 'Sole Trader', null),
@@ -1085,6 +1079,14 @@ INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`)
     ('fee_type', 'COURT', 'Court fees', 'IRFOGVPERMIT'),
     ('fee_type', 'MISC', 'Other Miscellaneous fees', 'MISC');
 
+
+ INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
+    (1, 'org_type', 'org_t_rc', 'Limited company', 'RC'),
+    (2, 'org_type', 'org_t_st', 'Sole Trader', 'ST'),
+    (3, 'org_type', 'org_t_p', 'Partnership', 'P'),
+    (4, 'org_type', 'org_t_llp', 'Limited Liability Partnership', 'LLP'),
+    (5, 'org_type', 'org_t_pa', 'Other (e.g. public authority, charity, trust, university)', 'PA'),
+    (6, 'org_type', 'org_t_ir', 'IRFO', 'IRFO');
 
  INSERT INTO `ref_data` (`display_order`, `ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     (1, 'other_lic_role', 'ol_role_tm', 'Transport Manager', NULL),
