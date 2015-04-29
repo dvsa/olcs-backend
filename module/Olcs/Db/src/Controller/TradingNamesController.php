@@ -40,7 +40,8 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
             $query = [
-                'organisation' => $data['organisation']
+                'organisation' => $data['organisation'],
+                'licence' => $data['licence']
             ];
 
             $existingRecords = $this->getService('TradingName')->getList($query);
@@ -68,6 +69,7 @@ class TradingNamesController extends AbstractBasicRestServerController
                     ->deleteList(
                         [
                             'organisation' => $data['organisation'],
+                            'licence' => $data['licence'],
                             'name' => $record
                         ]
                     );
