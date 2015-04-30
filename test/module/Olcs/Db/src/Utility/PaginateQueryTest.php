@@ -134,7 +134,7 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
 
         $this->qb->shouldReceive('setFirstResult')->never()
             ->shouldReceive('setMaxResults')->never()
-            ->shouldReceive('orderBy')
+            ->shouldReceive('addOrderBy')
             ->with('m.foo', 'ASC');
 
         $this->sut->filterQuery();
@@ -158,7 +158,7 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
             ->with(0)
             ->shouldReceive('setMaxResults')
             ->with(10)
-            ->shouldReceive('orderBy')
+            ->shouldReceive('addOrderBy')
             ->with('m.foo', 'ASC');
 
         $this->sut->filterQuery();
@@ -182,7 +182,7 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
             ->with(20)
             ->shouldReceive('setMaxResults')
             ->with(10)
-            ->shouldReceive('orderBy')
+            ->shouldReceive('addOrderBy')
             ->with('m.foo', 'ASC');
 
         $this->sut->filterQuery();
@@ -206,7 +206,7 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
             ->with(14)
             ->shouldReceive('setMaxResults')
             ->with(7)
-            ->shouldReceive('orderBy')
+            ->shouldReceive('addOrderBy')
             ->with('m.foo', 'ASC');
 
         $this->sut->filterQuery();
@@ -226,7 +226,7 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
 
         $this->qb->shouldReceive('setFirstResult')->never()
             ->shouldReceive('setMaxResults')->never()
-            ->shouldReceive('orderBy')->never();
+            ->shouldReceive('addOrderBy')->never();
 
         $this->sut->filterQuery();
     }
