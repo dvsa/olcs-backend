@@ -74,6 +74,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     protected $classMetadata = array();
 
+    protected $replacementReferences = [];
+
     public function setEntityNamespace($namespace)
     {
         $this->entityNamespace = $namespace;
@@ -171,7 +173,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             return null;
         }
 
-        $response = $this->processReplacements($response, $replacements);
+        $this->processReplacements($response, $replacements);
 
         return $response[0];
     }
@@ -222,11 +224,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      * @param array $replacements
      * @return array
      */
-    protected function getRefDataValues($results, $replacements)
+    protected function getRefDataValues(&$results, $replacements)
     {
         $values = [];
 
-        foreach ($results as $result) {
+        foreach ($results as &$result) {
 
             foreach ($replacements as $replacement) {
 
@@ -242,9 +244,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     /**
      * This method is recursive and builds a list of ref data ids for the given result node and stack
      */
-    protected function getStackedValues($result, $stack)
+    protected function getStackedValues(&$result, $stack)
     {
-        $result = $this->camelCaseMetaFields($result);
+        $this->camelCaseMetaFields($result);
 
         $values = [];
         $resultRef = &$result;
@@ -259,11 +261,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
             $resultRef = &$resultRef[$stackItem];
 
-            $resultRef = $this->camelCaseMetaFields($resultRef);
+            $this->camelCaseMetaFields($resultRef);
 
             // If we have a list here, we need to loop and recurse back through this method
             if ($this->isList($resultRef)) {
-                foreach ($resultRef as $key => $value) {
+                foreach ($resultRef as $key => &$value) {
                     $values = array_merge($values, $this->getStackedValues($value, $stack));
                 }
 
@@ -279,7 +281,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $resultRef = &$resultRef[$stackItem];
 
         if (!empty($resultRef)) {
+            $this->replacementReferences[] = &$resultRef;
             $values[$resultRef] = $resultRef;
+        } else {
+            $resultRef = null;
         }
 
         return $values;
@@ -288,66 +293,17 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     /**
      * This method is recursive and loops through the nodes replacing refData id's with arrays
      */
-    protected function replaceValues($result, $stack, $refDataMap)
+    protected function replaceValues($refDataMap)
     {
-        // If our value is empty, we can just bail
-        if (empty($result)) {
-            return $result;
+        foreach ($this->replacementReferences as &$ref) {
+            $ref = $refDataMap[$ref];
         }
-
-        $result = $this->camelCaseMetaFields($result);
-
-        $resultRef = &$result;
-
-        // Get deep into the stack
-        while (count($stack) > 1) {
-            $stackItem = array_shift($stack);
-
-            // If the stack value doesn't exist, bail early
-            if (!isset($resultRef[$stackItem]) || empty($resultRef[$stackItem])) {
-                return $result;
-            }
-
-            $resultRef = &$resultRef[$stackItem];
-
-            // Format any meta fields
-            $resultRef = $this->camelCaseMetaFields($resultRef);
-
-            // If it is a list
-            if ($this->isList($resultRef)) {
-
-                // Iterate the list, and replace each value
-                foreach ($resultRef as $key => &$value) {
-                    $value = $this->replaceValues($value, $stack, $refDataMap);
-                }
-
-                return $result;
-            }
-        }
-
-        // If it's not an array, we can't get the deepest value
-        if (!is_array($resultRef)) {
-            return $result;
-        }
-
-        // Grab the deepest stacked value
-        $stackItem = array_shift($stack);
-        $resultRef = &$resultRef[$stackItem];
-
-        // If it's not empty
-        if (!empty($resultRef)) {
-            $resultRef = $refDataMap[$resultRef];
-        } else {
-            $resultRef = null;
-        }
-
-        return $result;
     }
 
     /**
      * Does what it sez on't tin
      */
-    protected function camelCaseMetaFields($array)
+    protected function camelCaseMetaFields(&$array)
     {
         $filter = new \Zend\Filter\Word\UnderscoreToCamelCase();
         foreach ($array as $field => $value) {
@@ -358,8 +314,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
                 unset($array[$field]);
             }
         }
-
-        return $array;
     }
 
     /**
@@ -379,10 +333,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      * @param array $replacements
      * @return array
      */
-    protected function processReplacements(array $results, array $replacements)
+    protected function processReplacements(array &$results, array $replacements)
     {
         if (empty($replacements)) {
-            return $results;
+            return;
         }
 
         $refDatas = $this->getRefDataValues($results, $replacements);
@@ -414,21 +368,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             $indexedRefDataResults = [];
         }
 
-        $newResults = [];
+        $this->replaceValues($indexedRefDataResults);
 
-        foreach ($results as $result) {
-            $newResult = $result;
-            foreach ($replacements as $replacement) {
-
-                $stack = $replacement['stack'];
-
-                $newResult = $this->replaceValues($newResult, $stack, $indexedRefDataResults);
-            }
-
-            $newResults[] = $newResult;
-        }
-
-        return $newResults;
+        return $results;
     }
 
     /**
