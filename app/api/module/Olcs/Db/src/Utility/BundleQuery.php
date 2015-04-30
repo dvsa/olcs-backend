@@ -71,7 +71,6 @@ class BundleQuery implements ServiceLocatorAwareInterface
             // Grab the metadata of the parent entity
             $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
 
-
             $processed = [];
             foreach ($config['children'] as $childName => $childConfig) {
 

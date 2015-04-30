@@ -266,7 +266,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
             // If we have a list here, we need to loop and recurse back through this method
             if ($this->isList($resultRef)) {
-                foreach ($resultRef as $key => &$value) {
+                foreach ($resultRef as &$value) {
                     $values = array_merge($values, $this->getStackedValues($value, $stack));
                 }
 
