@@ -243,6 +243,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
     /**
      * This method is recursive and builds a list of ref data ids for the given result node and stack
+     * This method builds an array of references to be used when replacing the ids
      */
     protected function getStackedValues(&$result, $stack)
     {
@@ -291,7 +292,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     }
 
     /**
-     * This method is recursive and loops through the nodes replacing refData id's with arrays
+     * This method replaces all referenced refdata ids with their ref data arrays
      */
     protected function replaceValues($refDataMap)
     {
