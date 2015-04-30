@@ -49,12 +49,23 @@ class BundleQuery implements ServiceLocatorAwareInterface
         return $this->refDataReplacements;
     }
 
+    /**
+     * Build is called recursively until it has iterated through the children in the bundle
+     *
+     * @param array $config Partial bundle
+     * @param string $name Name of child (or main if it's the first call)
+     * @param string $alias Alias of this node
+     * @param string $parent Class name of the parent
+     * @param array $stack The stack of nodes from the parents
+     */
     public function build($config, $name = 'main', $alias = 'm', $parent = null, $stack = [])
     {
+        // This is the first call to build, so find the root entity
         if ($parent === null) {
             $parent = $this->qb->getRootEntities()[0];
         }
 
+        // Grab the metadata of the parent entity
         $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
 
         $this->addSelect($alias);
@@ -66,6 +77,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
                 if (is_numeric($childName) && is_string($childConfig)) {
 
+                    // We skip children that have already been joined
                     if (in_array($childConfig, $processed)) {
                         continue;
                     }
@@ -74,16 +86,15 @@ class BundleQuery implements ServiceLocatorAwareInterface
                     $childConfig = [];
                 }
 
-                // Build the stack
+                // Add to the stack, so we have a reference to any refData items
                 $childStack = $stack;
                 $childStack[] = $childName;
 
+                // If we find a refData relationship
+                // Store the stack reference to it's location and skip it
                 if ($this->isRefData($metadata, $childName)) {
-                    $refDataAlias = $this->getUniqueAlias();
-                    $this->qb->addSelect(['IDENTITY(' . $alias . '.' . $childName . ', \'id\') AS ' . $refDataAlias]);
                     $this->refDataReplacements[] = [
-                        'stack' => $childStack,
-                        'valueAlias' => $refDataAlias
+                        'stack' => $childStack
                     ];
                     continue;
                 }
@@ -111,16 +122,26 @@ class BundleQuery implements ServiceLocatorAwareInterface
         }
     }
 
-    protected function getUniqueAlias()
-    {
-        return 'RD_' . $this->refDataAlias++;
-    }
-
+    /**
+     * Grab the child's class name
+     *
+     * @param object $metadata
+     * @param string $name
+     * @return string
+     */
     protected function getChildClass($metadata, $name)
     {
         return $metadata->associationMappings[$name]['targetEntity'];
     }
 
+    /**
+     * Check if the given node is a refdata node
+     * (We ignore *ToMany relationships)
+     *
+     * @param object $metadata
+     * @param string $name
+     * @return booleab
+     */
     protected function isRefData($metadata, $name)
     {
         return (
