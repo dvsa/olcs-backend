@@ -150,7 +150,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
 
@@ -169,6 +169,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             return null;
         }
 
+        $response = $this->processReplacements($response, $replacements);
+
         return $response[0];
     }
 
@@ -183,7 +185,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         // Paginate
         $paginateQuery = $this->getServiceLocator()->get('PaginateQuery');
@@ -196,15 +198,98 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
 
         $language = $this->getLanguage();
+
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
 
         $paginator = new Paginator($query);
 
+        $results = (array)$paginator->getIterator();
+
         return array(
             'Count' => $paginator->count(),
-            'Results' => (array)$paginator->getIterator()
+            'Results' => $this->processReplacements($results, $replacements)
         );
+    }
+
+    protected function processReplacements(array $results, array $replacements)
+    {
+        if (empty($replacements)) {
+            return $results;
+        }
+
+        $refDatas = [];
+
+        foreach ($results as $result) {
+            foreach ($replacements as $replacement) {
+
+                if (!empty($result[$replacement['valueAlias']])) {
+                    $refDatas[$result[$replacement['valueAlias']]] = $result[$replacement['valueAlias']];
+                }
+            }
+        }
+
+        $repo = $this->getEntityManager()->getRepository('\Olcs\Db\Entity\RefData');
+        $qb = $repo->createQueryBuilder('r');
+
+        $qb->where($qb->expr()->in('r.id', $refDatas));
+
+        $query = $qb->getQuery();
+
+        $language = $this->getLanguage();
+
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+        $refDataResults = $query->getArrayResult();
+
+        $indexedRefDataResults = [];
+        foreach ($refDataResults as $result) {
+            $indexedRefDataResults[$result['id']] = $result;
+        }
+
+        $newResults = [];
+
+        foreach ($results as $result) {
+            $newResult = $result[0];
+
+            foreach ($replacements as $replacement) {
+
+                $valueAlias = $replacement['valueAlias'];
+
+                $stack = $replacement['stack'];
+
+                $resultRef = &$newResult;
+
+                while (count($stack) > 1) {
+
+                    $stackItem = array_shift($stack);
+
+                    $resultRef = &$resultRef[$stackItem];
+                }
+
+                $stackItem = array_shift($stack);
+
+                if (isset($indexedRefDataResults[$result[$valueAlias]])) {
+                    $resultRef[$stackItem] = $indexedRefDataResults[$result[$valueAlias]];
+                } else {
+                    $resultRef[$stackItem] = null;
+                }
+            }
+
+            $newResults[] = $newResult;
+        }
+
+        //return $newResults;
+
+        print '<pre>';
+        print_r($replacements);
+        print_r($indexedRefDataResults);
+        exit;
     }
 
     /**
@@ -303,10 +388,12 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $qb->select(array('m'))->from($this->getEntityName(), 'm');
 
+        $replacements = [];
         if (!empty($bundleConfig)) {
             $bundleQuery = $this->getServiceLocator()->get('BundleQuery');
             $bundleQuery->setQueryBuilder($qb);
             $bundleQuery->build($bundleConfig);
+            $replacements = $bundleQuery->getRefDataReplacements();
             $params = $bundleQuery->getParams();
         }
 
@@ -323,7 +410,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             $qb->andWhere($expression);
         }
 
-        return $qb->setParameters($eb->getParams());
+        $qb->setParameters($eb->getParams());
+
+        return [$qb, $replacements];
     }
 
     protected function getBundleConfig($data)
