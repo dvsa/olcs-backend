@@ -299,33 +299,13 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the file extension
-     *
-     * @return string
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
-    }
-
-    /**
-     * Get if digital
+     * Get is external
      *
      * @return int
      */
-    public function getIsDigital()
+    public function getIsExternal()
     {
-        return $this->isDigital;
-    }
-
-    /**
-     * Get the document file type
-     *
-     * @return string
-     */
-    public function getDocumentType()
-    {
-        return $this->documentType;
+        return $this->isExternal;
     }
 
     /**
