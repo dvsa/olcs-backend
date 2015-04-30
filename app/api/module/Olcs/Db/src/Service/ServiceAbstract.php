@@ -163,6 +163,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
 
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
+
         $response = $query->getArrayResult();
 
         if (!$response) {
@@ -201,6 +203,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
         $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
 
         $paginator = new Paginator($query);
 
@@ -212,84 +215,220 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         );
     }
 
+    /**
+     * Iterate through the data and find the ref data ids
+     *
+     * @param array $results
+     * @param array $replacements
+     * @return array
+     */
+    protected function getRefDataValues($results, $replacements)
+    {
+        $values = [];
+
+        foreach ($results as $result) {
+
+            foreach ($replacements as $replacement) {
+
+                $stack = $replacement['stack'];
+
+                $values = array_merge($values, $this->getStackedValues($result, $stack));
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * This method is recursive and builds a list of ref data ids for the given result node and stack
+     */
+    protected function getStackedValues($result, $stack)
+    {
+        $result = $this->camelCaseMetaFields($result);
+
+        $values = [];
+        $resultRef = &$result;
+
+        // Iterate through the stack indexes to get deeper into the node
+        while (count($stack) > 1) {
+            $stackItem = array_shift($stack);
+
+            if (!isset($resultRef[$stackItem])) {
+                return $values;
+            }
+
+            $resultRef = &$resultRef[$stackItem];
+
+            $resultRef = $this->camelCaseMetaFields($resultRef);
+
+            // If we have a list here, we need to loop and recurse back through this method
+            if ($this->isList($resultRef)) {
+                foreach ($resultRef as $key => $value) {
+                    $values = array_merge($values, $this->getStackedValues($value, $stack));
+                }
+
+                return $values;
+            }
+        }
+
+        if (!is_array($resultRef)) {
+            return $values;
+        }
+
+        $stackItem = array_shift($stack);
+        $resultRef = &$resultRef[$stackItem];
+
+        if (!empty($resultRef)) {
+            $values[$resultRef] = $resultRef;
+        }
+
+        return $values;
+    }
+
+    /**
+     * This method is recursive and loops through the nodes replacing refData id's with arrays
+     */
+    protected function replaceValues($result, $stack, $refDataMap)
+    {
+        // If our value is empty, we can just bail
+        if (empty($result)) {
+            return $result;
+        }
+
+        $result = $this->camelCaseMetaFields($result);
+
+        $resultRef = &$result;
+
+        // Get deep into the stack
+        while (count($stack) > 1) {
+            $stackItem = array_shift($stack);
+
+            // If the stack value doesn't exist, bail early
+            if (!isset($resultRef[$stackItem]) || empty($resultRef[$stackItem])) {
+                return $result;
+            }
+
+            $resultRef = &$resultRef[$stackItem];
+
+            // Format any meta fields
+            $resultRef = $this->camelCaseMetaFields($resultRef);
+
+            // If it is a list
+            if ($this->isList($resultRef)) {
+
+                // Iterate the list, and replace each value
+                foreach ($resultRef as $key => &$value) {
+                    $value = $this->replaceValues($value, $stack, $refDataMap);
+                }
+
+                return $result;
+            }
+        }
+
+        // If it's not an array, we can't get the deepest value
+        if (!is_array($resultRef)) {
+            return $result;
+        }
+
+        // Grab the deepest stacked value
+        $stackItem = array_shift($stack);
+        $resultRef = &$resultRef[$stackItem];
+
+        // If it's not empty
+        if (!empty($resultRef)) {
+            $resultRef = $refDataMap[$resultRef];
+        } else {
+            $resultRef = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Does what it sez on't tin
+     */
+    protected function camelCaseMetaFields($array)
+    {
+        $filter = new \Zend\Filter\Word\UnderscoreToCamelCase();
+        foreach ($array as $field => $value) {
+            if (strstr($field, '_')) {
+                $newField = lcfirst($filter->filter($field));
+
+                $array[$newField] = $value;
+                unset($array[$field]);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Checks if an array is non assoc
+     */
+    protected function isList($array)
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+
+    /**
+     * If we have some Stacked ref data replacements, iterate through the results to find the ref data id's we need to
+     * lookup. Once we have the ref data id's (and the translations) iterate through the results and replace the id's
+     * with the ref data arrays
+     *
+     * @param array $results
+     * @param array $replacements
+     * @return array
+     */
     protected function processReplacements(array $results, array $replacements)
     {
         if (empty($replacements)) {
             return $results;
         }
 
-        $refDatas = [];
+        $refDatas = $this->getRefDataValues($results, $replacements);
 
-        foreach ($results as $result) {
-            foreach ($replacements as $replacement) {
+        if (!empty($refDatas)) {
+            $repo = $this->getEntityManager()->getRepository('\Olcs\Db\Entity\RefData');
+            $qb = $repo->createQueryBuilder('r');
 
-                if (!empty($result[$replacement['valueAlias']])) {
-                    $refDatas[$result[$replacement['valueAlias']]] = $result[$replacement['valueAlias']];
-                }
+            $qb->where($qb->expr()->in('r.id', $refDatas));
+
+            $query = $qb->getQuery();
+
+            $language = $this->getLanguage();
+
+            $query->setHint(
+                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            );
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+            $refDataResults = $query->getArrayResult();
+
+            $indexedRefDataResults = [];
+            foreach ($refDataResults as $result) {
+                $indexedRefDataResults[$result['id']] = $result;
             }
-        }
-
-        $repo = $this->getEntityManager()->getRepository('\Olcs\Db\Entity\RefData');
-        $qb = $repo->createQueryBuilder('r');
-
-        $qb->where($qb->expr()->in('r.id', $refDatas));
-
-        $query = $qb->getQuery();
-
-        $language = $this->getLanguage();
-
-        $query->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
-        );
-        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
-        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
-
-        $refDataResults = $query->getArrayResult();
-
-        $indexedRefDataResults = [];
-        foreach ($refDataResults as $result) {
-            $indexedRefDataResults[$result['id']] = $result;
+        } else {
+            $indexedRefDataResults = [];
         }
 
         $newResults = [];
 
         foreach ($results as $result) {
-            $newResult = $result[0];
-
+            $newResult = $result;
             foreach ($replacements as $replacement) {
-
-                $valueAlias = $replacement['valueAlias'];
 
                 $stack = $replacement['stack'];
 
-                $resultRef = &$newResult;
-
-                while (count($stack) > 1) {
-
-                    $stackItem = array_shift($stack);
-
-                    $resultRef = &$resultRef[$stackItem];
-                }
-
-                $stackItem = array_shift($stack);
-
-                if (isset($indexedRefDataResults[$result[$valueAlias]])) {
-                    $resultRef[$stackItem] = $indexedRefDataResults[$result[$valueAlias]];
-                } else {
-                    $resultRef[$stackItem] = null;
-                }
+                $newResult = $this->replaceValues($newResult, $stack, $indexedRefDataResults);
             }
 
             $newResults[] = $newResult;
         }
 
-        //return $newResults;
-
-        print '<pre>';
-        print_r($replacements);
-        print_r($indexedRefDataResults);
-        exit;
+        return $newResults;
     }
 
     /**
