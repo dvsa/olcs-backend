@@ -263,7 +263,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('m.foo', 'mf', null, null)
             ->shouldReceive('addSelect')
             ->once()
-            ->with('mf');
+            ->with('mf')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -332,7 +352,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('mf')
             ->shouldReceive('andWhere')
             ->once()
-            ->with('mf.id IS NULL');
+            ->with('mf.id IS NULL')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -361,7 +401,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('mf')
             ->shouldReceive('addOrderBy')
             ->once()
-            ->with('m.foo', 'ASC');
+            ->with('m.foo', 'ASC')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
