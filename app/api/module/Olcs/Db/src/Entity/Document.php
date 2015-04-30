@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="ix_document_file_extension", columns={"file_extension"}),
  *        @ORM\Index(name="ix_document_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_document_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
@@ -86,16 +85,6 @@ class Document implements Interfaces\EntityInterface
     protected $case;
 
     /**
-     * File extension
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="file_extension", referencedColumnName="id", nullable=false)
-     */
-    protected $fileExtension;
-
-    /**
      * Filename
      *
      * @var string
@@ -114,13 +103,13 @@ class Document implements Interfaces\EntityInterface
     protected $identifier;
 
     /**
-     * Is digital
+     * Is external
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="is_external", nullable=false, options={"default": 0})
      */
-    protected $isDigital = 0;
+    protected $isExternal = 0;
 
     /**
      * Is read only
@@ -287,29 +276,6 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the file extension
-     *
-     * @param \Olcs\Db\Entity\RefData $fileExtension
-     * @return Document
-     */
-    public function setFileExtension($fileExtension)
-    {
-        $this->fileExtension = $fileExtension;
-
-        return $this;
-    }
-
-    /**
-     * Get the file extension
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
-    }
-
-    /**
      * Set the filename
      *
      * @param string $filename
@@ -356,26 +322,26 @@ class Document implements Interfaces\EntityInterface
     }
 
     /**
-     * Set the is digital
+     * Set the is external
      *
-     * @param boolean $isDigital
+     * @param boolean $isExternal
      * @return Document
      */
-    public function setIsDigital($isDigital)
+    public function setIsExternal($isExternal)
     {
-        $this->isDigital = $isDigital;
+        $this->isExternal = $isExternal;
 
         return $this;
     }
 
     /**
-     * Get the is digital
+     * Get the is external
      *
      * @return boolean
      */
-    public function getIsDigital()
+    public function getIsExternal()
     {
-        return $this->isDigital;
+        return $this->isExternal;
     }
 
     /**
