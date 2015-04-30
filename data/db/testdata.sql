@@ -1940,7 +1940,7 @@ VALUES
 INSERT INTO `grace_period` (`id`, `created_by`, `last_modified_by`, `licence_id`, `description`, `end_date`, `start_date`, `created_on`,
     `last_modified_on`, `olbs_key`)
     VALUES
-      (1, 1, 1, 7, "Grace period description 1", '2015-05-01', '2015-08-01', '2015-04-01', '2015-05-01', NULL),
-      (2, 1, 1, 7, "Grace period description 2", '2015-06-01', '2015-09-01', '2015-05-01', '2015-06-01', NULL),
-      (3, 1, 1, 7, "Grace period description 3", '2015-07-01', '2015-10-01', '2015-06-01', '2015-07-01', NULL),
-      (4, 1, 1, 7, "Grace period description 4", '2015-08-01', '2015-11-01', '2015-07-01', '2015-08-01', NULL);
+      (1, 1, 1, 7, "Grace period description 1", '2015-08-01', '2015-05-01', '2015-04-01', '2015-05-01', NULL),
+      (2, 1, 1, 7, "Grace period description 2", '2015-09-01', '2015-06-01', '2015-05-01', '2015-06-01', NULL),
+      (3, 1, 1, 7, "Grace period description 3", '2015-10-01', '2015-07-01', '2015-06-01', '2015-07-01', NULL),
+      (4, 1, 1, 7, "Grace period description 4", '2015-11-01', '2015-08-01', '2015-07-01', '2015-08-01', NULL);
