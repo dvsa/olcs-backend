@@ -45,7 +45,6 @@ class Search
      * @param array $indexes
      * @param int $page
      * @param int $limit
-     * @param array $filters
      * @return array
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
@@ -90,7 +89,7 @@ class Search
             $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
             $elasticaQueryBool->addShould($elasticaQueryWildcard);
 
-            $elasticaQuery        = new Query();
+            $elasticaQuery = new Query();
 
             $elasticaQuery->setQuery($elasticaQueryBool);
 
