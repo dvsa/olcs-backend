@@ -59,7 +59,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
      * @param string $parent Class name of the parent
      * @param array $stack The stack of nodes from the parents
      */
-    public function build($config, $name = 'main', $alias = 'm', $parent = null, $stack = [])
+    public function build($config, $alias = 'm', $parent = null, $stack = [])
     {
         $this->addSelect($alias);
 
@@ -124,7 +124,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
             $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
-            $this->build($childConfig, $childName, $childAlias, $entityClass, $childStack);
+            $this->build($childConfig, $childAlias, $entityClass, $childStack);
         }
     }
 
