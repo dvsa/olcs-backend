@@ -628,7 +628,10 @@ VALUES
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
     ('cont_d_status', 'con_det_sts_prepared', 'Prepared', null),
     ('cont_d_status', 'con_det_sts_printing', 'Printing', null),
-    ('cont_d_status', 'con_det_sts_printed', 'Printed', null);
+    ('cont_d_status', 'con_det_sts_printed', 'Printed', null),
+    ('cont_d_status', 'con_det_sts_unacceptable', 'Unacceptable', null),
+    ('cont_d_status', 'con_det_sts_acceptable', 'Acceptable', null),
+    ('cont_d_status', 'con_det_sts_complete', 'Complete', null);
 
 INSERT INTO `ref_data` (`ref_data_category_id`, `id`, `description`, `olbs_key`) VALUES
 

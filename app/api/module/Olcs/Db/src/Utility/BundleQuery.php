@@ -36,36 +36,42 @@ class BundleQuery implements ServiceLocatorAwareInterface
         return $this->params;
     }
 
-    public function build($config, $name = 'main', $alias = 'm')
+    public function build($config, $alias = 'm')
     {
         $this->addSelect($alias);
 
-        if (isset($config['children'])) {
-            foreach ($config['children'] as $childName => $childConfig) {
+        if (isset($config['sort']) && isset($config['order'])) {
+            $this->qb->addOrderBy($alias . '.' . $config['sort'], $config['order']);
+        }
 
-                if (is_numeric($childName) && is_string($childConfig)) {
-                    $childName = $childConfig;
-                    $childConfig = array('properties' => 'ALL');
-                }
+        if (!isset($config['children'])) {
+            return;
+        }
 
-                $childAlias = $this->getSelectAlias($childName, $alias);
+        foreach ($config['children'] as $childName => $childConfig) {
 
-                $joinType = 'left';
-
-                if (isset($childConfig['required'])) {
-                    $joinType = 'inner';
-                }
-
-                // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
-                // back in the leftJoin, this only works when the child has an ID column
-                if (isset($childConfig['requireNone'])) {
-                    $this->qb->andWhere($childAlias . '.id IS NULL');
-                }
-
-                $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
-
-                $this->build($childConfig, $childName, $childAlias);
+            if (is_numeric($childName) && is_string($childConfig)) {
+                $childName = $childConfig;
+                $childConfig = array('properties' => 'ALL');
             }
+
+            $childAlias = $this->getSelectAlias($childName, $alias);
+
+            $joinType = 'left';
+
+            if (isset($childConfig['required'])) {
+                $joinType = 'inner';
+            }
+
+            // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
+            // back in the leftJoin, this only works when the child has an ID column
+            if (isset($childConfig['requireNone'])) {
+                $this->qb->andWhere($childAlias . '.id IS NULL');
+            }
+
+            $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
+
+            $this->build($childConfig, $childAlias);
         }
     }
 
