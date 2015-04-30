@@ -328,7 +328,10 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
     protected function getLanguageFromHeader()
     {
-        return $this->getEvent()->getRequest()->getHeaders('accept-language')->getFieldValue();
+        $header = $this->getEvent()->getRequest()->getHeaders('accept-language');
+        if ($header) {
+            return $header->getFieldValue();
+        }
     }
 
     /**
