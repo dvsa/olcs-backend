@@ -10256,6 +10256,46 @@ CREATE VIEW `bus_reg_history_view` AS
    `br2`.`reg_no` AS `reg_no`
 FROM ((`bus_reg` `br1` join `bus_reg` `br2` on((`br2`.`reg_no` like `br1`.`reg_no`))) join `event_history` `eh` on((`eh`.`bus_reg_id` = `br2`.`id`)));
 
+INSERT INTO `irfo_country` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+VALUES
+(1, 'ECMT', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(2, 'Belarus', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(3, 'Georgia', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(4, 'Germany', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(5, 'Kazakhstan', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(6, 'Morocco', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(7, 'Romania', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(8, 'Russia', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(9, 'Tunisia', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(10, 'Turkey', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(11, 'Ukraine', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(12, 'Morocco Multi-Journey', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(13, 'Turkey Multi-Journey', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(14, 'Turkey 3rd Country Transit', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
+(15, 'Turkey 3rd Country Non-Transit', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1);
+
+INSERT INTO `irfo_gv_permit_type` (`id`, `description`, `irfo_country_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+VALUES
+(1, 'ECMT 100% (Jan to Mar)', 1, NULL, NULL, NULL, NULL, 1),
+(2, 'ECMT 75% (Apr to Jun)', 1, NULL, NULL, NULL, NULL, 1),
+(3, 'ECMT 50% (Jul to Sep)', 1, NULL, NULL, NULL, NULL, 1),
+(4, 'ECMT 25% (Oct to Dec)', 1, NULL, NULL, NULL, NULL, 1),
+(5, 'ECMT Community Removal', NULL, NULL, NULL, NULL, NULL, 1),
+(6, 'Belarus', 2, NULL, NULL, NULL, NULL, 1),
+(7, 'Georgia', 3, NULL, NULL, NULL, NULL, 1),
+(8, 'Germany 3rd Country', 4, NULL, NULL, NULL, NULL, 1),
+(9, 'Kazakhstan', 5, NULL, NULL, NULL, NULL, 1),
+(10, 'Morocco Single Journey', 6, NULL, NULL, NULL, NULL, 1),
+(11, 'Morocco Multi Journey x 15', 12, NULL, NULL, NULL, NULL, 1),
+(12, 'Romania 3rd Country', 7, NULL, NULL, NULL, NULL, 1),
+(13, 'Russia', 8, NULL, NULL, NULL, NULL, 1),
+(14, 'Tunisia', 9, NULL, NULL, NULL, NULL, 1),
+(15, 'Turkey 3rd Country', 14, NULL, NULL, NULL, NULL, 1),
+(16, 'Turkey Multi Journey x 4', 13, NULL, NULL, NULL, NULL, 1),
+(17, 'Ukraine', 11, NULL, NULL, NULL, NULL, 1),
+(18, 'Turkey Single Journey', 10, NULL, NULL, NULL, NULL, 1),
+(19, 'Turkey 3rd Country Non-Transit', 15, NULL, NULL, NULL, NULL, 1);
+
 COMMIT;
 
 
