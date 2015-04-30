@@ -210,10 +210,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $paginator = new Paginator($query);
 
         $results = (array)$paginator->getIterator();
+        $this->processReplacements($results, $replacements);
 
         return array(
             'Count' => $paginator->count(),
-            'Results' => $this->processReplacements($results, $replacements)
+            'Results' => $results
         );
     }
 
