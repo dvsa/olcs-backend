@@ -60,17 +60,17 @@ class BundleQuery implements ServiceLocatorAwareInterface
      */
     public function build($config, $name = 'main', $alias = 'm', $parent = null, $stack = [])
     {
-        // This is the first call to build, so find the root entity
-        if ($parent === null) {
-            $parent = $this->qb->getRootEntities()[0];
-        }
-
-        // Grab the metadata of the parent entity
-        $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
-
         $this->addSelect($alias);
 
-        if (isset($config['children'])) {
+        if (isset($config['children']) && !empty($config['children'])) {
+            // This is the first call to build, so find the root entity
+            if ($parent === null) {
+                $parent = $this->qb->getRootEntities()[0];
+            }
+
+            // Grab the metadata of the parent entity
+            $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
+
 
             $processed = [];
             foreach ($config['children'] as $childName => $childConfig) {
