@@ -113,6 +113,7 @@ TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
+TRUNCATE TABLE `correspondence_inbox`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
@@ -1936,3 +1937,7 @@ VALUES
     NULL, '2015-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 	(3, 'insp_rep_t_TE', 'insp_req_t_new_op', 2, 'insp_res_t_new_unsat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-03', NULL, NULL,
     NULL, '2015-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `correspondence_inbox` (`id`, `document_id`, `licence_id`)
+VALUES
+    (1, 674, 7);
