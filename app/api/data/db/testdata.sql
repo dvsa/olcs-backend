@@ -1567,6 +1567,10 @@ INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo
 VALUES
     (101, 1, 'irfo_perm_s_appreoved', NOW());
 
+INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `irfo_fee_id`)
+VALUES
+    (101, 1, 'irfo_auth_s_approved', '17/1', 'From', 'To', 3, NOW(), 'FeeId');
+
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
     ('task.default_team', 2, NULL),

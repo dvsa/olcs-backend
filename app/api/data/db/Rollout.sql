@@ -10310,6 +10310,17 @@ VALUES
 (18, 'Turkey Single Journey', 10, NULL, NULL, NULL, NULL, 1),
 (19, 'Turkey 3rd Country Non-Transit', 15, NULL, NULL, NULL, NULL, 1);
 
+INSERT INTO `irfo_psv_auth_type` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+
+VALUES
+(1,'EU Regular Service Operator (UK & Foreign Partner) (17)',NULL,NULL,NULL,NULL,1),
+(2,'EU Regular Service Operator (No Partners) (19A)',NULL,NULL,NULL,NULL,1),
+(3,'Non EU Regular Service Operator (UK & Foreign Partner) (18)',NULL,NULL,NULL,NULL,1),
+(4,'Non EU Regular Service Operator (No Partners) (19)',NULL,NULL,NULL,NULL,1),
+(5,'Non EU Occasional Service Operator (19)',NULL,NULL,NULL,NULL,1),
+(6,'Shuttle Service Operator (20)',NULL,NULL,NULL,NULL,1),
+(7,'Own A/C (21)',NULL,NULL,NULL,NULL,1);
+
 COMMIT;
 
 
