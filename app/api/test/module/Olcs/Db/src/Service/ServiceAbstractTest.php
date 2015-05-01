@@ -291,6 +291,12 @@ class ServiceAbstractTest extends MockeryTestCase
             )
             ->andReturnSelf()
             ->shouldReceive('setHint')
+            ->with(
+                \Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS,
+                true
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setHint')
             ->with(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1)
             ->andReturnSelf()
             ->shouldReceive('setHint')
@@ -369,6 +375,12 @@ class ServiceAbstractTest extends MockeryTestCase
             ->with(
                 \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
                 'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setHint')
+            ->with(
+                \Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS,
+                true
             )
             ->andReturnSelf()
             ->shouldReceive('setHint')
@@ -477,6 +489,12 @@ class ServiceAbstractTest extends MockeryTestCase
             )
             ->andReturnSelf()
             ->shouldReceive('setHint')
+            ->with(
+                \Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS,
+                true
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setHint')
             ->with(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1)
             ->andReturnSelf()
             ->shouldReceive('setHint')
@@ -532,6 +550,8 @@ class ServiceAbstractTest extends MockeryTestCase
             ->with($bundleConfig)
             ->shouldReceive('getParams')
             ->andReturn($expectedParms)
+            ->shouldReceive('getRefDataReplacements')
+            ->andReturn([])
             ->getMock();
 
         $this->sm->setService('BundleQuery', $mockBundleQuery);
