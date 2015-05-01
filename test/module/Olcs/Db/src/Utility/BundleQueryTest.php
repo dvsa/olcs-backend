@@ -22,10 +22,16 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
     protected $qb;
     protected $sm;
     protected $sut;
+    protected $em;
 
     protected function setUp()
     {
+        $this->em = m::mock();
+
         $this->qb = m::mock();
+        $this->qb->shouldReceive('getEntityManager')
+            ->andReturn($this->em);
+
         $this->sm = Bootstrap::getServiceManager();
         $this->sm->setAllowOverride(true);
 
@@ -71,7 +77,22 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('leftJoin')
             ->with('m.foo', 'mf', null, null)
             ->shouldReceive('addSelect')
-            ->with('mf');
+            ->with('mf')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -91,13 +112,11 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $mockEntityManager = m::mock();
-
         $expressionBuilder = m::mock()
             ->shouldReceive('setQueryBuilder')
             ->with($this->qb)
             ->shouldReceive('setEntityManager')
-            ->with($mockEntityManager)
+            ->with($this->em)
             ->shouldReceive('setParams')
             ->with(array())
             ->shouldReceive('buildWhereExpression')
@@ -112,11 +131,26 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
         $this->qb->shouldReceive('addSelect')
             ->with('m')
             ->shouldReceive('getEntityManager')
-            ->andReturn($mockEntityManager)
+            ->andReturn($this->em)
             ->shouldReceive('leftJoin')
             ->with('m.foo', 'mf', 'WITH', 'mf.name = ?0')
             ->shouldReceive('addSelect')
-            ->with('mf');
+            ->with('mf')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
 
@@ -143,13 +177,11 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $mockEntityManager = m::mock();
-
         $expressionBuilder = m::mock()
             ->shouldReceive('setQueryBuilder')
             ->with($this->qb)
             ->shouldReceive('setEntityManager')
-            ->with($mockEntityManager)
+            ->with($this->em)
             // First child
             ->shouldReceive('setParams')
             ->with(array())
@@ -176,7 +208,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('m')
             // First child
             ->shouldReceive('getEntityManager')
-            ->andReturn($mockEntityManager)
+            ->andReturn($this->em)
             ->shouldReceive('leftJoin')
             ->with('m.foo', 'mf', 'WITH', 'mf.name = ?0')
             ->shouldReceive('addSelect')
@@ -185,7 +217,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('leftJoin')
             ->with('m.fee', 'mf0', 'WITH', 'mf0.name = ?1')
             ->shouldReceive('addSelect')
-            ->with('mf0');
+            ->with('mf0')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
 
@@ -211,7 +263,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('m.foo', 'mf', null, null)
             ->shouldReceive('addSelect')
             ->once()
-            ->with('mf');
+            ->with('mf')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -236,8 +308,22 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->once()
             ->with('m.foo', 'mf', null, null)
             ->shouldReceive('addSelect')
-            ->once()
-            ->with('mf');
+            ->with('mf')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -266,7 +352,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('mf')
             ->shouldReceive('andWhere')
             ->once()
-            ->with('mf.id IS NULL');
+            ->with('mf.id IS NULL')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
@@ -295,7 +401,27 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('mf')
             ->shouldReceive('addOrderBy')
             ->once()
-            ->with('m.foo', 'ASC');
+            ->with('m.foo', 'ASC')
+            ->shouldReceive('getRootEntities')
+            ->andReturn(['\Some\Entity']);
+
+        $metadata = new \stdClass();
+        $metadata->associationMappings = [
+            'foo' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ],
+            'fee' => [
+                'targetEntity' => [
+                    '\Some\Entity'
+                ]
+            ]
+        ];
+
+        $this->em->shouldReceive('getClassMetadata')
+            ->with('\Some\Entity')
+            ->andReturn($metadata);
 
         $this->sut->build($config);
     }
