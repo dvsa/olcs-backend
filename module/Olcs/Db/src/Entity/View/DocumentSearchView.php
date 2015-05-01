@@ -118,31 +118,13 @@ class DocumentSearchView implements Interfaces\EntityInterface
     protected $filename;
 
     /**
-     * File Extension
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="file_extension")
-     */
-    protected $fileExtension;
-
-    /**
      * Is digital or not
      *
      * @var bool
      *
-     * @ORM\Column(type="boolean", name="is_digital")
+     * @ORM\Column(type="boolean", name="is_external")
      */
-    protected $isDigital;
-
-    /**
-     * Document type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_type")
-     */
-    protected $documentType;
+    protected $isExternal;
 
     /**
      * Identifier
@@ -206,6 +188,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="tm_id")
      */
     protected $tmId;
+
+    /**
+     * Correspondence Inbox ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="ci_id")
+     */
+    protected $ciId;
 
     /**
      * Get the id
@@ -308,33 +299,13 @@ class DocumentSearchView implements Interfaces\EntityInterface
     }
 
     /**
-     * Get the file extension
-     *
-     * @return string
-     */
-    public function getFileExtension()
-    {
-        return $this->fileExtension;
-    }
-
-    /**
-     * Get if digital
+     * Get is external
      *
      * @return int
      */
-    public function getIsDigital()
+    public function getIsExternal()
     {
-        return $this->isDigital;
-    }
-
-    /**
-     * Get the document file type
-     *
-     * @return string
-     */
-    public function getDocumentType()
-    {
-        return $this->documentType;
+        return $this->isExternal;
     }
 
     /**
@@ -405,5 +376,15 @@ class DocumentSearchView implements Interfaces\EntityInterface
     public function getTmId()
     {
         return $this->tmId;
+    }
+
+    /**
+     * Get the Correspondence Inbox ID (if applicable)
+     *
+     * @return int
+     */
+    public function getCiId()
+    {
+        return $this->ciId;
     }
 }
