@@ -1575,7 +1575,8 @@ VALUES
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
     ('task.default_team', 2, NULL),
-    ('task.default_user', 1, NULL);
+    ('task.default_user', 1, NULL),
+    ('CNS_EMAIL_LIST', 'terry.valtech@gmail.com', NULL);
 
 INSERT INTO `community_lic` (
     `id`, `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
