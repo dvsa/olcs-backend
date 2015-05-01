@@ -21,10 +21,18 @@ class BundleQuery implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
+    /**
+     * @var \Doctrine\ORM\QueryBuilder
+     */
     protected $qb;
     protected $selects = array();
     protected $joins = array();
     protected $params = array();
+
+    protected $nesting = [];
+    protected $refDataReplacements = array();
+    protected $refDataClassName = 'Olcs\\Db\\Entity\\RefData';
+    protected $refDataAlias = 1;
 
     public function setQueryBuilder($qb)
     {
@@ -36,37 +44,117 @@ class BundleQuery implements ServiceLocatorAwareInterface
         return $this->params;
     }
 
-    public function build($config, $name = 'main', $alias = 'm')
+
+    public function getRefDataReplacements()
+    {
+        return $this->refDataReplacements;
+    }
+
+    /**
+     * Build is called recursively until it has iterated through the children in the bundle
+     *
+     * @param array $config Partial bundle
+     * @param string $name Name of child (or main if it's the first call)
+     * @param string $alias Alias of this node
+     * @param string $parent Class name of the parent
+     * @param array $stack The stack of nodes from the parents
+     */
+    public function build($config, $alias = 'm', $parent = null, $stack = [])
     {
         $this->addSelect($alias);
 
-        if (isset($config['children'])) {
-            foreach ($config['children'] as $childName => $childConfig) {
-
-                if (is_numeric($childName) && is_string($childConfig)) {
-                    $childName = $childConfig;
-                    $childConfig = array('properties' => 'ALL');
-                }
-
-                $childAlias = $this->getSelectAlias($childName, $alias);
-
-                $joinType = 'left';
-
-                if (isset($childConfig['required'])) {
-                    $joinType = 'inner';
-                }
-
-                // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
-                // back in the leftJoin, this only works when the child has an ID column
-                if (isset($childConfig['requireNone'])) {
-                    $this->qb->andWhere($childAlias . '.id IS NULL');
-                }
-
-                $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
-
-                $this->build($childConfig, $childName, $childAlias);
-            }
+        if (isset($config['sort']) && isset($config['order'])) {
+            $this->qb->addOrderBy($alias . '.' . $config['sort'], $config['order']);
         }
+
+        if (!isset($config['children'])) {
+            return;
+        }
+
+        // This is the first call to build, so find the root entity
+        if ($parent === null) {
+            $parent = $this->qb->getRootEntities()[0];
+        }
+
+        // Grab the metadata of the parent entity
+        $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
+
+        $processed = [];
+        foreach ($config['children'] as $childName => $childConfig) {
+
+            if (is_numeric($childName) && is_string($childConfig)) {
+
+                // We skip children that have already been joined
+                if (in_array($childConfig, $processed)) {
+                    continue;
+                }
+                $processed[] = $childConfig;
+                $childName = $childConfig;
+                $childConfig = [];
+            }
+
+            // Add to the stack, so we have a reference to any refData items
+            $childStack = $stack;
+            $childStack[] = $childName;
+
+            // If we find a refData relationship
+            // Store the stack reference to it's location and skip it
+            if ($this->isRefData($metadata, $childName)) {
+                $this->refDataReplacements[] = [
+                    'stack' => $childStack
+                ];
+                continue;
+            }
+
+            $entityClass = $this->getChildClass($metadata, $childName);
+
+            $childAlias = $this->getSelectAlias($childName, $alias);
+
+            $joinType = 'left';
+
+            if (isset($childConfig['required'])) {
+                $joinType = 'inner';
+            }
+
+            // @NOTE Not an ideal solution, but what we are saying here is where there are no results fetched
+            // back in the leftJoin, this only works when the child has an ID column
+            if (isset($childConfig['requireNone'])) {
+                $this->qb->andWhere($childAlias . '.id IS NULL');
+            }
+
+            $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
+
+            $this->build($childConfig, $childAlias, $entityClass, $childStack);
+        }
+    }
+
+    /**
+     * Grab the child's class name
+     *
+     * @param object $metadata
+     * @param string $name
+     * @return string
+     */
+    protected function getChildClass($metadata, $name)
+    {
+        return $metadata->associationMappings[$name]['targetEntity'];
+    }
+
+    /**
+     * Check if the given node is a refdata node
+     * (We ignore *ToMany relationships)
+     *
+     * @param object $metadata
+     * @param string $name
+     * @return booleab
+     */
+    protected function isRefData($metadata, $name)
+    {
+        return (
+            isset($metadata->associationMappings[$name]['targetEntity'])
+            && $metadata->associationMappings[$name]['targetEntity'] === $this->refDataClassName
+            && !isset($metadata->associationMappings[$name]['joinTable'])
+        );
     }
 
     protected function addJoin($alias, $childName, $childAlias, $childConfig, $joinType = 'left')
