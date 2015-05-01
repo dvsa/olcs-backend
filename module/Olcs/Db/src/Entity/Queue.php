@@ -55,15 +55,6 @@ class Queue implements Interfaces\EntityInterface
     protected $options = '';
 
     /**
-     * Priority
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="priority", nullable=true, options={"default": 100})
-     */
-    protected $priority = 100;
-
-    /**
      * Process after date
      *
      * @var \DateTime
@@ -116,29 +107,6 @@ class Queue implements Interfaces\EntityInterface
     public function getOptions()
     {
         return $this->options;
-    }
-
-    /**
-     * Set the priority
-     *
-     * @param int $priority
-     * @return Queue
-     */
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-
-        return $this;
-    }
-
-    /**
-     * Get the priority
-     *
-     * @return int
-     */
-    public function getPriority()
-    {
-        return $this->priority;
     }
 
     /**
