@@ -127,24 +127,12 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $transactionId = 3;
-
         $mockServiceLocator = $this->getMock('\stdClass', array('get'));
 
         $mockServiceLocator->expects($this->once())
             ->method('get')
             ->with('Config')
             ->will($this->returnValue($config));
-
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
 
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
@@ -156,10 +144,8 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -182,8 +168,6 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -223,16 +207,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -243,10 +217,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -269,8 +241,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -310,16 +280,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -330,10 +290,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -356,8 +314,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -394,16 +350,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -414,10 +360,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -445,8 +389,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -484,16 +426,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -504,10 +436,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -537,8 +467,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -576,16 +504,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -596,10 +514,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -629,8 +545,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -663,16 +577,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -683,10 +587,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -711,8 +613,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -741,16 +641,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -761,10 +651,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -799,8 +687,6 @@ XML;
                 'userId' => 'bar'
             )
         );
-
-        $transactionId = 3;
 
         $mockResponse = <<< XML
 <?xml version="1.0"?>
@@ -842,16 +728,6 @@ XML;
             ->with('Config')
             ->will($this->returnValue($config));
 
-        $mockService = $this->getMock('\stdClass', array('initiateRequest', 'getId'));
-
-        $mockService->expects($this->once())
-            ->method('initiateRequest')
-            ->will($this->returnValue($mockService));
-
-        $mockService->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue($transactionId));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
@@ -862,10 +738,8 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $service->expects($this->any())
-            ->method('getService')
-            ->with('CompaniesHouseRequest')
-            ->will($this->returnValue($mockService));
+        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
+        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
         $this->assertEquals($expected, $response);

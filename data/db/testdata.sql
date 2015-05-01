@@ -70,6 +70,7 @@ TRUNCATE TABLE `tm_case_decision_unfitness`;
 TRUNCATE TABLE `tm_employment`;
 TRUNCATE TABLE `trading_name`;
 TRUNCATE TABLE `transport_manager`;
+TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `user`;
 TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `organisation_user`;
@@ -81,6 +82,7 @@ TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
 TRUNCATE TABLE `task_allocation_rule`;
+TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
@@ -111,32 +113,45 @@ TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
+TRUNCATE TABLE `correspondence_inbox`;
 
 /* Test documents */
-INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_digital,category_id,sub_category_id,
-file_extension, issued_date,document_store_id) VALUES
-    (672,7,null,'Test document digital','testdocument2.doc',1,1,1,'doc_doc','2014-08-25 12:04:35',''),
-    (673,7,null,'Test document 3','testdocument3.doc',0,1,2,'doc_doc','2014-08-22 11:01:00',''),
-    (674,7,null,'Test document 4','testdocument4.doc',0,2,3,'doc_doc','2014-08-24 16:23:00',''),
-    (675,7,null,'Test document 5','testdocument5.xls',0,2,3,'doc_xls','2014-07-01 15:01:00',''),
-    (676,7,null,'Test document 6','testdocument6.docx',0,2,3,'doc_docx','2014-07-05 09:00:05',''),
-    (677,7,null,'Test document 7','testdocument7.xls',0,2,4,'doc_xls','2014-07-05 10:23:00',''),
-    (678,7,null,'Test document 8','testdocument8.doc',1,2,4,'doc_doc','2014-07-05 10:45:00',''),
-    (679,7,null,'Test document 9','testdocument9.ppt',1,2,4,'doc_ppt','2014-08-05 08:59:40',''),
-    (680,7,null,'Test document 10','testdocument10.jpg',0,1,2,'doc_jpg','2014-08-08 12:47:00',''),
-    (681,7,null,'Test document 11','testdocument11.txt',0,1,1,'doc_txt','2014-08-14 14:00:00',''),
-    (682,7,null,'Test document 12','testdocument12.xls',1,1,2,'doc_xls','2014-08-28 14:03:00',''),
-    (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'doc_zip','2014-08-28 14:03:00',''),
-    (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'doc_pdf','2014-08-28 14:03:00',''),
-    (802,110,2,'Test bus route','route.jpg',1,3,36,'doc_jpg','2014-08-28 14:03:00','');
+INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
+issued_date,document_store_id) VALUES
+    (672,7,null,'Test document digital','testdocument2.doc',1,1,1,'2014-08-25 12:04:35',''),
+    (673,7,null,'Test document 3','testdocument3.doc',0,1,2,'2014-08-22 11:01:00',''),
+    (674,7,null,'Test document 4','testdocument4.doc',0,2,3,'2014-08-24 16:23:00',''),
+    (675,7,null,'Test document 5','testdocument5.xls',0,2,3,'2014-07-01 15:01:00',''),
+    (676,7,null,'Test document 6','testdocument6.docx',0,2,3,'2014-07-05 09:00:05',''),
+    (677,7,null,'Test document 7','testdocument7.xls',0,2,4,'2014-07-05 10:23:00',''),
+    (678,7,null,'Test document 8','testdocument8.doc',1,2,4,'2014-07-05 10:45:00',''),
+    (679,7,null,'Test document 9','testdocument9.ppt',1,2,4,'2014-08-05 08:59:40',''),
+    (680,7,null,'Test document 10','testdocument10.jpg',0,1,2,'2014-08-08 12:47:00',''),
+    (681,7,null,'Test document 11','testdocument11.txt',0,1,1,'2014-08-14 14:00:00',''),
+    (682,7,null,'Test document 12','testdocument12.xls',1,1,2,'2014-08-28 14:03:00',''),
+
+    (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'2014-08-28 14:03:00',''),
+    (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'2014-08-28 14:03:00',''),
+    (802,110,2,'Test bus route','route.jpg',1,3,36,'2014-08-28 14:03:00',''),
+
+    (803,110,2,'Test bus transxchange for LA 2','transxchange_LA2.zip',1,3,107,
+    '2014-08-28 14:03:00',''),
+    (804,110,2,'Test bus transxchange PDF for LA 2','transxchange_LA2.pdf',1,3,108,
+    '2014-08-28 14:03:00',
+    ''),
+    (805,110,2,'Test bus route for LA 2','route_LA2_Org1.jpg',1,3,36,'2014-08-28 14:03:00',''),
+
+    (806,110,2,'Test bus transxchange for LA 1','transxchange_LA1.zip',1,3,107,
+    '2014-08-28 14:03:00',''),
+    (807,110,2,'Test bus transxchange PDF for LA 1','transxchange_LA1.pdf',1,3,108,
+    '2014-08-28 14:03:00',''),
+    (808,110,2,'Test bus route for LA 1','route_LA1.jpg',1,3,36,'2014-08-28 14:03:00','');
 
 INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
 local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
-(1, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
-(2, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00'),
-(3, 801, 802, 800, 2, 1, NULL, 1, 0, 1, '2014-03-24 16:53:00');
-
-
+(1, 801, 802, 800, 2, 1, NULL, 1, 0, 13, '2014-03-24 16:53:00'),
+(2, 804, 805, 803, 2, 1, 2, 1, 0, 14, '2014-03-24 16:53:00'),
+(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -391,72 +406,77 @@ INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `operating_c
     (16,75,110,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
-   `last_modified_by`,`created_by`,`fao`,`forename`,`family_name`,`written_permission_to_engage`,`email_address`,
+   `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
    `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-    (1,'ct_ta',26,NULL,2,0,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (3,'ct_corr',109,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (8,'ct_corr',8,10,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (21,'ct_reg',21,NULL,0,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (25,'ct_def',25,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (26,'ct_def',26,NULL,0,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (27,'ct_def',27,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (29,'ct_def',29,NULL,3,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (30,'ct_reg',30,NULL,2,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (31,'ct_corr',31,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (37,'ct_oc',37,NULL,2,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (39,'ct_oc',39,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (41,'ct_reg',41,NULL,2,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (42,'ct_corr',42,NULL,1,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (54,'ct_reg',54,NULL,4,2,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (55,'ct_corr',55,NULL,3,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (63,'ct_reg',63,NULL,3,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (64,'ct_corr',64,NULL,0,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (67,'ct_oc',67,NULL,4,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (72,'ct_oc',72,NULL,2,4,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (75,'',75,NULL,4,3,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (76,'ct_corr',76,46,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (77,'ct_corr',72,46,4,1,'Important Person',NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (100,'ct_reg',100,44,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (101,'ct_team_user',26,4,4,1,NULL,'Logged in','User',0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (102,'ct_corr',41,NULL,1,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (103,'ct_complainant',72,46,4,1,NULL,'John','Smith',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (104,'ct_tm',110,NULL,1,1,NULL,NULL,NULL,0,'one@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (105,'ct_team_user',26,81,4,1,NULL,'John','Spellman',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (106,'ct_team_user',26,82,4,1,NULL,'Steve','Fox',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (107,'ct_complainant',72,33,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (108,'ct_complainant',72,34,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (109,'ct_complainant',72,35,4,1,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04',
+    (1,'ct_ta',26,NULL,2,0,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (3,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (8,'ct_corr',8,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (21,'ct_reg',21,NULL,0,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (25,'ct_def',25,NULL,4,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (26,'ct_def',26,NULL,0,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (27,'ct_def',27,NULL,2,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (29,'ct_def',29,NULL,3,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (30,'ct_reg',30,NULL,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (31,'ct_corr',31,NULL,0,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (37,'ct_oc',37,NULL,2,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (39,'ct_oc',39,NULL,4,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (41,'ct_reg',41,NULL,2,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (42,'ct_corr',42,NULL,1,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (54,'ct_reg',54,NULL,4,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (55,'ct_corr',55,NULL,3,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (63,'ct_reg',63,NULL,3,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (64,'ct_corr',64,NULL,0,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (67,'ct_oc',67,NULL,4,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (72,'ct_oc',72,NULL,2,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (75,'',75,NULL,4,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (76,'ct_corr',76,46,4,1,'Important Person',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (77,'ct_corr',72,46,4,1,'Important Person',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (100,'ct_reg',100,44,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (101,'ct_team_user',26,4,4,1,NULL,0,'loggedin@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (102,'ct_corr',41,NULL,1,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (103,'ct_complainant',72,46,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (104,'ct_tm',110,NULL,1,1,NULL,0,'one@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (105,'ct_team_user',26,81,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (106,'ct_team_user',26,82,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (107,'ct_complainant',72,33,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (108,'ct_complainant',72,34,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (109,'ct_complainant',72,35,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
 
-    (110,'ct_complainant',26,60,4,1,NULL,NULL,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04',
+    (110,'ct_complainant',26,60,4,1,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (111,'ct_complainant',26,65,4,1,NULL,NULL,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    (111,'ct_complainant',26,65,4,1,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (112,'ct_complainant',26,66,4,1,NULL,NULL,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    (112,'ct_complainant',26,66,4,1,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (113,'ct_complainant',26,77,4,1,NULL,NULL,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
+    (113,'ct_complainant',26,77,4,1,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (114,'ct_team_user',26,NULL,4,1,NULL,'Another','User',0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (115,'ct_tm',111,NULL,1,1,NULL,NULL,NULL,0,'two@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (116,'ct_tm',112,NULL,1,1,NULL,NULL,NULL,0,'three@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (117,'ct_tm',113,65,1,1,NULL,NULL,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (118,'ct_tm',114,66,1,1,NULL,NULL,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (119,'ct_tm',115,77,1,1,NULL,NULL,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (120,'ct_corr',105,4,1,1,NULL,NULL,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    (114,'ct_team_user',26,NULL,4,1,NULL,0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (115,'ct_tm',111,NULL,1,1,NULL,0,'two@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (116,'ct_tm',112,NULL,1,1,NULL,0,'three@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (117,'ct_tm',113,65,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (118,'ct_tm',114,66,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (119,'ct_tm',115,77,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (120,'ct_corr',105,4,1,1,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (121,'ct_corr',106,9,1,1,NULL,NULL,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    (121,'ct_corr',106,9,1,1,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (122,'ct_corr',107,10,1,1,NULL,NULL,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    (122,'ct_corr',107,10,1,1,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (123,'ct_corr',108,11,1,1,NULL,NULL,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
+    (123,'ct_corr',108,11,1,1,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (130,'ct_team_user',26,83,4,1,NULL,'Amy','Wrigg',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (131,'ct_team_user',26,84,4,1,NULL,'Phil','Jowitt',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (132,'ct_team_user',26,85,4,1,NULL,'Kevin','Rooney',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (133,'ct_team_user',26,86,4,1,NULL,'Sarah','Thompson',0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04',
+    (130,'ct_team_user',26,83,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (131,'ct_team_user',26,84,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (132,'ct_team_user',26,85,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (133,'ct_team_user',26,86,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04',
     '2014-11-24 10:30:04',1),
-    (140,'ct_team_user',NULL,90,1,1,NULL,NULL,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2000-04-02 00:00:00',NULL,1);
+    (140,'ct_partner',7,NULL,1,1,NULL,0,NULL,'HMRC',NULL,'2000-04-02 00:00:00',NULL,1),
+    (141,'ct_partner',7,NULL,1,1,NULL,0,NULL,'DVSA',NULL,'2000-04-02 00:00:00',NULL,1),
+    (142,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Police',NULL,'2000-04-02 00:00:00',NULL,1),
+    (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00',
+    NULL,1),
+    (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -777,16 +797,17 @@ VALUES
   (2, 16);
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
-`company_or_llp_no`, `name`,`is_mlh`, `type`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1),
-    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1),
-    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1),
-    (100,'K',1,3,  100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
-    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1),
-    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1);
+`company_or_llp_no`, `name`,`is_mlh`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1),
+    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1),
+    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1),
+    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1),
+    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,0,'org_t_rc',NOW(),NOW(),1),
+    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,0,'org_t_pa',NOW(),NOW(),1),
+    (100,'K',1,3,  100,'100100','Test partnership',0,0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2),
+    (101,'K',1,3,  100,'100100','Test IRFO',0,1,'org_t_ir',NOW(),NOW(),1),
+    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,0,'org_t_rc',NULL,NULL,1),
+    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,0,'org_t_rc',NOW(),NOW(),1);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -1052,27 +1073,28 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`) VALUES
+`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`,
+`local_authority_id`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
-    'loggedin@test9876.com'),
+    'loggedin@test9876.com', 1),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
-    'john.spellman@test9876.com'),
+    'john.spellman@test9876.com', NULL),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
-    'stevefox@test9876.com'),
+    'stevefox@test9876.com', NULL),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',130,
-    'amywrigg@test9876.com'),
+    'amywrigg@test9876.com', NULL),
     (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',131,
-    'philjowitt@test9876.com'),
+    'philjowitt@test9876.com', NULL),
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',132,
-    'kevinrooney@test9876.com'),
+    'kevinrooney@test9876.com', NULL),
     (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
-    'sarahthompson@test9876.com'),
+    'sarahthompson@test9876.com', NULL),
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
-    'anotheruser@test9876.com'),
+    'anotheruser@test9876.com', NULL),
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
-    NULL),
+    NULL, NULL),
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi2',140,
-    NULL);
+    NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`) VALUES
     (1, 1),
@@ -1121,7 +1143,7 @@ VALUES
   '2013-11-12 12:27:33',NULL,1),
   (28,'case_t_app',NULL,7,1,NULL,NULL,NULL,'E123444','2012-06-13',NULL,'Convictions against operator',0,NULL,NULL,
   NULL,'Annual Test History for case 28',NULL,NULL,NULL,NULL,'2014-01-01 11:11:11',NULL,1),
-  (29,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,'Polish Transport Authority','Polish Transport Authority','GH52 ABC',NULL,NULL,NULL,'comment',NULL,'2014-01-11 11:11:11','2014-11-07 12:47:07',3),
+  (29,'case_t_lic','erru_case_t_msi',7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'1213213',0,'Polish Transport Authority','Polish Transport Authority','GH52 ABC',NULL,NULL,NULL,'comment',NULL,'2014-01-11 11:11:11','2014-11-07 12:47:07',3),
   (30,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'werwrew',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (31,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11','2014-05-25','345345345',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (32,'case_t_lic',NULL,7,NULL,NULL,NULL,NULL,'','2014-02-11',NULL,'weewrerwerw',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
@@ -1261,7 +1283,6 @@ INSERT INTO `disc_sequence` (
     (19,'lcat_gv',10231,'ON',4003,'ON',14533,'ON','N',1,0,0),
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
-ALTER TABLE companies_house_request AUTO_INCREMENT=53;
 
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
     `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`,
@@ -1286,20 +1307,20 @@ VALUES
 INSERT INTO `serious_infringement`
 (`id`, `si_category_type_id`, `erru_response_user_id`, `member_state_code`, `created_by`,`last_modified_by`,
 `si_category_id`, `case_id`, `check_date`, `erru_response_sent`,`erru_response_time`, `infringement_date`,
-`notification_number`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
+`notification_number`, `workflow_id`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 1, null, null,'2014-05-04 17:50:06',
-  '2014-05-04 17:50:06', 1),
-  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 2, null, null,'2014-05-04 17:50:06',
-  '2014-05-04 17:50:06', 1);
+  (1, '101', 1, 'PL', 1,1, 'MSI', 29, '2014-04-04', 0,null, '2014-04-05', 12345, 'A3CCBDB1-6C8B-4741-847B-4C6B80AA8608',
+   null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1),
+  (2, '101', 1, 'PL', 1,1, 'MSI', 24, '2014-04-04', 0,null, '2014-04-05', 678910,
+   'FB4F5CE2-4D38-4AB8-8185-03947C939393', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1);
 
 INSERT INTO `si_penalty`
 (`id`, `si_penalty_type_id`, `last_modified_by`, `created_by`, `serious_infringement_id`, `imposed`,
  `reason_not_imposed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
   (1, '101', 1, 1, 1, 1, null, '2014-06-01', '2015-01-31', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (2, '306', 1, 1, 1, 0, 'Reason the penalty was not imposed', '2014-06-01', '2015-01-31', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (3, '306', 1, 1, 2, 0, 'Reason the penalty was not imposed', '2014-06-01', '2015-01-31', null,
+  (2, '306', 1, 1, 1, 0, 'Reason the penalty was not imposed', null, null, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (3, '306', 1, 1, 2, 0, 'Reason the penalty was not imposed', null, null, null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (4, '101', 1, 1, 2, 1, '', '2014-05-01', '2015-01-31', null,
   '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
@@ -1386,9 +1407,9 @@ INSERT INTO `si_penalty_erru_imposed`
 (`id`, `si_penalty_imposed_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `final_decision_date`,
  `executed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
 VALUES
-  (1, '204', 1, 1, 1, '2014-10-02', 1, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (2, '202', 1, 1, 1, '2014-10-02', 1, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (3, '201', 1, 1, 1, '2014-10-02', 0, '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+  (1, '204', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_yes', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (2, '202', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_no', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
+  (3, '201', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_un', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
 
 INSERT INTO `si_penalty_erru_requested`
 (`id`, `si_penalty_requested_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `duration`,
@@ -1543,6 +1564,14 @@ VALUES
 	(104, '01150'),
 	(105, '01150');
 
+INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `in_force_date`)
+VALUES
+    (101, 1, 'irfo_perm_s_appreoved', NOW());
+
+INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `irfo_fee_id`)
+VALUES
+    (101, 1, 'irfo_auth_s_approved', '17/1', 'From', 'To', 3, NOW(), 'FeeId');
+
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
     ('task.default_team', 2, NULL),
@@ -1564,10 +1593,10 @@ INSERT INTO `community_lic` (
     (10, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
-    `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+    `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
+	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `type_id`, `created_by`,
     `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
@@ -1576,10 +1605,10 @@ VALUES
 	(2, 2, 'cl_sw_reason_other', NULL, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `community_lic_withdrawal` (`id`, `community_lic_id`, `created_by`, `last_modified_by`,
-    `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`)
+    `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
+	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `type_id`,
     `created_by`, `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
@@ -1818,9 +1847,9 @@ INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_m
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (117,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (118,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:30:12',NULL,NULL,NULL,1);
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (119,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (124,116,'ct_corr',NULL,NULL,NULL,NULL,'',NULL,0,'2015-03-27 12:29:38',NULL,NULL,'dvsa@stolenegg.com',NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (125,117,'ct_est',NULL,NULL,NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (126,119,'ct_work',NULL,NULL,NULL,NULL,'Dan',NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (124,116,'ct_corr',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,'dvsa@stolenegg.com',NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (125,117,'ct_est',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (126,119,'ct_work',NULL,NULL,NULL,NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `operating_centre` (`id`, `address_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `olbs_key`, `version`, `vi_action`) VALUES (73,118,NULL,NULL,'2015-03-27 12:30:12',NULL,NULL,1,NULL);
 INSERT INTO `licence` (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`, `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`, `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`, `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`, `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `ni_flag`, `olbs_key`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `vi_action`) VALUES (211,124,NULL,125,1,'tach_internal',NULL,NULL,NULL,NULL,NULL,'lsts_not_submitted','B',NULL,NULL,NULL,NULL,0,1,0,1,NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','OB1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,7,NULL);
 INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES (1,211);
@@ -1840,11 +1869,11 @@ INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_m
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (121,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (122,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:30:12',NULL,NULL,NULL,1);
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (123,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (127,120,'ct_corr',NULL,NULL,NULL,NULL,'',NULL,0,'2015-03-27 12:29:38',NULL,NULL,'dvsa@stolenegg.com',NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (128,121,'ct_est',NULL,NULL,NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `family_name`, `fao`, `forename`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (129,123,'ct_work',NULL,NULL,NULL,NULL,'Dan',NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (127,120,'ct_corr',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,'dvsa@stolenegg.com',NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (128,121,'ct_est',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (129,123,'ct_work',NULL,NULL,NULL,NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `operating_centre` (`id`, `address_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `olbs_key`, `version`, `vi_action`) VALUES (74,122,NULL,NULL,'2015-03-27 12:30:12',NULL,NULL,1,NULL);
-INSERT INTO `licence` (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`, `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`, `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`, `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`, `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `ni_flag`, `olbs_key`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `vi_action`) VALUES (212,127,NULL,127,1,'tach_internal',NULL,NULL,NULL,NULL,NULL,'lsts_consideration','B',NULL,NULL,NULL,NULL,0,1,0,1,NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','ON2',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,7,NULL);
+INSERT INTO `licence` (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`, `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`, `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`, `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`, `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `ni_flag`, `olbs_key`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `vi_action`) VALUES (212,127,'V048',127,1,'tach_internal',NULL,NULL,NULL,NULL,NULL,'lsts_consideration','B',NULL,NULL,NULL,NULL,0,1,0,1,NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','ON2',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,7,NULL);
 INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES (2,212);
 INSERT INTO `application` (`id`, `interim_status`, `licence_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `withdrawn_reason`, `administration`, `bankrupt`, `convictions_confirmation`, `declaration_confirmation`, `disqualified`, `financial_evidence_uploaded`, `has_entered_reg`, `insolvency_confirmation`, `insolvency_details`, `interim_auth_trailers`, `interim_auth_vehicles`, `interim_end`, `interim_reason`, `interim_start`, `is_variation`, `liquidation`, `override_ooo`, `prev_been_at_pi`, `prev_been_disqualified_tc`, `prev_been_refused`, `prev_been_revoked`, `prev_conviction`, `prev_had_licence`, `prev_has_licence`, `prev_purchased_assets`, `psv_limousines`, `psv_medium_vhl_confirmation`, `psv_medium_vhl_notes`, `psv_no_limousine_confirmation`, `psv_no_small_vhl_confirmation`, `psv_only_limousines_confirmation`, `psv_operate_small_vhl`, `psv_small_vhl_confirmation`, `psv_small_vhl_notes`, `receivership`, `refused_date`, `safety_confirmation`, `target_completion_date`, `created_on`, `deleted_date`, `granted_date`, `is_maintenance_suitable`, `last_modified_on`, `ni_flag`, `received_date`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `withdrawn_date`) VALUES (8,NULL,212,NULL,'lcat_gv',NULL,'ltyp_sn','apsts_consideration',NULL,0,0,1,1,0,0,0,1,'',NULL,NULL,NULL,NULL,NULL,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,NULL,'2015-03-27 12:28:06',NULL,NULL,NULL,'2015-03-27 12:32:04',1,'2015-03-27 12:34:56',NULL,NULL,NULL,1,1,NULL,10,NULL);
 INSERT INTO `application_completion` (`id`, `application_id`, `created_by`, `last_modified_by`, `addresses_status`, `business_details_status`, `business_type_status`, `community_licences_status`, `conditions_undertakings_status`, `convictions_penalties_status`, `discs_status`, `financial_evidence_status`, `financial_history_status`, `last_section`, `licence_history_status`, `operating_centres_status`, `people_status`, `safety_status`, `taxi_phv_status`, `transport_managers_status`, `type_of_licence_status`, `undertakings_status`, `vehicles_declarations_status`, `vehicles_psv_status`, `vehicles_status`, `created_on`, `last_modified_on`, `version`) VALUES (5,8,NULL,NULL,2,2,2,NULL,NULL,2,NULL,2,2,NULL,2,2,2,2,NULL,2,2,2,NULL,NULL,2,'2015-03-27 12:28:07','2015-03-27 12:32:04',19);
@@ -1917,3 +1946,15 @@ VALUES
     NULL, '2015-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 	(3, 'insp_rep_t_TE', 'insp_req_t_new_op', 2, 'insp_res_t_new_unsat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-03', NULL, NULL,
     NULL, '2015-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+INSERT INTO `correspondence_inbox` (`id`, `document_id`, `licence_id`)
+VALUES
+    (1, 674, 7);
+
+INSERT INTO `grace_period` (`id`, `created_by`, `last_modified_by`, `licence_id`, `description`, `end_date`, `start_date`, `created_on`,
+    `last_modified_on`, `olbs_key`)
+    VALUES
+      (1, 1, 1, 7, "Grace period description 1", '2015-08-01', '2015-05-01', '2015-04-01', '2015-05-01', NULL),
+      (2, 1, 1, 7, "Grace period description 2", '2015-09-01', '2015-06-01', '2015-05-01', '2015-06-01', NULL),
+      (3, 1, 1, 7, "Grace period description 3", '2015-10-01', '2015-07-01', '2015-06-01', '2015-07-01', NULL),
+      (4, 1, 1, 7, "Grace period description 4", '2015-11-01', '2015-08-01', '2015-07-01', '2015-08-01', NULL);

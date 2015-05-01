@@ -36,9 +36,7 @@ class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
             'categoryName' => 'cat',
             'documentSubCategoryName' => 'subcat',
             'filename' => 'file1',
-            'fileExtension' => 'JPG',
-            'isDigital' => 1,
-            'documentType' => 'sometype',
+            'isExternal' => 1,
             'identifier' => 'ident',
             'licenceNo' => 'LIC1',
             'licenceId' => 4,
@@ -46,6 +44,7 @@ class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
             'caseId' => 5,
             'busRegId' => 6,
             'tmId' => 7,
+            'ciId' => 8,
         ];
         $this->entity = new DocumentSearchView();
 
