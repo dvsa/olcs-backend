@@ -56,7 +56,8 @@ class TradingNamesControllerTest extends MockeryTestCase
     public function testCreateWithException()
     {
         $data = [
-            'organisation' => 1
+            'organisation' => 1,
+            'licence' => 2
         ];
         $this->sut
             ->shouldReceive('checkMethod')
@@ -106,6 +107,7 @@ class TradingNamesControllerTest extends MockeryTestCase
         ];
         $delete = [
             'organisation' => $data['organisation'],
+            'licence' => $data['licence'],
             'name' => 'tn3'
         ];
 
@@ -120,7 +122,7 @@ class TradingNamesControllerTest extends MockeryTestCase
             ->andReturn(
                 m::mock()
                 ->shouldReceive('getList')
-                ->with(['organisation' => $data['organisation']])
+                ->with(['organisation' => $data['organisation'], 'licence' => $data['licence']])
                 ->andReturn($results)
                 ->once()
                 ->shouldReceive('create')
