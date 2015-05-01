@@ -1564,9 +1564,9 @@ VALUES
 	(104, '01150'),
 	(105, '01150');
 
-INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `in_force_date`)
+INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
 VALUES
-    (101, 1, 'irfo_perm_s_appreoved', NOW());
+    (101, 1, 'irfo_perm_s_appreoved', 2014, '2015-03-10', NOW());
 
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `irfo_fee_id`)
 VALUES
