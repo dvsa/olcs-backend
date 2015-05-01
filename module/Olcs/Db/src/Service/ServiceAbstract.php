@@ -275,7 +275,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             }
         }
 
-        if (!is_array($resultRef)) {
+        if (!is_array($resultRef) || empty($resultRef)) {
             return $values;
         }
 
