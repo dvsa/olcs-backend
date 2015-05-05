@@ -37,6 +37,15 @@ class Queue implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Attempts
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="attempts", nullable=false, options={"default": 0})
+     */
+    protected $attempts = 0;
+
+    /**
      * Entity id
      *
      * @var int
@@ -62,6 +71,29 @@ class Queue implements Interfaces\EntityInterface
      * @ORM\Column(type="datetime", name="process_after_date", nullable=true)
      */
     protected $processAfterDate;
+
+    /**
+     * Set the attempts
+     *
+     * @param int $attempts
+     * @return Queue
+     */
+    public function setAttempts($attempts)
+    {
+        $this->attempts = $attempts;
+
+        return $this;
+    }
+
+    /**
+     * Get the attempts
+     *
+     * @return int
+     */
+    public function getAttempts()
+    {
+        return $this->attempts;
+    }
 
     /**
      * Set the entity id
