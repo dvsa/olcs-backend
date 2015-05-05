@@ -10,16 +10,16 @@
             "type": "composer"
         },
         {
-            "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-logging.git",
             "type": "vcs"
         },
         {
-            "url": "git@gitlab.clb.npm:olcs/companies-house.git",
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
             "type": "vcs"
         },
         {
             "type": "vcs",
-            "url": "git@gitlab.clb.npm:olcs/olcs-autoload.git"
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-autoload.git"
         }
     ],
     "require": {
