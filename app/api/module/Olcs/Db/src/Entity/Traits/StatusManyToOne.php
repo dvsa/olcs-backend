@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Status many to one trait
  *
- * Auto-Generated (Shared between 7 entities)
+ * Auto-Generated (Shared between 8 entities)
  */
 trait StatusManyToOne
 {

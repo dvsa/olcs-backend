@@ -579,7 +579,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     /**
      * Return a new instance of DoctrineHydrator
      *
-     * @return DoctrineObject
+     * @return \DoctrineModule\Stdlib\Hydrator\DoctrineObject
      */
     protected function getDoctrineHydrator()
     {
