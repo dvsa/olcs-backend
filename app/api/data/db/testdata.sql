@@ -983,12 +983,12 @@ VALUES
 
 INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
-	(1, 1, 'tmap_st_incomplete', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
-	(2, 7, 'tmap_st_awaiting_signature', NULL, NULL, 'tm_t_I', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
+	(1, 1, 'tmap_st_incomplete', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
+	(2, 7, 'tmap_st_awaiting_signature', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
 	NULL, 1),
-  (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
+  (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
-	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_I', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
+	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
 	NULL, 1);
 
 INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
@@ -1016,10 +1016,10 @@ VALUES
 
 INSERT INTO `tm_qualification` (`id`, `transport_manager_id`, `created_by`, `last_modified_by`, `country_code`,
     `qualification_type`, `created_on`, `last_modified_on`, `version`, `issued_date`, `serial_no`) VALUES
-    (1,1,NULL,NULL,'GB','tm_qt_CPCSI',NULL,NULL,1,'2014-01-01','1'),
-    (2,1,NULL,NULL,'GB','tm_qt_CPCSN',NULL,NULL,1,'2014-02-02','2'),
-    (3,3,1,1,'GB','tm_qt_CPCSI','2012-01-01',NULL,1,'2012-01-01','3333'),
-    (4,3,1,1,'ZA','tm_qt_CPCSN','2013-02-02',NULL,1,'2013-02-02','4444');
+    (1,1,NULL,NULL,'GB','tm_qt_cpcsi',NULL,NULL,1,'2014-01-01','1'),
+    (2,1,NULL,NULL,'GB','tm_qt_cpcsn',NULL,NULL,1,'2014-02-02','2'),
+    (3,3,1,1,'GB','tm_qt_cpcsi','2012-01-01',NULL,1,'2012-01-01','3333'),
+    (4,3,1,1,'ZA','tm_qt_cpcsn','2013-02-02',NULL,1,'2013-02-02','4444');
 
 INSERT INTO `trading_name` (`id`,`organisation_id`,`last_modified_by`,`created_by`,`licence_id`,`name`,`deleted_date`,
   `vi_action`,`created_on`,`last_modified_on`,`version`)
@@ -1034,9 +1034,9 @@ VALUES
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `work_cd_id`,
  `home_cd_id`, `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'tm_st_A','tm_t_I',115,117,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'tm_st_A','tm_t_E',116,118,NULL,NULL,NULL,1),
-    (3,NULL,NULL,'tm_st_A','tm_t_I',104,119,NULL,NULL,NULL,1);
+    (1,NULL,NULL,'tm_st_a','tm_t_i',115,117,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_st_a','tm_t_e',116,118,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_st_a','tm_t_i',104,119,NULL,NULL,NULL,1);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
 `created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,
