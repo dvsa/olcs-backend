@@ -45,45 +45,56 @@ class Search
      * @param array $indexes
      * @param int $page
      * @param int $limit
-     * @param array $filters
      * @return array
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
         $elasticaQueryBool = new Query\Bool();
 
-        $elasticaQueryString  = new Query\Match();
-        $elasticaQueryString->setField('_all', $query);
-        $elasticaQueryBool->addShould($elasticaQueryString);
-
-        /**
-         * Here we send the filter values selected to the search query
+        /*
+         * Check for a single asterisk to allow the query to run with no params.
+         * Just returns everything for instances where landing on a search page
          */
-        $filters = $this->getFilters();
-        foreach ($filters as $field => $value) {
+        if ($query == '*' ) {
+            // ignore all query params and just search index for everything
+            $elasticaQuery        = new Query();
+        } else {
+            $elasticaQueryString  = new Query\Match();
+            $elasticaQueryString->setField('_all', $query);
+            $elasticaQueryBool->addShould($elasticaQueryString);
 
-            if (!empty($value)) {
+            /**
+             * Here we send the filter values selected to the search query
+             */
+            $filters = $this->getFilters();
+            foreach ($filters as $field => $value) {
 
-                $elasticaQueryString = new Query\Match();
-                $elasticaQueryString->setField($field, $value);
-                $elasticaQueryBool->addShould($elasticaQueryString);
+                if (!empty($value)) {
+
+                    $elasticaQueryString = new Query\Match();
+                    $elasticaQueryString->setField($field, $value);
+                    $elasticaQueryBool->addShould($elasticaQueryString);
+                }
             }
+
+            $vrmQuery = new Query\Match();
+            $vrmQuery->setField('vrm', $query);
+            $elasticaQueryBool->addShould($vrmQuery);
+
+            $postcodeQuery = new Query\Match();
+            $postcodeQuery->setField('correspondence_postcode', $query);
+            $elasticaQueryBool->addShould($postcodeQuery);
+
+            $wildcardQuery = strtolower(rtrim($query, '*') . '*');
+            $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+            $elasticaQueryBool->addShould($elasticaQueryWildcard);
+
+            $elasticaQuery = new Query();
+
+            $elasticaQuery->setQuery($elasticaQueryBool);
+
         }
 
-        $vrmQuery = new Query\Match();
-        $vrmQuery->setField('vrm', $query);
-        $elasticaQueryBool->addShould($vrmQuery);
-
-        $postcodeQuery = new Query\Match();
-        $postcodeQuery->setField('correspondence_postcode', $query);
-        $elasticaQueryBool->addShould($postcodeQuery);
-
-        $wildcardQuery = strtolower(rtrim($query, '*') . '*');
-        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-        $elasticaQueryBool->addShould($elasticaQueryWildcard);
-
-        $elasticaQuery        = new Query();
-        $elasticaQuery->setQuery($elasticaQueryBool);
         $elasticaQuery->setSize($limit);
         $elasticaQuery->setFrom($limit * ($page - 1));
 
