@@ -280,6 +280,19 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         }
 
         $stackItem = array_shift($stack);
+
+        // Added extra check in case column is suffixed with Id
+        if (!isset($resultRef[$stackItem]) && isset($resultRef[$stackItem . 'Id'])) {
+            $value = $resultRef[$stackItem . 'Id'];
+
+            $resultRef[$stackItem] = $value;
+
+            $resultRef = &$resultRef[$stackItem];
+            $this->replacementReferences[] = &$resultRef;
+            $values[$value] = $value;
+            return $values;
+        }
+
         $resultRef = &$resultRef[$stackItem];
 
         if (!empty($resultRef)) {
