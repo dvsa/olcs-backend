@@ -33,6 +33,7 @@ class Organisation implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\TypeManyToOneAlt1,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
 
@@ -154,16 +155,6 @@ class Organisation implements Interfaces\EntityInterface
      * )
      */
     protected $natureOfBusinesses;
-
-    /**
-     * Type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id", nullable=false)
-     */
-    protected $type;
 
     /**
      * Licence
@@ -524,29 +515,6 @@ class Organisation implements Interfaces\EntityInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Set the type
-     *
-     * @param \Olcs\Db\Entity\RefData $type
-     * @return Organisation
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
