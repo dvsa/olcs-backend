@@ -420,7 +420,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     {
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
 
