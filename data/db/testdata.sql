@@ -114,6 +114,7 @@ TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `correspondence_inbox`;
+TRUNCATE TABLE `grace_period`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
