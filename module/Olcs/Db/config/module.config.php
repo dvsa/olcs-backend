@@ -130,7 +130,10 @@ return [
             'continuation-detail-checklists' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/continuation-detail/checklists[/]',
+                    'route' => '/continuation-detail/checklists[/:id][/]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
                     'defaults' => [
                         'controller' => 'continuation-detail-checklists'
                     ]
@@ -154,7 +157,8 @@ return [
             'Olcs\Db\Service\BusReg\OtherServicesManager' =>
                 'Olcs\Db\Service\BusReg\OtherServicesManager',
             'Olcs\Db\Service\ContactDetails\PhoneContactsManager' =>
-                'Olcs\Db\Service\ContactDetails\PhoneContactsManager'
+                'Olcs\Db\Service\ContactDetails\PhoneContactsManager',
+            'EntityManagerHelper' => 'Olcs\Db\Service\EntityManager\EntityManagerHelperFactory',
         ],
         'invokables' => [
             'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',

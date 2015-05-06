@@ -276,18 +276,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     }
 
     /**
-     *  We should try and catch all known exceptions and provide a reasonable
-     *  response, if we get here, then we have no idea what went wrong
-     *
-     * @param \Exception $ex
-     * @return Response
-     */
-    protected function unknownError($ex)
-    {
-        return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage(), (array)$ex);
-    }
-
-    /**
      * Get the service
      *
      * @param string $name
