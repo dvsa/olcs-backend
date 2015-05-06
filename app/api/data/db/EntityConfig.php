@@ -666,7 +666,13 @@ return array(
                 'entity' => 'Organisation',
                 'property' => 'tradingName'
             )
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'tradingName'
+            )
+        ),
     ),
     'workshop' => array(
         'licence_id' => array(
