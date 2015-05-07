@@ -103,6 +103,7 @@ class Checklists implements ServiceLocatorAwareInterface
             return 'Continuation detail not found';
         }
 
+        /* @var $continuationDetail \Olcs\Db\Entity\ContinuationDetail */
         $continuationDetail = $results[0];
         $licence = $continuationDetail->getLicence();
 
@@ -129,11 +130,16 @@ class Checklists implements ServiceLocatorAwareInterface
 
             // Create the fee
             if ($this->shouldCreateFee($licence)) {
+                $feeType = $this->getLatestFeeType(self::FEE_TYPE_CONT, $licence);
+
+                $amount = ($feeType->getFixedValue() != 0 ? $feeType->getFixedValue() : $feeType->getFiveYearValue());
+
                 $fee = new Fee();
+                $fee->setAmount($amount);
                 $fee->setLicence($licence);
-                $fee->setFeeType(
-                    $this->getLatestFeeType(self::FEE_TYPE_CONT, $licence)
-                );
+                $fee->setInvoicedDate(new \DateTime());
+                $fee->setFeeType($feeType);
+                $fee->setDescription($feeType->getDescription() . ' for licence ' . $licence->getLicNo());
                 $feeStatusRefData = $emh->getRefDataReference(self::FEE_STATUS_OUTSTANDING);
                 $fee->setFeeStatus($feeStatusRefData);
 
@@ -155,6 +161,9 @@ class Checklists implements ServiceLocatorAwareInterface
         }
     }
 
+    /**
+     * @return \Olcs\Db\Entity\FeeType
+     */
     protected function getLatestFeeType($feeType, Licence $licence)
     {
         $em = $this->getEntityManager();
@@ -165,16 +174,26 @@ class Checklists implements ServiceLocatorAwareInterface
         $qb->select('ft')
             ->from('\Olcs\Db\Entity\FeeType', 'ft')
             ->where($qb->expr()->eq('ft.feeType', ':feeType'))
-            ->andWhere($qb->expr()->eq('ft.goodsOrPsv', $licence->getGoodsOrPsv()->getId()))
+            ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
             ->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->eq('ft.licenceType', $licence->getLicenceType()->getId()),
+                    $qb->expr()->eq('ft.licenceType', ':licenceType'),
                     $qb->expr()->isNull('ft.licenceType')
                 )
             )
             ->andWhere($qb->expr()->lte('ft.effectiveFrom', ':effectiveFrom'))
-            ->andWhere($qb->expr()->isNull('ft.trafficArea'))
-            ->orderBy('effectiveFrom', 'DESC')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('ft.trafficArea', ':trafficArea'),
+                    $qb->expr()->isNull('ft.trafficArea')
+                )
+            )
+            // Send the NULL values to the bottom
+            ->orderBy('ft.trafficArea', 'DESC')
+            ->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('trafficArea', $licence->getTrafficArea()->getId())
+            ->setParameter('goodsOrPsv', $licence->getGoodsOrPsv()->getId())
+            ->setParameter('licenceType', $licence->getLicenceType()->getId())
             ->setParameter('feeType', $feeType)
             ->setParameter('effectiveFrom', $effectiveFrom)
             ->setMaxResults(1);
