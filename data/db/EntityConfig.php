@@ -1050,7 +1050,7 @@ return array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
-                'property' => 'fee',
+                'property' => 'fee'
             )
         )
     ),
