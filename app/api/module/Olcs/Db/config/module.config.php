@@ -127,6 +127,18 @@ return [
                     ]
                 ]
             ],
+            'continuation-detail-checklists' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/continuation-detail/checklists[/:id][/]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
+                    'defaults' => [
+                        'controller' => 'continuation-detail-checklists'
+                    ]
+                ]
+            ]
         ]
     ],
     'service_manager' => [
@@ -145,12 +157,14 @@ return [
             'Olcs\Db\Service\BusReg\OtherServicesManager' =>
                 'Olcs\Db\Service\BusReg\OtherServicesManager',
             'Olcs\Db\Service\ContactDetails\PhoneContactsManager' =>
-                'Olcs\Db\Service\ContactDetails\PhoneContactsManager'
+                'Olcs\Db\Service\ContactDetails\PhoneContactsManager',
+            'EntityManagerHelper' => 'Olcs\Db\Service\EntityManager\EntityManagerHelperFactory',
         ],
         'invokables' => [
             'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',
             'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
-            'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery'
+            'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery',
+            'ContinuationDetail/Checklists' => 'Olcs\Db\Service\ContinuationDetail\Checklists',
         ]
     ],
     'controllers' => [
@@ -168,6 +182,7 @@ return [
             'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
             'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
+            'continuation-detail-checklists' => 'Olcs\Db\Controller\ContinuationDetail\ChecklistsController',
         ]
     ],
     'view_manager' => [

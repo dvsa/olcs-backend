@@ -22,7 +22,6 @@ use Doctrine\ORM\OptimisticLockException;
  */
 abstract class AbstractBasicRestServerController extends AbstractController implements OlcsRestServerInterface
 {
-
     use RestResponseTrait;
 
     protected $serviceName;
@@ -277,18 +276,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     }
 
     /**
-     *  We should try and catch all known exceptions and provide a reasonable
-     *  response, if we get here, then we have no idea what went wrong
-     *
-     * @param \Exception $ex
-     * @return Response
-     */
-    protected function unknownError($ex)
-    {
-        return $this->respond(Response::STATUS_CODE_500, 'An unknown error occurred: ' . $ex->getMessage(), (array)$ex);
-    }
-
-    /**
      * Get the service
      *
      * @param string $name
@@ -379,30 +366,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     public function setServiceName($name)
     {
         $this->serviceName = $name;
-    }
-
-    /**
-     * Format data from json
-     *
-     * @param mixed $data
-     */
-    public function formatDataFromJson($data)
-    {
-        $data = (is_array($data) && isset($data['data'])) ? $data['data'] : $data;
-
-        if (!is_string($data)) {
-
-            return $this->respond(Response::STATUS_CODE_400, 'Expected JSON request data');
-        }
-
-        $data = json_decode($data, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-
-            return $this->respond(Response::STATUS_CODE_400, 'JSON request data is invalid');
-        }
-
-        return $data;
     }
 
     /**

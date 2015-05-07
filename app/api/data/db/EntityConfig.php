@@ -1051,8 +1051,8 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'fee'
-            ),
-        ),
+            )
+        )
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
