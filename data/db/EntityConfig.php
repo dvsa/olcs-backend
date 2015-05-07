@@ -1046,7 +1046,13 @@ return array(
     'fee' => array(
         'irfo_fee_exempt' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'fee'
+            ),
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(

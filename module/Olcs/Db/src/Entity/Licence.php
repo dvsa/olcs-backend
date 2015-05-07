@@ -66,6 +66,15 @@ class Licence implements Interfaces\EntityInterface
         Traits\ViAction1Field;
 
     /**
+     * Cns date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cns_date", nullable=true)
+     */
+    protected $cnsDate;
+
+    /**
      * Correspondence cd
      *
      * @var \Olcs\Db\Entity\ContactDetails
@@ -324,6 +333,15 @@ class Licence implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Fee", mappedBy="licence")
+     */
+    protected $fees;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -417,6 +435,7 @@ class Licence implements Interfaces\EntityInterface
         $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
@@ -426,6 +445,29 @@ class Licence implements Interfaces\EntityInterface
         $this->tradingNames = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
         $this->workshops = new ArrayCollection();
+    }
+
+    /**
+     * Set the cns date
+     *
+     * @param \DateTime $cnsDate
+     * @return Licence
+     */
+    public function setCnsDate($cnsDate)
+    {
+        $this->cnsDate = $cnsDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cns date
+     *
+     * @return \DateTime
+     */
+    public function getCnsDate()
+    {
+        return $this->cnsDate;
     }
 
     /**
@@ -1326,6 +1368,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
         }
 
         return $this;
