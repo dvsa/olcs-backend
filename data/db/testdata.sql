@@ -24,6 +24,7 @@ TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
+TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `hint_question`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -588,6 +589,10 @@ VALUES
     -- Welsh licence, cloned from licence 7
     (70,1,'G','V059', 1,102,NULL,104,NULL,'lcat_gv','OG7654321','lsts_valid',0,'ltyp_si','2010-01-12','2010-01-12','2010-01-12',
     '',4,12,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 1),
+
+    -- Clone of licence 7 but linked to an operator which doesn't allow email
+    (700,41,'B','V048', 1,102,NULL,104,NULL,'lcat_gv','OB8484848','lsts_valid',0,'ltyp_si','2010-01-12','2010-01-12','2010-01-12',
+    '',4,12,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 0),
 
     -- extra licence for application 1
     (201,1,'B',NULL,0,NULL,NULL,NULL,1,NULL,'OB4234560','lsts_not_submitted',NULL,NULL,'2011-03-16','2011-03-16', '2011-03-16','',3,
