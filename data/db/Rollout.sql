@@ -4801,7 +4801,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (8, 10), -- operator ebsr sees ebsr docs
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
-    (7, 14), -- operator TM has selfserver dashboard
+    (7, 14), -- operator TM has selfserve dashboard
     (5, 15); -- "operator-admin" can access "selfserve-manage-user"
 
 INSERT INTO `financial_standing_rate` (
