@@ -1080,7 +1080,7 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
 `last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`,
 `local_authority_id`) VALUES
     (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
-    'valtecholcs@gmail.com', 1),
+    'terry.valtech@gmail.com', 1),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
     'john.spellman@test9876.com', NULL),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
