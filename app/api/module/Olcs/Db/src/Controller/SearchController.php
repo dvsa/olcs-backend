@@ -24,6 +24,11 @@ class SearchController extends AbstractController
             $elastic->setFilters($params['filters']);
         }
 
+        if (isset($params['dateRanges']) && !empty($params['dateRanges']) && is_array($params['dateRanges'])) {
+
+            $elastic->setDateRanges($params['dateRanges']);
+        }
+
         $resultSet = $elastic->search(
             urldecode($params['query']),
             $indices,

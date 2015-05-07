@@ -25,6 +25,11 @@ class Search
     protected $filters = [];
 
     /**
+     * @var array
+     */
+    protected $dateRanges = [];
+
+    /**
      * @param mixed $client
      */
     public function setClient($client)
@@ -202,5 +207,32 @@ class Search
     public function getFilterNames()
     {
         return array_keys($this->getFilters());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDateRanges()
+    {
+        return $this->dateRanges;
+    }
+
+    /**
+     * Sets the filters.
+     *
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function setDateRanges(array $dateRanges)
+    {
+        $f = new CamelCaseToUnderscore();
+
+        foreach ($dateRanges as $filterName => $value) {
+
+            $this->dateRanges[strtolower($f->filter($filterName))] = $value;
+        }
+
+        return $this;
     }
 }
