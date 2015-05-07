@@ -1952,10 +1952,6 @@ VALUES
 	(3, 'insp_rep_t_TE', 'insp_req_t_new_op', 2, 'insp_res_t_new_unsat', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-03', NULL, NULL,
     NULL, '2015-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `correspondence_inbox` (`id`, `document_id`, `licence_id`)
-VALUES
-    (1, 674, 7);
-
 INSERT INTO `grace_period` (`id`, `created_by`, `last_modified_by`, `licence_id`, `description`, `end_date`, `start_date`, `created_on`,
     `last_modified_on`, `olbs_key`)
     VALUES
