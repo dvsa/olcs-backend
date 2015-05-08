@@ -42,9 +42,9 @@ class CorrespondenceInbox implements Interfaces\EntityInterface
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="accessed", nullable=true)
+     * @ORM\Column(type="yesnonull", name="accessed", nullable=true, options={"default": 0})
      */
-    protected $accessed;
+    protected $accessed = 0;
 
     /**
      * Archived
