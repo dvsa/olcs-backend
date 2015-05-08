@@ -15,7 +15,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="irfo_partner",
  *    indexes={
  *        @ORM\Index(name="ix_irfo_partner_organisation_id", columns={"organisation_id"}),
- *        @ORM\Index(name="ix_irfo_partner_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
  *        @ORM\Index(name="ix_irfo_partner_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_irfo_partner_last_modified_by", columns={"last_modified_by"})
  *    },
@@ -30,7 +29,6 @@ class IrfoPartner implements Interfaces\EntityInterface
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
-        Traits\IrfoPsvAuthManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
