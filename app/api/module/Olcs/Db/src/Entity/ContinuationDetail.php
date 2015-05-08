@@ -55,6 +55,33 @@ class ContinuationDetail implements Interfaces\EntityInterface
     protected $received = 0;
 
     /**
+     * Tot auth vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_auth_vehicles", nullable=true)
+     */
+    protected $totAuthVehicles;
+
+    /**
+     * Tot community licences
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_community_licences", nullable=true)
+     */
+    protected $totCommunityLicences;
+
+    /**
+     * Tot psv discs
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="tot_psv_discs", nullable=true)
+     */
+    protected $totPsvDiscs;
+
+    /**
      * Set the continuation
      *
      * @param \Olcs\Db\Entity\Continuation $continuation
@@ -98,5 +125,74 @@ class ContinuationDetail implements Interfaces\EntityInterface
     public function getReceived()
     {
         return $this->received;
+    }
+
+    /**
+     * Set the tot auth vehicles
+     *
+     * @param int $totAuthVehicles
+     * @return ContinuationDetail
+     */
+    public function setTotAuthVehicles($totAuthVehicles)
+    {
+        $this->totAuthVehicles = $totAuthVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthVehicles()
+    {
+        return $this->totAuthVehicles;
+    }
+
+    /**
+     * Set the tot community licences
+     *
+     * @param int $totCommunityLicences
+     * @return ContinuationDetail
+     */
+    public function setTotCommunityLicences($totCommunityLicences)
+    {
+        $this->totCommunityLicences = $totCommunityLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot community licences
+     *
+     * @return int
+     */
+    public function getTotCommunityLicences()
+    {
+        return $this->totCommunityLicences;
+    }
+
+    /**
+     * Set the tot psv discs
+     *
+     * @param int $totPsvDiscs
+     * @return ContinuationDetail
+     */
+    public function setTotPsvDiscs($totPsvDiscs)
+    {
+        $this->totPsvDiscs = $totPsvDiscs;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot psv discs
+     *
+     * @return int
+     */
+    public function getTotPsvDiscs()
+    {
+        return $this->totPsvDiscs;
     }
 }
