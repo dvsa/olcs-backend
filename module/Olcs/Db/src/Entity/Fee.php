@@ -44,7 +44,6 @@ class Fee implements Interfaces\EntityInterface
         Traits\IrfoGvPermitManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\LicenceManyToOneAlt1,
         Traits\ReceivedDateField,
         Traits\TaskManyToOne,
         Traits\CustomVersionField;
@@ -131,6 +130,16 @@ class Fee implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="irfo_file_no", length=10, nullable=true)
      */
     protected $irfoFileNo;
+
+    /**
+     * Licence
+     *
+     * @var \Olcs\Db\Entity\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Licence", inversedBy="fees")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
 
     /**
      * Parent fee
@@ -457,6 +466,29 @@ class Fee implements Interfaces\EntityInterface
     public function getIrfoFileNo()
     {
         return $this->irfoFileNo;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Olcs\Db\Entity\Licence $licence
+     * @return Fee
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Olcs\Db\Entity\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 
     /**

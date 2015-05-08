@@ -8,13 +8,14 @@
 
 namespace Olcs\Db\Service;
 
+use Olcs\Db\Traits\LanguageAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Olcs\Db\Utility\Paginator;
 use Doctrine\ORM\Query;
 
 /**
@@ -26,7 +27,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait,
         EntityManagerAwareTrait,
-        OlcsLoggerAwareTrait;
+        OlcsLoggerAwareTrait,
+        LanguageAwareTrait;
 
     protected $entityNamespace = '\Olcs\Db\Entity\\';
 
@@ -71,6 +73,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      * @var array
      */
     protected $classMetadata = array();
+
+    protected $replacementReferences = [];
 
     public function setEntityNamespace($namespace)
     {
@@ -148,15 +152,28 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
+
+        $language = $this->getLanguage();
+
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
 
         $response = $query->getArrayResult();
 
         if (!$response) {
             return null;
         }
+
+        $this->processReplacements($response, $replacements);
 
         return $response[0];
     }
@@ -172,7 +189,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         // Paginate
         $paginateQuery = $this->getServiceLocator()->get('PaginateQuery');
@@ -184,12 +201,191 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
 
+        $language = $this->getLanguage();
+
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
+
         $paginator = new Paginator($query);
+
+        $results = (array)$paginator->getIterator();
+        $this->processReplacements($results, $replacements);
 
         return array(
             'Count' => $paginator->count(),
-            'Results' => (array)$paginator->getIterator()
+            'Results' => $results
         );
+    }
+
+    /**
+     * Iterate through the data and find the ref data ids
+     *
+     * @param array $results
+     * @param array $replacements
+     * @return array
+     */
+    protected function getRefDataValues(&$results, $replacements)
+    {
+        $values = [];
+
+        foreach ($results as &$result) {
+
+            foreach ($replacements as $replacement) {
+
+                $stack = $replacement['stack'];
+
+                $values = array_merge($values, $this->getStackedValues($result, $stack));
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * This method is recursive and builds a list of ref data ids for the given result node and stack
+     * This method builds an array of references to be used when replacing the ids
+     */
+    protected function getStackedValues(&$result, $stack)
+    {
+        $this->camelCaseMetaFields($result);
+
+        $values = [];
+        $resultRef = &$result;
+
+        // Iterate through the stack indexes to get deeper into the node
+        while (count($stack) > 1) {
+            $stackItem = array_shift($stack);
+
+            if (!isset($resultRef[$stackItem])) {
+                return $values;
+            }
+
+            $resultRef = &$resultRef[$stackItem];
+
+            $this->camelCaseMetaFields($resultRef);
+
+            // If we have a list here, we need to loop and recurse back through this method
+            if ($this->isList($resultRef)) {
+                foreach ($resultRef as &$value) {
+                    $values = array_merge($values, $this->getStackedValues($value, $stack));
+                }
+
+                return $values;
+            }
+        }
+
+        if (!is_array($resultRef) || empty($resultRef)) {
+            return $values;
+        }
+
+        $stackItem = array_shift($stack);
+
+        // Added extra check in case column is suffixed with Id
+        if (!isset($resultRef[$stackItem]) && isset($resultRef[$stackItem . 'Id'])) {
+            $value = $resultRef[$stackItem . 'Id'];
+
+            $resultRef[$stackItem] = $value;
+
+            $resultRef = &$resultRef[$stackItem];
+            $this->replacementReferences[] = &$resultRef;
+            $values[$value] = $value;
+            return $values;
+        }
+
+        $resultRef = &$resultRef[$stackItem];
+
+        if (!empty($resultRef)) {
+            $this->replacementReferences[] = &$resultRef;
+            $values[$resultRef] = $resultRef;
+        } else {
+            $resultRef = null;
+        }
+
+        return $values;
+    }
+
+    /**
+     * This method replaces all referenced refdata ids with their ref data arrays
+     */
+    protected function replaceValues($refDataMap)
+    {
+        foreach ($this->replacementReferences as &$ref) {
+            $ref = $refDataMap[$ref];
+        }
+    }
+
+    /**
+     * Does what it sez on't tin
+     */
+    protected function camelCaseMetaFields(&$array)
+    {
+        $filter = new \Zend\Filter\Word\UnderscoreToCamelCase();
+        foreach ($array as $field => $value) {
+            if (strstr($field, '_')) {
+                $newField = lcfirst($filter->filter($field));
+
+                $array[$newField] = $value;
+                unset($array[$field]);
+            }
+        }
+    }
+
+    /**
+     * Checks if an array is non assoc
+     */
+    protected function isList($array)
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+
+    /**
+     * If we have some Stacked ref data replacements, iterate through the results to find the ref data id's we need to
+     * lookup. Once we have the ref data id's (and the translations) iterate through the results and replace the id's
+     * with the ref data arrays
+     *
+     * @param array $results
+     * @param array $replacements
+     * @return array
+     */
+    protected function processReplacements(array &$results, array $replacements)
+    {
+        if (empty($replacements)) {
+            return;
+        }
+
+        $refDatas = $this->getRefDataValues($results, $replacements);
+
+        if (!empty($refDatas)) {
+            $repo = $this->getEntityManager()->getRepository('\Olcs\Db\Entity\RefData');
+            $qb = $repo->createQueryBuilder('r');
+
+            $qb->where($qb->expr()->in('r.id', $refDatas));
+
+            $query = $qb->getQuery();
+
+            $language = $this->getLanguage();
+
+            $query->setHint(
+                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            );
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+            $refDataResults = $query->getArrayResult();
+
+            $indexedRefDataResults = [];
+            foreach ($refDataResults as $result) {
+                $indexedRefDataResults[$result['id']] = $result;
+            }
+        } else {
+            $indexedRefDataResults = [];
+        }
+
+        $this->replaceValues($indexedRefDataResults);
+
+        return $results;
     }
 
     /**
@@ -224,7 +420,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     {
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
-        $qb = $this->getBundleQuery($criteria, $data);
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
 
@@ -288,10 +484,12 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
         $qb->select(array('m'))->from($this->getEntityName(), 'm');
 
+        $replacements = [];
         if (!empty($bundleConfig)) {
             $bundleQuery = $this->getServiceLocator()->get('BundleQuery');
             $bundleQuery->setQueryBuilder($qb);
             $bundleQuery->build($bundleConfig);
+            $replacements = $bundleQuery->getRefDataReplacements();
             $params = $bundleQuery->getParams();
         }
 
@@ -308,7 +506,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             $qb->andWhere($expression);
         }
 
-        return $qb->setParameters($eb->getParams());
+        $qb->setParameters($eb->getParams());
+
+        return [$qb, $replacements];
     }
 
     protected function getBundleConfig($data)
@@ -379,7 +579,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     /**
      * Return a new instance of DoctrineHydrator
      *
-     * @return DoctrineObject
+     * @return \DoctrineModule\Stdlib\Hydrator\DoctrineObject
      */
     protected function getDoctrineHydrator()
     {

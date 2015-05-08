@@ -37,17 +37,7 @@ class BookmarkSearchController extends AbstractBasicRestServerController
         $results = [];
         try {
             foreach ($queries as $token => $query) {
-                // possibly a bit dangerous, but if the array is numeric we
-                // assume it's a multi result request
-                if (isset($query[0])) {
-                    $result = [];
-                    foreach ($query as $q) {
-                        $result[] = $this->getResult($q);
-                    }
-                } else {
-                    $result = $this->getResult($query);
-                }
-                $results[$token] = $result;
+                $results[$token] = $this->getResultFromQuery($query);
             }
         } catch (\Exception $ex) {
             $this->getLogger()->info('Trapped exception querying bookmark: ' . $ex->getMessage());
@@ -55,6 +45,45 @@ class BookmarkSearchController extends AbstractBasicRestServerController
         }
 
         return $this->respond(Response::STATUS_CODE_200, 'OK', $results);
+    }
+
+    private function getResultFromQuery($query)
+    {
+        $query = $this->processQuery($query);
+
+        // possibly a bit dangerous, but if the array is numeric we
+        // assume it's a multi result request
+        if (isset($query[0])) {
+            $result = [];
+            foreach ($query as $q) {
+                $result[] = $this->getResult($q);
+            }
+
+            return $result;
+        }
+
+        return $this->getResult($query);
+    }
+
+    private function processQuery($query)
+    {
+        if (isset($query['options']['loop']) && $query['options']['loop']) {
+
+            $newQueries = [];
+            $queryTemplate = $query;
+            unset($queryTemplate['options']['loop']);
+            unset($queryTemplate['data']);
+
+            foreach ($query['data'] as $data) {
+                $newQuery = $queryTemplate;
+                $newQuery['data'] = $data;
+                $newQueries[] = $newQuery;
+            }
+
+            return $newQueries;
+        }
+
+        return $query;
     }
 
     private function getResult($query)
