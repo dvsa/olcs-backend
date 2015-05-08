@@ -14,13 +14,20 @@ class Module implements BootstrapListenerInterface
 {
     public function onBootstrap(EventInterface $e)
     {
+        $sm = $e->getApplication()->getServiceManager();
+
         /** @var MvcEvent $e */
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
+
+        // This needs to be priority 1
+        $payloadValidationListener = $sm->get('PayloadValidationListener');
+        $payloadValidationListener->attach($eventManager, 1);
+
         $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $moduleRouteListener->attach($eventManager, 2);
 
         // Enable and configure Doctrine filters
-        $entityManager = $e->getApplication()->getServiceManager()->get('doctrine.entitymanager.orm_default');
+        $entityManager = $sm->get('doctrine.entitymanager.orm_default');
         $entityManager->getFilters()->enable('soft-deleteable');
     }
 
