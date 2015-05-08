@@ -30,6 +30,9 @@ TRUNCATE TABLE `bus_service_type`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `postcode_enforcement_area`;
 TRUNCATE TABLE `ext_translations`;
+TRUNCATE TABLE `irfo_psv_auth_type`;
+TRUNCATE TABLE `irfo_gv_permit_type`;
+TRUNCATE TABLE `irfo_country`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
