@@ -35,6 +35,38 @@ class IrfoPartner implements Interfaces\EntityInterface
         Traits\CustomLastModifiedOnField,
         Traits\Name70Field,
         Traits\OlbsKeyField,
-        Traits\OrganisationManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Organisation
+     *
+     * @var \Olcs\Db\Entity\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Organisation", inversedBy="irfoPartners")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
+
+    /**
+     * Set the organisation
+     *
+     * @param \Olcs\Db\Entity\Organisation $organisation
+     * @return IrfoPartner
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Olcs\Db\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
 }

@@ -809,6 +809,14 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'irfo_partner' => array(
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'irfoPartner'
+            )
+        ),
+    ),
     'note' => array(
         'priority' => array(
             'type' => 'yesno'

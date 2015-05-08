@@ -157,6 +157,15 @@ class Organisation implements Interfaces\EntityInterface
     protected $natureOfBusinesses;
 
     /**
+     * Irfo partner
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\IrfoPartner", mappedBy="organisation")
+     */
+    protected $irfoPartners;
+
+    /**
      * Licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -198,6 +207,7 @@ class Organisation implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->natureOfBusinesses = new ArrayCollection();
+        $this->irfoPartners = new ArrayCollection();
         $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
         $this->organisationUsers = new ArrayCollection();
@@ -512,6 +522,66 @@ class Organisation implements Interfaces\EntityInterface
     {
         if ($this->natureOfBusinesses->contains($natureOfBusinesses)) {
             $this->natureOfBusinesses->removeElement($natureOfBusinesses);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irfo partner
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @return Organisation
+     */
+    public function setIrfoPartners($irfoPartners)
+    {
+        $this->irfoPartners = $irfoPartners;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo partners
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrfoPartners()
+    {
+        return $this->irfoPartners;
+    }
+
+    /**
+     * Add a irfo partners
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @return Organisation
+     */
+    public function addIrfoPartners($irfoPartners)
+    {
+        if ($irfoPartners instanceof ArrayCollection) {
+            $this->irfoPartners = new ArrayCollection(
+                array_merge(
+                    $this->irfoPartners->toArray(),
+                    $irfoPartners->toArray()
+                )
+            );
+        } elseif (!$this->irfoPartners->contains($irfoPartners)) {
+            $this->irfoPartners->add($irfoPartners);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irfo partners
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @return Organisation
+     */
+    public function removeIrfoPartners($irfoPartners)
+    {
+        if ($this->irfoPartners->contains($irfoPartners)) {
+            $this->irfoPartners->removeElement($irfoPartners);
         }
 
         return $this;
