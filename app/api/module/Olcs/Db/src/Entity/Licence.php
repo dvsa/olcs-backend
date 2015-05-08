@@ -66,6 +66,15 @@ class Licence implements Interfaces\EntityInterface
         Traits\ViAction1Field;
 
     /**
+     * Cns date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="cns_date", nullable=true)
+     */
+    protected $cnsDate;
+
+    /**
      * Correspondence cd
      *
      * @var \Olcs\Db\Entity\ContactDetails
@@ -324,6 +333,15 @@ class Licence implements Interfaces\EntityInterface
     protected $documents;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\Fee", mappedBy="licence")
+     */
+    protected $fees;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -379,6 +397,15 @@ class Licence implements Interfaces\EntityInterface
     protected $publicationLinks;
 
     /**
+     * Trading name
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\TradingName", mappedBy="licence")
+     */
+    protected $tradingNames;
+
+    /**
      * Tm licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -408,14 +435,39 @@ class Licence implements Interfaces\EntityInterface
         $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
         $this->psvDiscs = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->tradingNames = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
         $this->workshops = new ArrayCollection();
+    }
+
+    /**
+     * Set the cns date
+     *
+     * @param \DateTime $cnsDate
+     * @return Licence
+     */
+    public function setCnsDate($cnsDate)
+    {
+        $this->cnsDate = $cnsDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cns date
+     *
+     * @return \DateTime
+     */
+    public function getCnsDate()
+    {
+        return $this->cnsDate;
     }
 
     /**
@@ -1322,6 +1374,66 @@ class Licence implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Licence
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the operating centre
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
@@ -1676,6 +1788,66 @@ class Licence implements Interfaces\EntityInterface
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the trading name
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Licence
+     */
+    public function setTradingNames($tradingNames)
+    {
+        $this->tradingNames = $tradingNames;
+
+        return $this;
+    }
+
+    /**
+     * Get the trading names
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTradingNames()
+    {
+        return $this->tradingNames;
+    }
+
+    /**
+     * Add a trading names
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Licence
+     */
+    public function addTradingNames($tradingNames)
+    {
+        if ($tradingNames instanceof ArrayCollection) {
+            $this->tradingNames = new ArrayCollection(
+                array_merge(
+                    $this->tradingNames->toArray(),
+                    $tradingNames->toArray()
+                )
+            );
+        } elseif (!$this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->add($tradingNames);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a trading names
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @return Licence
+     */
+    public function removeTradingNames($tradingNames)
+    {
+        if ($this->tradingNames->contains($tradingNames)) {
+            $this->tradingNames->removeElement($tradingNames);
         }
 
         return $this;

@@ -15,10 +15,8 @@ use Olcs\Db\Entity\Traits;
  * @ORM\Table(name="grace_period",
  *    indexes={
  *        @ORM\Index(name="ix_grace_period_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_grace_period_assigned_to_user_id", columns={"assigned_to_user_id"}),
  *        @ORM\Index(name="ix_grace_period_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_grace_period_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_grace_period_period_type", columns={"period_type"})
+ *        @ORM\Index(name="ix_grace_period_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_grace_period_olbs_key", columns={"olbs_key"})
@@ -38,14 +36,13 @@ class GracePeriod implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
-     * Assigned to user
+     * Description
      *
-     * @var \Olcs\Db\Entity\User
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
-     * @ORM\JoinColumn(name="assigned_to_user_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="string", name="description", length=90, nullable=false)
      */
-    protected $assignedToUser;
+    protected $description;
 
     /**
      * End date
@@ -57,34 +54,6 @@ class GracePeriod implements Interfaces\EntityInterface
     protected $endDate;
 
     /**
-     * Grace period no
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="grace_period_no", nullable=false, options={"default": 1})
-     */
-    protected $gracePeriodNo = 1;
-
-    /**
-     * Is active
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_active", nullable=false, options={"default": 0})
-     */
-    protected $isActive = 0;
-
-    /**
-     * Period type
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="period_type", referencedColumnName="id", nullable=false)
-     */
-    protected $periodType;
-
-    /**
      * Start date
      *
      * @var \DateTime
@@ -94,26 +63,26 @@ class GracePeriod implements Interfaces\EntityInterface
     protected $startDate;
 
     /**
-     * Set the assigned to user
+     * Set the description
      *
-     * @param \Olcs\Db\Entity\User $assignedToUser
+     * @param string $description
      * @return GracePeriod
      */
-    public function setAssignedToUser($assignedToUser)
+    public function setDescription($description)
     {
-        $this->assignedToUser = $assignedToUser;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get the assigned to user
+     * Get the description
      *
-     * @return \Olcs\Db\Entity\User
+     * @return string
      */
-    public function getAssignedToUser()
+    public function getDescription()
     {
-        return $this->assignedToUser;
+        return $this->description;
     }
 
     /**
@@ -137,75 +106,6 @@ class GracePeriod implements Interfaces\EntityInterface
     public function getEndDate()
     {
         return $this->endDate;
-    }
-
-    /**
-     * Set the grace period no
-     *
-     * @param boolean $gracePeriodNo
-     * @return GracePeriod
-     */
-    public function setGracePeriodNo($gracePeriodNo)
-    {
-        $this->gracePeriodNo = $gracePeriodNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the grace period no
-     *
-     * @return boolean
-     */
-    public function getGracePeriodNo()
-    {
-        return $this->gracePeriodNo;
-    }
-
-    /**
-     * Set the is active
-     *
-     * @param boolean $isActive
-     * @return GracePeriod
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get the is active
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Set the period type
-     *
-     * @param \Olcs\Db\Entity\RefData $periodType
-     * @return GracePeriod
-     */
-    public function setPeriodType($periodType)
-    {
-        $this->periodType = $periodType;
-
-        return $this;
-    }
-
-    /**
-     * Get the period type
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getPeriodType()
-    {
-        return $this->periodType;
     }
 
     /**

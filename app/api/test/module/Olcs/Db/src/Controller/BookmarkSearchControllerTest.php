@@ -5,7 +5,6 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-
 namespace OlcsTest\Db\Controller;
 
 use PHPUnit_Framework_TestCase;
@@ -88,6 +87,17 @@ class BookmarkSearchControllerTest extends PHPUnit_Framework_TestCase
                     'bundle' => []
                 )
             ),
+            'loop' => array(
+                'service' => 'Loop',
+                'options' => [
+                    'loop' => true
+                ],
+                'data' => [
+                    ['id' => 123],
+                    ['id' => 321],
+                ],
+                'bundle' => []
+            ),
             'details' => array(
                 'service' => 'User',
                 'data' => [
@@ -115,6 +125,18 @@ class BookmarkSearchControllerTest extends PHPUnit_Framework_TestCase
         $mockParaService->expects($this->at(1))
             ->method('get')
             ->with(2)
+            ->willReturn(['text' => 'bar']);
+
+        $mockLoopService = $this->getMock('\stdClass', array('get'));
+
+        $mockLoopService->expects($this->at(0))
+            ->method('get')
+            ->with(123)
+            ->willReturn(['text' => 'foo']);
+
+        $mockLoopService->expects($this->at(1))
+            ->method('get')
+            ->with(321)
             ->willReturn(['text' => 'bar']);
 
         $mockUserService = $this->getMock('\stdClass', array('get'));
@@ -151,16 +173,30 @@ class BookmarkSearchControllerTest extends PHPUnit_Framework_TestCase
 
         $this->controller->expects($this->at(3))
             ->method('getService')
+            ->with('Loop')
+            ->will($this->returnValue($mockLoopService));
+
+        $this->controller->expects($this->at(4))
+            ->method('getService')
+            ->with('Loop')
+            ->will($this->returnValue($mockLoopService));
+
+        $this->controller->expects($this->at(5))
+            ->method('getService')
             ->with('User')
             ->will($this->returnValue($mockUserService));
 
-        $this->controller->expects($this->at(4))
+        $this->controller->expects($this->at(6))
             ->method('getService')
             ->with('Task')
             ->will($this->returnValue($mockTaskService));
 
         $expectedResult = [
             'paragraphs' => [
+                ['text' => 'foo'],
+                ['text' => 'bar']
+            ],
+            'loop' => [
                 ['text' => 'foo'],
                 ['text' => 'bar']
             ],
