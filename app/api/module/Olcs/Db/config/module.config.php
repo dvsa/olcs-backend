@@ -151,6 +151,7 @@ return [
             'Zend\Log\LoggerAbstractServiceFactory'
         ],
         'factories' => [
+            'PayloadValidationListener' => \Olcs\Db\Mvc\PayloadValidationListenerFactory::class,
             'serviceFactory' => '\Olcs\Db\Service\Factory',
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
             'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
