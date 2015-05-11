@@ -161,7 +161,7 @@ class Organisation implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\IrfoPartner", mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\IrfoPartner", mappedBy="organisation", cascade={"persist"})
      */
     protected $irfoPartners;
 
