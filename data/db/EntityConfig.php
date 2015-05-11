@@ -813,7 +813,10 @@ return array(
         'organisation_id' => array(
             'inversedBy' => array(
                 'entity' => 'Organisation',
-                'property' => 'irfoPartner'
+                'property' => 'irfoPartner',
+                'cascade' => array(
+                    'persist'
+                ),
             )
         ),
     ),
