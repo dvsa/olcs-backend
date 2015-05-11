@@ -13,6 +13,11 @@ return [
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
         ]
     ],
+    'controller_plugins' => [
+        'invokables' => [
+            'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
+        ]
+    ],
     'controllers' => [
         'invokables' => [
             'Api\Application' => \Dvsa\Olcs\Api\Controller\ApplicationController::class,
