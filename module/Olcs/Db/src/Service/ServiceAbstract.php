@@ -325,6 +325,12 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
             if (strstr($field, '_')) {
                 $newField = lcfirst($filter->filter($field));
 
+                if (array_key_exists($newField, $array)) {
+                    // don't override existing fields if they've already been populated by a join!
+                    unset($array[$field]);
+                    continue;
+                }
+
                 $array[$newField] = $value;
                 unset($array[$field]);
             }
