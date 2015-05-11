@@ -40,7 +40,8 @@ class TradingNamesController extends AbstractBasicRestServerController
 
         try {
             $query = [
-                'organisation' => $data['organisation']
+                'organisation' => $data['organisation'],
+                'licence' => !empty($data['licence']) ? $data['licence'] : 'NULL'
             ];
 
             $existingRecords = $this->getService('TradingName')->getList($query);
@@ -57,7 +58,7 @@ class TradingNamesController extends AbstractBasicRestServerController
             $recordsToInsert = array_diff($newNormalised, $existedNormalised);
             foreach ($recordsToInsert as $record) {
                 $dataToInsert = [
-                    'licence' => $data['licence'],
+                    'licence' => !empty($data['licence']) ? $data['licence'] : 'NULL',
                     'organisation' => $data['organisation'],
                     'name' => $record
                 ];
@@ -68,6 +69,7 @@ class TradingNamesController extends AbstractBasicRestServerController
                     ->deleteList(
                         [
                             'organisation' => $data['organisation'],
+                            'licence' => !empty($data['licence']) ? $data['licence'] : 'NULL',
                             'name' => $record
                         ]
                     );
