@@ -666,7 +666,13 @@ return array(
                 'entity' => 'Organisation',
                 'property' => 'tradingName'
             )
-        )
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'tradingName'
+            )
+        ),
     ),
     'workshop' => array(
         'licence_id' => array(
@@ -1040,6 +1046,12 @@ return array(
     'fee' => array(
         'irfo_fee_exempt' => array(
             'type' => 'yesnonull'
+        ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'fee'
+            )
         )
     ),
     'ebsr_submission_result' => array(

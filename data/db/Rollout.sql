@@ -30,6 +30,9 @@ TRUNCATE TABLE `bus_service_type`;
 TRUNCATE TABLE `publication_section`;
 TRUNCATE TABLE `postcode_enforcement_area`;
 TRUNCATE TABLE `ext_translations`;
+TRUNCATE TABLE `irfo_psv_auth_type`;
+TRUNCATE TABLE `irfo_gv_permit_type`;
+TRUNCATE TABLE `irfo_country`;
 
 INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
     ('NEWCASTLE UPON TYNE','B'),
@@ -2489,7 +2492,12 @@ VALUES
     (698, 11, 1, 698, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Wales', '2015-02-27 10:00:47', 1),
     (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1),
     (700, 9, 1, 700, 1, 31, 1, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2015-02-27 10:00:47', 1),
-    (701, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1);
+    (701, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1),
+
+    (702, 999999, 479, 702, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
+    (703, 999999, 479, 703, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
+    (704, 999999, 479, 704, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV Continuation checklist', '2015-01-01 00:00:00', 1),
+    (705, 999999, 479, 705, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV SR Continuation checklist', '2015-01-01 00:00:00', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -4674,8 +4682,12 @@ VALUES
     (698, NULL, NULL, NULL, NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
     (699, NULL, NULL, NULL, NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1),
     (700, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (701, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1);
-
+    (701, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1),
+    
+    (702, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
+    (703, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
+    (704, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
+    (705, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVSRChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV SR continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1);
 
 INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
     (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only
@@ -4792,7 +4804,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (8, 10), -- operator ebsr sees ebsr docs
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
-    (7, 14), -- operator TM has selfserver dashboard
+    (7, 14), -- operator TM has selfserve dashboard
     (5, 15); -- "operator-admin" can access "selfserve-manage-user"
 
 INSERT INTO `financial_standing_rate` (
