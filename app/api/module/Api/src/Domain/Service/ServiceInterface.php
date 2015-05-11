@@ -22,4 +22,11 @@ interface ServiceInterface
      * @param ArraySerializableInterface $query
      */
     public function handleQuery(ArraySerializableInterface $query);
+
+    /**
+     * Handles all commands objects passed to the service
+     *
+     * @param ArraySerializableInterface $command
+     */
+    public function handleCommand(ArraySerializableInterface $command);
 }

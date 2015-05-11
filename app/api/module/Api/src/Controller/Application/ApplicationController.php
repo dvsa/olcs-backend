@@ -5,7 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Controller;
+namespace Dvsa\Olcs\Api\Controller\Application;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 

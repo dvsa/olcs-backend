@@ -78,11 +78,19 @@ class PayloadValidationListener implements ListenerAggregateInterface
                 $response->setContent(json_encode($query->getMessages(), true));
                 return $response;
             }
-        }/* else {
-            $data = array_merge($data, $request->getContent());
+        } else {
+
+            $data = json_decode($request->getContent(), true);
             $dto->exchangeArray($data);
 
             $command = $this->annotationBuilder->createCommand($dto);
-        }*/
+
+            if (!$command->isValid()) {
+                $response = new Response();
+                $response->setStatusCode(Response::STATUS_CODE_422);
+                $response->setContent(json_encode($query->getMessages(), true));
+                return $response;
+            }
+        }
     }
 }

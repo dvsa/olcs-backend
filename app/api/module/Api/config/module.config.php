@@ -20,7 +20,8 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'Api\Application' => \Dvsa\Olcs\Api\Controller\ApplicationController::class,
+            'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
+            'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\DomainServiceManagerFactory::CONFIG_KEY => [

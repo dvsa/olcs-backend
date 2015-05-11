@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Zend\Stdlib\ArraySerializableInterface;
+use Doctrine\ORM\Query;
 
 /**
  * Application
@@ -24,13 +25,13 @@ final class Application extends AbstractRepository
      * @param ArraySerializableInterface $query
      * @return array
      */
-    public function fetchUsingId(ArraySerializableInterface $query)
+    public function fetchUsingId(ArraySerializableInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
     {
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
 
-        $results = $qb->getQuery()->getArrayResult();
+        $results = $qb->getQuery()->getResult($hydrateMode);
 
         return empty($results) ? null : $results[0];
     }
