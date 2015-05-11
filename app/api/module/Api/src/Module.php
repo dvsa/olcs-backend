@@ -1,10 +1,9 @@
 <?php
 
-namespace Olcs\Db;
+namespace Dvsa\Olcs\Api;
 
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -19,16 +18,13 @@ class Module implements BootstrapListenerInterface
         /** @var MvcEvent $e */
         $eventManager = $e->getApplication()->getEventManager();
 
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager, 1);
-
-        // Enable and configure Doctrine filters
-        $entityManager = $sm->get('doctrine.entitymanager.orm_default');
-        $entityManager->getFilters()->enable('soft-deleteable');
+        // This needs to be priority 1
+        $payloadValidationListener = $sm->get('PayloadValidationListener');
+        $payloadValidationListener->attach($eventManager, 1);
     }
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__ . '/../config/module.config.php';
     }
 }

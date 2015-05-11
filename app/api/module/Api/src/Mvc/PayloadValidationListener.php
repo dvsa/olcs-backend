@@ -1,6 +1,6 @@
 <?php
 
-namespace Olcs\Db\Mvc;
+namespace Dvsa\Olcs\Api\Mvc;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -32,7 +32,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
      *
      * @return void
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), $priority);
     }
@@ -47,23 +47,27 @@ class PayloadValidationListener implements ListenerAggregateInterface
         $method = $request->getMethod();
 
         $matches = $e->getRouteMatch();
+
         if (!$matches instanceof Router\RouteMatch) {
             // Can't do anything without a route match
             return;
         }
 
         $dtoClass = $matches->getParam('dto', false);
+
         if (!$dtoClass) {
             // no controller matched, nothing to do
             return;
         }
 
-        $dto = new $dtoClass();
-
         $data = $matches->getParams();
 
+        $dto = new $dtoClass();
+        $matches->setParam('dto', $dto);
+
         if ($method === 'GET') {
-            $data = array_merge($data, $request->getQuery());
+
+            $data = array_merge($data, (array) $request->getQuery());
             $dto->exchangeArray($data);
 
             $query = $this->annotationBuilder->createQuery($dto);
