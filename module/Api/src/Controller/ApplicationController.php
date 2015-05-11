@@ -8,8 +8,6 @@
 namespace Dvsa\Olcs\Api\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\Http\Response;
-use Zend\View\Model\JsonModel;
 
 /**
  * Application Controller
@@ -26,16 +24,11 @@ class ApplicationController extends AbstractRestfulController
 
         $result = $applicationService->handleQuery($dto);
 
-        $response = $this->getResponse();
-
         if ($result === null) {
-            $response->setStatusCode(Response::STATUS_CODE_404);
-            $response->setContent(json_encode(['foo' => 'bar']));
-            return $response;
+
+            return $this->response()->notFound();
         }
 
-        $response->setStatusCode(Response::STATUS_CODE_200);
-
-        return new JsonModel($result);
+        return $this->response()->singleResult($result);
     }
 }
