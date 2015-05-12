@@ -271,8 +271,10 @@ class Search
 
         foreach ($dateRanges as $filterName => $value) {
 
-            if (is_array($value)) {
+            if (is_array($value) && !empty(trim(implode(" ", [$value['year'], $value['month'], $value['day']])))) {
                 $value = implode('-', [$value['year'], $value['month'], $value['day']]);
+            } else {
+                $value = null;
             }
 
             if (!empty($value)) {
