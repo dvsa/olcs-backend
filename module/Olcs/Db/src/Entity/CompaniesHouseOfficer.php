@@ -31,7 +31,7 @@ class CompaniesHouseOfficer implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CompaniesHouseCompany
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompaniesHouseCompany")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompaniesHouseCompany", inversedBy="officers")
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=false)
      */
     protected $company;

@@ -1566,5 +1566,13 @@ return array(
         'received' => array(
             'type' => 'yesno'
         )
-    )
+    ),
+    'companies_house_officer' => array(
+        'company_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseCompany',
+                'property' => 'officer'
+            )
+        )
+    ),
 );

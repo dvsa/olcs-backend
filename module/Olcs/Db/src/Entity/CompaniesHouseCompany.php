@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -125,6 +126,23 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="region", length=100, nullable=true)
      */
     protected $region;
+
+    /**
+     * Officer
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompaniesHouseOfficer", mappedBy="company")
+     */
+    protected $officers;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->officers = new ArrayCollection();
+    }
 
     /**
      * Set the address line1
@@ -377,5 +395,65 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     public function getRegion()
     {
         return $this->region;
+    }
+
+    /**
+     * Set the officer
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @return CompaniesHouseCompany
+     */
+    public function setOfficers($officers)
+    {
+        $this->officers = $officers;
+
+        return $this;
+    }
+
+    /**
+     * Get the officers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOfficers()
+    {
+        return $this->officers;
+    }
+
+    /**
+     * Add a officers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @return CompaniesHouseCompany
+     */
+    public function addOfficers($officers)
+    {
+        if ($officers instanceof ArrayCollection) {
+            $this->officers = new ArrayCollection(
+                array_merge(
+                    $this->officers->toArray(),
+                    $officers->toArray()
+                )
+            );
+        } elseif (!$this->officers->contains($officers)) {
+            $this->officers->add($officers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a officers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @return CompaniesHouseCompany
+     */
+    public function removeOfficers($officers)
+    {
+        if ($this->officers->contains($officers)) {
+            $this->officers->removeElement($officers);
+        }
+
+        return $this;
     }
 }
