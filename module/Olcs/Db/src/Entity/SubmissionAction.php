@@ -35,6 +35,23 @@ class SubmissionAction implements Interfaces\EntityInterface
         Traits\CustomVersionField;
 
     /**
+     * Action type
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="submissionActions")
+     * @ORM\JoinTable(name="submission_action_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="action_type", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $actionTypes;
+
+    /**
      * Is decision
      *
      * @var string
@@ -71,23 +88,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $recipientUser;
 
     /**
-     * Recommendation type
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="submissionActions")
-     * @ORM\JoinTable(name="submission_action_recommendation_type",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="recommendation_type", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $recommendationTypes;
-
-    /**
      * Sender user
      *
      * @var \Olcs\Db\Entity\User
@@ -121,8 +121,68 @@ class SubmissionAction implements Interfaces\EntityInterface
      */
     public function __construct()
     {
-        $this->recommendationTypes = new ArrayCollection();
+        $this->actionTypes = new ArrayCollection();
         $this->reasons = new ArrayCollection();
+    }
+
+    /**
+     * Set the action type
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function setActionTypes($actionTypes)
+    {
+        $this->actionTypes = $actionTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get the action types
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getActionTypes()
+    {
+        return $this->actionTypes;
+    }
+
+    /**
+     * Add a action types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function addActionTypes($actionTypes)
+    {
+        if ($actionTypes instanceof ArrayCollection) {
+            $this->actionTypes = new ArrayCollection(
+                array_merge(
+                    $this->actionTypes->toArray(),
+                    $actionTypes->toArray()
+                )
+            );
+        } elseif (!$this->actionTypes->contains($actionTypes)) {
+            $this->actionTypes->add($actionTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a action types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function removeActionTypes($actionTypes)
+    {
+        if ($this->actionTypes->contains($actionTypes)) {
+            $this->actionTypes->removeElement($actionTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -229,66 +289,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getRecipientUser()
     {
         return $this->recipientUser;
-    }
-
-    /**
-     * Set the recommendation type
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
-     * @return SubmissionAction
-     */
-    public function setRecommendationTypes($recommendationTypes)
-    {
-        $this->recommendationTypes = $recommendationTypes;
-
-        return $this;
-    }
-
-    /**
-     * Get the recommendation types
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getRecommendationTypes()
-    {
-        return $this->recommendationTypes;
-    }
-
-    /**
-     * Add a recommendation types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
-     * @return SubmissionAction
-     */
-    public function addRecommendationTypes($recommendationTypes)
-    {
-        if ($recommendationTypes instanceof ArrayCollection) {
-            $this->recommendationTypes = new ArrayCollection(
-                array_merge(
-                    $this->recommendationTypes->toArray(),
-                    $recommendationTypes->toArray()
-                )
-            );
-        } elseif (!$this->recommendationTypes->contains($recommendationTypes)) {
-            $this->recommendationTypes->add($recommendationTypes);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a recommendation types
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
-     * @return SubmissionAction
-     */
-    public function removeRecommendationTypes($recommendationTypes)
-    {
-        if ($this->recommendationTypes->contains($recommendationTypes)) {
-            $this->recommendationTypes->removeElement($recommendationTypes);
-        }
-
-        return $this;
     }
 
     /**

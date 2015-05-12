@@ -847,11 +847,11 @@ return array(
             )
         )
     ),
-    'submission_action_recommendation_type' => array(
+    'submission_action_type' => array(
         'submission_action_id' => array(
             'inversedBy' => array(
                 'entity' => 'SubmissionAction',
-                'property' => 'recommendationType'
+                'property' => 'actionType'
             )
         )
     ),

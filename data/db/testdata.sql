@@ -1300,7 +1300,7 @@ VALUES
     (12, 1, 1, 1, 1, 0, 1, 'Comment recommendaion testing lorem', NOW(), NOW()),
     (12, 1, 1, 1, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
 
-INSERT INTO `submission_action_recommendation_type` (`submission_action_id`, `recommendation_type`)
+INSERT INTO `submission_action_type` (`submission_action_id`, `action_type`)
 VALUES
     (12, 'sub_st_rec_pi'),
     (12, 'sub_st_dec_agree');
