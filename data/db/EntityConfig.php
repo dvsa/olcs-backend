@@ -770,6 +770,14 @@ return array(
             )
         ),
     ),
+    'prohibition_defect' => array(
+        'prohibition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Prohibition',
+                'property' => 'defect'
+            )
+        )
+    ),
     'conviction' => array(
         'msi' => array(
             'type' => 'yesnonull'
@@ -808,6 +816,17 @@ return array(
         'is_fee_exempt_annual' => array(
             'type' => 'yesno'
         )
+    ),
+    'irfo_partner' => array(
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'irfoPartner',
+                'cascade' => array(
+                    'persist'
+                ),
+            )
+        ),
     ),
     'note' => array(
         'priority' => array(
