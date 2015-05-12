@@ -158,6 +158,8 @@ return [
                 'Olcs\Db\Service\BusReg\OtherServicesManager',
             'Olcs\Db\Service\ContactDetails\PhoneContactsManager' =>
                 'Olcs\Db\Service\ContactDetails\PhoneContactsManager',
+            'Olcs\Db\Service\Organisation\IrfoPartnersManager' =>
+                'Olcs\Db\Service\Organisation\IrfoPartnersManager',
             'EntityManagerHelper' => 'Olcs\Db\Service\EntityManager\EntityManagerHelperFactory',
         ],
         'invokables' => [
