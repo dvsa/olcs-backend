@@ -1295,11 +1295,15 @@ INSERT INTO `disc_sequence` (
 
 
 INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
-    `created_by`, `is_decision`, `urgent`, `submission_action_status`, `comment`,
-    `created_on`, `last_modified_on`)
+    `created_by`, `is_decision`, `urgent`, `comment`, `created_on`, `last_modified_on`)
 VALUES
-    (12, 1, 1, 1, 1, 0, 1, 'sub_st_rec_pi', 'Comment recommendaion testing lorem', NOW(), NOW()),
-    (12, 1, 1, 1, 1, 1, 1, 'sub_st_dec_agree', 'Comment decision testing lorem', NOW(), NOW());
+    (12, 1, 1, 1, 1, 0, 1, 'Comment recommendaion testing lorem', NOW(), NOW()),
+    (12, 1, 1, 1, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
+
+INSERT INTO `submission_action_recommendation_type` (`submission_action_id`, `recommendation_type`)
+VALUES
+    (12, 'sub_st_rec_pi'),
+    (12, 'sub_st_dec_agree');
 
 -- test business rules
 INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `weekend`, `public_holiday`, `effective_from`, `effective_to`)
