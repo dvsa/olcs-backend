@@ -19,8 +19,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_submission_action_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_action_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_action_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_submission_action_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_submission_action_submission_action_status", columns={"submission_action_status"})
+ *        @ORM\Index(name="ix_submission_action_submission_id", columns={"submission_id"})
  *    }
  * )
  */
@@ -72,6 +71,23 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $recipientUser;
 
     /**
+     * Recommendation type
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\RefData", inversedBy="submissionActions")
+     * @ORM\JoinTable(name="submission_action_recommendation_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="recommendation_type", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $recommendationTypes;
+
+    /**
      * Sender user
      *
      * @var \Olcs\Db\Entity\User
@@ -92,16 +108,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     protected $submission;
 
     /**
-     * Submission action status
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionActionStatus;
-
-    /**
      * Urgent
      *
      * @var string
@@ -115,6 +121,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->recommendationTypes = new ArrayCollection();
         $this->reasons = new ArrayCollection();
     }
 
@@ -225,6 +232,66 @@ class SubmissionAction implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the recommendation type
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
+     * @return SubmissionAction
+     */
+    public function setRecommendationTypes($recommendationTypes)
+    {
+        $this->recommendationTypes = $recommendationTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get the recommendation types
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRecommendationTypes()
+    {
+        return $this->recommendationTypes;
+    }
+
+    /**
+     * Add a recommendation types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
+     * @return SubmissionAction
+     */
+    public function addRecommendationTypes($recommendationTypes)
+    {
+        if ($recommendationTypes instanceof ArrayCollection) {
+            $this->recommendationTypes = new ArrayCollection(
+                array_merge(
+                    $this->recommendationTypes->toArray(),
+                    $recommendationTypes->toArray()
+                )
+            );
+        } elseif (!$this->recommendationTypes->contains($recommendationTypes)) {
+            $this->recommendationTypes->add($recommendationTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a recommendation types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $recommendationTypes
+     * @return SubmissionAction
+     */
+    public function removeRecommendationTypes($recommendationTypes)
+    {
+        if ($this->recommendationTypes->contains($recommendationTypes)) {
+            $this->recommendationTypes->removeElement($recommendationTypes);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the sender user
      *
      * @param \Olcs\Db\Entity\User $senderUser
@@ -268,29 +335,6 @@ class SubmissionAction implements Interfaces\EntityInterface
     public function getSubmission()
     {
         return $this->submission;
-    }
-
-    /**
-     * Set the submission action status
-     *
-     * @param \Olcs\Db\Entity\RefData $submissionActionStatus
-     * @return SubmissionAction
-     */
-    public function setSubmissionActionStatus($submissionActionStatus)
-    {
-        $this->submissionActionStatus = $submissionActionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission action status
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getSubmissionActionStatus()
-    {
-        return $this->submissionActionStatus;
     }
 
     /**

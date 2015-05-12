@@ -847,6 +847,14 @@ return array(
             )
         )
     ),
+    'submission_action_recommendation_type' => array(
+        'submission_action_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SubmissionAction',
+                'property' => 'recommendationType'
+            )
+        )
+    ),
     'submission_section_comment' => array(
         'submission_id' => array(
             'inversedBy' => array(
