@@ -45,6 +45,15 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\WithdrawnReasonManyToOne;
 
     /**
+     * Application sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="application_sent_date", nullable=true)
+     */
+    protected $applicationSentDate;
+
+    /**
      * Copies issued
      *
      * @var int
@@ -180,6 +189,29 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="validity_period", nullable=false)
      */
     protected $validityPeriod;
+
+    /**
+     * Set the application sent date
+     *
+     * @param \DateTime $applicationSentDate
+     * @return IrfoPsvAuth
+     */
+    public function setApplicationSentDate($applicationSentDate)
+    {
+        $this->applicationSentDate = $applicationSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the application sent date
+     *
+     * @return \DateTime
+     */
+    public function getApplicationSentDate()
+    {
+        return $this->applicationSentDate;
+    }
 
     /**
      * Set the copies issued
