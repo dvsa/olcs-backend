@@ -19,30 +19,17 @@ use Doctrine\ORM\Query;
  */
 final class Application extends AbstractService
 {
-    /**
-     * Handles all query objects passed to the service
-     *
-     * @param ArraySerializableInterface $query
-     */
-    public function handleQuery(ArraySerializableInterface $query)
-    {
-        switch (true) {
-            case ($query instanceof ApplicationQueries\Application):
-                return $this->getRepo()->fetchUsingId($query);
-        }
-    }
+    protected $queryMap = [
+        ApplicationQueries\Application::class => 'fetchUsingId'
+    ];
 
-    /**
-     * Handles all commands objects passed to the service
-     *
-     * @param ArraySerializableInterface $command
-     */
-    public function handleCommand(ArraySerializableInterface $command)
+    protected $commandMap = [
+        ApplicationCommands\UpdateTypeOfLicence::class => 'updateTypeOfLicence'
+    ];
+
+    protected function fetchUsingId($query)
     {
-        switch (true) {
-            case ($command instanceof ApplicationCommands\UpdateTypeOfLicence):
-                return $this->updateTypeOfLicence($command);
-        }
+        return $this->getRepo()->fetchUsingId($query);
     }
 
     protected function updateTypeOfLicence($command)
