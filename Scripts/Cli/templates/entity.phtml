@@ -1,29 +1,27 @@
 <<?php /* Cheeky Hack */ ?>?php
 
-namespace Olcs\Db\Entity;
+namespace <?php echo $details['namespace']; ?>;
 
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
-<?php endif; ?>
-<?php if (!empty($details['traits'])): ?>
-use Olcs\Db\Entity\Traits;
 <?php endif; ?>
 <?php if ($details['softDeletable'] || $details['translatable']): ?>
 use Gedmo\Mapping\Annotation as Gedmo;
 <?php endif; ?>
 
 /**
- * <?php echo $details['name']; ?> Entity
+ * <?php echo $details['name']; ?> Abstract Entity
  *
  * Auto-Generated
  *
-<?php if (isset($details['repository'])):?>
- * @ORM\Entity(repositoryClass="<?php echo $details['repository']; ?>")
-<?php else:?>
- * @ORM\Entity
-<?php endif; ?>
+<?php
+if ($details['hasCreatedOn'] || $details['hasModifiedOn']) {
+?>
  * @ORM\HasLifecycleCallbacks
+<?php
+}
+?>
 <?php if ($details['softDeletable']): ?>
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
 <?php endif; ?>
@@ -53,13 +51,9 @@ if (!empty($details['unique-constraints'])) {
 }
 ?>)
  */
-class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
+abstract class Abstract<?php echo $details['name']; ?>
+
 {
-<?php if(!empty($details['traits'])): ?>
-    use Traits\<?php echo implode(',
-        Traits\\', $details['traits']);
-    ?>;
-<?php endif; ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
 
 <?php include('property.phtml'); ?>
@@ -83,4 +77,36 @@ class <?php echo $details['name']; ?> implements Interfaces\EntityInterface
 <?php include('methods.phtml'); ?>
 <?php endforeach; ?>
 <?php endif;?>
+
+<?php
+if ($details['hasCreatedOn']) {
+?>
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
+<?php
+}
+?>
+
+<?php
+if ($details['hasModifiedOn']) {
+?>
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
+    }
+<?php
+}
+?>
 }

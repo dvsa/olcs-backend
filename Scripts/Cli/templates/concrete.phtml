@@ -1,0 +1,20 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace <?php echo $details['namespace']; ?>;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * <?php echo $details['name']; ?> Entity
+ *
+<?php if (isset($details['repository'])):?>
+ * @ORM\Entity(repositoryClass="<?php echo $details['repository']; ?>")
+<?php else:?>
+ * @ORM\Entity
+<?php endif; ?>
+ */
+class <?php echo $details['name']; ?> extends Abstract<?php echo $details['name']; ?>
+
+{
+
+}
