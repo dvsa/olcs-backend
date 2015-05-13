@@ -848,6 +848,14 @@ return array(
             )
         )
     ),
+    'submission_action_type' => array(
+        'submission_action_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SubmissionAction',
+                'property' => 'actionType'
+            )
+        )
+    ),
     'submission_section_comment' => array(
         'submission_id' => array(
             'inversedBy' => array(
