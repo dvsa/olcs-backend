@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Abstract Repository
@@ -33,6 +34,16 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $this->em = $em;
         $this->queryBuilder = $queryBuilder;
+    }
+
+    public function getRefdataReference($id)
+    {
+        return $this->getReference(RefData::class, $id);
+    }
+
+    public function getReference($entityClass, $id)
+    {
+        return $this->getEntityManager()->getReference($entityClass, $id);
     }
 
     /**

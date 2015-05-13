@@ -17,4 +17,8 @@ use Zend\Stdlib\ArraySerializableInterface;
 interface RepositoryInterface
 {
     public function fetchUsingId(ArraySerializableInterface $query);
+
+    public function getRefdataReference($id);
+
+    public function getReference($entityClass, $id);
 }

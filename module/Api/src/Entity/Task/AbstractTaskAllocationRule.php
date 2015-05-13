@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Auto-Generated
  *
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="task_allocation_rule",
  *    indexes={
  *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
@@ -254,4 +255,26 @@ abstract class AbstractTaskAllocationRule
     }
 
 
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
 }

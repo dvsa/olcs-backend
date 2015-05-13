@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Auto-Generated
  *
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="licence_no_gen",
  *    indexes={
  *        @ORM\Index(name="ix_licence_no_gen_licence_id", columns={"licence_id"})
@@ -86,4 +87,26 @@ abstract class AbstractLicenceNoGen
     }
 
 
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
 }

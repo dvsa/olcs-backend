@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Auto-Generated
  *
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="oc_complaint",
  *    indexes={
  *        @ORM\Index(name="ix_oc_complaint_complaint_id", columns={"complaint_id"}),
@@ -152,4 +153,26 @@ abstract class AbstractOcComplaint
     }
 
 
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
 }

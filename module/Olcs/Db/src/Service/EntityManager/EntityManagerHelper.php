@@ -31,6 +31,6 @@ class EntityManagerHelper implements EntityManagerAwareInterface
 
     public function getRefDataReference($id)
     {
-        return $this->getEntityManager()->getReference('\Olcs\Db\Entity\RefData', $id);
+        return $this->getEntityManager()->getReference('\Dvsa\Olcs\Api\Entity\System\RefData', $id);
     }
 }

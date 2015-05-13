@@ -7,7 +7,8 @@ return [
     'service_manager' => [
         'factories' => [
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
-            'DomainServiceManager' => \Dvsa\Olcs\Api\Domain\DomainServiceManagerFactory::class,
+            'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
+            'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
@@ -24,9 +25,16 @@ return [
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
         ]
     ],
-    \Dvsa\Olcs\Api\Domain\DomainServiceManagerFactory::CONFIG_KEY => [
+    \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
-            'Application' => \Dvsa\Olcs\Api\Domain\Service\ServiceFactory::class,
+            \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class
+        ]
+    ],
+    \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
+        'factories' => [
+            \Dvsa\Olcs\Transfer\Query\Application\Application::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -43,6 +51,7 @@ return [
             'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class
         ]
     ],
+    'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
     'doctrine' => [
         'driver' => [
             'EntityDriver' => [
@@ -80,10 +89,10 @@ return [
                     'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
                 ],
                 'types' => [
-                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
-                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
-                    'date' => 'Olcs\Db\Entity\Types\DateType',
-                    'datetime' => 'Olcs\Db\Entity\Types\DateTimeType',
+                    'yesno' => 'Dvsa\Olcs\Api\Entity\Types\YesNoType',
+                    'yesnonull' => 'Dvsa\Olcs\Api\Entity\Types\YesNoNullType',
+                    'date' => 'Dvsa\Olcs\Api\Entity\Types\DateType',
+                    'datetime' => 'Dvsa\Olcs\Api\Entity\Types\DateTimeType',
                 ]
             ]
         ]

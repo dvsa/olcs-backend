@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Auto-Generated
  *
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="previous_conviction",
  *    indexes={
  *        @ORM\Index(name="ix_previous_conviction_application_id", columns={"application_id"}),
@@ -443,4 +444,26 @@ abstract class AbstractPreviousConviction
     }
 
 
+
+    /**
+     * Clear properties
+     *
+     * @param type $properties
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+
+            if (property_exists($this, $property)) {
+                if ($this->$property instanceof Collection) {
+
+                    $this->$property = new ArrayCollection(array());
+
+                } else {
+
+                    $this->$property = null;
+                }
+            }
+        }
+    }
 }

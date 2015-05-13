@@ -17,7 +17,7 @@ use Doctrine\ORM\Query;
  */
 final class Application extends AbstractRepository
 {
-    protected $entity = '\Olcs\Db\Entity\Application';
+    protected $entity = '\Dvsa\Olcs\Api\Entity\Application\Application';
 
     /**
      * Fetch the default application record by it's id

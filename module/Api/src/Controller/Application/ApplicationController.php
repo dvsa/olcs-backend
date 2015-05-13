@@ -20,9 +20,7 @@ class ApplicationController extends AbstractRestfulController
     {
         $dto = $this->params('dto');
 
-        $applicationService = $this->getServiceLocator()->get('DomainServiceManager')->get('Application');
-
-        $result = $applicationService->handleQuery($dto);
+        $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
 
         if ($result === null) {
 
