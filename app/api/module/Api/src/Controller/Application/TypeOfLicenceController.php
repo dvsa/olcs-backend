@@ -20,9 +20,7 @@ class TypeOfLicenceController extends AbstractRestfulController
     {
         $dto = $this->params('dto');
 
-        $applicationService = $this->getServiceLocator()->get('DomainServiceManager')->get('Application');
-
-        $result = $applicationService->handleCommand($dto);
+        $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
 
         print '<pre>';
         print_r($result);

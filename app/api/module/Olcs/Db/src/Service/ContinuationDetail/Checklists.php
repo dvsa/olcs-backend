@@ -9,10 +9,10 @@ namespace Olcs\Db\Service\ContinuationDetail;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Olcs\Db\Entity\Queue;
-use Olcs\Db\Entity\Document;
-use Olcs\Db\Entity\Licence;
-use Olcs\Db\Entity\Fee;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Checklists
@@ -57,7 +57,7 @@ class Checklists implements ServiceLocatorAwareInterface
         }
 
         $results = $this->getServiceLocator()->get('EntityManagerHelper')
-            ->findByIds('\Olcs\Db\Entity\ContinuationDetail', $data);
+            ->findByIds('\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail', $data);
 
         if (count($results) < count($data)) {
             return 'Could not find one or more continuation detail records';
@@ -91,7 +91,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $qb = $em->createQueryBuilder();
 
         $qb->select('cd')
-            ->from('\Olcs\Db\Entity\ContinuationDetail', 'cd')
+            ->from('\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail', 'cd')
             ->leftJoin('cd.licence', 'l')
             ->where($qb->expr()->eq('cd.id', ':id'))
             ->setParameter('id', $id)
@@ -103,7 +103,7 @@ class Checklists implements ServiceLocatorAwareInterface
             return 'Continuation detail not found';
         }
 
-        /* @var $continuationDetail \Olcs\Db\Entity\ContinuationDetail */
+        /* @var $continuationDetail \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail */
         $continuationDetail = $results[0];
         $licence = $continuationDetail->getLicence();
 
@@ -116,9 +116,9 @@ class Checklists implements ServiceLocatorAwareInterface
             $document->setFilename($template . '.rtf');
             $document->setLicence($licence);
 
-            $catRef = $em->getReference('\Olcs\Db\Entity\Category', self::DOC_CATEGORY);
+            $catRef = $em->getReference('\Dvsa\Olcs\Api\Entity\System\Category', self::DOC_CATEGORY);
             $document->setCategory($catRef);
-            $subCatRef = $em->getReference('\Olcs\Db\Entity\SubCategory', self::DOC_SUB_CATEGORY);
+            $subCatRef = $em->getReference('\Dvsa\Olcs\Api\Entity\System\SubCategory', self::DOC_SUB_CATEGORY);
             $document->setSubCategory($subCatRef);
 
             $document->setIdentifier($docId);
@@ -162,7 +162,7 @@ class Checklists implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @return \Olcs\Db\Entity\FeeType
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      */
     protected function getLatestFeeType($feeType, Licence $licence)
     {
@@ -172,7 +172,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $effectiveFrom = (new \DateTime())->format(\DateTime::W3C);
 
         $qb->select('ft')
-            ->from('\Olcs\Db\Entity\FeeType', 'ft')
+            ->from('\Dvsa\Olcs\Api\Entity\Fee\FeeType', 'ft')
             ->where($qb->expr()->eq('ft.feeType', ':feeType'))
             ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
             ->andWhere(
@@ -227,7 +227,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $qb = $em->createQueryBuilder();
 
         $qb->select('f')
-            ->from('\Olcs\Db\Entity\Fee', 'f')
+            ->from('\Dvsa\Olcs\Api\Entity\Fee\Fee', 'f')
             ->innerJoin('f.feeType', 'ft')
             ->where($qb->expr()->eq('f.licence', ':licence'))
             ->andWhere(

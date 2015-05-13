@@ -40,9 +40,10 @@ class Factory implements FactoryInterface
 
         $service = new $className();
 
-        if ($setEntityName) {
+        $namespaces = $this->serviceLocator->get('Config')['entity_namespaces'];
 
-            $service->setEntityName('\Olcs\Db\Entity\\' . $name);
+        if ($setEntityName) {
+            $service->setEntityName('\Dvsa\Olcs\Api\Entity\\' . $namespaces[$name] . '\\' . $name);
         }
 
         $service->setEntityManager($this->serviceLocator->get('doctrine.entitymanager.orm_default'));

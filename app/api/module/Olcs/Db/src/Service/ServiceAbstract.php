@@ -30,7 +30,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         OlcsLoggerAwareTrait,
         LanguageAwareTrait;
 
-    protected $entityNamespace = '\Olcs\Db\Entity\\';
+    protected $entityNamespace = '\Dvsa\Olcs\Api\Entity\\';
 
     /**
      * Holds the Entity Name
@@ -363,7 +363,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
         $refDatas = $this->getRefDataValues($results, $replacements);
 
         if (!empty($refDatas)) {
-            $repo = $this->getEntityManager()->getRepository('\Olcs\Db\Entity\RefData');
+            $repo = $this->getEntityManager()->getRepository('\Dvsa\Olcs\Api\Entity\System\RefData');
             $qb = $repo->createQueryBuilder('r');
 
             $qb->where($qb->expr()->in('r.id', $refDatas));
@@ -617,8 +617,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
     /**
      * Returns a new instance of the entity.
-     *
-     * @return \Olcs\Db\Entity\EntityInterface
      */
     protected function getNewEntity()
     {
@@ -745,7 +743,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 
     protected function formatEntityName($entity)
     {
-        return $this->entityNamespace . $entity;
+        $namespaces = $this->getServiceLocator()->get('Config')['entity_namespaces'];
+
+        return $this->entityNamespace . $namespaces[$entity] . '\\' . $entity;
     }
 
     protected function processCascades($parentEntity, $data)

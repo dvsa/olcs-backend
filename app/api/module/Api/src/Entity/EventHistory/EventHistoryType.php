@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * EventHistoryType Entity
  *
  * @ORM\Entity
+ * @ORM\Table(name="event_history_type")
  */
 class EventHistoryType extends AbstractEventHistoryType
 {

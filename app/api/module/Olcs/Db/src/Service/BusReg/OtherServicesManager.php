@@ -2,8 +2,8 @@
 
 namespace Olcs\Db\Service\BusReg;
 
-use Olcs\Db\Entity\BusReg;
-use Olcs\Db\Entity\BusRegOtherService;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
