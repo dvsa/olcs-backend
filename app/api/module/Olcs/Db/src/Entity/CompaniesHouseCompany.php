@@ -132,7 +132,7 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompaniesHouseOfficer", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompaniesHouseOfficer", mappedBy="company", cascade={"persist"})
      */
     protected $officers;
 

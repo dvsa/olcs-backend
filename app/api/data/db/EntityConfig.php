@@ -1571,8 +1571,11 @@ return array(
         'company_id' => array(
             'inversedBy' => array(
                 'entity' => 'CompaniesHouseCompany',
-                'property' => 'officer'
-            )
-        )
+                'property' => 'officer',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
     ),
 );
