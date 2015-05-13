@@ -259,7 +259,7 @@ class Search
     }
 
     /**
-     * Sets the filters.
+     * Sets the filters. Requires the dates in three parts ['y','m','d']
      *
      * @param array $filters
      *
@@ -271,8 +271,10 @@ class Search
 
         foreach ($dateRanges as $filterName => $value) {
 
-            if (is_array($value)) {
+            if (is_array($value) && !empty(trim(implode(" ", [$value['year'], $value['month'], $value['day']])))) {
                 $value = implode('-', [$value['year'], $value['month'], $value['day']]);
+            } elseif (false === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $value)) {
+                $value = null;
             }
 
             if (!empty($value)) {
