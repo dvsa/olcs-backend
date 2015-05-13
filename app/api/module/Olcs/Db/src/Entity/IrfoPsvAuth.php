@@ -36,6 +36,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\ExpiryDateField,
         Traits\IdIdentity,
         Traits\InForceDateField,
+        Traits\IrfoFeeId10Field,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
@@ -43,6 +44,15 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\StatusManyToOne,
         Traits\CustomVersionField,
         Traits\WithdrawnReasonManyToOne;
+
+    /**
+     * Application sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="application_sent_date", nullable=true)
+     */
+    protected $applicationSentDate;
 
     /**
      * Copies issued
@@ -79,15 +89,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="copies_required_total", nullable=false, options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=false)
-     */
-    protected $irfoFeeId;
 
     /**
      * Irfo file no
@@ -182,6 +183,29 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
+     * Set the application sent date
+     *
+     * @param \DateTime $applicationSentDate
+     * @return IrfoPsvAuth
+     */
+    public function setApplicationSentDate($applicationSentDate)
+    {
+        $this->applicationSentDate = $applicationSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the application sent date
+     *
+     * @return \DateTime
+     */
+    public function getApplicationSentDate()
+    {
+        return $this->applicationSentDate;
+    }
+
+    /**
      * Set the copies issued
      *
      * @param int $copiesIssued
@@ -271,29 +295,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getCopiesRequiredTotal()
     {
         return $this->copiesRequiredTotal;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
     }
 
     /**
