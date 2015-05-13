@@ -7,8 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Zend\Stdlib\ArraySerializableInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * Application
@@ -19,20 +22,8 @@ final class Application extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Application\Application';
 
-    /**
-     * Fetch the default application record by it's id
-     *
-     * @param ArraySerializableInterface $query
-     * @return array
-     */
-    public function fetchUsingId(ArraySerializableInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
+    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
     {
-        $qb = $this->createQueryBuilder();
-
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
-
-        $results = $qb->getQuery()->getResult($hydrateMode);
-
-        return empty($results) ? null : $results[0];
     }
 }

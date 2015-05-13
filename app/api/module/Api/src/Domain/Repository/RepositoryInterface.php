@@ -7,7 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * Repository Interface
@@ -16,7 +18,17 @@ use Zend\Stdlib\ArraySerializableInterface;
  */
 interface RepositoryInterface
 {
-    public function fetchUsingId(ArraySerializableInterface $query);
+    public function lock($entity, $version);
+
+    public function save($entity);
+
+    public function beginTransaction();
+
+    public function commit();
+
+    public function rollback();
+
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null);
 
     public function getRefdataReference($id);
 

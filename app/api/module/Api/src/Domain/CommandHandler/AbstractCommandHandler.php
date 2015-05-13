@@ -28,9 +28,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private $commandHandler;
 
+    protected $repoServiceName;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')->get('Application');
+        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+            ->get($this->repoServiceName);
         $this->commandHandler = $serviceLocator;
 
         return $this;

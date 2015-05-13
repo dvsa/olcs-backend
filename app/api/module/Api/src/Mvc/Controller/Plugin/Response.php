@@ -26,6 +26,18 @@ class Response extends AbstractPlugin
         return $response;
     }
 
+    public function error($code, array $messages = [])
+    {
+        $response = $this->getController()->getResponse();
+        $response->setStatusCode($code);
+
+        if (empty($messages)) {
+            return $response;
+        }
+
+        return new JsonModel(['messages' => $messages]);
+    }
+
     public function singleResult($result)
     {
         $response = $this->getController()->getResponse();
@@ -40,5 +52,17 @@ class Response extends AbstractPlugin
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
         return new JsonModel(['count' => $count, 'results' => $results]);
+    }
+
+    public function successfulUpdate(array $messages = [])
+    {
+        $response = $this->getController()->getResponse();
+        $response->setStatusCode(HttpResponse::STATUS_CODE_200);
+
+        if (empty($messages)) {
+            return $response;
+        }
+
+        return new JsonModel(['messages' => $messages]);
     }
 }

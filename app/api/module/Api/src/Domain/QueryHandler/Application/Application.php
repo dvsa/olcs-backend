@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Zend\Stdlib\ArraySerializableInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Application
@@ -17,7 +17,9 @@ use Zend\Stdlib\ArraySerializableInterface;
  */
 class Application extends AbstractQueryHandler
 {
-    public function handleQuery(ArraySerializableInterface $query)
+    protected $repoServiceName = 'Application';
+
+    public function handleQuery(QueryInterface $query)
     {
         return $this->getRepo()->fetchUsingId($query);
     }

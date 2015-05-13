@@ -28,9 +28,11 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     private $queryHandler;
 
+    protected $repoServiceName;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')->get('Application');
+        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')->get($this->repoServiceName);
         $this->queryHandler = $serviceLocator;
 
         return $this;
