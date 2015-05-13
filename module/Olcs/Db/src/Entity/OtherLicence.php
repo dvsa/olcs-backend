@@ -35,6 +35,7 @@ class OtherLicence implements Interfaces\EntityInterface
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\LicNo18Field,
+        Traits\RoleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -110,16 +111,6 @@ class OtherLicence implements Interfaces\EntityInterface
      * @ORM\Column(type="date", name="purchase_date", nullable=true)
      */
     protected $purchaseDate;
-
-    /**
-     * Role
-     *
-     * @var \Olcs\Db\Entity\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="role", referencedColumnName="id", nullable=true)
-     */
-    protected $role;
 
     /**
      * Total auth vehicles
@@ -351,29 +342,6 @@ class OtherLicence implements Interfaces\EntityInterface
     public function getPurchaseDate()
     {
         return $this->purchaseDate;
-    }
-
-    /**
-     * Set the role
-     *
-     * @param \Olcs\Db\Entity\RefData $role
-     * @return OtherLicence
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * Get the role
-     *
-     * @return \Olcs\Db\Entity\RefData
-     */
-    public function getRole()
-    {
-        return $this->role;
     }
 
     /**
