@@ -36,6 +36,7 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
         Traits\ExpiryDateField,
         Traits\IdIdentity,
         Traits\InForceDateField,
+        Traits\IrfoFeeId10Field,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField,
@@ -88,15 +89,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="copies_required_total", nullable=false, options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=false)
-     */
-    protected $irfoFeeId;
 
     /**
      * Irfo file no
@@ -303,29 +295,6 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getCopiesRequiredTotal()
     {
         return $this->copiesRequiredTotal;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
     }
 
     /**
