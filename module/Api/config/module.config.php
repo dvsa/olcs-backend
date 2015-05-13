@@ -27,8 +27,22 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
+            // Transfer - Application
             \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
+            // Domain - Application
+            \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelApplicationFees::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelApplicationFees::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetApplication::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\ResetCompletionStatus::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetCompletionStatus::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [

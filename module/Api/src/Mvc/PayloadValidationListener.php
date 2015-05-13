@@ -88,7 +88,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
             if (!$command->isValid()) {
                 $response = new Response();
                 $response->setStatusCode(Response::STATUS_CODE_422);
-                $response->setContent(json_encode($query->getMessages(), true));
+                $response->setContent(json_encode($command->getMessages(), true));
                 return $response;
             }
         }

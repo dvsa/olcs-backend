@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
-use Zend\Stdlib\ArraySerializableInterface;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Command Handler Interface
@@ -16,5 +16,5 @@ use Zend\Stdlib\ArraySerializableInterface;
  */
 interface CommandHandlerInterface
 {
-    public function handleCommand(ArraySerializableInterface $command);
+    public function handleCommand(CommandInterface $command);
 }

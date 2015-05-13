@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\Stdlib\ArraySerializableInterface;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Zend\ServiceManager\Exception\RuntimeException;
 
@@ -27,7 +27,7 @@ class CommandHandlerManager extends AbstractPluginManager
         }
     }
 
-    public function handleCommand(ArraySerializableInterface $query)
+    public function handleCommand(CommandInterface $query)
     {
         return $this->get(get_class($query))->handleCommand($query);
     }

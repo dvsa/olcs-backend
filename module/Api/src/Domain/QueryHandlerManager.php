@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\Stdlib\ArraySerializableInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Zend\ServiceManager\Exception\RuntimeException;
 
@@ -27,7 +27,7 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
         }
     }
 
-    public function handleQuery(ArraySerializableInterface $query)
+    public function handleQuery(QueryInterface $query)
     {
         return $this->get(get_class($query))->handleQuery($query);
     }

@@ -7,9 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Doctrine\ORM\Query;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Doctrine\ORM\OptimisticLockException;
 
 /**
  * Abstract Repository
@@ -34,6 +40,76 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $this->em = $em;
         $this->queryBuilder = $queryBuilder;
+    }
+
+    /**
+     * Fetch the default record by it's id
+     *
+     * @param Query|QryCmd $query
+     * @param int $hydrateMode
+     * @param null $version
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\VersionConflictException
+     */
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultQuery($qb, $query);
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+            try {
+                $this->lock($results[0], $version);
+            } catch (OptimisticLockException $ex) {
+                throw new Exception\VersionConflictException();
+            }
+        }
+
+        return $results[0];
+    }
+
+    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
+    {
+        throw new Exception\RuntimeException('Must implement buildDefaultQuery method to use fetchUsingId');
+    }
+
+    public function lock($entity, $version)
+    {
+        $this->em->lock($entity, LockMode::OPTIMISTIC, $version);
+    }
+
+    public function save($entity)
+    {
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+    }
+
+    public function delete($entity)
+    {
+        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->flush();
+    }
+
+    public function beginTransaction()
+    {
+        $this->getEntityManager()->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->getEntityManager()->commit();
+    }
+
+    public function rollback()
+    {
+        $this->getEntityManager()->rollback();
     }
 
     public function getRefdataReference($id)

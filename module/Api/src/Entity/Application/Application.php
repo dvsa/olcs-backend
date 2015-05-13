@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Application Entity
@@ -28,9 +29,19 @@ class Application extends AbstractApplication
     const ERROR_GV_NON_SR = 'AP-TOL-2';
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
-    const ERROR_CHANGE_REQUIRES_CONF = 'AP-TOL-5';
+    const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
 
-    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType, $confirm)
+    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType)
+    {
+        if ($this->validate($niFlag, $goodsOrPsv, $licenceType)) {
+            $this->setNiFlag($niFlag);
+            $this->setGoodsOrPsv($goodsOrPsv);
+            $this->setLicenceType($licenceType);
+            return true;
+        }
+    }
+
+    public function validate($niFlag, $goodsOrPsv, $licenceType)
     {
         $errors = [];
 
@@ -47,17 +58,7 @@ class Application extends AbstractApplication
             ];
         }
 
-        if ($this->getGoodsOrPsv() !== null && ($this->getGoodsOrPsv() != $goodsOrPsv)) {
-            if (!$confirm) {
-                $errors['confirm'][] =[
-                    self::ERROR_CHANGE_REQUIRES_CONF => 'Changing operator type requires confirmation'
-                ];
-            } else {
-                // Need to destroy the app and start again
-            }
-        }
-
-        if ($this->isVariation()) {
+        if ($this->getIsVariation()) {
             if ($this->getGoodsOrPsv() != $goodsOrPsv) {
                 $errors['goodsOrPsv'][] =[
                     self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences'
@@ -70,5 +71,11 @@ class Application extends AbstractApplication
                 ];
             }
         }
+
+        if (empty($errors)) {
+            return true;
+        }
+
+        throw new ValidationException($errors);
     }
 }

@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
-use Zend\Stdlib\ArraySerializableInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Query Handler Interface
@@ -16,5 +16,5 @@ use Zend\Stdlib\ArraySerializableInterface;
  */
 interface QueryHandlerInterface
 {
-    public function handleQuery(ArraySerializableInterface $query);
+    public function handleQuery(QueryInterface $query);
 }

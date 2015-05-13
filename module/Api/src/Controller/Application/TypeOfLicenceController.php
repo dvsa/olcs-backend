@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Controller\Application;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 
 /**
  * Type Of Licence Controller
@@ -20,10 +21,14 @@ class TypeOfLicenceController extends AbstractRestfulController
     {
         $dto = $this->params('dto');
 
-        $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
-
-        print '<pre>';
-        print_r($result);
-        exit;
+        try {
+            $messages = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+            return $this->response()->successfulUpdate($messages);
+        } catch (Exception $ex) {
+            return $this->response()->error(500, $ex->getMessages());
+        } catch (\Exception $ex) {
+            throw $ex;
+            //return $this->response()->error(500, [$ex->getMessage()]);
+        }
     }
 }
