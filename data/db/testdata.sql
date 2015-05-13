@@ -1294,11 +1294,11 @@ INSERT INTO `disc_sequence` (
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
 
-INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
-    `created_by`, `is_decision`, `urgent`, `comment`, `created_on`, `last_modified_on`)
+INSERT INTO `submission_action` (`submission_id`, `last_modified_by`, `created_by`, `is_decision`, `comment`,
+`created_on`, `last_modified_on`)
 VALUES
-    (12, 1, 1, 1, 1, 0, 1, 'Comment recommendaion testing lorem', NOW(), NOW()),
-    (12, 1, 1, 1, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
+    (12, 1, 1, 0, 'Comment recommendaion testing lorem', NOW(), NOW()),
+    (12, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
 
 INSERT INTO `submission_action_type` (`submission_action_id`, `action_type`)
 VALUES
