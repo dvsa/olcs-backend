@@ -1,3 +1,9 @@
+/*
+ This file will reset the companies house data and queue up the retrieval
+ of approx. 50,000 live companies, retrieved 13/05/2015 from the olcsdev
+ database on scdv-db02.sc.npm
+*/
+
 SET foreign_key_checks = 0;
 
 START TRANSACTION;
