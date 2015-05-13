@@ -770,6 +770,14 @@ return array(
             )
         ),
     ),
+    'prohibition_defect' => array(
+        'prohibition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Prohibition',
+                'property' => 'defect'
+            )
+        )
+    ),
     'conviction' => array(
         'msi' => array(
             'type' => 'yesnonull'
