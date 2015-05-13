@@ -18,6 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="ix_submission_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_submission_sender_user_id", columns={"sender_user_id"}),
+ *        @ORM\Index(name="ix_submission_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"})
@@ -47,6 +49,26 @@ class Submission implements Interfaces\EntityInterface
     protected $dataSnapshot;
 
     /**
+     * Recipient user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $recipientUser;
+
+    /**
+     * Sender user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $senderUser;
+
+    /**
      * Submission type
      *
      * @var \Olcs\Db\Entity\RefData
@@ -55,6 +77,15 @@ class Submission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
+
+    /**
+     * Urgent
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="urgent", nullable=true)
+     */
+    protected $urgent;
 
     /**
      * Submission action
@@ -107,6 +138,52 @@ class Submission implements Interfaces\EntityInterface
     }
 
     /**
+     * Set the recipient user
+     *
+     * @param \Olcs\Db\Entity\User $recipientUser
+     * @return Submission
+     */
+    public function setRecipientUser($recipientUser)
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the recipient user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRecipientUser()
+    {
+        return $this->recipientUser;
+    }
+
+    /**
+     * Set the sender user
+     *
+     * @param \Olcs\Db\Entity\User $senderUser
+     * @return Submission
+     */
+    public function setSenderUser($senderUser)
+    {
+        $this->senderUser = $senderUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the sender user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getSenderUser()
+    {
+        return $this->senderUser;
+    }
+
+    /**
      * Set the submission type
      *
      * @param \Olcs\Db\Entity\RefData $submissionType
@@ -127,6 +204,29 @@ class Submission implements Interfaces\EntityInterface
     public function getSubmissionType()
     {
         return $this->submissionType;
+    }
+
+    /**
+     * Set the urgent
+     *
+     * @param boolean $urgent
+     * @return Submission
+     */
+    public function setUrgent($urgent)
+    {
+        $this->urgent = $urgent;
+
+        return $this;
+    }
+
+    /**
+     * Get the urgent
+     *
+     * @return boolean
+     */
+    public function getUrgent()
+    {
+        return $this->urgent;
     }
 
     /**
