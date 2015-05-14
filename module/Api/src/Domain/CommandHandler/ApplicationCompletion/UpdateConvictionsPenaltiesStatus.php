@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update Type Of Licence Status
+ * Update ConvictionsPenalties Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -12,34 +12,30 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
- * Update Type Of Licence Status
+ * Update ConvictionsPenalties Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateTypeOfLicenceStatus extends AbstractUpdateStatus
+final class UpdateConvictionsPenaltiesStatus extends AbstractUpdateStatus
 {
     protected $repoServiceName = 'Application';
 
-    protected $section = 'TypeOfLicence';
+    protected $section = 'ConvictionsPenalties';
 
     protected function isSectionValid(Application $application)
     {
-        if (!in_array($application->getNiFlag(), ['Y', 'N'])) {
+        if (!in_array($application->getPrevConviction(), ['Y', 'N'])) {
             return false;
         }
 
-        if ($application->getGoodsOrPsv() === null) {
+        if ($application->getConvictionsConfirmation() !== 'Y') {
             return false;
         }
 
-        if ($application->getLicenceType() === null) {
+        if ($application->getPrevConviction() === 'Y' && count($application->getPreviousConvictions()) < 1) {
             return false;
         }
 
-        return $application->isValidTol(
-            $application->getNiFlag(),
-            $application->getGoodsOrPsv(),
-            $application->getLicenceType()
-        );
+        return true;
     }
 }
