@@ -37,6 +37,8 @@ class Fee extends AbstractFee
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
+        parent::__construct();
+
         $this->feeType = $feeType;
         $this->amount = $amount;
         $this->feeStatus = $feeStatus;
