@@ -24,9 +24,11 @@ class IrfoPsvAuth extends ServiceAbstract
             $data['irfoFileNo'] = '';
 
             // create IRFO PSV Auth
-            $id = parent::create($data);
+            // update which follows will deal with irfoPsvAuthNumbers as well
+            $id = parent::create(array_merge($data, ['irfoPsvAuthNumbers' => null]));
 
-            // update the record which sets IRFO file number correctly
+            // update the record
+            // sets IRFO file number and auth numbers correctly
             // merge the data with the record just created in case create sets some extra fields
             $this->update($id, array_merge($data, $this->get($id)));
         } else {
@@ -56,6 +58,14 @@ class IrfoPsvAuth extends ServiceAbstract
 
             // update IRFO file number
             $data['irfoFileNo'] = sprintf('%s/%d', $irfoPsvAuthType->getSectionCode(), $id);
+        }
+
+        if (isset($data['irfoPsvAuthNumbers']) && is_array($data['irfoPsvAuthNumbers'])) {
+            $irfoPsvAuth = $this->getEntityManager()->find($this->getEntityName(), $id);
+
+            $data['irfoPsvAuthNumbers'] = $this->getServiceLocator()
+                ->get('Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager')
+                ->processIrfoPsvAuthNumbers($irfoPsvAuth, $data['irfoPsvAuthNumbers']);
         }
 
         return parent::doUpdate($id, $data);
