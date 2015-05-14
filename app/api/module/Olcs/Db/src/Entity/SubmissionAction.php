@@ -80,7 +80,7 @@ class SubmissionAction implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission", inversedBy="submissionActions")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission")
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;
