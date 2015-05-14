@@ -201,11 +201,21 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     protected $validityPeriod;
 
     /**
+     * Irfo psv auth number
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\IrfoPsvAuthNumber", mappedBy="irfoPsvAuth", cascade={"persist"})
+     */
+    protected $irfoPsvAuthNumbers;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
     {
         $this->countrys = new ArrayCollection();
+        $this->irfoPsvAuthNumbers = new ArrayCollection();
     }
 
     /**
@@ -611,5 +621,65 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getValidityPeriod()
     {
         return $this->validityPeriod;
+    }
+
+    /**
+     * Set the irfo psv auth number
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @return IrfoPsvAuth
+     */
+    public function setIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
+    {
+        $this->irfoPsvAuthNumbers = $irfoPsvAuthNumbers;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth numbers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrfoPsvAuthNumbers()
+    {
+        return $this->irfoPsvAuthNumbers;
+    }
+
+    /**
+     * Add a irfo psv auth numbers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @return IrfoPsvAuth
+     */
+    public function addIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
+    {
+        if ($irfoPsvAuthNumbers instanceof ArrayCollection) {
+            $this->irfoPsvAuthNumbers = new ArrayCollection(
+                array_merge(
+                    $this->irfoPsvAuthNumbers->toArray(),
+                    $irfoPsvAuthNumbers->toArray()
+                )
+            );
+        } elseif (!$this->irfoPsvAuthNumbers->contains($irfoPsvAuthNumbers)) {
+            $this->irfoPsvAuthNumbers->add($irfoPsvAuthNumbers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irfo psv auth numbers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @return IrfoPsvAuth
+     */
+    public function removeIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
+    {
+        if ($this->irfoPsvAuthNumbers->contains($irfoPsvAuthNumbers)) {
+            $this->irfoPsvAuthNumbers->removeElement($irfoPsvAuthNumbers);
+        }
+
+        return $this;
     }
 }
