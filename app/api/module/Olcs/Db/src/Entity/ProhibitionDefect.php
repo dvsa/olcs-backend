@@ -49,7 +49,7 @@ class ProhibitionDefect implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Prohibition
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Prohibition")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Prohibition", inversedBy="defects")
      * @ORM\JoinColumn(name="prohibition_id", referencedColumnName="id", nullable=false)
      */
     protected $prohibition;
