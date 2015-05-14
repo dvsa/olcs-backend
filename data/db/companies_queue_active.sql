@@ -8,8 +8,8 @@ SET foreign_key_checks = 0;
 START TRANSACTION;
 
 TRUNCATE TABLE `queue`;
--- TRUNCATE TABLE `companies_house_officer`;
--- TRUNCATE TABLE `companies_house_company`;
+TRUNCATE TABLE `companies_house_officer`;
+TRUNCATE TABLE `companies_house_company`;
 
 INSERT INTO `queue` (`status`, `type`, `options`)
 SELECT DISTINCT 'que_sts_queued',
