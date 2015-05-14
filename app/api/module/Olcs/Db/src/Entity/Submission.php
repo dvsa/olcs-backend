@@ -88,6 +88,15 @@ class Submission implements Interfaces\EntityInterface
     protected $urgent;
 
     /**
+     * Submission action
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\SubmissionAction", mappedBy="submission")
+     */
+    protected $submissionActions;
+
+    /**
      * Submission section comment
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -101,6 +110,7 @@ class Submission implements Interfaces\EntityInterface
      */
     public function __construct()
     {
+        $this->submissionActions = new ArrayCollection();
         $this->submissionSectionComments = new ArrayCollection();
     }
 
@@ -217,6 +227,66 @@ class Submission implements Interfaces\EntityInterface
     public function getUrgent()
     {
         return $this->urgent;
+    }
+
+    /**
+     * Set the submission action
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Submission
+     */
+    public function setSubmissionActions($submissionActions)
+    {
+        $this->submissionActions = $submissionActions;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission actions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSubmissionActions()
+    {
+        return $this->submissionActions;
+    }
+
+    /**
+     * Add a submission actions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Submission
+     */
+    public function addSubmissionActions($submissionActions)
+    {
+        if ($submissionActions instanceof ArrayCollection) {
+            $this->submissionActions = new ArrayCollection(
+                array_merge(
+                    $this->submissionActions->toArray(),
+                    $submissionActions->toArray()
+                )
+            );
+        } elseif (!$this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->add($submissionActions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a submission actions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @return Submission
+     */
+    public function removeSubmissionActions($submissionActions)
+    {
+        if ($this->submissionActions->contains($submissionActions)) {
+            $this->submissionActions->removeElement($submissionActions);
+        }
+
+        return $this;
     }
 
     /**
