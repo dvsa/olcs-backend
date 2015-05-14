@@ -9,6 +9,6 @@ sed -i '1i "company_number","company_name","company_status","address_line_1","ad
 
 FILE2=/tmp/companies_house/officers_${TIMESTAMP}.csv
 mysql -uroot -ppassword olcs_be -e "SELECT c.company_number, c.company_name, c.company_status, o.name, o.date_of_birth INTO OUTFILE '${FILE2}' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' FROM companies_house_officer o INNER JOIN companies_house_company c ON o.company_id=c.id;"
-sed -i '1i "c.company_number","c.company_name","c.company_status","o.name","o.date_of_birth"' $FILE2
+sed -i '1i "company_number","company_name","company_status","name","date_of_birth"' $FILE2
 
 printf "Output files:\n ${FILE1}\n ${FILE2}\n\n"
