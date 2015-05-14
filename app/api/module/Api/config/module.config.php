@@ -69,7 +69,10 @@ return [
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'Application' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class
+            'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Fee' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

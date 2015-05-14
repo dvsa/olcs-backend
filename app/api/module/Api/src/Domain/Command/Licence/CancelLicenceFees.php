@@ -16,35 +16,10 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class CancelLicenceFees extends AbstractCommand
 {
-    private $id;
+    protected $id;
 
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Exchange internal values from provided array
-     *
-     * @param  array $array
-     * @return void
-     */
-    public function exchangeArray(array $array)
-    {
-        if (isset($array['id'])) {
-            $this->id = $array['id'];
-        }
-    }
-
-    /**
-     * Return an array representation of the object
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'id' => $this->id
-        ];
     }
 }
