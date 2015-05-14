@@ -16,6 +16,7 @@ use Olcs\Db\Entity\Traits;
  *    indexes={
  *        @ORM\Index(name="ix_continuation_detail_continuation_id", columns={"continuation_id"}),
  *        @ORM\Index(name="ix_continuation_detail_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_continuation_detail_checklist_document_id", columns={"checklist_document_id"}),
  *        @ORM\Index(name="ix_continuation_detail_status", columns={"status"}),
  *        @ORM\Index(name="ix_continuation_detail_received", columns={"received"}),
  *        @ORM\Index(name="ix_continuation_created_by", columns={"created_by"}),
@@ -34,6 +35,16 @@ class ContinuationDetail implements Interfaces\EntityInterface
         Traits\LicenceManyToOne,
         Traits\StatusManyToOneAlt1,
         Traits\CustomVersionField;
+
+    /**
+     * Checklist document
+     *
+     * @var \Olcs\Db\Entity\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\JoinColumn(name="checklist_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $checklistDocument;
 
     /**
      * Continuation
@@ -80,6 +91,29 @@ class ContinuationDetail implements Interfaces\EntityInterface
      * @ORM\Column(type="integer", name="tot_psv_discs", nullable=true)
      */
     protected $totPsvDiscs;
+
+    /**
+     * Set the checklist document
+     *
+     * @param \Olcs\Db\Entity\Document $checklistDocument
+     * @return ContinuationDetail
+     */
+    public function setChecklistDocument($checklistDocument)
+    {
+        $this->checklistDocument = $checklistDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the checklist document
+     *
+     * @return \Olcs\Db\Entity\Document
+     */
+    public function getChecklistDocument()
+    {
+        return $this->checklistDocument;
+    }
 
     /**
      * Set the continuation
