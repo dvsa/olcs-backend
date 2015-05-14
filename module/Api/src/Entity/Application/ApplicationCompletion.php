@@ -21,5 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationCompletion extends AbstractApplicationCompletion
 {
+    const STATUS_NOT_STARTED = 0;
+    const STATUS_INCOMPLETE = 1;
+    const STATUS_COMPLETE = 2;
 
 }

@@ -27,7 +27,7 @@ final class CancelLicenceFees extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        /** @var $licence Licence */
+        /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $criteria = Criteria::create();
@@ -44,14 +44,14 @@ final class CancelLicenceFees extends AbstractCommandHandler
 
         $status = $this->getRepo()->getRefdataReference(Fee::STATUS_CANCELLED);
 
-        /** @var $fee Fee */
+        /** @var Fee $fee */
         foreach ($fees as $fee) {
             $fee->setFeeStatus($status);
         }
 
         $this->getRepo()->save($licence);
 
-        $result->addMessage(count($fees) . ' fees removed');
+        $result->addMessage(count($fees) . ' fee(s) cancelled');
         return $result;
     }
 }

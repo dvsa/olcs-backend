@@ -9,9 +9,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Reset Application
@@ -24,6 +24,7 @@ final class ResetApplication extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         if ($command->getConfirm() === false) {

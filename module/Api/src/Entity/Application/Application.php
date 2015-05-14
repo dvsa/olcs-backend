@@ -33,7 +33,7 @@ class Application extends AbstractApplication
 
     public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType)
     {
-        if ($this->validate($niFlag, $goodsOrPsv, $licenceType)) {
+        if ($this->validateTol($niFlag, $goodsOrPsv, $licenceType)) {
             $this->setNiFlag($niFlag);
             $this->setGoodsOrPsv($goodsOrPsv);
             $this->setLicenceType($licenceType);
@@ -41,7 +41,16 @@ class Application extends AbstractApplication
         }
     }
 
-    public function validate($niFlag, $goodsOrPsv, $licenceType)
+    public function isValidTol($niFlag, $goodsOrPsv, $licenceType)
+    {
+        try {
+            return $this->validateTol($niFlag, $goodsOrPsv, $licenceType);
+        } catch (ValidationException $ex) {
+            return false;
+        }
+    }
+
+    public function validateTol($niFlag, $goodsOrPsv, $licenceType)
     {
         $errors = [];
 
