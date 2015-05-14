@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Fee Entity
@@ -33,4 +34,11 @@ class Fee extends AbstractFee
     const STATUS_WAIVE_RECOMMENDED = 'lfs_wr';
     const STATUS_WAIVED = 'lfs_w';
     const STATUS_CANCELLED = 'lfs_cn';
+
+    public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
+    {
+        $this->feeType = $feeType;
+        $this->amount = $amount;
+        $this->feeStatus = $feeStatus;
+    }
 }

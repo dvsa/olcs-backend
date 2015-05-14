@@ -11,6 +11,8 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
@@ -25,6 +27,8 @@ use Doctrine\ORM\OptimisticLockException;
 abstract class AbstractRepository implements RepositoryInterface
 {
     protected $entity = 'Define\Me';
+
+    protected $alias = 'm';
 
     /**
      * @var EntityManagerInterface
@@ -123,6 +127,16 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this->getReference(RefData::class, $id);
     }
 
+    public function getCategoryReference($id)
+    {
+        return $this->getReference(Category::class, $id);
+    }
+
+    public function getSubCategoryReference($id)
+    {
+        return $this->getReference(SubCategory::class, $id);
+    }
+
     public function getReference($entityClass, $id)
     {
         return $this->getEntityManager()->getReference($entityClass, $id);
@@ -149,6 +163,6 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     protected function createQueryBuilder()
     {
-        return $this->getEntityManager()->getRepository($this->entity)->createQueryBuilder('a');
+        return $this->getEntityManager()->getRepository($this->entity)->createQueryBuilder($this->alias);
     }
 }

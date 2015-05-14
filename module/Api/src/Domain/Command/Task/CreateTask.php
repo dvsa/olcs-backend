@@ -16,35 +16,183 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class CreateTask extends AbstractCommand
 {
-    private $id;
+    protected $category;
 
-    public function getId()
+    protected $subCategory;
+
+    protected $description;
+
+    protected $actionDate;
+
+    protected $assignedToUser;
+
+    protected $assignedToTeam;
+
+    protected $isClosed = false;
+
+    protected $urgent = false;
+
+    protected $application;
+
+    protected $licence;
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
     {
-        return $this->id;
+        return $this->category;
     }
 
     /**
-     * Exchange internal values from provided array
-     *
-     * @param  array $array
-     * @return void
+     * @param mixed $category
      */
-    public function exchangeArray(array $array)
+    public function setCategory($category)
     {
-        if (isset($array['id'])) {
-            $this->id = $array['id'];
-        }
+        $this->category = $category;
     }
 
     /**
-     * Return an array representation of the object
-     *
-     * @return array
+     * @return mixed
      */
-    public function getArrayCopy()
+    public function getSubCategory()
     {
-        return [
-            'id' => $this->id
-        ];
+        return $this->subCategory;
+    }
+
+    /**
+     * @param mixed $subCategory
+     */
+    public function setSubCategory($subCategory)
+    {
+        $this->subCategory = $subCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActionDate()
+    {
+        return $this->actionDate;
+    }
+
+    /**
+     * @param mixed $actionDate
+     */
+    public function setActionDate($actionDate)
+    {
+        $this->actionDate = $actionDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssignedToUser()
+    {
+        return $this->assignedToUser;
+    }
+
+    /**
+     * @param mixed $assignedToUser
+     */
+    public function setAssignedToUser($assignedToUser)
+    {
+        $this->assignedToUser = $assignedToUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssignedToTeam()
+    {
+        return $this->assignedToTeam;
+    }
+
+    /**
+     * @param mixed $assignedToTeam
+     */
+    public function setAssignedToTeam($assignedToTeam)
+    {
+        $this->assignedToTeam = $assignedToTeam;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsClosed()
+    {
+        return $this->isClosed;
+    }
+
+    /**
+     * @param boolean $isClosed
+     */
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getUrgent()
+    {
+        return $this->urgent;
+    }
+
+    /**
+     * @param boolean $urgent
+     */
+    public function setUrgent($urgent)
+    {
+        $this->urgent = $urgent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param mixed $application
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * @param mixed $licence
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
     }
 }

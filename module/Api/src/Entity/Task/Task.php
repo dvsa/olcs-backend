@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Task;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
 /**
  * Task Entity
@@ -32,5 +34,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Task extends AbstractTask
 {
+    const STATUS_OPEN = 'tst_open';
+    const STATUS_CLOSED = 'tst_closed';
+    const STATUS_ALL = 'tst_all';
 
+    const CATEGORY_APPLICATION = 9;
+
+    const SUBCATEGORY_FEE_DUE = 11;
+
+    public function __construct(Category $category, SubCategory $subCategory)
+    {
+        $this->category = $category;
+        $this->subCategory = $subCategory;
+    }
 }
