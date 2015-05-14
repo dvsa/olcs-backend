@@ -28,11 +28,13 @@ use Olcs\Db\Entity\Traits;
 class Organisation implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CompanyOrLlpNo20Field,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\Name160Field,
         Traits\TypeManyToOneAlt1,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
@@ -54,15 +56,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="company_cert_seen", nullable=false, options={"default": 0})
      */
     protected $companyCertSeen = 0;
-
-    /**
-     * Company or llp no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
-     */
-    protected $companyOrLlpNo;
 
     /**
      * Contact details
@@ -129,15 +122,6 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
      */
     protected $leadTcArea;
-
-    /**
-     * Name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="name", length=160, nullable=true)
-     */
-    protected $name;
 
     /**
      * Nature of businesse
@@ -258,29 +242,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getCompanyCertSeen()
     {
         return $this->companyCertSeen;
-    }
-
-    /**
-     * Set the company or llp no
-     *
-     * @param string $companyOrLlpNo
-     * @return Organisation
-     */
-    public function setCompanyOrLlpNo($companyOrLlpNo)
-    {
-        $this->companyOrLlpNo = $companyOrLlpNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the company or llp no
-     *
-     * @return string
-     */
-    public function getCompanyOrLlpNo()
-    {
-        return $this->companyOrLlpNo;
     }
 
     /**
@@ -442,29 +403,6 @@ class Organisation implements Interfaces\EntityInterface
     public function getLeadTcArea()
     {
         return $this->leadTcArea;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param string $name
-     * @return Organisation
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
