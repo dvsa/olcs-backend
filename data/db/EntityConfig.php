@@ -852,6 +852,12 @@ return array(
     'submission_action' => array(
         'is_decision' => array(
             'type' => 'yesno'
+        ),
+        'submission_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Submission',
+                'property' => 'submissionAction'
+            )
         )
     ),
     'submission_action_type' => array(
