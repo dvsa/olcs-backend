@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Reset Completion Status
+ * Update Type of Licence Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\Command\Application;
+namespace Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Reset Completion Status
+ * Update Type of Licence Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class ResetCompletionStatus extends AbstractCommand
+final class UpdateTypeOfLicenceStatus extends AbstractCommand
 {
     protected $id;
 

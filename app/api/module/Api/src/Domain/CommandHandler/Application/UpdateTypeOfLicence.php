@@ -18,7 +18,6 @@ use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
-use Dvsa\Olcs\Api\Domain\Command\Application\ResetCompletionStatus;
 use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
 
 /**
@@ -34,7 +33,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
     {
         $result = new Result();
 
-        /** @var $application Application */
+        /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // Early return if we haven't changed anything
@@ -74,6 +73,30 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
         }
     }
 
+    private function determineSideEffects(Application $application, Cmd $command)
+    {
+        $sideEffects = [];
+
+        if ($this->updatingForTheFirstTime($application)) {
+
+            $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
+            $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
+
+        } else {
+
+            if ($this->licenceTypeWillChange($application, $command)) {
+
+                $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
+                $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
+
+            }
+        }
+
+        $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
+
+        return $sideEffects;
+    }
+
     /**
      * Check whether we have changed anything
      *
@@ -86,33 +109,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
         return $application->getNiFlag() !== $command->getNiFlag()
             || $application->getLicenceType() !== $this->getRepo()->getRefdataReference($command->getLicenceType())
             || $application->getGoodsOrPsv() !== $this->getRepo()->getRefdataReference($command->getOperatorType());
-    }
-
-    private function determineSideEffects(Application $application, Cmd $command)
-    {
-        $sideEffects = [];
-
-        if ($this->updatingForTheFirstTime($application)) {
-
-            $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
-            $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
-            $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
-
-        } else {
-
-            if ($this->licenceTypeWillChange($application, $command)) {
-
-                $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
-                $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
-                $sideEffects[] = $this->createResetCompletionStatusCommand($application);
-
-            } elseif ($this->typeOfLicenceWillChange($application, $command)) {
-
-                $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
-            }
-        }
-
-        return $sideEffects;
     }
 
     private function createCreateApplicationFeeCommand(Application $application)
@@ -132,12 +128,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
     private function createUpdateApplicationCompletionCommand(Application $application)
     {
-        return UpdateApplicationCompletion::create(['id' => $application->getId()]);
-    }
-
-    private function createResetCompletionStatusCommand(Application $application)
-    {
-        return ResetCompletionStatus::create(['id' => $application->getId()]);
+        return UpdateApplicationCompletion::create(['id' => $application->getId(), 'section' => 'typeOfLicence']);
     }
 
     private function createResetApplicationCommand(Cmd $command)

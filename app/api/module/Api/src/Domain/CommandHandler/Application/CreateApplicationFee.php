@@ -79,7 +79,7 @@ final class CreateApplicationFee extends AbstractCommandHandler
      */
     private function createCreateTaskCommand(Cmd $command)
     {
-        /** @var $application Application */
+        /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $currentUser = $this->fetchCurrentUser();
@@ -106,7 +106,7 @@ final class CreateApplicationFee extends AbstractCommandHandler
      */
     private function createCreateFeeCommand(Cmd $command, $taskId)
     {
-        /** @var $application Application */
+        /** @var Application $application */
         $feeType = $this->getRepo()->getReference(RefData::class, FeeTypeEntity::FEE_TYPE_APP);
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $trafficArea = $application->getNiFlag() === 'Y'

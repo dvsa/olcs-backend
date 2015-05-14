@@ -39,8 +39,6 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber::class,
             \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion::class,
-            \Dvsa\Olcs\Api\Domain\Command\Application\ResetCompletionStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetCompletionStatus::class,
             // Domain - Licence
             \Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CancelLicenceFees::class,
@@ -49,7 +47,10 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask::class,
             // Domain - Fee
             \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee::class,
+            // Domain - ApplicationCompletion
+            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTypeOfLicenceStatus::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
