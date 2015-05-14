@@ -16,5 +16,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 interface CommandHandlerInterface
 {
+    /**
+     * @param CommandInterface $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command);
 }

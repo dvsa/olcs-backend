@@ -22,13 +22,12 @@ class TypeOfLicenceController extends AbstractRestfulController
         $dto = $this->params('dto');
 
         try {
-            $messages = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
-            return $this->response()->successfulUpdate($messages);
+            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+            return $this->response()->successfulUpdate($result);
         } catch (Exception $ex) {
             return $this->response()->error(500, $ex->getMessages());
         } catch (\Exception $ex) {
-            throw $ex;
-            //return $this->response()->error(500, [$ex->getMessage()]);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 }

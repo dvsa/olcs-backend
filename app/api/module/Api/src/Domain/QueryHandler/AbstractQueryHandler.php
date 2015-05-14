@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * Abstract Query Handler
@@ -32,6 +33,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        if ($this->repoServiceName === null) {
+            throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
+        }
+
         $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')->get($this->repoServiceName);
         $this->queryHandler = $serviceLocator;
 

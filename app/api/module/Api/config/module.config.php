@@ -33,8 +33,6 @@ return [
             // Domain - Application
             \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelApplicationFees::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelApplicationFees::class,
             \Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetApplication::class,
             \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::class
@@ -43,6 +41,15 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion::class,
             \Dvsa\Olcs\Api\Domain\Command\Application\ResetCompletionStatus::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetCompletionStatus::class,
+            // Domain - Licence
+            \Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CancelLicenceFees::class,
+            // Domain - Task
+            \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask::class,
+            // Domain - Fee
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee::class
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [

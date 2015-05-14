@@ -75,9 +75,15 @@ abstract class AbstractRepository implements RepositoryInterface
         return $results[0];
     }
 
+    /**
+     * @NOTE This method can be overridden to extend the default resource bundle
+     *
+     * @param QueryBuilder $qb
+     * @param QryCmd $query
+     */
     protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
     {
-        throw new Exception\RuntimeException('Must implement buildDefaultQuery method to use fetchUsingId');
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
     }
 
     public function lock($entity, $version)

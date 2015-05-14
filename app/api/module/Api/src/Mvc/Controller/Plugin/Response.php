@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Http\Response as HttpResponse;
 use Zend\View\Model\JsonModel;
@@ -54,15 +55,11 @@ class Response extends AbstractPlugin
         return new JsonModel(['count' => $count, 'results' => $results]);
     }
 
-    public function successfulUpdate(array $messages = [])
+    public function successfulUpdate(Result $result)
     {
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
-        if (empty($messages)) {
-            return $response;
-        }
-
-        return new JsonModel(['messages' => $messages]);
+        return new JsonModel($result->toArray());
     }
 }

@@ -28,5 +28,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Fee extends AbstractFee
 {
-
+    const STATUS_OUTSTANDING = 'lfs_ot';
+    const STATUS_PAID = 'lfs_pd';
+    const STATUS_WAIVE_RECOMMENDED = 'lfs_wr';
+    const STATUS_WAIVED = 'lfs_w';
+    const STATUS_CANCELLED = 'lfs_cn';
 }

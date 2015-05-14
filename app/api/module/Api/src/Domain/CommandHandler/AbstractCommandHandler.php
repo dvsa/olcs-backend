@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -32,8 +33,13 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        if ($this->repoServiceName === null) {
+            throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
+        }
+
         $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get($this->repoServiceName);
+
         $this->commandHandler = $serviceLocator;
 
         return $this;
