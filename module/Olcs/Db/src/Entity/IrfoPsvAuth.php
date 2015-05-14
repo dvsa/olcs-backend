@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -89,6 +90,23 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="copies_required_total", nullable=false, options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
+
+    /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Country", inversedBy="irfoPsvAuths")
+     * @ORM\JoinTable(name="irfo_psv_auth_country",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
 
     /**
      * Irfo file no
@@ -181,6 +199,14 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
      * @ORM\Column(type="smallint", name="validity_period", nullable=false)
      */
     protected $validityPeriod;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->countrys = new ArrayCollection();
+    }
 
     /**
      * Set the application sent date
@@ -295,6 +321,66 @@ class IrfoPsvAuth implements Interfaces\EntityInterface
     public function getCopiesRequiredTotal()
     {
         return $this->copiesRequiredTotal;
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @return IrfoPsvAuth
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @return IrfoPsvAuth
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @return IrfoPsvAuth
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
     }
 
     /**
