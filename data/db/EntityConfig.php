@@ -844,18 +844,14 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'submission' => array(
+        'urgent' => array(
+            'type' => 'yesnonull'
+        )
+    ),
     'submission_action' => array(
         'is_decision' => array(
             'type' => 'yesno'
-        ),
-        'urgent' => array(
-            'type' => 'yesnonull'
-        ),
-        'submission_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Submission',
-                'property' => 'submissionAction'
-            )
         )
     ),
     'submission_action_type' => array(
