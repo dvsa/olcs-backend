@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Application
+ * Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -12,11 +12,11 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
- * Application
+ * Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Application extends AbstractRepository
+final class Licence extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Application\Application';
+    protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\Licence';
 }

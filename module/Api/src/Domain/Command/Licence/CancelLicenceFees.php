@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Cancel Application Fees
+ * Cancel Licence Fees
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\Command\Application;
+namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Cancel Application Fees
+ * Cancel Licence Fees
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CancelApplicationFees extends AbstractCommand
+final class CancelLicenceFees extends AbstractCommand
 {
     private $id;
 

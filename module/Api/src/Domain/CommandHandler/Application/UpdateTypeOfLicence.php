@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -15,10 +16,10 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
-use Dvsa\Olcs\Api\Domain\Command\Application\CancelApplicationFees;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetCompletionStatus;
+use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
 
 /**
  * Update Type Of Licence
@@ -31,15 +32,15 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $messages = [];
+        $result = new Result();
 
         /** @var $application Application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // Early return if we haven't changed anything
         if (!$this->hasChangedTypeOfLicence($application, $command)) {
-            $messages[] = 'No updates required';
-            return $messages;
+            $result->addMessage('No updates required');
+            return $result;
         }
 
         if ($this->changeRequiresConfirmation($application, $command)) {
@@ -60,13 +61,13 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
             $this->getRepo()->save($application);
 
             foreach ($sideEffects as $sideEffect) {
-                $messages = array_merge($messages, $this->handleCommand($sideEffect));
+                $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
             }
 
             $this->getRepo()->commit();
 
-            $messages[] = 'Application saved successfully';
-            return $messages;
+            $result->addMessage('Application saved successfully');
+            return $result;
         } catch (\Exception $ex) {
             $this->getRepo()->rollback();
             throw $ex;
@@ -93,7 +94,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
         if ($this->updatingForTheFirstTime($application)) {
 
-            $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
+            $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
             $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
 
@@ -101,7 +102,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
             if ($this->licenceTypeWillChange($application, $command)) {
 
-                $sideEffects[] = $this->createCancelApplicationFeesCommand($application);
+                $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
                 $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
                 $sideEffects[] = $this->createResetCompletionStatusCommand($application);
 
@@ -119,9 +120,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
         return CreateApplicationFee::create(['id' => $application->getId()]);
     }
 
-    private function createCancelApplicationFeesCommand(Application $application)
+    private function createCancelLicenceFeesCommand(Licence $licence)
     {
-        return CancelApplicationFees::create(['id' => $application->getId()]);
+        return CancelLicenceFees::create(['id' => $licence->getId()]);
     }
 
     private function createGenerateLicenceNumberCommand(Applcation $application)
