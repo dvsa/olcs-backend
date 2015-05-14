@@ -770,6 +770,14 @@ return array(
             )
         ),
     ),
+    'prohibition_defect' => array(
+        'prohibition_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Prohibition',
+                'property' => 'defect'
+            )
+        )
+    ),
     'conviction' => array(
         'msi' => array(
             'type' => 'yesnonull'
@@ -836,6 +844,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Submission',
                 'property' => 'submissionAction'
+            )
+        )
+    ),
+    'submission_action_type' => array(
+        'submission_action_id' => array(
+            'inversedBy' => array(
+                'entity' => 'SubmissionAction',
+                'property' => 'actionType'
             )
         )
     ),

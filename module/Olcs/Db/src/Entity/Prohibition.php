@@ -3,7 +3,9 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Prohibition Entity
@@ -12,6 +14,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="prohibition",
  *    indexes={
  *        @ORM\Index(name="ix_prohibition_case_id", columns={"case_id"}),
@@ -29,6 +32,7 @@ class Prohibition implements Interfaces\EntityInterface
     use Traits\CustomBaseEntity,
         Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
+        Traits\CustomDeletedDateField,
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
@@ -91,6 +95,23 @@ class Prohibition implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="prohibition_type", referencedColumnName="id", nullable=false)
      */
     protected $prohibitionType;
+
+    /**
+     * Defect
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\ProhibitionDefect", mappedBy="prohibition")
+     */
+    protected $defects;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->defects = new ArrayCollection();
+    }
 
     /**
      * Set the case
@@ -228,5 +249,65 @@ class Prohibition implements Interfaces\EntityInterface
     public function getProhibitionType()
     {
         return $this->prohibitionType;
+    }
+
+    /**
+     * Set the defect
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @return Prohibition
+     */
+    public function setDefects($defects)
+    {
+        $this->defects = $defects;
+
+        return $this;
+    }
+
+    /**
+     * Get the defects
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDefects()
+    {
+        return $this->defects;
+    }
+
+    /**
+     * Add a defects
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @return Prohibition
+     */
+    public function addDefects($defects)
+    {
+        if ($defects instanceof ArrayCollection) {
+            $this->defects = new ArrayCollection(
+                array_merge(
+                    $this->defects->toArray(),
+                    $defects->toArray()
+                )
+            );
+        } elseif (!$this->defects->contains($defects)) {
+            $this->defects->add($defects);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a defects
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @return Prohibition
+     */
+    public function removeDefects($defects)
+    {
+        if ($this->defects->contains($defects)) {
+            $this->defects->removeElement($defects);
+        }
+
+        return $this;
     }
 }

@@ -28,5 +28,6 @@ class IrfoPsvAuthType implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode20Field,
         Traits\CustomVersionField;
 }

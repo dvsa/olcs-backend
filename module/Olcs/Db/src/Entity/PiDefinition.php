@@ -31,6 +31,7 @@ class PiDefinition implements Interfaces\EntityInterface
         Traits\IsNiFieldAlt1,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\SectionCode20Field,
         Traits\CustomVersionField;
 
     /**
@@ -41,15 +42,6 @@ class PiDefinition implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="pi_definition_category", length=32, nullable=false)
      */
     protected $piDefinitionCategory;
-
-    /**
-     * Section code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="section_code", length=20, nullable=false)
-     */
-    protected $sectionCode;
 
     /**
      * Set the pi definition category
@@ -72,28 +64,5 @@ class PiDefinition implements Interfaces\EntityInterface
     public function getPiDefinitionCategory()
     {
         return $this->piDefinitionCategory;
-    }
-
-    /**
-     * Set the section code
-     *
-     * @param string $sectionCode
-     * @return PiDefinition
-     */
-    public function setSectionCode($sectionCode)
-    {
-        $this->sectionCode = $sectionCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the section code
-     *
-     * @return string
-     */
-    public function getSectionCode()
-    {
-        return $this->sectionCode;
     }
 }
