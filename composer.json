@@ -29,7 +29,7 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zendframework": "~2.3.3",
-        "doctrine/orm": "~2.4.0",
+        "doctrine/orm": "~2.5.0",
         "doctrine/doctrine-orm-module": "~0.8.0",
         "doctrine/annotations": "^1.2.3",
         "gedmo/doctrine-extensions": "~2.3.9",
