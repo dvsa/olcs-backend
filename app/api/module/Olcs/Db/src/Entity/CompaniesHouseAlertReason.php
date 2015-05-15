@@ -30,7 +30,7 @@ class CompaniesHouseAlertReason implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\CompaniesHouseAlert
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompaniesHouseAlert")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\CompaniesHouseAlert", inversedBy="reasons")
      * @ORM\JoinColumn(name="companies_house_alert_id", referencedColumnName="id", nullable=false)
      */
     protected $companiesHouseAlert;
