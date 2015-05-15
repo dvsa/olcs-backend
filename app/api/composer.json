@@ -51,8 +51,7 @@
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
             "Dvsa\\Olcs\\Api\\": "module/Api/src",
-            "CompaniesHouse\\": "vendor/olcs/companies-house/lib",
-            "Dvsa\\Olcs\\Transfer\\": "vendor/olcs/olcs-transfer/src/Transfer"
+            "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
     },
     "config": {
