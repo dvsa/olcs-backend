@@ -22,5 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Organisation extends AbstractOrganisation
 {
-
+    const ORG_TYPE_PARTNERSHIP = 'org_t_p';
+    const ORG_TYPE_OTHER = 'org_t_pa';
+    const ORG_TYPE_REGISTERED_COMPANY = 'org_t_rc';
+    const ORG_TYPE_LLP = 'org_t_llp';
+    const ORG_TYPE_SOLE_TRADER = 'org_t_st';
+    const ORG_TYPE_IRFO = 'org_t_ir';
 }
