@@ -25,6 +25,9 @@ class WithRefdataFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new WithRefdata($serviceLocator->getServiceLocator()->get('doctrine.entitymanager.orm_default'));
+        return new WithRefdata(
+            $serviceLocator->getServiceLocator()->get('doctrine.entitymanager.orm_default'),
+            $serviceLocator->get('with')
+        );
     }
 }
