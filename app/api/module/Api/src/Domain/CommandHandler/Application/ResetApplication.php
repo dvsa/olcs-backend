@@ -29,7 +29,7 @@ final class ResetApplication extends AbstractCommandHandler
 
         if ($command->getConfirm() === false) {
             // Before we tell the UI we need confirmation, we better validate the values
-            $application->validate(
+            $application->validateTol(
                 $command->getNiFlag(),
                 $this->getRepo()->getRefdataReference($command->getOperatorType()),
                 $this->getRepo()->getRefdataReference($command->getLicenceType())

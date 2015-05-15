@@ -14,5 +14,8 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class RequiresConfirmationException extends Exception
 {
-
+    public function __construct($message, $code)
+    {
+        $this->messages[$code] = $message;
+    }
 }
