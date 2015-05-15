@@ -69,11 +69,7 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
-            try {
-                $this->lock($results[0], $version);
-            } catch (OptimisticLockException $ex) {
-                throw new Exception\VersionConflictException();
-            }
+            $this->lock($results[0], $version);
         }
 
         return $results[0];
@@ -92,7 +88,11 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function lock($entity, $version)
     {
-        $this->em->lock($entity, LockMode::OPTIMISTIC, $version);
+        try {
+            $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $version);
+        } catch (OptimisticLockException $ex) {
+            throw new Exception\VersionConflictException();
+        }
     }
 
     public function save($entity)

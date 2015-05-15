@@ -18,13 +18,29 @@ use Doctrine\Common\Collections\ArrayCollection;
  *        @ORM\Index(name="ix_submission_action_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_action_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_action_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_submission_action_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_submission_action_submission_action_status", columns={"submission_action_status"})
+ *        @ORM\Index(name="ix_submission_action_submission_id", columns={"submission_id"})
  *    }
  * )
  */
 abstract class AbstractSubmissionAction
 {
+
+    /**
+     * Action type
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="submissionActions")
+     * @ORM\JoinTable(name="submission_action_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="action_type", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $actionTypes;
 
     /**
      * Comment
@@ -141,16 +157,6 @@ abstract class AbstractSubmissionAction
     protected $submission;
 
     /**
-     * Submission action status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
-     * @ORM\JoinColumn(name="submission_action_status", referencedColumnName="id", nullable=false)
-     */
-    protected $submissionActionStatus;
-
-    /**
      * Urgent
      *
      * @var string
@@ -164,8 +170,8 @@ abstract class AbstractSubmissionAction
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 
@@ -174,7 +180,68 @@ abstract class AbstractSubmissionAction
      */
     public function __construct()
     {
+        $this->actionTypes = new ArrayCollection();
         $this->reasons = new ArrayCollection();
+    }
+
+    /**
+     * Set the action type
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function setActionTypes($actionTypes)
+    {
+        $this->actionTypes = $actionTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get the action types
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getActionTypes()
+    {
+        return $this->actionTypes;
+    }
+
+    /**
+     * Add a action types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function addActionTypes($actionTypes)
+    {
+        if ($actionTypes instanceof ArrayCollection) {
+            $this->actionTypes = new ArrayCollection(
+                array_merge(
+                    $this->actionTypes->toArray(),
+                    $actionTypes->toArray()
+                )
+            );
+        } elseif (!$this->actionTypes->contains($actionTypes)) {
+            $this->actionTypes->add($actionTypes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a action types
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @return SubmissionAction
+     */
+    public function removeActionTypes($actionTypes)
+    {
+        if ($this->actionTypes->contains($actionTypes)) {
+            $this->actionTypes->removeElement($actionTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -465,29 +532,6 @@ abstract class AbstractSubmissionAction
     public function getSubmission()
     {
         return $this->submission;
-    }
-
-    /**
-     * Set the submission action status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionActionStatus
-     * @return SubmissionAction
-     */
-    public function setSubmissionActionStatus($submissionActionStatus)
-    {
-        $this->submissionActionStatus = $submissionActionStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the submission action status
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getSubmissionActionStatus()
-    {
-        return $this->submissionActionStatus;
     }
 
     /**

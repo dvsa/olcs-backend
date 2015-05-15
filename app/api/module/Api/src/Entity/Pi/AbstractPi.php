@@ -390,8 +390,8 @@ abstract class AbstractPi
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 

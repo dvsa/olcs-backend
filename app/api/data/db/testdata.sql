@@ -636,7 +636,7 @@ VALUES
     NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', 4, 0),
     (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1, '2016-01-01 10:00:00', NULL, 0),
-    (115,105,'S',NULL,NULL,NULL,NULL,NULL,NULL,'lcat_psv','TS1234568','lsts_not_submitted',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+    (115,1,'S',NULL,NULL,NULL,NULL,NULL,NULL,'lcat_psv','TS1234568','lsts_valid',0,'ltyp_sr',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NOW(),NULL,1, '2016-01-01 10:00:00', NULL, 0);
 
 INSERT INTO `licence_vehicle` (`id`, `licence_id`, `vehicle_id`, `created_by`, `last_modified_by`,
@@ -1582,9 +1582,9 @@ INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo
 VALUES
     (101, 1, 'irfo_perm_s_appreoved', 2014, '2015-03-10', NOW());
 
-INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `irfo_fee_id`)
+INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `created_on`, `irfo_fee_id`)
 VALUES
-    (101, 1, 'irfo_auth_s_approved', '17/1', 'From', 'To', 3, NOW(), 'FeeId');
+    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), 'FeeId');
 
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES

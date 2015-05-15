@@ -154,8 +154,8 @@ abstract class AbstractIrfoVehicle
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 

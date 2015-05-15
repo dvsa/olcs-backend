@@ -8,6 +8,7 @@
 
 namespace Olcs\Db\Service;
 
+use Doctrine\Instantiator\Instantiator;
 use Olcs\Db\Traits\LanguageAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -622,7 +623,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     {
         $entityName = $this->getEntityName();
 
-        return new $entityName();
+        $instantiator = new Instantiator();
+        return $instantiator->instantiate($entityName);
     }
 
     /**
