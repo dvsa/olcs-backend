@@ -30,7 +30,7 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\System\Category
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Category")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Category", fetch="LAZY")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
     protected $category;
@@ -40,7 +40,7 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -68,7 +68,7 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", inversedBy="templates")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY", inversedBy="templates")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
     protected $document;
@@ -98,7 +98,7 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -117,7 +117,7 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $subCategory;

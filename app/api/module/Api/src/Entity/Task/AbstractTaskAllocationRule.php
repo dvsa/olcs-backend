@@ -28,7 +28,7 @@ abstract class AbstractTaskAllocationRule
      *
      * @var \Dvsa\Olcs\Api\Entity\System\Category
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Category")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Category", fetch="LAZY")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=true)
      */
     protected $category;
@@ -38,7 +38,7 @@ abstract class AbstractTaskAllocationRule
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
      */
     protected $goodsOrPsv;
@@ -68,7 +68,7 @@ abstract class AbstractTaskAllocationRule
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
      */
     protected $team;
@@ -78,7 +78,7 @@ abstract class AbstractTaskAllocationRule
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
     protected $trafficArea;
@@ -88,7 +88,7 @@ abstract class AbstractTaskAllocationRule
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;

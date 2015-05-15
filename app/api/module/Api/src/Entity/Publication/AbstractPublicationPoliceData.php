@@ -39,7 +39,7 @@ abstract class AbstractPublicationPoliceData
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -87,7 +87,7 @@ abstract class AbstractPublicationPoliceData
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -124,7 +124,7 @@ abstract class AbstractPublicationPoliceData
      *
      * @var \Dvsa\Olcs\Api\Entity\Publication\PublicationLink
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink", fetch="LAZY")
      * @ORM\JoinColumn(name="publication_link_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationLink;

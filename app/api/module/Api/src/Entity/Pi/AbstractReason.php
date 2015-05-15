@@ -28,7 +28,7 @@ abstract class AbstractReason
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -56,7 +56,7 @@ abstract class AbstractReason
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
      */
     protected $goodsOrPsv;
@@ -104,7 +104,7 @@ abstract class AbstractReason
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -123,7 +123,7 @@ abstract class AbstractReason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", mappedBy="reasons")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", mappedBy="reasons", fetch="LAZY")
      */
     protected $pis;
 
@@ -132,7 +132,7 @@ abstract class AbstractReason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke", mappedBy="reasons")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
      */
     protected $proposeToRevokes;
 
@@ -150,7 +150,7 @@ abstract class AbstractReason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction", mappedBy="reasons")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction", mappedBy="reasons", fetch="LAZY")
      */
     protected $submissionActions;
 

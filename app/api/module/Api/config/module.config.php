@@ -30,6 +30,8 @@ return [
             // Transfer - Application
             \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
+            \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
             // Domain - Application
             \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,

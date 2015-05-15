@@ -68,7 +68,7 @@ abstract class AbstractAddress
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea", fetch="LAZY")
      * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
      */
     protected $adminArea;
@@ -78,7 +78,7 @@ abstract class AbstractAddress
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
      * @ORM\JoinColumn(name="country_code", referencedColumnName="id", nullable=true)
      */
     protected $countryCode;
@@ -88,7 +88,7 @@ abstract class AbstractAddress
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -118,7 +118,7 @@ abstract class AbstractAddress
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;

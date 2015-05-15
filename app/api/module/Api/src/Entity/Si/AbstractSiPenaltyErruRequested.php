@@ -30,7 +30,7 @@ abstract class AbstractSiPenaltyErruRequested
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -78,7 +78,7 @@ abstract class AbstractSiPenaltyErruRequested
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -106,7 +106,7 @@ abstract class AbstractSiPenaltyErruRequested
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement", inversedBy="requestedErrus")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement", fetch="LAZY", inversedBy="requestedErrus")
      * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
      */
     protected $seriousInfringement;
@@ -116,7 +116,7 @@ abstract class AbstractSiPenaltyErruRequested
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_penalty_requested_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siPenaltyRequestedType;

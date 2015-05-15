@@ -29,7 +29,7 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -57,7 +57,7 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -87,7 +87,7 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -106,7 +106,7 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=false)
      */
     protected $presidingTc;
@@ -125,7 +125,7 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="proposeToRevokes")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="proposeToRevokes", fetch="LAZY")
      * @ORM\JoinTable(name="ptr_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id")

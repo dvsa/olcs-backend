@@ -34,7 +34,7 @@ abstract class AbstractPrintQueue
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
     protected $document;
@@ -55,7 +55,7 @@ abstract class AbstractPrintQueue
      *
      * @var \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter", fetch="LAZY")
      * @ORM\JoinColumn(name="team_printer_id", referencedColumnName="id", nullable=false)
      */
     protected $teamPrinter;

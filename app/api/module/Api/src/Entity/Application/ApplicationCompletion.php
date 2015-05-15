@@ -25,4 +25,8 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE = 2;
 
+    public function __construct(Application $application)
+    {
+        $this->setApplication($application);
+    }
 }

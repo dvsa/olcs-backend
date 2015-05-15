@@ -39,7 +39,7 @@ abstract class AbstractApplicationCompletion
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", inversedBy="applicationCompletion")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="applicationCompletion")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
@@ -94,7 +94,7 @@ abstract class AbstractApplicationCompletion
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -151,7 +151,7 @@ abstract class AbstractApplicationCompletion
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;

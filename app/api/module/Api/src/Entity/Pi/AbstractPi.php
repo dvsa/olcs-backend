@@ -40,7 +40,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="agreed_by_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $agreedByTc;
@@ -50,7 +50,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="agreed_by_tc_role", referencedColumnName="id", nullable=true)
      */
     protected $agreedByTcRole;
@@ -69,7 +69,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
      */
     protected $assignedTo;
@@ -97,7 +97,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", inversedBy="publicInquirys")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="publicInquirys")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -125,7 +125,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -153,7 +153,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="decided_by_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $decidedByTc;
@@ -163,7 +163,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="decided_by_tc_role", referencedColumnName="id", nullable=true)
      */
     protected $decidedByTcRole;
@@ -200,7 +200,7 @@ abstract class AbstractPi
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Decision", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Decision", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_decision",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -246,7 +246,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -319,7 +319,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_status", referencedColumnName="id", nullable=false)
      */
     protected $piStatus;
@@ -329,7 +329,7 @@ abstract class AbstractPi
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -346,7 +346,7 @@ abstract class AbstractPi
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="pis")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="pis", fetch="LAZY")
      * @ORM\JoinTable(name="pi_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
@@ -409,7 +409,7 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="written_outcome", referencedColumnName="id", nullable=true)
      */
     protected $writtenOutcome;

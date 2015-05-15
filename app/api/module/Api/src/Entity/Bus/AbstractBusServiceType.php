@@ -21,7 +21,7 @@ abstract class AbstractBusServiceType
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", mappedBy="busServiceTypes")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", mappedBy="busServiceTypes", fetch="LAZY")
      */
     protected $busRegs;
 

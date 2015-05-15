@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Zend\Stdlib\ArraySerializableInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -21,17 +20,17 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
  */
 interface RepositoryInterface
 {
-    public function lock($entity, $version);
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null);
 
     public function save($entity);
+
+    public function delete($entity);
 
     public function beginTransaction();
 
     public function commit();
 
     public function rollback();
-
-    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null);
 
     /**
      * @param $id

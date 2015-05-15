@@ -39,7 +39,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", inversedBy="publicationLinks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -49,7 +49,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY")
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
@@ -59,7 +59,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -98,7 +98,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -117,7 +117,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", inversedBy="publicationLinks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -154,7 +154,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", inversedBy="publicationLinks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", fetch="LAZY", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
@@ -164,7 +164,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Publication\Publication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\Publication", inversedBy="publicationLinks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\Publication", fetch="LAZY", inversedBy="publicationLinks")
      * @ORM\JoinColumn(name="publication_id", referencedColumnName="id", nullable=false)
      */
     protected $publication;
@@ -174,7 +174,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Publication\PublicationSection
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationSection")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationSection", fetch="LAZY")
      * @ORM\JoinColumn(name="publication_section_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationSection;
@@ -211,7 +211,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
      */
     protected $trafficArea;
@@ -221,7 +221,7 @@ abstract class AbstractPublicationLink
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;

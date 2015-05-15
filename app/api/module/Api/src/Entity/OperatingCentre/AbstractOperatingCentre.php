@@ -31,7 +31,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Address
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Address")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Address", fetch="LAZY")
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
@@ -41,7 +41,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -71,7 +71,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -99,7 +99,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition", mappedBy="operatingCentres")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition", mappedBy="operatingCentres", fetch="LAZY")
      */
     protected $oppositions;
 
@@ -108,7 +108,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", mappedBy="operatingCentres")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", mappedBy="operatingCentres", fetch="LAZY")
      */
     protected $transportManagerApplications;
 
@@ -117,7 +117,7 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", mappedBy="operatingCentres")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", mappedBy="operatingCentres", fetch="LAZY")
      */
     protected $transportManagerLicences;
 

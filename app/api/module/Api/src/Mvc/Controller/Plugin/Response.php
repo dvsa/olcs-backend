@@ -62,4 +62,12 @@ class Response extends AbstractPlugin
 
         return new JsonModel($result->toArray());
     }
+
+    public function successfulCreate(Result $result)
+    {
+        $response = $this->getController()->getResponse();
+        $response->setStatusCode(HttpResponse::STATUS_CODE_201);
+
+        return new JsonModel($result->toArray());
+    }
 }

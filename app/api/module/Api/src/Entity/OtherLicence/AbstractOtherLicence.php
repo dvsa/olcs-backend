@@ -41,7 +41,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", inversedBy="otherLicences")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="otherLicences")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -51,7 +51,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -117,7 +117,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -154,7 +154,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="previous_licence_type", referencedColumnName="id", nullable=true)
      */
     protected $previousLicenceType;
@@ -173,7 +173,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="role", referencedColumnName="id", nullable=true)
      */
     protected $role;
@@ -192,7 +192,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", inversedBy="otherLicences")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY", inversedBy="otherLicences")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
@@ -202,7 +202,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", inversedBy="otherLicences")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", fetch="LAZY", inversedBy="otherLicences")
      * @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManagerApplication;
@@ -212,7 +212,7 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", inversedBy="otherLicences")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", fetch="LAZY", inversedBy="otherLicences")
      * @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManagerLicence;

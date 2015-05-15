@@ -41,7 +41,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -60,7 +60,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -99,7 +99,7 @@ abstract class AbstractImpounding
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="impoundings")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="impoundings", fetch="LAZY")
      * @ORM\JoinTable(name="impounding_legislation_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="impounding_id", referencedColumnName="id")
@@ -116,7 +116,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="impounding_type", referencedColumnName="id", nullable=false)
      */
     protected $impoundingType;
@@ -126,7 +126,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -154,7 +154,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="outcome", referencedColumnName="id", nullable=true)
      */
     protected $outcome;
@@ -173,7 +173,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
      */
     protected $piVenue;
@@ -192,7 +192,7 @@ abstract class AbstractImpounding
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $presidingTc;

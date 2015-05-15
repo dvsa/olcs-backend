@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
@@ -30,6 +31,23 @@ class Application extends AbstractApplication
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
+
+    const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
+    const APPLICATION_STATUS_GRANTED = 'apsts_granted';
+    const APPLICATION_STATUS_UNDER_CONSIDERATION = 'apsts_consideration';
+    const APPLICATION_STATUS_VALID = 'apsts_valid';
+    const APPLICATION_STATUS_WITHDRAWN = 'apsts_withdrawn';
+    const APPLICATION_STATUS_REFUSED = 'apsts_refused';
+    const APPLICATION_STATUS_NOT_TAKEN_UP = 'apsts_ntu';
+
+    public function __construct(Licence $licence, RefData $status, $isVariation)
+    {
+        parent::__construct();
+
+        $this->setLicence($licence);
+        $this->setStatus($status);
+        $this->setIsVariation($isVariation);
+    }
 
     public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType)
     {

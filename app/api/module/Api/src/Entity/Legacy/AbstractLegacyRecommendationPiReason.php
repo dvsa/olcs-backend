@@ -37,7 +37,7 @@ abstract class AbstractLegacyRecommendationPiReason
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -67,7 +67,7 @@ abstract class AbstractLegacyRecommendationPiReason
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -86,7 +86,7 @@ abstract class AbstractLegacyRecommendationPiReason
      *
      * @var \Dvsa\Olcs\Api\Entity\Legacy\LegacyPiReason
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyPiReason")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyPiReason", fetch="LAZY")
      * @ORM\JoinColumn(name="legacy_pi_reason_id", referencedColumnName="id", nullable=false)
      */
     protected $legacyPiReason;
@@ -96,7 +96,7 @@ abstract class AbstractLegacyRecommendationPiReason
      *
      * @var \Dvsa\Olcs\Api\Entity\Legacy\LegacyRecommendation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyRecommendation")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyRecommendation", fetch="LAZY")
      * @ORM\JoinColumn(name="legacy_recommendation_id", referencedColumnName="id", nullable=false)
      */
     protected $legacyRecommendation;

@@ -28,7 +28,7 @@ abstract class AbstractUserRole
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -67,7 +67,7 @@ abstract class AbstractUserRole
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -86,7 +86,7 @@ abstract class AbstractUserRole
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Role
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Role", inversedBy="roles")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Role", fetch="LAZY", inversedBy="roles")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
      */
     protected $role;
@@ -96,7 +96,7 @@ abstract class AbstractUserRole
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", inversedBy="userRoles")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY", inversedBy="userRoles")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

@@ -172,6 +172,9 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'application'
+            ),
+            'cascade' => array(
+                'persist'
             )
         ),
         'has_entered_reg' => array(
@@ -868,7 +871,21 @@ return array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
-                'property' => 'applicationCompletion'
+                'property' => 'applicationCompletion',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        )
+    ),
+    'application_tracking' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'applicationTracking',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),
@@ -994,6 +1011,12 @@ return array(
         )
     ),
     'task' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'task'
+            )
+        ),
         'is_closed' => array(
             'type' => 'yesno'
         ),

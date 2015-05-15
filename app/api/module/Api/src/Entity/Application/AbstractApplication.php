@@ -62,7 +62,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -117,7 +117,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
      */
     protected $goodsOrPsv;
@@ -219,7 +219,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="interim_status", referencedColumnName="id", nullable=true)
      */
     protected $interimStatus;
@@ -247,7 +247,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -266,7 +266,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", inversedBy="applications")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", cascade={"persist"}, inversedBy="applications")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -276,7 +276,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=true)
      */
     protected $licenceType;
@@ -502,7 +502,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
      */
     protected $status;
@@ -594,7 +594,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
      */
     protected $withdrawnReason;
@@ -604,7 +604,7 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion", mappedBy="application")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion", mappedBy="application", cascade={"persist"})
      */
     protected $applicationCompletion;
 
@@ -625,6 +625,15 @@ abstract class AbstractApplication
      * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson", mappedBy="application")
      */
     protected $applicationOrganisationPersons;
+
+    /**
+     * Application tracking
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking
+     *
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationTracking", mappedBy="application", cascade={"persist"})
+     */
+    protected $applicationTracking;
 
     /**
      * Condition undertaking
@@ -690,6 +699,15 @@ abstract class AbstractApplication
     protected $publicationLinks;
 
     /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="application")
+     */
+    protected $tasks;
+
+    /**
      * Transport manager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -712,6 +730,7 @@ abstract class AbstractApplication
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
         $this->transportManagers = new ArrayCollection();
     }
 
@@ -2285,6 +2304,29 @@ abstract class AbstractApplication
     }
 
     /**
+     * Set the application tracking
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking $applicationTracking
+     * @return Application
+     */
+    public function setApplicationTracking($applicationTracking)
+    {
+        $this->applicationTracking = $applicationTracking;
+
+        return $this;
+    }
+
+    /**
+     * Get the application tracking
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking
+     */
+    public function getApplicationTracking()
+    {
+        return $this->applicationTracking;
+    }
+
+    /**
      * Set the condition undertaking
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
@@ -2699,6 +2741,66 @@ abstract class AbstractApplication
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the task
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Application
+     */
+    public function setTasks($tasks)
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Get the tasks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Add a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Application
+     */
+    public function addTasks($tasks)
+    {
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Application
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
         }
 
         return $this;

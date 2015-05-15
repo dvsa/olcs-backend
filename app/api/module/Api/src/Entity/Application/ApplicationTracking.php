@@ -21,5 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationTracking extends AbstractApplicationTracking
 {
-
+    public function __construct(Application $application)
+    {
+        $this->setApplication($application);
+    }
 }

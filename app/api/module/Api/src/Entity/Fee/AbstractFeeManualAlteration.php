@@ -37,7 +37,7 @@ abstract class AbstractFeeManualAlteration
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="alteration_type", referencedColumnName="id", nullable=false)
      */
     protected $alterationType;
@@ -47,7 +47,7 @@ abstract class AbstractFeeManualAlteration
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", fetch="LAZY")
      * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
      */
     protected $fee;
@@ -68,7 +68,7 @@ abstract class AbstractFeeManualAlteration
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="post_fee_status", referencedColumnName="id", nullable=false)
      */
     protected $postFeeStatus;
@@ -105,7 +105,7 @@ abstract class AbstractFeeManualAlteration
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="pre_fee_status", referencedColumnName="id", nullable=false)
      */
     protected $preFeeStatus;
@@ -142,7 +142,7 @@ abstract class AbstractFeeManualAlteration
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

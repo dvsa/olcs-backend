@@ -39,7 +39,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", inversedBy="seriousInfringements")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="seriousInfringements")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -58,7 +58,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -104,7 +104,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
      */
     protected $erruResponseUser;
@@ -134,7 +134,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -153,7 +153,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
      * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
      */
     protected $memberStateCode;
@@ -199,7 +199,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SiCategory
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiCategory")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="si_category_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategory;
@@ -209,7 +209,7 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SiCategoryType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiCategoryType")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiCategoryType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_category_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siCategoryType;
