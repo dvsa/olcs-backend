@@ -37,6 +37,7 @@ class Submission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\UrgentField,
         Traits\CustomVersionField;
 
     /**
@@ -77,15 +78,6 @@ class Submission implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
-
-    /**
-     * Urgent
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="urgent", nullable=true)
-     */
-    protected $urgent;
 
     /**
      * Submission action
@@ -204,29 +196,6 @@ class Submission implements Interfaces\EntityInterface
     public function getSubmissionType()
     {
         return $this->submissionType;
-    }
-
-    /**
-     * Set the urgent
-     *
-     * @param string $urgent
-     * @return Submission
-     */
-    public function setUrgent($urgent)
-    {
-        $this->urgent = $urgent;
-
-        return $this;
-    }
-
-    /**
-     * Get the urgent
-     *
-     * @return string
-     */
-    public function getUrgent()
-    {
-        return $this->urgent;
     }
 
     /**
