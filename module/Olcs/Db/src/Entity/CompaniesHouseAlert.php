@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -50,6 +51,23 @@ class CompaniesHouseAlert implements Interfaces\EntityInterface
     protected $lastModifiedBy;
 
     /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\CompaniesHouseAlertReason", mappedBy="companiesHouseAlert", cascade={"persist"})
+     */
+    protected $reasons;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->reasons = new ArrayCollection();
+    }
+
+    /**
      * Set the created by
      *
      * @param int $createdBy
@@ -93,5 +111,65 @@ class CompaniesHouseAlert implements Interfaces\EntityInterface
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
+    }
+
+    /**
+     * Add a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->removeElement($reasons);
+        }
+
+        return $this;
     }
 }
