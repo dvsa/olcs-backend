@@ -100,7 +100,8 @@ return [
             'withRefdata' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdataFactory::class,
         ],
         'invokables' => [
-            'byId' => \Dvsa\Olcs\Api\Domain\QueryPartial\ById::class
+            'byId' => \Dvsa\Olcs\Api\Domain\QueryPartial\ById::class,
+            'with' => \Dvsa\Olcs\Api\Domain\QueryPartial\With::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [

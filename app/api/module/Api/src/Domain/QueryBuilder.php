@@ -15,8 +15,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  *
- * @method \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdata withRefdata()
- * @method \Dvsa\Olcs\Api\Domain\QueryPartial\ById byId()
+ * @method QueryBuilder withRefdata($entity = null, $alias = null)
+ * @method QueryBuilder byId($id)
+ * @method QueryBuilder with($property, $alias = null)
  */
 final class QueryBuilder implements QueryBuilderInterface
 {

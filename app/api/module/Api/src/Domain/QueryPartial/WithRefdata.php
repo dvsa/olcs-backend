@@ -22,11 +22,17 @@ final class WithRefdata implements QueryPartialInterface
      */
     private $em;
 
+    /**
+     * @var With
+     */
+    private $with;
+
     private $refDataEntity = 'Dvsa\\Olcs\\Api\\Entity\\System\\RefData';
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, With $with)
     {
         $this->em = $em;
+        $this->with = $with;
     }
 
     /**
@@ -37,18 +43,15 @@ final class WithRefdata implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($entity) = $qb->getRootEntities();
-        list($alias) = $qb->getRootAliases();
+        $entity = ((isset($arguments[0]) && isset($arguments[1])) ? $arguments[0] : $qb->getRootEntities()[0]);
+        $alias = ((isset($arguments[0]) && isset($arguments[1])) ? $arguments[1] : $qb->getRootAliases()[0]);
 
         /** @var $meta \Doctrine\ORM\Mapping\ClassMetadata */
         $meta = $this->em->getClassMetadata($entity);
 
-        $i = 0;
         foreach($meta->associationMappings as $property => $config) {
             if ($config['targetEntity'] === $this->refDataEntity) {
-                $qb->leftJoin($alias . '.' . $property, 'rd' . $i);
-                $qb->addSelect('rd' . $i);
-                $i++;
+                $this->with->modifyQuery($qb, [$alias . '.' . $property]);
             }
         }
     }
