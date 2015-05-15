@@ -1754,6 +1754,7 @@ VALUES
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
  ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital')
  ,(11, 113, 0, 0, 0, 0, 'Publication')
+ ,(10, 114, 0, 1, 0, 0, 'Assignment')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 INSERT INTO sub_category_description
