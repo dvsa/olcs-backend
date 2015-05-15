@@ -31,7 +31,7 @@ abstract class AbstractDocParagraphBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -50,7 +50,7 @@ abstract class AbstractDocParagraphBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark", inversedBy="docParagraphBookmarks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark", fetch="LAZY", inversedBy="docParagraphBookmarks")
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
     protected $docBookmark;
@@ -60,7 +60,7 @@ abstract class AbstractDocParagraphBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\DocParagraph
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocParagraph")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocParagraph", fetch="LAZY")
      * @ORM\JoinColumn(name="doc_paragraph_id", referencedColumnName="id", nullable=false)
      */
     protected $docParagraph;
@@ -81,7 +81,7 @@ abstract class AbstractDocParagraphBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;

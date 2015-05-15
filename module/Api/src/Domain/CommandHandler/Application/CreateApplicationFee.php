@@ -113,11 +113,9 @@ final class CreateApplicationFee extends AbstractCommandHandler
             ? $this->getRepo()->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
             : null;
 
-        $date = new \DateTime(
-            $application->getReceivedDate() === null
-                ? $application->getCreatedOn()
-                : $application->getReceivedDate()
-        );
+        $date = $application->getReceivedDate() === null
+            ? $application->getCreatedOn()
+            : $application->getReceivedDate();
 
         $feeType = $this->feeTypeRepo->fetchLatest(
             $feeType,

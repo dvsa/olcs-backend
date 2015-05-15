@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Licence Entity
@@ -39,5 +41,27 @@ class Licence extends AbstractLicence
     const LICENCE_TYPE_STANDARD_NATIONAL = 'ltyp_sn';
     const LICENCE_TYPE_SPECIAL_RESTRICTED = 'ltyp_sr';
 
+    const LICENCE_STATUS_UNDER_CONSIDERATION = 'lsts_consideration';
+    const LICENCE_STATUS_NOT_SUBMITTED = 'lsts_not_submitted';
+    const LICENCE_STATUS_SUSPENDED = 'lsts_suspended';
+    const LICENCE_STATUS_VALID = 'lsts_valid';
+    const LICENCE_STATUS_CURTAILED = 'lsts_curtailed';
+    const LICENCE_STATUS_GRANTED = 'lsts_granted';
+    const LICENCE_STATUS_SURRENDERED = 'lsts_surrendered';
+    const LICENCE_STATUS_WITHDRAWN = 'lsts_withdrawn';
+    const LICENCE_STATUS_REFUSED = 'lsts_refused';
+    const LICENCE_STATUS_REVOKED = 'lsts_revoked';
+    const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
+    const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
+    const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
+
     const TACH_EXT = 'tach_external';
+
+    public function __construct(Organisation $organisation, RefData $status)
+    {
+        parent::__construct();
+
+        $this->setOrganisation($organisation);
+        $this->setStatus($status);
+    }
 }

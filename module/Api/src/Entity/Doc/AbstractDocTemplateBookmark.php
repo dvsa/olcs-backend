@@ -31,7 +31,7 @@ abstract class AbstractDocTemplateBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -50,7 +50,7 @@ abstract class AbstractDocTemplateBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark", fetch="LAZY")
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
     protected $docBookmark;
@@ -60,7 +60,7 @@ abstract class AbstractDocTemplateBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\DocTemplate
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocTemplate", inversedBy="docTemplateBookmarks")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocTemplate", fetch="LAZY", inversedBy="docTemplateBookmarks")
      * @ORM\JoinColumn(name="doc_template_id", referencedColumnName="id", nullable=false)
      */
     protected $docTemplate;
@@ -81,7 +81,7 @@ abstract class AbstractDocTemplateBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;

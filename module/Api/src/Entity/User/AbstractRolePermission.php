@@ -28,7 +28,7 @@ abstract class AbstractRolePermission
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -58,7 +58,7 @@ abstract class AbstractRolePermission
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -77,7 +77,7 @@ abstract class AbstractRolePermission
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Permission
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Permission")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Permission", fetch="LAZY")
      * @ORM\JoinColumn(name="permission_id", referencedColumnName="id", nullable=false)
      */
     protected $permission;
@@ -87,7 +87,7 @@ abstract class AbstractRolePermission
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Role
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Role", inversedBy="rolePermissions")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Role", fetch="LAZY", inversedBy="rolePermissions")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
      */
     protected $role;

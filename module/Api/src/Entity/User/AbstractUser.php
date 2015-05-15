@@ -55,7 +55,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY", cascade={"persist"})
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $contactDetails;
@@ -65,7 +65,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -138,7 +138,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\HintQuestion
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\HintQuestion")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\HintQuestion", fetch="LAZY")
      * @ORM\JoinColumn(name="hint_question_id1", referencedColumnName="id", nullable=true)
      */
     protected $hintQuestion1;
@@ -148,7 +148,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\HintQuestion
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\HintQuestion")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\HintQuestion", fetch="LAZY")
      * @ORM\JoinColumn(name="hint_question_id2", referencedColumnName="id", nullable=true)
      */
     protected $hintQuestion2;
@@ -178,7 +178,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -206,7 +206,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority", fetch="LAZY")
      * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=true)
      */
     protected $localAuthority;
@@ -270,7 +270,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
@@ -280,7 +280,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY")
      * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $partnerContactDetails;
@@ -326,7 +326,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true)
      */
     protected $team;
@@ -336,7 +336,7 @@ abstract class AbstractUser
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;

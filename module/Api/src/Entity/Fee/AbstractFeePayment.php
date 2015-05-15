@@ -31,7 +31,7 @@ abstract class AbstractFeePayment
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -50,7 +50,7 @@ abstract class AbstractFeePayment
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", inversedBy="feePayments")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", fetch="LAZY", inversedBy="feePayments")
      * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
      */
     protected $fee;
@@ -80,7 +80,7 @@ abstract class AbstractFeePayment
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -99,7 +99,7 @@ abstract class AbstractFeePayment
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Payment
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Payment")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Payment", fetch="LAZY")
      * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
      */
     protected $payment;

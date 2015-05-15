@@ -44,7 +44,7 @@ abstract class AbstractInspectionEmail
      *
      * @var \Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest", fetch="LAZY")
      * @ORM\JoinColumn(name="inspection_request_id", referencedColumnName="id", nullable=false)
      */
     protected $inspectionRequest;

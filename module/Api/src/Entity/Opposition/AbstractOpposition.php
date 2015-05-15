@@ -39,7 +39,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", inversedBy="oppositions")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="oppositions")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -49,7 +49,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", inversedBy="oppositions")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="oppositions")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
@@ -59,7 +59,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -87,7 +87,7 @@ abstract class AbstractOpposition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="oppositions")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="oppositions", fetch="LAZY")
      * @ORM\JoinTable(name="opposition_grounds",
      *     joinColumns={
      *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
@@ -142,7 +142,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="is_valid", referencedColumnName="id", nullable=false)
      */
     protected $isValid;
@@ -170,7 +170,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -189,7 +189,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -226,7 +226,7 @@ abstract class AbstractOpposition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", inversedBy="oppositions")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", inversedBy="oppositions", fetch="LAZY")
      * @ORM\JoinTable(name="operating_centre_opposition",
      *     joinColumns={
      *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
@@ -243,7 +243,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Opposition\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposer", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposer", fetch="LAZY", cascade={"persist"})
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
      */
     protected $opposer;
@@ -253,7 +253,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="opposition_type", referencedColumnName="id", nullable=false)
      */
     protected $oppositionType;
@@ -272,7 +272,7 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
     protected $status;

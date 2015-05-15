@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Controller\Application;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 
 /**
  * Application Controller
@@ -23,6 +24,20 @@ class ApplicationController extends AbstractRestfulController
             return $this->response()->singleResult($result);
         } catch (\Exception $ex) {
             return $this->response()->notFound();
+        }
+    }
+
+    public function create($data)
+    {
+        $dto = $this->params('dto');
+
+        try {
+            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+            return $this->response()->successfulCreate($result);
+        } catch (Exception $ex) {
+            return $this->response()->error(400, $ex->getMessages());
+        } catch (\Exception $ex) {
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 }

@@ -30,7 +30,7 @@ abstract class AbstractProhibitionDefect
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -69,7 +69,7 @@ abstract class AbstractProhibitionDefect
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -106,7 +106,7 @@ abstract class AbstractProhibitionDefect
      *
      * @var \Dvsa\Olcs\Api\Entity\Prohibition\Prohibition
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\Prohibition", inversedBy="defects")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\Prohibition", fetch="LAZY", inversedBy="defects")
      * @ORM\JoinColumn(name="prohibition_id", referencedColumnName="id", nullable=false)
      */
     protected $prohibition;

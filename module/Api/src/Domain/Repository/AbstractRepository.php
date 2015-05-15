@@ -75,19 +75,12 @@ abstract class AbstractRepository implements RepositoryInterface
         return $results[0];
     }
 
-    /**
-     * @NOTE This method can be overridden to extend the default resource bundle
-     *
-     * @param QueryBuilder $qb
-     * @param QryCmd $query
-     */
-    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
-    {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
-    }
-
     public function lock($entity, $version)
     {
+        if (!($entity instanceof $this->entity)) {
+            throw new Exception\RuntimeException('This repository can only lock entities of type ' . $this->entity);
+        }
+
         try {
             $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $version);
         } catch (OptimisticLockException $ex) {
@@ -97,12 +90,20 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function save($entity)
     {
+        if (!($entity instanceof $this->entity)) {
+            throw new Exception\RuntimeException('This repository can only save entities of type ' . $this->entity);
+        }
+
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
 
     public function delete($entity)
     {
+        if (!($entity instanceof $this->entity)) {
+            throw new Exception\RuntimeException('This repository can only delete entities of type ' . $this->entity);
+        }
+
         $this->getEntityManager()->remove($entity);
         $this->getEntityManager()->flush();
     }
@@ -164,5 +165,16 @@ abstract class AbstractRepository implements RepositoryInterface
     protected function createQueryBuilder()
     {
         return $this->getEntityManager()->getRepository($this->entity)->createQueryBuilder($this->alias);
+    }
+
+    /**
+     * @NOTE This method can be overridden to extend the default resource bundle
+     *
+     * @param QueryBuilder $qb
+     * @param QryCmd $query
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
     }
 }

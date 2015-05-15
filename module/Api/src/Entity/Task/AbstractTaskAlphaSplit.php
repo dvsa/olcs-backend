@@ -54,7 +54,7 @@ abstract class AbstractTaskAlphaSplit
      *
      * @var \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule", fetch="LAZY")
      * @ORM\JoinColumn(name="task_allocation_rules_id", referencedColumnName="id", nullable=false)
      */
     protected $taskAllocationRules;
@@ -64,7 +64,7 @@ abstract class AbstractTaskAlphaSplit
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

@@ -34,7 +34,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", inversedBy="tmDecisions")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="tmDecisions")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -44,7 +44,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -63,7 +63,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="decision", referencedColumnName="id", nullable=false)
      */
     protected $decision;
@@ -111,7 +111,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -157,7 +157,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="tmCaseDecisions")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="tmCaseDecisions", fetch="LAZY")
      * @ORM\JoinTable(name="tm_case_decision_rehab",
      *     joinColumns={
      *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")
@@ -192,7 +192,7 @@ abstract class AbstractTmCaseDecision
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="tmCaseDecisions")
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="tmCaseDecisions", fetch="LAZY")
      * @ORM\JoinTable(name="tm_case_decision_unfitness",
      *     joinColumns={
      *         @ORM\JoinColumn(name="tm_case_decision_id", referencedColumnName="id")

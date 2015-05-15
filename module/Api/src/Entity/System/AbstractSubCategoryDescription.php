@@ -47,7 +47,7 @@ abstract class AbstractSubCategoryDescription
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
      * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=false)
      */
     protected $subCategory;

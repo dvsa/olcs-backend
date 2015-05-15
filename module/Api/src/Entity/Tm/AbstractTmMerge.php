@@ -33,7 +33,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -63,7 +63,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -91,7 +91,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_application_id", referencedColumnName="id", nullable=true)
      */
     protected $tmApplication;
@@ -101,7 +101,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_from_id", referencedColumnName="id", nullable=false)
      */
     protected $tmFrom;
@@ -111,7 +111,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_licence_id", referencedColumnName="id", nullable=true)
      */
     protected $tmLicence;
@@ -121,7 +121,7 @@ abstract class AbstractTmMerge
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_to_id", referencedColumnName="id", nullable=false)
      */
     protected $tmTo;

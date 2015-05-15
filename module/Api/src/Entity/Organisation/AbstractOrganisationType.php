@@ -39,7 +39,7 @@ abstract class AbstractOrganisationType
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="org_person_type_id", referencedColumnName="id", nullable=false)
      */
     protected $orgPersonType;
@@ -49,7 +49,7 @@ abstract class AbstractOrganisationType
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="org_type_id", referencedColumnName="id", nullable=false)
      */
     protected $orgType;

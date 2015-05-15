@@ -45,7 +45,7 @@ abstract class AbstractTeamPrinter
      *
      * @var \Dvsa\Olcs\Api\Entity\PrintScan\Printer
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\Printer")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\Printer", fetch="LAZY")
      * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
      */
     protected $printer;
@@ -55,7 +55,7 @@ abstract class AbstractTeamPrinter
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
      */
     protected $team;

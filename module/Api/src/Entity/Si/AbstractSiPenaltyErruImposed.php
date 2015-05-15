@@ -31,7 +31,7 @@ abstract class AbstractSiPenaltyErruImposed
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -68,7 +68,7 @@ abstract class AbstractSiPenaltyErruImposed
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="executed", referencedColumnName="id", nullable=true)
      */
     protected $executed;
@@ -98,7 +98,7 @@ abstract class AbstractSiPenaltyErruImposed
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -126,7 +126,7 @@ abstract class AbstractSiPenaltyErruImposed
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement", inversedBy="imposedErrus")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement", fetch="LAZY", inversedBy="imposedErrus")
      * @ORM\JoinColumn(name="serious_infringement_id", referencedColumnName="id", nullable=false)
      */
     protected $seriousInfringement;
@@ -136,7 +136,7 @@ abstract class AbstractSiPenaltyErruImposed
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType", fetch="LAZY")
      * @ORM\JoinColumn(name="si_penalty_imposed_type_id", referencedColumnName="id", nullable=false)
      */
     protected $siPenaltyImposedType;

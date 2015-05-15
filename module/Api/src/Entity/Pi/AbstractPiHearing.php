@@ -69,7 +69,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
@@ -135,7 +135,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
@@ -172,7 +172,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\Pi
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", inversedBy="piHearings")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", fetch="LAZY", inversedBy="piHearings")
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=false)
      */
     protected $pi;
@@ -182,7 +182,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
      * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
      */
     protected $piVenue;
@@ -201,7 +201,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="presided_by_role", referencedColumnName="id", nullable=true)
      */
     protected $presidedByRole;
@@ -211,7 +211,7 @@ abstract class AbstractPiHearing
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PresidingTc", fetch="LAZY")
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $presidingTc;
