@@ -38,4 +38,6 @@ class Licence extends AbstractLicence
     const LICENCE_TYPE_STANDARD_INTERNATIONAL = 'ltyp_si';
     const LICENCE_TYPE_STANDARD_NATIONAL = 'ltyp_sn';
     const LICENCE_TYPE_SPECIAL_RESTRICTED = 'ltyp_sr';
+
+    const TACH_EXT = 'tach_external';
 }

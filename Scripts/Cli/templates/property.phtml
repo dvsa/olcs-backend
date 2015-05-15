@@ -14,11 +14,11 @@
 <?php if ($item['isId']): ?>
      * @ORM\Id
 <?php endif; ?>
-<?php if ($item['isVersion']): ?>
-     * @ORM\Version
-<?php endif; ?>
 <?php if (in_array($item['type'], array('id', 'field'))): ?>
      * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php if ($item['isVersion']): ?>
+    * @ORM\Version
+<?php endif; ?>
 <?php else: ?>
      * @ORM\<?php echo ucfirst($item['type']); ?>(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], $item['type']); ?>)
 <?php endif; ?>
