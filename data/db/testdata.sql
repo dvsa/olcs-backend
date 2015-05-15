@@ -97,6 +97,7 @@ TRUNCATE TABLE `si_penalty_type`;
 TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
+TRUNCATE TABLE `submission_action_type`;
 TRUNCATE TABLE `system_parameter`;
 TRUNCATE TABLE `publication`;
 TRUNCATE TABLE `publication_link`;
