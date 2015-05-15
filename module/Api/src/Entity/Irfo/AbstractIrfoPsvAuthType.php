@@ -80,12 +80,21 @@ abstract class AbstractIrfoPsvAuthType
     protected $lastModifiedOn;
 
     /**
+     * Section code
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="section_code", length=20, nullable=false)
+     */
+    protected $sectionCode;
+
+    /**
      * Version
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 
@@ -225,6 +234,29 @@ abstract class AbstractIrfoPsvAuthType
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the section code
+     *
+     * @param string $sectionCode
+     * @return IrfoPsvAuthType
+     */
+    public function setSectionCode($sectionCode)
+    {
+        $this->sectionCode = $sectionCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the section code
+     *
+     * @return string
+     */
+    public function getSectionCode()
+    {
+        return $this->sectionCode;
     }
 
     /**

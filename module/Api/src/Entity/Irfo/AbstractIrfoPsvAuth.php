@@ -30,6 +30,15 @@ abstract class AbstractIrfoPsvAuth
 {
 
     /**
+     * Application sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="application_sent_date", nullable=true)
+     */
+    protected $applicationSentDate;
+
+    /**
      * Copies issued
      *
      * @var int
@@ -127,7 +136,7 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=false)
+     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=true)
      */
     protected $irfoFeeId;
 
@@ -276,8 +285,8 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 
@@ -290,6 +299,29 @@ abstract class AbstractIrfoPsvAuth
      * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
      */
     protected $withdrawnReason;
+
+    /**
+     * Set the application sent date
+     *
+     * @param \DateTime $applicationSentDate
+     * @return IrfoPsvAuth
+     */
+    public function setApplicationSentDate($applicationSentDate)
+    {
+        $this->applicationSentDate = $applicationSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the application sent date
+     *
+     * @return \DateTime
+     */
+    public function getApplicationSentDate()
+    {
+        return $this->applicationSentDate;
+    }
 
     /**
      * Set the copies issued

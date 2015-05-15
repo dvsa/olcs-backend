@@ -261,8 +261,8 @@ abstract class AbstractEbsrSubmission
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="integer", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
      */
     protected $version = 1;
 

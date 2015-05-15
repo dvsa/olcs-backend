@@ -346,8 +346,8 @@ abstract class AbstractUser
      *
      * @var int
      *
-     * @ORM\Version
      * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 0})
+     * @ORM\Version
      */
     protected $version = 0;
 
