@@ -741,26 +741,28 @@ INSERT INTO `note` (
   `case_id`,
   `application_id`,
   `transport_manager_id`,
+  `organisation_id`,
   `comment`,
   `priority`,
   `created_on`,
   `version`
 )
 VALUES
-(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1),
-(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1),
-(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1),
-(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
-(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1),
-(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1),
-(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
-(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1),
-(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1),
-(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1),
-(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    'This is a TM note',      0, '2011-10-12 00:00:00', 1);
+(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1),
+(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1),
+(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1),
+(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1),
+(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1),
+(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1),
+(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1),
+(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1),
+(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1),
+(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1);
 
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
