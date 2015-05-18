@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\OperatingCentre;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * OperatingCentre Abstract Entity

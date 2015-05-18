@@ -5,6 +5,7 @@ namespace <?php echo $details['namespace']; ?>;
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 <?php endif; ?>
 <?php if ($details['softDeletable'] || $details['translatable']): ?>
 use Gedmo\Mapping\Annotation as Gedmo;

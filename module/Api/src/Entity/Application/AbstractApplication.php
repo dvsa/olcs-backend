@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -2901,6 +2902,7 @@ abstract class AbstractApplication
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
+
                 if ($this->$property instanceof Collection) {
 
                     $this->$property = new ArrayCollection(array());

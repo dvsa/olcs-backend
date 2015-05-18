@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Fee;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Fee Abstract Entity

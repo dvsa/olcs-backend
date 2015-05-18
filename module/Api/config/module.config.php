@@ -27,7 +27,7 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
-            // Transfer - Application
+            // src - Application
             \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
             \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class

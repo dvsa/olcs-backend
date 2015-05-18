@@ -44,15 +44,66 @@ abstract class EntityTester extends MockeryTestCase
 
     protected function instantiate($entityName)
     {
-        $instantiator = new Instantiator();
+        if (!method_exists($entityName, '__construct')) {
+            $object = new $entityName();
+        } else {
+            $instantiator = new Instantiator();
 
-        $object = $instantiator->instantiate($entityName);
+            $object = $instantiator->instantiate($entityName);
 
-        if (method_exists($object, 'initCollections')) {
-            $object->initCollections();
+            if (method_exists($object, 'initCollections')) {
+                $object->initCollections();
+            }
         }
 
         return $object;
+    }
+
+    public function testClearProperties()
+    {
+        $classToTestName = $this->getClassToTestName();
+        $entity = $this->instantiate($classToTestName);
+
+        $methodName = $this->providerGettersAndSetters()[0][0];
+
+        $properties = ['duntExist', lcfirst($methodName)];
+
+        // Test clear properties (Non collection)
+        $entity->{'set' . $methodName}('foo');
+        $this->assertEquals('foo', $entity->{'get' . $methodName}());
+        $entity->clearProperties($properties);
+        $this->assertEquals(null, $entity->{'get' . $methodName}());
+
+        // Test clear properties (Collection)
+        $collection = new ArrayCollection(['foo', 'bar']);
+        $entity->{'set' . $methodName}($collection);
+        $this->assertSame($collection, $entity->{'get' . $methodName}());
+        $entity->clearProperties($properties);
+        $this->assertNotSame($collection, $entity->{'get' . $methodName}());
+    }
+
+    public function testLifecycleCallbacks()
+    {
+        $classToTestName = $this->getClassToTestName();
+        $entity = $this->instantiate($classToTestName);
+
+        $tested = false;
+
+        if (method_exists($entity, 'setCreatedOnBeforePersist')) {
+            $tested = true;
+            $entity->setCreatedOnBeforePersist();
+            $this->assertEquals(date('Y-m-d'), $entity->getCreatedOn()->format('Y-m-d'));
+        }
+
+        if (method_exists($entity, 'setLastModifiedOnBeforePersist')) {
+            $tested = true;
+            $entity->setLastModifiedOnBeforePersist();
+            $this->assertEquals(date('Y-m-d'), $entity->getLastModifiedOn()->format('Y-m-d'));
+        }
+
+        if ($tested === false) {
+            $this->assertTrue(true); // Mark the test as passed (None exist)
+        }
     }
 
     /**
