@@ -14,7 +14,6 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
- *        @ORM\Index(name="ix_companies_house_officer_role", columns={"role"}),
  *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id", columns={"company_id"})
  *    }
  * )
@@ -23,7 +22,6 @@ class CompaniesHouseOfficer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\IdIdentity,
-        Traits\RoleManyToOne,
         Traits\CustomVersionField;
 
     /**
@@ -53,6 +51,15 @@ class CompaniesHouseOfficer implements Interfaces\EntityInterface
      * @ORM\Column(type="string", name="name", length=100, nullable=true)
      */
     protected $name;
+
+    /**
+     * Role
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="role", length=32, nullable=true)
+     */
+    protected $role;
 
     /**
      * Set the company
@@ -121,5 +128,28 @@ class CompaniesHouseOfficer implements Interfaces\EntityInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the role
+     *
+     * @param string $role
+     * @return CompaniesHouseOfficer
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get the role
+     *
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }
