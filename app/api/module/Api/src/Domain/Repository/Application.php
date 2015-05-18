@@ -16,7 +16,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Application extends AbstractRepository
+/*final */class Application extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Application\Application';
 }
