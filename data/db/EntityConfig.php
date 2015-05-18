@@ -844,6 +844,11 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'submission' => array(
+        'urgent' => array(
+            'type' => 'yesnonull'
+        )
+    ),
     'submission_action' => array(
         'is_decision' => array(
             'type' => 'yesno'
