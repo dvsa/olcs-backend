@@ -3,6 +3,7 @@
 namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Olcs\Db\Entity\Traits;
 
 /**
@@ -48,6 +49,15 @@ class Country implements Interfaces\EntityInterface
     protected $id;
 
     /**
+     * Irfo psv auth
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\IrfoPsvAuth", mappedBy="countrys")
+     */
+    protected $irfoPsvAuths;
+
+    /**
      * Is member state
      *
      * @var string
@@ -55,6 +65,14 @@ class Country implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_member_state", nullable=false, options={"default": 0})
      */
     protected $isMemberState = 0;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->irfoPsvAuths = new ArrayCollection();
+    }
 
     /**
      * Set the country desc
@@ -100,6 +118,66 @@ class Country implements Interfaces\EntityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths
+     * @return Country
+     */
+    public function setIrfoPsvAuths($irfoPsvAuths)
+    {
+        $this->irfoPsvAuths = $irfoPsvAuths;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrfoPsvAuths()
+    {
+        return $this->irfoPsvAuths;
+    }
+
+    /**
+     * Add a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths
+     * @return Country
+     */
+    public function addIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($irfoPsvAuths instanceof ArrayCollection) {
+            $this->irfoPsvAuths = new ArrayCollection(
+                array_merge(
+                    $this->irfoPsvAuths->toArray(),
+                    $irfoPsvAuths->toArray()
+                )
+            );
+        } elseif (!$this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->add($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths
+     * @return Country
+     */
+    public function removeIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
     }
 
     /**

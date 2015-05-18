@@ -77,7 +77,10 @@ class IrfoPsvAuthTest extends TestCase
         $data = array(
             'version' => 1,
             'irfoPsvAuthType' => $irfoPsvAuthTypeId,
-            'irfoFileNo' => '12A/7'
+            'irfoFileNo' => '12A/7',
+            'irfoPsvAuthNumbers' => [
+                7
+            ]
         );
 
         $mockEntity = $this->getMock('\Olcs\Db\Entity\IrfoPsvAuth', array('clearProperties'));
@@ -120,9 +123,20 @@ class IrfoPsvAuthTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
+        $mockDataService = $this->getMock('Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager');
+        $mockDataService->expects($this->once())
+            ->method('processIrfoPsvAuthNumbers')
+            ->with($mockEntity, [['name' => 'auth number']])
+            ->willReturn([7]);
+
+        $this->sm->setService('Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager', $mockDataService);
+
         $postData = array(
             'version' => 1,
-            'irfoPsvAuthType' => $irfoPsvAuthTypeId
+            'irfoPsvAuthType' => $irfoPsvAuthTypeId,
+            'irfoPsvAuthNumbers' => [
+                ['name' => 'auth number']
+            ]
         );
 
         $this->assertTrue($this->sut->update($id, $postData));
