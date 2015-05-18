@@ -13,7 +13,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
@@ -125,7 +125,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function getRefdataReference($id)
     {
-        return $this->getReference(RefData::class, $id);
+        return $this->getReference(RefDataEntity::class, $id);
     }
 
     public function getCategoryReference($id)

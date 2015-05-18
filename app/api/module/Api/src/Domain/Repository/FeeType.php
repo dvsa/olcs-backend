@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
@@ -25,9 +25,9 @@ final class FeeType extends AbstractRepository
     protected $alias = 'ft';
 
     /**
-     * @param RefData $feeType
-     * @param RefData $goodsOrPsv
-     * @param RefData $licenceType
+     * @param RefDataEntity $feeType
+     * @param RefDataEntity $goodsOrPsv
+     * @param RefDataEntity $licenceType
      * @param \DateTime $date
      * @param TrafficArea $trafficArea
      *
@@ -35,9 +35,9 @@ final class FeeType extends AbstractRepository
      * @throws Exception\NotFoundException
      */
     public function fetchLatest(
-        RefData $feeType,
-        RefData $goodsOrPsv,
-        RefData $licenceType,
+        RefDataEntity $feeType,
+        RefDataEntity $goodsOrPsv,
+        RefDataEntity $licenceType,
         \DateTime $date,
         $trafficArea = null
     ) {

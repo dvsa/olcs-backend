@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
@@ -34,7 +34,7 @@ interface RepositoryInterface
 
     /**
      * @param $id
-     * @return RefData
+     * @return RefDataEntity
      */
     public function getRefdataReference($id);
 
