@@ -16,5 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LicenceNoGen extends AbstractLicenceNoGen
 {
-
+    public function __construct(Licence $licence)
+    {
+        $this->setLicence($licence);
+    }
 }

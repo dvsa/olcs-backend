@@ -79,7 +79,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
         if ($this->updatingForTheFirstTime($application)) {
 
-            $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
+            $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
 
         } else {
@@ -121,7 +121,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
         return CancelLicenceFees::create(['id' => $licence->getId()]);
     }
 
-    private function createGenerateLicenceNumberCommand(Applcation $application)
+    private function createGenerateLicenceNumberCommand(Application $application)
     {
         return GenerateLicenceNumber::create(['id' => $application->getId()]);
     }

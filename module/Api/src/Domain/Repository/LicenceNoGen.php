@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Licence
+ * Licence No Gen
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -11,11 +11,11 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
- * Licence
+ * Licence No Gen
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Licence extends AbstractRepository
+final class LicenceNoGen extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\Licence';
+    protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen';
 }
