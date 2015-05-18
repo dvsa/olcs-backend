@@ -13,12 +13,7 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="companies_house_company",
- *    indexes={
- *        @ORM\Index(name="ix_companies_house_company_company_status", columns={"company_status"}),
- *        @ORM\Index(name="ix_companies_house_company_country", columns={"country"})
- *    }
- * )
+ * @ORM\Table(name="companies_house_company")
  */
 class CompaniesHouseCompany implements Interfaces\EntityInterface
 {
@@ -65,20 +60,18 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     /**
      * Company status
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="company_status", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="company_status", length=32, nullable=true)
      */
     protected $companyStatus;
 
     /**
      * Country
      *
-     * @var \Olcs\Db\Entity\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="country", length=32, nullable=true)
      */
     protected $country;
 
@@ -239,7 +232,7 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     /**
      * Set the company status
      *
-     * @param \Olcs\Db\Entity\RefData $companyStatus
+     * @param string $companyStatus
      * @return CompaniesHouseCompany
      */
     public function setCompanyStatus($companyStatus)
@@ -252,7 +245,7 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     /**
      * Get the company status
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
     public function getCompanyStatus()
     {
@@ -262,7 +255,7 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     /**
      * Set the country
      *
-     * @param \Olcs\Db\Entity\RefData $country
+     * @param string $country
      * @return CompaniesHouseCompany
      */
     public function setCountry($country)
@@ -275,7 +268,7 @@ class CompaniesHouseCompany implements Interfaces\EntityInterface
     /**
      * Get the country
      *
-     * @return \Olcs\Db\Entity\RefData
+     * @return string
      */
     public function getCountry()
     {
