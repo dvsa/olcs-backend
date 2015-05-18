@@ -138,6 +138,15 @@ return [
                         'controller' => 'continuation-detail-checklists'
                     ]
                 ]
+            ],
+            'companies-house-queue' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/companies-house-queue[/]',
+                    'defaults' => [
+                        'controller' => 'companies-house-queue'
+                    ]
+                ]
             ]
         ]
     ],
@@ -169,6 +178,7 @@ return [
             'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
             'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery',
             'ContinuationDetail/Checklists' => 'Olcs\Db\Service\ContinuationDetail\Checklists',
+            'CompaniesHouse/Queue' => 'Olcs\Db\Service\CompaniesHouse\Queue',
         ]
     ],
     'controllers' => [
@@ -187,6 +197,7 @@ return [
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
             'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
             'continuation-detail-checklists' => 'Olcs\Db\Controller\ContinuationDetail\ChecklistsController',
+            'companies-house-queue' => 'Olcs\Db\Controller\CompaniesHouse\QueueController',
         ]
     ],
     'view_manager' => [
