@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LicenceStatusRuleTest extends EntityTester
+class LicenceStatusRuleEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

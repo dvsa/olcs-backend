@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class EnforcementAreaTest extends EntityTester
+class EnforcementAreaEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -124,7 +124,11 @@ abstract class AbstractPsvDisc
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="psvDiscs")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="psvDiscs"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -143,7 +147,10 @@ abstract class AbstractPsvDisc
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="reprint_required", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesnonull",
+     *     name="reprint_required",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $reprintRequired = 0;
 

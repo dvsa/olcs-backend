@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class EbsrSubmissionTest extends EntityTester
+class EbsrSubmissionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

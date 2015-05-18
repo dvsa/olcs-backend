@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PublicationLinkTest extends EntityTester
+class PublicationLinkEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

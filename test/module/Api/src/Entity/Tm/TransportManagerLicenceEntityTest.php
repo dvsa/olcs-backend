@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TransportManagerLicenceTest extends EntityTester
+class TransportManagerLicenceEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

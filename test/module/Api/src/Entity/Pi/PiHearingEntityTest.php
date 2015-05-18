@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PiHearing as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PiHearingTest extends EntityTester
+class PiHearingEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

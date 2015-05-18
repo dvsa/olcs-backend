@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\SystemInfoMessage as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SystemInfoMessageTest extends EntityTester
+class SystemInfoMessageEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

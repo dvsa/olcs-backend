@@ -167,7 +167,10 @@ abstract class AbstractPublication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink", mappedBy="publication")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink",
+     *     mappedBy="publication"
+     * )
      */
     protected $publicationLinks;
 

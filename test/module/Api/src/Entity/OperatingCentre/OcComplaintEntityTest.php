@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class OcComplaintTest extends EntityTester
+class OcComplaintEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Complaint as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ComplaintTest extends EntityTester
+class ComplaintEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -14,8 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_ebsr_submission_document_id", columns={"document_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_bus_reg_id", columns={"bus_reg_id"}),
- *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id", columns={"ebsr_submission_status_id"}),
- *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_type_id", columns={"ebsr_submission_type_id"})
+ *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id",
+     *     columns={"ebsr_submission_status_id"}),
+ *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_type_id",
+     *     columns={"ebsr_submission_type_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_ebsr_submission_olbs_key", columns={"olbs_key"})
@@ -39,7 +41,11 @@ abstract class AbstractEbsrSubmission
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY", inversedBy="ebsrSubmissions")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     fetch="LAZY",
+     *     inversedBy="ebsrSubmissions"
+     * )
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;

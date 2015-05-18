@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PermissionTest extends EntityTester
+class PermissionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

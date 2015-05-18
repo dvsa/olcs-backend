@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SubmissionTest extends EntityTester
+class SubmissionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

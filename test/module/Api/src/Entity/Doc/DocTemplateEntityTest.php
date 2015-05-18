@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class DocTemplateTest extends EntityTester
+class DocTemplateEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

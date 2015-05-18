@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ContinuationDetailTest extends EntityTester
+class ContinuationDetailEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

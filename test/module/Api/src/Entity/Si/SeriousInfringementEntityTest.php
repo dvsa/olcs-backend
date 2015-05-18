@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SeriousInfringementTest extends EntityTester
+class SeriousInfringementEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

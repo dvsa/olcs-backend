@@ -40,7 +40,11 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="oppositions")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="oppositions"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -50,7 +54,11 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="oppositions")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="oppositions"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
@@ -88,7 +96,11 @@ abstract class AbstractOpposition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="oppositions", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="oppositions",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="opposition_grounds",
      *     joinColumns={
      *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
@@ -153,7 +165,10 @@ abstract class AbstractOpposition
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_willing_to_attend_pi", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="is_willing_to_attend_pi",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $isWillingToAttendPi = 0;
 
@@ -227,7 +242,11 @@ abstract class AbstractOpposition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", inversedBy="oppositions", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     inversedBy="oppositions",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="operating_centre_opposition",
      *     joinColumns={
      *         @ORM\JoinColumn(name="opposition_id", referencedColumnName="id")
@@ -244,7 +263,11 @@ abstract class AbstractOpposition
      *
      * @var \Dvsa\Olcs\Api\Entity\Opposition\Opposer
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposer", fetch="LAZY", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposer",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="opposer_id", referencedColumnName="id", nullable=false)
      */
     protected $opposer;

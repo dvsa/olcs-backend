@@ -69,7 +69,11 @@ abstract class AbstractDocTemplate
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY", inversedBy="templates")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="templates"
+     * )
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
     protected $document;
@@ -147,7 +151,10 @@ abstract class AbstractDocTemplate
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocTemplateBookmark", mappedBy="docTemplate")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocTemplateBookmark",
+     *     mappedBy="docTemplate"
+     * )
      */
     protected $docTemplateBookmarks;
 

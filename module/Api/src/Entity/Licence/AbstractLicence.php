@@ -28,7 +28,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_licence_tachograph_ins", columns={"tachograph_ins"}),
  *        @ORM\Index(name="ix_licence_correspondence_cd_id", columns={"correspondence_cd_id"}),
  *        @ORM\Index(name="ix_licence_establishment_cd_id", columns={"establishment_cd_id"}),
- *        @ORM\Index(name="ix_licence_transport_consultant_cd_id", columns={"transport_consultant_cd_id"})
+ *        @ORM\Index(name="ix_licence_transport_consultant_cd_id",
+     *     columns={"transport_consultant_cd_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_licence_lic_no", columns={"lic_no"}),
@@ -100,7 +101,10 @@ abstract class AbstractLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=true)
      */
     protected $enforcementArea;
@@ -251,7 +255,11 @@ abstract class AbstractLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY", inversedBy="licences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="licences"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
@@ -500,7 +508,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity",
+     *     mappedBy="licence"
+     * )
      */
     protected $changeOfEntitys;
 
@@ -509,7 +520,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic",
+     *     mappedBy="licence"
+     * )
      */
     protected $communityLics;
 
@@ -518,7 +532,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary",
+     *     mappedBy="licence"
+     * )
      */
     protected $companySubsidiaries;
 
@@ -527,7 +544,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     mappedBy="licence"
+     * )
      */
     protected $conditionUndertakings;
 
@@ -554,7 +574,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre",
+     *     mappedBy="licence"
+     * )
      */
     protected $operatingCentres;
 
@@ -563,7 +586,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule",
+     *     mappedBy="licence"
+     * )
      */
     protected $licenceStatusRules;
 
@@ -581,7 +607,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence",
+     *     mappedBy="licence"
+     * )
      */
     protected $privateHireLicences;
 
@@ -600,7 +629,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink",
+     *     mappedBy="licence"
+     * )
      */
     protected $publicationLinks;
 
@@ -618,7 +650,10 @@ abstract class AbstractLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", mappedBy="licence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence",
+     *     mappedBy="licence"
+     * )
      */
     protected $tmLicences;
 

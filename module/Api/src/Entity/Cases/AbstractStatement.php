@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_statement_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
  *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
- *        @ORM\Index(name="fk_statement_contact_details1_idx", columns={"requestors_contact_details_id"})
+ *        @ORM\Index(name="fk_statement_contact_details1_idx",
+     *     columns={"requestors_contact_details_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_statement_olbs_key", columns={"olbs_key"})
@@ -42,7 +43,11 @@ abstract class AbstractStatement
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="statements")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="statements"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -165,7 +170,11 @@ abstract class AbstractStatement
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="requestors_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $requestorsContactDetails;

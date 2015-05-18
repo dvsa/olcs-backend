@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PublicationPoliceDataTest extends EntityTester
+class PublicationPoliceDataEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

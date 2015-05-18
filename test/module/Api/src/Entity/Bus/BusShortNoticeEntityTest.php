@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class BusShortNoticeTest extends EntityTester
+class BusShortNoticeEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

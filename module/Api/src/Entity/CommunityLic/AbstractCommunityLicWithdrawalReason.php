@@ -15,9 +15,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="community_lic_withdrawal_reason",
  *    indexes={
- *        @ORM\Index(name="ix_community_lic_withdrawal_reason_community_lic_withdrawal_id", columns={"community_lic_withdrawal_id"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_community_lic_withdrawal_id",
+     *     columns={"community_lic_withdrawal_id"}),
  *        @ORM\Index(name="ix_community_lic_withdrawal_reason_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_community_lic_withdrawal_reason_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_community_lic_withdrawal_reason_ref_data1_idx", columns={"type_id"})
  *    },
  *    uniqueConstraints={
@@ -33,7 +35,10 @@ abstract class AbstractCommunityLicWithdrawalReason
      *
      * @var \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="community_lic_withdrawal_id", referencedColumnName="id", nullable=false)
      */
     protected $communityLicWithdrawal;

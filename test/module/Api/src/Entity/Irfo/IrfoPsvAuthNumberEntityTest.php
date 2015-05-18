@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoPsvAuthNumberTest extends EntityTester
+class IrfoPsvAuthNumberEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

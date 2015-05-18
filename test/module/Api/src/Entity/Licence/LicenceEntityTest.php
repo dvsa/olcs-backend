@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LicenceTest extends EntityTester
+class LicenceEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

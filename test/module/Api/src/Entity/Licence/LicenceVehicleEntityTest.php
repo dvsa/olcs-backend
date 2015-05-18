@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LicenceVehicleTest extends EntityTester
+class LicenceVehicleEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

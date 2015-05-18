@@ -138,7 +138,10 @@ abstract class AbstractSubmission
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction", mappedBy="submission")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction",
+     *     mappedBy="submission"
+     * )
      */
     protected $submissionActions;
 
@@ -147,7 +150,10 @@ abstract class AbstractSubmission
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment", mappedBy="submission")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment",
+     *     mappedBy="submission"
+     * )
      */
     protected $submissionSectionComments;
 

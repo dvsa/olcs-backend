@@ -100,7 +100,11 @@ abstract class AbstractImpounding
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="impoundings", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="impoundings",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="impounding_legislation_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="impounding_id", referencedColumnName="id")

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ConditionUndertakingTest extends EntityTester
+class ConditionUndertakingEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

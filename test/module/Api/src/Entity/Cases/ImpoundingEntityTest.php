@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Impounding as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ImpoundingTest extends EntityTester
+class ImpoundingEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

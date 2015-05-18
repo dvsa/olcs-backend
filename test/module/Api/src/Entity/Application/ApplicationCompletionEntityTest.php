@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ApplicationCompletionTest extends EntityTester
+class ApplicationCompletionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\Role as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class RoleTest extends EntityTester
+class RoleEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

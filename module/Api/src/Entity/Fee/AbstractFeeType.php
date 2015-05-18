@@ -88,7 +88,10 @@ abstract class AbstractFeeType
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="expire_fee_with_licence", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="expire_fee_with_licence",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $expireFeeWithLicence = 0;
 

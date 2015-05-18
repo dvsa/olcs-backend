@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CountryTest extends EntityTester
+class CountryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

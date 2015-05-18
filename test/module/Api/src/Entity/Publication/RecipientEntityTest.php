@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Recipient as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class RecipientTest extends EntityTester
+class RecipientEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

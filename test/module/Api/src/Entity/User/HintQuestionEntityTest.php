@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\HintQuestion as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class HintQuestionTest extends EntityTester
+class HintQuestionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

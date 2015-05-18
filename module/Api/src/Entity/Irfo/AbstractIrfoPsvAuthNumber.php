@@ -60,7 +60,11 @@ abstract class AbstractIrfoPsvAuthNumber
      *
      * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth", fetch="LAZY", inversedBy="irfoPsvAuthNumbers")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth",
+     *     fetch="LAZY",
+     *     inversedBy="irfoPsvAuthNumbers"
+     * )
      * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuth;

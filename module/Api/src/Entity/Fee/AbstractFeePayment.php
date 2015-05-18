@@ -50,7 +50,11 @@ abstract class AbstractFeePayment
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Fee
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", fetch="LAZY", inversedBy="feePayments")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee",
+     *     fetch="LAZY",
+     *     inversedBy="feePayments"
+     * )
      * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
      */
     protected $fee;

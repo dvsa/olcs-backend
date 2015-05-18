@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SiPenaltyRequestedTypeTest extends EntityTester
+class SiPenaltyRequestedTypeEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

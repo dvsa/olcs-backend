@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Elastic\ElasticUpdates as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ElasticUpdatesTest extends EntityTester
+class ElasticUpdatesEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

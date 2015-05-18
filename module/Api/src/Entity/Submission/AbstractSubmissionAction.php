@@ -31,7 +31,11 @@ abstract class AbstractSubmissionAction
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="submissionActions", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="submissionActions",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="submission_action_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
@@ -115,7 +119,11 @@ abstract class AbstractSubmissionAction
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="submissionActions", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason",
+     *     inversedBy="submissionActions",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="submission_action_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="submission_action_id", referencedColumnName="id")
@@ -152,7 +160,11 @@ abstract class AbstractSubmissionAction
      *
      * @var \Dvsa\Olcs\Api\Entity\Submission\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission", fetch="LAZY", inversedBy="submissionActions")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission",
+     *     fetch="LAZY",
+     *     inversedBy="submissionActions"
+     * )
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;

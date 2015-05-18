@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PiTest extends EntityTester
+class PiEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

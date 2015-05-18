@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class DocumentTest extends EntityTester
+class DocumentEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

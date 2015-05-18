@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TmMerge as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TmMergeTest extends EntityTester
+class TmMergeEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

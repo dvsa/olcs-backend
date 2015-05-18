@@ -39,7 +39,11 @@ abstract class AbstractApplicationTracking
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="applicationTracking")
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="applicationTracking"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;

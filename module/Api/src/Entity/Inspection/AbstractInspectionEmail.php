@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="inspection_email",
  *    indexes={
- *        @ORM\Index(name="ix_inspection_email_inspection_request_id", columns={"inspection_request_id"})
+ *        @ORM\Index(name="ix_inspection_email_inspection_request_id",
+     *     columns={"inspection_request_id"})
  *    }
  * )
  */

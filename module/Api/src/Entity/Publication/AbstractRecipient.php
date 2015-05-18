@@ -154,7 +154,11 @@ abstract class AbstractRecipient
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", inversedBy="recipients", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea",
+     *     inversedBy="recipients",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="recipient_traffic_area",
      *     joinColumns={
      *         @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")

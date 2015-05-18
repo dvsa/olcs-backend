@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TransportManagerTest extends EntityTester
+class TransportManagerEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

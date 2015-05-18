@@ -56,5 +56,4 @@ abstract class AbstractUpdateStatus extends AbstractCommandHandler
     }
 
     abstract protected function isSectionValid(Application $application);
-
 }

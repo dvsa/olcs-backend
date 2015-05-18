@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeManualAlteration as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class FeeManualAlterationTest extends EntityTester
+class FeeManualAlterationEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

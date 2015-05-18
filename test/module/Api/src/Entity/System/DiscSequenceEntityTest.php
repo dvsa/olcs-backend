@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\DiscSequence as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class DiscSequenceTest extends EntityTester
+class DiscSequenceEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

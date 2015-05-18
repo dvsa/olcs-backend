@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PublicationTest extends EntityTester
+class PublicationEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

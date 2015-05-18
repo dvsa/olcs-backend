@@ -59,14 +59,14 @@ final class FeeType extends AbstractRepository
 
         if ($trafficArea !== null) {
             $qb->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->eq('ft.trafficArea', ':trafficArea'),
-                        $qb->expr()->isNull('ft.trafficArea')
-                    )
+                $qb->expr()->orX(
+                    $qb->expr()->eq('ft.trafficArea', ':trafficArea'),
+                    $qb->expr()->isNull('ft.trafficArea')
                 )
-                // Send the NULL values to the bottom
-                ->orderBy('ft.trafficArea', 'DESC')
-                ->setParameter('trafficArea', $trafficArea);
+            )
+            // Send the NULL values to the bottom
+            ->orderBy('ft.trafficArea', 'DESC')
+            ->setParameter('trafficArea', $trafficArea);
 
         } else {
             $qb->andWhere($qb->expr()->isNull('ft.trafficArea'));

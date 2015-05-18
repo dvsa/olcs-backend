@@ -96,7 +96,11 @@ abstract class AbstractUserRole
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY", inversedBy="userRoles")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\User\User",
+     *     fetch="LAZY",
+     *     inversedBy="userRoles"
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

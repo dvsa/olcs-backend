@@ -126,8 +126,9 @@ final class CreateApplication extends AbstractCommandHandler
         $licence = new Licence($organisation, $status);
 
         if ($command->getTrafficArea() !== null) {
-            $licence->setTrafficArea($this->getRepo()
-                ->getReference(TrafficArea::class, $command->getTrafficArea()));
+            $licence->setTrafficArea(
+                $this->getRepo()->getReference(TrafficArea::class, $command->getTrafficArea())
+            );
         }
 
         return $licence;

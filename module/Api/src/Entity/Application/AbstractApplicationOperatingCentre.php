@@ -15,10 +15,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application_operating_centre",
  *    indexes={
- *        @ORM\Index(name="ix_application_operating_centre_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_application_operating_centre_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_application_operating_centre_application_id",
+     *     columns={"application_id"}),
+ *        @ORM\Index(name="ix_application_operating_centre_operating_centre_id",
+     *     columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_application_operating_centre_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_application_operating_centre_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_operating_centre_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_application_operating_centre_s4_id", columns={"s4_id"})
  *    },
  *    uniqueConstraints={
@@ -70,7 +73,11 @@ abstract class AbstractApplicationOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="operatingCentres")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="operatingCentres"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
@@ -174,7 +181,10 @@ abstract class AbstractApplicationOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
      */
     protected $operatingCentre;
@@ -193,7 +203,10 @@ abstract class AbstractApplicationOperatingCentre
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="publication_appropriate", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="publication_appropriate",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $publicationAppropriate = 0;
 

@@ -17,7 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="complaint",
  *    indexes={
- *        @ORM\Index(name="ix_complaint_complainant_contact_details_id", columns={"complainant_contact_details_id"}),
+ *        @ORM\Index(name="ix_complaint_complainant_contact_details_id",
+     *     columns={"complainant_contact_details_id"}),
  *        @ORM\Index(name="ix_complaint_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_complaint_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_complaint_status", columns={"status"}),
@@ -35,7 +36,11 @@ abstract class AbstractComplaint
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="complaints")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="complaints"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -54,7 +59,11 @@ abstract class AbstractComplaint
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="complainant_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $complainantContactDetails;
@@ -215,7 +224,10 @@ abstract class AbstractComplaint
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint", mappedBy="complaint")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint",
+     *     mappedBy="complaint"
+     * )
      */
     protected $ocComplaints;
 

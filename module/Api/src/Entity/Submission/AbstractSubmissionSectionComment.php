@@ -14,9 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="submission_section_comment",
  *    indexes={
  *        @ORM\Index(name="ix_submission_section_comment_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_submission_section_comment_submission_section", columns={"submission_section"}),
+ *        @ORM\Index(name="ix_submission_section_comment_submission_section",
+     *     columns={"submission_section"}),
  *        @ORM\Index(name="ix_submission_section_comment_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_submission_section_comment_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_submission_section_comment_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -86,7 +88,11 @@ abstract class AbstractSubmissionSectionComment
      *
      * @var \Dvsa\Olcs\Api\Entity\Submission\Submission
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission", fetch="LAZY", inversedBy="submissionSectionComments")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission",
+     *     fetch="LAZY",
+     *     inversedBy="submissionSectionComments"
+     * )
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=false)
      */
     protected $submission;

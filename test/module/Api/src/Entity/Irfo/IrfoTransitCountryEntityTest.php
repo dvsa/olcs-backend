@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoTransitCountry as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoTransitCountryTest extends EntityTester
+class IrfoTransitCountryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

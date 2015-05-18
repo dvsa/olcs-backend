@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Trailer as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TrailerTest extends EntityTester
+class TrailerEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

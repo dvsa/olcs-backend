@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class FeeTypeTest extends EntityTester
+class FeeTypeEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

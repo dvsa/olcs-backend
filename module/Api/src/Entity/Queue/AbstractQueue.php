@@ -106,7 +106,11 @@ abstract class AbstractQueue
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="options", length=4000, nullable=false, options={"default": ""})
+     * @ORM\Column(type="string",
+     *     name="options",
+     *     length=4000,
+     *     nullable=false,
+     *     options={"default": ""})
      */
     protected $options = '';
 

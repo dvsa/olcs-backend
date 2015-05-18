@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class InspectionRequestTest extends EntityTester
+class InspectionRequestEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

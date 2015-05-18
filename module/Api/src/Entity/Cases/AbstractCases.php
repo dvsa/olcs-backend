@@ -65,7 +65,11 @@ abstract class AbstractCases
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="cases", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="cases",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="case_category",
      *     joinColumns={
      *         @ORM\JoinColumn(name="case_id", referencedColumnName="id")
@@ -222,7 +226,11 @@ abstract class AbstractCases
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="cases")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="cases"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -259,7 +267,11 @@ abstract class AbstractCases
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="casess", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="casess",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="case_outcome",
      *     joinColumns={
      *         @ORM\JoinColumn(name="cases_id", referencedColumnName="id")
@@ -395,7 +407,11 @@ abstract class AbstractCases
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement", mappedBy="case", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\SeriousInfringement",
+     *     mappedBy="case",
+     *     cascade={"persist"}
+     * )
      */
     protected $seriousInfringements;
 

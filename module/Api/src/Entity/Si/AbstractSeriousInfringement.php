@@ -18,16 +18,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="serious_infringement",
  *    indexes={
  *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_serious_infringement_erru_response_user_id", columns={"erru_response_user_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_erru_response_user_id",
+     *     columns={"erru_response_user_id"}),
  *        @ORM\Index(name="ix_serious_infringement_member_state_code", columns={"member_state_code"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_id", columns={"si_category_id"}),
- *        @ORM\Index(name="ix_serious_infringement_si_category_type_id", columns={"si_category_type_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_si_category_type_id",
+     *     columns={"si_category_type_id"}),
  *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type", columns={"olbs_key","olbs_type"}),
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number", columns={"notification_number"}),
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type",
+     *     columns={"olbs_key","olbs_type"}),
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number",
+     *     columns={"notification_number"}),
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_workflow_id", columns={"workflow_id"})
  *    }
  * )
@@ -40,7 +44,11 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="seriousInfringements")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="seriousInfringements"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -248,7 +256,10 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed", mappedBy="seriousInfringement")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed",
+     *     mappedBy="seriousInfringement"
+     * )
      */
     protected $imposedErrus;
 
@@ -257,7 +268,10 @@ abstract class AbstractSeriousInfringement
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested", mappedBy="seriousInfringement")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested",
+     *     mappedBy="seriousInfringement"
+     * )
      */
     protected $requestedErrus;
 

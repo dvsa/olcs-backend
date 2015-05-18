@@ -14,7 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="private_hire_licence",
  *    indexes={
  *        @ORM\Index(name="ix_private_hire_licence_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_private_hire_licence_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_private_hire_licence_contact_details_id",
+     *     columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_private_hire_licence_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_private_hire_licence_last_modified_by", columns={"last_modified_by"})
  *    },
@@ -90,7 +91,11 @@ abstract class AbstractPrivateHireLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="privateHireLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="privateHireLicences"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;

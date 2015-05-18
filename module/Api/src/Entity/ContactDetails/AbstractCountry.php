@@ -66,7 +66,11 @@ abstract class AbstractCountry
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth", mappedBy="countrys", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
      */
     protected $irfoPsvAuths;
 

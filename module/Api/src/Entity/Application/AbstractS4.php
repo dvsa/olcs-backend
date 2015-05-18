@@ -49,7 +49,11 @@ abstract class AbstractS4
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", mappedBy="s4s", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     mappedBy="s4s",
+     *     fetch="LAZY"
+     * )
      */
     protected $conditions;
 

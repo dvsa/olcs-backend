@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TmCaseDecisionTest extends EntityTester
+class TmCaseDecisionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

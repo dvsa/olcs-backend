@@ -156,7 +156,10 @@ abstract class AbstractVehicle
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="section_26_curtail", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean",
+     *     name="section_26_curtail",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $section26Curtail = 0;
 
@@ -165,7 +168,10 @@ abstract class AbstractVehicle
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="section_26_revoked", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean",
+     *     name="section_26_revoked",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $section26Revoked = 0;
 
@@ -174,7 +180,10 @@ abstract class AbstractVehicle
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="section_26_suspend", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean",
+     *     name="section_26_suspend",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $section26Suspend = 0;
 

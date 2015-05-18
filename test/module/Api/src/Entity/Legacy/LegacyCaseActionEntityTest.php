@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Legacy\LegacyCaseAction as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LegacyCaseActionTest extends EntityTester
+class LegacyCaseActionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SubCategoryTest extends EntityTester
+class SubCategoryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

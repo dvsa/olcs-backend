@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TmQualification as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TmQualificationTest extends EntityTester
+class TmQualificationEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

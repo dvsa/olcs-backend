@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PrivateHireLicenceTest extends EntityTester
+class PrivateHireLicenceEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
