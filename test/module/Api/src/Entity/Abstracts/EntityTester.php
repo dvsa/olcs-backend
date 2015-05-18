@@ -95,9 +95,9 @@ abstract class EntityTester extends MockeryTestCase
             $this->assertEquals(date('Y-m-d'), $entity->getCreatedOn()->format('Y-m-d'));
         }
 
-        if (method_exists($entity, 'setLastModifiedOnBeforePersist')) {
+        if (method_exists($entity, 'setLastModifiedOnBeforeUpdate')) {
             $tested = true;
-            $entity->setLastModifiedOnBeforePersist();
+            $entity->setLastModifiedOnBeforeUpdate();
             $this->assertEquals(date('Y-m-d'), $entity->getLastModifiedOn()->format('Y-m-d'));
         }
 
