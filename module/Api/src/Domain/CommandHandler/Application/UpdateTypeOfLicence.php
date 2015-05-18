@@ -14,10 +14,10 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication;
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
-use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as ResetApplicationCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as GenerateLicenceNumberCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
 
 /**
@@ -113,7 +113,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
     private function createCreateApplicationFeeCommand(Application $application)
     {
-        return CreateApplicationFee::create(['id' => $application->getId()]);
+        return CreateApplicationFeeCommand::create(['id' => $application->getId()]);
     }
 
     private function createCancelLicenceFeesCommand(Licence $licence)
@@ -123,17 +123,17 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
     private function createGenerateLicenceNumberCommand(Application $application)
     {
-        return GenerateLicenceNumber::create(['id' => $application->getId()]);
+        return GenerateLicenceNumberCommand::create(['id' => $application->getId()]);
     }
 
     private function createUpdateApplicationCompletionCommand(Application $application)
     {
-        return UpdateApplicationCompletion::create(['id' => $application->getId(), 'section' => 'typeOfLicence']);
+        return UpdateApplicationCompletionCommand::create(['id' => $application->getId(), 'section' => 'typeOfLicence']);
     }
 
     private function createResetApplicationCommand(Cmd $command)
     {
-        return ResetApplication::create($command->getArrayCopy());
+        return ResetApplicationCommand::create($command->getArrayCopy());
     }
 
     /**

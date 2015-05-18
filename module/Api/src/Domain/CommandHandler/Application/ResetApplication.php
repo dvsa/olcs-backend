@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
-use Dvsa\Olcs\Transfer\Command\Application\CreateApplication;
+use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 
@@ -92,7 +92,7 @@ final class ResetApplication extends AbstractCommandHandler
         $data['organisation'] = $organisation->getId();
 
         return $this->getCommandHandler()->handleCommand(
-            CreateApplication::create($data)
+            CreateApplicationCommand::create($data)
         );
     }
 
