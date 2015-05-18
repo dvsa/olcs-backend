@@ -82,7 +82,9 @@ class ServiceAbstractTest extends MockeryTestCase
      */
     public function testGetEntityName()
     {
-        $this->assertEquals('\Olcs\Db\Entity\Foo', $this->sut->getEntityName());
+        $this->sm->setService('Config', ['entity_namespaces' => ['Foo' => 'FooSpace']]);
+
+        $this->assertEquals('\Dvsa\Olcs\Api\Entity\FooSpace\Foo', $this->sut->getEntityName());
     }
 
     /**
@@ -632,6 +634,8 @@ class ServiceAbstractTest extends MockeryTestCase
 
         $mockEntity = null;
 
+        $this->sm->setService('Config', ['entity_namespaces' => ['Foo' => 'FooSpace']]);
+
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
@@ -753,6 +757,8 @@ class ServiceAbstractTest extends MockeryTestCase
 
         $mockEntity = null;
 
+        $this->sm->setService('Config', ['entity_namespaces' => ['Foo' => 'FooSpace']]);
+
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
@@ -782,6 +788,7 @@ class ServiceAbstractTest extends MockeryTestCase
      */
     public function testCreateWithCascade()
     {
+        $this->sm->setService('Config', ['entity_namespaces' => ['EntityStub' => '']]);
         $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
 

@@ -169,6 +169,11 @@ abstract class AbstractReason
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->submissionActions = new ArrayCollection();
         $this->pis = new ArrayCollection();
         $this->proposeToRevokes = new ArrayCollection();

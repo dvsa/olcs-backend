@@ -22,7 +22,7 @@ class YesNoNullTypeTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (!YesNoNullType::hasType('yesnonull')) {
-            YesNoNullType::addType('yesnonull', 'Olcs\Db\Entity\Types\YesNoNullType');
+            YesNoNullType::addType('yesnonull', YesNoNullType::class);
         }
         $this->type = YesNoNullType::getType('yesnonull');
     }

@@ -332,6 +332,11 @@ abstract class AbstractIrfoPsvAuth
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->countrys = new ArrayCollection();
         $this->irfoPsvAuthNumbers = new ArrayCollection();
     }

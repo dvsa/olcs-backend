@@ -175,6 +175,11 @@ abstract class AbstractPublication
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->publicationLinks = new ArrayCollection();
     }
 

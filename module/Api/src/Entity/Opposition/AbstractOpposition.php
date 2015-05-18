@@ -310,6 +310,11 @@ abstract class AbstractOpposition
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->grounds = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->documents = new ArrayCollection();

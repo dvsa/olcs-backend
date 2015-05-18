@@ -67,6 +67,11 @@ abstract class Abstract<?php echo $details['name']; ?>
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
 <?php foreach ($details['collections'] as $collection): ?>
         $this-><?php echo $collection['@attributes']['field']; ?>s = new ArrayCollection();
 <?php endforeach; ?>

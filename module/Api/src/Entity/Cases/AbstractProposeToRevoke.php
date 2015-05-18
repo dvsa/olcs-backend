@@ -152,6 +152,11 @@ abstract class AbstractProposeToRevoke
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->reasons = new ArrayCollection();
     }
 

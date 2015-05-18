@@ -455,6 +455,11 @@ abstract class AbstractPi
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->piTypes = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->reasons = new ArrayCollection();

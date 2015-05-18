@@ -274,6 +274,11 @@ abstract class AbstractOrganisation
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->natureOfBusinesses = new ArrayCollection();
         $this->irfoPartners = new ArrayCollection();
         $this->licences = new ArrayCollection();

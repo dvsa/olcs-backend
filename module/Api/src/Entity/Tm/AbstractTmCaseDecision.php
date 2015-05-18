@@ -228,6 +228,11 @@ abstract class AbstractTmCaseDecision
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->unfitnessReasons = new ArrayCollection();
         $this->rehabMeasures = new ArrayCollection();
     }

@@ -155,6 +155,11 @@ abstract class AbstractSubmission
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->submissionActions = new ArrayCollection();
         $this->submissionSectionComments = new ArrayCollection();
     }

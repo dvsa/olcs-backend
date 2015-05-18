@@ -320,6 +320,11 @@ abstract class AbstractDocument
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->templates = new ArrayCollection();
     }
 

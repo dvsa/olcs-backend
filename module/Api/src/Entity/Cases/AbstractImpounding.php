@@ -221,6 +221,11 @@ abstract class AbstractImpounding
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->impoundingLegislationTypes = new ArrayCollection();
     }
 

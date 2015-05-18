@@ -721,6 +721,11 @@ abstract class AbstractApplication
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->operatingCentres = new ArrayCollection();
         $this->applicationOrganisationPersons = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();

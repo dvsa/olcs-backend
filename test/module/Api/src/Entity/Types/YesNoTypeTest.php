@@ -22,7 +22,7 @@ class YesNoTypeTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (!YesNoType::hasType('yesno')) {
-            YesNoType::addType('yesno', 'Olcs\Db\Entity\Types\YesNoType');
+            YesNoType::addType('yesno', YesNoType::class);
         }
         $this->type = YesNoType::getType('yesno');
     }

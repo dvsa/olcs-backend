@@ -113,6 +113,11 @@ abstract class AbstractDocBookmark
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->docParagraphBookmarks = new ArrayCollection();
     }
 
