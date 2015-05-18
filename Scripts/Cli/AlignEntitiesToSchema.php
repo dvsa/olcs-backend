@@ -534,16 +534,20 @@ class AlignEntitiesToSchema
 
     protected function findNamespace($name)
     {
-        return self::ENTITY_NAMESPACE . $this->findRelativeNamespace($name);
+        return rtrim(self::ENTITY_NAMESPACE . $this->findRelativeNamespace($name), '\\');
     }
 
     protected function findRelativeNamespace($name)
     {
+        if (!isset($this->entityConfig['namespaces'][$name])) {
+            return '';
+        }
+
         return $this->entityConfig['namespaces'][$name];
     }
 
     /**
-     * Get a list of id proeprties from the fields
+     * Get a list of id properties from the fields
      *
      * @param array $fields
      * @return array

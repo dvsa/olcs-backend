@@ -821,6 +821,17 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'irfo_psv_auth_number' => array(
+        'irfo_psv_auth_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrfoPsvAuth',
+                'property' => 'irfoPsvAuthNumber',
+                'cascade' => array(
+                    'persist'
+                ),
+            )
+        ),
+    ),
     'irfo_partner' => array(
         'organisation_id' => array(
             'inversedBy' => array(
@@ -835,6 +846,11 @@ return array(
     'note' => array(
         'priority' => array(
             'type' => 'yesno'
+        )
+    ),
+    'submission' => array(
+        'urgent' => array(
+            'type' => 'yesnonull'
         )
     ),
     'submission_action' => array(
