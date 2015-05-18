@@ -7,19 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Application;
 
-use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
  * Create Application Fee
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplicationFee extends AbstractCommand
+final class CreateApplicationFee extends AbstractIdOnlyCommand
 {
-    protected $id;
 
-    public function getId()
-    {
-        return $this->id;
-    }
 }

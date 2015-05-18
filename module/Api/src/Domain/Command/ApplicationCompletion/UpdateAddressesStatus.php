@@ -7,19 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion;
 
-use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
  * Update Addresses Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateAddressesStatus extends AbstractCommand
+final class UpdateAddressesStatus extends AbstractIdOnlyCommand
 {
-    protected $id;
 
-    public function getId()
-    {
-        return $this->id;
-    }
 }

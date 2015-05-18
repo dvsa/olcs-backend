@@ -45,27 +45,11 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @param mixed $category
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return mixed
      */
     public function getSubCategory()
     {
         return $this->subCategory;
-    }
-
-    /**
-     * @param mixed $subCategory
-     */
-    public function setSubCategory($subCategory)
-    {
-        $this->subCategory = $subCategory;
     }
 
     /**
@@ -77,27 +61,11 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
      * @return mixed
      */
     public function getActionDate()
     {
         return $this->actionDate;
-    }
-
-    /**
-     * @param mixed $actionDate
-     */
-    public function setActionDate($actionDate)
-    {
-        $this->actionDate = $actionDate;
     }
 
     /**
@@ -109,27 +77,11 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @param mixed $assignedToUser
-     */
-    public function setAssignedToUser($assignedToUser)
-    {
-        $this->assignedToUser = $assignedToUser;
-    }
-
-    /**
      * @return mixed
      */
     public function getAssignedToTeam()
     {
         return $this->assignedToTeam;
-    }
-
-    /**
-     * @param mixed $assignedToTeam
-     */
-    public function setAssignedToTeam($assignedToTeam)
-    {
-        $this->assignedToTeam = $assignedToTeam;
     }
 
     /**
@@ -141,27 +93,11 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @param boolean $isClosed
-     */
-    public function setIsClosed($isClosed)
-    {
-        $this->isClosed = $isClosed;
-    }
-
-    /**
      * @return boolean
      */
     public function getUrgent()
     {
         return $this->urgent;
-    }
-
-    /**
-     * @param boolean $urgent
-     */
-    public function setUrgent($urgent)
-    {
-        $this->urgent = $urgent;
     }
 
     /**
@@ -173,26 +109,10 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @param mixed $application
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-    }
-
-    /**
      * @return mixed
      */
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * @param mixed $licence
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
     }
 }

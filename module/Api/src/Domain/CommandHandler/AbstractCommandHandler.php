@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
+abstract class AbstractCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var RepositoryInterface

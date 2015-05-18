@@ -42,27 +42,11 @@ final class CreateFee extends AbstractCommand
     }
 
     /**
-     * @param mixed $application
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-    }
-
-    /**
      * @return mixed
      */
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * @param mixed $licence
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
     }
 
     /**
@@ -74,27 +58,11 @@ final class CreateFee extends AbstractCommand
     }
 
     /**
-     * @param mixed $task
-     */
-    public function setTask($task)
-    {
-        $this->task = $task;
-    }
-
-    /**
      * @return mixed
      */
     public function getAmount()
     {
         return $this->amount;
-    }
-
-    /**
-     * @param mixed $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
     }
 
     /**
@@ -106,27 +74,11 @@ final class CreateFee extends AbstractCommand
     }
 
     /**
-     * @param mixed $invoicedDate
-     */
-    public function setInvoicedDate($invoicedDate)
-    {
-        $this->invoicedDate = $invoicedDate;
-    }
-
-    /**
      * @return mixed
      */
     public function getFeeType()
     {
         return $this->feeType;
-    }
-
-    /**
-     * @param mixed $feeType
-     */
-    public function setFeeType($feeType)
-    {
-        $this->feeType = $feeType;
     }
 
     /**
@@ -138,26 +90,10 @@ final class CreateFee extends AbstractCommand
     }
 
     /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
      * @return string
      */
     public function getFeeStatus()
     {
         return $this->feeStatus;
-    }
-
-    /**
-     * @param string $feeStatus
-     */
-    public function setFeeStatus($feeStatus)
-    {
-        $this->feeStatus = $feeStatus;
     }
 }

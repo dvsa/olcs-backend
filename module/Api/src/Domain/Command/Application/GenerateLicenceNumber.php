@@ -7,19 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Application;
 
-use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
  * Generate Licence Number
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class GenerateLicenceNumber extends AbstractCommand
+final class GenerateLicenceNumber extends AbstractIdOnlyCommand
 {
-    protected $id;
 
-    public function getId()
-    {
-        return $this->id;
-    }
 }

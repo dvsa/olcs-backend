@@ -8,13 +8,14 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\ServiceManager\FactoryInterface;
 
 /**
  * Command Handler Interface
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-interface CommandHandlerInterface
+interface CommandHandlerInterface extends FactoryInterface
 {
     /**
      * @param CommandInterface $command

@@ -7,19 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion;
 
-use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
  * Update Vehicles Status
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateVehiclesStatus extends AbstractCommand
+final class UpdateVehiclesStatus extends AbstractIdOnlyCommand
 {
-    protected $id;
 
-    public function getId()
-    {
-        return $this->id;
-    }
 }
