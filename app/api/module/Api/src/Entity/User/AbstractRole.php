@@ -131,6 +131,11 @@ abstract class AbstractRole
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->rolePermissions = new ArrayCollection();
         $this->roles = new ArrayCollection();
     }

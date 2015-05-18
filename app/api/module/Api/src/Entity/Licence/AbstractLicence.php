@@ -635,6 +635,11 @@ abstract class AbstractLicence
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->applications = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->changeOfEntitys = new ArrayCollection();

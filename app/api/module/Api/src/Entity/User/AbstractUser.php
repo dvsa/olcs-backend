@@ -374,6 +374,11 @@ abstract class AbstractUser
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->organisationUsers = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
     }

@@ -226,6 +226,11 @@ abstract class AbstractLicenceVehicle
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->goodsDiscs = new ArrayCollection();
     }
 

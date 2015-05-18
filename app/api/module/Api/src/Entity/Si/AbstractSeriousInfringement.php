@@ -265,6 +265,11 @@ abstract class AbstractSeriousInfringement
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->appliedPenalties = new ArrayCollection();
         $this->imposedErrus = new ArrayCollection();
         $this->requestedErrus = new ArrayCollection();

@@ -237,6 +237,11 @@ abstract class AbstractAddress
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->contactDetails = new ArrayCollection();
     }
 

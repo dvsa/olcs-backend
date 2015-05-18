@@ -172,6 +172,11 @@ abstract class AbstractOperatingCentre
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->transportManagerLicences = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->transportManagerApplications = new ArrayCollection();

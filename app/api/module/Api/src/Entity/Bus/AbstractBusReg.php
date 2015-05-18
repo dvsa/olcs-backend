@@ -707,6 +707,11 @@ abstract class AbstractBusReg
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->variationReasons = new ArrayCollection();
         $this->trafficAreas = new ArrayCollection();
         $this->localAuthoritys = new ArrayCollection();

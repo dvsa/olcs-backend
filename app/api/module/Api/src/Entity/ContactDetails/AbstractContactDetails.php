@@ -196,6 +196,11 @@ abstract class AbstractContactDetails
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->phoneContacts = new ArrayCollection();
     }
 

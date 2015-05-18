@@ -369,6 +369,11 @@ abstract class AbstractFee
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->feePayments = new ArrayCollection();
     }
 

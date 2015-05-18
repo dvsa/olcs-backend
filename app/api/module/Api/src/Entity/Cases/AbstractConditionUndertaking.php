@@ -279,6 +279,11 @@ abstract class AbstractConditionUndertaking
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->s4s = new ArrayCollection();
         $this->variationRecords = new ArrayCollection();
     }

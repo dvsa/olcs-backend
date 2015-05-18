@@ -155,6 +155,11 @@ abstract class AbstractDocTemplate
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->docTemplateBookmarks = new ArrayCollection();
     }
 

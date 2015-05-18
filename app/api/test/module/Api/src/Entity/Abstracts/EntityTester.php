@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Instantiator\Instantiator;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
@@ -41,13 +42,26 @@ abstract class EntityTester extends MockeryTestCase
         return $this->entityClass;
     }
 
+    protected function instantiate($entityName)
+    {
+        $instantiator = new Instantiator();
+
+        $object = $instantiator->instantiate($entityName);
+
+        if (method_exists($object, 'initCollections')) {
+            $object->initCollections();
+        }
+
+        return $object;
+    }
+
     /**
      * @dataProvider providerGettersAndSetters
      */
     public function testGettersAndSetters($methodName, $testValue)
     {
         $classToTestName = $this->getClassToTestName();
-        $entity = new $classToTestName();
+        $entity = $this->instantiate($classToTestName);
 
         $entity->{'set' . $methodName}($testValue);
         $this->assertSame($testValue, $entity->{'get' . $methodName}());
@@ -60,10 +74,11 @@ abstract class EntityTester extends MockeryTestCase
     {
         if ($methodName == null) {
             $this->assertTrue(true); // Just mark the test as passed as there are no methods to test
+            return;
         }
 
         $classToTestName = $this->getClassToTestName();
-        $entity = new $classToTestName();
+        $entity = $this->instantiate($classToTestName);
 
         $this->assertEquals(0, count($entity->{'get' . $methodName}()));
 
@@ -91,6 +106,14 @@ abstract class EntityTester extends MockeryTestCase
     public function providerGettersAndSetters()
     {
         $classToTestName = $this->getClassToTestName();
+
+        $parts = explode('\\', $classToTestName);
+
+        $class = array_pop($parts);
+        $class = 'Abstract' . $class;
+
+        $classToTestName = implode('\\', $parts) . '\\' . $class;
+
         $reflection = new \ReflectionClass($classToTestName);
 
         $methods = $reflection->getMethods();
@@ -131,6 +154,14 @@ abstract class EntityTester extends MockeryTestCase
     public function providerAddMethods()
     {
         $classToTestName = $this->getClassToTestName();
+
+        $parts = explode('\\', $classToTestName);
+
+        $class = array_pop($parts);
+        $class = 'Abstract' . $class;
+
+        $classToTestName = implode('\\', $parts) . '\\' . $class;
+
         $reflection = new \ReflectionClass($classToTestName);
 
         $methods = $reflection->getMethods();

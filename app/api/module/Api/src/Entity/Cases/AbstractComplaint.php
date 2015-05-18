@@ -223,6 +223,11 @@ abstract class AbstractComplaint
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->ocComplaints = new ArrayCollection();
     }
 

@@ -177,6 +177,11 @@ abstract class AbstractTrafficArea
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->recipients = new ArrayCollection();
         $this->busRegs = new ArrayCollection();
         $this->documents = new ArrayCollection();

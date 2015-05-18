@@ -59,6 +59,11 @@ abstract class AbstractBusServiceType
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->busRegs = new ArrayCollection();
     }
 

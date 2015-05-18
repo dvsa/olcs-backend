@@ -162,6 +162,11 @@ abstract class AbstractS4
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->conditions = new ArrayCollection();
     }
 

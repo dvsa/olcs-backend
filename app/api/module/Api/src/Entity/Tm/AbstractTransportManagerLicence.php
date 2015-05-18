@@ -240,6 +240,11 @@ abstract class AbstractTransportManagerLicence
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->operatingCentres = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
     }

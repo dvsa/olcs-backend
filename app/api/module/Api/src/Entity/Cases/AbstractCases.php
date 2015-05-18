@@ -430,6 +430,11 @@ abstract class AbstractCases
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->outcomes = new ArrayCollection();
         $this->categorys = new ArrayCollection();
         $this->appeals = new ArrayCollection();

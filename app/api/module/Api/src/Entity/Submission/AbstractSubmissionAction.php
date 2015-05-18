@@ -180,6 +180,11 @@ abstract class AbstractSubmissionAction
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->actionTypes = new ArrayCollection();
         $this->reasons = new ArrayCollection();
     }

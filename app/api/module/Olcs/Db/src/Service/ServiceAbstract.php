@@ -747,6 +747,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
     {
         $namespaces = $this->getServiceLocator()->get('Config')['entity_namespaces'];
 
+        if (empty($namespaces[$entity])) {
+            return $this->entityNamespace . $entity;
+        }
+
         return $this->entityNamespace . $namespaces[$entity] . '\\' . $entity;
     }
 

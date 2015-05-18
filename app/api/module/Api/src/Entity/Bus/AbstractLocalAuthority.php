@@ -142,6 +142,11 @@ abstract class AbstractLocalAuthority
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->busRegs = new ArrayCollection();
     }
 

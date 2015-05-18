@@ -185,6 +185,11 @@ abstract class AbstractProhibition
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->defects = new ArrayCollection();
     }
 

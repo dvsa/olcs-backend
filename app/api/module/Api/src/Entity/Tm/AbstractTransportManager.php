@@ -252,6 +252,11 @@ abstract class AbstractTransportManager
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->documents = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();

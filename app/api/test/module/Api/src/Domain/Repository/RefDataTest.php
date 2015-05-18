@@ -1,8 +1,8 @@
 <?php
 
-namespace OlcsTest\Db\Entity\Repository;
+namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Olcs\Db\Entity\Repository\RefData;
+use Dvsa\Olcs\Api\Domain\Repository\RefData;
 
 /**
  * Class RefDataTest

@@ -142,6 +142,11 @@ abstract class AbstractDecision
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->pis = new ArrayCollection();
     }
 

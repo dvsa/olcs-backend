@@ -7,6 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\Db\Service\Organisation;
 use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 
 /**
  * Class OrganisationTest
@@ -80,13 +81,13 @@ class OrganisationTest extends TestCase
             ]
         );
 
-        $mockEntity = $this->getMock('\Olcs\Db\Entity\Organisation', array('clearProperties'));
+        $mockEntity = $this->getMock(OrganisationEntity::class, array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $this->isInstanceOf('\Olcs\Db\Entity\Organisation'))
+            ->with($data, $this->isInstanceOf(OrganisationEntity::class))
             ->will($this->returnValue($mockEntity));
 
         $this->em->expects($this->once())

@@ -180,6 +180,11 @@ abstract class AbstractRecipient
      */
     public function __construct()
     {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
         $this->trafficAreas = new ArrayCollection();
     }
 
