@@ -63,6 +63,7 @@ return [
     'IrfoPsvAuthType' => 'Irfo',
     'IrfoTransitCountry' => 'Irfo',
     'IrfoVehicle' => 'Irfo',
+    'IrfoPsvAuthNumber' => 'Irfo',
     'LegacyCaseAction' => 'Legacy',
     'LegacyOffence' => 'Legacy',
     'LegacyPiReason' => 'Legacy',

@@ -1,16 +1,17 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity\Irfo;
+namespace Olcs\Db\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Olcs\Db\Entity\Traits;
 
 /**
- * IrfoPsvAuth Abstract Entity
+ * IrfoPsvAuth Entity
  *
  * Auto-Generated
  *
- * @ORM\MappedSuperclass
+ * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth",
  *    indexes={
@@ -27,8 +28,23 @@ use Doctrine\Common\Collections\ArrayCollection;
  *    }
  * )
  */
-abstract class AbstractIrfoPsvAuth
+class IrfoPsvAuth implements Interfaces\EntityInterface
 {
+    use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
+        Traits\ExemptionDetails255Field,
+        Traits\ExpiryDateField,
+        Traits\IdIdentity,
+        Traits\InForceDateField,
+        Traits\IrfoFeeId10Field,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
+        Traits\OlbsKeyField,
+        Traits\OrganisationManyToOne,
+        Traits\StatusManyToOne,
+        Traits\CustomVersionField,
+        Traits\WithdrawnReasonManyToOne;
 
     /**
      * Application sent date
@@ -80,7 +96,7 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", inversedBy="irfoPsvAuths", fetch="LAZY")
+     * @ORM\ManyToMany(targetEntity="Olcs\Db\Entity\Country", inversedBy="irfoPsvAuths")
      * @ORM\JoinTable(name="irfo_psv_auth_country",
      *     joinColumns={
      *         @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id")
@@ -91,72 +107,6 @@ abstract class AbstractIrfoPsvAuth
      * )
      */
     protected $countrys;
-
-    /**
-     * Created by
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
-     */
-    protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Exemption details
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="exemption_details", length=255, nullable=true)
-     */
-    protected $exemptionDetails;
-
-    /**
-     * Expiry date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="expiry_date", nullable=true)
-     */
-    protected $expiryDate;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
-
-    /**
-     * In force date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="in_force_date", nullable=true)
-     */
-    protected $inForceDate;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=true)
-     */
-    protected $irfoFeeId;
 
     /**
      * Irfo file no
@@ -170,9 +120,9 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Irfo psv auth type
      *
-     * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType
+     * @var \Olcs\Db\Entity\IrfoPsvAuthType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuthType")
      * @ORM\JoinColumn(name="irfo_psv_auth_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irfoPsvAuthType;
@@ -198,9 +148,9 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Journey frequency
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     * @var \Olcs\Db\Entity\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\RefData")
      * @ORM\JoinColumn(name="journey_frequency", referencedColumnName="id", nullable=true)
      */
     protected $journeyFrequency;
@@ -213,44 +163,6 @@ abstract class AbstractIrfoPsvAuth
      * @ORM\Column(type="datetime", name="last_date_copies_req", nullable=true)
      */
     protected $lastDateCopiesReq;
-
-    /**
-     * Last modified by
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
-     */
-    protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
-
-    /**
-     * Organisation
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $organisation;
 
     /**
      * Renewal date
@@ -280,16 +192,6 @@ abstract class AbstractIrfoPsvAuth
     protected $serviceRouteTo;
 
     /**
-     * Status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
-     */
-    protected $status;
-
-    /**
      * Validity period
      *
      * @var int
@@ -299,31 +201,11 @@ abstract class AbstractIrfoPsvAuth
     protected $validityPeriod;
 
     /**
-     * Version
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
-     * @ORM\Version
-     */
-    protected $version = 1;
-
-    /**
-     * Withdrawn reason
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="withdrawn_reason", referencedColumnName="id", nullable=true)
-     */
-    protected $withdrawnReason;
-
-    /**
      * Irfo psv auth number
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber", mappedBy="irfoPsvAuth", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Olcs\Db\Entity\IrfoPsvAuthNumber", mappedBy="irfoPsvAuth", cascade={"persist"})
      */
     protected $irfoPsvAuthNumbers;
 
@@ -512,167 +394,6 @@ abstract class AbstractIrfoPsvAuth
     }
 
     /**
-     * Set the created by
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return IrfoPsvAuth
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn
-     * @return IrfoPsvAuth
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn()
-    {
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the exemption details
-     *
-     * @param string $exemptionDetails
-     * @return IrfoPsvAuth
-     */
-    public function setExemptionDetails($exemptionDetails)
-    {
-        $this->exemptionDetails = $exemptionDetails;
-
-        return $this;
-    }
-
-    /**
-     * Get the exemption details
-     *
-     * @return string
-     */
-    public function getExemptionDetails()
-    {
-        return $this->exemptionDetails;
-    }
-
-    /**
-     * Set the expiry date
-     *
-     * @param \DateTime $expiryDate
-     * @return IrfoPsvAuth
-     */
-    public function setExpiryDate($expiryDate)
-    {
-        $this->expiryDate = $expiryDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the expiry date
-     *
-     * @return \DateTime
-     */
-    public function getExpiryDate()
-    {
-        return $this->expiryDate;
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id
-     * @return IrfoPsvAuth
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the in force date
-     *
-     * @param \DateTime $inForceDate
-     * @return IrfoPsvAuth
-     */
-    public function setInForceDate($inForceDate)
-    {
-        $this->inForceDate = $inForceDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the in force date
-     *
-     * @return \DateTime
-     */
-    public function getInForceDate()
-    {
-        return $this->inForceDate;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return IrfoPsvAuth
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
-    }
-
-    /**
      * Set the irfo file no
      *
      * @param string $irfoFileNo
@@ -698,7 +419,7 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Set the irfo psv auth type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType $irfoPsvAuthType
+     * @param \Olcs\Db\Entity\IrfoPsvAuthType $irfoPsvAuthType
      * @return IrfoPsvAuth
      */
     public function setIrfoPsvAuthType($irfoPsvAuthType)
@@ -711,7 +432,7 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Get the irfo psv auth type
      *
-     * @return \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType
+     * @return \Olcs\Db\Entity\IrfoPsvAuthType
      */
     public function getIrfoPsvAuthType()
     {
@@ -767,7 +488,7 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Set the journey frequency
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $journeyFrequency
+     * @param \Olcs\Db\Entity\RefData $journeyFrequency
      * @return IrfoPsvAuth
      */
     public function setJourneyFrequency($journeyFrequency)
@@ -780,7 +501,7 @@ abstract class AbstractIrfoPsvAuth
     /**
      * Get the journey frequency
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     * @return \Olcs\Db\Entity\RefData
      */
     public function getJourneyFrequency()
     {
@@ -808,98 +529,6 @@ abstract class AbstractIrfoPsvAuth
     public function getLastDateCopiesReq()
     {
         return $this->lastDateCopiesReq;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
-     * @return IrfoPsvAuth
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn
-     * @return IrfoPsvAuth
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn()
-    {
-        return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return IrfoPsvAuth
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
-     * @return IrfoPsvAuth
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 
     /**
@@ -972,29 +601,6 @@ abstract class AbstractIrfoPsvAuth
     }
 
     /**
-     * Set the status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
-     * @return IrfoPsvAuth
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the status
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set the validity period
      *
      * @param int $validityPeriod
@@ -1015,52 +621,6 @@ abstract class AbstractIrfoPsvAuth
     public function getValidityPeriod()
     {
         return $this->validityPeriod;
-    }
-
-    /**
-     * Set the version
-     *
-     * @param int $version
-     * @return IrfoPsvAuth
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the version
-     *
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the withdrawn reason
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason
-     * @return IrfoPsvAuth
-     */
-    public function setWithdrawnReason($withdrawnReason)
-    {
-        $this->withdrawnReason = $withdrawnReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the withdrawn reason
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getWithdrawnReason()
-    {
-        return $this->withdrawnReason;
     }
 
     /**
@@ -1121,47 +681,5 @@ abstract class AbstractIrfoPsvAuth
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param type $properties
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }
