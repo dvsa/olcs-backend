@@ -203,7 +203,7 @@ class AlignEntitiesToSchema
 
             $this->createEntities();
 
-            $this->removeOldUnitTests();
+            //$this->removeOldUnitTests();
 
             $this->createUnitTests();
 
@@ -445,7 +445,7 @@ class AlignEntitiesToSchema
                 'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
                 'translatable' => $this->hasTranslatableField($fields),
-                'className' => $config['entity']['@attributes']['name'],
+                'className' => $namespace . '\\' . $camelCaseName,
                 'table' => $config['entity']['@attributes']['table'],
                 'ids' => $this->getIdsFromFields($fields),
                 'indexes' => $this->getIndexesFromConfig($config),
@@ -720,23 +720,24 @@ class AlignEntitiesToSchema
         $this->respond('Removing old entity unit tests...', 'info');
 
         $directory = $this->options['test-files'];
-
         $error = false;
 
-        foreach (new DirectoryIterator($directory) as $fileInfo) {
+        $di = new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS);
+        $ri = new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($ri as $file) {
+            if ($file->isFile()) {
+                $fileName = $file->getFilename();
+                $filePath = $file->getPath() . '/' . $fileName;
 
-            if ($fileInfo->isDot() || $fileInfo->isDir()) {
-                continue;
-            }
-
-            $fileName = $fileInfo->getFilename();
-
-            unlink($directory . $fileName);
-            if (!file_exists($directory . $fileName)) {
-                $this->respond('Removed: ' . $fileName);
-            } else {
-                $error = true;
-                $this->respond('Unable to remove: ' . $fileName, 'error');
+                if (preg_match('/([^.]+)EntityTest.php/', $fileName)) {
+                    unlink($filePath);
+                    if (!file_exists($filePath)) {
+                        $this->respond('Removed: ' . $filePath);
+                    } else {
+                        $error = true;
+                        $this->respond('Unable to remove: ' . $filePath, 'error');
+                    }
+                }
             }
         }
 
@@ -757,6 +758,11 @@ class AlignEntitiesToSchema
         $error = false;
 
         foreach ($this->entities as $className => $details) {
+
+            // Skip the file if it exists
+            if (file_exists($details['testFileName'])) {
+                continue;
+            }
 
             ob_start();
                 include(__DIR__ . '/templates/test-entity.phtml');
@@ -1261,7 +1267,7 @@ class AlignEntitiesToSchema
         $classNameParts = explode('\\', $className);
 
         return sprintf(
-            '%s/%s/Abstract%sTest.php',
+            '%s/%s/%sEntityTest.php',
             rtrim($this->options['test-files'], '/'),
             $relativeNamespace,
             array_pop($classNameParts)
