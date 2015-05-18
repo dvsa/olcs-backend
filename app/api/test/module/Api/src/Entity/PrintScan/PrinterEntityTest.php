@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\Printer as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PrinterTest extends EntityTester
+class PrinterEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

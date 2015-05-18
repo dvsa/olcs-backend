@@ -36,7 +36,12 @@ abstract class AbstractContactDetails
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Address
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Address", fetch="LAZY", cascade={"persist"}, inversedBy="contactDetails")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Address",
+     *     fetch="LAZY",
+     *     cascade={"persist"},
+     *     inversedBy="contactDetails"
+     * )
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;
@@ -159,7 +164,12 @@ abstract class AbstractContactDetails
      *
      * @var \Dvsa\Olcs\Api\Entity\Person\Person
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Person\Person", fetch="LAZY", cascade={"persist"}, inversedBy="contactDetails")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Person\Person",
+     *     fetch="LAZY",
+     *     cascade={"persist"},
+     *     inversedBy="contactDetails"
+     * )
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
      */
     protected $person;
@@ -179,7 +189,10 @@ abstract class AbstractContactDetails
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="written_permission_to_engage", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="written_permission_to_engage",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $writtenPermissionToEngage = 0;
 
@@ -188,7 +201,11 @@ abstract class AbstractContactDetails
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact", mappedBy="contactDetails", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact",
+     *     mappedBy="contactDetails",
+     *     cascade={"persist"}
+     * )
      */
     protected $phoneContacts;
 

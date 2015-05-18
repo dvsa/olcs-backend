@@ -15,7 +15,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_qualification",
  *    indexes={
- *        @ORM\Index(name="ix_tm_qualification_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_tm_qualification_transport_manager_id",
+     *     columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_tm_qualification_country_code", columns={"country_code"}),
  *        @ORM\Index(name="ix_tm_qualification_qualification_type", columns={"qualification_type"}),
  *        @ORM\Index(name="ix_tm_qualification_created_by", columns={"created_by"}),
@@ -139,7 +140,11 @@ abstract class AbstractTmQualification
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY", inversedBy="qualifications")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
+     *     fetch="LAZY",
+     *     inversedBy="qualifications"
+     * )
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
      */
     protected $transportManager;

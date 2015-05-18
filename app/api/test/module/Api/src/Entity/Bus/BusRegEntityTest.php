@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class BusRegTest extends EntityTester
+class BusRegEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

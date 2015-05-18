@@ -91,7 +91,11 @@ abstract class AbstractTradingName
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="tradingNames")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="tradingNames"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -119,7 +123,11 @@ abstract class AbstractTradingName
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY", inversedBy="tradingNames")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="tradingNames"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;

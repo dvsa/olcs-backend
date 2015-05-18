@@ -203,7 +203,7 @@ class AlignEntitiesToSchema
 
             $this->createEntities();
 
-            //$this->removeOldUnitTests();
+            $this->removeOldUnitTests();
 
             $this->createUnitTests();
 
@@ -1036,7 +1036,9 @@ class AlignEntitiesToSchema
                 }
 
                 if (isset($item['@attributes']['target-entity'])) {
-                    $item['@attributes']['target-entity'] = $this->replaceNamespace($item['@attributes']['target-entity']);
+                    $item['@attributes']['target-entity'] = $this->replaceNamespace(
+                        $item['@attributes']['target-entity']
+                    );
                 }
 
                 $fieldConfig = array(
@@ -1473,7 +1475,13 @@ class AlignEntitiesToSchema
             }
         }
 
-        return implode(', ', $options);
+        $string = implode(', ', $options);
+
+        if (strlen($string) > 80) {
+            return implode(",\n     *     ", $options);
+        }
+
+        return $string;
     }
 
     /**

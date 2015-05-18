@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class QueueTest extends EntityTester
+class QueueEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TmEmployment as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TmEmploymentTest extends EntityTester
+class TmEmploymentEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

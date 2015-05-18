@@ -100,7 +100,11 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition", mappedBy="operatingCentres", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition",
+     *     mappedBy="operatingCentres",
+     *     fetch="LAZY"
+     * )
      */
     protected $oppositions;
 
@@ -109,7 +113,11 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", mappedBy="operatingCentres", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
+     *     mappedBy="operatingCentres",
+     *     fetch="LAZY"
+     * )
      */
     protected $transportManagerApplications;
 
@@ -118,7 +126,11 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", mappedBy="operatingCentres", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence",
+     *     mappedBy="operatingCentres",
+     *     fetch="LAZY"
+     * )
      */
     protected $transportManagerLicences;
 
@@ -146,7 +158,10 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", mappedBy="operatingCentre")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     mappedBy="operatingCentre"
+     * )
      */
     protected $conditionUndertakings;
 
@@ -164,7 +179,10 @@ abstract class AbstractOperatingCentre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint", mappedBy="operatingCentre")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint",
+     *     mappedBy="operatingCentre"
+     * )
      */
     protected $ocComplaints;
 

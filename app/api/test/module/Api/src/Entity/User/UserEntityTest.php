@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\User as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class UserTest extends EntityTester
+class UserEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CorrespondenceInboxTest extends EntityTester
+class CorrespondenceInboxEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

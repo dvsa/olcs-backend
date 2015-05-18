@@ -18,8 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_other_licence_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_other_licence_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_other_licence_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_other_licence_transport_manager_application_id", columns={"transport_manager_application_id"}),
- *        @ORM\Index(name="fk_other_licence_transport_manager_licence1_idx", columns={"transport_manager_licence_id"}),
+ *        @ORM\Index(name="ix_other_licence_transport_manager_application_id",
+     *     columns={"transport_manager_application_id"}),
+ *        @ORM\Index(name="fk_other_licence_transport_manager_licence1_idx",
+     *     columns={"transport_manager_licence_id"}),
  *        @ORM\Index(name="fk_other_licence_ref_data1_idx", columns={"role"})
  *    }
  * )
@@ -41,7 +43,11 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="otherLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="otherLicences"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -192,7 +198,11 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY", inversedBy="otherLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
+     *     fetch="LAZY",
+     *     inversedBy="otherLicences"
+     * )
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
@@ -202,8 +212,14 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", fetch="LAZY", inversedBy="otherLicences")
-     * @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
+     *     fetch="LAZY",
+     *     inversedBy="otherLicences"
+     * )
+     * @ORM\JoinColumn(name="transport_manager_application_id",
+     *     referencedColumnName="id",
+     *     nullable=true)
      */
     protected $transportManagerApplication;
 
@@ -212,7 +228,11 @@ abstract class AbstractOtherLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", fetch="LAZY", inversedBy="otherLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence",
+     *     fetch="LAZY",
+     *     inversedBy="otherLicences"
+     * )
      * @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManagerLicence;

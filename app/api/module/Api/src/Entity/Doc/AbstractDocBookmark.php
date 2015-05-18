@@ -105,7 +105,10 @@ abstract class AbstractDocBookmark
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocParagraphBookmark", mappedBy="docBookmark")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocParagraphBookmark",
+     *     mappedBy="docBookmark"
+     * )
      */
     protected $docParagraphBookmarks;
 

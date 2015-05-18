@@ -37,7 +37,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
         }
 
-        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')->get($this->repoServiceName);
+        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+            ->get($this->repoServiceName);
         $this->queryHandler = $serviceLocator;
 
         return $this;

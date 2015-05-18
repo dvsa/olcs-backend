@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ContactDetailsTest extends EntityTester
+class ContactDetailsEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -54,7 +54,10 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="copies_issued_total", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint",
+     *     name="copies_issued_total",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $copiesIssuedTotal = 0;
 
@@ -72,7 +75,10 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="copies_required_total", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint",
+     *     name="copies_required_total",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $copiesRequiredTotal = 0;
 
@@ -81,7 +87,11 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", inversedBy="irfoPsvAuths", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="irfoPsvAuths",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="irfo_psv_auth_country",
      *     joinColumns={
      *         @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id")
@@ -183,7 +193,10 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_annual", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="is_fee_exempt_annual",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $isFeeExemptAnnual = 0;
 
@@ -192,7 +205,10 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_fee_exempt_application", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="is_fee_exempt_application",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $isFeeExemptApplication = 0;
 
@@ -324,7 +340,11 @@ abstract class AbstractIrfoPsvAuth
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber", mappedBy="irfoPsvAuth", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber",
+     *     mappedBy="irfoPsvAuth",
+     *     cascade={"persist"}
+     * )
      */
     protected $irfoPsvAuthNumbers;
 

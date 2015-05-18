@@ -14,11 +14,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="application_organisation_person",
  *    indexes={
  *        @ORM\Index(name="ix_application_organisation_person_person_id", columns={"person_id"}),
- *        @ORM\Index(name="ix_application_organisation_person_organisation_id", columns={"organisation_id"}),
- *        @ORM\Index(name="ix_application_organisation_person_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_application_organisation_person_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_application_organisation_person_organisation_id",
+     *     columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_application_organisation_person_application_id",
+     *     columns={"application_id"}),
+ *        @ORM\Index(name="ix_application_organisation_person_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_application_organisation_person_created_by", columns={"created_by"}),
- *        @ORM\Index(name="fk_application_organisation_person_person1_idx", columns={"original_person_id"})
+ *        @ORM\Index(name="fk_application_organisation_person_person1_idx",
+     *     columns={"original_person_id"})
  *    }
  * )
  */
@@ -39,7 +43,11 @@ abstract class AbstractApplicationOrganisationPerson
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="applicationOrganisationPersons")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="applicationOrganisationPersons"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LocalAuthorityTest extends EntityTester
+class LocalAuthorityEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

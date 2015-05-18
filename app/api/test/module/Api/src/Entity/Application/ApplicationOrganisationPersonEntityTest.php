@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ApplicationOrganisationPersonTest extends EntityTester
+class ApplicationOrganisationPersonEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

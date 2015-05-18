@@ -39,7 +39,11 @@ abstract class AbstractBusShortNotice
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusReg
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY", inversedBy="shortNotice")
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     fetch="LAZY",
+     *     inversedBy="shortNotice"
+     * )
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */
     protected $busReg;
@@ -134,7 +138,10 @@ abstract class AbstractBusShortNotice
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="not_available_change", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="not_available_change",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $notAvailableChange = 0;
 
@@ -197,7 +204,10 @@ abstract class AbstractBusShortNotice
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="special_occasion_change", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="special_occasion_change",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $specialOccasionChange = 0;
 

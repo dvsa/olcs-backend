@@ -54,7 +54,10 @@ abstract class AbstractApplication
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="convictions_confirmation", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="convictions_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $convictionsConfirmation = 0;
 
@@ -82,7 +85,10 @@ abstract class AbstractApplication
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="declaration_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $declarationConfirmation = 0;
 
@@ -157,7 +163,10 @@ abstract class AbstractApplication
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="insolvency_confirmation", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="insolvency_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $insolvencyConfirmation = 0;
 
@@ -267,7 +276,12 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", cascade={"persist"}, inversedBy="applications")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     cascade={"persist"},
+     *     inversedBy="applications"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -605,7 +619,11 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion", mappedBy="application", cascade={"persist"})
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion",
+     *     mappedBy="application",
+     *     cascade={"persist"}
+     * )
      */
     protected $applicationCompletion;
 
@@ -614,7 +632,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre",
+     *     mappedBy="application"
+     * )
      */
     protected $operatingCentres;
 
@@ -623,7 +644,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson",
+     *     mappedBy="application"
+     * )
      */
     protected $applicationOrganisationPersons;
 
@@ -632,7 +656,11 @@ abstract class AbstractApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationTracking", mappedBy="application", cascade={"persist"})
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationTracking",
+     *     mappedBy="application",
+     *     cascade={"persist"}
+     * )
      */
     protected $applicationTracking;
 
@@ -641,7 +669,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     mappedBy="application"
+     * )
      */
     protected $conditionUndertakings;
 
@@ -659,7 +690,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle",
+     *     mappedBy="application"
+     * )
      */
     protected $licenceVehicles;
 
@@ -668,7 +702,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition",
+     *     mappedBy="application"
+     * )
      */
     protected $oppositions;
 
@@ -677,7 +714,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence",
+     *     mappedBy="application"
+     * )
      */
     protected $otherLicences;
 
@@ -686,7 +726,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\PreviousConviction", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\PreviousConviction",
+     *     mappedBy="application"
+     * )
      */
     protected $previousConvictions;
 
@@ -695,7 +738,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink",
+     *     mappedBy="application"
+     * )
      */
     protected $publicationLinks;
 
@@ -713,7 +759,10 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
+     *     mappedBy="application"
+     * )
      */
     protected $transportManagers;
 
@@ -2902,7 +2951,6 @@ abstract class AbstractApplication
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
                 if ($this->$property instanceof Collection) {
 
                     $this->$property = new ArrayCollection(array());

@@ -29,7 +29,11 @@ abstract class AbstractTrafficArea
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", mappedBy="trafficAreas", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     mappedBy="trafficAreas",
+     *     fetch="LAZY"
+     * )
      */
     protected $busRegs;
 
@@ -141,7 +145,11 @@ abstract class AbstractTrafficArea
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Publication\Recipient", mappedBy="trafficAreas", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\Recipient",
+     *     mappedBy="trafficAreas",
+     *     fetch="LAZY"
+     * )
      */
     protected $recipients;
 

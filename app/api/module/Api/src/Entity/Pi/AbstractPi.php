@@ -98,7 +98,11 @@ abstract class AbstractPi
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="publicInquirys")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="publicInquirys"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -266,7 +270,10 @@ abstract class AbstractPi
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_curtailed_at_pi", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="licence_curtailed_at_pi",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $licenceCurtailedAtPi = 0;
 
@@ -275,7 +282,10 @@ abstract class AbstractPi
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_revoked_at_pi", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="licence_revoked_at_pi",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $licenceRevokedAtPi = 0;
 
@@ -284,7 +294,10 @@ abstract class AbstractPi
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="licence_suspended_at_pi", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="licence_suspended_at_pi",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $licenceSuspendedAtPi = 0;
 
@@ -330,7 +343,11 @@ abstract class AbstractPi
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="pis", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="pis",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="pi_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")

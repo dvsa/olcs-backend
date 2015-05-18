@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ApplicationTrackingTest extends EntityTester
+class ApplicationTrackingEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

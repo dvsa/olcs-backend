@@ -106,7 +106,11 @@ abstract class AbstractProhibitionDefect
      *
      * @var \Dvsa\Olcs\Api\Entity\Prohibition\Prohibition
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\Prohibition", fetch="LAZY", inversedBy="defects")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\Prohibition",
+     *     fetch="LAZY",
+     *     inversedBy="defects"
+     * )
      * @ORM\JoinColumn(name="prohibition_id", referencedColumnName="id", nullable=false)
      */
     protected $prohibition;

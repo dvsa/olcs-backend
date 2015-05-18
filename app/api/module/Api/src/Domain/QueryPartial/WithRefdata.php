@@ -49,7 +49,7 @@ final class WithRefdata implements QueryPartialInterface
         /** @var $meta \Doctrine\ORM\Mapping\ClassMetadata */
         $meta = $this->em->getClassMetadata($entity);
 
-        foreach($meta->associationMappings as $property => $config) {
+        foreach ($meta->associationMappings as $property => $config) {
             if ($config['targetEntity'] === $this->refDataEntity) {
                 $this->with->modifyQuery($qb, [$alias . '.' . $property]);
             }

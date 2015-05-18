@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Si\SiCategory as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SiCategoryTest extends EntityTester
+class SiCategoryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

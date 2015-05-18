@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TaskTest extends EntityTester
+class TaskEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

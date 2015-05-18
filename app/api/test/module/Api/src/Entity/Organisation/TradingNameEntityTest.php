@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class TradingNameTest extends EntityTester
+class TradingNameEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

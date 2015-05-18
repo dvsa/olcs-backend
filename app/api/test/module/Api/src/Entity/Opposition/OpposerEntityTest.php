@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Opposition\Opposer as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class OpposerTest extends EntityTester
+class OpposerEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

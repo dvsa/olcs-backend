@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoPartnerTest extends EntityTester
+class IrfoPartnerEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

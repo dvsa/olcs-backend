@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_irfo_transit_country_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_transit_country_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
+ *        @ORM\UniqueConstraint(name="uk_irfo_transit_country_olbs_key_olbs_type",
+     *     columns={"olbs_key","olbs_type"})
  *    }
  * )
  */

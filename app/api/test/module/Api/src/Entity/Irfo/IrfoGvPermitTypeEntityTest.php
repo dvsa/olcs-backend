@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoGvPermitTypeTest extends EntityTester
+class IrfoGvPermitTypeEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

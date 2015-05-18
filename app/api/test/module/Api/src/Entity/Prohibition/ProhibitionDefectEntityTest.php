@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ProhibitionDefectTest extends EntityTester
+class ProhibitionDefectEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

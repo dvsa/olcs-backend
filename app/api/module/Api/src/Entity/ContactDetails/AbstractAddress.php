@@ -69,7 +69,10 @@ abstract class AbstractAddress
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="admin_area", referencedColumnName="id", nullable=true)
      */
     protected $adminArea;
@@ -229,7 +232,10 @@ abstract class AbstractAddress
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", mappedBy="address")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     mappedBy="address"
+     * )
      */
     protected $contactDetails;
 

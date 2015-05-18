@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Stay as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class StayTest extends EntityTester
+class StayEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

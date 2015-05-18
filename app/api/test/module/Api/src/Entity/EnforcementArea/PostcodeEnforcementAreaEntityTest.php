@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\EnforcementArea\PostcodeEnforcementArea as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PostcodeEnforcementAreaTest extends EntityTester
+class PostcodeEnforcementAreaEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

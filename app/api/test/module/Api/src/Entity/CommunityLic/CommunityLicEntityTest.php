@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CommunityLicTest extends EntityTester
+class CommunityLicEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

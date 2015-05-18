@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\Sla as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SlaTest extends EntityTester
+class SlaEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

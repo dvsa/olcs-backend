@@ -19,7 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="IDX_CFD7D6519E6B1585", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_organisation_user_organisation_id_user_id", columns={"organisation_id","user_id"})
+ *        @ORM\UniqueConstraint(name="uk_organisation_user_organisation_id_user_id",
+     *     columns={"organisation_id","user_id"})
  *    }
  * )
  */
@@ -98,7 +99,11 @@ abstract class AbstractOrganisationUser
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY", inversedBy="organisationUsers")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="organisationUsers"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;
@@ -126,7 +131,11 @@ abstract class AbstractOrganisationUser
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY", inversedBy="organisationUsers")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\User\User",
+     *     fetch="LAZY",
+     *     inversedBy="organisationUsers"
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

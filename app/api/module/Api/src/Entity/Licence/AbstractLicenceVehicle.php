@@ -21,7 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_licence_vehicle_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_licence_vehicle_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_licence_vehicle_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_licence_vehicle_interim_application_id", columns={"interim_application_id"}),
+ *        @ORM\Index(name="ix_licence_vehicle_interim_application_id",
+     *     columns={"interim_application_id"}),
  *        @ORM\Index(name="fk_licence_vehicle_licence_id_licence_id", columns={"licence_id"})
  *    },
  *    uniqueConstraints={
@@ -37,7 +38,11 @@ abstract class AbstractLicenceVehicle
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="licenceVehicles"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -115,7 +120,11 @@ abstract class AbstractLicenceVehicle
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="licenceVehicles"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -170,7 +179,11 @@ abstract class AbstractLicenceVehicle
      *
      * @var \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Vehicle\Vehicle", fetch="LAZY", inversedBy="licenceVehicles")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Vehicle\Vehicle",
+     *     fetch="LAZY",
+     *     inversedBy="licenceVehicles"
+     * )
      * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
      */
     protected $vehicle;

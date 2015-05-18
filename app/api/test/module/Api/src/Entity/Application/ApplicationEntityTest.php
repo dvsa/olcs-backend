@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ApplicationTest extends EntityTester
+class ApplicationEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

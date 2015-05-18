@@ -177,7 +177,10 @@ abstract class AbstractPerson
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", mappedBy="person")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     mappedBy="person"
+     * )
      */
     protected $contactDetails;
 

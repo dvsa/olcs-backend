@@ -61,7 +61,11 @@ abstract class AbstractBusReg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusServiceType", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusServiceType",
+     *     inversedBy="busRegs",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="bus_reg_bus_service_type",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -198,7 +202,10 @@ abstract class AbstractBusReg
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="is_quality_partnership", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="is_quality_partnership",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $isQualityPartnership = 0;
 
@@ -263,7 +270,11 @@ abstract class AbstractBusReg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority",
+     *     inversedBy="busRegs",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="bus_reg_local_auth",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -343,7 +354,10 @@ abstract class AbstractBusReg
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
@@ -399,7 +413,10 @@ abstract class AbstractBusReg
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="quality_partnership_facilities_used", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="quality_partnership_facilities_used",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $qualityPartnershipFacilitiesUsed = 0;
 
@@ -490,7 +507,10 @@ abstract class AbstractBusReg
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="short_notice_refused", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="short_notice_refused",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $shortNoticeRefused = 0;
 
@@ -555,7 +575,10 @@ abstract class AbstractBusReg
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="timetable_acceptable", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="timetable_acceptable",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $timetableAcceptable = 0;
 
@@ -564,7 +587,11 @@ abstract class AbstractBusReg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea",
+     *     inversedBy="busRegs",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="bus_reg_traffic_area",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -581,7 +608,10 @@ abstract class AbstractBusReg
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="trc_condition_checked", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="trc_condition_checked",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $trcConditionChecked = 0;
 
@@ -626,7 +656,11 @@ abstract class AbstractBusReg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="busRegs", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="busRegs",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="bus_reg_variation_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
@@ -672,7 +706,11 @@ abstract class AbstractBusReg
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService", mappedBy="busReg", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService",
+     *     mappedBy="busReg",
+     *     cascade={"persist"}
+     * )
      */
     protected $otherServices;
 
@@ -681,7 +719,11 @@ abstract class AbstractBusReg
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusShortNotice", mappedBy="busReg", cascade={"persist"})
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusShortNotice",
+     *     mappedBy="busReg",
+     *     cascade={"persist"}
+     * )
      */
     protected $shortNotice;
 

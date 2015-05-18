@@ -199,7 +199,10 @@ abstract class AbstractTransportManager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence", mappedBy="transportManager")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence",
+     *     mappedBy="transportManager"
+     * )
      */
     protected $otherLicences;
 
@@ -208,7 +211,10 @@ abstract class AbstractTransportManager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\PreviousConviction", mappedBy="transportManager")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\PreviousConviction",
+     *     mappedBy="transportManager"
+     * )
      */
     protected $previousConvictions;
 
@@ -226,7 +232,10 @@ abstract class AbstractTransportManager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TmQualification", mappedBy="transportManager")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TmQualification",
+     *     mappedBy="transportManager"
+     * )
      */
     protected $qualifications;
 
@@ -235,7 +244,10 @@ abstract class AbstractTransportManager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication", mappedBy="transportManager")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
+     *     mappedBy="transportManager"
+     * )
      */
     protected $tmApplications;
 
@@ -244,7 +256,10 @@ abstract class AbstractTransportManager
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence", mappedBy="transportManager")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence",
+     *     mappedBy="transportManager"
+     * )
      */
     protected $tmLicences;
 

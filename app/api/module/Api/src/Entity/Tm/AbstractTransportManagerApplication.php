@@ -17,12 +17,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_application",
  *    indexes={
- *        @ORM\Index(name="ix_transport_manager_application_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_transport_manager_application_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_transport_manager_application_transport_manager_id",
+     *     columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_transport_manager_application_application_id",
+     *     columns={"application_id"}),
  *        @ORM\Index(name="ix_transport_manager_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_transport_manager_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_transport_manager_application_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_type", columns={"tm_type"}),
- *        @ORM\Index(name="ix_transport_manager_application_tm_application_status", columns={"tm_application_status"})
+ *        @ORM\Index(name="ix_transport_manager_application_tm_application_status",
+     *     columns={"tm_application_status"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_transport_manager_application_olbs_key", columns={"olbs_key"})
@@ -55,7 +59,11 @@ abstract class AbstractTransportManagerApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="transportManagers")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="transportManagers"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
@@ -84,7 +92,10 @@ abstract class AbstractTransportManagerApplication
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="declaration_confirmation", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno",
+     *     name="declaration_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
      */
     protected $declarationConfirmation = 0;
 
@@ -213,7 +224,11 @@ abstract class AbstractTransportManagerApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", inversedBy="transportManagerApplications", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     inversedBy="transportManagerApplications",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="tm_application_oc",
      *     joinColumns={
      *         @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id")
@@ -250,7 +265,11 @@ abstract class AbstractTransportManagerApplication
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY", inversedBy="tmApplications")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
+     *     fetch="LAZY",
+     *     inversedBy="tmApplications"
+     * )
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
      */
     protected $transportManager;
@@ -270,7 +289,10 @@ abstract class AbstractTransportManagerApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence", mappedBy="transportManagerApplication")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence",
+     *     mappedBy="transportManagerApplication"
+     * )
      */
     protected $otherLicences;
 

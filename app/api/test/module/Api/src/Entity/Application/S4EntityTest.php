@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\S4 as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class S4Test extends EntityTester
+class S4EntityTest extends EntityTester
 {
     /**
      * Define the entity to test

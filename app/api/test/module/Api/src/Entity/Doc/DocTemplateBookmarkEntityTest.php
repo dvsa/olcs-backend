@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Doc\DocTemplateBookmark as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class DocTemplateBookmarkTest extends EntityTester
+class DocTemplateBookmarkEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

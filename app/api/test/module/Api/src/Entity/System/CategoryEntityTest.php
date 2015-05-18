@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\Category as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CategoryTest extends EntityTester
+class CategoryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

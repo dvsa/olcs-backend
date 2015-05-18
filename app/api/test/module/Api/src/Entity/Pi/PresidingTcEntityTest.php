@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PresidingTcTest extends EntityTester
+class PresidingTcEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

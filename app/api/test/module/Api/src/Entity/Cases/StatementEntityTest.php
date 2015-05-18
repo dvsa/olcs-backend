@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Statement as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class StatementTest extends EntityTester
+class StatementEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

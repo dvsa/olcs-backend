@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\RolePermission as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class RolePermissionTest extends EntityTester
+class RolePermissionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

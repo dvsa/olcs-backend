@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Disqualification as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class DisqualificationTest extends EntityTester
+class DisqualificationEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

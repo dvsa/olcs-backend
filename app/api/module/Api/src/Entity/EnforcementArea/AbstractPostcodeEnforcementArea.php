@@ -13,12 +13,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcode_enforcement_area",
  *    indexes={
- *        @ORM\Index(name="ix_postcode_enforcement_area_enforcement_area_id", columns={"enforcement_area_id"}),
+ *        @ORM\Index(name="ix_postcode_enforcement_area_enforcement_area_id",
+     *     columns={"enforcement_area_id"}),
  *        @ORM\Index(name="ix_postcode_enforcement_area_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_postcode_enforcement_area_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_postcode_enforcement_area_last_modified_by",
+     *     columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_postcode_enforcement_area_enforcement_area_id_postcode_id", columns={"enforcement_area_id","postcode_id"})
+ *        @ORM\UniqueConstraint(name="uk_postcode_enforcement_area_enforcement_area_id_postcode_id",
+     *     columns={"enforcement_area_id","postcode_id"})
  *    }
  * )
  */
@@ -49,7 +52,10 @@ abstract class AbstractPostcodeEnforcementArea
      *
      * @var \Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="enforcement_area_id", referencedColumnName="id", nullable=false)
      */
     protected $enforcementArea;

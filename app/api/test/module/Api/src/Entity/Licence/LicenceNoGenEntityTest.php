@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class LicenceNoGenTest extends EntityTester
+class LicenceNoGenEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

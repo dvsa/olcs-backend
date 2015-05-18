@@ -133,7 +133,11 @@ abstract class AbstractReason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke",
+     *     mappedBy="reasons",
+     *     fetch="LAZY"
+     * )
      */
     protected $proposeToRevokes;
 
@@ -151,7 +155,11 @@ abstract class AbstractReason
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction", mappedBy="reasons", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\SubmissionAction",
+     *     mappedBy="reasons",
+     *     fetch="LAZY"
+     * )
      */
     protected $submissionActions;
 

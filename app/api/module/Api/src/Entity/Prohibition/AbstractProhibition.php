@@ -35,7 +35,11 @@ abstract class AbstractProhibition
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="prohibitions")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="prohibitions"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
@@ -177,7 +181,10 @@ abstract class AbstractProhibition
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect", mappedBy="prohibition")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect",
+     *     mappedBy="prohibition"
+     * )
      */
     protected $defects;
 

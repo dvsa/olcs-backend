@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CasesTest extends EntityTester
+class CasesEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

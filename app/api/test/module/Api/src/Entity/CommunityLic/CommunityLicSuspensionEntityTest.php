@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CommunityLicSuspensionTest extends EntityTester
+class CommunityLicSuspensionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

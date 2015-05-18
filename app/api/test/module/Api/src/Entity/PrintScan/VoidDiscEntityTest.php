@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\VoidDisc as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class VoidDiscTest extends EntityTester
+class VoidDiscEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -126,7 +126,11 @@ abstract class AbstractProposeToRevoke
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason", inversedBy="proposeToRevokes", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason",
+     *     inversedBy="proposeToRevokes",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="ptr_reason",
      *     joinColumns={
      *         @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id")

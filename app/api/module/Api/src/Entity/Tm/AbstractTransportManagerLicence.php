@@ -17,10 +17,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_licence",
  *    indexes={
- *        @ORM\Index(name="ix_transport_manager_licence_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_transport_manager_licence_transport_manager_id",
+     *     columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_transport_manager_licence_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_transport_manager_licence_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_transport_manager_licence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_transport_manager_licence_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_licence_tm_type", columns={"tm_type"})
  *    },
  *    uniqueConstraints={
@@ -166,7 +168,11 @@ abstract class AbstractTransportManagerLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="tmLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="tmLicences"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -185,7 +191,11 @@ abstract class AbstractTransportManagerLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", inversedBy="transportManagerLicences", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     inversedBy="transportManagerLicences",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="tm_licence_oc",
      *     joinColumns={
      *         @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id")
@@ -212,7 +222,11 @@ abstract class AbstractTransportManagerLicence
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY", inversedBy="tmLicences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
+     *     fetch="LAZY",
+     *     inversedBy="tmLicences"
+     * )
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
      */
     protected $transportManager;
@@ -232,7 +246,10 @@ abstract class AbstractTransportManagerLicence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence", mappedBy="transportManagerLicence")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence",
+     *     mappedBy="transportManagerLicence"
+     * )
      */
     protected $otherLicences;
 

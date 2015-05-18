@@ -21,7 +21,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_organisation_lead_tc_area_id", columns={"lead_tc_area_id"}),
  *        @ORM\Index(name="ix_organisation_name", columns={"name"}),
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
- *        @ORM\Index(name="ix_organisation_irfo_contact_details_id", columns={"irfo_contact_details_id"})
+ *        @ORM\Index(name="ix_organisation_irfo_contact_details_id",
+     *     columns={"irfo_contact_details_id"})
  *    }
  * )
  */
@@ -184,7 +185,11 @@ abstract class AbstractOrganisation
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", inversedBy="organisations", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="organisations",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="organisation_nature_of_business",
      *     joinColumns={
      *         @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
@@ -230,7 +235,11 @@ abstract class AbstractOrganisation
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner", mappedBy="organisation", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner",
+     *     mappedBy="organisation",
+     *     cascade={"persist"}
+     * )
      */
     protected $irfoPartners;
 
@@ -248,7 +257,10 @@ abstract class AbstractOrganisation
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson", mappedBy="organisation")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson",
+     *     mappedBy="organisation"
+     * )
      */
     protected $organisationPersons;
 
@@ -257,7 +269,10 @@ abstract class AbstractOrganisation
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser", mappedBy="organisation")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser",
+     *     mappedBy="organisation"
+     * )
      */
     protected $organisationUsers;
 
@@ -266,7 +281,10 @@ abstract class AbstractOrganisation
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\TradingName", mappedBy="organisation")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\TradingName",
+     *     mappedBy="organisation"
+     * )
      */
     protected $tradingNames;
 

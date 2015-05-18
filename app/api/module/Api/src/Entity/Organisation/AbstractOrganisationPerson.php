@@ -109,7 +109,11 @@ abstract class AbstractOrganisationPerson
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY", inversedBy="organisationPersons")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="organisationPersons"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=false)
      */
     protected $organisation;

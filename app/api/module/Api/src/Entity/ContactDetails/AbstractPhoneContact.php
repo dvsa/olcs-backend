@@ -19,7 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_phone_contact_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_phone_contact_olbs_key_olbs_type_phone_contact_type", columns={"olbs_key","olbs_type","phone_contact_type"})
+ *        @ORM\UniqueConstraint(name="uk_phone_contact_olbs_key_olbs_type_phone_contact_type",
+     *     columns={"olbs_key","olbs_type","phone_contact_type"})
  *    }
  * )
  */
@@ -31,7 +32,11 @@ abstract class AbstractPhoneContact
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY", inversedBy="phoneContacts")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     fetch="LAZY",
+     *     inversedBy="phoneContacts"
+     * )
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=false)
      */
     protected $contactDetails;

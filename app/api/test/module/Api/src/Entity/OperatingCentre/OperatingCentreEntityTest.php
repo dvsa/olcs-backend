@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class OperatingCentreTest extends EntityTester
+class OperatingCentreEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

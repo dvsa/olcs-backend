@@ -19,7 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="IDX_34C39149C1FDC79C", columns={"doc_bookmark_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_doc_paragraph_bookmark_doc_bookmark_id_doc_paragraph_id", columns={"doc_bookmark_id","doc_paragraph_id"})
+ *        @ORM\UniqueConstraint(name="uk_doc_paragraph_bookmark_doc_bookmark_id_doc_paragraph_id",
+     *     columns={"doc_bookmark_id","doc_paragraph_id"})
  *    }
  * )
  */
@@ -50,7 +51,11 @@ abstract class AbstractDocParagraphBookmark
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\DocBookmark
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark", fetch="LAZY", inversedBy="docParagraphBookmarks")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\DocBookmark",
+     *     fetch="LAZY",
+     *     inversedBy="docParagraphBookmarks"
+     * )
      * @ORM\JoinColumn(name="doc_bookmark_id", referencedColumnName="id", nullable=false)
      */
     protected $docBookmark;

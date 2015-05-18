@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Inspection\InspectionEmail as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class InspectionEmailTest extends EntityTester
+class InspectionEmailEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

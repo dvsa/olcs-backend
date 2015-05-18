@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class SubmissionSectionCommentTest extends EntityTester
+class SubmissionSectionCommentEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

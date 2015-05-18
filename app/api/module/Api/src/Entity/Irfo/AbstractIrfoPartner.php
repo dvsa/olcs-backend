@@ -97,7 +97,11 @@ abstract class AbstractIrfoPartner
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY", inversedBy="irfoPartners")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="irfoPartners"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;

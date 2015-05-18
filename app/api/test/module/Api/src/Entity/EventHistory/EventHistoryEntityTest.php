@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class EventHistoryTest extends EntityTester
+class EventHistoryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PreviousConvictionTest extends EntityTester
+class PreviousConvictionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

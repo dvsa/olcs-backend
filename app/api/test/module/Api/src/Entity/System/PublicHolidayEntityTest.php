@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\PublicHoliday as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class PublicHolidayTest extends EntityTester
+class PublicHolidayEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

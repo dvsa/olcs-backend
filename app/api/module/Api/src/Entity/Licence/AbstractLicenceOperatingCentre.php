@@ -16,9 +16,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="licence_operating_centre",
  *    indexes={
  *        @ORM\Index(name="ix_licence_operating_centre_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_licence_operating_centre_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_operating_centre_id",
+     *     columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_licence_operating_centre_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_licence_operating_centre_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_licence_operating_centre_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_licence_operating_centre_s4_id", columns={"s4_id"})
  *    },
  *    uniqueConstraints={
@@ -128,7 +130,11 @@ abstract class AbstractLicenceOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="operatingCentres")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="operatingCentres"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -183,7 +189,10 @@ abstract class AbstractLicenceOperatingCentre
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
      */
     protected $operatingCentre;

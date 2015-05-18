@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Reason as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class ReasonTest extends EntityTester
+class ReasonEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

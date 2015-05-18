@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawalReason as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CommunityLicWithdrawalReasonTest extends EntityTester
+class CommunityLicWithdrawalReasonEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

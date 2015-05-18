@@ -22,15 +22,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_condition_type", columns={"condition_type"}),
  *        @ORM\Index(name="ix_condition_undertaking_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_condition_undertaking_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_operating_centre_id",
+     *     columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_condition_undertaking_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id", columns={"lic_condition_variation_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id",
+     *     columns={"lic_condition_variation_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
+ *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type",
+     *     columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -61,7 +64,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="conditionUndertakings"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
@@ -91,7 +98,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
+     *     fetch="LAZY",
+     *     inversedBy="conditionUndertakings"
+     * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
@@ -187,7 +198,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", fetch="LAZY", inversedBy="variationRecords")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     fetch="LAZY",
+     *     inversedBy="variationRecords"
+     * )
      * @ORM\JoinColumn(name="lic_condition_variation_id", referencedColumnName="id", nullable=true)
      */
     protected $licConditionVariation;
@@ -197,7 +212,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="conditionUndertakings"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
@@ -234,7 +253,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY", inversedBy="conditionUndertakings")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY",
+     *     inversedBy="conditionUndertakings"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
@@ -244,7 +267,11 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\S4", inversedBy="conditions", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\S4",
+     *     inversedBy="conditions",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinTable(name="s4_condition",
      *     joinColumns={
      *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
@@ -271,7 +298,10 @@ abstract class AbstractConditionUndertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking", mappedBy="licConditionVariation")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
+     *     mappedBy="licConditionVariation"
+     * )
      */
     protected $variationRecords;
 

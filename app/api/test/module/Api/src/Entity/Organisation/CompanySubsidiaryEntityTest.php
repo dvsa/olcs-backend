@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class CompanySubsidiaryTest extends EntityTester
+class CompanySubsidiaryEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

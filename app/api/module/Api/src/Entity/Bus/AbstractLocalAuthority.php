@@ -29,7 +29,11 @@ abstract class AbstractLocalAuthority
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", mappedBy="localAuthoritys", fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     mappedBy="localAuthoritys",
+     *     fetch="LAZY"
+     * )
      */
     protected $busRegs;
 

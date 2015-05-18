@@ -99,8 +99,9 @@ final class ResetApplication extends AbstractCommandHandler
     private function closeTasks(Application $application)
     {
         $count = 0;
+
         /** @var Task $task */
-        foreach($application->getTasks() as $task) {
+        foreach ($application->getTasks() as $task) {
             if ($task->getIsClosed() === 'N') {
                 $count++;
                 $task->setIsClosed('Y');

@@ -25,7 +25,11 @@ abstract class AbstractOcComplaint
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Complaint
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Complaint", fetch="LAZY", inversedBy="ocComplaints")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Complaint",
+     *     fetch="LAZY",
+     *     inversedBy="ocComplaints"
+     * )
      * @ORM\JoinColumn(name="complaint_id", referencedColumnName="id", nullable=false)
      */
     protected $complaint;
@@ -55,7 +59,11 @@ abstract class AbstractOcComplaint
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY", inversedBy="ocComplaints")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY",
+     *     inversedBy="ocComplaints"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
      */
     protected $operatingCentre;

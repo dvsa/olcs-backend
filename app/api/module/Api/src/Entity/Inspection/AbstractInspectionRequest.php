@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_inspection_request_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_inspection_request_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_inspection_request_operating_centre_id", columns={"operating_centre_id"}),
+ *        @ORM\Index(name="ix_inspection_request_operating_centre_id",
+     *     columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_inspection_request_task_id", columns={"task_id"}),
  *        @ORM\Index(name="ix_inspection_request_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_inspection_request_report_type", columns={"report_type"}),
@@ -171,7 +172,10 @@ abstract class AbstractInspectionRequest
      *
      * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
      */
     protected $operatingCentre;

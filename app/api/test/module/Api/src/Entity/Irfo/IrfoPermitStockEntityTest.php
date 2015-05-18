@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as Entity;
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoPermitStockTest extends EntityTester
+class IrfoPermitStockEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
