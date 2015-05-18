@@ -113,6 +113,7 @@ return [
             'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Fee' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

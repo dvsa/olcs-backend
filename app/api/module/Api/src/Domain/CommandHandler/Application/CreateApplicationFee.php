@@ -117,6 +117,10 @@ final class CreateApplicationFee extends AbstractCommandHandler
             ? $application->getCreatedOn()
             : $application->getReceivedDate();
 
+        if (is_string($date)) {
+            $date = new \DateTime($date);
+        }
+
         $feeType = $this->feeTypeRepo->fetchLatest(
             $feeType,
             $application->getGoodsOrPsv(),

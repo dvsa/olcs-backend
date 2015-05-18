@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
@@ -122,7 +123,14 @@ final class CreateApplication extends AbstractCommandHandler
         $organisation = $this->getRepo()->getReference(Organisation::class, $command->getOrganisation());
         $status = $this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_NOT_SUBMITTED);
 
-        return new Licence($organisation, $status);
+        $licence = new Licence($organisation, $status);
+
+        if ($command->getTrafficArea() !== null) {
+            $licence->setTrafficArea($this->getRepo()
+                ->getReference(TrafficArea::class, $command->getTrafficArea()));
+        }
+
+        return $licence;
     }
 
     /**
@@ -132,7 +140,13 @@ final class CreateApplication extends AbstractCommandHandler
      */
     private function createApplicationObject(Cmd $command, Licence $licence)
     {
-        return new Application($licence, $this->getApplicationStatus(), false);
+        $application = new Application($licence, $this->getApplicationStatus(), false);
+
+        if ($command->getReceivedDate() !== null) {
+            $application->setReceivedDate(new \DateTime($command->getReceivedDate()));
+        }
+
+        return $application;
     }
 
     private function getApplicationStatus()
