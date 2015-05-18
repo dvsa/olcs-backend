@@ -31,7 +31,6 @@ class IrfoVehicle implements Interfaces\EntityInterface
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
         Traits\IrfoGvPermitManyToOne,
-        Traits\IrfoPsvAuthManyToOne,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\OlbsKeyField;
@@ -80,6 +79,16 @@ class IrfoVehicle implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="coc_t", nullable=false, options={"default": 0})
      */
     protected $cocT = 0;
+
+    /**
+     * Irfo psv auth
+     *
+     * @var \Olcs\Db\Entity\IrfoPsvAuth
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\IrfoPsvAuth")
+     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoPsvAuth;
 
     /**
      * Version
@@ -212,6 +221,29 @@ class IrfoVehicle implements Interfaces\EntityInterface
     public function getCocT()
     {
         return $this->cocT;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Olcs\Db\Entity\IrfoPsvAuth $irfoPsvAuth
+     * @return IrfoVehicle
+     */
+    public function setIrfoPsvAuth($irfoPsvAuth)
+    {
+        $this->irfoPsvAuth = $irfoPsvAuth;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth
+     *
+     * @return \Olcs\Db\Entity\IrfoPsvAuth
+     */
+    public function getIrfoPsvAuth()
+    {
+        return $this->irfoPsvAuth;
     }
 
     /**
