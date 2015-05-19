@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Created by many to one trait
  *
- * Auto-Generated (Shared between 138 entities)
+ * Auto-Generated (Shared between 140 entities)
  */
 trait CreatedByManyToOne
 {
