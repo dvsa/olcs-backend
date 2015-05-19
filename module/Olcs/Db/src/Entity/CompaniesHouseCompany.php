@@ -13,12 +13,21 @@ use Olcs\Db\Entity\Traits;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="companies_house_company")
+ * @ORM\Table(name="companies_house_company",
+ *    indexes={
+ *        @ORM\Index(name="ix_companies_house_company_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_companies_house_company_last_modified_by", columns={"last_modified_by"})
+ *    }
+ * )
  */
 class CompaniesHouseCompany implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**

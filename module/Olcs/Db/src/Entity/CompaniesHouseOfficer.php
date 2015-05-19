@@ -14,14 +14,20 @@ use Olcs\Db\Entity\Traits;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
- *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id", columns={"company_id"})
+ *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id", columns={"company_id"}),
+ *        @ORM\Index(name="ix_companies_house_officer_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_companies_house_officer_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
 class CompaniesHouseOfficer implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
+        Traits\CreatedByManyToOne,
+        Traits\CustomCreatedOnField,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
+        Traits\CustomLastModifiedOnField,
         Traits\CustomVersionField;
 
     /**
