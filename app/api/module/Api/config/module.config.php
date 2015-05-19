@@ -12,6 +12,10 @@ return [
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
+            \Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface::class =>
+                \Dvsa\Olcs\Api\Domain\Util\SlaCalculatorFactory::class,
+            \Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilderInterface::class =>
+                \Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilderFactory::class
         ]
     ],
     'controller_plugins' => [
@@ -21,6 +25,7 @@ return [
     ],
     'controllers' => [
         'invokables' => [
+            'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
             'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
         ]
@@ -95,6 +100,8 @@ return [
         'factories' => [
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
+            => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -113,6 +120,10 @@ return [
             'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Fee' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Cases' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
+            'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
