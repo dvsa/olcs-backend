@@ -41,6 +41,10 @@ class CommandHandlerTestCase extends MockeryTestCase
 
     protected $sideEffects = [];
 
+    protected $commands = [];
+
+    protected $refData = [];
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
@@ -58,18 +62,40 @@ class CommandHandlerTestCase extends MockeryTestCase
         $this->sut = $this->sut->createService($this->commandHandler);
 
         $this->sideEffects = [];
+        $this->commands = [];
+    }
+
+    public function tearDown()
+    {
+        $this->assertCommandData();
     }
 
     public function expectedSideEffect($class, $data, $result)
     {
         $this->commandHandler->shouldReceive('handleCommand')
+            ->with(m::type($class))
             ->andReturnUsing(
                 function (CommandInterface $command) use ($class, $data, $result) {
-                    $this->assertInstanceOf($class, $command);
-                    $this->assertEquals($data, $command->getArrayCopy());
-
+                    $this->commands[] = [$command, $data];
                     return $result;
                 }
             );
+    }
+
+    public function mapRefData($key)
+    {
+        return isset($this->refData[$key]) ? $this->refData[$key] : null;
+    }
+
+    /**
+     * @NOTE must be called after the tested method has been executed
+     */
+    private function assertCommandData()
+    {
+        foreach ($this->commands as $command) {
+            list($cmd, $data) = $command;
+
+            $this->assertEquals($data, $cmd->getArrayCopy(), get_class($cmd) . ' has unexpected data');
+        }
     }
 }
