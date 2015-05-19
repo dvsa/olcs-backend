@@ -18,6 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="ix_submission_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_submission_sender_user_id", columns={"sender_user_id"}),
+ *        @ORM\Index(name="ix_submission_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"})
@@ -35,6 +37,7 @@ class Submission implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
+        Traits\UrgentField,
         Traits\CustomVersionField;
 
     /**
@@ -45,6 +48,26 @@ class Submission implements Interfaces\EntityInterface
      * @ORM\Column(type="text", name="data_snapshot", length=65535, nullable=true)
      */
     protected $dataSnapshot;
+
+    /**
+     * Recipient user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $recipientUser;
+
+    /**
+     * Sender user
+     *
+     * @var \Olcs\Db\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\User")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $senderUser;
 
     /**
      * Submission type
@@ -104,6 +127,52 @@ class Submission implements Interfaces\EntityInterface
     public function getDataSnapshot()
     {
         return $this->dataSnapshot;
+    }
+
+    /**
+     * Set the recipient user
+     *
+     * @param \Olcs\Db\Entity\User $recipientUser
+     * @return Submission
+     */
+    public function setRecipientUser($recipientUser)
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the recipient user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getRecipientUser()
+    {
+        return $this->recipientUser;
+    }
+
+    /**
+     * Set the sender user
+     *
+     * @param \Olcs\Db\Entity\User $senderUser
+     * @return Submission
+     */
+    public function setSenderUser($senderUser)
+    {
+        $this->senderUser = $senderUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the sender user
+     *
+     * @return \Olcs\Db\Entity\User
+     */
+    public function getSenderUser()
+    {
+        return $this->senderUser;
     }
 
     /**

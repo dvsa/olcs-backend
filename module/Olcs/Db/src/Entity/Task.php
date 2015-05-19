@@ -19,6 +19,7 @@ use Olcs\Db\Entity\Traits;
  *        @ORM\Index(name="ix_task_assigned_by_user_id", columns={"assigned_by_user_id"}),
  *        @ORM\Index(name="ix_task_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_task_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_task_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_task_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_task_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_task_irfo_organisation_id", columns={"irfo_organisation_id"}),
@@ -101,6 +102,16 @@ class Task implements Interfaces\EntityInterface
      * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
      */
     protected $isClosed = 0;
+
+    /**
+     * Submission
+     *
+     * @var \Olcs\Db\Entity\Submission
+     *
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Submission")
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=true)
+     */
+    protected $submission;
 
     /**
      * Urgent
@@ -224,6 +235,29 @@ class Task implements Interfaces\EntityInterface
     public function getIsClosed()
     {
         return $this->isClosed;
+    }
+
+    /**
+     * Set the submission
+     *
+     * @param \Olcs\Db\Entity\Submission $submission
+     * @return Task
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Olcs\Db\Entity\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
     }
 
     /**
