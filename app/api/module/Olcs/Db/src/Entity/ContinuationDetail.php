@@ -41,7 +41,7 @@ class ContinuationDetail implements Interfaces\EntityInterface
      *
      * @var \Olcs\Db\Entity\Document
      *
-     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Olcs\Db\Entity\Document", inversedBy="continuationDetails")
      * @ORM\JoinColumn(name="checklist_document_id", referencedColumnName="id", nullable=true)
      */
     protected $checklistDocument;
