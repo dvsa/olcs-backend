@@ -25,30 +25,14 @@ class CompaniesHouseAlert implements Interfaces\EntityInterface
 {
     use Traits\CustomBaseEntity,
         Traits\CompanyOrLlpNo20Field,
+        Traits\CreatedByManyToOne,
         Traits\CustomCreatedOnField,
         Traits\IdIdentity,
+        Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
         Traits\Name160Field,
         Traits\OrganisationManyToOne,
         Traits\CustomVersionField;
-
-    /**
-     * Created by
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
-     */
-    protected $createdBy;
-
-    /**
-     * Last modified by
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
-     */
-    protected $lastModifiedBy;
 
     /**
      * Reason
@@ -65,52 +49,6 @@ class CompaniesHouseAlert implements Interfaces\EntityInterface
     public function __construct()
     {
         $this->reasons = new ArrayCollection();
-    }
-
-    /**
-     * Set the created by
-     *
-     * @param int $createdBy
-     * @return CompaniesHouseAlert
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return int
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param int $lastModifiedBy
-     * @return CompaniesHouseAlert
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return int
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
     }
 
     /**
