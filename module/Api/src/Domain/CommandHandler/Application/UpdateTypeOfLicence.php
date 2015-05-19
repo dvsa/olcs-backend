@@ -82,14 +82,11 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
 
-        } else {
+        } elseif ($this->licenceTypeWillChange($application, $command)) {
 
-            if ($this->licenceTypeWillChange($application, $command)) {
+            $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
+            $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
 
-                $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
-                $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
-
-            }
         }
 
         $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
