@@ -29,6 +29,5 @@ class QueueController extends AbstractController
             ->enqueueActiveOrganisations($formattedData['type']);
 
         return $this->respond(Response::STATUS_CODE_201, 'Queue Populated', $response);
-
     }
 }
