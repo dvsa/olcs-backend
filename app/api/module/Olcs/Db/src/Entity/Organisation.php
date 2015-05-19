@@ -34,7 +34,6 @@ class Organisation implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\Name160Field,
         Traits\TypeManyToOneAlt1,
         Traits\CustomVersionField,
         Traits\ViAction1Field;
@@ -122,6 +121,15 @@ class Organisation implements Interfaces\EntityInterface
      * @ORM\JoinColumn(name="lead_tc_area_id", referencedColumnName="id", nullable=true)
      */
     protected $leadTcArea;
+
+    /**
+     * Name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name", length=160, nullable=true)
+     */
+    protected $name;
 
     /**
      * Nature of businesse
@@ -403,6 +411,29 @@ class Organisation implements Interfaces\EntityInterface
     public function getLeadTcArea()
     {
         return $this->leadTcArea;
+    }
+
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @return Organisation
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

@@ -30,7 +30,6 @@ class CompaniesHouseAlert implements Interfaces\EntityInterface
         Traits\IdIdentity,
         Traits\LastModifiedByManyToOne,
         Traits\CustomLastModifiedOnField,
-        Traits\Name160Field,
         Traits\OrganisationManyToOne,
         Traits\CustomVersionField;
 
