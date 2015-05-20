@@ -45,6 +45,8 @@ class CommandHandlerTestCase extends MockeryTestCase
 
     protected $refData = [];
 
+    protected $references = [];
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
@@ -63,6 +65,22 @@ class CommandHandlerTestCase extends MockeryTestCase
 
         $this->sideEffects = [];
         $this->commands = [];
+
+        $this->initReferences();
+    }
+
+    protected function mockRepo($name, $class)
+    {
+        $this->repoMap[$name] = m::mock($class);
+        $this->repoMap[$name]->shouldReceive('getRefdataReference')
+            ->andReturnUsing([$this, 'mapRefData'])
+            ->shouldReceive('getReference')
+            ->andReturnUsing([$this, 'mapReference']);
+    }
+
+    protected function initReferences()
+    {
+        // Noop
     }
 
     public function tearDown()
@@ -85,6 +103,11 @@ class CommandHandlerTestCase extends MockeryTestCase
     public function mapRefData($key)
     {
         return isset($this->refData[$key]) ? $this->refData[$key] : null;
+    }
+
+    public function mapReference($class, $id)
+    {
+        return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
     }
 
     /**

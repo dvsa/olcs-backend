@@ -63,7 +63,10 @@ final class CreateFee extends AbstractCommandHandler
             $fee->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()));
         }
 
-        $fee->setInvoicedDate($command->getInvoicedDate());
+        if ($command->getInvoicedDate() !== null) {
+            $fee->setInvoicedDate(new \DateTime($command->getInvoicedDate()));
+        }
+
         $fee->setDescription($command->getDescription());
 
         return $fee;

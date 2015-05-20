@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
@@ -88,7 +87,7 @@ final class CreateApplicationFee extends AbstractCommandHandler
             'category' => Task::CATEGORY_APPLICATION,
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
             'description' => 'Application Fee Due',
-            'actionDate' => new \DateTime(),
+            'actionDate' => date('Y-m-d'),
             'assignedToUser' => $currentUser['id'],
             'assignedToTeam' => $currentUser['team']['id'],
             'application' => $application->getId(),
@@ -107,7 +106,7 @@ final class CreateApplicationFee extends AbstractCommandHandler
     private function createCreateFeeCommand(Cmd $command, $taskId)
     {
         /** @var Application $application */
-        $feeType = $this->getRepo()->getReference(RefData::class, FeeTypeEntity::FEE_TYPE_APP);
+        $feeType = $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_APP);
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $trafficArea = $application->getNiFlag() === 'Y'
             ? $this->getRepo()->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
@@ -133,7 +132,7 @@ final class CreateApplicationFee extends AbstractCommandHandler
             'task' => $taskId,
             'application' => $application->getId(),
             'licence' => $application->getLicence()->getId(),
-            'invoicedDate' => new \DateTime(),
+            'invoicedDate' => date('Y-m-d'),
             'description' => $feeType->getDescription() . ' for application ' . $application->getId(),
             'feeType' => $feeType->getId(),
             'amount' => $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue()

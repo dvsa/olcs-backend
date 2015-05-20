@@ -31,35 +31,38 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->initRefdata();
-
         $this->sut = new UpdateTypeOfLicence();
-        $this->repoMap['Application'] = m::mock(Application::class);
-        $this->repoMap['Application']->shouldReceive('getRefdataReference')
-            ->andReturnUsing([$this, 'mapRefData']);
+        $this->mockRepo('Application', Application::class);
 
         parent::setUp();
     }
 
-    public function initRefdata()
+    protected function initReferences()
     {
         $this->refData = [
-            'lcat_psv' => m::mock(),
-            'lcat_gv' => m::mock(),
-            'ltyp_sn' => m::mock(),
-            'ltyp_si' => m::mock(),
-            'ltyp_sr' => m::mock(),
-            'ltyp_r' => m::mock()
+            Licence::LICENCE_CATEGORY_PSV => m::mock(),
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE => m::mock(),
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL => m::mock(),
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL => m::mock(),
+            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED => m::mock()
         ];
     }
 
     public function testHandleCommandWithoutChanges()
     {
         // Params
-        $command = $this->getCommand('Y', 'ltyp_sn', 'lcat_gv');
+        $command = $this->getCommand(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+        );
 
         // Mocks
-        $application = $this->getApplication('Y', 'ltyp_sn', 'lcat_gv');
+        $application = $this->getApplication(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+        );
 
         // Expectations
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -102,14 +105,18 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandFirstTime()
     {
         // Params
-        $command = $this->getCommand('Y', 'ltyp_sn', 'lcat_psv');
+        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV);
 
         // Mocks
         $application = $this->getApplication(null, null, null);
 
         // Expectations
         $application->shouldReceive('updateTypeOfLicence')
-            ->with('Y', $this->mapRefData('lcat_psv'), $this->mapRefData('ltyp_sn'));
+            ->with(
+                'Y',
+                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL)
+            );
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -161,14 +168,22 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandWithAllowedUpdate()
     {
         // Params
-        $command = $this->getCommand('Y', 'ltyp_si', 'lcat_psv');
+        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
 
-        $application = $this->getApplication('Y', 'ltyp_sn', 'lcat_psv');
+        $application = $this->getApplication(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_PSV
+        );
 
         // Expectations
         $application->shouldReceive('updateTypeOfLicence')
             ->once()
-            ->with('Y', $this->mapRefData('lcat_psv'), $this->mapRefData('ltyp_si'))
+            ->with(
+                'Y',
+                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+            )
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock(Licence::class)
@@ -227,14 +242,22 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandWithException()
     {
         // Params
-        $command = $this->getCommand('Y', 'ltyp_si', 'lcat_psv');
+        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
 
-        $application = $this->getApplication('Y', 'ltyp_sn', 'lcat_psv');
+        $application = $this->getApplication(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_PSV
+        );
 
         // Expectations
         $application->shouldReceive('updateTypeOfLicence')
             ->once()
-            ->with('Y', $this->mapRefData('lcat_psv'), $this->mapRefData('ltyp_si'))
+            ->with(
+                'Y',
+                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+            )
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock(Licence::class)
@@ -264,49 +287,54 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
     public function requireReset()
     {
-        $this->initRefdata();
+        $this->initReferences();
         return [
             'niFlag changed' => [
-                $this->getCommand('Y', 'ltyp_sn', 'lcat_psv'),
-                $this->getApplication('N', 'ltyp_sn', 'lcat_psv'),
+                $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                $this->getApplication('N', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => 'lcat_psv',
-                    'licenceType' => 'ltyp_sn',
+                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                     'confirm' => false
                 ]
             ],
             'operatorType changed' => [
-                $this->getCommand('Y', 'ltyp_sn', 'lcat_gv', true),
-                $this->getApplication('Y', 'ltyp_sn', 'lcat_psv'),
+                $this->getCommand(
+                    'Y',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    true
+                ),
+                $this->getApplication('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => 'lcat_gv',
-                    'licenceType' => 'ltyp_sn',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                     'confirm' => true
                 ]
             ],
             'to SR' => [
-                $this->getCommand('Y', 'ltyp_sr', 'lcat_psv'),
-                $this->getApplication('Y', 'ltyp_sn', 'lcat_psv'),
+                $this->getCommand('Y', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
+                $this->getApplication('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => 'lcat_psv',
-                    'licenceType' => 'ltyp_sr',
+                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                     'confirm' => false
                 ]
             ],
             'from SR' => [
-                $this->getCommand('Y', 'ltyp_sn', 'lcat_psv'),
-                $this->getApplication('Y', 'ltyp_sr', 'lcat_psv'),
+                $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                $this->getApplication('Y', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => 'lcat_psv',
-                    'licenceType' => 'ltyp_sn',
+                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                     'confirm' => false
                 ]
             ]
