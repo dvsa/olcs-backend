@@ -26,13 +26,13 @@ final class UpdateLicenceHistoryStatus extends AbstractUpdateStatus
     protected function isSectionValid(Application $application)
     {
         $licenceTypes = [
-            'prev_has_licence' => $application->getPrevHasLicence(),
-            'prev_had_licence' => $application->getPrevHasLicence(),
-            'prev_been_refused' => $application->getPrevBeenRefused(),
-            'prev_been_revoked' => $application->getPrevBeenRevoked(),
-            'prev_been_disqualified' => $application->getPrevBeenDisqualifiedTc(),
-            'prev_been_at_pi' => $application->getPrevBeenAtPi(),
-            'prev_purchased_assets' => $application->getPrevPurchasedAssets()
+            OtherLicence::TYPE_CURRENT => $application->getPrevHasLicence(),
+            OtherLicence::TYPE_APPLIED => $application->getPrevHadLicence(),
+            OtherLicence::TYPE_REFUSED => $application->getPrevBeenRefused(),
+            OtherLicence::TYPE_REVOKED => $application->getPrevBeenRevoked(),
+            OtherLicence::TYPE_DISQUALIFIED => $application->getPrevBeenDisqualifiedTc(),
+            OtherLicence::TYPE_PUBLIC_INQUIRY => $application->getPrevBeenAtPi(),
+            OtherLicence::TYPE_HELD => $application->getPrevPurchasedAssets()
         ];
 
         $yn = ['Y', 'N'];
