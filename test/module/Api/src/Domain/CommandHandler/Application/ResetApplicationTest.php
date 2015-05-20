@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication;
@@ -21,7 +20,6 @@ use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
@@ -45,18 +43,17 @@ class ResetApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            LicenceEntity::LICENCE_CATEGORY_PSV => m::mock(RefData::class)->makePartial()
-                ->shouldReceive('getId')->andReturn(LicenceEntity::LICENCE_CATEGORY_PSV)->getMock(),
-            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL => m::mock(RefData::class)->makePartial()
-                ->shouldReceive('getId')->andReturn(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL)->getMock()
+            LicenceEntity::LICENCE_CATEGORY_PSV,
+            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL
         ];
 
         $this->references = [
             TrafficArea::class => [
-                TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)->makePartial()
-                    ->shouldReceive('getId')->andReturn(TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE)->getMock()
+                TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
             ]
         ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandRequireConfirmationInvalidValue()

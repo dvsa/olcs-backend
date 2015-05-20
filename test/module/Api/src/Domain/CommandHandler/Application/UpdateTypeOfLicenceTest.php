@@ -40,12 +40,14 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            Licence::LICENCE_CATEGORY_PSV => m::mock(),
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE => m::mock(),
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL => m::mock(),
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL => m::mock(),
-            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED => m::mock()
+            Licence::LICENCE_CATEGORY_PSV,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED
         ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandWithoutChanges()

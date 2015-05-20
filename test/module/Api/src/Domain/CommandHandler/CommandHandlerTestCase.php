@@ -14,6 +14,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Zend\ServiceManager\ServiceManager;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Command Handler Test Case
@@ -46,6 +47,8 @@ class CommandHandlerTestCase extends MockeryTestCase
     protected $refData = [];
 
     protected $references = [];
+
+    private $initRefdata = false;
 
     public function setUp()
     {
@@ -80,11 +83,31 @@ class CommandHandlerTestCase extends MockeryTestCase
 
     protected function initReferences()
     {
-        // Noop
+        if (!$this->initRefdata) {
+            foreach ($this->refData as $id => $mock) {
+
+                if (is_numeric($id) && is_string($mock)) {
+                    $this->refData[$mock] = m::mock(RefData::class)->makePartial()->setId($mock);
+                } else {
+                    $mock->makePartial();
+                    $mock->setId($id);
+                }
+            }
+
+            foreach ($this->references as $type => $mocks) {
+                foreach ($mocks as  $id => $mock) {
+                    $mock->makePartial();
+                    $mock->setId($id);
+                }
+            }
+
+            $this->initRefdata = true;
+        }
     }
 
     public function tearDown()
     {
+        $this->initRefdata = false;
         $this->assertCommandData();
     }
 

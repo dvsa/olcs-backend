@@ -22,7 +22,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Create Application Test
@@ -42,12 +41,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            Licence::LICENCE_STATUS_NOT_SUBMITTED => m::mock(RefData::class),
-            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION => m::mock(RefData::class),
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL => m::mock(RefData::class)
-                ->shouldReceive('getId')->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL)->getMock(),
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE => m::mock(RefData::class)
-                ->shouldReceive('getId')->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE)->getMock(),
+            Licence::LICENCE_STATUS_NOT_SUBMITTED,
+            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ];
 
         $this->references = [
@@ -58,6 +55,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
             ]
         ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandMinimal()
