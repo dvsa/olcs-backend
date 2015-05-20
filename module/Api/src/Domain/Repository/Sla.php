@@ -4,9 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
-final class Sla extends AbstractRepository
+/*final */class Sla extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\System\Sla';
 
