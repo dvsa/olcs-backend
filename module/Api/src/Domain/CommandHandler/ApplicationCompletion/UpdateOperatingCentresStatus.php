@@ -49,7 +49,7 @@ final class UpdateOperatingCentresStatus extends AbstractUpdateStatus
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
         );
 
-        if (in_array($licenceType, $allowLargeVehicles) && $application->getTotAuthLargeVehicles() !== null) {
+        if (in_array($licenceType, $allowLargeVehicles) && $application->getTotAuthLargeVehicles() === null) {
             return false;
         }
 
@@ -58,7 +58,7 @@ final class UpdateOperatingCentresStatus extends AbstractUpdateStatus
             Licence::LICENCE_TYPE_RESTRICTED
         );
 
-        if (in_array($licenceType, $allowCommunityLicences) && $application->getTotCommunityLicences() !== null) {
+        if (in_array($licenceType, $allowCommunityLicences) && $application->getTotCommunityLicences() === null) {
             return false;
         }
 

@@ -43,7 +43,7 @@ final class UpdateSafetyStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if (!in_array($application->getSafetyConfirmation(), ['Y', 'N'])) {
+        if ($application->getSafetyConfirmation() !== 'Y') {
             return false;
         }
 
