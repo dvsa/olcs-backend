@@ -6,9 +6,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
-final class PublicHoliday extends AbstractRepository
+/*final */class PublicHoliday extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\System\PublicHoliday';
     protected $alias = 'p';

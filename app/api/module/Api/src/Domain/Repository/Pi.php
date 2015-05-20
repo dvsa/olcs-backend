@@ -3,7 +3,6 @@
 /**
  * Cases
  */
-
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +14,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 /**
  * Pi
  */
-final class Pi extends AbstractRepository
+/*final */class Pi extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Pi\Pi';
 
