@@ -1005,7 +1005,11 @@ VALUES
   (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
 	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
-	NULL, 1);
+	NULL, 1),
+  (5, 8, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 2, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
+  NULL, 1),
+  (6, 8, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 2, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
+  NULL, 1);
 
 INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
 VALUES
