@@ -7,11 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
@@ -50,6 +50,11 @@ final class ResetApplication extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
+        $licence = $application->getLicence();
+
+        $receivedDate = $application->getReceivedDate();
+        $trafficArea = $licence->getTrafficArea();
+
         // Need to grab this now before removing the licence
         $organisation = $application->getLicence()->getOrganisation();
 
@@ -61,14 +66,13 @@ final class ResetApplication extends AbstractCommandHandler
             $count = $this->closeTasks($application);
             $result->addMessage($count . ' task(s) closed');
 
-            $this->licenceRepo->delete($application->getLicence());
+            $this->licenceRepo->delete($licence);
             $result->addMessage('Licence removed');
 
             $this->getRepo()->delete($application);
             $result->addMessage('Application removed');
 
-            $result->merge($this->createNewApplication($command, $organisation));
-            $result->merge($this->updateApplicationCompletion($result->getId('application')));
+            $result->merge($this->createNewApplication($command, $organisation, $receivedDate, $trafficArea));
 
             $this->getRepo()->commit();
 
@@ -79,17 +83,22 @@ final class ResetApplication extends AbstractCommandHandler
         }
     }
 
-    private function updateApplicationCompletion($applicationId)
-    {
-        return $this->getCommandHandler()->handleCommand(
-            UpdateApplicationCompletion::create(['id' => $applicationId])
-        );
-    }
-
-    private function createNewApplication(Cmd $command, Organisation $organisation)
+    private function createNewApplication(Cmd $command, Organisation $organisation, $receivedDate = null, TrafficArea $trafficArea = null)
     {
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
+
+        if ($receivedDate !== null) {
+            if ($receivedDate instanceof \DateTime) {
+                $receivedDate = $receivedDate->format('Y-m-d');
+            }
+
+            $data['receivedDate'] = $receivedDate;
+        }
+
+        if ($trafficArea !== null) {
+            $data['trafficArea'] = $trafficArea->getId();
+        }
 
         return $this->getCommandHandler()->handleCommand(
             CreateApplicationCommand::create($data)
