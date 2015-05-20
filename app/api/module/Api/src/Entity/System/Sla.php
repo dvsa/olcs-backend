@@ -12,5 +12,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sla extends AbstractSla
 {
+    public function appliesTo(\DateTime $date)
+    {
+        if ($this->effectiveFrom !== null && $this->effectiveFrom > $date) {
+            return false;
+        }
 
+        if ($this->effectiveTo !== null && $this->effectiveTo < $date) {
+            return false;
+        }
+
+        return true;
+    }
 }
