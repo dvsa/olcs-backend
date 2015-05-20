@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAplicationFeeCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -97,7 +97,7 @@ final class CreateApplication extends AbstractCommandHandler
 
     private function createApplicationFee($applicationId)
     {
-        return $this->getCommandHandler()->handleCommand(CreateApplicationFee::create(['id' => $applicationId]));
+        return $this->getCommandHandler()->handleCommand(CreateAplicationFeeCommand::create(['id' => $applicationId]));
     }
 
     private function createApplicationCompletion(Application $application)

@@ -73,9 +73,12 @@ final class CreateTask extends AbstractCommandHandler
             $task->setLicence($Licence);
         }
 
+        if ($command->getActionDate() !== null) {
+            $task->setActionDate(new \DateTime($command->getActionDate()));
+        }
+
         // Task properties
         $task->setDescription($command->getDescription());
-        $task->setActionDate($command->getActionDate());
         $task->setIsClosed($command->getIsClosed());
         $task->setUrgent($command->getUrgent());
 

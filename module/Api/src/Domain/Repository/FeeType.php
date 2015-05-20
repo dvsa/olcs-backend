@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class FeeType extends AbstractRepository
+/*final */class FeeType extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Fee\FeeType';
 
