@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 
 /**
@@ -39,18 +38,17 @@ class GenerateLicenceNumberTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE => m::mock(RefData::class)->makePartial()
-                ->shouldReceive('getId')->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)->getMock(),
-            LicenceEntity::LICENCE_CATEGORY_PSV => m::mock(RefData::class)->makePartial()
-                ->shouldReceive('getId')->andReturn(LicenceEntity::LICENCE_CATEGORY_PSV)->getMock()
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_CATEGORY_PSV
         ];
 
         $this->references = [
             TrafficArea::class => [
-                TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)->makePartial()
-                    ->shouldReceive('getId')->andReturn(TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE)->getMock()
+                TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
             ]
         ];
+
+        parent::initReferences();
     }
 
     /**

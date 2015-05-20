@@ -44,7 +44,7 @@ final class UpdateAddressesStatus extends AbstractUpdateStatus
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
         );
 
-        // If we don't need an establishment address
+        // If we need an establishment address
         if (in_array($application->getLicenceType()->getId(), $allowedLicTypes)) {
             $estAdd = $licence->getEstablishmentCd();
 

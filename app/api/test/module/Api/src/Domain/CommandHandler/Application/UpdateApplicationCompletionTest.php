@@ -35,15 +35,6 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-        ];
-
-        $this->references = [
-        ];
-    }
-
     public function testHandleCommand()
     {
         $command = Cmd::create(['id' => 111, 'section' => 'typeOfLicence']);

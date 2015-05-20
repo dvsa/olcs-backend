@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
@@ -44,9 +43,9 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            FeeTypeEntity::FEE_TYPE_APP => m::mock(RefData::class),
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE => m::mock(RefData::class),
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL => m::mock(RefData::class),
+            FeeTypeEntity::FEE_TYPE_APP,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
         ];
 
         $this->references = [
@@ -54,6 +53,8 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
                 TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
             ]
         ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommand()
