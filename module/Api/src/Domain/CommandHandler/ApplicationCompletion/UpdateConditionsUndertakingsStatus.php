@@ -20,7 +20,7 @@ final class UpdateConditionsUndertakingsStatus extends AbstractUpdateStatus
 {
     protected $repoServiceName = 'Application';
 
-    protected $section = 'Conditions';
+    protected $section = 'ConditionsUndertakings';
 
     protected function isSectionValid(Application $application)
     {
