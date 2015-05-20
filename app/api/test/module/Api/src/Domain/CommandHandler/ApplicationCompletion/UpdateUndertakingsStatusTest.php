@@ -45,7 +45,7 @@ class UpdateUndertakingsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setUndertakingsStatus(ApplicationCompletionEntity::STATUS_INCOMPLETE);
 
         $this->application->setDeclarationConfirmation('N');
-        
+
         $this->expectStatusUnchanged(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
