@@ -91,6 +91,7 @@ class CommandHandlerTestCase extends MockeryTestCase
     public function expectedSideEffect($class, $data, $result)
     {
         $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
             ->with(m::type($class))
             ->andReturnUsing(
                 function (CommandInterface $command) use ($class, $data, $result) {
