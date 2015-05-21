@@ -4,8 +4,8 @@
 namespace OlcsTest\Db\Service\Organisation;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Olcs\Db\Entity\Organisation;
-use Olcs\Db\Entity\IrfoPartner;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner;
 use Olcs\Db\Service\Organisation\IrfoPartnersManager;
 use Mockery as m;
 

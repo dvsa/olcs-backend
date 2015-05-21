@@ -2,8 +2,8 @@
 
 namespace Olcs\Db\Service\ContactDetails;
 
-use Olcs\Db\Entity\ContactDetails;
-use Olcs\Db\Entity\PhoneContact;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
