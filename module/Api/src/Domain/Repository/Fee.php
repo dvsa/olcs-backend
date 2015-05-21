@@ -12,7 +12,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-/*final */class Fee extends AbstractRepository
+class Fee extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Fee\Fee';
 }

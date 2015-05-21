@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Domain\Util;
 
 use Dvsa\Olcs\Api\Entity\System\Sla;

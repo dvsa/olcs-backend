@@ -11,6 +11,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Sla as SlaRepo;
 
+/**
+ * PI
+ */
 final class Pi extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Pi';

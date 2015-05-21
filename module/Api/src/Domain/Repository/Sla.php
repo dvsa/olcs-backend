@@ -5,7 +5,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 
-/*final */class Sla extends AbstractRepository
+/**
+ * SLA
+ */
+class Sla extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\System\Sla';
 

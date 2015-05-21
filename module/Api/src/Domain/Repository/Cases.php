@@ -13,7 +13,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 /**
  * Cases
  */
-/*final */class Cases extends AbstractRepository
+class Cases extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Cases\Cases';
 

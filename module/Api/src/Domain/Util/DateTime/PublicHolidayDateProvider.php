@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
  * Class PublicHolidayDateProvider
- * @package Dvsa\Olcs\Api\Util\DateTime
  */
 final class PublicHolidayDateProvider implements DateProviderInterface
 {

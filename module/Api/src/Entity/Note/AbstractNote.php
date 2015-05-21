@@ -16,8 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_note_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_note_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_note_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_note_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="ix_note_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_note_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_note_note_type", columns={"note_type"}),
@@ -102,26 +101,6 @@ abstract class AbstractNote
     protected $id;
 
     /**
-     * Irfo gv permit
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoGvPermit;
-
-    /**
-     * Irfo psv auth
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoPsvAuth;
-
-    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -177,6 +156,16 @@ abstract class AbstractNote
      * @ORM\Column(type="string", name="olbs_type", length=32, nullable=true)
      */
     protected $olbsType;
+
+    /**
+     * Organisation
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
 
     /**
      * Priority
@@ -369,52 +358,6 @@ abstract class AbstractNote
     }
 
     /**
-     * Set the irfo gv permit
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit $irfoGvPermit
-     * @return Note
-     */
-    public function setIrfoGvPermit($irfoGvPermit)
-    {
-        $this->irfoGvPermit = $irfoGvPermit;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo gv permit
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit
-     */
-    public function getIrfoGvPermit()
-    {
-        return $this->irfoGvPermit;
-    }
-
-    /**
-     * Set the irfo psv auth
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth $irfoPsvAuth
-     * @return Note
-     */
-    public function setIrfoPsvAuth($irfoPsvAuth)
-    {
-        $this->irfoPsvAuth = $irfoPsvAuth;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo psv auth
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
-     */
-    public function getIrfoPsvAuth()
-    {
-        return $this->irfoPsvAuth;
-    }
-
-    /**
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
@@ -550,6 +493,29 @@ abstract class AbstractNote
     public function getOlbsType()
     {
         return $this->olbsType;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @return Note
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 
     /**

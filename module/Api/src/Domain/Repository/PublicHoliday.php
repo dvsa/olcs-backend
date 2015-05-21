@@ -7,7 +7,10 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
-/*final */class PublicHoliday extends AbstractRepository
+/**
+ * PublicHoliday
+ */
+class PublicHoliday extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\System\PublicHoliday';
     protected $alias = 'p';
