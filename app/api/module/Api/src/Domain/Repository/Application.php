@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+
 /**
  * Application
  *
@@ -14,5 +16,5 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
  */
 /*final */class Application extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Application\Application';
+    protected $entity = Entity::class;
 }

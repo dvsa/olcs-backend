@@ -22,6 +22,8 @@ interface RepositoryInterface
 {
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null);
 
+    public function lock($entity, $version);
+
     public function save($entity);
 
     public function delete($entity);
