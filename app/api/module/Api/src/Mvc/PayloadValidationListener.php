@@ -11,6 +11,9 @@ use Dvsa\Olcs\Transfer\Util\Annotation\AnnotationBuilder;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response;
 
+/**
+ * Class PayloadValidationListener
+ */
 class PayloadValidationListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;

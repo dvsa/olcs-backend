@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\Util;
+
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\System\Sla;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
