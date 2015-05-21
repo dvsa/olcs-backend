@@ -28,9 +28,6 @@ class Checklists implements ServiceLocatorAwareInterface
     const MESSAGE_TYPE_CONTINUATION_CHECKLIST = 'que_typ_cont_checklist';
     const MESSAGE_STATUS_QUEUED = 'que_sts_queued';
 
-    const DOC_CATEGORY = 1; // Licence
-    const DOC_SUB_CATEGORY = 74; // Licence - continuations and renewals
-
     const LICENCE_TYPE_SPECIAL_RESTRICTED = 'ltyp_sr';
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
@@ -83,7 +80,6 @@ class Checklists implements ServiceLocatorAwareInterface
     public function update($id, $data)
     {
         $docId = $data['docId'];
-        $template = $data['template'];
 
         $em = $this->getEntityManager();
         $emh = $this->getServiceLocator()->get('EntityManagerHelper');
@@ -103,45 +99,40 @@ class Checklists implements ServiceLocatorAwareInterface
             return 'Continuation detail not found';
         }
 
-        /* @var $continuationDetail \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail */
+        $qb->select('d')
+            ->from('\Olcs\Db\Entity\Document', 'd')
+            ->where($qb->expr()->eq('d.id', ':id'))
+            ->setParameter('id', $docId)
+            ->setMaxResults(1);
+
+        $documents = $qb->getQuery()->execute();
+
+        if (empty($documents)) {
+            return 'Document record not found';
+        }
+
+        /* @var \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail $continuationDetail */
         $continuationDetail = $results[0];
         $licence = $continuationDetail->getLicence();
+
+        /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
+        $document = $documents[0];
 
         $em->beginTransaction();
 
         try {
-            // Create the document record
-            $document = new Document();
-            $document->setDescription('Checklist');
-            $document->setFilename($template . '.rtf');
-            $document->setLicence($licence);
-
-            $catRef = $em->getReference('\Dvsa\Olcs\Api\Entity\System\Category', self::DOC_CATEGORY);
-            $document->setCategory($catRef);
-            $subCatRef = $em->getReference('\Dvsa\Olcs\Api\Entity\System\SubCategory', self::DOC_SUB_CATEGORY);
-            $document->setSubCategory($subCatRef);
-
-            $document->setIdentifier($docId);
-            $document->setIssuedDate(new \DateTime());
-            $document->setIsExternal(false);
-            $document->setIsScan(false);
-
-            $em->persist($document);
-
             // Create the fee
             if ($this->shouldCreateFee($licence)) {
                 $feeType = $this->getLatestFeeType(self::FEE_TYPE_CONT, $licence);
 
                 $amount = ($feeType->getFixedValue() != 0 ? $feeType->getFixedValue() : $feeType->getFiveYearValue());
 
-                $fee = new Fee();
-                $fee->setAmount($amount);
+                $feeStatusRefData = $emh->getRefDataReference(self::FEE_STATUS_OUTSTANDING);
+
+                $fee = new Fee($feeType, $amount, $feeStatusRefData);
                 $fee->setLicence($licence);
                 $fee->setInvoicedDate(new \DateTime());
-                $fee->setFeeType($feeType);
                 $fee->setDescription($feeType->getDescription() . ' for licence ' . $licence->getLicNo());
-                $feeStatusRefData = $emh->getRefDataReference(self::FEE_STATUS_OUTSTANDING);
-                $fee->setFeeStatus($feeStatusRefData);
 
                 $em->persist($fee);
             }
@@ -149,6 +140,7 @@ class Checklists implements ServiceLocatorAwareInterface
             // Update the continuation detail status
             $printedRefData = $emh->getRefDataReference(self::CONTINUATION_DETAIL_STATUS_PRINTED);
             $continuationDetail->setStatus($printedRefData);
+            $continuationDetail->setChecklistDocument($document);
 
             $em->persist($continuationDetail);
 
