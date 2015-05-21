@@ -1589,6 +1589,23 @@ return array(
     'continuation_detail' => array(
         'received' => array(
             'type' => 'yesno'
-        )
-    )
+        ),
+        'checklist_document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'continuationDetail'
+            )
+        ),
+    ),
+    'companies_house_officer' => array(
+        'company_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseCompany',
+                'property' => 'officer',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
+    ),
 );
