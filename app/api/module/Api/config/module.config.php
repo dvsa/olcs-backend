@@ -27,6 +27,7 @@ return [
         'invokables' => [
             'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
             'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
+            'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
         ]
     ],
@@ -100,8 +101,10 @@ return [
         'factories' => [
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
-            => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -116,6 +119,7 @@ return [
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'Application' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Organisation' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
