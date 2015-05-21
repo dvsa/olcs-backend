@@ -115,7 +115,7 @@ class CommandHandlerTestCase extends MockeryTestCase
             }
 
             foreach ($this->references as $type => $mocks) {
-                foreach ($mocks as  $id => $mock) {
+                foreach ($mocks as $id => $mock) {
                     $mock->makePartial();
                     $mock->setId($id);
                 }

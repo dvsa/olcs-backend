@@ -49,7 +49,6 @@ class Cases extends AbstractRepository
         // -> presided by role (refdata)
         //decisions
 
-
         $qb->andWhere($qb->expr()->eq('p.case', ':byId'))
             ->setParameter('byId', $query->getId())
             ->setMaxResults(1);

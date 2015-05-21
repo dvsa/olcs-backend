@@ -6,6 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryPartial;
+
 use Dvsa\Olcs\Api\Domain\QueryPartial\ById;
 
 /**

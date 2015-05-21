@@ -5,6 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\Util;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class TimeProcessorBuilderFactory
+ */
 class TimeProcessorBuilderFactory implements FactoryInterface
 {
     /**

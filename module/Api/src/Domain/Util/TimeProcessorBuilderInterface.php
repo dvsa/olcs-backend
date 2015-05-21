@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\System\Sla;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Util\DateTime\DateTimeCalculatorInterface;
 
-
 /**
  * Interface TimeProcessorBuilderInterface
  * @package Dvsa\Olcs\Api\Domain\Util

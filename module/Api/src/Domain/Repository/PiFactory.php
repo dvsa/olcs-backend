@@ -5,6 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class PiFactory
+ */
 class PiFactory implements FactoryInterface
 {
     /**
