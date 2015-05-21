@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+/**
+ * Add Days
+ */
 class AddDays implements DateTimeCalculatorInterface
 {
     /**

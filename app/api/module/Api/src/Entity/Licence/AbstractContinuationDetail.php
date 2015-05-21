@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_continuation_detail_continuation_id", columns={"continuation_id"}),
  *        @ORM\Index(name="ix_continuation_detail_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_continuation_detail_checklist_document_id",
+     *     columns={"checklist_document_id"}),
  *        @ORM\Index(name="ix_continuation_detail_status", columns={"status"}),
  *        @ORM\Index(name="ix_continuation_detail_received", columns={"received"}),
  *        @ORM\Index(name="ix_continuation_created_by", columns={"created_by"}),
@@ -24,6 +26,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class AbstractContinuationDetail
 {
+
+    /**
+     * Checklist document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="continuationDetails"
+     * )
+     * @ORM\JoinColumn(name="checklist_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $checklistDocument;
 
     /**
      * Continuation
@@ -149,6 +165,29 @@ abstract class AbstractContinuationDetail
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Set the checklist document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $checklistDocument
+     * @return ContinuationDetail
+     */
+    public function setChecklistDocument($checklistDocument)
+    {
+        $this->checklistDocument = $checklistDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the checklist document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getChecklistDocument()
+    {
+        return $this->checklistDocument;
+    }
 
     /**
      * Set the continuation

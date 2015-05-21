@@ -83,8 +83,12 @@ final class ResetApplication extends AbstractCommandHandler
         }
     }
 
-    private function createNewApplication(Cmd $command, Organisation $organisation, $receivedDate = null, TrafficArea $trafficArea = null)
-    {
+    private function createNewApplication(
+        Cmd $command,
+        Organisation $organisation,
+        $receivedDate = null,
+        TrafficArea $trafficArea = null
+    ) {
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
 

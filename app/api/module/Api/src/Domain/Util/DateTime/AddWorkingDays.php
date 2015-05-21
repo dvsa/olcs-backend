@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+/**
+ * Class AddWorkingDays
+ */
 class AddWorkingDays implements DateTimeCalculatorInterface
 {
     private $wrapped;

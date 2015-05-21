@@ -19,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @method QueryBuilder byId($id)
  * @method QueryBuilder with($property, $alias = null)
  */
-/*final */class QueryBuilder implements QueryBuilderInterface
+class QueryBuilder implements QueryBuilderInterface
 {
     /**
      * @var DoctrineQueryBuilder

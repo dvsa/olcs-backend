@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+/**
+ * AddDaysExcludingDates
+ */
 class AddDaysExcludingDates implements DateTimeCalculatorInterface
 {
     private $wrapped;

@@ -14,7 +14,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 /**
  * Pi
  */
-/*final */class Pi extends AbstractRepository
+class Pi extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Pi\Pi';
 
@@ -24,8 +24,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
         EntityManagerInterface $em,
         QueryBuilderInterface $queryBuilder,
         RepositoryInterface $cases
-    )
-    {
+    ) {
         parent::__construct($em, $queryBuilder);
         $this->cases = $cases;
     }

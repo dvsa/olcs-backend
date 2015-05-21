@@ -3,7 +3,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
-
+/**
+ * Interface DateTimeCalculatorInterface
+ */
 interface DateTimeCalculatorInterface
 {
     /**

@@ -18,6 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="ix_submission_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_submission_sender_user_id", columns={"sender_user_id"}),
+ *        @ORM\Index(name="ix_submission_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"})
@@ -114,6 +116,26 @@ abstract class AbstractSubmission
     protected $lastModifiedOn;
 
     /**
+     * Recipient user
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="recipient_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $recipientUser;
+
+    /**
+     * Sender user
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="sender_user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $senderUser;
+
+    /**
      * Submission type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -122,6 +144,15 @@ abstract class AbstractSubmission
      * @ORM\JoinColumn(name="submission_type", referencedColumnName="id", nullable=false)
      */
     protected $submissionType;
+
+    /**
+     * Urgent
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="urgent", nullable=true)
+     */
+    protected $urgent;
 
     /**
      * Version
@@ -379,6 +410,52 @@ abstract class AbstractSubmission
     }
 
     /**
+     * Set the recipient user
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $recipientUser
+     * @return Submission
+     */
+    public function setRecipientUser($recipientUser)
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the recipient user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getRecipientUser()
+    {
+        return $this->recipientUser;
+    }
+
+    /**
+     * Set the sender user
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $senderUser
+     * @return Submission
+     */
+    public function setSenderUser($senderUser)
+    {
+        $this->senderUser = $senderUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the sender user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getSenderUser()
+    {
+        return $this->senderUser;
+    }
+
+    /**
      * Set the submission type
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionType
@@ -399,6 +476,29 @@ abstract class AbstractSubmission
     public function getSubmissionType()
     {
         return $this->submissionType;
+    }
+
+    /**
+     * Set the urgent
+     *
+     * @param string $urgent
+     * @return Submission
+     */
+    public function setUrgent($urgent)
+    {
+        $this->urgent = $urgent;
+
+        return $this;
+    }
+
+    /**
+     * Get the urgent
+     *
+     * @return string
+     */
+    public function getUrgent()
+    {
+        return $this->urgent;
     }
 
     /**

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-/*final */class Application extends AbstractRepository
+class Application extends AbstractRepository
 {
     protected $entity = Entity::class;
 }

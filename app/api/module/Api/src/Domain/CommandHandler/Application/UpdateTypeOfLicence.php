@@ -125,7 +125,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
 
     private function createUpdateApplicationCompletionCommand(Application $application)
     {
-        return UpdateApplicationCompletionCommand::create(['id' => $application->getId(), 'section' => 'typeOfLicence']);
+        return UpdateApplicationCompletionCommand::create(
+            ['id' => $application->getId(), 'section' => 'typeOfLicence']
+        );
     }
 
     private function createResetApplicationCommand(Cmd $command)

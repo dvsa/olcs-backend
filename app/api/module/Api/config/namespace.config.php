@@ -29,6 +29,8 @@ return [
     'CommunityLicSuspensionReason' => 'CommunityLic',
     'CommunityLicWithdrawal' => 'CommunityLic',
     'CommunityLicWithdrawalReason' => 'CommunityLic',
+    'CompaniesHouseCompany' => 'CompaniesHouse',
+    'CompaniesHouseOfficer' => 'CompaniesHouse',
     'Address' => 'ContactDetails',
     'ContactDetails' => 'ContactDetails',
     'Country' => 'ContactDetails',

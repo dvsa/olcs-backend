@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-/*final */class Licence extends AbstractRepository
+class Licence extends AbstractRepository
 {
     protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\Licence';
 

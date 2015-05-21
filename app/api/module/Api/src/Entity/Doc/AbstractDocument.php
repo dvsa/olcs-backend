@@ -340,6 +340,18 @@ abstract class AbstractDocument
     protected $version = 1;
 
     /**
+     * Continuation detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail",
+     *     mappedBy="checklistDocument"
+     * )
+     */
+    protected $continuationDetails;
+
+    /**
      * Template
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -358,6 +370,7 @@ abstract class AbstractDocument
 
     public function initCollections()
     {
+        $this->continuationDetails = new ArrayCollection();
         $this->templates = new ArrayCollection();
     }
 
@@ -1003,6 +1016,66 @@ abstract class AbstractDocument
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the continuation detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails
+     * @return Document
+     */
+    public function setContinuationDetails($continuationDetails)
+    {
+        $this->continuationDetails = $continuationDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the continuation details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getContinuationDetails()
+    {
+        return $this->continuationDetails;
+    }
+
+    /**
+     * Add a continuation details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails
+     * @return Document
+     */
+    public function addContinuationDetails($continuationDetails)
+    {
+        if ($continuationDetails instanceof ArrayCollection) {
+            $this->continuationDetails = new ArrayCollection(
+                array_merge(
+                    $this->continuationDetails->toArray(),
+                    $continuationDetails->toArray()
+                )
+            );
+        } elseif (!$this->continuationDetails->contains($continuationDetails)) {
+            $this->continuationDetails->add($continuationDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a continuation details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails
+     * @return Document
+     */
+    public function removeContinuationDetails($continuationDetails)
+    {
+        if ($this->continuationDetails->contains($continuationDetails)) {
+            $this->continuationDetails->removeElement($continuationDetails);
+        }
+
+        return $this;
     }
 
     /**
