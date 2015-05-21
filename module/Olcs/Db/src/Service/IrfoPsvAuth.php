@@ -6,6 +6,8 @@
 
 namespace Olcs\Db\Service;
 
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
+
 /**
  * IRFO PSV Auth Service
  */
@@ -52,7 +54,7 @@ class IrfoPsvAuth extends ServiceAbstract
         if (!empty($data['irfoPsvAuthType'])) {
             // get IrfoPsvAuthType
             $irfoPsvAuthType = $this->getEntityManager()->find(
-                '\Olcs\Db\Entity\IrfoPsvAuthType',
+                IrfoPsvAuthType::class,
                 $data['irfoPsvAuthType']
             );
 

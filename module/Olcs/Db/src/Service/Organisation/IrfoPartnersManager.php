@@ -2,8 +2,8 @@
 
 namespace Olcs\Db\Service\Organisation;
 
-use Olcs\Db\Entity\Organisation;
-use Olcs\Db\Entity\IrfoPartner;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -21,7 +21,7 @@ class RefDataController extends AbstractController
 
         /** @var \Doctrine\Orm\EntityManager $em */
         $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        $repository = $em->getRepository('Olcs\Db\Entity\RefData');
+        $repository = $em->getRepository('Dvsa\Olcs\Api\Entity\System\RefData');
 
         $data = $repository->findByIdentifierAndLanguage($id, $lang);
         return $this->respond(Response::STATUS_CODE_200, 'OK', $data);
@@ -34,7 +34,7 @@ class RefDataController extends AbstractController
         $lang = $this->getLanguage();
         /** @var \Doctrine\Orm\EntityManager $em */
         $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        $repository = $em->getRepository('Olcs\Db\Entity\RefData');
+        $repository = $em->getRepository('Dvsa\Olcs\Api\Entity\System\RefData');
 
         $data = $repository->findAllByCategoryAndLanguage($category, $lang);
 
