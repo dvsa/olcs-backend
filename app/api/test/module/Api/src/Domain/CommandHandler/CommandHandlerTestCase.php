@@ -9,12 +9,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Zend\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler Test Case
@@ -48,6 +50,10 @@ class CommandHandlerTestCase extends MockeryTestCase
 
     protected $references = [];
 
+    protected $categoryReferences = [];
+
+    protected $subCategoryReferences = [];
+
     private $initRefdata = false;
 
     public function setUp()
@@ -78,7 +84,11 @@ class CommandHandlerTestCase extends MockeryTestCase
         $this->repoMap[$name]->shouldReceive('getRefdataReference')
             ->andReturnUsing([$this, 'mapRefData'])
             ->shouldReceive('getReference')
-            ->andReturnUsing([$this, 'mapReference']);
+            ->andReturnUsing([$this, 'mapReference'])
+            ->shouldReceive('getCategoryReference')
+            ->andReturnUsing([$this, 'mapCategoryReference'])
+            ->shouldReceive('getSubCategoryReference')
+            ->andReturnUsing([$this, 'mapSubCategoryReference']);
     }
 
     protected function initReferences()
@@ -92,6 +102,16 @@ class CommandHandlerTestCase extends MockeryTestCase
                     $mock->makePartial();
                     $mock->setId($id);
                 }
+            }
+
+            foreach ($this->categoryReferences as $id => $mock) {
+                $mock->makePartial();
+                $mock->setId($id);
+            }
+
+            foreach ($this->subCategoryReferences as $id => $mock) {
+                $mock->makePartial();
+                $mock->setId($id);
             }
 
             foreach ($this->references as $type => $mocks) {
@@ -127,6 +147,16 @@ class CommandHandlerTestCase extends MockeryTestCase
     public function mapRefData($key)
     {
         return isset($this->refData[$key]) ? $this->refData[$key] : null;
+    }
+
+    public function mapCategoryReference($key)
+    {
+        return isset($this->categoryReferences[$key]) ? $this->categoryReferences[$key] : null;
+    }
+
+    public function mapSubCategoryReference($key)
+    {
+        return isset($this->subCategoryReferences[$key]) ? $this->subCategoryReferences[$key] : null;
     }
 
     public function mapReference($class, $id)
