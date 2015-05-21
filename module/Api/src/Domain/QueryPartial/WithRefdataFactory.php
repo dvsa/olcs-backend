@@ -2,8 +2,6 @@
 
 /**
  * With Refdata Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
@@ -12,8 +10,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * With Refdata Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
  */
 class WithRefdataFactory implements FactoryInterface
 {

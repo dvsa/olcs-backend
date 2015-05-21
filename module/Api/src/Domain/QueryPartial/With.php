@@ -1,18 +1,19 @@
 <?php
 
 /**
- * ById
+ * With
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * ById
+ * With
  */
 final class With implements QueryPartialInterface
 {
     private $i = 0;
+
     /**
      * Adds a where id = XX clause
      *

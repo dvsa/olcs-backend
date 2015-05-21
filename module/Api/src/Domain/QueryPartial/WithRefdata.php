@@ -2,8 +2,6 @@
 
 /**
  * With Refdata
- *
- * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
@@ -12,8 +10,6 @@ use Doctrine\ORM\QueryBuilder;
 
 /**
  * With Refdata
- *
- * @author Rob Caiger <rob@clocal.co.uk>
  */
 final class WithRefdata implements QueryPartialInterface
 {
