@@ -100,7 +100,7 @@ class Checklists implements ServiceLocatorAwareInterface
         }
 
         $qb->select('d')
-            ->from('\Olcs\Db\Entity\Document', 'd')
+            ->from(Document::class, 'd')
             ->where($qb->expr()->eq('d.id', ':id'))
             ->setParameter('id', $docId)
             ->setMaxResults(1);
