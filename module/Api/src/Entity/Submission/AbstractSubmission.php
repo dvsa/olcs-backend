@@ -165,6 +165,15 @@ abstract class AbstractSubmission
     protected $version = 1;
 
     /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="submission")
+     */
+    protected $documents;
+
+    /**
      * Submission action
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -198,6 +207,7 @@ abstract class AbstractSubmission
 
     public function initCollections()
     {
+        $this->documents = new ArrayCollection();
         $this->submissionActions = new ArrayCollection();
         $this->submissionSectionComments = new ArrayCollection();
     }
@@ -522,6 +532,66 @@ abstract class AbstractSubmission
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Submission
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Submission
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @return Submission
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->removeElement($documents);
+        }
+
+        return $this;
     }
 
     /**

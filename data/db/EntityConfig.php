@@ -508,6 +508,12 @@ return array(
                 'entity' => 'BusReg',
                 'property' => 'document'
             )
+        ),
+        'submission_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Submission',
+                'property' => 'document'
+            )
         )
     ),
     'doc_template' => array(
