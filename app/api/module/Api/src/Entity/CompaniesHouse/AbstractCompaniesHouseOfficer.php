@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
  *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id",
@@ -35,6 +36,15 @@ abstract class AbstractCompaniesHouseOfficer
     protected $company;
 
     /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
      * Date of birth
      *
      * @var \DateTime
@@ -53,6 +63,15 @@ abstract class AbstractCompaniesHouseOfficer
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
 
     /**
      * Name
@@ -106,6 +125,29 @@ abstract class AbstractCompaniesHouseOfficer
     }
 
     /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return CompaniesHouseOfficer
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
      * Set the date of birth
      *
      * @param \DateTime $dateOfBirth
@@ -149,6 +191,29 @@ abstract class AbstractCompaniesHouseOfficer
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return CompaniesHouseOfficer
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
     }
 
     /**
@@ -220,7 +285,25 @@ abstract class AbstractCompaniesHouseOfficer
         return $this->version;
     }
 
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
 
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
+    }
 
     /**
      * Clear properties
