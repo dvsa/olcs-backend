@@ -42,7 +42,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             Licence::LICENCE_STATUS_NOT_SUBMITTED,
-            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ];
@@ -103,7 +103,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
 
         $this->assertNull($app->getReceivedDate());
         $this->assertNull($app->getNiFlag());
@@ -178,7 +178,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
