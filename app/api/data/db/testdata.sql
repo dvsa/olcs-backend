@@ -1588,6 +1588,15 @@ INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status
 VALUES
     (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), 'FeeId');
 
+INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `created_on`)
+VALUES
+    (1, 1, 'irfo_perm_s_s_in_stock', 2015, NOW()),
+    (2, 1, 'irfo_perm_s_s_in_stock', 2015, NOW()),
+    (3, 2, 'irfo_perm_s_s_in_stock', 2015, NOW()),
+    (4, 2, 'irfo_perm_s_s_in_stock', 2016, NOW()),
+    (5, 1, 'irfo_perm_s_s_in_stock', 2016, NOW()),
+    (6, 1, 'irfo_perm_s_s_ret', 2016, NOW());
+
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
     ('task.default_team', 2, NULL),
