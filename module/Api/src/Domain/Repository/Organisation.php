@@ -7,9 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
-use Doctrine\ORM\QueryBuilder;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * Organisation
@@ -20,16 +19,16 @@ class Organisation extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    /**
-     * @NOTE This method can be overridden to extend the default resource bundle
-     *
-     * @param QueryBuilder $qb
-     * @param QryCmd $query
-     */
-    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
+    public function hasInforceLicences($id)
     {
-        $queryBuilder = parent::buildDefaultQuery($qb, $query);
+        /** @var Entity $organisation */
+        $organisation = $this->getEntityManager()->find($this->entity, $id);
 
-        //$qb->addSelect('')
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->neq('inForceDate', null));
+
+        $licences = $organisation->getLicences()->matching($criteria);
+
+        return !empty($licences);
     }
 }
