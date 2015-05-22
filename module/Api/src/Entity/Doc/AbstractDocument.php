@@ -22,6 +22,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
  *        @ORM\Index(name="ix_document_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_document_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_document_operating_centre_id", columns={"operating_centre_id"}),
@@ -300,6 +301,20 @@ abstract class AbstractDocument
      * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $subCategory;
+
+    /**
+     * Submission
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Submission\Submission
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission",
+     *     fetch="LAZY",
+     *     inversedBy="documents"
+     * )
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=true)
+     */
+    protected $submission;
 
     /**
      * Traffic area
@@ -947,6 +962,29 @@ abstract class AbstractDocument
     public function getSubCategory()
     {
         return $this->subCategory;
+    }
+
+    /**
+     * Set the submission
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @return Document
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Submission\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
     }
 
     /**
