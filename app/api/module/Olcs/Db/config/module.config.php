@@ -8,7 +8,7 @@ return [
                 'options' => [
                     'route' => '/[:service][/:id]',
                     'constraints' => [
-                        'service' => '[a-z\-]+',
+                        'service' => '[a-z0-9\-]+',
                         'id' => '[0-9]+'
                     ],
                     'defaults' => [

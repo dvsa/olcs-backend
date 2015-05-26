@@ -21,6 +21,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_attached_to", columns={"attached_to"}),
  *        @ORM\Index(name="ix_condition_undertaking_condition_type", columns={"condition_type"}),
  *        @ORM\Index(name="ix_condition_undertaking_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_s4_id", columns={"s4_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_operating_centre_id",
      *     columns={"operating_centre_id"}),
@@ -265,23 +266,12 @@ abstract class AbstractConditionUndertaking
     /**
      * S4
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Dvsa\Olcs\Api\Entity\Application\S4
      *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\S4",
-     *     inversedBy="conditions",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="s4_condition",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="condition_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="s4_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\S4", fetch="LAZY")
+     * @ORM\JoinColumn(name="s4_id", referencedColumnName="id", nullable=true)
      */
-    protected $s4s;
+    protected $s4;
 
     /**
      * Version
@@ -315,7 +305,6 @@ abstract class AbstractConditionUndertaking
 
     public function initCollections()
     {
-        $this->s4s = new ArrayCollection();
         $this->variationRecords = new ArrayCollection();
     }
 
@@ -805,61 +794,24 @@ abstract class AbstractConditionUndertaking
     /**
      * Set the s4
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
      * @return ConditionUndertaking
      */
-    public function setS4s($s4s)
+    public function setS4($s4)
     {
-        $this->s4s = $s4s;
+        $this->s4 = $s4;
 
         return $this;
     }
 
     /**
-     * Get the s4s
+     * Get the s4
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Dvsa\Olcs\Api\Entity\Application\S4
      */
-    public function getS4s()
+    public function getS4()
     {
-        return $this->s4s;
-    }
-
-    /**
-     * Add a s4s
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
-     * @return ConditionUndertaking
-     */
-    public function addS4s($s4s)
-    {
-        if ($s4s instanceof ArrayCollection) {
-            $this->s4s = new ArrayCollection(
-                array_merge(
-                    $this->s4s->toArray(),
-                    $s4s->toArray()
-                )
-            );
-        } elseif (!$this->s4s->contains($s4s)) {
-            $this->s4s->add($s4s);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a s4s
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
-     * @return ConditionUndertaking
-     */
-    public function removeS4s($s4s)
-    {
-        if ($this->s4s->contains($s4s)) {
-            $this->s4s->removeElement($s4s);
-        }
-
-        return $this;
+        return $this->s4;
     }
 
     /**
