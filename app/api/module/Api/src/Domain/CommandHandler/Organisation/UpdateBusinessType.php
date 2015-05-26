@@ -38,51 +38,69 @@ final class UpdateBusinessType extends AbstractCommandHandler
 
         $canChangeBusinessType = $this->canChangeBusinessType($command, $organisation);
 
-        // If we can change business type, but we don't have a business type set
-        if ($canChangeBusinessType && $command->getBusinessType() === null) {
-            throw new ValidationException([self::ERROR_NO_TYPE => 'Missing business type']);
+        // If we can change business type...
+        if ($canChangeBusinessType) {
+            // A) But we don't have a business type set
+            if ($command->getBusinessType() === null) {
+                throw new ValidationException([self::ERROR_NO_TYPE => 'Missing business type']);
+            }
+
+            // B) But we are not changing business type
+            if (!$this->businessTypeWillChange($organisation, $command)) {
+                $result->addMessage('Business type unchanged');
+                return $result;
+            }
+        } else {
+            // If we can't change business type...
+
+            // A) But we are attempting to change it
+            if ($this->businessTypeWillChange($organisation, $command)) {
+
+                throw new ValidationException(
+                    [self::ERROR_CANT_CHANGE_TYPE => 'Attempted to change business type when update is not allowed']
+                );
+            }
+
+            // B) Otherwise...
+            $result->addMessage('Can\'t update business type');
+
+            $this->maybeUpdateApplicationCompletion($command, $result);
+
+            return $result;
         }
 
-        if (!$canChangeBusinessType && $this->businessTypeWillChange($organisation, $command)) {
-            throw new ValidationException(
-                [self::ERROR_CANT_CHANGE_TYPE => 'Attempted to change business type when update is not allowed']
-            );
-        }
-
+        // If we have got here then we CAN change the business type and we ARE changing the business type
         try {
 
             $this->getRepo()->beginTransaction();
 
-            if ($canChangeBusinessType) {
+            $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
 
-                if ($this->businessTypeWillChange($organisation, $command)) {
-                    $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
+            $this->getRepo()->save($organisation);
 
-                    $this->getRepo()->save($organisation);
-                    $result->addMessage('Business type updated');
-                } else {
-                    $result->addMessage('Business type unchanged');
-                }
-            } else {
-                $result->addMessage('Can\'t update business type');
-            }
+            $result->addMessage('Business type updated');
 
-            if ($command->getApplication() !== null) {
-
-                $result->merge(
-                    $this->getCommandHandler()->handleCommand(
-                        $this->createUpdateApplicationCompletionCommand($command->getApplication())
-                    )
-                );
-            }
+            $this->maybeUpdateApplicationCompletion($command, $result);
 
             $this->getRepo()->commit();
 
             return $result;
         } catch (\Exception $ex) {
+
             $this->getRepo()->rollback();
 
             throw $ex;
+        }
+    }
+
+    private function maybeUpdateApplicationCompletion(Cmd $command, Result $result)
+    {
+        if ($command->getApplication() !== null) {
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(
+                    $this->createUpdateApplicationCompletionCommand($command->getApplication())
+                )
+            );
         }
     }
 
