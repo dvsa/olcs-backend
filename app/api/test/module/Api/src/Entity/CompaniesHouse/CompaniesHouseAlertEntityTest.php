@@ -1,9 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity;
+namespace Dvsa\OlcsTest\Api\Entity\CompaniesHouse;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\CompaniesHouseAlert as Entity;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as Entity;
 
 /**
  * CompaniesHouseAlert Entity Unit Tests
