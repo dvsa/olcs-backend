@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class AlignEntitiesToSchema
 {
-    const ENTITY_NAMESPACE = 'Olcs\\Db\\Entity\\';
+    const ENTITY_NAMESPACE = 'Dvsa\\Olcs\\Api\\Entity\\';
 
     /**
      * Store the cli options
@@ -168,8 +168,8 @@ class AlignEntitiesToSchema
             $this->exitResponse(
                 'Usage \'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql '
                 . '--mapping-files /var/www/olcs/olcs-backend/data/mapping/ --entity-files '
-                . '/var/www/olcs/olcs-backend/module/Olcs/Db/src/Entity/ --test-files '
-                . '/var/www/olcs/olcs-backend/test/module/Olcs/Db/src/Entity/ --entity-config '
+                . '/var/www/olcs/olcs-backend/module/Api/src/Entity/ --test-files '
+                . '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/ --entity-config '
                 . '/var/www/olcs/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\''
             );
         }
@@ -184,35 +184,35 @@ class AlignEntitiesToSchema
     {
         $this->application = Application::init($config);
 
-        $this->loadEntityConfig();
+        try {
+            $this->loadEntityConfig();
 
-        $this->createDatabaseConnection();
+            $this->createDatabaseConnection();
 
-        $this->maybeImportSchema();
+            $this->maybeImportSchema();
 
-        $this->removeOldMappingFiles();
+            $this->removeOldMappingFiles();
 
-        $this->generateNewMappingFiles();
+            $this->generateNewMappingFiles();
 
-        $this->removeOldEntities();
+            $this->removeOldEntities();
 
-        $this->removeOldTraits();
+            $this->findMappingFiles();
 
-        $this->findMappingFiles();
+            $this->compileEntityConfig();
 
-        $this->compileEntityConfig();
+            $this->createEntities();
 
-        $this->createTraits();
+            $this->removeOldUnitTests();
 
-        $this->exchangeFieldsForTraits();
+            $this->createUnitTests();
 
-        $this->createEntities();
-
-        $this->removeOldUnitTests();
-
-        $this->createUnitTests();
-
-        $this->importEntities();
+            $this->importEntities();
+        } catch (\Exception $ex) {
+            echo $ex->getTraceAsString() . "\n\n";
+            echo $ex->getMessage();
+            exit;
+        }
     }
 
     /**
@@ -385,20 +385,22 @@ class AlignEntitiesToSchema
 
         $error = false;
 
-        foreach (new DirectoryIterator($entityDirectory) as $fileInfo) {
+        $di = new \RecursiveDirectoryIterator($entityDirectory, \FilesystemIterator::SKIP_DOTS);
+        $ri = new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($ri as $file) {
+            if ($file->isFile()) {
+                $fileName = $file->getFilename();
+                $filePath = $file->getPath() . '/' . $fileName;
 
-            if ($fileInfo->isDot() || $fileInfo->isDir()) {
-                continue;
-            }
-
-            $fileName = $fileInfo->getFilename();
-
-            unlink($entityDirectory . $fileName);
-            if (!file_exists($entityDirectory . $fileName)) {
-                $this->respond('Removed: ' . $fileName);
-            } else {
-                $error = true;
-                $this->respond('Unable to remove: ' . $fileName, 'error');
+                if (preg_match('/Abstract([^.]+).php/', $fileName)) {
+                    unlink($filePath);
+                    if (!file_exists($filePath)) {
+                        $this->respond('Removed: ' . $filePath);
+                    } else {
+                        $error = true;
+                        $this->respond('Unable to remove: ' . $filePath, 'error');
+                    }
+                }
             }
         }
 
@@ -406,45 +408,6 @@ class AlignEntitiesToSchema
             $this->exitResponse('Unable to remove some entities');
         } else {
             $this->respond('Old entities were removed', 'success');
-        }
-    }
-
-    /**
-     * Remove old traits
-     */
-    private function removeOldTraits()
-    {
-        $this->respond('Removing non-custom old traits ...', 'info');
-
-        $entityDirectory = $this->options['entity-files'] . 'Traits/';
-
-        $error = false;
-
-        foreach (new DirectoryIterator($entityDirectory) as $fileInfo) {
-
-            if ($fileInfo->isDot() || $fileInfo->isDir()) {
-                continue;
-            }
-
-            $fileName = $fileInfo->getFilename();
-
-            if (preg_match('/^Custom/', $fileName)) {
-                continue;
-            }
-
-            unlink($entityDirectory . $fileName);
-            if (!file_exists($entityDirectory . $fileName)) {
-                $this->respond('Removed: ' . $fileName);
-            } else {
-                $error = true;
-                $this->respond('Unable to remove: ' . $fileName, 'error');
-            }
-        }
-
-        if ($error) {
-            $this->exitResponse('Unable to remove some traits');
-        } else {
-            $this->respond('Old non-custom traits were removed', 'success');
         }
     }
 
@@ -471,11 +434,10 @@ class AlignEntitiesToSchema
 
             $camelCaseName = str_replace(self::ENTITY_NAMESPACE, '', $config['entity']['@attributes']['name']);
 
-            try {
-                $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName, $nullables);
-            } catch (\Exception $ex) {
-                die($ex->getMessage());
-            }
+            $namespace = $this->findNamespace($camelCaseName);
+            $relativeNamespace = $this->findRelativeNamespace($camelCaseName);
+
+            $fields = $this->getFieldsFromConfig($config, $defaults, $comments, $camelCaseName, $nullables);
 
             $this->cacheFields($fields);
 
@@ -483,20 +445,21 @@ class AlignEntitiesToSchema
                 'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
                 'translatable' => $this->hasTranslatableField($fields),
-                'className' => $config['entity']['@attributes']['name'],
+                'className' => $namespace . '\\' . $camelCaseName,
                 'table' => $config['entity']['@attributes']['table'],
                 'ids' => $this->getIdsFromFields($fields),
                 'indexes' => $this->getIndexesFromConfig($config),
                 'unique-constraints' => $this->getUniqueConstraintsFromConfig($config),
-                'traits' => array(
-                    'CustomBaseEntity'
-                ),
                 'fields' => $fields,
                 'hasCollections' => $this->getHasCollectionsFromConfig($config),
                 'collections' => $this->getCollectionsFromConfig($config),
                 'mappingFileName' => $fileName,
-                'entityFileName' => $this->formatEntityFileName($className),
-                'testFileName' => $this->formatUnitTestFileName($className)
+                'entityFileName' => $this->formatEntityFileName($className, $relativeNamespace),
+                'entityConcreteFileName' => $this->formatEntityConcreteFileName($className, $relativeNamespace),
+                'testFileName' => $this->formatUnitTestFileName($className, $relativeNamespace),
+                'namespace' => $namespace,
+                'hasCreatedOn' => $this->hasCreatedOn($fields),
+                'hasModifiedOn' => $this->hasModifiedOn($fields)
             );
 
             if (isset($comments['@settings']['repository'])) {
@@ -519,7 +482,7 @@ class AlignEntitiesToSchema
                 $item = array(
                     '@attributes' => array(
                         'field' => $fieldDetails['property'],
-                        'target-entity' => $fieldDetails['targetEntity'],
+                        'target-entity' => $this->replaceNamespace($fieldDetails['targetEntity']),
                         $property => $fieldDetails['inversedBy']
                     ),
                     'orderBy' => $fieldDetails['orderBy']
@@ -536,6 +499,7 @@ class AlignEntitiesToSchema
                     'ref' => 'field',
                     'default' => null,
                     'config' => $item,
+                    'isVersion' => false
                 );
 
                 if ($fieldDetails['relationship'] == 'manyToMany' || $fieldDetails['relationship'] == 'oneToMany') {
@@ -549,8 +513,41 @@ class AlignEntitiesToSchema
         $this->respond('Entity configurations compiled', 'success');
     }
 
+    protected function hasCreatedOn($fields)
+    {
+        return isset($fields['createdOn']);
+    }
+
+    protected function hasModifiedOn($fields)
+    {
+        return isset($fields['lastModifiedOn']);
+    }
+
+    protected function replaceNamespace($namespace)
+    {
+        $parts = explode('\\', $namespace);
+
+        $last = array_pop($parts);
+
+        return $this->findNamespace($last) . '\\' . $last;
+    }
+
+    protected function findNamespace($name)
+    {
+        return rtrim(self::ENTITY_NAMESPACE . $this->findRelativeNamespace($name), '\\');
+    }
+
+    protected function findRelativeNamespace($name)
+    {
+        if (!isset($this->entityConfig['namespaces'][$name])) {
+            return '';
+        }
+
+        return $this->entityConfig['namespaces'][$name];
+    }
+
     /**
-     * Get a list of id proeprties from the fields
+     * Get a list of id properties from the fields
      *
      * @param array $fields
      * @return array
@@ -644,140 +641,6 @@ class AlignEntitiesToSchema
     }
 
     /**
-     * Create the traits
-     */
-    private function createTraits()
-    {
-        $this->respond('Creating traits...', 'info');
-
-        $error = false;
-
-        foreach ($this->fields as $key => $encode) {
-            $item = json_decode($encode, true);
-
-            $field = $item['config'];
-
-            $details = &$this->fieldDetails[$key];
-            $which = $item['type'];
-
-            switch ($which) {
-                case 'id':
-                    $description = 'Identity';
-                    break;
-                default:
-                    $description = ucwords($which);
-            }
-
-            switch ($which) {
-                case 'id':
-                case 'field':
-                    $ref = 'name';
-                    break;
-                default:
-                    $ref = 'field';
-            }
-
-            if ($details['count'] < 2) {
-                continue;
-            }
-
-            if (isset($field['@attributes']['type'])
-                && $field['@attributes']['type'] == 'string'
-                && isset($field['@attributes']['length'])) {
-                $description = $field['@attributes']['length'] . $description;
-            }
-
-            $trait =
-                ucwords((isset($item['property']) ? $item['property'] : $field['@attributes'][$ref])) . $description;
-
-            $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
-
-            $customFileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/Custom', $trait);
-
-            // If we have a custom trait that already exists, skip it
-            if (file_exists($customFileName)) {
-                $details['trait'] = 'Custom' . $trait;
-                $this->respond('Custom trait already exists: Custom' . $trait, 'warning');
-                continue;
-            }
-
-            // If the trait file exists, we need to rename this one
-            if (file_exists($fileName)) {
-
-                $oldTrait = $trait;
-
-                $i = 0;
-
-                while (file_exists($fileName)) {
-
-                    $i++;
-
-                    $trait = $oldTrait . 'Alt' . $i;
-                    $fileName = sprintf('%s%s.php', $this->options['entity-files'] . 'Traits/', $trait);
-                }
-
-            }
-
-            $details['trait'] = $trait;
-
-            $fluidReturn = '\\Olcs\\Db\\Entity\\Interfaces\\EntityInterface';
-
-            ob_start();
-                include(__DIR__ . '/templates/trait.phtml');
-                $content = ob_get_contents();
-            ob_end_clean();
-
-            file_put_contents($fileName, $content);
-
-            if (file_exists($fileName)) {
-                $this->respond('Trait created: ' . $trait);
-            } else {
-                $error = true;
-                $this->respond('Trait creation failed: ' . $trait, 'error');
-            }
-        }
-
-        if ($error) {
-            $this->exitResponse('Some traits were unable to be created');
-        } else {
-            $this->respond('Traits created successfully', 'success');
-        }
-    }
-
-    /**
-     * Iterate through the entities to swap fields for traits
-     */
-    private function exchangeFieldsForTraits()
-    {
-        $this->respond('Exchanging fields for traits...', 'info');
-
-        foreach ($this->entities as $className => &$details) {
-
-            foreach ($details['fields'] as $index => $field) {
-
-                $encode = json_encode($field);
-
-                $key = array_search($encode, $this->fields);
-
-                if ($key === false) {
-                    continue;
-                }
-
-                if (is_null($this->fieldDetails[$key]['trait'])) {
-                    continue;
-                } else {
-                    $details['traits'][] = $this->fieldDetails[$key]['trait'];
-                    unset($details['fields'][$index]);
-                }
-            }
-
-            $this->respond('Processed: ' . $className);
-        }
-
-        $this->respond('Fields exchanged for traits', 'success');
-    }
-
-    /**
      * Create entities
      */
     private function createEntities()
@@ -793,7 +656,19 @@ class AlignEntitiesToSchema
                 $content = ob_get_contents();
             ob_end_clean();
 
+            $this->maybeCreateDir($details['entityFileName']);
+
             file_put_contents($details['entityFileName'], $content);
+
+            if (!file_exists($details['entityConcreteFileName'])) {
+
+                ob_start();
+                    include(__DIR__ . '/templates/concrete.phtml');
+                    $content = ob_get_contents();
+                ob_end_clean();
+
+                file_put_contents($details['entityConcreteFileName'], $content);
+            }
 
             if (file_exists($details['entityFileName'])) {
                 $this->respond('Entity created: ' . $className);
@@ -807,6 +682,17 @@ class AlignEntitiesToSchema
             $this->exitResponse('Some entities were not created', 'error');
         } else {
             $this->respond('Entity created', 'success');
+        }
+    }
+
+    protected function maybeCreateDir($fileName)
+    {
+        $parts = explode('/', $fileName);
+        array_pop($parts);
+        $dir = '/' . implode('/', $parts);
+
+        if (!file_exists($dir)) {
+            mkdir($dir);
         }
     }
 
@@ -834,23 +720,24 @@ class AlignEntitiesToSchema
         $this->respond('Removing old entity unit tests...', 'info');
 
         $directory = $this->options['test-files'];
-
         $error = false;
 
-        foreach (new DirectoryIterator($directory) as $fileInfo) {
+        $di = new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS);
+        $ri = new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($ri as $file) {
+            if ($file->isFile()) {
+                $fileName = $file->getFilename();
+                $filePath = $file->getPath() . '/' . $fileName;
 
-            if ($fileInfo->isDot() || $fileInfo->isDir()) {
-                continue;
-            }
-
-            $fileName = $fileInfo->getFilename();
-
-            unlink($directory . $fileName);
-            if (!file_exists($directory . $fileName)) {
-                $this->respond('Removed: ' . $fileName);
-            } else {
-                $error = true;
-                $this->respond('Unable to remove: ' . $fileName, 'error');
+                if (preg_match('/([^.]+)EntityTest.php/', $fileName)) {
+                    unlink($filePath);
+                    if (!file_exists($filePath)) {
+                        $this->respond('Removed: ' . $filePath);
+                    } else {
+                        $error = true;
+                        $this->respond('Unable to remove: ' . $filePath, 'error');
+                    }
+                }
             }
         }
 
@@ -872,11 +759,17 @@ class AlignEntitiesToSchema
 
         foreach ($this->entities as $className => $details) {
 
+            // Skip the file if it exists
+            if (file_exists($details['testFileName'])) {
+                continue;
+            }
+
             ob_start();
                 include(__DIR__ . '/templates/test-entity.phtml');
                 $content = ob_get_contents();
             ob_end_clean();
 
+            $this->maybeCreateDir($details['testFileName']);
             file_put_contents($details['testFileName'], $content);
 
             if (file_exists($details['testFileName'])) {
@@ -910,8 +803,7 @@ class AlignEntitiesToSchema
             if ($key === false) {
                 $this->fields[] = $encode;
                 $this->fieldDetails[] = array(
-                    'count' => 0,
-                    'trait' => null
+                    'count' => 0
                 );
 
                 $key = count($this->fields) - 1;
@@ -1069,7 +961,8 @@ class AlignEntitiesToSchema
                     'ref' => 'name',
                     'default' => $default,
                     'config' => $item,
-                    'translatable' => false
+                    'translatable' => false,
+                    'isVersion' => ($columnName === 'version')
                 );
 
                 if (isset($extraConfig['type'])) {
@@ -1142,6 +1035,12 @@ class AlignEntitiesToSchema
                     $item['@attributes']['options'] = array('default' => $default);
                 }
 
+                if (isset($item['@attributes']['target-entity'])) {
+                    $item['@attributes']['target-entity'] = $this->replaceNamespace(
+                        $item['@attributes']['target-entity']
+                    );
+                }
+
                 $fieldConfig = array(
                     'isId' => isset($associationKeys[$item['@attributes'][$key]]),
                     'isInverse' => false,
@@ -1149,7 +1048,8 @@ class AlignEntitiesToSchema
                     'ref' => ($which == 'field' ? 'name' : 'field'),
                     'default' => $default,
                     'config' => $item,
-                    'translatable' => false
+                    'translatable' => false,
+                    'isVersion' => ($columnName === 'version')
                 );
 
                 if (isset($fieldConfig['config']['join-columns']['join-column'])) {
@@ -1328,13 +1228,32 @@ class AlignEntitiesToSchema
      * @param string $className
      * @return string
      */
-    private function formatEntityFileName($className)
+    private function formatEntityFileName($className, $relativeNamespace)
     {
         $classNameParts = explode('\\', $className);
 
         return sprintf(
-            '%s/%s.php',
+            '%s/%s/Abstract%s.php',
             rtrim($this->options['entity-files'], '/'),
+            $relativeNamespace,
+            array_pop($classNameParts)
+        );
+    }
+
+    /**
+     * Format the entity file name
+     *
+     * @param string $className
+     * @return string
+     */
+    private function formatEntityConcreteFileName($className, $relativeNamespace)
+    {
+        $classNameParts = explode('\\', $className);
+
+        return sprintf(
+            '%s/%s/%s.php',
+            rtrim($this->options['entity-files'], '/'),
+            $relativeNamespace,
             array_pop($classNameParts)
         );
     }
@@ -1345,13 +1264,14 @@ class AlignEntitiesToSchema
      * @param string $className
      * @return string
      */
-    private function formatUnitTestFileName($className)
+    private function formatUnitTestFileName($className, $relativeNamespace)
     {
         $classNameParts = explode('\\', $className);
 
         return sprintf(
-            '%s/%sTest.php',
+            '%s/%s/%sEntityTest.php',
             rtrim($this->options['test-files'], '/'),
+            $relativeNamespace,
             array_pop($classNameParts)
         );
     }
@@ -1555,7 +1475,13 @@ class AlignEntitiesToSchema
             }
         }
 
-        return implode(', ', $options);
+        $string = implode(', ', $options);
+
+        if (strlen($string) > 80) {
+            return implode(",\n     *     ", $options);
+        }
+
+        return $string;
     }
 
     /**

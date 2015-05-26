@@ -6,6 +6,8 @@ namespace OlcsTest\Db\Service;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\Db\Service\IrfoPsvAuth;
 use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
 
 /**
  * Class IrfoPsvAuthTest
@@ -83,22 +85,22 @@ class IrfoPsvAuthTest extends TestCase
             ]
         );
 
-        $mockEntity = $this->getMock('\Olcs\Db\Entity\IrfoPsvAuth', array('clearProperties'));
+        $mockEntity = $this->getMock(IrfoPsvAuthEntity::class, array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
-        $mockIrfoPsvAuthTypeEntity = $this->getMock('\Olcs\Db\Entity\IrfoPsvAuthType', array('getSectionCode'));
+        $mockIrfoPsvAuthTypeEntity = $this->getMock(IrfoPsvAuthTypeEntity::class, array('getSectionCode'));
         $mockIrfoPsvAuthTypeEntity->expects($this->once())->method('getSectionCode')
             ->will($this->returnValue($sectionCode));
 
         $findValues = [
-            '\Olcs\Db\Entity\IrfoPsvAuth' => $mockEntity,
-            '\Olcs\Db\Entity\IrfoPsvAuthType' => $mockIrfoPsvAuthTypeEntity,
+            '\\' . IrfoPsvAuthEntity::class => $mockEntity,
+            IrfoPsvAuthTypeEntity::class => $mockIrfoPsvAuthTypeEntity,
         ];
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $this->isInstanceOf('\Olcs\Db\Entity\IrfoPsvAuth'))
+            ->with($data, $this->isInstanceOf(IrfoPsvAuthEntity::class))
             ->will($this->returnValue($mockEntity));
 
         $this->em->expects($this->once())
