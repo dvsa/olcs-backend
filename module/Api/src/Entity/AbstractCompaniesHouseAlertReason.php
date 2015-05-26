@@ -24,9 +24,12 @@ abstract class AbstractCompaniesHouseAlertReason
     /**
      * Companies house alert
      *
-     * @var \Dvsa\Olcs\Api\Entity\CompaniesHouseAlert
+     * @var \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouseAlert", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert",
+     *     fetch="LAZY"
+     * )
      * @ORM\JoinColumn(name="companies_house_alert_id", referencedColumnName="id", nullable=false)
      */
     protected $companiesHouseAlert;
@@ -65,7 +68,7 @@ abstract class AbstractCompaniesHouseAlertReason
     /**
      * Set the companies house alert
      *
-     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouseAlert $companiesHouseAlert
+     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert $companiesHouseAlert
      * @return CompaniesHouseAlertReason
      */
     public function setCompaniesHouseAlert($companiesHouseAlert)
@@ -78,7 +81,7 @@ abstract class AbstractCompaniesHouseAlertReason
     /**
      * Get the companies house alert
      *
-     * @return \Dvsa\Olcs\Api\Entity\CompaniesHouseAlert
+     * @return \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert
      */
     public function getCompaniesHouseAlert()
     {

@@ -30,6 +30,7 @@ return [
     'CommunityLicWithdrawal' => 'CommunityLic',
     'CommunityLicWithdrawalReason' => 'CommunityLic',
     'CompaniesHouseCompany' => 'CompaniesHouse',
+    'CompaniesHouseAlert' => 'CompaniesHouse',
     'CompaniesHouseOfficer' => 'CompaniesHouse',
     'Address' => 'ContactDetails',
     'ContactDetails' => 'ContactDetails',

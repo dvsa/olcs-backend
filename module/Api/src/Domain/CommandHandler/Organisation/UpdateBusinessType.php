@@ -101,7 +101,6 @@ final class UpdateBusinessType extends AbstractCommandHandler
             return true;
         }
 
-
         if (($command->getLicence() !== null || $command->getVariation() !== null)) {
             return false;
         }
