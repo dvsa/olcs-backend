@@ -22,6 +22,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Create Application Test
@@ -34,6 +36,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateApplication();
         $this->mockRepo('Application', Application::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -61,6 +67,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandMinimal()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_VIEW)
+            ->andReturn(false);
+
         $command = Cmd::create(['organisation' => 11]);
         /** @var ApplicationEntity $app */
         $app = null;
@@ -91,7 +102,6 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'Application created',
                 'Application Completion created',
                 'Application Tracking created',
-
             ]
         ];
 
@@ -114,6 +124,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_VIEW)
+            ->andReturn(false);
+
         $command = Cmd::create(
             [
                 'organisation' => 11,
@@ -193,6 +208,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandMinimalException()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_VIEW)
+            ->andReturn(false);
+
         $command = Cmd::create(['organisation' => 11]);
 
         $this->repoMap['Application']->shouldReceive('beginTransaction')
