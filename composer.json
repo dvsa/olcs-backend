@@ -37,7 +37,8 @@
         "olcs/companies-house": "dev-develop",
         "olcs/olcs-transfer": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
-        "olcs/autoload": "dev-develop"
+        "olcs/autoload": "dev-develop",
+        "zf-commons/zfc-rbac": "~2.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0.0",

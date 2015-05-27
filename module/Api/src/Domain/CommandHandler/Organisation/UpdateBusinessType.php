@@ -136,15 +136,4 @@ final class UpdateBusinessType extends AbstractCommandHandler
             ['id' => $applicationId, 'section' => 'businessType']
         );
     }
-
-    /**
-     * @TODO Need to replace this with a real way to determine between internal and selfserve users
-     *
-     * @param $permission
-     * @return bool
-     */
-    private function isGranted($permission)
-    {
-        return true;
-    }
 }

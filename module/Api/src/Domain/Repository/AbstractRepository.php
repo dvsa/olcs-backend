@@ -58,9 +58,14 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
+        return $this->findById($query->getId(), $hydrateMode, $version);
+    }
+
+    public function findById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query);
+        $this->buildDefaultQuery($qb, $id);
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
@@ -171,10 +176,10 @@ abstract class AbstractRepository implements RepositoryInterface
      * @NOTE This method can be overridden to extend the default resource bundle
      *
      * @param QueryBuilder $qb
-     * @param QryCmd $query
+     * @param int $id
      */
-    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
     }
 }

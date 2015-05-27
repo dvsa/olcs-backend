@@ -158,15 +158,4 @@ final class CreateApplication extends AbstractCommandHandler
 
         return $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_NOT_SUBMITTED);
     }
-
-    /**
-     * @TODO Need to replace this with a real way to determine between internal and selfserve users
-     *
-     * @param $permission
-     * @return bool
-     */
-    private function isGranted($permission)
-    {
-        return false;
-    }
 }
