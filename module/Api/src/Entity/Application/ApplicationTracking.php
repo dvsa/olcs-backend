@@ -25,4 +25,9 @@ class ApplicationTracking extends AbstractApplicationTracking
     {
         $this->setApplication($application);
     }
+
+    protected function getCalculatedValues()
+    {
+        return ['application' => null];
+    }
 }
