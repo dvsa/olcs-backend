@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType as Cmd;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update Business Type Test
@@ -29,6 +31,10 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateBusinessType();
         $this->mockRepo('Organisation', Organisation::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -45,6 +51,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCanChangeWithoutValue()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $this->setExpectedException(ValidationException::class);
 
         $data = [
@@ -71,6 +82,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCanChangeWithoutChange()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $data = [
             'id' => 11,
             'version' => 1,
@@ -107,6 +123,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithChange1()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $this->setExpectedException(ValidationException::class);
 
         $data = [
@@ -132,6 +153,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithChange2()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $this->setExpectedException(ValidationException::class);
 
         $data = [
@@ -157,6 +183,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithChange3()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $this->setExpectedException(ValidationException::class);
 
         $data = [
@@ -185,6 +216,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithoutChangeWithoutApplication1()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $data = [
             'id' => 11,
             'version' => 1,
@@ -218,6 +254,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithoutChangeWithoutApplication2()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $data = [
             'id' => 11,
             'version' => 1,
@@ -250,6 +291,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCantChangeWithoutChangeWithApplication()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $data = [
             'id' => 11,
             'version' => 1,
@@ -293,6 +339,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCanChangeWithChange()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $data = [
             'id' => 11,
             'version' => 1,
@@ -347,6 +398,11 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenCanChangeWithChangeWithException()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER)
+            ->andReturn(true);
+
         $this->setExpectedException(\Exception::class);
 
         $data = [

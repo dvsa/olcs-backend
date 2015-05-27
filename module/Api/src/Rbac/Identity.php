@@ -43,6 +43,11 @@ class Identity implements IdentityInterface
         $this->user = $user;
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
     /**
      * Get the list of roles of this identity
      *

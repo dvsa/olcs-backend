@@ -9,8 +9,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType as Cmd;
@@ -22,8 +25,10 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateBusinessType extends AbstractCommandHandler
+final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     const ERROR_NO_TYPE = 'ORG-BT-1';
     const ERROR_CANT_CHANGE_TYPE = 'ORG-BT-2';
 
@@ -115,7 +120,7 @@ final class UpdateBusinessType extends AbstractCommandHandler
 
     private function canChangeBusinessType(Cmd $command, Organisation $organisation)
     {
-        if (!$this->isGranted('selfserve-user')) {
+        if (!$this->isGranted(Permission::SELFSERVE_USER)) {
             return true;
         }
 

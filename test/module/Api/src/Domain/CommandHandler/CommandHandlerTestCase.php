@@ -56,6 +56,8 @@ class CommandHandlerTestCase extends MockeryTestCase
 
     private $initRefdata = false;
 
+    protected $mockedSmServices = [];
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
@@ -66,6 +68,10 @@ class CommandHandlerTestCase extends MockeryTestCase
 
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
+
+        foreach ($this->mockedSmServices as $serviceName => $service) {
+            $sm->setService($serviceName, $service);
+        }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class)->makePartial();
         $this->commandHandler->setServiceLocator($sm);
