@@ -167,6 +167,6 @@ final class CreateApplication extends AbstractCommandHandler
      */
     private function isGranted($permission)
     {
-        return true;
+        return false;
     }
 }

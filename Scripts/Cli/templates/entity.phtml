@@ -2,6 +2,8 @@
 
 namespace <?php echo $details['namespace']; ?>;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
@@ -53,9 +55,9 @@ if (!empty($details['unique-constraints'])) {
 }
 ?>)
  */
-abstract class Abstract<?php echo $details['name']; ?>
-
+abstract class Abstract<?php echo $details['name']; ?> implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 <?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
 
 <?php include('property.phtml'); ?>

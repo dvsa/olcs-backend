@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Publication;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,8 +35,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractPublicationLink
+abstract class AbstractPublicationLink implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application

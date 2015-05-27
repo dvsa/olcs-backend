@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -22,8 +24,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractTmEmployment
+abstract class AbstractTmEmployment implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Contact details

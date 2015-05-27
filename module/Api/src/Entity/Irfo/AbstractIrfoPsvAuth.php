@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,8 +30,9 @@ use Doctrine\Common\Collections\Collection;
  *    }
  * )
  */
-abstract class AbstractIrfoPsvAuth
+abstract class AbstractIrfoPsvAuth implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application sent date

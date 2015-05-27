@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,8 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractBusShortNotice
+abstract class AbstractBusShortNotice implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Bank holiday change

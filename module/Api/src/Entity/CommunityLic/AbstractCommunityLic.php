@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\CommunityLic;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,8 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractCommunityLic
+abstract class AbstractCommunityLic implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

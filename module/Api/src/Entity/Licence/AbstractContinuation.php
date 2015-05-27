@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,8 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractContinuation
+abstract class AbstractContinuation implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

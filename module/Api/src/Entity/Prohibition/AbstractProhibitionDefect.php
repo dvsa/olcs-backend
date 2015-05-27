@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Prohibition;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,8 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractProhibitionDefect
+abstract class AbstractProhibitionDefect implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

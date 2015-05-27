@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Si;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -21,8 +23,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractSiPenaltyRequestedType
+abstract class AbstractSiPenaltyRequestedType implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

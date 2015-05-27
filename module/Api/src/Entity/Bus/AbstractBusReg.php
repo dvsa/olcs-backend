@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,8 +36,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractBusReg
+abstract class AbstractBusReg implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application signed
