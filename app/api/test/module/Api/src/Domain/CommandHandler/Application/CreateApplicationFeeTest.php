@@ -14,6 +14,9 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -23,6 +26,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Application Fee Test
@@ -36,6 +40,10 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         $this->sut = new CreateApplicationFee();
         $this->mockRepo('Application', Application::class);
         $this->mockRepo('FeeType', FeeType::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -59,6 +67,23 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_VIEW)
+            ->andReturn(true);
+
+        /** @var Team $mockTeam */
+        $mockTeam = m::mock(Team::class)->makePartial();
+        $mockTeam->setId(2);
+
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+        $mockUser->setTeam($mockTeam);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
         $command = Cmd::create(['id' => 111]);
 
         /** @var Licence $licence */
@@ -143,6 +168,23 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_VIEW)
+            ->andReturn(true);
+
+        /** @var Team $mockTeam */
+        $mockTeam = m::mock(Team::class)->makePartial();
+        $mockTeam->setId(2);
+
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+        $mockUser->setTeam($mockTeam);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
         $command = Cmd::create(['id' => 111]);
 
         /** @var Licence $licence */

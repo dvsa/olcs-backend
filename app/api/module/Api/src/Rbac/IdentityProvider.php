@@ -39,7 +39,7 @@ class IdentityProvider implements IdentityProviderInterface, FactoryInterface
             $userId = $auth->getFieldValue();
 
             $userRepository = $serviceLocator->get('RepositoryServiceManager')->get('User');
-            $user = $userRepository->findById($userId);
+            $user = $userRepository->fetchById($userId);
 
             if ($user instanceof User) {
                 $this->setUser($user);

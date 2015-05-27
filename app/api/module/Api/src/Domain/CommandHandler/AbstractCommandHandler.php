@@ -29,19 +29,15 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface
      */
     private $commandHandler;
 
-    /**
-     * @var AuthorizationService
-     */
-    private $authService;
-
     protected $repoServiceName;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        // @todo we might not always need this, so we could optional fetch it from the sm
-        $this->authService = $mainServiceLocator->get(AuthorizationService::class);
+        if ($this instanceof AuthAwareInterface) {
+            $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+        }
 
         if ($this->repoServiceName === null) {
             throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
@@ -53,11 +49,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface
         $this->commandHandler = $serviceLocator;
 
         return $this;
-    }
-
-    protected function isGranted($permission)
-    {
-        return $this->authService->isGranted($permission);
     }
 
     /**
