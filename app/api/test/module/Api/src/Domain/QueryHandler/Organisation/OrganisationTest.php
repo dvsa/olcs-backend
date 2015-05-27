@@ -33,10 +33,7 @@ class OrganisationTest extends QueryHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['id' => 111])
-            ->shouldReceive('hasInforceLicences')
-            ->with(111)
-            ->andReturn(true);
+            ->andReturn(['id' => 111, 'hasInforceLicences' => true]);
 
         $this->assertEquals(['id' => 111, 'hasInforceLicences' => true], $this->sut->handleQuery($query));
     }

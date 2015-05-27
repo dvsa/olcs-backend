@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,8 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractCompaniesHouseAlertReason
+abstract class AbstractCompaniesHouseAlertReason implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Companies house alert

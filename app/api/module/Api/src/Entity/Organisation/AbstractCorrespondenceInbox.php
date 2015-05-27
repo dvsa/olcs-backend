@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,8 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractCorrespondenceInbox
+abstract class AbstractCorrespondenceInbox implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Accessed

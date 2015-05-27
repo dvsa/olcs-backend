@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
+
 /**
  * Task
  *
@@ -14,5 +16,5 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
  */
 class Task extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Task\Task';
+    protected $entity = Entity::class;
 }

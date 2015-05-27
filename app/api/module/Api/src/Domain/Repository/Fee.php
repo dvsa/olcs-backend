@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+
 /**
  * Fee
  *
@@ -14,5 +16,5 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
  */
 class Fee extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Fee\Fee';
+    protected $entity = Entity::class;
 }

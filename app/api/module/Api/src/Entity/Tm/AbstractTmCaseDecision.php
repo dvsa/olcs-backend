@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,8 +29,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractTmCaseDecision
+abstract class AbstractTmCaseDecision implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Case

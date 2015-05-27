@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,8 +16,9 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="bus_service_type")
  */
-abstract class AbstractBusServiceType
+abstract class AbstractBusServiceType implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Bus reg

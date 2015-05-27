@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\System;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -18,8 +20,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractRefData
+abstract class AbstractRefData implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Description

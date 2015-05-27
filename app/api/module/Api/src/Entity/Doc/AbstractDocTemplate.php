@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Doc;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,8 +25,9 @@ use Doctrine\Common\Collections\Collection;
  *    }
  * )
  */
-abstract class AbstractDocTemplate
+abstract class AbstractDocTemplate implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Category

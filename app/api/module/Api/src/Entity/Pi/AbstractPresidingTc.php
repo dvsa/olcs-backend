@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Pi;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,8 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="presiding_tc")
  */
-abstract class AbstractPresidingTc
+abstract class AbstractPresidingTc implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Deleted

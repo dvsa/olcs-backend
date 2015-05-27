@@ -123,7 +123,7 @@ final class UpdateBusinessType extends AbstractCommandHandler
             return false;
         }
 
-        if ($command->getApplication() !== null && $this->getRepo()->hasInforceLicences($organisation->getId())) {
+        if ($command->getApplication() !== null && $organisation->hasInforceLicences()) {
             return false;
         }
 

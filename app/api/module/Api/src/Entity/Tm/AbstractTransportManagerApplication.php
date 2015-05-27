@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,8 +35,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractTransportManagerApplication
+abstract class AbstractTransportManagerApplication implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Action

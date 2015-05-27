@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\TrafficArea;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,8 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractAdminAreaTrafficArea
+abstract class AbstractAdminAreaTrafficArea implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

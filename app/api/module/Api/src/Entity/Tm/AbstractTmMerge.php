@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,8 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractTmMerge
+abstract class AbstractTmMerge implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by
