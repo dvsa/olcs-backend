@@ -46,8 +46,6 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         $this->feeTypeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('FeeType');
 
-
-
         return parent::createService($serviceLocator);
     }
 
