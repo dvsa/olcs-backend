@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,8 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractLicenceNoGen
+abstract class AbstractLicenceNoGen implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Identifier - Id

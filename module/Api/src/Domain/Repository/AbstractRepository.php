@@ -56,7 +56,7 @@ abstract class AbstractRepository implements RepositoryInterface
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException
      */
-    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         $qb = $this->createQueryBuilder();
 

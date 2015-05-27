@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Inspection;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,8 +33,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractInspectionRequest
+abstract class AbstractInspectionRequest implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application

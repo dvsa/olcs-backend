@@ -35,7 +35,7 @@ final class Pi extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $case = $this->getRepo()->fetchUsingId($query);
+        $case = $this->getRepo()->fetchUsingId($query, Query::HYDRATE_ARRAY);
 
         $this->extractHearingDate($case['pi']);
 

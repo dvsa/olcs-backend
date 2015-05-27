@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,8 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractFeePayment
+abstract class AbstractFeePayment implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

@@ -57,14 +57,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation = m::mock(OrganisationEntity::class)->makePartial();
         $organisation->setId(11);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(false);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(false);
+            ->andReturn($organisation);
 
         $this->sut->handleCommand($command);
     }
@@ -83,14 +83,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation->setId(11);
         $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(false);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(false);
+            ->andReturn($organisation);
 
         $result = $this->sut->handleCommand($command);
 
@@ -171,14 +171,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation->setId(11);
         $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_SOLE_TRADER]);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(true);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(true);
+            ->andReturn($organisation);
 
         $this->sut->handleCommand($command);
     }
@@ -262,14 +262,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation->setId(11);
         $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(true);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(true);
+            ->andReturn($organisation);
 
         $result1 = new Result();
         $result1->addMessage('Section updated');
@@ -305,14 +305,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation->setId(11);
         $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(false);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(false)
             ->shouldReceive('beginTransaction')
             ->once()
             ->shouldReceive('save')
@@ -361,14 +361,14 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $organisation->setId(11);
         $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
 
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(false);
+
         $command = Cmd::create($data);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($organisation)
-            ->shouldReceive('hasInforceLicences')
-            ->with(11)
-            ->andReturn(false)
             ->shouldReceive('beginTransaction')
             ->once()
             ->shouldReceive('save')

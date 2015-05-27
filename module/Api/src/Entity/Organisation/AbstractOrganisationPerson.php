@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -25,8 +27,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractOrganisationPerson
+abstract class AbstractOrganisationPerson implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Added date

@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\User;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,8 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractHintQuestion
+abstract class AbstractHintQuestion implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Category no

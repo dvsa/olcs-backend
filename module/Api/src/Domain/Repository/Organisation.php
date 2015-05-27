@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 
 /**
@@ -18,17 +17,4 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 class Organisation extends AbstractRepository
 {
     protected $entity = Entity::class;
-
-    public function hasInforceLicences($id)
-    {
-        /** @var Entity $organisation */
-        $organisation = $this->getEntityManager()->find($this->entity, $id);
-
-        $criteria = Criteria::create();
-        $criteria->where($criteria->expr()->neq('inForceDate', null));
-
-        $licences = $organisation->getLicences()->matching($criteria);
-
-        return !empty($licences);
-    }
 }

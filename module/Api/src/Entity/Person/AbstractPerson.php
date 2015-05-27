@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Person;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,8 +30,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractPerson
+abstract class AbstractPerson implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Birth date

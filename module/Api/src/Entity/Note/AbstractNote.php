@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Note;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,8 +30,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractNote
+abstract class AbstractNote implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application

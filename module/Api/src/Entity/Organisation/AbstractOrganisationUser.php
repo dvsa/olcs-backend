@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,8 +26,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractOrganisationUser
+abstract class AbstractOrganisationUser implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Added date

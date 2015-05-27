@@ -21,10 +21,6 @@ class Organisation extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $organisation = $this->getRepo()->fetchUsingId($query);
-
-        $organisation['hasInforceLicences'] = $this->getRepo()->hasInforceLicences($organisation['id']);
-
-        return $organisation;
+        return $this->getRepo()->fetchUsingId($query);
     }
 }
