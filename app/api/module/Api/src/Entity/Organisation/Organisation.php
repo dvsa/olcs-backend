@@ -41,7 +41,7 @@ class Organisation extends AbstractOrganisation
 
             $licences = $this->getLicences()->matching($criteria);
 
-            $this->hasInforceLicences = !empty($licences);
+            $this->hasInforceLicences = !empty($licences->toArray());
         }
 
         return $this->hasInforceLicences;
