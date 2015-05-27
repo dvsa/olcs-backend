@@ -6,6 +6,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -133,6 +134,7 @@ return [
             'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -180,5 +182,15 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+    'zfc_rbac' => [
+        'identity_provider' => 'IdentityProvider',
+        'role_provider' => [
+            'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
+                'object_manager'     => 'doctrine.entitymanager.orm_default',
+                'class_name'         => \Dvsa\Olcs\Api\Entity\User\Role::class,
+                'role_name_property' => 'role'
+            ]
+        ]
+    ],
 ];
