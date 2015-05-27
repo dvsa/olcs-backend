@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
  */
 interface RepositoryInterface
 {
-    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null);
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
 
     public function lock($entity, $version);
 

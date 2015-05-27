@@ -28,15 +28,20 @@ return [
             'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
             'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
+            'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
+            'Api\Organisation\BusinessType' => \Dvsa\Olcs\Api\Controller\Organisation\BusinessTypeController::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
-            // src - Application
+            // Transfer - Application
             \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
             \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
+            // Transfer - Organisation
+            \Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType::class,
             // Domain - Application
             \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,
@@ -100,8 +105,10 @@ return [
         'factories' => [
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
-            => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -116,6 +123,7 @@ return [
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'Application' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Organisation' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,

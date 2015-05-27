@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 
 use Doctrine\ORM\Mapping as ORM;
 

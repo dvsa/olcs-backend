@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
+use JsonSerializable;
 
 /**
  * Organisation Entity
@@ -28,4 +30,25 @@ class Organisation extends AbstractOrganisation
     const ORG_TYPE_LLP = 'org_t_llp';
     const ORG_TYPE_SOLE_TRADER = 'org_t_st';
     const ORG_TYPE_IRFO = 'org_t_ir';
+
+    protected $hasInforceLicences;
+
+    public function hasInforceLicences()
+    {
+        if ($this->hasInforceLicences === null) {
+            $criteria = Criteria::create();
+            $criteria->where($criteria->expr()->neq('inForceDate', null));
+
+            $licences = $this->getLicences()->matching($criteria);
+
+            $this->hasInforceLicences = !empty($licences->toArray());
+        }
+
+        return $this->hasInforceLicences;
+    }
+
+    protected function getCalculatedValues()
+    {
+        return ['hasInforceLicences' => $this->hasInforceLicences()];
+    }
 }

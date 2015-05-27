@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * S4 Abstract Entity
@@ -22,8 +22,9 @@ use Doctrine\Common\Collections\Collection;
  *    }
  * )
  */
-abstract class AbstractS4
+abstract class AbstractS4 implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Agreed date
@@ -43,19 +44,6 @@ abstract class AbstractS4
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;
-
-    /**
-     * Condition
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking",
-     *     mappedBy="s4s",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $conditions;
 
     /**
      * Created by
@@ -163,19 +151,6 @@ abstract class AbstractS4
     protected $version = 1;
 
     /**
-     * Initialise the collections
-     */
-    public function __construct()
-    {
-        $this->initCollections();
-    }
-
-    public function initCollections()
-    {
-        $this->conditions = new ArrayCollection();
-    }
-
-    /**
      * Set the agreed date
      *
      * @param \DateTime $agreedDate
@@ -219,66 +194,6 @@ abstract class AbstractS4
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the condition
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
-     * @return S4
-     */
-    public function setConditions($conditions)
-    {
-        $this->conditions = $conditions;
-
-        return $this;
-    }
-
-    /**
-     * Get the conditions
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getConditions()
-    {
-        return $this->conditions;
-    }
-
-    /**
-     * Add a conditions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
-     * @return S4
-     */
-    public function addConditions($conditions)
-    {
-        if ($conditions instanceof ArrayCollection) {
-            $this->conditions = new ArrayCollection(
-                array_merge(
-                    $this->conditions->toArray(),
-                    $conditions->toArray()
-                )
-            );
-        } elseif (!$this->conditions->contains($conditions)) {
-            $this->conditions->add($conditions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a conditions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditions
-     * @return S4
-     */
-    public function removeConditions($conditions)
-    {
-        if ($this->conditions->contains($conditions)) {
-            $this->conditions->removeElement($conditions);
-        }
-
-        return $this;
     }
 
     /**

@@ -1,16 +1,16 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity;
+namespace Dvsa\OlcsTest\Api\Entity\CompaniesHouse;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\CompaniesHouseAlert as Entity;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason as Entity;
 
 /**
- * CompaniesHouseAlert Entity Unit Tests
+ * CompaniesHouseAlertReason Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class CompaniesHouseAlertEntityTest extends EntityTester
+class CompaniesHouseAlertReasonEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

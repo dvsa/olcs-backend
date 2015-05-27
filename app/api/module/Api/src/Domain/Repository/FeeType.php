@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
 
 /**
  * FeeType
@@ -19,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  */
 class FeeType extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Fee\FeeType';
+    protected $entity = Entity::class;
 
     protected $alias = 'ft';
 

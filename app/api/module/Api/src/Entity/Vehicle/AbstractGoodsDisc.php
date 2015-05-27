@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Vehicle;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,8 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractGoodsDisc
+abstract class AbstractGoodsDisc implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Ceased date

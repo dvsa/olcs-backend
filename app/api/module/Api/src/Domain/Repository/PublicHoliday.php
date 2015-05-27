@@ -6,13 +6,14 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\System\PublicHoliday as Entity;
 
 /**
  * PublicHoliday
  */
 class PublicHoliday extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\System\PublicHoliday';
+    protected $entity = Entity::class;
     protected $alias = 'p';
 
     /**
