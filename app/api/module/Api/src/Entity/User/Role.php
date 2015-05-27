@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Rbac\Role\RoleInterface;
 
 /**
  * Role Entity
@@ -15,7 +16,34 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class Role extends AbstractRole
+class Role extends AbstractRole implements RoleInterface
 {
+    /**
+     * Get the name of the role.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getRole();
+    }
 
+    /**
+     * Checks if a permission exists for this role (it does not check child roles)
+     *
+     * @param  mixed $permission
+     * @return bool
+     */
+    public function hasPermission($permission)
+    {
+
+        /** @var RolePermission $rolePermission */
+        foreach ($this->getRolePermissions() as $rolePermission) {
+            if ($rolePermission->getPermission()->getName() === $permission) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
