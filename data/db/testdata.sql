@@ -389,23 +389,27 @@ VALUES
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `application_id`, `operating_centre_id`,
 `created_by`,`last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
-    `is_fulfilled`, `notes`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,24,NULL,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 1',NOW(),NULL,1),
-    (2,24,NULL,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 2',NOW(),NULL,1),
-    (3,24,NULL,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 3',NOW(),NULL,1),
-    (4,24,7,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 4',NOW(),NULL,1),
-    (5,24,7,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 5',NOW(),NULL,1),
-    (6,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,1,'Some notes 6',NOW(),NULL,1),
-    (7,24,NULL,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 7',NOW(),NULL,1),
-    (8,24,NULL,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some invoice_notes 8',NOW(),NULL,1),
-    (9,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 9',NOW(),NULL,1),
-    (10,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 10',NOW(),NULL,1),
-    (11,24,NULL,1,NULL,NULL,NULL,'cav_app','cat_lic','cdt_con',NULL,0,0,'Some notes 11',NOW(),NULL,1),
-    (12,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12',NOW(),NULL,1),
-    (13,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13',NOW(),NULL,1),
-    (14,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14',NOW(),NULL,1),
-    (15,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15',NOW(),NULL,1),
-    (16,75,110,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16',NOW(),NULL,1);
+    `is_fulfilled`, `notes`, `action`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1,24,NULL,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 1','A',NOW(),NULL,1),
+    (2,24,NULL,NULL,16,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 2','A',NOW(),NULL,1),
+    (3,24,NULL,NULL,21,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 3','A',NOW(),NULL,1),
+    (4,24,7,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 4','A',NOW(),NULL,1),
+    (5,24,7,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_und',NULL,0,1,'Some notes 5','U',NOW(),NULL,1),
+    (6,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,1,'Some notes 6','A',NOW(),NULL,1),
+    (7,24,NULL,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 7','D',NOW(),NULL,1),
+    (8,24,NULL,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some invoice_notes 8','D',NOW(),NULL,1),
+    (9,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 9','D',NOW(),NULL,1),
+    (10,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 10','A',NOW(),NULL,1),
+    (11,24,NULL,1,16,NULL,NULL,'cav_app','cat_lic','cdt_con',NULL,0,0,'Some notes 11','A',NOW(),NULL,1),
+    (12,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12','U',NOW(),NULL,1),
+    (13,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13','A',NOW(),NULL,1),
+    (14,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14','U',NOW(),NULL,1),
+    (15,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15','A',NOW(),NULL,1),
+    (16,75,110,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16','U',NOW(),NULL,1),
+    (17,24,NULL,8,16,NULL,NULL,'cav_app','cat_oc','cdt_con',NULL,0,0,'Some notes 17','A',NOW(),NULL,1),
+    (18,24,NULL,8,21,NULL,NULL,'cav_app','cat_oc','cdt_und',NULL,0,0,'Some notes 18','D',NOW(),NULL,1),
+    (19,24,NULL,8,48,NULL,NULL,'cav_app','cat_oc','cdt_und',NULL,0,0,'Some notes 19','U',NOW(),NULL,1),
+    (20,24,NULL,8,NULL,NULL,NULL,'cav_app','cat_lic','cdt_und',NULL,0,0,'Some notes 20','U',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
@@ -1001,7 +1005,11 @@ VALUES
   (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
 	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
-	NULL, 1);
+	NULL, 1),
+  (5, 8, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 2, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
+  NULL, 1),
+  (6, 8, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 2, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
+  NULL, 1);
 
 INSERT INTO `tm_application_oc` (`transport_manager_application_id`, `operating_centre_id`)
 VALUES
