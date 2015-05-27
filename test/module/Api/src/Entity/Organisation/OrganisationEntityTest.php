@@ -21,6 +21,48 @@ class OrganisationEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    public function testJsonSerialize()
+    {
+        /** @var Entity $organisation */
+        $organisation = $this->instantiate($this->entityClass);
+
+        $organisation->setId(111);
+
+        $values = $organisation->jsonSerialize();
+
+        $expectedKeys = [
+            'hasInforceLicences',
+            'allowEmail',
+            'companyCertSeen',
+            'companyOrLlpNo',
+            'contactDetails',
+            'createdBy',
+            'createdOn',
+            'id',
+            'irfoContactDetails',
+            'irfoName',
+            'irfoNationality',
+            'isIrfo',
+            'isMlh',
+            'lastModifiedBy',
+            'lastModifiedOn',
+            'leadTcArea',
+            'name',
+            'natureOfBusinesses',
+            'type',
+            'version',
+            'viAction',
+            'irfoPartners',
+            'licences',
+            'organisationPersons',
+            'organisationUsers',
+            'tradingNames'
+        ];
+
+        $this->assertEquals($expectedKeys, array_keys($values));
+        $this->assertFalse($values['hasInforceLicences']);
+    }
+
     public function testHasInforceLicences()
     {
         /** @var Entity $organisation */
@@ -37,7 +79,11 @@ class OrganisationEntityTest extends EntityTester
                     $this->assertEquals('<>', $expr->getOperator());
                     $this->assertEquals(null, $expr->getValue()->getValue());
 
-                    return ['foo'];
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['foo']);
+
+                    return $collection;
                 }
             );
 
