@@ -249,7 +249,7 @@ abstract class AbstractTransportManagerApplication implements \JsonSerializable
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=false)
      */
     protected $tmApplicationStatus;
 

@@ -13,9 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_irfo_psv_auth_number_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_number_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_number_last_modified_by", columns={"last_modified_by"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_number_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */

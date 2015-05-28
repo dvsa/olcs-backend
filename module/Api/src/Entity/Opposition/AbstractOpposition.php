@@ -62,7 +62,7 @@ abstract class AbstractOpposition implements \JsonSerializable
      *     fetch="LAZY",
      *     inversedBy="oppositions"
      * )
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
 

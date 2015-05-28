@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_task_assigned_by_user_id", columns={"assigned_by_user_id"}),
  *        @ORM\Index(name="ix_task_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_task_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_task_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_task_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_task_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_task_irfo_organisation_id", columns={"irfo_organisation_id"}),
@@ -29,7 +28,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_task_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_task_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_task_sub_category_id", columns={"sub_category_id"}),
- *        @ORM\Index(name="ix_task_etl", columns={"description","category_id","sub_category_id"})
+ *        @ORM\Index(name="ix_task_etl", columns={"description","category_id","sub_category_id"}),
+ *        @ORM\Index(name="fk_task_submission1_idx", columns={"submission_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_task_olbs_key", columns={"olbs_key"})
