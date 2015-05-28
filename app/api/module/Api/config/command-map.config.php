@@ -1,7 +1,6 @@
 <?php
 
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
-use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
