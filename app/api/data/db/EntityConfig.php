@@ -1604,7 +1604,7 @@ return array(
         ),
     ),
     'companies_house_officer' => array(
-        'company_id' => array(
+        'companies_house_company_id' => array(
             'inversedBy' => array(
                 'entity' => 'CompaniesHouseCompany',
                 'property' => 'officer',

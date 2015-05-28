@@ -23,7 +23,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_attached_to", columns={"attached_to"}),
  *        @ORM\Index(name="ix_condition_undertaking_condition_type", columns={"condition_type"}),
  *        @ORM\Index(name="ix_condition_undertaking_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_condition_undertaking_s4_id", columns={"s4_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_operating_centre_id",
      *     columns={"operating_centre_id"}),
@@ -32,7 +31,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id",
      *     columns={"lic_condition_variation_id"}),
- *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"})
+ *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"}),
+ *        @ORM\Index(name="fk_condition_undertaking_s41_idx", columns={"s4_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type",
