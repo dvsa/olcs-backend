@@ -36,6 +36,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
             \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
+            \Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialHistory::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialHistory::class,
             // Transfer - Organisation
             \Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType::class,
@@ -108,6 +110,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
             \Dvsa\Olcs\Transfer\Query\Processing\History::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
+            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
