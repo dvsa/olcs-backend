@@ -18,6 +18,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @method QueryBuilder withRefdata($entity = null, $alias = null)
  * @method QueryBuilder byId($id)
  * @method QueryBuilder with($property, $alias = null)
+ * @method QueryBuilder paginate($page, $limit)
+ * @method QueryBuilder order($sort, $order)
  */
 class QueryBuilder implements QueryBuilderInterface
 {
