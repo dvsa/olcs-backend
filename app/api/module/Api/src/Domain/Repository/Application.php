@@ -17,4 +17,13 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 class Application extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    public function fetchWithPreviousConvictions($query)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->buildDefaultQuery($qb, $query->getId())
+            ->with('previousConvictions');
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }
