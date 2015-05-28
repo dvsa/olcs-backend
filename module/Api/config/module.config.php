@@ -26,6 +26,7 @@ return [
     ],
     'controllers' => [
         'invokables' => [
+            'Api\Generic' => \Dvsa\Olcs\Api\Controller\GenericController::class,
             'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
             'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
@@ -110,6 +111,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+            \Dvsa\Olcs\Transfer\Query\Processing\History::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -119,6 +122,8 @@ return [
         'invokables' => [
             'byId' => \Dvsa\Olcs\Api\Domain\QueryPartial\ById::class,
             'with' => \Dvsa\Olcs\Api\Domain\QueryPartial\With::class,
+            'paginate' => \Dvsa\Olcs\Api\Domain\QueryPartial\Paginate::class,
+            'order' => \Dvsa\Olcs\Api\Domain\QueryPartial\Order::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
@@ -134,6 +139,7 @@ return [
             'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'EventHistory' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
