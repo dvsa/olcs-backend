@@ -21,9 +21,13 @@ class Application extends AbstractRepository
     public function fetchWithPreviousConvictions($query)
     {
         $qb = $this->createQueryBuilder();
-        $this->buildDefaultQuery($qb, $query->getId())
-            ->with('previousConvictions');
+        $this->buildDefaultQuery($qb, $query->getId());
+            // @FIXME ->with('previousConvictions');
 
-        return $qb->getQuery()->getSingleResult();
+        $a = $qb->getQuery()->getSingleResult();
+
+        $a->setPreviousConvictions([]);
+
+        return $a;
     }
 }

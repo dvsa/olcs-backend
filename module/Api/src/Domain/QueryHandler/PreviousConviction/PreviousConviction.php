@@ -5,7 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\PreviousConviction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
