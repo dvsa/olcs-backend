@@ -29,6 +29,7 @@ return [
             'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
             'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
             'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
+            'Api\Application\PreviousConvictions' => \Dvsa\Olcs\Api\Controller\Application\PreviousConvictionsController::class,
             'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
             'Api\Organisation\BusinessType' => \Dvsa\Olcs\Api\Controller\Organisation\BusinessTypeController::class,
         ]
@@ -100,6 +101,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateCommunityLicencesStatus::class,
             \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessDetailsStatus::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateBusinessDetailsStatus::class,
+            \Dvsa\Olcs\Transfer\Command\Application\UpdatePreviousConvictions::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePreviousConvictions::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
@@ -110,6 +113,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+            \Dvsa\Olcs\Transfer\Query\Application\PreviousConvictions::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\PreviousConvictions::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
