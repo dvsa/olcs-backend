@@ -28,12 +28,6 @@ final class CreatePreviousConviction extends AbstractCommandHandler
     {
         $result = new Result();
 
-        $application = $this->getCommandHandler()
-            ->getServiceLocator()
-            ->get('RepositoryServiceManager')
-            ->get('Application')
-            ->fetchById($command->getApplication());
-
         try {
             $this->getRepo()->beginTransaction();
 
