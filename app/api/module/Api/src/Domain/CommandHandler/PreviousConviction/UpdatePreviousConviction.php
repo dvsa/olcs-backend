@@ -28,7 +28,7 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
     {
         $result = new Result();
 
-        $conviction = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $conviction = $this->getRepo()->fetchUsingId($command);
 
         $title = $this->getRepo()->getRefdataReference($command->getTitle());
 
@@ -37,7 +37,6 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
         }
 
         $conviction->setTitle($title);
-        $conviction->setApplication($application);
         $conviction->setForename($command->getForename());
         $conviction->setFamilyName($command->getFamilyName());
         $conviction->setConvictionDate(
