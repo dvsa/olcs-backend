@@ -7967,18 +7967,12 @@ CREATE VIEW document_search_view AS
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id
     FROM `document` d
-
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
-
     LEFT JOIN licence l ON d.licence_id = l.id
-
     LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
         ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
-
     LEFT JOIN cases c ON d.case_id = c.id
-
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-
     LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id;
 
 DROP TABLE IF EXISTS vehicle_history_view;
