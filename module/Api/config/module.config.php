@@ -109,6 +109,7 @@ return [
         'factories' => [
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+            TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
@@ -198,6 +199,9 @@ return [
                 'class_name'         => \Dvsa\Olcs\Api\Entity\User\Role::class,
                 'role_name_property' => 'role'
             ]
+        ],
+        'assertion_map' => [
+            'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class
         ]
     ],
 ];

@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
- * Update Licence Type
+ * Check whether the current user can update the type of licence for the given licence
  */
 class UpdateLicenceType implements AssertionInterface
 {
     public function assert(AuthorizationService $authorizationService, Licence $context = null)
     {
-        if ($authorizationService->isGranted(Permission::INTERNAL_VIEW)) {
+        if ($authorizationService->isGranted(Permission::INTERNAL_USER)) {
             return true;
         }
 

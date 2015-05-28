@@ -69,7 +69,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::INTERNAL_VIEW)
+            ->with(Permission::INTERNAL_USER)
             ->andReturn(false);
 
         $command = Cmd::create(['organisation' => 11]);
@@ -126,7 +126,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::INTERNAL_VIEW)
+            ->with(Permission::INTERNAL_USER)
             ->andReturn(false);
 
         $command = Cmd::create(
@@ -210,7 +210,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::INTERNAL_VIEW)
+            ->with(Permission::INTERNAL_USER)
             ->andReturn(false);
 
         $command = Cmd::create(['organisation' => 11]);
