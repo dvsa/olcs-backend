@@ -32,6 +32,7 @@ return [
             'Api\Application\PreviousConvictions' => \Dvsa\Olcs\Api\Controller\Application\PreviousConvictionsController::class,
             'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
             'Api\Organisation\BusinessType' => \Dvsa\Olcs\Api\Controller\Organisation\BusinessTypeController::class,
+            'Api\PreviousConviction' => \Dvsa\Olcs\Api\Controller\PreviousConviction\PreviousConvictionController::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
@@ -103,6 +104,10 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateBusinessDetailsStatus::class,
             \Dvsa\Olcs\Transfer\Command\Application\UpdatePreviousConvictions::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePreviousConvictions::class,
+            \Dvsa\Olcs\Transfer\Command\PreviousConviction\CreatePreviousConviction::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction\CreatePreviousConviction::class,
+            \Dvsa\Olcs\Transfer\Command\PreviousConviction\UpdatePreviousConviction::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
@@ -115,6 +120,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
             \Dvsa\Olcs\Transfer\Query\Application\PreviousConvictions::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\PreviousConvictions::class,
+            \Dvsa\Olcs\Transfer\Query\PreviousConviction\PreviousConviction::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\PreviousConviction\PreviousConviction::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -140,6 +147,7 @@ return [
             'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'PreviousConviction' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
