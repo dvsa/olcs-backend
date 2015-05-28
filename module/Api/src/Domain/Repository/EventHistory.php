@@ -27,5 +27,7 @@ class EventHistory extends AbstractRepository
             $qb->andWhere($this->alias . '.case = :caseId');
             $qb->setParameter('caseId', $query->getCaseId());
         }
+
+        $this->getQueryBuilder()->modifyQuery($qb)->with('eventHistoryType')->withUser();
     }
 }
