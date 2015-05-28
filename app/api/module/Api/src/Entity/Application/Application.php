@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Application Entity
@@ -104,5 +105,18 @@ class Application extends AbstractApplication
         }
 
         throw new ValidationException($errors);
+    }
+
+    public function getApplicationDocuments($category, $subCategory)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('category', $category));
+        $criteria->andWhere(
+            $expr->eq('subCategory', $subCategory)
+        );
+
+        return $this->documents->matching($criteria);
     }
 }
