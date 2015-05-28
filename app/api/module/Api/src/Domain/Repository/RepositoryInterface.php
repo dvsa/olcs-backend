@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -23,6 +24,20 @@ interface RepositoryInterface
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
 
     public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY);
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     * @return int
+     */
+    public function fetchCount(QueryInterface $query);
 
     public function lock($entity, $version);
 
