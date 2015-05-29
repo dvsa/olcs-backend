@@ -374,7 +374,7 @@ abstract class AbstractCases implements \JsonSerializable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyOffence", mappedBy="case")
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Legacy\LegacyOffence", mappedBy="case", indexBy="id", fetch="LAZY")
      */
     protected $legacyOffences;
 
