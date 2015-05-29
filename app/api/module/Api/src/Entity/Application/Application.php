@@ -32,6 +32,7 @@ class Application extends AbstractApplication
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
+    const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
 
     const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
     const APPLICATION_STATUS_GRANTED = 'apsts_granted';
@@ -118,5 +119,48 @@ class Application extends AbstractApplication
         );
 
         return $this->documents->matching($criteria);
+    }
+
+    public function updateFinancialHistory(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails
+    ) {
+        $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
+        if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
+            foreach ($flags as $key => $flag) {
+                $this->{'set' . ucfirst($key)}($flag);
+            }
+            $this->setInsolvencyDetails($insolvencyDetails);
+            return true;
+        }
+    }
+
+    public function validateFinancialHistory($flags, $insolvencyDetails)
+    {
+        $foundYes = false;
+        foreach ($flags as $element) {
+            if ($element == 'Y') {
+                $foundYes = true;
+                break;
+            }
+        }
+        if (!$foundYes) {
+            return true;
+        }
+        if (strlen($insolvencyDetails) >= 200) {
+            return true;
+        }
+        $errors = [
+            'insolvencyDetails' => [
+                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED =>
+                    'You selected \'yes\' in one of the provided questions, so the input has to be at least 200
+                characters long'
+            ]
+        ];
+        throw new ValidationException($errors);
     }
 }
