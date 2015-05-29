@@ -24,4 +24,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Cases extends AbstractCases
 {
 
+    public function getLegacyOffence($offence)
+    {
+        if (!isset($this->legacyOffences[$offence])) {
+            throw new \InvalidArgumentException("Case legacyOffence: $offence was not found");
+        }
+
+        return $this->legacyOffences[$offence];
+    }
 }
