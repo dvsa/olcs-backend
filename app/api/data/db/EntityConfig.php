@@ -1614,4 +1614,15 @@ return array(
             ),
         ),
     ),
+    'companies_house_alert_reason' => array(
+        'companies_house_alert_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseAlert',
+                'property' => 'reason',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
+    ),
 );
