@@ -27,11 +27,6 @@ return [
     'controllers' => [
         'invokables' => [
             'Api\Generic' => \Dvsa\Olcs\Api\Controller\GenericController::class,
-            'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
-            'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
-            'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
-            'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
-            'Api\Organisation\BusinessType' => \Dvsa\Olcs\Api\Controller\Organisation\BusinessTypeController::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
