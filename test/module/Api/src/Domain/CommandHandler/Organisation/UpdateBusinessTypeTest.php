@@ -53,7 +53,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $this->setExpectedException(ValidationException::class);
@@ -84,7 +84,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $data = [
@@ -125,7 +125,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $this->setExpectedException(ValidationException::class);
@@ -155,7 +155,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $this->setExpectedException(ValidationException::class);
@@ -185,7 +185,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $this->setExpectedException(ValidationException::class);
@@ -218,7 +218,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $data = [
@@ -256,7 +256,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $data = [
@@ -293,7 +293,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $data = [
@@ -341,7 +341,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $data = [
@@ -400,7 +400,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::SELFSERVE_USER)
+            ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
         $this->setExpectedException(\Exception::class);
