@@ -39,6 +39,8 @@ return [
             // Transfer - Organisation
             \Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType::class,
+            \Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateDeclaration::class,
             // Domain - Application
             \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,
@@ -48,6 +50,12 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber::class,
             \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVariationCompletion::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\CreateFee::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateFee::class,
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelAllInterimFees::class,
             // Domain - Licence
             \Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CancelLicenceFees::class,
@@ -57,6 +65,8 @@ return [
             // Domain - Fee
             \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee::class,
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CancelFee::class,
             // Domain - ApplicationCompletion
             \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTypeOfLicenceStatus::class,
@@ -108,6 +118,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
             \Dvsa\Olcs\Transfer\Query\Processing\History::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
+            \Dvsa\Olcs\Transfer\Query\Application\Declaration::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Declaration::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
