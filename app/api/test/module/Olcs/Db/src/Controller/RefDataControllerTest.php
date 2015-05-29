@@ -4,9 +4,10 @@ namespace OlcsTest\Db\Controller;
 
 use Olcs\Db\Controller\RefDataController;
 use Mockery as m;
-use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
+use Dvsa\Olcs\Api\Domain\Repository\RefData as RefDataRepo;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Class RefDataControllerTest
@@ -22,7 +23,7 @@ class RefDataControllerTest extends \PHPUnit_Framework_TestCase
 
         // -- Start Doctrine Mocking
 
-        $mockRepo = $this->getMock('\Olcs\Db\Entity\Repository\RefData', [], [], '', 0);
+        $mockRepo = $this->getMock(RefDataRepo::class, [], [], '', 0);
         $mockRepo->expects($this->once())
             ->method('findByIdentifierAndLanguage')
             ->with($this->equalTo($id), $this->equalTo($lang))
@@ -31,7 +32,7 @@ class RefDataControllerTest extends \PHPUnit_Framework_TestCase
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManagerInterface');
         $mockEm->expects($this->once())
             ->method('getRepository')
-            ->with($this->equalTo('Olcs\Db\Entity\RefData'))
+            ->with($this->equalTo(RefDataEntity::class))
             ->willReturn($mockRepo);
 
         $mockSl = $this->getMock('\Zend\ServiceManager\ServiceLocatorInterface');
@@ -66,7 +67,7 @@ class RefDataControllerTest extends \PHPUnit_Framework_TestCase
 
         // -- Start Doctrine Mocking
 
-        $mockRepo = $this->getMock('\Olcs\Db\Entity\Repository\RefData', [], [], '', 0);
+        $mockRepo = $this->getMock(RefDataRepo::class, [], [], '', 0);
         $mockRepo->expects($this->once())
             ->method('findAllByCategoryAndLanguage')
             ->with($this->equalTo($category), $this->equalTo($lang))
@@ -75,7 +76,7 @@ class RefDataControllerTest extends \PHPUnit_Framework_TestCase
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManagerInterface');
         $mockEm->expects($this->once())
             ->method('getRepository')
-            ->with($this->equalTo('Olcs\Db\Entity\RefData'))
+            ->with($this->equalTo(RefDataEntity::class))
             ->willReturn($mockRepo);
 
         $mockSl = $this->getMock('\Zend\ServiceManager\ServiceLocatorInterface');

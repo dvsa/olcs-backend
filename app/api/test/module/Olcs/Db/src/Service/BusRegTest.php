@@ -3,10 +3,12 @@
 
 namespace OlcsTest\Db\Service;
 
+use Dvsa\OlcsTest\Api\Entity\Bus\BusRegOtherServiceTest;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\Db\Service\BusReg;
 use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class BusRegTest
@@ -80,13 +82,13 @@ class BusRegTest extends TestCase
             ]
         );
 
-        $mockEntity = $this->getMock('\Olcs\Db\Entity\BusReg', array('clearProperties'));
+        $mockEntity = $this->getMock(BusRegEntity::class, array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
-            ->with($data, $this->isInstanceOf('\Olcs\Db\Entity\BusReg'))
+            ->with($data, $this->isInstanceOf(BusRegEntity::class))
             ->will($this->returnValue($mockEntity));
 
         $this->em->expects($this->once())

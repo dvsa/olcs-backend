@@ -1755,7 +1755,60 @@ VALUES
  ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital')
  ,(11, 113, 0, 0, 0, 0, 'Publication')
  ,(10, 114, 0, 1, 0, 0, 'Assignment')
+
+ -- subcategories for submission section attachments
+ ,(10, 115, 0, 0, 0, 0, 'Introduction')
+ ,(10, 116, 0, 0, 0, 0, 'Case Summary')
+ ,(10, 117, 0, 0, 0, 0, 'Case Outline')
+ ,(10, 118, 0, 0, 0, 0, 'Most serious infringement')
+ ,(10, 119, 0, 0, 0, 0, 'Outstanding applications')
+ ,(10, 120, 0, 0, 0, 0, 'Persons')
+ ,(10, 121, 0, 0, 0, 0, 'Operating centres')
+ ,(10, 122, 0, 0, 0, 0, 'Conditions and undertakings')
+ ,(10, 123, 0, 0, 0, 0, 'Intelligence unit check')
+ ,(10, 124, 0, 0, 0, 0, 'Interim')
+ ,(10, 125, 0, 0, 0, 0, 'Advertisement')
+ ,(10, 126, 0, 0, 0, 0, 'Linked licences')
+ ,(10, 127, 0, 0, 0, 0, 'Lead TC area')
+ ,(10, 128, 0, 0, 0, 0, 'Current submissions')
+ ,(10, 129, 0, 0, 0, 0, 'Authorisation requested / applied for')
+ ,(10, 130, 0, 0, 0, 0, 'Transport managers')
+ ,(10, 131, 0, 0, 0, 0, 'Continuous and effective control')
+ ,(10, 132, 0, 0, 0, 0, 'Fitness & repute')
+ ,(10, 133, 0, 0, 0, 0, 'Previous history')
+ ,(10, 134, 0, 0, 0, 0, 'Bus registration application details')
+ ,(10, 135, 0, 0, 0, 0, 'Transport authority comments')
+ ,(10, 136, 0, 0, 0, 0, 'Total bus registrations')
+ ,(10, 137, 0, 0, 0, 0, 'Local licence history')
+ ,(10, 138, 0, 0, 0, 0, 'Linked MLH history')
+ ,(10, 139, 0, 0, 0, 0, 'Registration details')
+ ,(10, 140, 0, 0, 0, 0, 'Maintenance / Tachographs / Drivers hours')
+ ,(10, 141, 0, 0, 0, 0, 'Prohibition history')
+ ,(10, 142, 0, 0, 0, 0, 'Conviction / FPN / Offence histor')
+ ,(10, 143, 0, 0, 0, 0, 'Annual test history')
+ ,(10, 144, 0, 0, 0, 0, 'ERRU Penalties')
+ ,(10, 145, 0, 0, 0, 0, 'Statements')
+ ,(10, 146, 0, 0, 0, 0, 'Other issues / misc')
+ ,(10, 147, 0, 0, 0, 0, 'TE reports')
+ ,(10, 148, 0, 0, 0, 0, 'Site plans')
+ ,(10, 149, 0, 0, 0, 0, 'Planning permission')
+ ,(10, 150, 0, 0, 0, 0, 'Applicants comments')
+ ,(10, 151, 0, 0, 0, 0, 'Visibility / access egress size')
+ ,(10, 152, 0, 0, 0, 0, 'Compliance complaints')
+ ,(10, 153, 0, 0, 0, 0, 'Environmental complaints')
+ ,(10, 154, 0, 0, 0, 0, 'Oppositions')
+ ,(10, 155, 0, 0, 0, 0, 'Financial information')
+ ,(10, 156, 0, 0, 0, 0, 'Maps')
+ ,(10, 157, 0, 0, 0, 0, 'Waive fee / Late fee')
+ ,(10, 158, 0, 0, 0, 0, 'Surrender')
+ ,(10, 159, 0, 0, 0, 0, 'Annex')
+ ,(10, 160, 0, 0, 0, 0, 'Transport Manager details')
+ ,(10, 161, 0, 0, 0, 0, 'Qualifications')
+ ,(10, 162, 0, 0, 0, 0, 'Responsibilities')
+ ,(10, 163, 0, 0, 0, 0, 'Other employment')
+ ,(10, 164, 0, 0, 0, 0, 'Previous history')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
+
 
 INSERT INTO sub_category_description
   (sub_category_id, description)
@@ -7914,18 +7967,12 @@ CREATE VIEW document_search_view AS
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id
     FROM `document` d
-
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
-
     LEFT JOIN licence l ON d.licence_id = l.id
-
     LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
         ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
-
     LEFT JOIN cases c ON d.case_id = c.id
-
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-
     LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id;
 
 DROP TABLE IF EXISTS vehicle_history_view;
