@@ -77,6 +77,7 @@ return [
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
+            'LegacyOffence' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
