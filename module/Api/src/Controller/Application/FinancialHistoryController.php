@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Exception\Exception;
  */
 class FinancialHistoryController extends AbstractRestfulController
 {
-    public function update($id, $data)
+    public function update()
     {
         $dto = $this->params('dto');
 
@@ -31,14 +31,12 @@ class FinancialHistoryController extends AbstractRestfulController
         }
     }
 
-    public function get($id)
+    public function get()
     {
         try {
             $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($this->params('dto'));
             return $this->response()->singleResult($result);
         } catch (\Exception $ex) {
-            echo $ex->getMessage();
-            die();
             return $this->response()->notFound();
         }
     }

@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 class FinancialHistory extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
-    
+
     public function handleQuery(QueryInterface $query)
     {
         $applicationRepo = $this->getRepo();
@@ -31,7 +31,8 @@ class FinancialHistory extends AbstractQueryHandler
             $applicationRepo->getCategoryReference(SubCategory::DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL)
         );
         $data = $application->jsonSerialize();
-        $data['documents'] = $financialDocuments;
+        $data['documents'] = $financialDocuments->toArray();
+
         return $data;
     }
 }
