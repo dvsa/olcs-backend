@@ -47,6 +47,7 @@ return [
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
+            TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
