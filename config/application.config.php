@@ -2,12 +2,14 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => [
+        'ZfcRbac',
+        'Dvsa\Olcs\Transfer',
         'Olcs\Logging',
-        'Olcs\Db',
         'DoctrineModule',
-        'DoctrineORMModule'
+        'DoctrineORMModule',
+        'Olcs\Db',
+        'Dvsa\Olcs\Api',
     ],
-
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(
         // This should be an array of paths in which modules reside.

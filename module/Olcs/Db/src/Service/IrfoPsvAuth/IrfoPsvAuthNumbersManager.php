@@ -2,8 +2,8 @@
 
 namespace Olcs\Db\Service\IrfoPsvAuth;
 
-use Olcs\Db\Entity\IrfoPsvAuth;
-use Olcs\Db\Entity\IrfoPsvAuthNumber;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

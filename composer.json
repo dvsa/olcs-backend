@@ -14,6 +14,10 @@
             "type": "vcs"
         },
         {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
+            "type": "vcs"
+        },
+        {
             "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
             "type": "vcs"
         },
@@ -24,17 +28,17 @@
     ],
     "require": {
         "php": ">=5.4",
-
         "zendframework/zendframework": "~2.3.3",
-        "doctrine/orm": "~2.4.0",
+        "doctrine/orm": "~2.5.0",
         "doctrine/doctrine-orm-module": "~0.8.0",
         "doctrine/annotations": "^1.2.3",
         "gedmo/doctrine-extensions": "~2.3.9",
         "ruflin/Elastica": "v1.4.3.0",
-
         "olcs/companies-house": "dev-develop",
+        "olcs/olcs-transfer": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
-        "olcs/autoload": "dev-develop"
+        "olcs/autoload": "dev-develop",
+        "zf-commons/zfc-rbac": "~2.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0.0",
@@ -47,6 +51,7 @@
         ],
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
+            "Dvsa\\Olcs\\Api\\": "module/Api/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
     },

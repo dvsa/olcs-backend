@@ -4,8 +4,8 @@
 namespace OlcsTest\Db\Service\IrfoPsvAuth;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Olcs\Db\Entity\IrfoPsvAuth;
-use Olcs\Db\Entity\IrfoPsvAuthNumber;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber;
 use Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager;
 use Mockery as m;
 

@@ -213,50 +213,5 @@ return [
              'error/index' => __DIR__ . '/../view/error/index.phtml',
              'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
          ],
-    ],
-    'doctrine' => [
-        'driver' => [
-            'EntityDriver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    __DIR__ . '/../src/Entity'
-                ]
-            ],
-            'translatable_metadata_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    'vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity',
-                ],
-            ],
-            'orm_default' => [
-                'drivers' => [
-                    'Olcs\Db\Entity' => 'EntityDriver',
-                    'Gedmo\Translatable\Entity' => 'translatable_metadata_driver'
-                ]
-            ]
-        ],
-        'eventmanager' => [
-            'orm_default' => [
-                'subscribers' => [
-                    'Gedmo\SoftDeleteable\SoftDeleteableListener',
-                    'Gedmo\Translatable\TranslatableListener'
-                ],
-            ],
-        ],
-        'configuration' => [
-            'orm_default' => [
-                'filters' => [
-                    'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
-                ],
-                'types' => [
-                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
-                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
-                    'date' => 'Olcs\Db\Entity\Types\DateType',
-                    'datetime' => 'Olcs\Db\Entity\Types\DateTimeType',
-                ]
-            ]
-        ]
     ]
 ];

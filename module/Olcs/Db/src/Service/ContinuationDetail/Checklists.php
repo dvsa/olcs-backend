@@ -9,10 +9,10 @@ namespace Olcs\Db\Service\ContinuationDetail;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Olcs\Db\Entity\Queue;
-use Olcs\Db\Entity\Document;
-use Olcs\Db\Entity\Licence;
-use Olcs\Db\Entity\Fee;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Checklists
@@ -54,7 +54,7 @@ class Checklists implements ServiceLocatorAwareInterface
         }
 
         $results = $this->getServiceLocator()->get('EntityManagerHelper')
-            ->findByIds('\Olcs\Db\Entity\ContinuationDetail', $data);
+            ->findByIds('\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail', $data);
 
         if (count($results) < count($data)) {
             return 'Could not find one or more continuation detail records';
@@ -87,7 +87,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $qb = $em->createQueryBuilder();
 
         $qb->select('cd')
-            ->from('\Olcs\Db\Entity\ContinuationDetail', 'cd')
+            ->from('\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail', 'cd')
             ->leftJoin('cd.licence', 'l')
             ->where($qb->expr()->eq('cd.id', ':id'))
             ->setParameter('id', $id)
@@ -100,7 +100,7 @@ class Checklists implements ServiceLocatorAwareInterface
         }
 
         $qb->select('d')
-            ->from('\Olcs\Db\Entity\Document', 'd')
+            ->from(Document::class, 'd')
             ->where($qb->expr()->eq('d.id', ':id'))
             ->setParameter('id', $docId)
             ->setMaxResults(1);
@@ -111,11 +111,11 @@ class Checklists implements ServiceLocatorAwareInterface
             return 'Document record not found';
         }
 
-        /* @var $continuationDetail \Olcs\Db\Entity\ContinuationDetail */
+        /* @var \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail $continuationDetail */
         $continuationDetail = $results[0];
         $licence = $continuationDetail->getLicence();
 
-        /* @var $document \Olcs\Db\Entity\Document */
+        /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
         $document = $documents[0];
 
         $em->beginTransaction();
@@ -127,14 +127,12 @@ class Checklists implements ServiceLocatorAwareInterface
 
                 $amount = ($feeType->getFixedValue() != 0 ? $feeType->getFixedValue() : $feeType->getFiveYearValue());
 
-                $fee = new Fee();
-                $fee->setAmount($amount);
+                $feeStatusRefData = $emh->getRefDataReference(self::FEE_STATUS_OUTSTANDING);
+
+                $fee = new Fee($feeType, $amount, $feeStatusRefData);
                 $fee->setLicence($licence);
                 $fee->setInvoicedDate(new \DateTime());
-                $fee->setFeeType($feeType);
                 $fee->setDescription($feeType->getDescription() . ' for licence ' . $licence->getLicNo());
-                $feeStatusRefData = $emh->getRefDataReference(self::FEE_STATUS_OUTSTANDING);
-                $fee->setFeeStatus($feeStatusRefData);
 
                 $em->persist($fee);
             }
@@ -156,7 +154,7 @@ class Checklists implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @return \Olcs\Db\Entity\FeeType
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      */
     protected function getLatestFeeType($feeType, Licence $licence)
     {
@@ -166,7 +164,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $effectiveFrom = (new \DateTime())->format(\DateTime::W3C);
 
         $qb->select('ft')
-            ->from('\Olcs\Db\Entity\FeeType', 'ft')
+            ->from('\Dvsa\Olcs\Api\Entity\Fee\FeeType', 'ft')
             ->where($qb->expr()->eq('ft.feeType', ':feeType'))
             ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
             ->andWhere(
@@ -221,7 +219,7 @@ class Checklists implements ServiceLocatorAwareInterface
         $qb = $em->createQueryBuilder();
 
         $qb->select('f')
-            ->from('\Olcs\Db\Entity\Fee', 'f')
+            ->from('\Dvsa\Olcs\Api\Entity\Fee\Fee', 'f')
             ->innerJoin('f.feeType', 'ft')
             ->where($qb->expr()->eq('f.licence', ':licence'))
             ->andWhere(
