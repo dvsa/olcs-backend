@@ -11,13 +11,11 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 final class LegacyOffence extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'Cases';
+    protected $repoServiceName = 'LegacyOffence';
 
     public function handleQuery(QueryInterface $query)
     {
-        $case = $this->getRepo()->fetchById($query->getCase());
-
-        $legacyOffence = $case->getLegacyOffence($query->getOffence());
+        $legacyOffence = $this->getRepo()->fetchCaseLegacyOffenceUsingId($query);
 
         return $legacyOffence;
     }
