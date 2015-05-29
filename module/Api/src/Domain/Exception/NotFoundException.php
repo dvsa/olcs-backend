@@ -14,5 +14,8 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class NotFoundException extends Exception
 {
-
+    public function __construct($message)
+    {
+        $this->messages = [$message];
+    }
 }
