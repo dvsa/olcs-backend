@@ -139,7 +139,7 @@ class Application extends AbstractApplication
         }
     }
 
-    public function validateFinancialHistory($flags, $insolvencyDetails)
+    protected function validateFinancialHistory($flags, $insolvencyDetails)
     {
         $foundYes = false;
         foreach ($flags as $element) {
