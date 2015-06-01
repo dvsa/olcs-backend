@@ -4789,7 +4789,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (24, 'partner-admin', 'PAAD'),
     (25, 'partner-user', 'PAUS'),
     (26, 'local-authority-admin', 'LAAD'),
-    (27, 'local-authority-user', 'LAUS');
+    (27, 'local-authority-user', 'LAUS'),
+    (28, 'can-update-licence-licence-type', 'ULLT');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4855,7 +4856,12 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
     (7, 14), -- operator TM has selfserve dashboard
-    (5, 15); -- "operator-admin" can access "selfserve-manage-user"
+    (5, 15), -- "operator-admin" can access "selfserve-manage-user"
+
+    (3, 28), -- internal users can update licence licence type
+    (4, 28), -- internal users can update licence licence type
+    (5, 28), -- selfserve users can update licence licence type
+    (6, 28); -- selfserve users can update licence licence type
 
 INSERT INTO `financial_standing_rate` (
     `id`,
