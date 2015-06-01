@@ -18,5 +18,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubCategory extends AbstractSubCategory
 {
-
+    const DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL = 112;
 }
