@@ -29,7 +29,6 @@ final class ById implements QueryPartialInterface
         list($alias) = $qb->getRootAliases();
 
         $qb->andWhere($qb->expr()->eq($alias . '.id', ':byId'))
-            ->setParameter('byId', $id)
-            ->setMaxResults(1);
+            ->setParameter('byId', $id);
     }
 }
