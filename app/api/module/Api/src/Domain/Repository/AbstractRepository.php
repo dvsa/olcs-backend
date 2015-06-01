@@ -223,10 +223,11 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @param QueryBuilder $qb
      * @param QryCmd $query
+     * @return QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
+        return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
     }
 
     /**

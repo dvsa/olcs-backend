@@ -104,6 +104,8 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
             \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
+            \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
             \Dvsa\Olcs\Transfer\Query\Processing\History::class
