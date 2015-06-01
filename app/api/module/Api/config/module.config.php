@@ -38,6 +38,9 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
             \Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialHistory::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialHistory::class,
+            // Transfer - Licence
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTypeOfLicence::class
+                => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateTypeOfLicence::class,
             // Transfer - Organisation
             \Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType::class,
@@ -104,10 +107,12 @@ return [
         'factories' => [
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Licence\Licence::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Licence::class,
             \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
-            => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
             \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
             \Dvsa\Olcs\Transfer\Query\Processing\History::class
