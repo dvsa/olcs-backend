@@ -28,7 +28,7 @@ class FinancialHistory extends AbstractQueryHandler
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
         $financialDocuments = $application->getApplicationDocuments(
             $applicationRepo->getCategoryReference(Category::CATEGORY_LICENSING),
-            $applicationRepo->getCategoryReference(SubCategory::DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL)
+            $applicationRepo->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL)
         );
         $data = $application->jsonSerialize();
         $data['documents'] = $financialDocuments->toArray();

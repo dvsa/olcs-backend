@@ -59,7 +59,7 @@ class FinancialHistoryTest extends QueryHandlerTestCase
             ->with(Category::CATEGORY_LICENSING)
             ->andReturn('category')
             ->once()
-            ->shouldReceive('getCategoryReference')
+            ->shouldReceive('getSubCategoryReference')
             ->with(SubCategory::DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL)
             ->andReturn('subCategory')
             ->once();
