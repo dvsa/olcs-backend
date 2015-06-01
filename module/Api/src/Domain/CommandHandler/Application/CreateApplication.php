@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAplic
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -157,7 +157,7 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
 
     private function getApplicationStatus()
     {
-        if ($this->isGranted(Permission::INTERNAL_VIEW)) {
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
             return $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION);
         }
 

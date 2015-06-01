@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 
 /**
  * Abstract Command Handler
