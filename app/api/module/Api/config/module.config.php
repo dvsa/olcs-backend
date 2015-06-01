@@ -6,6 +6,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -25,11 +26,7 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'Api\Cases' => \Dvsa\Olcs\Api\Controller\Cases\CasesController::class,
-            'Api\Application' => \Dvsa\Olcs\Api\Controller\Application\ApplicationController::class,
-            'Api\Application\TypeOfLicence' => \Dvsa\Olcs\Api\Controller\Application\TypeOfLicenceController::class,
-            'Api\Organisation' => \Dvsa\Olcs\Api\Controller\Organisation\OrganisationController::class,
-            'Api\Organisation\BusinessType' => \Dvsa\Olcs\Api\Controller\Organisation\BusinessTypeController::class,
+            'Api\Generic' => \Dvsa\Olcs\Api\Controller\GenericController::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
@@ -109,15 +106,20 @@ return [
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+            \Dvsa\Olcs\Transfer\Query\Processing\History::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withRefdata' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdataFactory::class,
+            'withUser' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithUserFactory::class,
         ],
         'invokables' => [
             'byId' => \Dvsa\Olcs\Api\Domain\QueryPartial\ById::class,
             'with' => \Dvsa\Olcs\Api\Domain\QueryPartial\With::class,
+            'paginate' => \Dvsa\Olcs\Api\Domain\QueryPartial\Paginate::class,
+            'order' => \Dvsa\Olcs\Api\Domain\QueryPartial\Order::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
@@ -133,6 +135,8 @@ return [
             'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'EventHistory' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -180,5 +184,15 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+    'zfc_rbac' => [
+        'identity_provider' => 'IdentityProvider',
+        'role_provider' => [
+            'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
+                'object_manager'     => 'doctrine.entitymanager.orm_default',
+                'class_name'         => \Dvsa\Olcs\Api\Entity\User\Role::class,
+                'role_name_property' => 'role'
+            ]
+        ]
+    ],
 ];

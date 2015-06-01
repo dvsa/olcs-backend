@@ -261,7 +261,7 @@ abstract class AbstractCases implements \JsonSerializable
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="open_date", nullable=false)
+     * @ORM\Column(type="datetime", name="open_date", nullable=true)
      */
     protected $openDate;
 

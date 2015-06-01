@@ -31,7 +31,8 @@ abstract class AbstractCompaniesHouseAlertReason implements \JsonSerializable
      *
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert",
-     *     fetch="LAZY"
+     *     fetch="LAZY",
+     *     inversedBy="reasons"
      * )
      * @ORM\JoinColumn(name="companies_house_alert_id", referencedColumnName="id", nullable=false)
      */

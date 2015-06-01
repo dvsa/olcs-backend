@@ -18,6 +18,10 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\OptimisticLockException;
+use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Abstract Repository
@@ -58,9 +62,14 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
+        return $this->fetchById($query->getId(), $hydrateMode, $version);
+    }
+
+    public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query);
+        $this->buildDefaultQuery($qb, $id);
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
@@ -73,6 +82,48 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         return $results[0];
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultListQuery($qb, $query);
+        $this->applyListFilters($qb, $query);
+
+        $query = $qb->getQuery();
+        $query->setHydrationMode($hydrateMode);
+
+        $paginator = new Paginator($query);
+        return $paginator->getIterator($hydrateMode);
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     * @return int
+     */
+    public function fetchCount(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultListQuery($qb, $query);
+        $this->applyListFilters($qb, $query);
+
+        $query = $qb->getQuery();
+
+        $paginator = new Paginator($query);
+        return $paginator->count();
+    }
+
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+
     }
 
     public function lock($entity, $version)
@@ -173,8 +224,26 @@ abstract class AbstractRepository implements RepositoryInterface
      * @param QueryBuilder $qb
      * @param QryCmd $query
      */
-    protected function buildDefaultQuery(QueryBuilder $qb, QryCmd $query)
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($query->getId());
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    {
+        $queryBuilderHelper = $this->getQueryBuilder()->modifyQuery($qb);
+        $queryBuilderHelper->withRefdata();
+
+        if ($query instanceof PagedQueryInterface) {
+            $queryBuilderHelper->paginate($query->getPage(), $query->getLimit());
+        }
+
+        if ($query instanceof OrderedQueryInterface) {
+            $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+        }
     }
 }

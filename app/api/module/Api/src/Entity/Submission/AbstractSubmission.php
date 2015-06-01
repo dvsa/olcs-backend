@@ -20,11 +20,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="submission",
  *    indexes={
  *        @ORM\Index(name="ix_submission_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_submission_sender_user_id", columns={"sender_user_id"}),
- *        @ORM\Index(name="ix_submission_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"})
+ *        @ORM\Index(name="ix_submission_submission_type", columns={"submission_type"}),
+ *        @ORM\Index(name="fk_submission_user1_idx", columns={"sender_user_id"}),
+ *        @ORM\Index(name="fk_submission_user2_idx", columns={"recipient_user_id"})
  *    }
  * )
  */
