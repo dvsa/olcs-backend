@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler;
+namespace Dvsa\Olcs\Api\Domain;
 
 use ZfcRbac\Service\AuthorizationService;
 
@@ -34,8 +34,8 @@ trait AuthAwareTrait
      * @param $permission
      * @return bool
      */
-    public function isGranted($permission)
+    public function isGranted($permission, $context = null)
     {
-        return $this->authService->isGranted($permission);
+        return $this->authService->isGranted($permission, $context);
     }
 }
