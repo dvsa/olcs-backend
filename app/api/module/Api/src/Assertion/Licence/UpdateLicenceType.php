@@ -14,8 +14,7 @@ class UpdateLicenceType implements AssertionInterface
 {
     public function assert(AuthorizationService $authorizationService, Licence $context = null)
     {
-        // If internal then we are good to go
-        if ($authorizationService->isGranted()) {
+        if ($authorizationService->isGranted(Permission::INTERNAL_VIEW)) {
             return true;
         }
 
