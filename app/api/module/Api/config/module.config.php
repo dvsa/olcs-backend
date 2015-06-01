@@ -114,6 +114,7 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
+            'withContactDetails' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithContactDetailsFactory::class,
             'withRefdata' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdataFactory::class,
             'withUser' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithUserFactory::class,
         ],
