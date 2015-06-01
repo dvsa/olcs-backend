@@ -54,24 +54,17 @@ class LegacyOffence extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
-
         return $result[0];
     }
 
     /**
-     * Fetch list by case id
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-
-     * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
-
     }
 }
