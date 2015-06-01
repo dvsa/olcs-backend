@@ -132,7 +132,7 @@ class Application extends AbstractApplication
         $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
         if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
             foreach ($flags as $key => $flag) {
-                $this->{'set' . ucfirst($key)}($flag);
+                $this->{$key} = $flag;
             }
             $this->setInsolvencyDetails($insolvencyDetails);
             return true;

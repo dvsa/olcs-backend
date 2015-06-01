@@ -28,11 +28,11 @@ class ApplicationEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
-     * @group applicationEntity
+     * @group applicationEntity1
      */
     public function testGetApplicationDocuments()
     {
-        $mockDocument = m::mock()
+        $mockDocument1 = m::mock()
             ->shouldReceive('getcategory')
             ->andReturn('category')
             ->once()
@@ -41,9 +41,20 @@ class ApplicationEntityTest extends EntityTester
             ->once()
             ->getMock();
 
-        $documentsCollection = new ArrayCollection([$mockDocument]);
+        $mockDocument2 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category1')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory1')
+            ->never()
+            ->getMock();
+
+        $documentsCollection = new ArrayCollection([$mockDocument1, $mockDocument2]);
+        $expected = new ArrayCollection([$mockDocument1]);
+
         $this->entity->setDocuments($documentsCollection);
-        $this->assertEquals($documentsCollection, $this->entity->getApplicationDocuments('category', 'subCategory'));
+        $this->assertEquals($expected, $this->entity->getApplicationDocuments('category', 'subCategory'));
     }
 
     /**
