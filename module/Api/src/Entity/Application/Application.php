@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Application Entity
@@ -31,6 +32,7 @@ class Application extends AbstractApplication
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
+    const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
 
     const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
     const APPLICATION_STATUS_GRANTED = 'apsts_granted';
@@ -112,6 +114,62 @@ class Application extends AbstractApplication
         throw new ValidationException($errors);
     }
 
+    public function getApplicationDocuments($category, $subCategory)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('category', $category));
+        $criteria->andWhere(
+            $expr->eq('subCategory', $subCategory)
+        );
+
+        return $this->documents->matching($criteria);
+    }
+
+    public function updateFinancialHistory(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails
+    ) {
+        $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
+        if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
+            foreach ($flags as $key => $flag) {
+                $this->{$key} = $flag;
+            }
+            $this->setInsolvencyDetails($insolvencyDetails);
+            return true;
+        }
+    }
+
+    protected function validateFinancialHistory($flags, $insolvencyDetails)
+    {
+        $foundYes = false;
+        foreach ($flags as $element) {
+            if ($element == 'Y') {
+                $foundYes = true;
+                break;
+            }
+        }
+        if (!$foundYes) {
+            return true;
+        }
+        if (strlen($insolvencyDetails) >= 200) {
+            return true;
+        }
+        $errors = [
+            'insolvencyDetails' => [
+                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED =>
+                    'You selected \'yes\' in one of the provided questions, so the input has to be at least 200
+                characters long'
+            ]
+        ];
+        throw new ValidationException($errors);
+    }
+    
     /**
      * Determine whether the licence has changed within set parameters that would
      * qualify this variation to be an interim.

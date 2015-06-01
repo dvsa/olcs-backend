@@ -492,6 +492,10 @@ class AlignEntitiesToSchema
                     $item['@attributes']['cascade'] = $fieldDetails['cascade'];
                 }
 
+                if (isset($fieldDetails['fetch'])) {
+                    $item['@attributes']['fetch'] = $fieldDetails['fetch'];
+                }
+
                 $details['fields'][] = array(
                     'isId' => false,
                     'isInverse' => true,
@@ -1076,6 +1080,11 @@ class AlignEntitiesToSchema
                     unset($extraConfig['type']);
                 }
 
+                if (isset($extraConfig['fetch'])) {
+                    $fieldConfig['config']['@attributes']['fetch'] = $extraConfig['fetch'];
+                    unset($extraConfig['fetch']);
+                }
+
                 $fieldConfig = array_merge($fieldConfig, $extraConfig);
 
                 if (isset($fieldConfig['inversedBy'])) {
@@ -1109,6 +1118,9 @@ class AlignEntitiesToSchema
                             : null,
                         'orderBy' => isset($fieldConfig['inversedBy']['orderBy'])
                             ? $fieldConfig['inversedBy']['orderBy']
+                            : null,
+                        'fetch' => isset($fieldConfig['inversedBy']['fetch'])
+                            ? $fieldConfig['inversedBy']['fetch']
                             : null
                     );
 

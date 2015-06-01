@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 
@@ -14,6 +16,11 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
+    public function setUp()
+    {
+        $this->entity = $this->instantiate($this->entityClass);
+    }
+
     /**
      * Define the entity to test
      *
@@ -123,6 +130,68 @@ class ApplicationEntityTest extends EntityTester
             [true, ['D', 'A', 'D']],
             [true, ['A', 'U', 'U']],
             [true, ['A', 'A', 'A']],
+        ];
+    }
+
+    /**
+     * @group applicationEntity1
+     */
+    public function testGetApplicationDocuments()
+    {
+        $mockDocument1 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory')
+            ->once()
+            ->getMock();
+
+        $mockDocument2 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category1')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory1')
+            ->never()
+            ->getMock();
+
+        $documentsCollection = new ArrayCollection([$mockDocument1, $mockDocument2]);
+        $expected = new ArrayCollection([$mockDocument1]);
+
+        $this->entity->setDocuments($documentsCollection);
+        $this->assertEquals($expected, $this->entity->getApplicationDocuments('category', 'subCategory'));
+    }
+
+    /**
+     * @dataProvider notValidDataProvider
+     * @group applicationEntity
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateFinancialHistoryNotValid(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails
+    ) {
+
+        $this->entity->updateFinancialHistory(
+            $bankrupt,
+            $liquidation,
+            $receivership,
+            $administration,
+            $disqualified,
+            $insolvencyDetails
+        );
+    }
+
+    public function notValidDataProvider()
+    {
+        return [
+            ['Y', 'N', 'N', 'N', 'N', '123'],
+            ['Y', 'N', 'N', 'N', 'N', ''],
         ];
     }
 
@@ -375,5 +444,44 @@ class ApplicationEntityTest extends EntityTester
         $sut->shouldReceive('getLicenceType->getId')->with()->once()->andReturn($applicationLicenceType);
 
         $this->assertSame($expected, $sut->isLicenceUpgrade());
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @group applicationEntity
+     */
+    public function testUpdateFinancialHistoryValid(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails
+    ) {
+
+        $this->assertTrue(
+            $this->entity->updateFinancialHistory(
+                $bankrupt,
+                $liquidation,
+                $receivership,
+                $administration,
+                $disqualified,
+                $insolvencyDetails
+            )
+        );
+        $this->assertEquals($this->entity->getBankrupt(), $bankrupt);
+        $this->assertEquals($this->entity->getLiquidation(), $liquidation);
+        $this->assertEquals($this->entity->getReceivership(), $receivership);
+        $this->assertEquals($this->entity->getAdministration(), $administration);
+        $this->assertEquals($this->entity->getDisqualified(), $disqualified);
+        $this->assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
+    }
+
+    public function validDataProvider()
+    {
+        return [
+            ['N', 'N', 'N', 'N', 'N', ''],
+            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200)],
+        ];
     }
 }
