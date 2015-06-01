@@ -25,11 +25,14 @@ class Organisation extends AbstractRepository
 
     public function fetchBusinessTypeUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
+        return $this->fetchBusinessTypeById($query->getId());
+    }
+
+    public function fetchBusinessTypeById($id, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query->getId())
-            ->withContactDetails()
-            ->with($this->alias . '.tradingNames');
+        $this->buildDefaultQuery($qb, $id)->withContactDetails();
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
