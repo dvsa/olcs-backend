@@ -50,8 +50,7 @@ class LegacyOffence extends AbstractRepository
             ->with('lastModifiedBy')
             ->byId($query->getId());
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
+        $this->applyListFilters($qb, $query);
 
         $result = $qb->getQuery()->getResult($hydrateMode);
         return $result[0];
