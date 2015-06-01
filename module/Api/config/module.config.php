@@ -1,5 +1,11 @@
 <?php
 
+use Dvsa\Olcs\Transfer\Query as TransferQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
+use Dvsa\Olcs\Api\Domain\QueryPartial;
+use Dvsa\Olcs\Api\Domain\Util;
+
 return [
     'router' => [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
@@ -13,10 +19,8 @@ return [
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
-            \Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface::class =>
-                \Dvsa\Olcs\Api\Domain\Util\SlaCalculatorFactory::class,
-            \Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilderInterface::class =>
-                \Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilderFactory::class
+            Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
+            Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class
         ]
     ],
     'controller_plugins' => [
@@ -36,8 +40,6 @@ return [
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
             \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
-            \Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialHistory::class,
             // Transfer - Licence
             \Dvsa\Olcs\Transfer\Command\Licence\UpdateTypeOfLicence::class
                 => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -105,47 +107,41 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
-            \Dvsa\Olcs\Transfer\Query\Application\Application::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
-            \Dvsa\Olcs\Transfer\Query\Licence\Licence::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Licence::class,
-            \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
-            \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
-            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
-            \Dvsa\Olcs\Transfer\Query\Processing\History::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
+            TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
+            TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+            TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+            TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
+            TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
+            TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
-            'withRefdata' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdataFactory::class,
-            'withUser' => \Dvsa\Olcs\Api\Domain\QueryPartial\WithUserFactory::class,
+            'withRefdata' => QueryPartial\WithRefdataFactory::class,
+            'withUser' => QueryPartial\WithUserFactory::class,
         ],
         'invokables' => [
-            'byId' => \Dvsa\Olcs\Api\Domain\QueryPartial\ById::class,
-            'with' => \Dvsa\Olcs\Api\Domain\QueryPartial\With::class,
-            'paginate' => \Dvsa\Olcs\Api\Domain\QueryPartial\Paginate::class,
-            'order' => \Dvsa\Olcs\Api\Domain\QueryPartial\Order::class,
+            'byId' => QueryPartial\ById::class,
+            'with' => QueryPartial\With::class,
+            'paginate' => QueryPartial\Paginate::class,
+            'order' => QueryPartial\Order::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
-            'Application' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Organisation' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Fee' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Cases' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Application' => RepositoryFactory::class,
+            'Organisation' => RepositoryFactory::class,
+            'Licence' => RepositoryFactory::class,
+            'Task' => RepositoryFactory::class,
+            'FeeType' => RepositoryFactory::class,
+            'Fee' => RepositoryFactory::class,
+            'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
-            'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'EventHistory' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'EventHistory' => RepositoryFactory::class,
+            'PublicHoliday' => RepositoryFactory::class,
+            'Sla' => RepositoryFactory::class,
+            'LicenceNoGen' => RepositoryFactory::class,
+            'User' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
