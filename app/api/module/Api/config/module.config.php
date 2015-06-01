@@ -102,16 +102,27 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
+            // Application
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
+
+            // Licence
+            \Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails::class,
+
+            // Organisation
             \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
+
+            // Pi
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
-            => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
-            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi::class,
+
+            // Processing
             \Dvsa\Olcs\Transfer\Query\Processing\History::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Processing\History::class,
         ]
