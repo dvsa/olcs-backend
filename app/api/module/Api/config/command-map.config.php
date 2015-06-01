@@ -10,6 +10,8 @@ return [
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
+    TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
+
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,

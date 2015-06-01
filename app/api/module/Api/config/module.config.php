@@ -34,76 +34,7 @@ return [
         ]
     ],
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
-        'factories' => [
-            // Transfer - Application
-            \Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence::class,
-            \Dvsa\Olcs\Transfer\Command\Application\CreateApplication::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication::class,
-            // Transfer - Licence
-            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTypeOfLicence::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateTypeOfLicence::class,
-            // Transfer - Organisation
-            \Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType::class,
-            // Domain - Application
-            \Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee::class,
-            \Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetApplication::class,
-            \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber::class,
-            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion::class,
-            // Domain - Licence
-            \Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CancelLicenceFees::class,
-            // Domain - Task
-            \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask::class,
-            // Domain - Fee
-            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee::class,
-            // Domain - ApplicationCompletion
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTypeOfLicenceStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateAddressesStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateAddressesStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessTypeStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateBusinessTypeStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateConvictionsPenaltiesStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateConvictionsPenaltiesStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateFinancialEvidenceStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateFinancialEvidenceStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateFinancialHistoryStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateFinancialHistoryStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateLicenceHistoryStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateLicenceHistoryStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateOperatingCentresStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateOperatingCentresStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdatePeopleStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdatePeopleStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateSafetyStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateSafetyStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateVehiclesStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateUndertakingsStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateUndertakingsStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateConditionsUndertakingsStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateConditionsUndertakingsStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesDeclarationsStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateVehiclesDeclarationsStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesPsvStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateVehiclesPsvStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTransportManagersStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTransportManagersStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTaxiPhvStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTaxiPhvStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateCommunityLicencesStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateCommunityLicencesStatus::class,
-            \Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessDetailsStatus::class
-                => \Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateBusinessDetailsStatus::class,
-        ]
+        'factories' => include(__DIR__ . '/command-map.config.php')
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
