@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAplic
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -19,14 +21,17 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Create Application
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplication extends AbstractCommandHandler
+final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
@@ -152,21 +157,10 @@ final class CreateApplication extends AbstractCommandHandler
 
     private function getApplicationStatus()
     {
-        if ($this->isGranted('internal-view')) {
+        if ($this->isGranted(Permission::INTERNAL_VIEW)) {
             return $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION);
         }
 
         return $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_NOT_SUBMITTED);
-    }
-
-    /**
-     * @TODO Need to replace this with a real way to determine between internal and selfserve users
-     *
-     * @param $permission
-     * @return bool
-     */
-    private function isGranted($permission)
-    {
-        return false;
     }
 }

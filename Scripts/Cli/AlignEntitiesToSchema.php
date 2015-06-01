@@ -203,7 +203,7 @@ class AlignEntitiesToSchema
 
             $this->createEntities();
 
-            $this->removeOldUnitTests();
+            //$this->removeOldUnitTests();
 
             $this->createUnitTests();
 

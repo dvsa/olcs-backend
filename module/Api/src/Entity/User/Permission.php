@@ -17,5 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Permission extends AbstractPermission
 {
-
+    const INTERNAL_VIEW = 'internal-view';
+    const SELFSERVE_USER = 'selfserve-user';
 }

@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * CompaniesHouseAlert Abstract Entity
@@ -102,6 +104,32 @@ abstract class AbstractCompaniesHouseAlert implements \JsonSerializable
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason",
+     *     mappedBy="companiesHouseAlert",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $reasons;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->reasons = new ArrayCollection();
+    }
 
     /**
      * Set the company or llp no
@@ -285,6 +313,66 @@ abstract class AbstractCompaniesHouseAlert implements \JsonSerializable
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
+    }
+
+    /**
+     * Add a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return CompaniesHouseAlert
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->removeElement($reasons);
+        }
+
+        return $this;
     }
 
     /**

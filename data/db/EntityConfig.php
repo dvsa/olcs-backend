@@ -1613,10 +1613,21 @@ return array(
         ),
     ),
     'companies_house_officer' => array(
-        'company_id' => array(
+        'companies_house_company_id' => array(
             'inversedBy' => array(
                 'entity' => 'CompaniesHouseCompany',
                 'property' => 'officer',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
+    ),
+    'companies_house_alert_reason' => array(
+        'companies_house_alert_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseAlert',
+                'property' => 'reason',
                 'cascade' => array(
                     'persist',
                 ),

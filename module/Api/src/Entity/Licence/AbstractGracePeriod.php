@@ -52,7 +52,7 @@ abstract class AbstractGracePeriod implements \JsonSerializable
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="description", length=90, nullable=false)
+     * @ORM\Column(type="string", name="description", length=90, nullable=true)
      */
     protected $description;
 

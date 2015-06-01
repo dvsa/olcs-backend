@@ -12,7 +12,10 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Entity\Task\Task;
@@ -20,14 +23,17 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create Application Fee
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplicationFee extends AbstractCommandHandler
+final class CreateApplicationFee extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var FeeType
      */
@@ -88,8 +94,8 @@ final class CreateApplicationFee extends AbstractCommandHandler
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
             'description' => 'Application Fee Due',
             'actionDate' => date('Y-m-d'),
-            'assignedToUser' => $currentUser['id'],
-            'assignedToTeam' => $currentUser['team']['id'],
+            'assignedToUser' => $currentUser->getId(),
+            'assignedToTeam' => $currentUser->getTeam()->getId(),
             'application' => $application->getId(),
             'licence' => $application->getLicence()->getId()
         ];
@@ -148,32 +154,14 @@ final class CreateApplicationFee extends AbstractCommandHandler
      */
     private function shouldCreateTask()
     {
-        return $this->isGranted('internal-view');
+        return $this->isGranted(Permission::INTERNAL_VIEW);
     }
 
     /**
-     * @TODO Need to replace this when we have auth
-     *
-     * @return array
+     * @return UserEntity
      */
     private function fetchCurrentUser()
     {
-        return [
-            'id' => 1,
-            'team' => [
-                'id' => 2
-            ]
-        ];
-    }
-
-    /**
-     * @TODO Need to replace this with a real way to determine between internal and selfserve users
-     *
-     * @param $permission
-     * @return bool
-     */
-    private function isGranted($permission)
-    {
-        return true;
+        return $this->getAuthService()->getIdentity()->getUser();
     }
 }
