@@ -110,6 +110,8 @@ return [
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
             TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
+            TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
+            TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
