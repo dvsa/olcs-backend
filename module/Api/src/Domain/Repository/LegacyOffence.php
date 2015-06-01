@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Legacy\LegacyOffence as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * LegacyOffence
@@ -54,5 +56,22 @@ class LegacyOffence extends AbstractRepository
         $result = $qb->getQuery()->getResult($hydrateMode);
 
         return $result[0];
+    }
+
+    /**
+     * Fetch list by case id
+     *
+     * @param Query|QryCmd $query
+     * @param int $hydrateMode
+
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\VersionConflictException
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+            ->setParameter('byCase', $query->getCase());
+
     }
 }
