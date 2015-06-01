@@ -102,6 +102,8 @@ return [
         'factories' => [
             \Dvsa\Olcs\Transfer\Query\Application\Application::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application::class,
+            \Dvsa\Olcs\Transfer\Query\Bus\BusReg::class
+            => \Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Bus::class,
             \Dvsa\Olcs\Transfer\Query\Organisation\Organisation::class
                 => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation::class,
             \Dvsa\Olcs\Transfer\Query\Cases\Pi::class
@@ -127,6 +129,7 @@ return [
             'Application' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Organisation' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Licence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Bus' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Task' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'FeeType' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'Fee' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
