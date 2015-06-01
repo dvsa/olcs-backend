@@ -57,19 +57,22 @@ final class CreateFee extends AbstractCommandHandler
      * @param \Dvsa\Olcs\Api\Domain\Command\Application\CreateFee $command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     private function createCreateFeeCommand(\Dvsa\Olcs\Api\Domain\Command\Application\CreateFee $command)
     {
         /** @var Application $application */
-        $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
-        $trafficArea = $application->getNiFlag() === 'Y'
-            ? $this->getRepo()->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
-            : null;
+        $application = $this->getRepo()->fetchUsingId($command);
 
-        $date = $application->getReceivedDate() === null
-            ? $application->getCreatedOn()
-            : $application->getReceivedDate();
+        $trafficArea = null;
+        if ($application->getNiFlag() === 'Y') {
+            $trafficArea = $this->getRepo()
+                ->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+        }
+
+        $date = $application->getReceivedDate();
+        if ($date === null) {
+            $date = $application->getCreatedOn();
+        }
 
         if (is_string($date)) {
             $date = new \DateTime($date);

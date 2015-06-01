@@ -34,7 +34,6 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
         for ($id = 23; $id < 26; $id++) {
             $mockFee = m::mock(FeeEntity::class)->makePartial();
             $mockFee->setId($id);
-            $fees[] = $mockFee;
         }
 
         $this->repoMap['Application']->shouldReceive('beginTransaction')->with()->once();
@@ -47,7 +46,7 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
         $this->setExpectedException('\Exception');
 
         $command = \Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::create(['id' => 542]);
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommand()
