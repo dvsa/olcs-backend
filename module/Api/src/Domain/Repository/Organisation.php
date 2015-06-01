@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 
 /**
  * Organisation
@@ -26,7 +27,9 @@ class Organisation extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query->getId())/** with(contactDetails)->with(address) */;
+        $this->buildDefaultQuery($qb, $query->getId())
+            ->withContactDetails()
+            ->with($this->alias . '.tradingNames');
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 

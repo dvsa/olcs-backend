@@ -223,7 +223,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @param QueryBuilder $qb
      * @param QryCmd $query
-     * @return QueryBuilder
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {

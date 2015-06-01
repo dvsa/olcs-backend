@@ -22,5 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TradingName extends AbstractTradingName
 {
-
+    protected function getCalculatedValues()
+    {
+        return ['organisation' => null, 'licence' => null];
+    }
 }
