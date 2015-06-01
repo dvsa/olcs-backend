@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 
 /**
  * Licence Entity
@@ -63,5 +65,16 @@ class Licence extends AbstractLicence
 
         $this->setOrganisation($organisation);
         $this->setStatus($status);
+    }
+
+    public function getLatestBusVariation($regNo)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('regNo', $regNo))
+            ->andWhere(Criteria::expr()->notIn('status', [BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN]))
+            ->orderBy(array('variationNo' => Criteria::DESC))
+            ->setMaxResults(1);
+
+        return $this->getBusRegs()->matching($criteria)->current();
     }
 }
