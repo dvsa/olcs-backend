@@ -41,8 +41,7 @@ class Bus extends AbstractRepository
             ->byId($query->getId());
 
         $results = $qb->getQuery()->getResult($hydrateMode);
-
-        //\Doctrine\Common\Util\Debug::dump($results);
+        
         if (empty($results)) {
             throw new Exception\NotFoundException('Resource not found');
         }
