@@ -58,6 +58,7 @@ return [
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Processing\ImpoundingList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
