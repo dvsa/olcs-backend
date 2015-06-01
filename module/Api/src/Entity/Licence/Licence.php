@@ -64,4 +64,26 @@ class Licence extends AbstractLicence
         $this->setOrganisation($organisation);
         $this->setStatus($status);
     }
+
+    /**
+     * @return array
+     */
+    protected function getCalculatedValues()
+    {
+        return ['canBecomeSpecialRestricted' => $this->canBecomeSpecialRestricted()];
+    }
+
+    /**
+     * At the moment a licence can only be special restricted, if it is already special restricted.
+     * It seems pointless putting this logic in here, however it is a business rule, and if the business rule changes,
+     * then the web app shouldn't need changing
+     *
+     * @return bool
+     */
+    protected function canBecomeSpecialRestricted()
+    {
+        return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
+            && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
+        );
+    }
 }
