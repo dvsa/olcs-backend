@@ -29,5 +29,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusReg extends AbstractBusReg
 {
+    const STATUS_NEW = 'breg_s_new';
+    const STATUS_VAR = 'breg_s_var';
+    const STATUS_CANCEL = 'breg_s_cancellation';
+    const STATUS_ADMIN = 'breg_s_admin';
+    const STATUS_REGISTERED = 'breg_s_registered';
+    const STATUS_REFUSED = 'breg_s_refused';
+    const STATUS_WITHDRAWN = 'breg_s_withdrawn';
+    const STATUS_CNS = 'breg_s_cns';
+    const STATUS_CANCELLED = 'breg_s_cancelled';
 
+    public function isLatestVariation()
+    {
+        return $this->getId() === $this->getLicence()->getLatestBusVariation($this->regNo)->getId();
+    }
+
+    protected function getCalculatedValues()
+    {
+        return [
+            'licence' => null,
+            'isLatestVariation' => $this->isLatestVariation()
+        ];
+    }
 }
