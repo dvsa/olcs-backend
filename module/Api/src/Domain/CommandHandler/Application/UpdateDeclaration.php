@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees;
+use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
@@ -127,7 +127,7 @@ final class UpdateDeclaration extends AbstractCommandHandler
             }
         } else {
             return $this->getCommandHandler()->handleCommand(
-                CancelAllInterimFees::create(['id' => $command->getId()])
+                CancelAllInterimFeesCommand::create(['id' => $command->getId()])
             );
         }
 
