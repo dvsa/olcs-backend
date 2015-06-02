@@ -56,7 +56,7 @@ final class CreatePreviousConviction extends AbstractCommandHandler
     private function updateApplicationCompletion($applicationId)
     {
         return $this->getCommandHandler()->handleCommand(
-            UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'typeOfLicence'])
+            UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'convictionsPenalties'])
         );
     }
 
