@@ -56,9 +56,6 @@ class Impounding extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->with('presidingTc');
-
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
     }
