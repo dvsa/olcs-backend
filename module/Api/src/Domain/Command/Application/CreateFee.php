@@ -7,14 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
  * Create Fee for an Application
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateFee extends AbstractIdOnlyCommand
+final class CreateFee extends AbstractCommand
 {
     /**
      * Application ID
