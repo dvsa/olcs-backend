@@ -25,7 +25,7 @@ final class DeleteTrailer extends AbstractCommandHandler
     {
         $result = new Result();
 
-        foreach($command->getIds() as $trailer) {
+        foreach ($command->getIds() as $trailer) {
             $this->getRepo()->delete(
                 $this->getRepo()->fetchById($trailer)
             );
