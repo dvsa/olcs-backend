@@ -52,7 +52,7 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
 
             $this->getRepo()->save($conviction);
 
-            //$result->merge($this->updateApplicationCompletion($conviction->getApplication()->getId()));
+            $result->merge($this->updateApplicationCompletion($application->getId()));
 
             $this->getRepo()->commit();
 
