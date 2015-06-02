@@ -39,16 +39,88 @@ class BusReg extends AbstractBusReg
     const STATUS_CNS = 'breg_s_cns';
     const STATUS_CANCELLED = 'breg_s_cancelled';
 
+    /**
+     * Returns whether the variation is the latest one
+     *
+     * @return bool
+     */
     public function isLatestVariation()
     {
         return $this->getId() === $this->getLicence()->getLatestBusVariation($this->regNo)->getId();
     }
 
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
     protected function getCalculatedValues()
     {
         return [
             'licence' => null,
             'isLatestVariation' => $this->isLatestVariation()
         ];
+    }
+
+    /**
+     * @param $useAllStops
+     * @param $hasManoeuvre
+     * @param $manoeuvreDetail
+     * @param $needNewStop
+     * @param $newStopDetail
+     * @param $hasNotFixedStop
+     * @param $notFixedStopDetail
+     * @param $subsidised
+     * @param $subsidyDetail
+     * @return bool
+     */
+    public function updateStops(
+        $useAllStops,
+        $hasManoeuvre,
+        $manoeuvreDetail,
+        $needNewStop,
+        $newStopDetail,
+        $hasNotFixedStop,
+        $notFixedStopDetail,
+        $subsidised,
+        $subsidyDetail
+    )
+    {
+        $this->setUseAllStops($useAllStops);
+        $this->setHasManoeuvre($hasManoeuvre);
+        $this->setManoeuvreDetail($manoeuvreDetail);
+        $this->setNeedNewStop($needNewStop);
+        $this->setNewStopDetail($newStopDetail);
+        $this->setHasNotFixedStop($hasNotFixedStop);
+        $this->setNotFixedStopDetail($notFixedStopDetail);
+        $this->setSubsidised($subsidised);
+        $this->setSubsidyDetail($subsidyDetail);
+
+        return true;
+    }
+
+    /**
+     * @param $isQualityPartnership
+     * @param $qualityPartnershipDetails
+     * @param $qualityPartnershipFacilitiesUsed
+     * @param $isQualityContract
+     * @param $qualityContractDetails
+     * @return bool
+     */
+    public function updateQualitySchemes(
+        $isQualityPartnership,
+        $qualityPartnershipDetails,
+        $qualityPartnershipFacilitiesUsed,
+        $isQualityContract,
+        $qualityContractDetails
+    )
+    {
+        $this->setIsQualityPartnership($isQualityPartnership);
+        $this->setQualityPartnershipDetails($qualityPartnershipDetails);
+        $this->setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed);
+        $this->setIsQualityContract($isQualityContract);
+        $this->setQualityContractDetails($qualityContractDetails);
+
+        return true;
     }
 }
