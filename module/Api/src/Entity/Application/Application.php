@@ -174,6 +174,15 @@ class Application extends AbstractApplication
         throw new ValidationException($errors);
     }
 
+    public function getOtherLicencesByType($type)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+        $criteria->where($expr->eq('previousLicenceType', $type));
+
+        return $this->otherLicences->matching($criteria);
+    }
+
     /**
      * Determine whether the licence has changed within set parameters that would
      * qualify this variation to be an interim.

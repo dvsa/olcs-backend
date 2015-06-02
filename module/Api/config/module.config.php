@@ -82,6 +82,10 @@ return [
             TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
             TransferQuery\Cases\Complaint\ComplaintList::class =>
                 QueryHandler\Cases\Complaint\ComplaintList::class,
+            TransferQuery\Application\LicenceHistory::class
+                => QueryHandler\Application\LicenceHistory::class,
+            TransferQuery\OtherLicence\OtherLicence::class
+                => QueryHandler\OtherLicence\OtherLicence::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -128,6 +132,7 @@ return [
             'Impounding' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
+            'OtherLicence' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
