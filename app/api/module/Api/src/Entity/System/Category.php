@@ -18,5 +18,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category extends AbstractCategory
 {
-
+    const CATEGORY_LICENSING = 1;
 }

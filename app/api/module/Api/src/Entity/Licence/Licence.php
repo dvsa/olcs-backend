@@ -35,6 +35,9 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
  */
 class Licence extends AbstractLicence
 {
+    const ERROR_CANT_BE_SR = 'LIC-TOL-1';
+    const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
+
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
@@ -65,6 +68,20 @@ class Licence extends AbstractLicence
 
         $this->setOrganisation($organisation);
         $this->setStatus($status);
+    }
+
+    /**
+     * At the moment a licence can only be special restricted, if it is already special restricted.
+     * It seems pointless putting this logic in here, however it is a business rule, and if the business rule changes,
+     * then the web app shouldn't need changing
+     *
+     * @return bool
+     */
+    public function canBecomeSpecialRestricted()
+    {
+        return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
+            && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
+        );
     }
 
     public function getLatestBusVariation($regNo)
