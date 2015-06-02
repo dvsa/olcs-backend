@@ -21,6 +21,6 @@ class PreviousConvictions extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchWithPreviousConvictions($query);
+        return $this->getRepo()->fetchWithPreviousConvictionsUsingId($query);
     }
 }
