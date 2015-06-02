@@ -39,7 +39,8 @@ class FeeTest extends RepositoryTestCase
     private function setupFetchInterimFeesByApplicationId($mockQb, $applicationId)
     {
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('f')->once()->andReturn($mockQb);
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('join')->with('f.feeType', 'ft')->once()->andReturnSelf();
         //$mockQb->shouldReceive('expr->eq')->with('f.application', ':applicationId')->once()->andReturnSelf();
@@ -50,7 +51,6 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->eq')->with('f.application', ':applicationId')->once()->andReturn('bar');
         $mockQb->shouldReceive('andWhere')->with('bar')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('orderBy')->with('f.invoicedDate')->once()->andReturnSelf();
         $this->em->shouldReceive('getReference')->with(
             \Dvsa\Olcs\Api\Entity\System\RefData::class,
             \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
