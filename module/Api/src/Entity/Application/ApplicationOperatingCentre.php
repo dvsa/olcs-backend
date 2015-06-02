@@ -23,5 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre
 {
-
+    const ACTION_ADD    = 'A';
+    const ACTION_UPDATE = 'U';
+    const ACTION_DELETE = 'D';
 }
