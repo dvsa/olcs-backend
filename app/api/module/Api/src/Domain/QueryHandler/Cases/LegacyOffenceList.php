@@ -6,9 +6,10 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\LegacyOffence;
 
 /**
- * PI
+ * Legacy Offence QueryHandler
  */
 final class LegacyOffenceList extends AbstractQueryHandler
 {
@@ -16,6 +17,7 @@ final class LegacyOffenceList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        /** @var LegacyOffence $repo */
         $repo = $this->getRepo();
 
         return [
