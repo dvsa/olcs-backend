@@ -330,11 +330,17 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     private function findEntityClass($name)
     {
         $namespaces = array(
-            '\Olcs\Db\Entity\View\\',
-            '\Olcs\Db\Entity\\'
+            '\Dvsa\Olcs\Api\Entity\View\\',
+            '\Dvsa\Olcs\Api\Entity\\'
         );
 
+        $entityNamespaces = $this->getServiceLocator()->get('Config')['entity_namespaces'];
+
         foreach ($namespaces as $namespace) {
+
+            if (isset($entityNamespaces[$name])) {
+                $name = $entityNamespaces[$name] . '\\' . $name;
+            }
 
             $potentialClassName = $namespace . $name;
 

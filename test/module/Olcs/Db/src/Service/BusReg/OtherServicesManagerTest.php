@@ -4,8 +4,8 @@
 namespace OlcsTest\Db\Service\BusReg;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Olcs\Db\Entity\BusReg;
-use Olcs\Db\Entity\BusRegOtherService;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 use Olcs\Db\Service\BusReg\OtherServicesManager;
 use Mockery as m;
 

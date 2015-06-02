@@ -31,7 +31,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
     protected $nesting = [];
     protected $refDataReplacements = array();
-    protected $refDataClassName = 'Olcs\\Db\\Entity\\RefData';
+    protected $refDataClassName = 'Dvsa\\Olcs\\Api\\Entity\\System\\RefData';
     protected $refDataAlias = 1;
 
     public function setQueryBuilder($qb)

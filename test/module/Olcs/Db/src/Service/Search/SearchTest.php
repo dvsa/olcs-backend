@@ -5,6 +5,7 @@ namespace OlcsTest\Db\Service\Search;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use PHPUnit_Framework_TestCase as TestCase;
+use Elastica\Query as Query;
 
 /**
  * Class Search Test
@@ -13,6 +14,46 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class SearchTest extends TestCase
 {
+    public function testProcessDateRanges()
+    {
+        $bool = new Query\Bool();
+
+        $service = $this->getMock(SearchService::class, null);
+        $service->setDateRanges(
+            [
+                'dateOneFrom' => ['year' => '2015', 'month' => '01', 'day' => '02'],
+                'dateOneTo'   => '2015-03-01',
+                'dateTwoFrom' => '2015-02-01',
+                'dateTwoTo'   => '2015-04-01'
+            ]
+        );
+
+        $result = array (
+            'bool' => array (
+                'must' => array (
+                    0 => array (
+                        'range' => array (
+                            'date_one' => array (
+                                'from' => '2015-01-02',
+                                'to' => '2015-03-01',
+                            ),
+                        ),
+                    ),
+                    1 => array (
+                        'range' => array (
+                            'date_two' => array (
+                                'from' => '2015-02-01',
+                                'to' => '2015-04-01',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSame($result, $service->processDateRanges($bool)->toArray());
+    }
+
     /**
      * Tests the filter methods and functionality.
      *
