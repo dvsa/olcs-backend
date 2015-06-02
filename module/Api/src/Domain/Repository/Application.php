@@ -18,16 +18,12 @@ class Application extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchWithPreviousConvictions($query)
+    public function fetchWithPreviousConvictionsUsingId($query)
     {
         $qb = $this->createQueryBuilder();
-        $this->buildDefaultQuery($qb, $query->getId());
-            // @FIXME ->with('previousConvictions');
+        $this->buildDefaultQuery($qb, $query->getId())
+            ->with('previousConvictions');
 
-        $a = $qb->getQuery()->getSingleResult();
-
-        $a->setPreviousConvictions([]);
-
-        return $a;
+        return $qb->getQuery()->getSingleResult();
     }
 }

@@ -18,5 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PreviousConviction extends AbstractPreviousConviction
 {
-
+    protected function getCalculatedValues()
+    {
+        return [
+            'application' => null
+        ];
+    }
 }
