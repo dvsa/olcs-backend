@@ -47,6 +47,7 @@ return [
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
+            TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
             TransferQuery\PreviousConviction\PreviousConviction::class =>
@@ -97,6 +98,7 @@ return [
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
+            'FinancialStandingRate' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
