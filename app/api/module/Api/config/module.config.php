@@ -51,6 +51,7 @@ return [
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
