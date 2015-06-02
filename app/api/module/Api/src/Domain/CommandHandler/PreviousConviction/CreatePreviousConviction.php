@@ -27,7 +27,6 @@ final class CreatePreviousConviction extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
         try {
             $this->getRepo()->beginTransaction();
 
@@ -71,7 +70,8 @@ final class CreatePreviousConviction extends AbstractCommandHandler
         $conviction = new PreviousConviction();
 
         if ($command->getTransportManager()) {
-            // @TODO
+            // @TODO: as and when TM previous convictions are worked on
+            // this will need to be implemented
         }
 
         $conviction->setTitle($title);
