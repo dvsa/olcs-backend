@@ -59,6 +59,8 @@ return [
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Processing\ImpoundingList::class,
+            TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -95,6 +97,7 @@ return [
             'LegacyOffenceList' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
+            'ImpoundingList' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
