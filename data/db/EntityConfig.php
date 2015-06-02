@@ -485,8 +485,9 @@ return array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
-                'property' => 'document'
-            )
+                'property' => 'document',
+                'fetch' => 'EXTRA_LAZY'
+            ),
         ),
         'case_id' => array(
             'inversedBy' => array(
