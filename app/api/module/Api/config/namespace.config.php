@@ -11,6 +11,7 @@ return [
     'BusNoticePeriod' => 'Bus',
     'BusReg' => 'Bus',
     'BusRegOtherService' => 'Bus',
+    'BusRegTrafficArea' => 'Bus',
     'BusServiceType' => 'Bus',
     'BusShortNotice' => 'Bus',
     'LocalAuthority' => 'Bus',

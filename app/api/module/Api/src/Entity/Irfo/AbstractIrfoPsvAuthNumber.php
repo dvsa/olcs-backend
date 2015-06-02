@@ -15,12 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_psv_auth_number",
  *    indexes={
- *        @ORM\Index(name="ix_irfo_psv_auth_number_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="ix_irfo_psv_auth_number_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irfo_psv_auth_number_last_modified_by", columns={"last_modified_by"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_number_olbs_key", columns={"olbs_key"})
+ *        @ORM\Index(name="fk_irfo_psv_auth_number_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_number_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irfo_psv_auth_number_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -99,15 +96,6 @@ abstract class AbstractIrfoPsvAuthNumber implements \JsonSerializable
      * @ORM\Column(type="string", name="name", length=70, nullable=false)
      */
     protected $name;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
 
     /**
      * Version
@@ -278,29 +266,6 @@ abstract class AbstractIrfoPsvAuthNumber implements \JsonSerializable
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return IrfoPsvAuthNumber
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
     }
 
     /**

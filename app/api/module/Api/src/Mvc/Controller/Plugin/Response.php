@@ -44,7 +44,11 @@ class Response extends AbstractPlugin
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
-        return new JsonModel($result->jsonSerialize());
+        if (!is_array($result)) {
+            $result = $result->jsonSerialize();
+        }
+
+        return new JsonModel($result);
     }
 
     public function multipleResults($count, $results)

@@ -684,7 +684,11 @@ abstract class AbstractApplication implements \JsonSerializable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     mappedBy="application",
+     *     fetch="EXTRA_LAZY"
+     * )
      */
     protected $documents;
 

@@ -15,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
- *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id",
-     *     columns={"company_id"})
+ *        @ORM\Index(name="fk_companies_house_officer_companies_house_company1_idx",
+     *     columns={"companies_house_company_id"})
  *    }
  * )
  */
@@ -25,7 +25,7 @@ abstract class AbstractCompaniesHouseOfficer implements \JsonSerializable
     use JsonSerializableTrait;
 
     /**
-     * Company
+     * Companies house company
      *
      * @var \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany
      *
@@ -34,9 +34,9 @@ abstract class AbstractCompaniesHouseOfficer implements \JsonSerializable
      *     fetch="LAZY",
      *     inversedBy="officers"
      * )
-     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="companies_house_company_id", referencedColumnName="id", nullable=false)
      */
-    protected $company;
+    protected $companiesHouseCompany;
 
     /**
      * Created on
@@ -105,26 +105,26 @@ abstract class AbstractCompaniesHouseOfficer implements \JsonSerializable
     protected $version = 1;
 
     /**
-     * Set the company
+     * Set the companies house company
      *
-     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany $company
+     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany $companiesHouseCompany
      * @return CompaniesHouseOfficer
      */
-    public function setCompany($company)
+    public function setCompaniesHouseCompany($companiesHouseCompany)
     {
-        $this->company = $company;
+        $this->companiesHouseCompany = $companiesHouseCompany;
 
         return $this;
     }
 
     /**
-     * Get the company
+     * Get the companies house company
      *
      * @return \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany
      */
-    public function getCompany()
+    public function getCompaniesHouseCompany()
     {
-        return $this->company;
+        return $this->companiesHouseCompany;
     }
 
     /**

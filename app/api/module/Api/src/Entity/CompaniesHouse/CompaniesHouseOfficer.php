@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
  *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id",
-     *     columns={"company_id"})
+     *     columns={"companies_house_company_id"})
  *    }
  * )
  */
