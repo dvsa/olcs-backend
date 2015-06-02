@@ -38,6 +38,7 @@ class Bus extends AbstractRepository
             ->with('busServiceTypes')
             ->with('trafficAreas')
             ->with('localAuthoritys')
+            ->with('subsidised')
             ->byId($query->getId());
 
         $results = $qb->getQuery()->getResult($hydrateMode);
