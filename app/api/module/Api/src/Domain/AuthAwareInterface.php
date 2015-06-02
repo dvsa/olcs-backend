@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler;
+namespace Dvsa\Olcs\Api\Domain;
 
 use ZfcRbac\Service\AuthorizationService;
 

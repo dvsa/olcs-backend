@@ -9,8 +9,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\User\Permission;

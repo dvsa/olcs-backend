@@ -39,6 +39,8 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     protected $repoMap = [];
 
+    protected $mockedSmServices = [];
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
@@ -49,6 +51,10 @@ class QueryHandlerTestCase extends MockeryTestCase
 
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
+
+        foreach ($this->mockedSmServices as $serviceName => $service) {
+            $sm->setService($serviceName, $service);
+        }
 
         $this->queryHandler = m::mock(QueryHandlerManager::class)->makePartial();
         $this->queryHandler->setServiceLocator($sm);

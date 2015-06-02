@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -154,7 +154,7 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
      */
     private function shouldCreateTask()
     {
-        return $this->isGranted(Permission::INTERNAL_VIEW);
+        return $this->isGranted(Permission::INTERNAL_USER);
     }
 
     /**
