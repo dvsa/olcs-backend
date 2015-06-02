@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Impounding Entity
@@ -22,5 +23,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Impounding extends AbstractImpounding
 {
+    const PI_VENUE_OTHER = 'other';
 
+    public function __construct(Cases $case, RefData $impoundingType)
+    {
+        parent::__construct();
+
+        $this->setCase($case);
+        $this->setImpoundingType($impoundingType);
+    }
+
+    /**
+     * Sets the piVenue and piVenueOther properties, since they are interdependent on each other.
+     *
+     * @param RefData $piVenue
+     * @param RefData $piVenueOther
+     * @return Impounding
+     */
+    public function setPiVenueProperties(RefData $piVenue, RefData $piVenueOther)
+    {
+        if ($piVenue != self::PI_VENUE_OTHER) {
+            $this->piVenueOther = null;
+        } else {
+            $this->piVenueOther = $piVenueOther;
+        }
+
+        $this->piVenue = $piVenue;
+
+        return $this;
+    }
 }
