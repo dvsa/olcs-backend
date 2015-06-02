@@ -125,6 +125,8 @@ return [
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
+            TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
+            TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
         ]
     ],
@@ -155,6 +157,8 @@ return [
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
+            'LegacyOffence' => RepositoryFactory::class,
+            'LegacyOffenceList' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
