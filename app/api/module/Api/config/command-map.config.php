@@ -12,7 +12,7 @@ return [
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
     TransferCommand\Application\UpdatePreviousConvictions::class => CommandHandler\Application\UpdatePreviousConvictions::class,
-
+    TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -34,6 +34,9 @@ return [
     Command\Application\GenerateLicenceNumber::class => CommandHandler\Application\GenerateLicenceNumber::class,
     Command\Application\UpdateApplicationCompletion::class
         => CommandHandler\Application\UpdateApplicationCompletion::class,
+    Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
+    Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
+    Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
@@ -43,6 +46,7 @@ return [
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
+    Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,

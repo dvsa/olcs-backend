@@ -49,8 +49,17 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        /** @var Application $application */
+        /* @var $application Application  */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+
+        // if Varaition then run UpdateVariationCompletion command
+        if ($application->getIsVariation()) {
+            return $this->getCommandHandler()->handleCommand(
+                \Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion::create(
+                    ['id' => $command->getId(), 'section' => $command->getSection()]
+                )
+            );
+        }
 
         $completion = $application->getApplicationCompletion();
 
