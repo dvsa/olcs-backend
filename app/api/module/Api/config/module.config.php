@@ -48,6 +48,7 @@ return [
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
+            TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -72,23 +73,13 @@ return [
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
-<<<<<<< HEAD
             'EventHistory' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
-=======
-            'PublicHoliday' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'Sla' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'LicenceNoGen' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'EventHistory' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'User' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'LegacyOffence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'LegacyOffenceList' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-
->>>>>>> Added LegacyOffenceList query handler
+            'LegacyOffenceList' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
