@@ -104,6 +104,9 @@ return [
             'Payment' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
+            'ImpoundingList' => RepositoryFactory::class,
+            'TransportManagerApplication' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'TransportManagerLicence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
