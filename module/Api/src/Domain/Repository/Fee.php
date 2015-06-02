@@ -53,14 +53,13 @@ class Fee extends AbstractRepository
     private function getQueryByApplicationFeeTypeFeeType($applicationId, $feeTypeFeeType)
     {
         $doctrineQb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->withRefdata();
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'ASC');
 
         $doctrineQb->join('f.feeType', 'ft')
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
             ->andWhere($doctrineQb->expr()->eq('f.application', ':applicationId'));
 
-        $doctrineQb->orderBy('f.invoicedDate')
-            ->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType))
+        $doctrineQb->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType))
             ->setParameter('applicationId', $applicationId);
 
         return $doctrineQb;

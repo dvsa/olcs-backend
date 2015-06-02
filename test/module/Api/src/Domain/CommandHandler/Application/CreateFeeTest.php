@@ -68,7 +68,7 @@ class CreateFeeTest extends CommandHandlerTestCase
         $application->setLicenceType($this->mapRefData('LICENCE_TYPE'));
         $application->setReceivedDate('2015-06-01');
 
-        $feeType = m::mock(FeeType::class)->makePartial();
+        $feeType = new FeeType();
         $feeType->setId(223);
         $feeType->setDescription('DESCRIPTION');
         $feeType->setFixedValue(123.33);

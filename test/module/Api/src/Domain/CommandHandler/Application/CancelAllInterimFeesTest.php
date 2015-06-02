@@ -31,11 +31,6 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        for ($id = 23; $id < 26; $id++) {
-            $mockFee = m::mock(FeeEntity::class)->makePartial();
-            $mockFee->setId($id);
-        }
-
         $this->repoMap['Application']->shouldReceive('beginTransaction')->with()->once();
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(542, true)->once()
