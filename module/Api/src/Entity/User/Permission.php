@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Permission extends AbstractPermission
 {
-    const INTERNAL_VIEW = 'internal-view';
+    const INTERNAL_USER = 'internal-user';
     const SELFSERVE_USER = 'selfserve-user';
+    const CAN_UPDATE_LICENCE_LICENCE_TYPE = 'can-update-licence-licence-type';
 }

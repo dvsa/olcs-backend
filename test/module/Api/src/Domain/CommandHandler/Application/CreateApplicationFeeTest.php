@@ -69,7 +69,7 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::INTERNAL_VIEW)
+            ->with(Permission::INTERNAL_USER, null)
             ->andReturn(true);
 
         /** @var Team $mockTeam */
@@ -170,7 +170,7 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(Permission::INTERNAL_VIEW)
+            ->with(Permission::INTERNAL_USER, null)
             ->andReturn(true);
 
         /** @var Team $mockTeam */
