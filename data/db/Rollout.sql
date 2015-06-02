@@ -4789,7 +4789,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (24, 'partner-admin', 'PAAD'),
     (25, 'partner-user', 'PAUS'),
     (26, 'local-authority-admin', 'LAAD'),
-    (27, 'local-authority-user', 'LAUS');
+    (27, 'local-authority-user', 'LAUS'),
+    (28, 'can-update-licence-licence-type', 'ULLT');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4855,7 +4856,12 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
     (7, 14), -- operator TM has selfserve dashboard
-    (5, 15); -- "operator-admin" can access "selfserve-manage-user"
+    (5, 15), -- "operator-admin" can access "selfserve-manage-user"
+
+    (3, 28), -- internal users can update licence licence type
+    (4, 28), -- internal users can update licence licence type
+    (5, 28), -- selfserve users can update licence licence type
+    (6, 28); -- selfserve users can update licence licence type
 
 INSERT INTO `financial_standing_rate` (
     `id`,
@@ -7967,18 +7973,12 @@ CREATE VIEW document_search_view AS
         coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
         l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id
     FROM `document` d
-
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
-
     LEFT JOIN licence l ON d.licence_id = l.id
-
     LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
         ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
-
     LEFT JOIN cases c ON d.case_id = c.id
-
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-
     LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id;
 
 DROP TABLE IF EXISTS vehicle_history_view;

@@ -32,7 +32,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id",
      *     columns={"lic_condition_variation_id"}),
- *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"})
+ *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"}),
+ *        @ORM\Index(name="fk_condition_undertaking_s41_idx", columns={"s4_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type",
