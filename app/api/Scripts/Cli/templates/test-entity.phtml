@@ -1,18 +1,21 @@
 <<?php /* Cheeky Hack */ ?>?php
 
-namespace OlcsTest\Db\Entity;
+namespace <?php echo str_replace('Dvsa\\Olcs\\', 'Dvsa\\OlcsTest\\', $details['namespace']); ?>;
+
+use <?php echo \Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester::class; ?>;
+use <?php echo $details['className']; ?> as Entity;
 
 /**
  * <?php echo $details['name']; ?> Entity Unit Tests
  *
- * Auto-Generated
+ * Initially auto-generated but won't be overridden
  */
-class <?php echo $details['name']; ?>Test extends Abstracts\EntityTester
+class <?php echo $details['name']; ?>EntityTest extends EntityTester
 {
     /**
      * Define the entity to test
      *
      * @var string
      */
-    protected $entityClass = '<?php echo $details['className']; ?>';
+    protected $entityClass = Entity::class;
 }

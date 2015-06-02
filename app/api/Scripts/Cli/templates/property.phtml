@@ -16,8 +16,11 @@
 <?php endif; ?>
 <?php if (in_array($item['type'], array('id', 'field'))): ?>
      * @ORM\Column(<?php echo $this->generateOptionsFromAttributes($field['@attributes']); ?>)
+<?php if ($item['isVersion']): ?>
+     * @ORM\Version
+<?php endif; ?>
 <?php else: ?>
-     * @ORM\<?php echo ucfirst($item['type']); ?>(<?php echo $this->generateOptionsFromAttributes($field['@attributes'], $item['type']); ?>)
+     * @ORM\<?php echo ucfirst($item['type']); ?>(<?php $line = $this->generateOptionsFromAttributes($field['@attributes'], $item['type']); echo strlen($line) > 80 ? "\n     *     " . $line . "\n     * " : $line; ?>)
 <?php endif; ?>
 <?php if (!$item['isInverse'] && in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @ORM\JoinColumn(<?php echo $this->generateOptionsFromAttributes($field['join-columns']['join-column']['@attributes'], 'join-column'); ?>)

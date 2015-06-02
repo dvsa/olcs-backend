@@ -4,6 +4,7 @@ namespace Olcs\Db\Service\Search;
 
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
+use Elastica\Filter;
 use Elastica\ResultSet;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
@@ -23,6 +24,11 @@ class Search
      * @var array
      */
     protected $filters = [];
+
+    /**
+     * @var array
+     */
+    protected $dateRanges = [];
 
     /**
      * @param mixed $client
@@ -63,8 +69,10 @@ class Search
             $elasticaQueryString->setField('_all', $query);
             $elasticaQueryBool->addShould($elasticaQueryString);
 
+            $elasticaQueryBool = $this->processDateRanges($elasticaQueryBool);
+
             /**
-             * Here we send the filter values selected to the search query
+             * Here we send the filters.
              */
             $filters = $this->getFilters();
             foreach ($filters as $field => $value) {
@@ -115,7 +123,7 @@ class Search
         }
 
         //Search on the index.
-        $es    = new \Elastica\Search($this->getClient());
+        $es = new \Elastica\Search($this->getClient());
 
         foreach ($indexes as $index) {
             $es->addIndex($index);
@@ -132,6 +140,44 @@ class Search
         $response['Filters'] = $this->processFilters($resultSet->getAggregations());
 
         return $response;
+    }
+
+    public function processDateRanges(Query\Bool $bool)
+    {
+        /**
+         * Here we send the filter values selected to the search query
+         */
+        $dates = $this->getDateRanges();
+
+        foreach ($dates as $fieldName => $value) {
+
+            if (strtolower(substr($fieldName, -2)) == 'to') {
+                // we'll deal with the TO fields later.
+                continue;
+            }
+
+            $criteria = [];
+
+            $range = new Query\Range();
+
+            if (strtolower(substr($fieldName, -4)) == 'from') {
+                $fieldName = substr($fieldName, 0, -5);
+                $criteria['from'] = $value;
+
+                // Let's now look for the to field.
+                $toFieldName = $fieldName . '_to';
+                if (array_key_exists($toFieldName, $dates)) {
+                    if ('' != $dates[$toFieldName]) {
+                        $criteria['to'] = $dates[$toFieldName];
+                    }
+                }
+            }
+
+            $range->addField($fieldName, $criteria);
+            $bool->addMust($range);
+        }
+
+        return $bool;
     }
 
     protected function processResults(ResultSet $resultSet)
@@ -202,5 +248,40 @@ class Search
     public function getFilterNames()
     {
         return array_keys($this->getFilters());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDateRanges()
+    {
+        return $this->dateRanges;
+    }
+
+    /**
+     * Sets the filters. Requires the dates in three parts ['y','m','d']
+     *
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function setDateRanges(array $dateRanges)
+    {
+        $f = new CamelCaseToUnderscore();
+
+        foreach ($dateRanges as $filterName => $value) {
+
+            if (is_array($value) && !empty(trim(implode(" ", [$value['year'], $value['month'], $value['day']])))) {
+                $value = implode('-', [$value['year'], $value['month'], $value['day']]);
+            } elseif (false === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $value)) {
+                $value = null;
+            }
+
+            if (!empty($value)) {
+                $this->dateRanges[strtolower($f->filter($filterName))] = $value;
+            }
+        }
+
+        return $this;
     }
 }

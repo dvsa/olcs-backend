@@ -1754,7 +1754,61 @@ VALUES
  ,( 9, 111, 1, 1, 1, 0, 'Insolvency Document Assisted Digital')
  ,( 9, 112, 1, 1, 0, 1, 'Insolvency Document Digital')
  ,(11, 113, 0, 0, 0, 0, 'Publication')
+ ,(10, 114, 0, 1, 0, 0, 'Assignment')
+
+ -- subcategories for submission section attachments
+ ,(10, 115, 0, 0, 0, 0, 'Introduction')
+ ,(10, 116, 0, 0, 0, 0, 'Case Summary')
+ ,(10, 117, 0, 0, 0, 0, 'Case Outline')
+ ,(10, 118, 0, 0, 0, 0, 'Most serious infringement')
+ ,(10, 119, 0, 0, 0, 0, 'Outstanding applications')
+ ,(10, 120, 0, 0, 0, 0, 'Persons')
+ ,(10, 121, 0, 0, 0, 0, 'Operating centres')
+ ,(10, 122, 0, 0, 0, 0, 'Conditions and undertakings')
+ ,(10, 123, 0, 0, 0, 0, 'Intelligence unit check')
+ ,(10, 124, 0, 0, 0, 0, 'Interim')
+ ,(10, 125, 0, 0, 0, 0, 'Advertisement')
+ ,(10, 126, 0, 0, 0, 0, 'Linked licences')
+ ,(10, 127, 0, 0, 0, 0, 'Lead TC area')
+ ,(10, 128, 0, 0, 0, 0, 'Current submissions')
+ ,(10, 129, 0, 0, 0, 0, 'Authorisation requested / applied for')
+ ,(10, 130, 0, 0, 0, 0, 'Transport managers')
+ ,(10, 131, 0, 0, 0, 0, 'Continuous and effective control')
+ ,(10, 132, 0, 0, 0, 0, 'Fitness & repute')
+ ,(10, 133, 0, 0, 0, 0, 'Previous history')
+ ,(10, 134, 0, 0, 0, 0, 'Bus registration application details')
+ ,(10, 135, 0, 0, 0, 0, 'Transport authority comments')
+ ,(10, 136, 0, 0, 0, 0, 'Total bus registrations')
+ ,(10, 137, 0, 0, 0, 0, 'Local licence history')
+ ,(10, 138, 0, 0, 0, 0, 'Linked MLH history')
+ ,(10, 139, 0, 0, 0, 0, 'Registration details')
+ ,(10, 140, 0, 0, 0, 0, 'Maintenance / Tachographs / Drivers hours')
+ ,(10, 141, 0, 0, 0, 0, 'Prohibition history')
+ ,(10, 142, 0, 0, 0, 0, 'Conviction / FPN / Offence histor')
+ ,(10, 143, 0, 0, 0, 0, 'Annual test history')
+ ,(10, 144, 0, 0, 0, 0, 'ERRU Penalties')
+ ,(10, 145, 0, 0, 0, 0, 'Statements')
+ ,(10, 146, 0, 0, 0, 0, 'Other issues / misc')
+ ,(10, 147, 0, 0, 0, 0, 'TE reports')
+ ,(10, 148, 0, 0, 0, 0, 'Site plans')
+ ,(10, 149, 0, 0, 0, 0, 'Planning permission')
+ ,(10, 150, 0, 0, 0, 0, 'Applicants comments')
+ ,(10, 151, 0, 0, 0, 0, 'Visibility / access egress size')
+ ,(10, 152, 0, 0, 0, 0, 'Compliance complaints')
+ ,(10, 153, 0, 0, 0, 0, 'Environmental complaints')
+ ,(10, 154, 0, 0, 0, 0, 'Oppositions')
+ ,(10, 155, 0, 0, 0, 0, 'Financial information')
+ ,(10, 156, 0, 0, 0, 0, 'Maps')
+ ,(10, 157, 0, 0, 0, 0, 'Waive fee / Late fee')
+ ,(10, 158, 0, 0, 0, 0, 'Surrender')
+ ,(10, 159, 0, 0, 0, 0, 'Annex')
+ ,(10, 160, 0, 0, 0, 0, 'Transport Manager details')
+ ,(10, 161, 0, 0, 0, 0, 'Qualifications')
+ ,(10, 162, 0, 0, 0, 0, 'Responsibilities')
+ ,(10, 163, 0, 0, 0, 0, 'Other employment')
+ ,(10, 164, 0, 0, 0, 0, 'Previous history')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
+
 
 INSERT INTO sub_category_description
   (sub_category_id, description)
@@ -2491,8 +2545,8 @@ VALUES
     (697, 11, 1, 697, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P West of England', '2015-02-27 10:00:47', 1),
     (698, 11, 1, 698, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: A&D Wales', '2015-02-27 10:00:47', 1),
     (699, 11, 1, 699, 1, 113, 0, 1, '2015-02-27 10:00:47', 'Publication: N&P Wales', '2015-02-27 10:00:47', 1),
-    (700, 9, 1, 700, 1, 31, 1, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2015-02-27 10:00:47', 1),
-    (701, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1),
+    (8, 9, 1, 701, 1, 31, 0, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs', '2015-02-27 10:00:47', 1),
+    (401, 9, 1, 700, 1, 31, 1, 1, '2015-02-27 10:00:47', 'GV - New/Var Incomplete - final request for supporting docs (NI)', '2015-02-27 10:00:47', 1),
 
     (702, 999999, 479, 702, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
     (703, 999999, 479, 703, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
@@ -4104,7 +4158,6 @@ VALUES
     (5, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal -no advert', 0, NULL, '2002-05-14 17:45:01', 1),
     (6, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
     (7, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 85, 479, NULL, 479, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var App Incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
-    (8, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/GV_Application_Incomplete_Final_Request_For_Supporting_Docs.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (9, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_NEW_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
     (10, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_VAR_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Variation applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
     (11, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/LIC_CONTD_VAR_REQD.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Licence continued - variation required', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -4389,9 +4442,6 @@ VALUES
     (400, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 85, 1, NULL, 1, NULL,
     '/templates/NI/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL,
     'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (401, NULL, NULL, NULL,  NULL, NULL, NULL, 1, NULL, NULL, 85, 1, NULL, 1, NULL,
-    '/templates/NI/GV_Application_Incomplete_Final_Request_For_Supporting_Docs_(NI).rtf', 0, NULL, NULL,
-    '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (402, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_OC not in Northern Ireland.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App - O/C not in Northern Ireland (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (403, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (404, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal -no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -4681,9 +4731,9 @@ VALUES
     (697, NULL, NULL, NULL, NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_West_of_England.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P West of England', 0, NULL, '2015-02-27 10:00:47', 1),
     (698, NULL, NULL, NULL, NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/A&D_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'A&D Wales', 0, NULL, '2015-02-27 10:00:47', 1),
     (699, NULL, NULL, NULL, NULL, NULL, NULL, 113, NULL, NULL, 11, 1, NULL, 1, NULL, '/templates/GB/N&P_Wales.rtf', 0, NULL, NULL, '2015-02-27 10:00:47', NULL, 'N&P Wales', 0, NULL, '2015-02-27 10:00:47', 1),
-    (700, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (701, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1),
-    
+    (8, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs', 0, NULL, '2012-09-14 00:00:00', 1),
+    (401, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PUB_APPS_SUPP_DOCS_FINAL.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New/Var Incomplete - final request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+
     (702, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (703, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (704, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
@@ -8047,16 +8097,16 @@ VALUES
 (18, 'Turkey Single Journey', 10, NULL, NULL, NULL, NULL, 1),
 (19, 'Turkey 3rd Country Non-Transit', 15, NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `irfo_psv_auth_type` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+INSERT INTO `irfo_psv_auth_type` (`id`, `description`, `section_code`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 
 VALUES
-(1,'EU Regular Service Operator (UK & Foreign Partner) (17)',NULL,NULL,NULL,NULL,1),
-(2,'EU Regular Service Operator (No Partners) (19A)',NULL,NULL,NULL,NULL,1),
-(3,'Non EU Regular Service Operator (UK & Foreign Partner) (18)',NULL,NULL,NULL,NULL,1),
-(4,'Non EU Regular Service Operator (No Partners) (19)',NULL,NULL,NULL,NULL,1),
-(5,'Non EU Occasional Service Operator (19)',NULL,NULL,NULL,NULL,1),
-(6,'Shuttle Service Operator (20)',NULL,NULL,NULL,NULL,1),
-(7,'Own A/C (21)',NULL,NULL,NULL,NULL,1);
+(1,'EU Regular Service Operator (UK & Foreign Partner) (17)','17',NULL,NULL,NULL,NULL,1),
+(2,'EU Regular Service Operator (No Partners) (19A)','19A',NULL,NULL,NULL,NULL,1),
+(3,'Non EU Regular Service Operator (UK & Foreign Partner) (18)','18',NULL,NULL,NULL,NULL,1),
+(4,'Non EU Regular Service Operator (No Partners) (19)','19',NULL,NULL,NULL,NULL,1),
+(5,'Non EU Occasional Service Operator (19)','19',NULL,NULL,NULL,NULL,1),
+(6,'Shuttle Service Operator (20)','20',NULL,NULL,NULL,NULL,1),
+(7,'Own A/C (21)','21',NULL,NULL,NULL,NULL,1);
 
 COMMIT;
 
