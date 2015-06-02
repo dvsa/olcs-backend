@@ -23,6 +23,8 @@ class Trailer extends AbstractRepository
 
     public function fetchByLicenceId(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
     {
+        unset($version);
+
         $qb = $this->createQueryBuilder();
 
         $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
