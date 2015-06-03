@@ -133,7 +133,8 @@ class Application extends AbstractApplication
         $receivership,
         $administration,
         $disqualified,
-        $insolvencyDetails
+        $insolvencyDetails,
+        $insolvencyConfirmation
     ) {
         $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
         if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
@@ -141,6 +142,9 @@ class Application extends AbstractApplication
                 $this->{$key} = $flag;
             }
             $this->setInsolvencyDetails($insolvencyDetails);
+            if ($insolvencyConfirmation) {
+                $this->setInsolvencyConfirmation('Y');
+            }
             return true;
         }
     }
@@ -169,7 +173,7 @@ class Application extends AbstractApplication
         ];
         throw new ValidationException($errors);
     }
-    
+
     /**
      * Determine whether the licence has changed within set parameters that would
      * qualify this variation to be an interim.
