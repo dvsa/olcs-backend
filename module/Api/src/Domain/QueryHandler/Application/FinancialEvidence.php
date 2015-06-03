@@ -30,12 +30,17 @@ class FinancialEvidence extends AbstractQueryHandler
         $applicationRepo = $this->getRepo();
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
 
+        // var_dump($application->getLicence()->getId());
+
         $data = $application->jsonSerialize();
 
-        $data['financialEvidence'] = [
-            'requiredFinance' => $this->getRequiredFinance($application),
-            'rates' => $this->getRatesForView($application),
-        ];
+        $data['financialEvidence'] = array_merge(
+            [
+                'requiredFinance' => $this->getRequiredFinance($application),
+                'vehicles' => $this->getTotalNumberOfAuthorisedVehicles($application),
+            ],
+            $this->getRatesForView($application)
+        );
 
         return $data;
     }
@@ -46,6 +51,7 @@ class FinancialEvidence extends AbstractQueryHandler
 
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->ratesRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
+        $this->licenceRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Licence');
 
         return $this;
     }
@@ -61,31 +67,17 @@ class FinancialEvidence extends AbstractQueryHandler
         ];
 
         // add the counts for each licence
-        $organisation = $application->getLicence()->getOrganisation();
-        $licences = $organisation->getLicences();
+        $licences = $this->getOtherLicences($application);
         foreach ($licences as $licence) {
-            if (
-                in_array(
-                    $licence->getStatus()->getId(),
-                    [
-                        Licence::LICENCE_STATUS_VALID,
-                        Licence::LICENCE_STATUS_SUSPENDED,
-                        Licence::LICENCE_STATUS_CURTAILED,
-                    ]
-                )
-                &&
-                $licence->getId() !== $application->getLicence()->getId()
-            ) {
-                $auths[] = [
-                    'type' => $licence->getLicenceType()->getId(),
-                    'count' => $licence->getTotAuthVehicles(),
-                    'category' => $licence->getGoodsOrPsv()->getId(),
-                ];
-            }
+            $auths[] = [
+                'type' => $licence->getLicenceType()->getId(),
+                'count' => $licence->getTotAuthVehicles(),
+                'category' => $licence->getGoodsOrPsv()->getId(),
+            ];
         }
 
         // add the counts for each other application
-        $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
+        $applications = $this->getOtherApplications($application);
         foreach ($applications as $app) {
              if (
                 in_array(
@@ -109,6 +101,55 @@ class FinancialEvidence extends AbstractQueryHandler
         return $this->getFinanceCalculation($auths);
 
     }
+
+    protected function getOtherLicences($application)
+    {
+        $organisation = $application->getLicence()->getOrganisation();
+        $licences = $organisation->getLicences();
+        $filtered = [];
+        foreach ($licences as $licence) {
+            if (
+                in_array(
+                    $licence->getStatus()->getId(),
+                    [
+                        Licence::LICENCE_STATUS_VALID,
+                        Licence::LICENCE_STATUS_SUSPENDED,
+                        Licence::LICENCE_STATUS_CURTAILED,
+                    ]
+                )
+                &&
+                $licence->getId() !== $application->getLicence()->getId()
+            ) {
+                $filtered[] = $licence;
+            }
+        }
+        return $filtered;
+    }
+
+    protected function getOtherApplications($application)
+    {
+        $organisation = $application->getLicence()->getOrganisation();
+        $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
+        $filtered = [];
+        foreach ($applications as $app) {
+             if (
+                in_array(
+                    $app->getStatus()->getId(),
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                        Application::APPLICATION_STATUS_GRANTED,
+                    ]
+                )
+                &&
+                $app->getId() !== $application->getId()
+            ) {
+                $filtered[] = $app;
+            }
+        }
+
+        return $filtered;
+    }
+
     /**
      * Takes an array of vehicle authorisations (example below) and
      * returns the required finance amount
@@ -258,5 +299,43 @@ class FinancialEvidence extends AbstractQueryHandler
                 $goodsOrPsv
             ),
         ];
+    }
+
+    /**
+     * Get the total vehicle authority which includes:
+     *
+     *  The vehicles on this application
+     *  PLUS the vehicles across other licence records with a status of:
+     *   Valid
+     *   Suspended
+     *   Curtailed
+     *  PLUS the vehicles across other new applications with a status of:
+     *   Under consideration
+     *   Granted
+     *
+     * @param int $applicationId
+     * @return int
+     */
+    public function getTotalNumberOfAuthorisedVehicles($application)
+    {
+        // get the total vehicle authorisation for this application
+        $appVehicles = $application->getTotAuthVehicles();
+
+        // get the total vehicle authorisation for other licences
+        $otherLicenceVehicles = 0;
+        $licences = $this->getOtherLicences($application);
+        foreach ($licences as $licence) {
+            $otherLicenceVehicles += (int)$licence->getTotAuthVehicles();
+        }
+
+        // get the total vehicle authorisation for other applications
+        // that are 'under consideration' or 'granted'
+        $otherApplicationVehicles = 0;
+        $applications = $this->getOtherApplications($application);
+        foreach ($applications as $application) {
+            $otherApplicationVehicles += (int)$application->getTotAuthVehicles();
+        }
+
+        return $appVehicles + $otherLicenceVehicles + $otherApplicationVehicles;
     }
 }

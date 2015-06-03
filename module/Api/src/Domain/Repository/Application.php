@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 
 /**
@@ -43,4 +44,15 @@ class Application extends AbstractRepository
 
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * Extend the default resource bundle to include licence
+     *
+     * @param QueryBuilder $qb
+     * @param QryCmd $query
+     */
+    // protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    // {
+    //     $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
+    // }
 }
