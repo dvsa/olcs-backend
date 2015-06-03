@@ -52,6 +52,8 @@ return [
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
+            TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -85,6 +87,7 @@ return [
             'User' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
+            'IrfoGvPermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
