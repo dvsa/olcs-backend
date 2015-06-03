@@ -498,6 +498,19 @@ abstract class AbstractLicence implements \JsonSerializable
     protected $applications;
 
     /**
+     * Bus reg
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     mappedBy="licence",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $busRegs;
+
+    /**
      * Case
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -680,6 +693,7 @@ abstract class AbstractLicence implements \JsonSerializable
     public function initCollections()
     {
         $this->applications = new ArrayCollection();
+        $this->busRegs = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->changeOfEntitys = new ArrayCollection();
         $this->communityLics = new ArrayCollection();
@@ -1834,6 +1848,66 @@ abstract class AbstractLicence implements \JsonSerializable
     {
         if ($this->applications->contains($applications)) {
             $this->applications->removeElement($applications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the bus reg
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return Licence
+     */
+    public function setBusRegs($busRegs)
+    {
+        $this->busRegs = $busRegs;
+
+        return $this;
+    }
+
+    /**
+     * Get the bus regs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBusRegs()
+    {
+        return $this->busRegs;
+    }
+
+    /**
+     * Add a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return Licence
+     */
+    public function addBusRegs($busRegs)
+    {
+        if ($busRegs instanceof ArrayCollection) {
+            $this->busRegs = new ArrayCollection(
+                array_merge(
+                    $this->busRegs->toArray(),
+                    $busRegs->toArray()
+                )
+            );
+        } elseif (!$this->busRegs->contains($busRegs)) {
+            $this->busRegs->add($busRegs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a bus regs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @return Licence
+     */
+    public function removeBusRegs($busRegs)
+    {
+        if ($this->busRegs->contains($busRegs)) {
+            $this->busRegs->removeElement($busRegs);
         }
 
         return $this;
