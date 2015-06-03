@@ -30,8 +30,6 @@ class FinancialEvidence extends AbstractQueryHandler
         $applicationRepo = $this->getRepo();
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
 
-        // var_dump($application->getLicence()->getId());
-
         $data = $application->jsonSerialize();
 
         $data['financialEvidence'] = array_merge(
@@ -41,6 +39,10 @@ class FinancialEvidence extends AbstractQueryHandler
             ],
             $this->getRatesForView($application)
         );
+
+        // @todo fix this
+        // var_dump($application->getLicence()->getId());
+        $data['licence']['id'] = $application->getLicence()->getId();
 
         return $data;
     }
