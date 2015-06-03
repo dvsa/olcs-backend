@@ -84,6 +84,12 @@ class Licence extends AbstractLicence
         );
     }
 
+    /**
+     * Gets the latest Bus Reg variation number, based on the supplied regNo
+     *
+     * @param $regNo
+     * @return mixed
+     */
     public function getLatestBusVariation($regNo)
     {
         $criteria = Criteria::create()
