@@ -12,9 +12,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\UpdateTradingNames;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -87,14 +89,22 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
                 $this->isDirty = true;
                 $this->getRepo('Organisation')->save($organisation);
                 $this->result->addMessage('Organisation updated');
-                $this->result->setFlag('hasChanged', true);
             } else {
                 $this->result->addMessage('Organisation unchanged');
             }
 
-            if ($this->isDirty) {
-                // Do something
+            if ($this->isDirty && $this->isGranted(Permission::SELFSERVE_USER)) {
+                $taskData = [
+                    'category' => Category::CATEGORY_APPLICATION,
+                    'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+                    'description' => 'Change to business details',
+                    'licence' => $licence->getId()
+                ];
+
+                $this->result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskData)));
             }
+
+            $this->result->setFlag('hasChanged', $this->isDirty);
 
             $this->getRepo()->commit();
 
@@ -107,35 +117,46 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
     private function updateNatureOfBusinesses(array $nobList, Organisation $organisation)
     {
-        die('finish');
-
-        $changed = false;
-
-        // If the counts match
-        if (count($nobList) === $organisation->getNatureOfBusinesses()->count()) {
-
-            // try to match each one
-            $matches = 0;
-            foreach ($organisation->getNatureOfBusinesses()->getIterator() as $entity) {
-
-                if (in_array($entity->getId(), $nobList)) {
-                    $matches++;
-                }
-            }
-
-            // if we match all, then there are no changes
-            if ($matches === count($nobList)) {
-                return false;
-            }
-        }
-
-        $nobs = [];
+        $nobObjects = [];
 
         foreach ($nobList as $nob) {
-            $nobs[] = $this->getRepo()->getRefdataReference($nob);
+            $nobObjects[] = $this->getRepo()->getRefdataReference($nob);
         }
 
-        $organisation->setNatureOfBusinesses($nobs);
+        $current = $organisation->getNatureOfBusinesses();
+
+        $added = 0;
+        $removed = 0;
+        $initial = $current->count();
+
+        foreach ($nobObjects as $nob) {
+            // If we need to add a new one
+            if (!$current->contains($nob)) {
+                $added++;
+                $this->isDirty = true;
+                $this->hasChangedOrg = true;
+                $current->add($nob);
+                continue;
+            }
+        }
+
+        $list = $current->getIterator();
+
+        foreach ($list as $nob) {
+            if (!in_array($nob, $nobObjects)) {
+                $removed++;
+                $this->isDirty = true;
+                $this->hasChangedOrg = true;
+                $current->removeElement($nob);
+                continue;
+            }
+        }
+
+        $unchanged = $initial - $removed;
+
+        $this->result->addMessage($added . ' new nature(s) of business');
+        $this->result->addMessage($unchanged . ' unchanged nature(s) of business');
+        $this->result->addMessage($removed . ' nature(s) of business removed');
     }
 
     private function canUpdateOrganisation($organisation)

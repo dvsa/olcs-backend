@@ -63,9 +63,9 @@ final class UpdateTradingNames extends AbstractCommandHandler
                     $licence
                 );
 
-                $result->addMessage($newCount . '(s) new trading names');
-                $result->addMessage($unchangedCount . '(s) unchanged trading names');
-                $result->addMessage($removedCount . '(s) trading names removed');
+                $result->addMessage($newCount . ' new trading name(s)');
+                $result->addMessage($unchangedCount . ' unchanged trading name(s)');
+                $result->addMessage($removedCount . ' trading name(s) removed');
 
                 $this->getRepo()->commit();
             } catch (\Exception $ex) {

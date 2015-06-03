@@ -62,6 +62,8 @@ return [
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+            TransferQuery\CompanySubsidiary\CompanySubsidiary::class
+                => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -82,6 +84,7 @@ return [
             'Application' => RepositoryFactory::class,
             'Address' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
+            'CompanySubsidiary' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
