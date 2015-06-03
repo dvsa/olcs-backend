@@ -80,6 +80,8 @@ return [
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'Application' => RepositoryFactory::class,
+            'Address' => RepositoryFactory::class,
+            'ContactDetails' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
@@ -94,6 +96,7 @@ return [
             'User' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
+            'TradingName' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

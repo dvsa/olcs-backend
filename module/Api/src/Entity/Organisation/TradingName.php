@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * TradingName Entity
@@ -22,6 +23,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TradingName extends AbstractTradingName
 {
+    public function __construct($name, Organisation $organisation)
+    {
+        $this->setOrganisation($organisation);
+        $this->setName($name);
+    }
+
     protected function getCalculatedValues()
     {
         return ['organisation' => null, 'licence' => null];

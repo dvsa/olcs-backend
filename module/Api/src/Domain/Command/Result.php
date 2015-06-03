@@ -24,6 +24,11 @@ final class Result
      */
     private $messages = [];
 
+    /**
+     * @var array
+     */
+    private $flags = [];
+
     public function addId($name, $id)
     {
         $this->ids[$name] = $id;
@@ -31,7 +36,7 @@ final class Result
 
     public function getId($name)
     {
-        return $this->ids[$name];
+        return isset($this->ids[$name]) ? $this->ids[$name] : null;
     }
 
     /**
@@ -53,6 +58,16 @@ final class Result
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function setFlag($name, $value)
+    {
+        $this->flags[$name] = $value;
+    }
+
+    public function getFlag($name)
+    {
+        return $this->flags[$name];
     }
 
     public function merge(Result $result)
