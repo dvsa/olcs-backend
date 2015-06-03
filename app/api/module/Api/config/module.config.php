@@ -50,6 +50,7 @@ return [
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+            TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -69,6 +70,7 @@ return [
             'Application' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
+            'Bus' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
