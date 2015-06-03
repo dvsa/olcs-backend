@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * IrfoGvPermit Entity
@@ -24,5 +27,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoGvPermit extends AbstractIrfoGvPermit
 {
+    const STATUS_APPROVED = 'irfo_perm_s_appreoved';
+    const STATUS_PENDING = 'irfo_perm_s_pending';
+    const STATUS_REFUSED = 'irfo_perm_s_refused';
+    const STATUS_WITHDRAWN = 'irfo_perm_s_withdrawn';
 
+    public function __construct(Organisation $organisation, IrfoGvPermitType $type, RefData $status)
+    {
+        $this->setOrganisation($organisation);
+        $this->setIrfoGvPermitType($type);
+        $this->setIrfoPermitStatus($status);
+    }
 }
