@@ -46,6 +46,10 @@ return [
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
         CommandHandler\Cases\Impounding\CreateImpounding::class,
+    TransferCommand\Cases\Impounding\UpdateImpounding::class =>
+        CommandHandler\Cases\Impounding\UpdateImpounding::class,
+    TransferCommand\Cases\Impounding\DeleteImpounding::class =>
+        CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
