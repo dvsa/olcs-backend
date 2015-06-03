@@ -22,6 +22,7 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+    Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
@@ -35,6 +36,9 @@ return [
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
+
+    // Domain - ContactDetails
+    Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
 
     // Domain - Task
     Command\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,

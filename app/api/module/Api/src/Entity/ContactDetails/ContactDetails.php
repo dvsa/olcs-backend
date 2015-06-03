@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * ContactDetails Entity
@@ -23,5 +24,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ContactDetails extends AbstractContactDetails
 {
+    const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
 
+    public function __construct(RefData $contactType)
+    {
+        parent::__construct();
+
+        $this->setContactType($contactType);
+    }
 }
