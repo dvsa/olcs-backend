@@ -43,6 +43,10 @@ return [
     \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
 
+    // Transfer - Impounding
+    TransferCommand\Cases\Impounding\CreateImpounding::class =>
+        CommandHandler\Cases\Impounding\CreateImpounding::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -86,4 +90,5 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+
 ];
