@@ -40,7 +40,7 @@ class Impounding extends AbstractImpounding
      * @param RefData $piVenueOther
      * @return Impounding
      */
-    public function setPiVenueProperties(RefData $piVenue, RefData $piVenueOther)
+    public function setPiVenueProperties(RefData $piVenue, $piVenueOther = null)
     {
         if ($piVenue != self::PI_VENUE_OTHER) {
             $this->piVenueOther = null;
