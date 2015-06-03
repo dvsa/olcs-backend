@@ -64,6 +64,11 @@ return [
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\CompanySubsidiary\CompanySubsidiary::class
                 => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
+
+            TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
+            TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -87,6 +92,8 @@ return [
             'CompanySubsidiary' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
+            'Bus' => RepositoryFactory::class,
+            'Trailer' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
@@ -100,6 +107,7 @@ return [
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
+            'IrfoGvPermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
