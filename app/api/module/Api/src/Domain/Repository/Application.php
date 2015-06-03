@@ -25,5 +25,22 @@ class Application extends AbstractRepository
             ->with('previousConvictions');
 
         return $qb->getQuery()->getSingleResult();
+
+    }
+
+    public function fetchForOrganisation($organisationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefData()
+            ->with('licence', 'l');
+
+        $qb
+            ->andWhere($qb->expr()->eq('l.organisation',':organisationId'))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->execute();
     }
 }
