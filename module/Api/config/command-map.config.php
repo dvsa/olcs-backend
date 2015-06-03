@@ -61,6 +61,8 @@ return [
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
     TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
+    TransferCommand\Variation\TransportManagerDeleteDelta::class
+        => CommandHandler\Variation\TransportManagerDeleteDelta::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -207,4 +209,8 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+
+    // Transport Manager Application
+    TransferCommand\TransportManagerApplication\Delete::class
+        => CommandHandler\TransportManagerApplication\Delete::class,
 ];
