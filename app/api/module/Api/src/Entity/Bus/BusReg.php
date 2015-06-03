@@ -46,7 +46,7 @@ class BusReg extends AbstractBusReg
      */
     public function isLatestVariation()
     {
-        return $this->getId() === $this->getLicence()->getLatestBusVariation($this->regNo)->getId();
+        return $this->getId() === $this->getLicence()->getLatestBusVariation($this->getRegNo())->getId();
     }
 
     /**
@@ -54,7 +54,7 @@ class BusReg extends AbstractBusReg
      *
      * @return array
      */
-    protected function getCalculatedValues()
+    public function getCalculatedValues()
     {
         return [
             'licence' => null,
