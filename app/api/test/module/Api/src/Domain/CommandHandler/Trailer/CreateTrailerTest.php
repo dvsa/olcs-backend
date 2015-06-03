@@ -47,8 +47,6 @@ class CreateTrailerTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Licence']->shouldReceive('fetchById')->once()->with($data['licence']);
-
         $this->repoMap['Trailer']
             ->shouldReceive('save')
             ->once()

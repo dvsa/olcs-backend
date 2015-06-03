@@ -24,7 +24,13 @@ final class UpdateTrailer extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $trailer = $this->getRepo()->fetchById($command->getId());
+        $trailer = $this->getRepo()
+            ->fetchById(
+                $command->getId(),
+                \Doctrine\ORM\Query::HYDRATE_OBJECT,
+                $command->getVersion()
+            );
+
         $trailer->setTrailerNo($command->getTrailerNo());
 
         $this->getRepo()->save($trailer);

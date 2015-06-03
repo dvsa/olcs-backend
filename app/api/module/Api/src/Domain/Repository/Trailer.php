@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer as Entity;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -33,5 +34,11 @@ class Trailer extends AbstractRepository
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         return $results;
+    }
+
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+        $qb->setParameter(':licenceId', $query->getLicence());
     }
 }
