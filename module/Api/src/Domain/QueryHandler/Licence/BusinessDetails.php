@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Business Details
@@ -21,15 +22,7 @@ class BusinessDetails extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $organisationRepo;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->organisationRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('Organisation');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['Organisation'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -37,12 +30,13 @@ class BusinessDetails extends AbstractQueryHandler
         $licence = $this->getRepo()->fetchUsingId($query);
         $organisation = $licence->getOrganisation();
 
-        $organisation = $this->organisationRepo->fetchBusinessTypeById($organisation->getId());
+        /** @var Organisation $organisation */
+        $organisation = $this->getRepo('Organisation')->fetchBusinessTypeById($organisation->getId());
 
         $orgData = $organisation->jsonSerialize();
 
-        $orgData['tradingNames'] = $licence->getTradingNames();
-        $orgData['companySubsidiaries'] = $licence->getCompanySubsidiaries();
+        $orgData['tradingNames'] = $licence->getTradingNames()->toArray();
+        $orgData['companySubsidiaries'] = $licence->getCompanySubsidiaries()->toArray();
 
         return $orgData;
     }

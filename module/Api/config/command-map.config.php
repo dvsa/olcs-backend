@@ -10,19 +10,30 @@ return [
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
-    TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdateFinancialHistory::class
+        => CommandHandler\Application\UpdateFinancialHistory::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
+    TransferCommand\Application\UpdateBusinessDetails::class
+        => CommandHandler\Application\UpdateBusinessDetails::class,
+    TransferCommand\Application\UpdateCompanySubsidiary::class
+        => CommandHandler\Application\UpdateCompanySubsidiary::class,
+    TransferCommand\Application\CreateCompanySubsidiary::class
+        => CommandHandler\Application\CreateCompanySubsidiary::class,
+    TransferCommand\Application\DeleteCompanySubsidiary::class
+        => CommandHandler\Application\DeleteCompanySubsidiary::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
     TransferCommand\Licence\UpdateBusinessDetails::class => CommandHandler\Licence\UpdateBusinessDetails::class,
+    TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
+    TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
+    TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
-    Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
@@ -42,6 +53,9 @@ return [
 
     // Domain - Task
     Command\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+    // Domain - Organisation
+    Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
