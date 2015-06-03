@@ -38,7 +38,6 @@ class Impounding extends AbstractRepository
             ->with('case')
             ->with('presidingTc')
             ->with('piVenue')
-            ->with('impoundingLegislationTypes')
             ->with('createdBy')
             ->with('lastModifiedBy')
             ->byId($query->getId());

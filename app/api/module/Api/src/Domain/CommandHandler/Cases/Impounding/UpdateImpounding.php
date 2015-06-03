@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Create Impounding
+ * Update Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding;
 
+use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -14,14 +15,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 
 /**
- * Create Impounding
+ * Update Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class CreateImpounding extends AbstractCommandHandler
+final class UpdateImpounding extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Impounding';
 
@@ -34,10 +35,9 @@ final class CreateImpounding extends AbstractCommandHandler
             $impounding = $this->createImpoundingObject($command);
 
             $this->getRepo()->save($impounding);
-            $result->addMessage('Impounding created');
-            $result->addId('impounding', $impounding->getId());
-
             $this->getRepo()->commit();
+
+            $result->addMessage('Impounding updated');
 
             return $result;
 
@@ -54,10 +54,7 @@ final class CreateImpounding extends AbstractCommandHandler
      */
     private function createImpoundingObject(Cmd $command)
     {
-        $impounding = new Impounding(
-            $this->getRepo()->getReference(Cases::class, $command->getCase()),
-            $this->getRepo()->getRefdataReference($command->getImpoundingType())
-        );
+        $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $piVenueOther = $this->determinePiVenueOther($command->getPiVenueOther());
 
