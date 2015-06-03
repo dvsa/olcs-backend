@@ -72,6 +72,7 @@ return [
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'Trailer' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
