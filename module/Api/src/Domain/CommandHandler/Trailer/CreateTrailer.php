@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Trailer;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -24,17 +25,10 @@ final class CreateTrailer extends AbstractCommandHandler
 
     protected $licenceRepo = null;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->licenceRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('Licence');
-
-        return parent::createService($serviceLocator);
-    }
-
     public function handleCommand(CommandInterface $command)
     {
-        $licence = $this->licenceRepo->fetchById($command->getLicence());
+        $licence = $this->getRepo()
+            ->getReference(Licence::class, $command->getLicence());
 
         $trailer = new Trailer();
         $trailer->setTrailerNo($command->getTrailerNo());

@@ -31,7 +31,7 @@ class TrailersTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['licence' => 1]);
 
-        $this->repoMap['Trailer']->shouldReceive('fetchByLicenceId')
+        $this->repoMap['Trailer']->shouldReceive('fetchList')
             ->with($query)
             ->andReturn(
                 [
