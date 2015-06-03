@@ -21,12 +21,12 @@ class Trailers extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Licence $repo */
-        $repo = $this->getRepo();
+        $result = $this->getRepo()
+            ->fetchByLicenceId($query);
 
         return [
-            'result' => $repo->fetchByLicenceId($query),
-            'count' => $repo->fetchCount($query)
+            'result' => $result,
+            'count' => count($result)
         ];
     }
 }
