@@ -24,7 +24,8 @@ class FinancialStandingRate extends AbstractRepository
      * @return array \Dvsa\Olcs\Api\Entity\System\FinancialStandingRate
      * @throws Exception\NotFoundException
      */
-    public function getRatesInEffect(\DateTime $date) {
+    public function getRatesInEffect(\DateTime $date)
+    {
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->withRefdata();

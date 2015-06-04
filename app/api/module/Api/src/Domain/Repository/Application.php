@@ -39,7 +39,7 @@ class Application extends AbstractRepository
             ->with('licence', 'l');
 
         $qb
-            ->andWhere($qb->expr()->eq('l.organisation',':organisationId'))
+            ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->execute();
