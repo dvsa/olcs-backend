@@ -46,6 +46,7 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 123,
+            'version' => 2,
             'title' => 'title_mr',
             'forename' => 'Test',
             'familyName' => 'Person',
@@ -59,8 +60,8 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['PreviousConviction']
-            ->shouldReceive('fetchUsingId')
-            ->with($command)
+            ->shouldReceive('fetchById')
+            ->with(123, \Doctrine\Orm\Query::HYDRATE_OBJECT, 2)
             ->andReturn(
                 m::mock(PrevConvictionEntity::class)
                 ->shouldReceive('setTitle')
@@ -86,6 +87,8 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
                     ->andReturn(50)
                     ->getMock()
                 )
+                ->shouldreceive('getId')
+                ->andReturn(123)
                 ->getMock()
             )
             ->shouldReceive('beginTransaction')
@@ -102,7 +105,9 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'previousConviction' => 123
+            ],
             'messages' => [
                 'Previous conviction updated'
             ]
