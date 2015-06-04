@@ -20,7 +20,8 @@ return [
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
-            Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class
+            Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
+            'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -48,7 +49,8 @@ return [
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
-            TransferQuery\PreviousConviction\PreviousConviction::class => QueryHandler\PreviousConviction\PreviousConviction::class,
+            TransferQuery\PreviousConviction\PreviousConviction::class =>
+                QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
