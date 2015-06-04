@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateBusinessDetails as Cmd;
@@ -21,7 +22,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as LicenceCmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateBusinessDetails extends AbstractCommandHandler
+final class UpdateBusinessDetails extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -29,25 +30,15 @@ final class UpdateBusinessDetails extends AbstractCommandHandler
     {
         $result = new Result();
 
-        try {
+        $updateResult = $this->updateBusinessDetails($command);
 
-            $this->getRepo()->beginTransaction();
+        $result->merge($updateResult);
 
-            $updateResult = $this->updateBusinessDetails($command);
-
-            $result->merge($updateResult);
-
-            if ($updateResult->getFlag('hasChanged')) {
-                $result->merge($this->updateApplicationCompletion($command));
-            }
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+        if ($updateResult->getFlag('hasChanged')) {
+            $result->merge($this->updateApplicationCompletion($command));
         }
+
+        return $result;
     }
 
     private function updateBusinessDetails(Cmd $command)

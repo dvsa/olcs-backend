@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\UpdateTradingNames;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -29,7 +30,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateBusinessDetails extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateBusinessDetails extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -69,50 +70,40 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
         $this->result = new Result();
 
-        try {
+        $this->updateTradingNames(
+            $licence->getId(),
+            $organisation->getId(),
+            $command->getTradingNames()
+        );
 
-            $this->getRepo()->beginTransaction();
+        $this->maybeSaveRegisteredAddress($command, $organisation);
 
-            $this->updateTradingNames(
-                $licence->getId(),
-                $organisation->getId(),
-                $command->getTradingNames()
-            );
+        $this->maybeUpdateOrganisation($command, $organisation);
 
-            $this->maybeSaveRegisteredAddress($command, $organisation);
+        $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);
 
-            $this->maybeUpdateOrganisation($command, $organisation);
-
-            $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);
-
-            if ($this->hasChangedOrg) {
-                $this->isDirty = true;
-                $this->getRepo('Organisation')->save($organisation);
-                $this->result->addMessage('Organisation updated');
-            } else {
-                $this->result->addMessage('Organisation unchanged');
-            }
-
-            if ($this->isDirty && $this->isGranted(Permission::SELFSERVE_USER)) {
-                $taskData = [
-                    'category' => Category::CATEGORY_APPLICATION,
-                    'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
-                    'description' => 'Change to business details',
-                    'licence' => $licence->getId()
-                ];
-
-                $this->result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskData)));
-            }
-
-            $this->result->setFlag('hasChanged', $this->isDirty);
-
-            $this->getRepo()->commit();
-
-            return $this->result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+        if ($this->hasChangedOrg) {
+            $this->isDirty = true;
+            $this->getRepo('Organisation')->save($organisation);
+            $this->result->addMessage('Organisation updated');
+        } else {
+            $this->result->addMessage('Organisation unchanged');
         }
+
+        if ($this->isDirty && $this->isGranted(Permission::SELFSERVE_USER)) {
+            $taskData = [
+                'category' => Category::CATEGORY_APPLICATION,
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+                'description' => 'Change to business details',
+                'licence' => $licence->getId()
+            ];
+
+            $this->result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskData)));
+        }
+
+        $this->result->setFlag('hasChanged', $this->isDirty);
+
+        return $this->result;
     }
 
     private function updateNatureOfBusinesses(array $nobList, Organisation $organisation)

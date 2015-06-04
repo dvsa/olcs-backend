@@ -66,10 +66,6 @@ class UpdatePreviousHistoryTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($application)
             ->once()
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('commit')
-            ->once()
             ->getMock();
 
         $result = $this->sut->handleCommand($command);

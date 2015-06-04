@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateCompanySubsidiary as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -46,31 +47,20 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Au
             return $result;
         }
 
-        try {
+        $companySubsidiary->setName($command->getName());
+        $companySubsidiary->setCompanyNo($command->getCompanyNo());
 
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($companySubsidiary);
 
-            $companySubsidiary->setName($command->getName());
-            $companySubsidiary->setCompanyNo($command->getCompanyNo());
+        $result->addMessage('Company Subsidiary updated');
 
-            $this->getRepo()->save($companySubsidiary);
-
-            $result->addMessage('Company Subsidiary updated');
-
-            if ($this->isGranted(Permission::SELFSERVE_USER)) {
-                $result->merge($this->createTask($command));
-            }
-
-            $result->setFlag('hasChanged', true);
-
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+        if ($this->isGranted(Permission::SELFSERVE_USER)) {
+            $result->merge($this->createTask($command));
         }
+
+        $result->setFlag('hasChanged', true);
+
+        return $result;
     }
 
     private function createTask(Cmd $command)

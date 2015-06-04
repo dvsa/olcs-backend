@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -28,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -37,42 +38,32 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $licence = $this->createLicenceObject($command);
-            $result->addMessage('Licence created');
+        $licence = $this->createLicenceObject($command);
+        $result->addMessage('Licence created');
 
-            $application = $this->createApplicationObject($command, $licence);
-            $result->addMessage('Application created');
+        $application = $this->createApplicationObject($command, $licence);
+        $result->addMessage('Application created');
 
-            $updatedTol = $this->populateTypeOfLicence($command, $application);
+        $updatedTol = $this->populateTypeOfLicence($command, $application);
 
-            $this->createApplicationCompletion($application);
-            $result->addMessage('Application Completion created');
+        $this->createApplicationCompletion($application);
+        $result->addMessage('Application Completion created');
 
-            $this->createApplicationTracking($application);
-            $result->addMessage('Application Tracking created');
+        $this->createApplicationTracking($application);
+        $result->addMessage('Application Tracking created');
 
-            $this->getRepo()->save($application);
+        $this->getRepo()->save($application);
 
-            $result->addId('application', $application->getId());
-            $result->addId('licence', $licence->getId());
+        $result->addId('application', $application->getId());
+        $result->addId('licence', $licence->getId());
 
-            if ($updatedTol) {
-                $result->merge($this->createApplicationFee($application->getId()));
-                $result->merge($this->updateApplicationCompletion($application->getId()));
-            }
-
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
+        if ($updatedTol) {
+            $result->merge($this->createApplicationFee($application->getId()));
+            $result->merge($this->updateApplicationCompletion($application->getId()));
         }
+
+        return $result;
     }
 
     private function populateTypeOfLicence(Cmd $command, Application $application)

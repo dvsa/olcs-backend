@@ -13,18 +13,18 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Licence\DeleteCompanySubsidiary as Cmd;
 
 /**
  * Delete Company Subsidiary
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class DeleteCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface
+final class DeleteCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -34,31 +34,20 @@ final class DeleteCompanySubsidiary extends AbstractCommandHandler implements Au
     {
         $result = new Result();
 
-        try {
+        foreach ($command->getIds() as $id) {
+            /** @var CompanySubsidiary $companySubsidiary */
+            $companySubsidiary = $this->getRepo('CompanySubsidiary')->fetchById($id);
 
-            $this->getRepo()->beginTransaction();
-
-            foreach ($command->getIds() as $id) {
-                /** @var CompanySubsidiary $companySubsidiary */
-                $companySubsidiary = $this->getRepo('CompanySubsidiary')->fetchById($id);
-
-                if ($this->isGranted(Permission::SELFSERVE_USER)) {
-                    $result->merge($this->createTask($command->getLicence(), $companySubsidiary->getName()));
-                }
-
-                $this->getRepo()->delete($companySubsidiary);
+            if ($this->isGranted(Permission::SELFSERVE_USER)) {
+                $result->merge($this->createTask($command->getLicence(), $companySubsidiary->getName()));
             }
 
-            $result->addMessage(count($command->getIds()) . ' Company Subsidiaries removed');
-
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+            $this->getRepo()->delete($companySubsidiary);
         }
+
+        $result->addMessage(count($command->getIds()) . ' Company Subsidiaries removed');
+
+        return $result;
     }
 
     private function createTask($licence, $name)
