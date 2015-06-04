@@ -18,7 +18,7 @@ use Zend\ServiceManager\Exception\RuntimeException;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CommandHandlerManager extends AbstractPluginManager
+class CommandHandlerManager extends AbstractPluginManager implements CommandHandlerInterface
 {
     public function __construct(ConfigInterface $config = null)
     {

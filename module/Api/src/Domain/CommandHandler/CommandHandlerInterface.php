@@ -15,7 +15,7 @@ use Zend\ServiceManager\FactoryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-interface CommandHandlerInterface extends FactoryInterface
+interface CommandHandlerInterface
 {
     /**
      * @param CommandInterface $command
