@@ -70,7 +70,7 @@ class CommandHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
         $sm->setService('TransactionManager', m::mock(TransactionManagerInterface::class));
-        
+
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->setService($serviceName, $service);
         }

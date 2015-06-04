@@ -44,9 +44,12 @@ return [
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
 
     // Transfer - Previous Conviction
-    TransferCommand\PreviousConviction\CreatePreviousConviction::class => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
-    TransferCommand\PreviousConviction\UpdatePreviousConviction::class => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
-    TransferCommand\PreviousConviction\DeletePreviousConviction::class => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+    TransferCommand\PreviousConviction\CreatePreviousConviction::class
+        => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
+    TransferCommand\PreviousConviction\UpdatePreviousConviction::class
+        => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
+    TransferCommand\PreviousConviction\DeletePreviousConviction::class
+        => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
