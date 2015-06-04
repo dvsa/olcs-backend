@@ -27,4 +27,11 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
     const ACTION_DELETE = 'D';
+
+    const STATUS_INCOMPLETE = 'tmap_st_incomplete';
+    const STATUS_AWAITING_SIGNATURE = 'tmap_st_awaiting_signature';
+    const STATUS_TM_SIGNED = 'tmap_st_tm_signed';
+    const STATUS_OPERATOR_SIGNED = 'tmap_st_operator_signed';
+    const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
+    const STATUS_RECEIVED = 'tmap_st_received';
 }
