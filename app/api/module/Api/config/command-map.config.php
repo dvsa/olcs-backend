@@ -14,6 +14,10 @@ return [
     TransferCommand\Application\UpdatePreviousConvictions::class => CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
 
+    // Transfer - Bus
+    TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
+    TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
+
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
 
@@ -27,6 +31,17 @@ return [
     TransferCommand\PreviousConviction\CreatePreviousConviction::class => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
     TransferCommand\PreviousConviction\UpdatePreviousConviction::class => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
     TransferCommand\PreviousConviction\DeletePreviousConviction::class => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+
+    // Transfer - Trailer
+    TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
+    TransferCommand\Trailer\UpdateTrailer::class => CommandHandler\Trailer\UpdateTrailer::class,
+    TransferCommand\Trailer\DeleteTrailer::class => CommandHandler\Trailer\DeleteTrailer::class,
+
+    // Transfer - IRFO
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
