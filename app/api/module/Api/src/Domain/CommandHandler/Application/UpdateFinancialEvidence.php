@@ -33,6 +33,7 @@ final class UpdateFinancialEvidence extends AbstractCommandHandler
         $application->setFinancialEvidenceUploaded($command->getFinancialEvidenceUploaded());
 
         $this->getRepo()->save($application);
+
         $result->addMessage('Financial evidence section has been updated');
         return $result;
     }
