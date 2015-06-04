@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrfoPsvAuth Entity
@@ -25,5 +28,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoPsvAuth extends AbstractIrfoPsvAuth
 {
-
+    public function __construct(Organisation $organisation, IrfoPsvAuthType $type, RefData $status)
+    {
+        $this->organisation = $organisation;
+        $this->irfoPsvAuthType = $type;
+        $this->status = $status;
+    }
 }
