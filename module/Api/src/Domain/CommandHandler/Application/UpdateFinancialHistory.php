@@ -36,7 +36,8 @@ final class UpdateFinancialHistory extends AbstractCommandHandler
             $command->getReceivership(),
             $command->getAdministration(),
             $command->getDisqualified(),
-            $command->getInsolvencyDetails()
+            $command->getInsolvencyDetails(),
+            $command->getInsolvencyConfirmation()
         );
 
         $this->getRepo()->save($application);
