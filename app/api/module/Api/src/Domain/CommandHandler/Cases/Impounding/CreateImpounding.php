@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 
@@ -59,11 +60,14 @@ final class CreateImpounding extends AbstractCommandHandler
             $this->getRepo()->getRefdataReference($command->getImpoundingType())
         );
 
-        $piVenueOther = $this->determinePiVenueOther($command->getPiVenueOther());
+        $piVenue = $command->getPiVenue();
+        if ($piVenue !== Impounding::PI_VENUE_OTHER) {
+            $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
+        }
 
         $impounding->setPiVenueProperties(
-            $this->getRepo()->getRefdataReference($command->getPiVenue()),
-            $piVenueOther
+            $piVenue,
+            $command->getPiVenueOther()
         );
 
         $impoundingLegislationTypes = $this->generateImpoundingLegislationTypes(
