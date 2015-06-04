@@ -51,7 +51,10 @@ return [
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+            TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
+            TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -73,6 +76,7 @@ return [
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
+            'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
