@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,12 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="licence_no_gen",
  *    indexes={
- *        @ORM\Index(name="ix_licence_no_gen_licence_id", columns={"licence_id"})
+ *        @ORM\Index(name="fk_licence_no_gen_licence_id_idx", columns={"licence_id"})
  *    }
  * )
  */
-abstract class AbstractLicenceNoGen
+abstract class AbstractLicenceNoGen implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Identifier - Id

@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\System;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,8 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractCategory
+abstract class AbstractCategory implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,8 +36,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractBusReg
+abstract class AbstractBusReg implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application signed
@@ -260,7 +263,11 @@ abstract class AbstractBusReg
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="busRegs"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;

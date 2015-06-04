@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\EventHistory;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,8 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="event_history_type")
  */
-abstract class AbstractEventHistoryType
+abstract class AbstractEventHistoryType implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Description

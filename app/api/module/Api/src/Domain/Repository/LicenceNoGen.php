@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as Entity;
+
 /**
  * Licence No Gen
  *
@@ -14,5 +16,5 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
  */
 class LicenceNoGen extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen';
+    protected $entity = Entity::class;
 }

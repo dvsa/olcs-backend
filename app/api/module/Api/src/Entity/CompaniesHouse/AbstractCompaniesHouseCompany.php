@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,15 +15,11 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="companies_house_company",
- *    indexes={
- *        @ORM\Index(name="ix_companies_house_company_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_companies_house_company_last_modified_by", columns={"last_modified_by"})
- *    }
- * )
+ * @ORM\Table(name="companies_house_company")
  */
-abstract class AbstractCompaniesHouseCompany
+abstract class AbstractCompaniesHouseCompany implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Address line1
@@ -78,16 +76,6 @@ abstract class AbstractCompaniesHouseCompany
     protected $country;
 
     /**
-     * Created by
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
-     */
-    protected $createdBy;
-
-    /**
      * Created on
      *
      * @var \DateTime
@@ -106,16 +94,6 @@ abstract class AbstractCompaniesHouseCompany
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Last modified by
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
-     */
-    protected $lastModifiedBy;
 
     /**
      * Last modified on
@@ -188,7 +166,7 @@ abstract class AbstractCompaniesHouseCompany
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseOfficer",
-     *     mappedBy="company",
+     *     mappedBy="companiesHouseCompany",
      *     cascade={"persist"}
      * )
      */
@@ -346,29 +324,6 @@ abstract class AbstractCompaniesHouseCompany
     }
 
     /**
-     * Set the created by
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return CompaniesHouseCompany
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the created by
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
      * Set the created on
      *
      * @param \DateTime $createdOn
@@ -412,29 +367,6 @@ abstract class AbstractCompaniesHouseCompany
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the last modified by
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
-     * @return CompaniesHouseCompany
-     */
-    public function setLastModifiedBy($lastModifiedBy)
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified by
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getLastModifiedBy()
-    {
-        return $this->lastModifiedBy;
     }
 
     /**

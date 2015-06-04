@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,13 +17,14 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_continuation_month", columns={"month"}),
  *        @ORM\Index(name="ix_continuation_year", columns={"year"}),
- *        @ORM\Index(name="ix_continuation_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_continuation_created_by", columns={"created_by"})
+ *        @ORM\Index(name="fk_continuation_traffic_area1_idx", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="fk_continuation_user1_idx", columns={"created_by"})
  *    }
  * )
  */
-abstract class AbstractContinuation
+abstract class AbstractContinuation implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by
@@ -58,7 +61,7 @@ abstract class AbstractContinuation
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="month", nullable=false)
+     * @ORM\Column(type="smallint", name="month", nullable=false)
      */
     protected $month;
 
@@ -68,7 +71,7 @@ abstract class AbstractContinuation
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
      */
     protected $trafficArea;
 
@@ -87,7 +90,7 @@ abstract class AbstractContinuation
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="year", nullable=false)
+     * @ORM\Column(type="smallint", name="year", nullable=false)
      */
     protected $year;
 

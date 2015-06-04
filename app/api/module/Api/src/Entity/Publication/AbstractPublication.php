@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Publication;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,8 +26,9 @@ use Doctrine\Common\Collections\Collection;
  *    }
  * )
  */
-abstract class AbstractPublication
+abstract class AbstractPublication implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

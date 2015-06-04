@@ -23,5 +23,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Cases extends AbstractCases
 {
-
 }

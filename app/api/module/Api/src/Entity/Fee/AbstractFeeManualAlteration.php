@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,8 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractFeeManualAlteration
+abstract class AbstractFeeManualAlteration implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Actioned date

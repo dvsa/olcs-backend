@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,8 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractBusNoticePeriod
+abstract class AbstractBusNoticePeriod implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Cancellation period

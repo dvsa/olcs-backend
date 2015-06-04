@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,8 +30,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractApplication
+abstract class AbstractApplication implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Administration
@@ -681,7 +684,11 @@ abstract class AbstractApplication
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="application")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     mappedBy="application",
+     *     fetch="EXTRA_LAZY"
+     * )
      */
     protected $documents;
 

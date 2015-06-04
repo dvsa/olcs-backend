@@ -50,6 +50,8 @@ final class ResetApplication extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
+        $this->validate($command, $application);
+
         $licence = $application->getLicence();
 
         $receivedDate = $application->getReceivedDate();
@@ -57,8 +59,6 @@ final class ResetApplication extends AbstractCommandHandler
 
         // Need to grab this now before removing the licence
         $organisation = $application->getLicence()->getOrganisation();
-
-        $this->validate($command, $application);
 
         try {
             $this->getRepo()->beginTransaction();

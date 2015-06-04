@@ -10,13 +10,14 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
 
 /**
  * Pi
  */
 class Pi extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Pi\Pi';
+    protected $entity = Entity::class;
 
     private $cases;
 
@@ -39,7 +40,7 @@ class Pi extends AbstractRepository
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException
      */
-    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
+    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         $case = $this->cases->fetchUsingId($query, $hydrateMode, $version);
 

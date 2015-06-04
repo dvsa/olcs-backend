@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,8 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractGracePeriod
+abstract class AbstractGracePeriod implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by
@@ -49,7 +52,7 @@ abstract class AbstractGracePeriod
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="description", length=90, nullable=false)
+     * @ORM\Column(type="string", name="description", length=90, nullable=true)
      */
     protected $description;
 

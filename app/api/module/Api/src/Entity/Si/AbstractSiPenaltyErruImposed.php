@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Si;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -21,12 +23,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"serious_infringement_id"}),
  *        @ORM\Index(name="ix_si_penalty_erru_imposed_si_penalty_imposed_type_id",
      *     columns={"si_penalty_imposed_type_id"}),
- *        @ORM\Index(name="ix_si_penalty_erru_imposed_executed", columns={"executed"})
+ *        @ORM\Index(name="fk_si_penalty_erru_imposed_ref_data1_idx", columns={"executed"})
  *    }
  * )
  */
-abstract class AbstractSiPenaltyErruImposed
+abstract class AbstractSiPenaltyErruImposed implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

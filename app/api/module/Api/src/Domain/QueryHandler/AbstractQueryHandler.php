@@ -11,6 +11,8 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 
 /**
  * Abstract Query Handler
@@ -33,12 +35,18 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        if ($this instanceof AuthAwareInterface) {
+            $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+        }
+
         if ($this->repoServiceName === null) {
             throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
         }
 
-        $this->repo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get($this->repoServiceName);
+        $this->repo = $mainServiceLocator->get('RepositoryServiceManager')->get($this->repoServiceName);
+
         $this->queryHandler = $serviceLocator;
 
         return $this;

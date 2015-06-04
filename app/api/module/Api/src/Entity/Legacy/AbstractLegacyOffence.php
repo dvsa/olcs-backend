@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Legacy;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,8 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractLegacyOffence
+abstract class AbstractLegacyOffence implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Case

@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,14 +20,15 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_fee_type_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_fee_type_accrual_rule", columns={"accrual_rule"}),
- *        @ORM\Index(name="ix_fee_type_fee_type", columns={"fee_type"}),
+ *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"}),
+ *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"fee_type"}),
  *        @ORM\Index(name="ix_fee_type_is_miscellaneous", columns={"is_miscellaneous"})
  *    }
  * )
  */
-abstract class AbstractFeeType
+abstract class AbstractFeeType implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Accrual rule

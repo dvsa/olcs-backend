@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -27,8 +29,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractHearing
+abstract class AbstractHearing implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Agreed by tc date
