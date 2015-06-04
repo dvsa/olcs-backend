@@ -17,5 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Country extends AbstractCountry
 {
-
+    protected function getCalculatedValues()
+    {
+        return ['irfoPsvAuths' => null];
+    }
 }
