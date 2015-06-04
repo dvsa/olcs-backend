@@ -1,11 +1,9 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-
 /**
- * Abstract Repository
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * TransactionManagerInterface
  */
 interface TransactionManagerInterface
 {
