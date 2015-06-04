@@ -13,6 +13,8 @@ use Doctrine\ORM\Query;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
 /**
  * Financial Evidence
@@ -30,9 +32,14 @@ class FinancialEvidence extends AbstractQueryHandler
         $applicationRepo = $this->getRepo();
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
 
-        $data = $application->jsonSerialize();
+        // add documents
+        $financialDocuments = $application->getApplicationDocuments(
+            $applicationRepo->getCategoryReference(Category::CATEGORY_APPLICATION),
+            $applicationRepo->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
+        );
 
-        $data['financialEvidence'] = array_merge(
+        // add calculated finance data
+        $financialEvidence = array_merge(
             [
                 'requiredFinance' => $this->getRequiredFinance($application),
                 'vehicles' => $this->getTotalNumberOfAuthorisedVehicles($application),
@@ -40,9 +47,9 @@ class FinancialEvidence extends AbstractQueryHandler
             $this->getRatesForView($application)
         );
 
-        // @todo fix this
-        // var_dump($application->getLicence()->getId());
-        $data['licence']['id'] = $application->getLicence()->getId();
+        $data = $application->jsonSerialize();
+        $data['documents'] = $financialDocuments->toArray();
+        $data['financialEvidence'] = $financialEvidence;
 
         return $data;
     }
@@ -53,7 +60,6 @@ class FinancialEvidence extends AbstractQueryHandler
 
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->ratesRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
-        $this->licenceRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Licence');
 
         return $this;
     }

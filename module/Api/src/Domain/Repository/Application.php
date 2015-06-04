@@ -51,8 +51,8 @@ class Application extends AbstractRepository
      * @param QueryBuilder $qb
      * @param QryCmd $query
      */
-    // protected function buildDefaultQuery(QueryBuilder $qb, $id)
-    // {
-    //     $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
-    // }
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
+    }
 }
