@@ -26,10 +26,12 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
-
-        $conviction = $this->getRepo()->fetchUsingId($command);
+        $conviction = $this->getRepo()
+            ->fetchById(
+                $command->getId(),
+                \Doctrine\ORM\Query::HYDRATE_OBJECT,
+                $command->getVersion()
+            );
 
         $title = $this->getRepo()->getRefdataReference($command->getTitle());
 
@@ -47,6 +49,8 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
         $application = $conviction->getApplication();
 
         try {
+            $result = new Result();
+
             $this->getRepo()->beginTransaction();
 
             $this->getRepo()->save($conviction);
@@ -57,6 +61,7 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
 
             $this->getRepo()->commit();
 
+            $result->addId('previousConviction', $conviction->getId());
             $result->addMessage('Previous conviction updated');
             return $result;
 
