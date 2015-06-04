@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateCompanySubsidiary as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateCompanySubsidiary as LicenceCreateCompanySubsidiary;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 
 /**
  * Create Company Subsidiary
@@ -51,7 +51,9 @@ final class CreateCompanySubsidiary extends AbstractCommandHandler implements Tr
     private function updateApplicationCompletion(Cmd $command)
     {
         return $this->getCommandHandler()->handleCommand(
-            UpdateApplicationCompletion::create(['id' => $command->getApplication(), 'section' => 'businessDetails'])
+            UpdateApplicationCompletionCommand::create(
+                ['id' => $command->getApplication(), 'section' => 'businessDetails']
+            )
         );
     }
 }
