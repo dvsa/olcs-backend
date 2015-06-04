@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 
 /**
  * Licence
@@ -49,8 +50,14 @@ class Licence extends AbstractRepository
 
         $this->buildDefaultQuery($qb, $query->getId())
             ->withContactDetails('correspondenceCd', 'c')
+            ->with('c.phoneContacts', 'c_p')
+            ->with('c_p.phoneContactType', 'c_p_pct')
+            ->withRefData(PhoneContact::class, 'c_p')
             ->withContactDetails('establishmentCd', 'e')
-            ->withContactDetails('transportConsultantCd', 't');
+            ->withContactDetails('transportConsultantCd', 't')
+            ->with('t.phoneContacts', 't_p')
+            ->with('t_p.phoneContactType', 't_p_pct')
+            ->withRefData(PhoneContact::class, 't_p');
 
         return $qb->getQuery()->getSingleResult();
     }
