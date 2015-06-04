@@ -5,17 +5,17 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
 
 /**
  * Cases
  */
 class Cases extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Cases\Cases';
+    protected $entity = Entity::class;
 
     /**
      * Fetch the default record by it's id

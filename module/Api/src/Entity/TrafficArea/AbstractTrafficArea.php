@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\TrafficArea;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,8 +23,9 @@ use Doctrine\Common\Collections\Collection;
  *    }
  * )
  */
-abstract class AbstractTrafficArea
+abstract class AbstractTrafficArea implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Bus reg

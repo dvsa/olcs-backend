@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateAddressesStatus;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessTypeStatus;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as UpdateVariationCompletionCommand;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -82,6 +83,26 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         $this->assertTrue(in_array('Addresses updated', $messages));
         $this->assertTrue(in_array('Bt updated', $messages));
         $this->assertTrue(in_array('Tol updated', $messages));
+    }
+
+    public function testHandleCommandIsVariation()
+    {
+        $command = Cmd::create(['id' => 111, 'section' => 'section1']);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setIsVariation(true);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($application);
+
+        $this->expectedSideEffect(
+            UpdateVariationCompletionCommand::class, ['id' => 111, 'section' => 'section1'], new Result()
+        );
+
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandWithException()

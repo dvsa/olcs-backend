@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\EnforcementArea;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,8 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractPostcodeEnforcementArea
+abstract class AbstractPostcodeEnforcementArea implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

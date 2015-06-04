@@ -22,6 +22,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Create Application Test
@@ -35,6 +37,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->sut = new CreateApplication();
         $this->mockRepo('Application', Application::class);
 
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -42,7 +48,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             Licence::LICENCE_STATUS_NOT_SUBMITTED,
-            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ];
@@ -61,6 +67,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandMinimal()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
         $command = Cmd::create(['organisation' => 11]);
         /** @var ApplicationEntity $app */
         $app = null;
@@ -91,7 +102,6 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'Application created',
                 'Application Completion created',
                 'Application Tracking created',
-
             ]
         ];
 
@@ -103,7 +113,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
 
         $this->assertNull($app->getReceivedDate());
         $this->assertNull($app->getNiFlag());
@@ -114,6 +124,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
         $command = Cmd::create(
             [
                 'organisation' => 11,
@@ -178,7 +193,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
@@ -193,6 +208,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandMinimalException()
     {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
         $command = Cmd::create(['organisation' => 11]);
 
         $this->repoMap['Application']->shouldReceive('beginTransaction')

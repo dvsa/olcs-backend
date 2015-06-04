@@ -388,6 +388,15 @@ return array(
         )
     ),
     'bus_reg' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'busReg',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
         'use_all_stops' => array(
             'type' => 'yesno'
         ),
@@ -476,8 +485,9 @@ return array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
-                'property' => 'document'
-            )
+                'property' => 'document',
+                'fetch' => 'EXTRA_LAZY'
+            ),
         ),
         'case_id' => array(
             'inversedBy' => array(
@@ -1604,10 +1614,21 @@ return array(
         ),
     ),
     'companies_house_officer' => array(
-        'company_id' => array(
+        'companies_house_company_id' => array(
             'inversedBy' => array(
                 'entity' => 'CompaniesHouseCompany',
                 'property' => 'officer',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
+    ),
+    'companies_house_alert_reason' => array(
+        'companies_house_alert_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseAlert',
+                'property' => 'reason',
                 'cascade' => array(
                     'persist',
                 ),

@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,8 +28,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractIrfoGvPermit
+abstract class AbstractIrfoGvPermit implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

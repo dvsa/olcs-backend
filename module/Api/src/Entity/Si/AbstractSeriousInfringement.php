@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Si;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,14 +32,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type",
      *     columns={"olbs_key","olbs_type"}),
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number",
-     *     columns={"notification_number"}),
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_workflow_id", columns={"workflow_id"})
+ *        @ORM\UniqueConstraint(name="workflow_id_UNIQUE", columns={"workflow_id"}),
+ *        @ORM\UniqueConstraint(name="notification_number_UNIQUE", columns={"notification_number"})
  *    }
  * )
  */
-abstract class AbstractSeriousInfringement
+abstract class AbstractSeriousInfringement implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Case

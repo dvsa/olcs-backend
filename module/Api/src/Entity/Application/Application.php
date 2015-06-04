@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Application Entity
@@ -31,6 +32,7 @@ class Application extends AbstractApplication
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
+    const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
 
     const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
     const APPLICATION_STATUS_GRANTED = 'apsts_granted';
@@ -39,6 +41,12 @@ class Application extends AbstractApplication
     const APPLICATION_STATUS_WITHDRAWN = 'apsts_withdrawn';
     const APPLICATION_STATUS_REFUSED = 'apsts_refused';
     const APPLICATION_STATUS_NOT_TAKEN_UP = 'apsts_ntu';
+
+    const INTERIM_STATUS_REQUESTED = 'int_sts_requested';
+    const INTERIM_STATUS_INFORCE = 'int_sts_in_force';
+    const INTERIM_STATUS_REFUSED = 'int_sts_refused';
+    const INTERIM_STATUS_REVOKED = 'int_sts_revoked';
+    const INTERIM_STATUS_GRANTED = 'int_sts_granted';
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -104,5 +112,240 @@ class Application extends AbstractApplication
         }
 
         throw new ValidationException($errors);
+    }
+
+    public function getApplicationDocuments($category, $subCategory)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('category', $category));
+        $criteria->andWhere(
+            $expr->eq('subCategory', $subCategory)
+        );
+
+        return $this->documents->matching($criteria);
+    }
+
+    public function updateFinancialHistory(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails,
+        $insolvencyConfirmation
+    ) {
+        $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
+        if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
+            foreach ($flags as $key => $flag) {
+                $this->{$key} = $flag;
+            }
+            $this->setInsolvencyDetails($insolvencyDetails);
+            if ($insolvencyConfirmation) {
+                $this->setInsolvencyConfirmation('Y');
+            }
+            return true;
+        }
+    }
+
+    protected function validateFinancialHistory($flags, $insolvencyDetails)
+    {
+        $foundYes = false;
+        foreach ($flags as $element) {
+            if ($element == 'Y') {
+                $foundYes = true;
+                break;
+            }
+        }
+        if (!$foundYes) {
+            return true;
+        }
+        if (strlen($insolvencyDetails) >= 200) {
+            return true;
+        }
+        $errors = [
+            'insolvencyDetails' => [
+                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED =>
+                    'You selected \'yes\' in one of the provided questions, so the input has to be at least 200
+                characters long'
+            ]
+        ];
+        throw new ValidationException($errors);
+    }
+
+    /**
+     * Determine whether the licence has changed within set parameters that would
+     * qualify this variation to be an interim.
+     *
+     * @return bool
+     */
+    protected function hasUpgrade()
+    {
+        $applicationLicenceTypeId = null;
+        if ($this->getLicenceType()) {
+            $applicationLicenceTypeId = $this->getLicenceType()->getId();
+        }
+
+        $licenceTypeId = null;
+        if ($this->getLicence()->getLicenceType()) {
+            $licenceTypeId = $this->getLicence()->getLicenceType()->getId();
+        }
+
+        // If licence type has been changed from restricted to national or international.
+        if (
+            $licenceTypeId === Licence::LICENCE_TYPE_RESTRICTED &&
+            (
+                $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL ||
+                $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            )
+        ) {
+            return true;
+        }
+
+        // If licence is is updated from a standard national to an international.
+        if (
+            $licenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL &&
+            (
+                $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Has the overall number of vehicles authority increased.
+     *
+     * @return bool
+     */
+    protected function hasAuthVehiclesIncrease()
+    {
+        return ((int) $this->getTotAuthVehicles() > (int) $this->getLicence()->getTotAuthVehicles());
+    }
+
+    /**
+     * Has the overall number of trailers authority increased.
+     *
+     * @return bool
+     */
+    protected function hasAuthTrailersIncrease()
+    {
+        return ($this->getTotAuthTrailers() > $this->getLicence()->getTotAuthTrailers());
+    }
+
+    /**
+     * Does this variation specify an additional operating centre.
+     *
+     * @return bool
+     */
+    protected function hasNewOperatingCentre()
+    {
+        $operatingCentres = $this->getOperatingCentres();
+        /* @var $operatingCentre ApplicationOperatingCentre */
+        foreach ($operatingCentres as $operatingCentre) {
+            if ($operatingCentre->getAction() === ApplicationOperatingCentre::ACTION_ADD) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does this variation increment an operating centres vehicles or trailers.
+     *
+     * @return bool
+     */
+    protected function hasIncreaseInOperatingCentre()
+    {
+        $licence = array();
+        $variation = array();
+
+        // Makes dealing with the records easier.
+        /* @var $lOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
+        foreach ($this->getLicence()->getOperatingCentres() as $lOperatingCentre) {
+            $licence[$lOperatingCentre->getOperatingCentre()->getId()] = $lOperatingCentre;
+        }
+
+        /* @var $aOperatingCentre ApplicationOperatingCentre */
+        foreach ($this->getOperatingCentres() as $aOperatingCentre) {
+            $variation[$aOperatingCentre->getOperatingCentre()->getId()] = $aOperatingCentre;
+        }
+
+        // foreach of the licence op centres.
+        foreach (array_keys($licence) as $operatingCenterId) {
+            // If a variation record doesnt exists or its a removal op centre.
+            if (!isset($variation[$operatingCenterId]) ||
+                $variation[$operatingCenterId]->getAction() ===  ApplicationOperatingCentre::ACTION_DELETE
+            ) {
+                continue;
+            }
+
+            if (
+                ($variation[$operatingCenterId]->getNoOfVehiclesRequired() >
+                    $licence[$operatingCenterId]->getNoOfVehiclesRequired()) ||
+                ($variation[$operatingCenterId]->getNoOfTrailersRequired() >
+                    $licence[$operatingCenterId]->getNoOfTrailersRequired())
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Can this variation create an interim licence application?
+     *
+     * @return boolean
+     */
+    public function canHaveInterimLicence()
+    {
+        // only goods can have an interim
+        if ($this->getGoodsOrPsv()->getId() !== Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
+            return false;
+        }
+
+        // if its an application then it can have an interim
+        if (!$this->getIsVariation()) {
+            return true;
+        }
+
+        if ($this->hasAuthVehiclesIncrease() ||
+            $this->hasAuthTrailersIncrease() ||
+            $this->hasUpgrade() ||
+            $this->hasNewOperatingCentre() ||
+            $this->hasIncreaseInOperatingCentre()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * If the application involves a licence upgrade
+     *
+     * @return boolean
+     */
+    public function isLicenceUpgrade()
+    {
+        // only a variation can be an upgrade
+        if (!$this->getIsVariation()) {
+            return false;
+        }
+
+        $restrictedUpgrades = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ];
+
+        return (
+            $this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED
+            && in_array($this->getLicenceType()->getId(), $restrictedUpgrades)
+        );
     }
 }

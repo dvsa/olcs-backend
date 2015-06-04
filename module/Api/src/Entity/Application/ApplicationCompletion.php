@@ -29,4 +29,9 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     {
         $this->setApplication($application);
     }
+
+    protected function getCalculatedValues()
+    {
+        return ['application' => null];
+    }
 }

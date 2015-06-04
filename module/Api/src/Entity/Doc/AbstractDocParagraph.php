@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Doc;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,8 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractDocParagraph
+abstract class AbstractDocParagraph implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Created by

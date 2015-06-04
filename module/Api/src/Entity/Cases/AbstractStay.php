@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,8 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractStay
+abstract class AbstractStay implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Case

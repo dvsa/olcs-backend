@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Elastic;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,8 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="elastic_updates")
  */
-abstract class AbstractElasticUpdates
+abstract class AbstractElasticUpdates implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Identifier - Id

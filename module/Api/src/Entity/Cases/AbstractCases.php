@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,8 +30,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractCases
+abstract class AbstractCases implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Annual test history
@@ -258,7 +261,7 @@ abstract class AbstractCases
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="open_date", nullable=false)
+     * @ORM\Column(type="datetime", name="open_date", nullable=true)
      */
     protected $openDate;
 

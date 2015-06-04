@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Opposition;
 
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,8 +34,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractOpposition
+abstract class AbstractOpposition implements \JsonSerializable
 {
+    use JsonSerializableTrait;
 
     /**
      * Application
@@ -59,7 +62,7 @@ abstract class AbstractOpposition
      *     fetch="LAZY",
      *     inversedBy="oppositions"
      * )
-     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
 

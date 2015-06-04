@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 
 /**
  * Licence
@@ -17,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
  */
 class Licence extends AbstractRepository
 {
-    protected $entity = '\Dvsa\Olcs\Api\Entity\Licence\Licence';
+    protected $entity = Entity::class;
 
     public function fetchByCaseId($caseId, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
     {
