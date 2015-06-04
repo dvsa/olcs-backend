@@ -49,7 +49,8 @@ return [
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
-            TransferQuery\PreviousConviction\PreviousConviction::class => QueryHandler\PreviousConviction\PreviousConviction::class,
+            TransferQuery\PreviousConviction\PreviousConviction::class =>
+                QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
