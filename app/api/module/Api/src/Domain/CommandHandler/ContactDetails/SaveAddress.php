@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class SaveAddress extends AbstractCommandHandler
+final class SaveAddress extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Address';
 
@@ -42,29 +43,20 @@ final class SaveAddress extends AbstractCommandHandler
     {
         $result = new Result();
 
-        try {
-            $this->getRepo()->beginTransaction();
+        $address = new Address();
+        $this->populate($address, $command);
+        $this->getRepo()->save($address);
 
-            $address = new Address();
-            $this->populate($address, $command);
-            $this->getRepo()->save($address);
+        $contactDetails = new ContactDetails($this->getRepo()->getRefdataReference($command->getContactType()));
+        $contactDetails->setAddress($address);
+        $this->getRepo('ContactDetails')->save($contactDetails);
 
-            $contactDetails = new ContactDetails($this->getRepo()->getRefdataReference($command->getContactType()));
-            $contactDetails->setAddress($address);
-            $this->getRepo('ContactDetails')->save($contactDetails);
+        $result->addId('address', $address->getId());
+        $result->addId('contactDetails', $contactDetails->getId());
 
-            $result->addId('address', $address->getId());
-            $result->addId('contactDetails', $contactDetails->getId());
+        $result->setFlag('hasChanged', true);
 
-            $this->getRepo()->commit();
-
-            $result->setFlag('hasChanged', true);
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 
     private function updateAddress(Cmd $command)

@@ -10,17 +10,15 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\PreviousConviction\UpdatePreviousConviction as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Update Previous Conviction
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-final class UpdatePreviousConviction extends AbstractCommandHandler
+final class UpdatePreviousConviction extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'PreviousConviction';
 
@@ -48,28 +46,17 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
 
         $application = $conviction->getApplication();
 
-        try {
-            $result = new Result();
+        $result = new Result();
 
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($conviction);
 
-            $this->getRepo()->save($conviction);
+        $result->merge(
+            $this->updateApplicationCompletion($application->getId())
+        );
 
-            $result->merge(
-                $this->updateApplicationCompletion($application->getId())
-            );
-
-            $this->getRepo()->commit();
-
-            $result->addId('previousConviction', $conviction->getId());
-            $result->addMessage('Previous conviction updated');
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        $result->addId('previousConviction', $conviction->getId());
+        $result->addMessage('Previous conviction updated');
+        return $result;
     }
 
     private function updateApplicationCompletion($applicationId)

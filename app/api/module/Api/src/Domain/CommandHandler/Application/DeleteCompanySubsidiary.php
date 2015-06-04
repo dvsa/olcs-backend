@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class DeleteCompanySubsidiary extends AbstractCommandHandler
+final class DeleteCompanySubsidiary extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -33,22 +34,10 @@ final class DeleteCompanySubsidiary extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getApplication());
 
-        try {
+        $result->merge($this->deleteCompanySubsidiary($command, $application->getLicence()));
+        $result->merge($this->updateApplicationCompletion($command));
 
-            $this->getRepo()->beginTransaction();
-
-            $result->merge($this->deleteCompanySubsidiary($command, $application->getLicence()));
-
-            $result->merge($this->updateApplicationCompletion($command));
-
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 
     private function deleteCompanySubsidiary(Cmd $command, Licence $licence)

@@ -28,7 +28,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractRepository implements RepositoryInterface, TransactionManagerInterface
+abstract class AbstractRepository implements RepositoryInterface
 {
     protected $entity = 'Define\Me';
 
@@ -157,21 +157,6 @@ abstract class AbstractRepository implements RepositoryInterface, TransactionMan
 
         $this->getEntityManager()->remove($entity);
         $this->getEntityManager()->flush();
-    }
-
-    public function beginTransaction()
-    {
-        $this->getEntityManager()->beginTransaction();
-    }
-
-    public function commit()
-    {
-        $this->getEntityManager()->commit();
-    }
-
-    public function rollback()
-    {
-        $this->getEntityManager()->rollback();
     }
 
     public function getRefdataReference($id)

@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateCompanySubsidiary as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateCompanySubsidiary extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -40,28 +41,17 @@ final class CreateCompanySubsidiary extends AbstractCommandHandler implements Au
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchById($command->getLicence());
 
-        try {
+        $companySubsidiary = new CompanySubsidiary($command->getName(), $command->getCompanyNo(), $licence);
+        $this->getRepo('CompanySubsidiary')->save($companySubsidiary);
 
-            $this->getRepo()->beginTransaction();
+        $result->addId('companySubsidiary', $companySubsidiary->getId());
+        $result->addMessage('Company Subsidiary created');
 
-            $companySubsidiary = new CompanySubsidiary($command->getName(), $command->getCompanyNo(), $licence);
-            $this->getRepo('CompanySubsidiary')->save($companySubsidiary);
-
-            $result->addId('companySubsidiary', $companySubsidiary->getId());
-            $result->addMessage('Company Subsidiary created');
-
-            if ($this->isGranted(Permission::SELFSERVE_USER)) {
-                $result->merge($this->createTask($command));
-            }
-
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+        if ($this->isGranted(Permission::SELFSERVE_USER)) {
+            $result->merge($this->createTask($command));
         }
+
+        return $result;
     }
 
     private function createTask(Cmd $command)

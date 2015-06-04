@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateTradingNames extends AbstractCommandHandler
+final class UpdateTradingNames extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
 
@@ -51,27 +52,18 @@ final class UpdateTradingNames extends AbstractCommandHandler
 
         if ($this->haveTradingNamesChanged($current, $command->getTradingNames())) {
 
-            try {
-                $this->getRepo()->beginTransaction();
+            $result->setFlag('hasChanged', true);
 
-                $result->setFlag('hasChanged', true);
+            list($newCount, $unchangedCount, $removedCount) = $this->updateTradingNames(
+                $current,
+                $command->getTradingNames(),
+                $organisation,
+                $licence
+            );
 
-                list($newCount, $unchangedCount, $removedCount) = $this->updateTradingNames(
-                    $current,
-                    $command->getTradingNames(),
-                    $organisation,
-                    $licence
-                );
-
-                $result->addMessage($newCount . ' new trading name(s)');
-                $result->addMessage($unchangedCount . ' unchanged trading name(s)');
-                $result->addMessage($removedCount . ' trading name(s) removed');
-
-                $this->getRepo()->commit();
-            } catch (\Exception $ex) {
-                $this->getRepo()->rollback();
-                throw $ex;
-            }
+            $result->addMessage($newCount . ' new trading name(s)');
+            $result->addMessage($unchangedCount . ' unchanged trading name(s)');
+            $result->addMessage($removedCount . ' trading name(s) removed');
 
         } else {
             $result->setFlag('hasChanged', false);
@@ -88,19 +80,21 @@ final class UpdateTradingNames extends AbstractCommandHandler
         Licence $licence = null
     ) {
         // Differentiate between trading names to keep and trading names to remove
-        list($maintain, $remove) = $current->partition(function ($key, $tradingName) use (&$new) {
+        list($maintain, $remove) = $current->partition(
+            function ($key, $tradingName) use (&$new) {
 
-            $index = array_search($tradingName->getName(), $new);
+                $index = array_search($tradingName->getName(), $new);
 
-            if ($index !== false) {
+                if ($index !== false) {
 
-                unset($new[$index]);
+                    unset($new[$index]);
 
-                return true;
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
-        });
+        );
 
         $newCount = 0;
         $unchangedCount = $maintain->count();
