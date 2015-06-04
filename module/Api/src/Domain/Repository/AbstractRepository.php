@@ -28,7 +28,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractRepository implements RepositoryInterface
+abstract class AbstractRepository implements RepositoryInterface, TransactionManagerInterface
 {
     protected $entity = 'Define\Me';
 
