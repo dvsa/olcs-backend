@@ -28,13 +28,10 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
     {
         $result = new Result();
 
+
         $conviction = $this->getRepo()->fetchUsingId($command);
 
         $title = $this->getRepo()->getRefdataReference($command->getTitle());
-
-        if ($command->getTransportManager()) {
-            // @TODO
-        }
 
         $conviction->setTitle($title);
         $conviction->setForename($command->getForename());
@@ -47,12 +44,16 @@ final class UpdatePreviousConviction extends AbstractCommandHandler
         $conviction->setCourtFpn($command->getCourtFpn());
         $conviction->setPenalty($command->getPenalty());
 
+        $application = $conviction->getApplication();
+
         try {
             $this->getRepo()->beginTransaction();
 
             $this->getRepo()->save($conviction);
 
-            $result->merge($this->updateApplicationCompletion($application->getId()));
+            $result->merge(
+                $this->updateApplicationCompletion($application->getId())
+            );
 
             $this->getRepo()->commit();
 
