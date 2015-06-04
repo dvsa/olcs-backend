@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class UpdatePreviousHistoryTest extends CommandHandlerTestCase
+class UpdatePreviousConvictionsTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
