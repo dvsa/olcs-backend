@@ -42,4 +42,16 @@ class Licence extends AbstractRepository
 
         return $results[0];
     }
+
+    public function fetchWithAddressesUsingId($query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultQuery($qb, $query->getId())
+            ->withContactDetails('correspondenceCd', 'c')
+            ->withContactDetails('establishmentCd', 'e')
+            ->withContactDetails('transportConsultantCd', 't');
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }

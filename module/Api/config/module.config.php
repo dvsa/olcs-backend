@@ -41,6 +41,7 @@ return [
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
             TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
+            TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
             TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
             TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
@@ -62,6 +63,7 @@ return [
         'factories' => [
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
+            'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
