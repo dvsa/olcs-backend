@@ -18,5 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category extends AbstractCategory
 {
+    // copy constants from old Common\Service\Data\CategoryDataService as required
     const CATEGORY_LICENSING = 1;
+    const CATEGORY_APPLICATION = 9;
 }
