@@ -51,7 +51,7 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * Fetch the default record by it's id
+     * Fetch the default record by its id
      *
      * @param Query|QryCmd $query
      * @param int $hydrateMode
@@ -226,7 +226,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
+        return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
     }
 
     /**

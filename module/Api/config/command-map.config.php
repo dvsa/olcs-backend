@@ -11,6 +11,7 @@ return [
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdatePreviousConvictions::class => CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
 
     // Transfer - Bus
@@ -25,6 +26,11 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+
+    // Transfer - Previous Conviction
+    TransferCommand\PreviousConviction\CreatePreviousConviction::class => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
+    TransferCommand\PreviousConviction\UpdatePreviousConviction::class => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
+    TransferCommand\PreviousConviction\DeletePreviousConviction::class => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
