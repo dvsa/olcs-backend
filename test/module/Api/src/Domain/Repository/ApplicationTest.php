@@ -141,7 +141,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('blah', $this->sut->getRefdataReference($id));
     }
 
-    public function testGetCategpryReference()
+    public function testGetCategoryReference()
     {
         $id = 'foo';
 
@@ -152,7 +152,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('blah', $this->sut->getCategoryReference($id));
     }
 
-    public function testGetSubCategpryReference()
+    public function testGetSubCategoryReference()
     {
         $id = 'foo';
 
@@ -192,6 +192,10 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
             ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence')
             ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
@@ -233,6 +237,10 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
             ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence')
             ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
