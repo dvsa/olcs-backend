@@ -125,4 +125,8 @@ return [
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
 
+    // Domain - Complaint
+    Command\Cases\Complaint\CreateComplaint::class => CommandHandler\Cases\Complaint\CreateComplaint::class,
+    Command\Cases\Complaint\UpdateComplaint::class => CommandHandler\Cases\Complaint\UpateComplaint::class,
+    Command\Cases\Complaint\DeleteComplaint::class => CommandHandler\Cases\Complaint\DeleteComplaint::class,
 ];
