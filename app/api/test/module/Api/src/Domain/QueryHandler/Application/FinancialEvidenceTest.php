@@ -39,7 +39,6 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $applicationId = 111;
-        $licenceId = 222;
         $organisationId = 69;
         $licenceType = Licence::LICENCE_TYPE_STANDARD_NATIONAL;
         $goodsOrPsv = Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
@@ -140,7 +139,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         return [
             $this->getStubRate(6000, 2900, 'lcat_gv', 'ltyp_sn'),
             $this->getStubRate(6000, 2900, 'lcat_gv', 'ltyp_si'),
-            $this->getStubRate(2100,  700, 'lcat_gv', 'ltyp_r'),
+            $this->getStubRate(2100, 700, 'lcat_gv', 'ltyp_r'),
             $this->getStubRate(7000, 3900, 'lcat_psv', 'ltyp_sn'),
             $this->getStubRate(7000, 3900, 'lcat_psv', 'ltyp_si'),
             $this->getStubRate(3100, 1700, 'lcat_psv', 'ltyp_r'),

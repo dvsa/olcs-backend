@@ -35,7 +35,7 @@ class Application extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('licence', 'l');
 
         $qb
