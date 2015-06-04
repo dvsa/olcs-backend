@@ -97,8 +97,8 @@ class FinancialEvidence extends AbstractQueryHandler
                 in_array(
                     $app->getStatus()->getId(),
                     [
-                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        Application::APPLICATION_STATUS_GRANTED,
+                        ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                        ApplicationEntity::APPLICATION_STATUS_GRANTED,
                     ]
                 )
                 &&
@@ -221,6 +221,7 @@ class FinancialEvidence extends AbstractQueryHandler
         usort(
             $auths,
             function ($a, $b) {
+                unset($b); // not used in comparison
                 return $a['category'] === Licence::LICENCE_CATEGORY_PSV ? -1 : 1;
             }
         );
