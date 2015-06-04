@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
@@ -155,8 +155,8 @@ class FinancialEvidence extends AbstractQueryHandler
                     in_array(
                         $app->getStatus()->getId(),
                         [
-                            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                            Application::APPLICATION_STATUS_GRANTED,
+                            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                            ApplicationEntity::APPLICATION_STATUS_GRANTED,
                         ]
                     )
                     &&
