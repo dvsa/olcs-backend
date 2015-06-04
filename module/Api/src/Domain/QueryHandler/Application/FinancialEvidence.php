@@ -27,6 +27,8 @@ class FinancialEvidence extends AbstractQueryHandler
 
     protected $rates;
 
+    protected $otherApplications;
+
     public function handleQuery(QueryInterface $query)
     {
         $applicationRepo = $this->getRepo();
@@ -144,26 +146,28 @@ class FinancialEvidence extends AbstractQueryHandler
 
     protected function getOtherApplications($application)
     {
-        $organisation = $application->getLicence()->getOrganisation();
-        $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
-        $filtered = [];
-        foreach ($applications as $app) {
-            if (
-                in_array(
-                    $app->getStatus()->getId(),
-                    [
-                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        Application::APPLICATION_STATUS_GRANTED,
-                    ]
-                )
-                &&
-                $app->getId() !== $application->getId()
-            ) {
-                $filtered[] = $app;
+        if (is_null($this->otherApplications)) {
+            $organisation = $application->getLicence()->getOrganisation();
+            $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
+            $this->otherApplications = [];
+            foreach ($applications as $app) {
+                if (
+                    in_array(
+                        $app->getStatus()->getId(),
+                        [
+                            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                            Application::APPLICATION_STATUS_GRANTED,
+                        ]
+                    )
+                    &&
+                    $app->getId() !== $application->getId()
+                ) {
+                    $this->otherApplications[] = $app;
+                }
             }
         }
 
-        return $filtered;
+        return $this->otherApplications;
     }
 
     /**
