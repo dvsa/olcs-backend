@@ -68,8 +68,12 @@ class FinancialEvidence extends AbstractQueryHandler
     protected function getRequiredFinance($application)
     {
         // add the application count
+        $type = null;
+        if ($application->getLicenceType()) {
+            $type = $application->getLicenceType()->getId();
+        }
         $auths[] = [
-            'type' => $application->getLicenceType()->getId(),
+            'type' => $type,
             'count' => $application->getTotAuthVehicles(),
             'category' =>  $application->getGoodsOrPsv()->getId(),
         ];
@@ -98,8 +102,12 @@ class FinancialEvidence extends AbstractQueryHandler
                 &&
                 $app->getId() !== $application->getId()
             ) {
+                $type = null;
+                if ($app->getLicenceType()) {
+                    $type = $app->getLicenceType()->getId();
+                }
                 $auths[] = [
-                    'type' => $app->getLicenceType()->getId(),
+                    'type' => $type,
                     'count' => $app->getTotAuthVehicles(),
                     'category' => $app->getGoodsOrPsv()->getId(),
                 ];
