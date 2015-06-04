@@ -1,25 +1,24 @@
 <?php
 
 /**
- * Abstract Command Handler
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * Class TransactioningCommandHandler
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 
 /**
- * Abstract Command Handler
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * Class TransactioningCommandHandler
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler
  */
 final class TransactioningCommandHandler implements CommandHandlerInterface
 {
     /**
-     * @var RepositoryInterface
+     * @var TransactionManagerInterface
      */
     private $repo;
 
@@ -28,14 +27,20 @@ final class TransactioningCommandHandler implements CommandHandlerInterface
      */
     private $wrapped;
 
-    public function __construct(CommandHandlerInterface $wrapped, RepositoryInterface $repo)
+    /**
+     * @param CommandHandlerInterface $wrapped
+     * @param TransactionManagerInterface $repo
+     */
+    public function __construct(CommandHandlerInterface $wrapped, TransactionManagerInterface $repo)
     {
         $this->repo = $repo;
         $this->wrapped = $wrapped;
     }
+
     /**
      * @param CommandInterface $command
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {

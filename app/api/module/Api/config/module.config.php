@@ -20,7 +20,8 @@ return [
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
-            Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class
+            Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
+            'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -91,7 +92,6 @@ return [
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
-            'Repository' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
