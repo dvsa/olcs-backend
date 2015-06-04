@@ -40,16 +40,16 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
             // Application
-            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
+            TransferQuery\Application\FinancialHistory::class
+                => QueryHandler\Application\FinancialHistory::class,
 
             // Licence
-            \Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails::class,
+            TransferQuery\Licence\BusinessDetails::class
+                => QueryHandler\Licence\BusinessDetails::class,
 
             // Organisation
-            \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
+            TransferQuery\Organisation\BusinessDetails::class
+                => QueryHandler\Organisation\BusinessDetails::class,
 
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
@@ -61,12 +61,15 @@ return [
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
-            TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
+            TransferQuery\Application\PreviousConvictions::class =>
+                QueryHandler\Application\PreviousConvictions::class,
             TransferQuery\PreviousConviction\PreviousConviction::class =>
                 QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+            TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
+            TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
             TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
 
@@ -133,6 +136,7 @@ return [
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
+            'IrfoGvPermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
