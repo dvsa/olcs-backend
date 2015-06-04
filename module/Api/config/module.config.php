@@ -79,6 +79,9 @@ return [
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+            TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
+            TransferQuery\Cases\Complaint\ComplaintList::class =>
+                QueryHandler\Cases\Complaint\ComplaintList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -124,6 +127,7 @@ return [
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
+            'Complaint' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
