@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractCommandHandler implements CommandHandlerInterface
+abstract class AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
 {
     /**
      * @var RepositoryInterface
@@ -34,6 +35,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         if ($this instanceof AuthAwareInterface) {
@@ -48,6 +50,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface
             ->get($this->repoServiceName);
 
         $this->commandHandler = $serviceLocator;
+
+        if ($this instanceof TransactionedInterface) {
+            $repo = $mainServiceLocator->get('RepositoryServiceManager')->get('Repository');
+            return new TransactioningCommandHandler($this, $repo);
+        }
 
         return $this;
     }

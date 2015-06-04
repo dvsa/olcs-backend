@@ -91,6 +91,7 @@ return [
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'Repository' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
