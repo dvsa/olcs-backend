@@ -30,7 +30,7 @@ final class UpdateFinancialEvidence extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $application->updateFinancialEvidence($command->getFinancialEvidenceUploaded());
+        $application->setFinancialEvidenceUploaded($command->getFinancialEvidenceUploaded());
 
         $this->getRepo()->save($application);
         $result->addMessage('Financial evidence section has been updated');

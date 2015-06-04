@@ -91,7 +91,7 @@ class FinancialEvidence extends AbstractQueryHandler
         // add the counts for each other application
         $applications = $this->getOtherApplications($application);
         foreach ($applications as $app) {
-             if (
+            if (
                 in_array(
                     $app->getStatus()->getId(),
                     [
@@ -148,7 +148,7 @@ class FinancialEvidence extends AbstractQueryHandler
         $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
         $filtered = [];
         foreach ($applications as $app) {
-             if (
+            if (
                 in_array(
                     $app->getStatus()->getId(),
                     [
@@ -223,7 +223,7 @@ class FinancialEvidence extends AbstractQueryHandler
 
         // 2. Get first vehicle charge
         foreach ($auths as $key => $auth) {
-            if (!$foundHigher && $count = $auth['count']>0) {
+            if (!$foundHigher && $auth['count']>0) {
                 $firstVehicleCharge = $this->getFirstVehicleRate($auth['type'], $auth['category']);
                 $firstVehicleKey = $key;
             }
@@ -254,7 +254,7 @@ class FinancialEvidence extends AbstractQueryHandler
     {
         foreach ($this->getRates() as $rate) {
             if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv && $rate->getLicenceType()->getId() == $licenceType) {
-                return (float) $rate->getFirstVehicleRate();;
+                return (float) $rate->getFirstVehicleRate();
             }
         }
     }
