@@ -516,6 +516,111 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+
+    public function testDeleteList()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $result = new Result();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('successfulUpdate')->with($result)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andReturn($result);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->deleteList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testDeleteListNotFound()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('notFound')->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\NotFoundException());
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->deleteList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testDeleteListClientError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $errors = ['foo' => 'is not bar'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\ValidationException($errors));
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->deleteList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testDeleteListServerError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new \Exception('blargle');
+        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->deleteList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
     /**
      * @param $mockSl
      * @return GenericController
