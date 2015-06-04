@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -53,7 +53,7 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Tran
     private function updateApplicationCompletion(Cmd $command)
     {
         return $this->getCommandHandler()->handleCommand(
-            UpdateApplicationCompletion::create(['id' => $command->getId(), 'section' => 'businessDetails'])
+            UpdateApplicationCompletionCommand::create(['id' => $command->getId(), 'section' => 'businessDetails'])
         );
     }
 }
