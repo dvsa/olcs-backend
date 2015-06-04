@@ -213,4 +213,6 @@ return [
     // Transport Manager Application
     TransferCommand\TransportManagerApplication\Delete::class
         => CommandHandler\TransportManagerApplication\Delete::class,
+    TransferCommand\TransportManagerApplication\Create::class
+        => CommandHandler\TransportManagerApplication\Create::class,
 ];
