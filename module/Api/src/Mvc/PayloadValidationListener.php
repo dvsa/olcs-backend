@@ -61,7 +61,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
         if (!$dtoClass) {
             // no controller matched, nothing to do
             return;
-        };
+        }
 
         $data = $matches->getParams();
 
@@ -85,7 +85,6 @@ class PayloadValidationListener implements ListenerAggregateInterface
 
             $data = json_decode($request->getContent(), true);
 
-            //die('<pre>' . print_r($data, 1));
             $dto->exchangeArray($data);
 
             $command = $this->annotationBuilder->createCommand($dto);

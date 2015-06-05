@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Exception;
 
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -43,7 +44,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setApplication($application);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_app'));
+            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
         if ($command->getBusReg() !== null) {
@@ -54,7 +55,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->getBusReg($busReg);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_bus'));
+            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_BUS));
         }
 
         if ($command->getCase() !== null) {
@@ -65,7 +66,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setCase($case);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_case'));
+            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_CASE));
         }
 
         if ($command->getLicence() !== null) {
@@ -76,7 +77,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setLicence($licence);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_lic'));
+            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_LICENCE));
         }
 
         if ($command->getOrganisation() !== null) {
@@ -87,7 +88,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setOrganisation($org);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_org'));
+            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_ORGANISATION));
         }
 
         if ($command->getTransportManager() !== null) {
@@ -98,11 +99,15 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setTransportManager($transportManager);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, 'note_t_tm'));
+            $entity->setNoteType(
+                $this->getRepo()->getReference(
+                    RefData::class, NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER
+                )
+            );
         }
 
         $entity->setUser(
-            $this->getRepo()->getReference(Entity\Application\Application::class,
+            $this->getRepo()->getReference(Entity\User\User::class,
                 $this->hardCodedUserId)
         );
 
