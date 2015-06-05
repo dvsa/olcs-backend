@@ -126,7 +126,6 @@ return [
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
-            'ImpoundingList' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
         ]
