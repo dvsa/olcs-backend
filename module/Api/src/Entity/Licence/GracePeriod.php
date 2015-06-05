@@ -24,14 +24,16 @@ class GracePeriod extends AbstractGracePeriod
 {
     protected $isActive = false;
 
-    public function isActive()
+    public function isActive($today = 'now')
     {
-        if (isset($this->startDate) && isset($this->endDate)) {
+        if (!is_null($this->getStartDate()) && !is_null($this->getEndDate())) {
             /*
              * The dates should really be returned as date time objects from the entity
              * therefore this will need changing once that change is made.
+             *
+             * We should probably have the date helper in backend.
              */
-            $today = new \DateTime();
+            $today = new \DateTime($today);
             $startDate = new \DateTime($this->getStartDate());
             $endDate = new \DateTime($this->getEndDate());
 
