@@ -13,8 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 
 /**
@@ -56,11 +55,14 @@ final class UpdateImpounding extends AbstractCommandHandler
     {
         $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $piVenueOther = $this->determinePiVenueOther($command->getPiVenueOther());
+        $piVenue = $command->getPiVenue();
+        if ($piVenue !== Impounding::PI_VENUE_OTHER) {
+            $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
+        }
 
         $impounding->setPiVenueProperties(
-            $this->getRepo()->getRefdataReference($command->getPiVenue()),
-            $piVenueOther
+            $piVenue,
+            $command->getPiVenueOther()
         );
 
         $impoundingLegislationTypes = $this->generateImpoundingLegislationTypes(
@@ -98,20 +100,6 @@ final class UpdateImpounding extends AbstractCommandHandler
         }
 
         return $impounding;
-    }
-
-    /**
-     * Determines the piVenueOtherValue. May be null
-     *
-     * @param null $piVenueOther
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
-     */
-    private function determinePiVenueOther($piVenueOther = null)
-    {
-        if (!empty($piVenueOther)) {
-            return $this->getRepo()->getRefdataReference($piVenueOther);
-        }
-        return null;
     }
 
     /**
