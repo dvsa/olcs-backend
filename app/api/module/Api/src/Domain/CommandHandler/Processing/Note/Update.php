@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
-use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
+use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Exception;
 use Doctrine\ORM\Query;
@@ -14,32 +14,12 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
- * Create a Note
+ * Update a Note
  */
-final class Create extends CreateUpdateAbstract
+final class Update extends CreateUpdateAbstract
 {
     /**
-     * @var String
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({
-     *     "name":"Zend\Validator\InArray",
-     *     "options": {
-     *          "haystack": {
-     *              "note_t_app",
-     *              "note_t_bus",
-     *              "note_t_case",
-     *              "note_t_lic",
-     *              "note_t_org",
-     *              "note_t_person",
-     *              "note_t_tm"
-     *          }
-     *      }
-     * })
-     */
-    protected $noteType;
-
-    /**
-     * @param CreateCommand $command
+     * @param UpdateCommand $command
      * @throws Exception
      * @return Result
      */
@@ -55,13 +35,16 @@ final class Create extends CreateUpdateAbstract
             $repo->beginTransaction();
 
             $note = $this->getNoteEntity($command);
+            $note->setId($command->getId());
+            $note->setVersion($command->getVersion());
             $note->setComment($command->getComment());
 
             $this->getRepo()->save($note);
+
             $this->getRepo()->commit();
 
             $result->addId('note', $note->getId());
-            $result->addMessage('Note created');
+            $result->addMessage('Note updated');
 
             return $result;
 
@@ -78,6 +61,6 @@ final class Create extends CreateUpdateAbstract
      */
     protected function retrieveEntity(CommandInterface $command)
     {
-        return new Entity\Note\Note();
+        return $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
     }
 }
