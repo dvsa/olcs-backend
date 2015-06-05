@@ -134,7 +134,7 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @group applicationEntity1
+     * @group applicationEntity
      */
     public function testGetApplicationDocuments()
     {
@@ -488,5 +488,29 @@ class ApplicationEntityTest extends EntityTester
             ['N', 'N', 'N', 'N', 'N', '', '1'],
             ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200), '1'],
         ];
+    }
+
+    /**
+     * @group applicationEntity
+     */
+    public function testGetOtherLicencesByType()
+    {
+        $mockOtherLicence1 = m::mock()
+            ->shouldReceive('getpreviousLicenceType')
+            ->andReturn('type')
+            ->once()
+            ->getMock();
+
+        $mockOtherLicence2 = m::mock()
+            ->shouldReceive('getpreviousLicenceType')
+            ->andReturn('type1')
+            ->once()
+            ->getMock();
+
+        $otherLicencesCollection = new ArrayCollection([$mockOtherLicence1, $mockOtherLicence2]);
+        $expected = new ArrayCollection([$mockOtherLicence1]);
+
+        $this->entity->setOtherLicences($otherLicencesCollection);
+        $this->assertEquals($expected, $this->entity->getOtherLicencesByType('type'));
     }
 }

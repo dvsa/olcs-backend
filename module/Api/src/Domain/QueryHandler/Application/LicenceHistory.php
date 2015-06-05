@@ -39,7 +39,7 @@ class LicenceHistory extends AbstractQueryHandler
 
         foreach ($types as $key => $type) {
             $otherLicences = $application->getOtherLicencesByType(
-                $this->getRepo()->getRefdataReference($type)
+                $applicationRepo->getRefdataReference($type)
             );
             $data['otherLicences'][$key] = $otherLicences->toArray();
         }
