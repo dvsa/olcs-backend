@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Doctrine\Common\Collections\Collection;
@@ -33,14 +32,14 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
     {
         if ($command->getLicence() !== null) {
             /** @var Licence $licence */
-            $licence = $this->getRepo()->fetchById($command->getLicence(), Query::HYDRATE_OBJECT);
+            $licence = $this->getRepo()->fetchById($command->getLicence());
             $organisation = $licence->getOrganisation();
             $current = $licence->getTradingNames();
         } else {
             $licence = null;
             /** @var Organisation $organisation */
             $organisation = $this->getRepo('Organisation')
-                ->fetchById($command->getOrganisation(), Query::HYDRATE_OBJECT);
+                ->fetchById($command->getOrganisation());
 
             $criteria = Criteria::create();
             $criteria->where($criteria->expr()->isNull('licence'));
@@ -123,8 +122,6 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         }
 
         $this->getRepo('TradingName')->save($tradingName);
-
-        return $tradingName;
     }
 
     private function haveTradingNamesChanged(Collection $current, array $new)
