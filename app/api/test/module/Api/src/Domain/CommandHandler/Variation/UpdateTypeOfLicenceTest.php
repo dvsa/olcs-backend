@@ -176,12 +176,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
-            ->once($application)
-            ->shouldReceive('commit')
-            ->once();
+            ->once($application);
 
         $result = $this->sut->handleCommand($command);
 
@@ -199,44 +195,5 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             $this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL],
             $application->getLicenceType()
         );
-    }
-
-    public function testHandleCommandRollback()
-    {
-        $this->setExpectedException('\Exception');
-
-        $data = [
-            'id' => 111,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            'version' => 1
-        ];
-        $command = Cmd::create($data);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setLicence($licence);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
-            ->andReturn(true);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
-            ->once($application)
-            ->andThrow('\Exception')
-            ->shouldReceive('rollback')
-            ->once();
-
-        $this->sut->handleCommand($command);
     }
 }

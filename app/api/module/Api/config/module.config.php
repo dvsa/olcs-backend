@@ -39,6 +39,18 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
+            // Application
+            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
+
+            // Licence
+            \Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails::class,
+
+            // Organisation
+            \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
+                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
+
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
             TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
@@ -56,16 +68,21 @@ return [
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
             TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
+
+            TransferQuery\CompanySubsidiary\CompanySubsidiary::class
+                => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
+
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
-            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Processing\ImpoundingList::class,
+            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
+            'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
         ],
@@ -79,6 +96,9 @@ return [
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'Application' => RepositoryFactory::class,
+            'Address' => RepositoryFactory::class,
+            'ContactDetails' => RepositoryFactory::class,
+            'CompanySubsidiary' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
@@ -97,6 +117,7 @@ return [
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'Note' => RepositoryFactory::class,
+            'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,

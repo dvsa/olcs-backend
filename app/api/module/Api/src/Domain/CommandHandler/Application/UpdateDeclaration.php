@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class UpdateDeclaration extends AbstractCommandHandler
+final class UpdateDeclaration extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -58,31 +59,22 @@ final class UpdateDeclaration extends AbstractCommandHandler
             $application->setInterimReason(null);
         }
 
-        try {
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($application);
 
-            $this->getRepo()->save($application);
-
-            // if interimRequested is Y or N (eg it is specified)
-            if ($command->getInterimRequested() === 'Y' || $command->getInterimRequested() === 'N') {
-                $interimFeeResult = $this->handleInterimFee($command);
-                if ($interimFeeResult instanceof Result) {
-                    $result->merge($interimFeeResult);
-                }
+        // if interimRequested is Y or N (eg it is specified)
+        if ($command->getInterimRequested() === 'Y' || $command->getInterimRequested() === 'N') {
+            $interimFeeResult = $this->handleInterimFee($command);
+            if ($interimFeeResult instanceof Result) {
+                $result->merge($interimFeeResult);
             }
-
-            // update completion
-            $result->merge($this->updateApplicationCompletionCommand($command));
-
-            $this->getRepo()->commit();
-
-            $result->addId('application', $application->getId());
-            $result->addMessage('Update declaration successful');
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
         }
+
+        // update completion
+        $result->merge($this->updateApplicationCompletionCommand($command));
+
+        $result->addId('application', $application->getId());
+        $result->addMessage('Update declaration successful');
+        return $result;
     }
 
     /**
