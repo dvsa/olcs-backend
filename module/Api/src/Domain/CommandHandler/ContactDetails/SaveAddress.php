@@ -52,7 +52,9 @@ final class SaveAddress extends AbstractCommandHandler implements TransactionedI
         $this->getRepo('ContactDetails')->save($contactDetails);
 
         $result->addId('address', $address->getId());
+        $result->addMessage('Address created');
         $result->addId('contactDetails', $contactDetails->getId());
+        $result->addMessage('Contact Details created');
 
         $result->setFlag('hasChanged', true);
 
