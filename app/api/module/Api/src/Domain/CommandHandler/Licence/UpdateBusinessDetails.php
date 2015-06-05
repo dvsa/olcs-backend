@@ -36,7 +36,7 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['Organisation', 'TradingName'];
+    protected $extraRepos = ['Organisation'];
 
     private $isDirty = false;
     private $hasChangedOrg = false;
@@ -45,7 +45,7 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
     public function handleCommand(CommandInterface $command)
     {
         /** @var Licence $licence */
-        $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+        $licence = $this->getRepo()->fetchUsingId($command);
 
         $organisation = $licence->getOrganisation();
 
