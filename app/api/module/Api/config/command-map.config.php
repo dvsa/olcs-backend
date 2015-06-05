@@ -13,6 +13,11 @@ return [
     TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
 
+    // Transfer - Note
+    TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
+    TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
+    TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
+
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
 

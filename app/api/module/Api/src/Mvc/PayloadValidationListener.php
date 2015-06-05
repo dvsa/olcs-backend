@@ -61,7 +61,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
         if (!$dtoClass) {
             // no controller matched, nothing to do
             return;
-        }
+        };
 
         $data = $matches->getParams();
 

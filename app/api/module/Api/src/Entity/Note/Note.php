@@ -27,5 +27,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Note extends AbstractNote
 {
+    /**
+     * Set owner user.
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @return Note
+     */
+    public function setUser($user)
+    {
+        return $this->setCreatedBy($user);
+    }
 
+    /**
+     * Get owner user.
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getUser($user)
+    {
+        return $this->getCreatedBy();
+    }
 }
