@@ -19,6 +19,8 @@ final class CreateFee extends AbstractCommand
 {
     protected $application;
 
+    protected $busReg;
+
     protected $licence;
 
     protected $task;
@@ -39,6 +41,14 @@ final class CreateFee extends AbstractCommand
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 
     /**
