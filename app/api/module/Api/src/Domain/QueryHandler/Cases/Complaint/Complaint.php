@@ -15,7 +15,7 @@ final class Complaint extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $complaint = $this->getRepo()->fetchCaseComplaintUsingId($query);
+        $complaint = $this->getRepo()->fetchUsingCaseId($query);
 
         return $complaint;
     }
