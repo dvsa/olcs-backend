@@ -108,6 +108,12 @@ return [
             'TransportManagerApplication' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'TransportManagerLicence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
             'TransportManager' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'Person' => RepositoryFactory::class,
+            'ApplicationOperatingCentre' => RepositoryFactory::class,
+            'LicenceOperatingCentre' => RepositoryFactory::class,
+            'PreviousConviction' => RepositoryFactory::class,
+            'OtherLicences' => RepositoryFactory::class,
+            'TmEmployment' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

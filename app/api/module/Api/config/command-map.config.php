@@ -215,4 +215,10 @@ return [
         => CommandHandler\TransportManagerApplication\Delete::class,
     TransferCommand\TransportManagerApplication\Create::class
         => CommandHandler\TransportManagerApplication\Create::class,
+
+    // Email
+    Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+
+    // Person
+    TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
 ];
