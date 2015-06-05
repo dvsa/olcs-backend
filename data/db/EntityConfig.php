@@ -1438,8 +1438,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Fee',
                 'property' => 'feePayment'
-            )
-        )
+            ),
+        ),
+        'payment_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Payment',
+                'property' => 'feePayment'
+            ),
+        ),
     ),
     'tm_application_oc' => array(
         'transport_manager_application_id' => array(

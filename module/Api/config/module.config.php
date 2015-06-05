@@ -103,6 +103,7 @@ return [
                 QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
             TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
                 QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+            TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -159,6 +160,7 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'Payment' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
