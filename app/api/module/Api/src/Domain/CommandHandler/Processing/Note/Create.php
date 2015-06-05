@@ -19,26 +19,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 final class Create extends CreateUpdateAbstract
 {
     /**
-     * @var String
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({
-     *     "name":"Zend\Validator\InArray",
-     *     "options": {
-     *          "haystack": {
-     *              "note_t_app",
-     *              "note_t_bus",
-     *              "note_t_case",
-     *              "note_t_lic",
-     *              "note_t_org",
-     *              "note_t_person",
-     *              "note_t_tm"
-     *          }
-     *      }
-     * })
-     */
-    protected $noteType;
-
-    /**
      * @param CreateCommand $command
      * @throws Exception
      * @return Result

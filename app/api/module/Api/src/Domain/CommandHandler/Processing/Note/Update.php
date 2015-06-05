@@ -35,8 +35,6 @@ final class Update extends CreateUpdateAbstract
             $repo->beginTransaction();
 
             $note = $this->getNoteEntity($command);
-            $note->setId($command->getId());
-            $note->setVersion($command->getVersion());
             $note->setComment($command->getComment());
 
             $this->getRepo()->save($note);
@@ -61,6 +59,6 @@ final class Update extends CreateUpdateAbstract
      */
     protected function retrieveEntity(CommandInterface $command)
     {
-        return $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+        return $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
     }
 }
