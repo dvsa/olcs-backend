@@ -48,7 +48,7 @@ class Fee extends AbstractRepository
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
      *
-     * @param int  $oraganisationId Organisation ID
+     * @param int $oraganisationId Organisation ID
      *
      * @return array
      */
@@ -59,42 +59,15 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->modifyQuery($doctrineQb)
             ->withRefdata()
+            ->with('licence')
+            ->with('application')
+            ->with('feePayments', 'fp')
+            ->with('fp.payment', 'p')
+            ->with('p.status')
             ->order('invoicedDate', 'ASC');
 
-        $doctrineQb
-            ->leftJoin('f.application', 'a')
-            ->leftJoin('f.licence', 'l')
-            ->leftJoin('a.licence', 'al')
-            ->andWhere(
-                $doctrineQb->expr()->orX(
-                    $doctrineQb->expr()->eq('l.organisation', ':organisationId'),
-                    $doctrineQb->expr()->eq('al.organisation', ':organisationId')
-                )
-            )
-            ->andWhere(
-                $doctrineQb->expr()->orX(
-                    $doctrineQb->expr()->in('a.status', ':appStatus'),
-                    $doctrineQb->expr()->in('l.status', ':licStatus')
-                )
-            )
-            ->setParameter('organisationId', $organisationId)
-            ->setParameter(
-                'appStatus',
-                [
-                    $this->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
-                    $this->getRefdataReference(Application::APPLICATION_STATUS_GRANTED),
-                ]
-            )
-            ->setParameter(
-                'licStatus',
-                [
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_VALID),
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_CURTAILED),
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_SUSPENDED),
-                ]
-            );
-
         $this->whereOutstandingFee($doctrineQb);
+        $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
         return $doctrineQb->getQuery()->getResult();
     }
@@ -138,5 +111,58 @@ class Fee extends AbstractRepository
                 $this->getRefdataReference(Entity::STATUS_WAIVE_RECOMMENDED),
             ]
         );
+    }
+
+    /**
+     * Add conditions to the query builder to only select fee that are associated
+     * to either:
+     *  a) a valid/curtailed/suspended licence
+     *  or
+     *  b) an under consideration/granted application
+     * for the given organisation
+     *
+     * @param Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param int $organisationId
+     */
+    private function whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId)
+    {
+        $doctrineQb
+            ->leftJoin('f.application', 'a')
+            ->leftJoin('f.licence', 'l')
+            ->leftJoin('a.licence', 'al')
+            ->andWhere(
+                $doctrineQb->expr()->orX(
+                    $doctrineQb->expr()->eq('l.organisation', ':organisationId'),
+                    $doctrineQb->expr()->eq('al.organisation', ':organisationId')
+                )
+            )
+            ->andWhere(
+                $doctrineQb->expr()->orX(
+                    $doctrineQb->expr()->in('a.status', ':appStatus'),
+                    $doctrineQb->expr()->in('l.status', ':licStatus')
+                )
+            )
+            ->andWhere(
+                $doctrineQb->expr()->orX(
+                    $doctrineQb->expr()->isNotNull('f.licence'),
+                    $doctrineQb->expr()->isNotNull('f.application')
+                )
+            )
+            ->setParameter('organisationId', $organisationId)
+            ->setParameter(
+                'appStatus',
+                [
+                    $this->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
+                    $this->getRefdataReference(Application::APPLICATION_STATUS_GRANTED),
+                ]
+            )
+            ->setParameter(
+                'licStatus',
+                [
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_VALID),
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_CURTAILED),
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_SUSPENDED),
+                ]
+            );
     }
 }
