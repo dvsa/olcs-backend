@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -75,27 +76,15 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
         }
 
         // If we have got here then we CAN change the business type and we ARE changing the business type
-        try {
+        $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
 
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($organisation);
 
-            $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
+        $result->addMessage('Business type updated');
 
-            $this->getRepo()->save($organisation);
+        $this->maybeUpdateApplicationCompletion($command, $result);
 
-            $result->addMessage('Business type updated');
-
-            $this->maybeUpdateApplicationCompletion($command, $result);
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     private function maybeUpdateApplicationCompletion(Cmd $command, Result $result)
