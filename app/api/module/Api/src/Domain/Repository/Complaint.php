@@ -46,6 +46,7 @@ class Complaint extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefData()
             ->with('case')
+            ->with('complainantContactDetails')
             ->with('createdBy')
             ->with('lastModifiedBy')
             ->byId($query->getId());
