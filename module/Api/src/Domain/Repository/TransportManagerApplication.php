@@ -31,13 +31,56 @@ class TransportManagerApplication extends AbstractRepository
         $dqb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
-        $dqb->join('tma.transportManager', 'tm')->addSelect('tm')
-            ->join('tm.homeCd', 'hcd')->addSelect('hcd')
-            ->join('hcd.person', 'p')->addSelect('p');
+        $this->joinTransportManagerPerson($dqb);
 
         $dqb->andWhere($dqb->expr()->eq('tma.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     *
+     * @param int $tmaId Transport Manager Application ID
+     *
+     * @return Entity
+     */
+    public function fetchDetails($tmaId)
+    {
+        $dqb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($dqb)
+            ->withRefdata()
+            ->with('tma.application', 'a')
+            ->with('tma.operatingCentres')
+            ->with('tma.otherLicences', 'ol')
+            ->with('ol.role')
+            ->with('a.goodsOrPsv', 'gop')
+            ->with('a.licence');
+
+        $this->joinTransportManagerPerson($dqb);
+
+        $dqb->where($dqb->expr()->eq('tma.id', ':tmaId'))
+            ->setParameter('tmaId', $tmaId);
+
+        $results = $dqb->getQuery()->getResult();
+
+        if (empty($results)) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * Join Trasport Manager, Contact Details and Person entities to the query
+     *
+     * @param type $dqb
+     */
+    protected function joinTransportManagerPerson($dqb)
+    {
+        $dqb->join('tma.transportManager', 'tm')->addSelect('tm')
+            ->join('tm.homeCd', 'hcd')->addSelect('hcd')
+            ->join('hcd.person', 'p')->addSelect('p');
     }
 }

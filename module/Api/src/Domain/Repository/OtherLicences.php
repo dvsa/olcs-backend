@@ -1,28 +1,26 @@
 <?php
 
 /**
- * Previous Conviction
+ * OtherLicences
  *
- * @author Nick Payne <nick.payne@valtech.co.uk>
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as Entity;
+use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as Entity;
 
 /**
- * Previous Conviction
+ * OtherLicences
  *
- * @author Nick Payne <nick.payne@valtech.co.uk>
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class PreviousConviction extends AbstractRepository
+class OtherLicences extends AbstractRepository
 {
     protected $entity = Entity::class;
-    protected $alias = 'pc';
+    protected $alias = 'ol';
 
     /**
-     * Fetch a list of Previous Convictions for a Transport Manager
+     * Fetch a list of Other Licences for a Transport Manager
      *
      * @param int $tmId
      *
@@ -34,7 +32,7 @@ class PreviousConviction extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($dqb)
             ->withRefdata();
 
-        $dqb->andWhere($dqb->expr()->eq('pc.transportManager', ':tmId'))
+        $dqb->andWhere($dqb->expr()->eq('ol.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();
