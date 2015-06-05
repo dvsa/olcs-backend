@@ -14,7 +14,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 
 /**
@@ -105,20 +104,6 @@ final class CreateImpounding extends AbstractCommandHandler
         }
 
         return $impounding;
-    }
-
-    /**
-     * Determines the piVenueOtherValue. May be null
-     *
-     * @param null $piVenueOther
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
-     */
-    private function determinePiVenueOther($piVenueOther = null)
-    {
-        if (!empty($piVenueOther)) {
-            return $this->getRepo()->getRefdataReference($piVenueOther);
-        }
-        return null;
     }
 
     /**
