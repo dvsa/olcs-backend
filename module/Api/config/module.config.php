@@ -88,8 +88,9 @@ return [
         'factories' => [
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
-            'withRefdata'        => QueryPartial\WithRefdataFactory::class,
-            'withUser'           => QueryPartial\WithUserFactory::class,
+            'withRefdata' => QueryPartial\WithRefdataFactory::class,
+            'withUser' => QueryPartial\WithUserFactory::class,
+            'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
