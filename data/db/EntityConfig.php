@@ -388,6 +388,15 @@ return array(
         )
     ),
     'bus_reg' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'busReg',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
         'use_all_stops' => array(
             'type' => 'yesno'
         ),

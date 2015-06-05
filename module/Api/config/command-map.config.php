@@ -11,12 +11,17 @@ return [
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdatePreviousConvictions::class => CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
-
+    
     // Transfer - Note
     TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
     TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
     TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
+
+    // Transfer - Bus
+    TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
+    TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -26,6 +31,30 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+
+    // Transfer - Previous Conviction
+    TransferCommand\PreviousConviction\CreatePreviousConviction::class => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
+    TransferCommand\PreviousConviction\UpdatePreviousConviction::class => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
+    TransferCommand\PreviousConviction\DeletePreviousConviction::class => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+
+    // Transfer - Trailer
+    TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
+    TransferCommand\Trailer\UpdateTrailer::class => CommandHandler\Trailer\UpdateTrailer::class,
+    TransferCommand\Trailer\DeleteTrailer::class => CommandHandler\Trailer\DeleteTrailer::class,
+
+    // Transfer - IRFO
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+
+    // Transfer - Impounding
+    TransferCommand\Cases\Impounding\CreateImpounding::class =>
+        CommandHandler\Cases\Impounding\CreateImpounding::class,
+    TransferCommand\Cases\Impounding\UpdateImpounding::class =>
+        CommandHandler\Cases\Impounding\UpdateImpounding::class,
+    TransferCommand\Cases\Impounding\DeleteImpounding::class =>
+        CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
@@ -70,4 +99,5 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+
 ];
