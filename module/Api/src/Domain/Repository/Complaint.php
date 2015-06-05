@@ -38,7 +38,7 @@ class Complaint extends AbstractRepository
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException
      */
-    public function fetchCaseComplaintUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
