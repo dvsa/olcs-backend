@@ -28,6 +28,21 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrfoPsvAuth extends AbstractIrfoPsvAuth
 {
+    const STATUS_APPROVED = 'irfo_auth_s_approved';
+    const STATUS_CNS = 'irfo_auth_s_cns';
+    const STATUS_GRANTED = 'irfo_auth_s_granted';
+    const STATUS_PENDING = 'irfo_auth_s_pending';
+    const STATUS_REFUSED = 'irfo_auth_s_refused';
+    const STATUS_RENEW = 'irfo_auth_s_renew';
+    const STATUS_WITHDRAWN = 'irfo_auth_s_withdrawn';
+
+    const JOURNEY_FREQ_DAILY = 'psv_freq_daily';
+    const JOURNEY_FREQ_TWICE_WEEKLY = 'psv_freq_2_weekly';
+    const JOURNEY_FREQ_WEEKLY = 'psv_freq_weekly';
+    const JOURNEY_FREQ_FORTNIGHTLY = 'psv_freq_fortnight';
+    const JOURNEY_FREQ_MONTHLY = 'psv_freq_monthly';
+    const JOURNEY_FREQ_OTHER = 'psv_freq_other';
+
     public function __construct(Organisation $organisation, IrfoPsvAuthType $type, RefData $status)
     {
         $this->organisation = $organisation;
