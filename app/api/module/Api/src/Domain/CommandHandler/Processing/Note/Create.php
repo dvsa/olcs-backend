@@ -117,6 +117,7 @@ final class Create extends AbstractCommandHandler
 
             $org = $this->getRepo()->getReference(
                 Entity\Licence\Licence::class,
+                $command->getOrganisation()
             );
 
             $entity->setOrganisation($org);
