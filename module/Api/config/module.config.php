@@ -57,6 +57,7 @@ return [
             TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
             TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+            TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,

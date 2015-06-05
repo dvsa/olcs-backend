@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Fee
@@ -38,6 +40,61 @@ class Fee extends AbstractRepository
         if ($outstanding) {
             $this->whereOutstandingFee($doctrineQb);
         }
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch outstanding fees for an organisation
+     * (only those associated to a valid licence or in progress application)
+     *
+     * @param int  $oraganisationId Organisation ID
+     *
+     * @return array
+     */
+    public function fetchOutstandingFeesByOrganisationId($organisationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'ASC');
+
+        $doctrineQb
+            ->leftJoin('f.application', 'a')
+            ->leftJoin('f.licence', 'l')
+            ->leftJoin('a.licence', 'al')
+            ->andWhere(
+                $doctrineQb->expr()->orX(
+                    $doctrineQb->expr()->eq('l.organisation', ':organisationId'),
+                    $doctrineQb->expr()->eq('al.organisation', ':organisationId')
+                )
+            )
+            ->andWhere(
+                $doctrineQb->expr()->orX(
+                    $doctrineQb->expr()->in('a.status', ':appStatus'),
+                    $doctrineQb->expr()->in('l.status', ':licStatus')
+                )
+            )
+            ->setParameter('organisationId', $organisationId)
+            ->setParameter(
+                'appStatus',
+                [
+                    $this->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
+                    $this->getRefdataReference(Application::APPLICATION_STATUS_GRANTED),
+                ]
+            )
+            ->setParameter(
+                'licStatus',
+                [
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_VALID),
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_CURTAILED),
+                    $this->getRefdataReference(Licence::LICENCE_STATUS_SUSPENDED),
+                ]
+            );
+
+        $this->whereOutstandingFee($doctrineQb);
 
         return $doctrineQb->getQuery()->getResult();
     }
