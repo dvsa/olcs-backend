@@ -37,7 +37,7 @@ class UpdateFinancialHistoryTest extends CommandHandlerTestCase
 
         $application = $this->getApplication()
             ->shouldReceive('updateFinancialHistory')
-            ->with('Y', 'Y', 'Y', 'Y', 'Y', str_repeat('X', 200))
+            ->with('Y', 'Y', 'Y', 'Y', 'Y', str_repeat('X', 200), '1')
             ->once()
             ->getMock();
 
@@ -71,7 +71,8 @@ class UpdateFinancialHistoryTest extends CommandHandlerTestCase
             'receivership' => 'Y',
             'administration' => 'Y',
             'disqualified' => 'Y',
-            'insolvencyDetails' => str_repeat('X', 200)
+            'insolvencyDetails' => str_repeat('X', 200),
+            'insolvencyConfirmation'=> '1'
         ];
 
         return Cmd::create($data);

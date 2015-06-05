@@ -174,7 +174,8 @@ class ApplicationEntityTest extends EntityTester
         $receivership,
         $administration,
         $disqualified,
-        $insolvencyDetails
+        $insolvencyDetails,
+        $insolvencyConfirmation
     ) {
 
         $this->entity->updateFinancialHistory(
@@ -183,15 +184,16 @@ class ApplicationEntityTest extends EntityTester
             $receivership,
             $administration,
             $disqualified,
-            $insolvencyDetails
+            $insolvencyDetails,
+            $insolvencyConfirmation
         );
     }
 
     public function notValidDataProvider()
     {
         return [
-            ['Y', 'N', 'N', 'N', 'N', '123'],
-            ['Y', 'N', 'N', 'N', 'N', ''],
+            ['Y', 'N', 'N', 'N', 'N', '123', '1'],
+            ['Y', 'N', 'N', 'N', 'N', '', '1'],
         ];
     }
 
@@ -456,7 +458,8 @@ class ApplicationEntityTest extends EntityTester
         $receivership,
         $administration,
         $disqualified,
-        $insolvencyDetails
+        $insolvencyDetails,
+        $insolvencyConfirmation
     ) {
 
         $this->assertTrue(
@@ -466,7 +469,8 @@ class ApplicationEntityTest extends EntityTester
                 $receivership,
                 $administration,
                 $disqualified,
-                $insolvencyDetails
+                $insolvencyDetails,
+                $insolvencyConfirmation
             )
         );
         $this->assertEquals($this->entity->getBankrupt(), $bankrupt);
@@ -475,13 +479,14 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals($this->entity->getAdministration(), $administration);
         $this->assertEquals($this->entity->getDisqualified(), $disqualified);
         $this->assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
+        $this->assertEquals($this->entity->getInsolvencyConfirmation(), 'Y');
     }
 
     public function validDataProvider()
     {
         return [
-            ['N', 'N', 'N', 'N', 'N', ''],
-            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200)],
+            ['N', 'N', 'N', 'N', 'N', '', '1'],
+            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200), '1'],
         ];
     }
 }
