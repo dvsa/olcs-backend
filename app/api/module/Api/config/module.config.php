@@ -77,6 +77,7 @@ return [
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+            TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
         ]
@@ -121,6 +122,7 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoPermitStock' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
