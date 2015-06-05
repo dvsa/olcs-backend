@@ -36,8 +36,7 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Au
         $result = new Result();
 
         /** @var CompanySubsidiary $companySubsidiary */
-        $companySubsidiary = $this->getRepo('CompanySubsidiary')
-            ->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $companySubsidiary = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         if ($companySubsidiary->getName() === $command->getName()
             && $companySubsidiary->getCompanyNo() == $command->getCompanyNo()

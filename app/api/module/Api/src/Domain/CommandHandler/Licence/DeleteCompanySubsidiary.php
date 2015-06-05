@@ -39,6 +39,8 @@ final class DeleteCompanySubsidiary extends AbstractCommandHandler implements Au
             $companySubsidiary = $this->getRepo('CompanySubsidiary')->fetchById($id);
 
             if ($this->isGranted(Permission::SELFSERVE_USER)) {
+                // @NOTE At the moment this would overide any existing task ID, which we don't currently use anyway
+                // but this would need to change if we did need to know each task id
                 $result->merge($this->createTask($command->getLicence(), $companySubsidiary->getName()));
             }
 
