@@ -21,6 +21,6 @@ class BusinessDetails extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchBusinessTypeUsingId($query);
+        return $this->getRepo()->fetchBusinessDetailsUsingId($query);
     }
 }

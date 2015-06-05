@@ -31,7 +31,7 @@ class BusinessDetails extends AbstractQueryHandler
         $organisation = $licence->getOrganisation();
 
         /** @var Organisation $organisation */
-        $organisation = $this->getRepo('Organisation')->fetchBusinessTypeById($organisation->getId());
+        $organisation = $this->getRepo('Organisation')->fetchBusinessDetailsById($organisation->getId());
 
         $orgData = $organisation->jsonSerialize();
 
