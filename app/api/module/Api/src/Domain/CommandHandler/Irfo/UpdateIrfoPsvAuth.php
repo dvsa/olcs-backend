@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber;
@@ -17,7 +18,7 @@ use Doctrine\ORM\Query;
 /**
  * Update IrfoPsvAuth
  */
-final class UpdateIrfoPsvAuth extends AbstractCommandHandler
+final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrfoPsvAuth';
 
@@ -25,70 +26,61 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        try {
-            $this->getRepo()->beginTransaction();
+        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-            $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $irfoPsvAuth->setIrfoPsvAuthType(
+            $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType())
+        );
+        $irfoPsvAuth->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
 
-            $irfoPsvAuth->setIrfoPsvAuthType(
-                $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType())
-            );
-            $irfoPsvAuth->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-            $irfoPsvAuth->setValidityPeriod($command->getValidityPeriod());
-            $irfoPsvAuth->setServiceRouteFrom($command->getServiceRouteFrom());
-            $irfoPsvAuth->setServiceRouteTo($command->getServiceRouteTo());
-            $irfoPsvAuth->setJourneyFrequency($command->getJourneyFrequency());
-            $irfoPsvAuth->setIsFeeExemptApplication($command->getIsFeeExemptApplication());
-            $irfoPsvAuth->setIsFeeExemptAnnual($command->getIsFeeExemptAnnual());
-            $irfoPsvAuth->setExemptionDetails($command->getExemptionDetails());
-            $irfoPsvAuth->setCopiesRequired($command->getCopiesRequired());
-            $irfoPsvAuth->setCopiesRequiredTotal($command->getCopiesRequiredTotal());
+        $irfoPsvAuth->setValidityPeriod($command->getValidityPeriod());
+        $irfoPsvAuth->setInForceDate(new \DateTime($command->getInForceDate()));
+        $irfoPsvAuth->setServiceRouteFrom($command->getServiceRouteFrom());
+        $irfoPsvAuth->setServiceRouteTo($command->getServiceRouteTo());
+        $irfoPsvAuth->setJourneyFrequency($this->getRepo()->getRefdataReference($command->getJourneyFrequency()));
+        $irfoPsvAuth->setCopiesRequired($command->getCopiesRequired());
+        $irfoPsvAuth->setCopiesRequiredTotal($command->getCopiesRequiredTotal());
 
-            if ($command->getJourneyFrequency() !== null) {
-                $irfoPsvAuth->setJourneyFrequency(
-                    $this->getRepo()->getRefdataReference($command->getJourneyFrequency())
-                );
-            }
-
-            if ($command->getInForceDate() !== null) {
-                $irfoPsvAuth->setInForceDate(new \DateTime($command->getInForceDate()));
-            }
-
-            if ($command->getExpiryDate() !== null) {
-                $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));
-            }
-
-            if ($command->getApplicationSentDate() !== null) {
-                $irfoPsvAuth->setApplicationSentDate(new \DateTime($command->getApplicationSentDate()));
-            }
-
-            if ($command->getCountrys() !== null) {
-                $countries = [];
-
-                foreach ($command->getCountrys() as $countryId) {
-                    $countries[] = $this->getRepo()->getReference(Country::class, $countryId);
-                }
-
-                $irfoPsvAuth->setCountrys($countries);
-            }
-
-            $this->getRepo()->save($irfoPsvAuth);
-
-            // deal with IrfoPsvAuthNumbers
-            $this->processIrfoPsvAuthNumbers($irfoPsvAuth, $command->getIrfoPsvAuthNumbers());
-
-            $result = new Result();
-            $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
-            $result->addMessage('IRFO PSV Auth updated successfully');
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
+        if ($command->getExpiryDate() !== null) {
+            $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));
         }
+
+        if ($command->getApplicationSentDate() !== null) {
+            $irfoPsvAuth->setApplicationSentDate(new \DateTime($command->getApplicationSentDate()));
+        }
+
+        if ($command->getCountrys() !== null) {
+            $countries = [];
+
+            foreach ($command->getCountrys() as $countryId) {
+                $countries[] = $this->getRepo()->getReference(Country::class, $countryId);
+            }
+
+            $irfoPsvAuth->setCountrys($countries);
+        }
+
+        if ($command->getIsFeeExemptApplication() !== null) {
+            $irfoPsvAuth->setIsFeeExemptApplication($command->getIsFeeExemptApplication());
+        }
+
+        if ($command->getIsFeeExemptAnnual() !== null) {
+            $irfoPsvAuth->setIsFeeExemptAnnual($command->getIsFeeExemptAnnual());
+        }
+
+        if ($command->getExemptionDetails() !== null) {
+            $irfoPsvAuth->setExemptionDetails($command->getExemptionDetails());
+        }
+
+        $this->getRepo()->save($irfoPsvAuth);
+
+        // deal with IrfoPsvAuthNumbers
+        $this->processIrfoPsvAuthNumbers($irfoPsvAuth, $command->getIrfoPsvAuthNumbers());
+
+        $result = new Result();
+        $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
+        $result->addMessage('IRFO PSV Auth updated successfully');
+
+        return $result;
     }
 
     /**

@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth as Cmd;
 /**
  * Create IrfoPsvAuth
  */
-final class CreateIrfoPsvAuth extends AbstractCommandHandler
+final class CreateIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrfoPsvAuth';
 
@@ -26,23 +27,21 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        try {
-            $this->getRepo()->beginTransaction();
+        // create and save a record
+        $irfoPsvAuth = $this->createIrfoPsvAuthObject($command);
+        $this->getRepo()->save($irfoPsvAuth);
 
-            // create and save a record
-            $irfoPsvAuth = $this->createIrfoPsvAuthObject($command);
-            $this->getRepo()->save($irfoPsvAuth);
+        // deal with IrfoFileNo
+        $irfoFileNo = sprintf(
+            '%s/%d',
+            $irfoPsvAuth->getIrfoPsvAuthType()->getSectionCode(),
+            $irfoPsvAuth->getId()
+        );
+        $irfoPsvAuth->setIrfoFileNo($irfoFileNo);
+        $this->getRepo()->save($irfoPsvAuth);
 
-            // deal with IrfoFileNo
-            $irfoFileNo = sprintf(
-                '%s/%d',
-                $irfoPsvAuth->getIrfoPsvAuthType()->getSectionCode(),
-                $irfoPsvAuth->getId()
-            );
-            $irfoPsvAuth->setIrfoFileNo($irfoFileNo);
-            $this->getRepo()->save($irfoPsvAuth);
-
-            // deal with IrfoPsvAuthNumbers
+        // deal with IrfoPsvAuthNumbers
+        if ($command->getIrfoPsvAuthNumbers() !== null) {
             foreach ($command->getIrfoPsvAuthNumbers() as $irfoPsvAuthNumber) {
                 if (!empty($irfoPsvAuthNumber['name'])) {
                     // create
@@ -50,19 +49,13 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler
                     $this->getRepo('IrfoPsvAuthNumber')->save($irfoPsvAuthNumberEntity);
                 }
             }
-
-            $result = new Result();
-            $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
-            $result->addMessage('IRFO PSV Auth created successfully');
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
         }
+
+        $result = new Result();
+        $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
+        $result->addMessage('IRFO PSV Auth created successfully');
+
+        return $result;
     }
 
     /**
@@ -83,22 +76,12 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler
         $irfoPsvAuth->setIrfoFileNo('');
 
         $irfoPsvAuth->setValidityPeriod($command->getValidityPeriod());
+        $irfoPsvAuth->setInForceDate(new \DateTime($command->getInForceDate()));
         $irfoPsvAuth->setServiceRouteFrom($command->getServiceRouteFrom());
         $irfoPsvAuth->setServiceRouteTo($command->getServiceRouteTo());
-        $irfoPsvAuth->setJourneyFrequency($command->getJourneyFrequency());
-        $irfoPsvAuth->setIsFeeExemptApplication($command->getIsFeeExemptApplication());
-        $irfoPsvAuth->setIsFeeExemptAnnual($command->getIsFeeExemptAnnual());
-        $irfoPsvAuth->setExemptionDetails($command->getExemptionDetails());
+        $irfoPsvAuth->setJourneyFrequency($this->getRepo()->getRefdataReference($command->getJourneyFrequency()));
         $irfoPsvAuth->setCopiesRequired($command->getCopiesRequired());
         $irfoPsvAuth->setCopiesRequiredTotal($command->getCopiesRequiredTotal());
-
-        if ($command->getJourneyFrequency() !== null) {
-            $irfoPsvAuth->setJourneyFrequency($this->getRepo()->getRefdataReference($command->getJourneyFrequency()));
-        }
-
-        if ($command->getInForceDate() !== null) {
-            $irfoPsvAuth->setInForceDate(new \DateTime($command->getInForceDate()));
-        }
 
         if ($command->getExpiryDate() !== null) {
             $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));
@@ -116,6 +99,18 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler
             }
 
             $irfoPsvAuth->setCountrys($countries);
+        }
+
+        if ($command->getIsFeeExemptApplication() !== null) {
+            $irfoPsvAuth->setIsFeeExemptApplication($command->getIsFeeExemptApplication());
+        }
+
+        if ($command->getIsFeeExemptAnnual() !== null) {
+            $irfoPsvAuth->setIsFeeExemptAnnual($command->getIsFeeExemptAnnual());
+        }
+
+        if ($command->getExemptionDetails() !== null) {
+            $irfoPsvAuth->setExemptionDetails($command->getExemptionDetails());
         }
 
         return $irfoPsvAuth;
