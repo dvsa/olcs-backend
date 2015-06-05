@@ -12,10 +12,24 @@ use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as Entity;
  */
 class BusShortNoticeEntityTest extends EntityTester
 {
+    public function setUp()
+    {
+        $this->entity = $this->instantiate($this->entityClass);
+    }
+
     /**
      * Define the entity to test
      *
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * Tests calculated values
+     */
+    public function testGetCalculatedValues()
+    {
+        $result = $this->entity->getCalculatedValues();
+        $this->assertEquals($result['busReg'], null);
+    }
 }

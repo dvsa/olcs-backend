@@ -15,7 +15,7 @@ final class With implements QueryPartialInterface
     private $i = 0;
 
     /**
-     * Adds a where id = XX clause
+     * Adds a left join on XX clause
      *
      * @param QueryBuilder $qb
      * @param array $arguments

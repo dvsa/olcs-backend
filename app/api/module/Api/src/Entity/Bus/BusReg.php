@@ -29,5 +29,98 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusReg extends AbstractBusReg
 {
+    const STATUS_NEW = 'breg_s_new';
+    const STATUS_VAR = 'breg_s_var';
+    const STATUS_CANCEL = 'breg_s_cancellation';
+    const STATUS_ADMIN = 'breg_s_admin';
+    const STATUS_REGISTERED = 'breg_s_registered';
+    const STATUS_REFUSED = 'breg_s_refused';
+    const STATUS_WITHDRAWN = 'breg_s_withdrawn';
+    const STATUS_CNS = 'breg_s_cns';
+    const STATUS_CANCELLED = 'breg_s_cancelled';
 
+    /**
+     * Returns whether the variation is the latest one
+     *
+     * @return bool
+     */
+    public function isLatestVariation()
+    {
+        return $this->getId() === $this->getLicence()->getLatestBusVariation($this->getRegNo())->getId();
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedValues()
+    {
+        return [
+            'licence' => null,
+            'isLatestVariation' => $this->isLatestVariation()
+        ];
+    }
+
+    /**
+     * @param $useAllStops
+     * @param $hasManoeuvre
+     * @param $manoeuvreDetail
+     * @param $needNewStop
+     * @param $newStopDetail
+     * @param $hasNotFixedStop
+     * @param $notFixedStopDetail
+     * @param $subsidised
+     * @param $subsidyDetail
+     * @return bool
+     */
+    public function updateStops(
+        $useAllStops,
+        $hasManoeuvre,
+        $manoeuvreDetail,
+        $needNewStop,
+        $newStopDetail,
+        $hasNotFixedStop,
+        $notFixedStopDetail,
+        $subsidised,
+        $subsidyDetail
+    )
+    {
+        $this->setUseAllStops($useAllStops);
+        $this->setHasManoeuvre($hasManoeuvre);
+        $this->setManoeuvreDetail($manoeuvreDetail);
+        $this->setNeedNewStop($needNewStop);
+        $this->setNewStopDetail($newStopDetail);
+        $this->setHasNotFixedStop($hasNotFixedStop);
+        $this->setNotFixedStopDetail($notFixedStopDetail);
+        $this->setSubsidised($subsidised);
+        $this->setSubsidyDetail($subsidyDetail);
+
+        return true;
+    }
+
+    /**
+     * @param $isQualityPartnership
+     * @param $qualityPartnershipDetails
+     * @param $qualityPartnershipFacilitiesUsed
+     * @param $isQualityContract
+     * @param $qualityContractDetails
+     * @return bool
+     */
+    public function updateQualitySchemes(
+        $isQualityPartnership,
+        $qualityPartnershipDetails,
+        $qualityPartnershipFacilitiesUsed,
+        $isQualityContract,
+        $qualityContractDetails
+    )
+    {
+        $this->setIsQualityPartnership($isQualityPartnership);
+        $this->setQualityPartnershipDetails($qualityPartnershipDetails);
+        $this->setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed);
+        $this->setIsQualityContract($isQualityContract);
+        $this->setQualityContractDetails($qualityContractDetails);
+
+        return true;
+    }
 }

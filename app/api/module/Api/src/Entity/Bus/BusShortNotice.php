@@ -21,5 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusShortNotice extends AbstractBusShortNotice
 {
-
+    public function getCalculatedValues()
+    {
+        return ['busReg' => null];
+    }
 }
