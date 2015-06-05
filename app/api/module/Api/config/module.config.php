@@ -61,6 +61,8 @@ return [
             TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Processing\ImpoundingList::class,
+            TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -97,6 +99,8 @@ return [
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'Impounding' => RepositoryFactory::class,
+            'ImpoundingList' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
