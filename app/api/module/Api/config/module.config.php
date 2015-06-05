@@ -96,13 +96,10 @@ return [
             'PreviousConviction' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
-<<<<<<< HEAD
             'Note' => RepositoryFactory::class,
-=======
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
->>>>>>> 97d3f8f5ac12cea940061275381e9f716e877e80
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

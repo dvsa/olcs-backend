@@ -13,7 +13,7 @@ return [
     TransferCommand\Application\UpdateFinancialHistory::class => CommandHandler\Application\UpdateFinancialHistory::class,
     TransferCommand\Application\UpdatePreviousConvictions::class => CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
-    
+
     // Transfer - Note
     TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
     TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
