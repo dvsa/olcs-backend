@@ -31,7 +31,9 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $this->validateOtherLicences($command, $application);
+        if (!$command->getInProgress()) {
+            $this->validateOtherLicences($command, $application);
+        }
 
         $application->setPrevHasLicence(
             $command->getPrevHasLicence()

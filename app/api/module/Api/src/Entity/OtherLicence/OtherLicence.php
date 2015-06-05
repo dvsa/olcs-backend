@@ -57,27 +57,28 @@ class OtherLicence extends AbstractOtherLicence
         $disqualificationLength,
         $purchaseDate
     ) {
-        if (
-            $this->validateOtherLicence(
-                $willSurrender,
-                $disqualificationDate,
-                $disqualificationLength,
-                $purchaseDate
-            )
-        ) {
-            $previousLicenceType = $this->previousLicenceType->getId();
-            foreach ($this->requiredFields[$previousLicenceType] as $field) {
-                if (substr($field, -4) == 'Date') {
-                    $this->$field = new \DateTime($$field);
-                } else {
-                    $this->$field = $$field;
-                }
+        $this->validateOtherLicence(
+            $licNo,
+            $holderName,
+            $willSurrender,
+            $disqualificationDate,
+            $disqualificationLength,
+            $purchaseDate
+        );
+        $previousLicenceType = $this->getPreviousLicenceType()->getId();
+        foreach ($this->requiredFields[$previousLicenceType] as $field) {
+            if (substr($field, -4) == 'Date') {
+                $this->$field = new \DateTime($$field);
+            } else {
+                $this->$field = $$field;
             }
-            return true;
         }
+        return true;
     }
 
     protected function validateOtherLicence(
+        $licNo,
+        $holderName,
         $willSurrender,
         $disqualificationDate,
         $disqualificationLength,
@@ -85,7 +86,7 @@ class OtherLicence extends AbstractOtherLicence
     ) {
         $errors = [];
 
-        $previousLicenceType = $this->previousLicenceType;
+        $previousLicenceType = $this->getPreviousLicenceType();
 
         // need to remove it when other sections with otherLicence will be done
         $this->checkEmptyPreviousLicenceType($previousLicenceType);
@@ -93,12 +94,21 @@ class OtherLicence extends AbstractOtherLicence
 
         switch ($previousLicenceTypeId) {
             case self::TYPE_CURRENT:
-                $errors = $this->checkRequiredField($willSurrender, 'willSurrender', $errors);
+                $errors = $this->checkRequiredFields(
+                    [$willSurrender, $licNo, $holderName],
+                    ['willSurrender', 'licNo', 'holderName'],
+                    $errors
+                );
                 break;
             case self::TYPE_DISQUALIFIED:
                 $errors = $this->checkDateNotEmptyAndNotInFuture(
                     $disqualificationDate,
                     'disqualificationDate',
+                    $errors
+                );
+                $errors = $this->checkRequiredFields(
+                    [$licNo, $holderName],
+                    ['licNo', 'holderName'],
                     $errors
                 );
                 $errors = $this->checkRequiredField($disqualificationLength, 'disqualificationLength', $errors);
@@ -110,11 +120,21 @@ class OtherLicence extends AbstractOtherLicence
                     'purchaseDate',
                     $errors
                 );
+                $errors = $this->checkRequiredFields(
+                    [$licNo, $holderName],
+                    ['licNo', 'holderName'],
+                    $errors
+                );
                 break;
             case self::TYPE_APPLIED:
             case self::TYPE_REFUSED:
             case self::TYPE_REVOKED:
             case self::TYPE_PUBLIC_INQUIRY:
+                $errors = $this->checkRequiredFields(
+                    [$licNo, $holderName],
+                    ['licNo', 'holderName'],
+                    $errors
+                );
                 break;
             default:
                 $errors[] = [
@@ -165,6 +185,14 @@ class OtherLicence extends AbstractOtherLicence
                     self::ERROR_FIELD_IS_REQUIRED => 'Field is required'
                 ]
             ];
+        }
+        return $errors;
+    }
+
+    protected function checkRequiredFields($fields, $names, $errors)
+    {
+        for ($i = 0; $i < count($fields); $i++) {
+            $errors = $this->checkRequiredField($fields[$i], $names[$i], $errors);
         }
         return $errors;
     }
