@@ -2,7 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
+use Common\Filter\Publication\PiVenue;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
 
 /**
  * Impounding Entity
@@ -22,5 +25,34 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Impounding extends AbstractImpounding
 {
+    const PI_VENUE_OTHER = 'other';
 
+    public function __construct(Cases $case, RefData $impoundingType)
+    {
+        parent::__construct();
+
+        $this->setCase($case);
+        $this->setImpoundingType($impoundingType);
+    }
+
+    /**
+     * Sets the piVenue and piVenueOther properties, since they are interdependent on each other.
+     * @to-do Check this logic is correct...
+     *
+     * @param PiVenueEntity $piVenue|string
+     * @param $piVenueOther
+     * @return Impounding
+     */
+    public function setPiVenueProperties($piVenue, $piVenueOther = null)
+    {
+        if ($piVenue === self::PI_VENUE_OTHER) {
+            $this->piVenue = null;
+            $this->piVenueOther = $piVenueOther;
+        } else {
+            $this->piVenue = $piVenue;
+            $this->piVenueOther = null;
+        }
+
+        return $this;
+    }
 }
