@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as Entity;
 
@@ -18,4 +20,17 @@ class TradingNameEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetCalculatedValues()
+    {
+        $organisation = m::mock(Organisation::class);
+
+        $entity = new Entity('Foo', $organisation);
+        $data = $entity->jsonSerialize();
+
+        $this->assertSame($organisation, $entity->getOrganisation());
+        $this->assertEquals('Foo', $data['name']);
+        $this->assertNull($data['organisation']);
+        $this->assertNull($data['licence']);
+    }
 }
