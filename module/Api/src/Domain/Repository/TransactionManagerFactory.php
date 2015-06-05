@@ -21,8 +21,6 @@ final class TransactionManagerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $sm = $serviceLocator->getServiceLocator();
-
-        return new TransactionManager($sm->get('doctrine.entitymanager.orm_default'));
+        return new TransactionManager($serviceLocator->get('doctrine.entitymanager.orm_default'));
     }
 }

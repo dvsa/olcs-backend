@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as Entity;
 
@@ -18,4 +20,17 @@ class CompanySubsidiaryEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetCalculatedValues()
+    {
+        $licence = m::mock(Licence::class);
+
+        $entity = new Entity('Foo', '123456789', $licence);
+        $data = $entity->jsonSerialize();
+
+        $this->assertSame($licence, $entity->getLicence());
+        $this->assertEquals('Foo', $data['name']);
+        $this->assertEquals('123456789', $data['companyNo']);
+        $this->assertNull($data['licence']);
+    }
 }
