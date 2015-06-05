@@ -66,6 +66,8 @@ return [
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
     \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPermitStock::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPermitStock::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
