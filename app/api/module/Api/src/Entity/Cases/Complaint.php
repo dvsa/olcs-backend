@@ -22,5 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Complaint extends AbstractComplaint
 {
+    public function __construct(Cases $case, $isCompliance)
+    {
+        parent::__construct();
 
+        $this->setCase($case);
+        $this->setIsCompliance($isCompliance);
+    }
 }
