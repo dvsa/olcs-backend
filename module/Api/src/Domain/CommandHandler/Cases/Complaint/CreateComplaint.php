@@ -14,50 +14,40 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Transfer\Command\Cases\Complaint\CreateComplaint as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Create Complaint
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class CreateComplaint extends AbstractCommandHandler
+final class CreateComplaint extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Complaint';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $person = $this->createPersonObject($command);
-            $result->addMessage('Person created');
+        $person = $this->createPersonObject($command);
+        $result->addMessage('Person created');
 
-            $contactDetails = $this->createContactDetailsObject($command, $person);
-            $result->addMessage('Contact details created');
+        $contactDetails = $this->createContactDetailsObject($command, $person);
+        $result->addMessage('Contact details created');
 
-            $complaint = $this->createComplaintObject($command, $contactDetails);
+        $complaint = $this->createComplaintObject($command, $contactDetails);
 
-            $this->getRepo()->save($complaint);
-            $result->addMessage('Complaint created');
+        $this->getRepo()->save($complaint);
+        $result->addMessage('Complaint created');
 
-            $result->addId('complaint', $complaint->getId());
-            $result->addId('person', $person->getId());
-            $result->addId('contactDetails', $contactDetails->getId());
+        $result->addId('complaint', $complaint->getId());
+        $result->addId('person', $person->getId());
+        $result->addId('contactDetails', $contactDetails->getId());
 
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     /**
@@ -67,8 +57,11 @@ final class CreateComplaint extends AbstractCommandHandler
      */
     private function createComplaintObject(Cmd $command, ContactDetails $contactDetails)
     {
+        $isCompliance = true;
+
         $complaint = new Complaint(
-            $this->getRepo()->getReference(Cases::class, $command->getCase())
+            $this->getRepo()->getReference(Cases::class, $command->getCase()),
+            $isCompliance
         );
 
         if ($command->getComplaintType() !== null) {
@@ -80,15 +73,11 @@ final class CreateComplaint extends AbstractCommandHandler
         }
 
         if ($command->getClosedDate() !== null) {
-            $complaint->setClosedDate(new DateTime($command->getClosedDate()));
+            $complaint->setClosedDate(new \DateTime($command->getClosedDate()));
         }
 
         if ($command->getComplaintDate() !== null) {
-            $complaint->setComplaintDate(new DateTime($command->getComplaintDate()));
-        }
-
-        if ($command->getDeletedDate() !== null) {
-            $complaint->setDeletedDate(new DateTime($command->getDeletedDate()));
+            $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
         }
 
         if ($command->getDescription() !== null) {
@@ -139,12 +128,14 @@ final class CreateComplaint extends AbstractCommandHandler
     {
         $contactDetails = new ContactDetails();
 
+        $contactDetails->setContactType($this->getRepo()->getRefdataReference(ContactDetails::CT_COMPLAINANT));
+
         if ($command->getComplainantForename() !== null) {
-            $contactDetails->setForename($command->getComplainantForename());
+            $person->setForename($command->getComplainantForename());
         }
 
         if ($command->getComplainantFamilyName() !== null) {
-            $contactDetails->setFamilyName($command->getComplainantFamilyName());
+            $person->setFamilyName($command->getComplainantFamilyName());
         }
 
         $contactDetails->setPerson($person);
