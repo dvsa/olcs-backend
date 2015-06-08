@@ -67,6 +67,9 @@ return [
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+            TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
+            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
+
             TransferQuery\CompanySubsidiary\CompanySubsidiary::class
                 => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
 
@@ -81,8 +84,9 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
-            'withRefdata' => QueryPartial\WithRefdataFactory::class,
-            'withUser' => QueryPartial\WithUserFactory::class,
+            'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
+            'withRefdata'        => QueryPartial\WithRefdataFactory::class,
+            'withUser'           => QueryPartial\WithUserFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
@@ -114,6 +118,7 @@ return [
             'PreviousConviction' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
+            'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
