@@ -29,7 +29,7 @@ class Workshop extends AbstractWorkshop
         $this->setContactDetails($contactDetails);
     }
 
-    public function getCalculatedValues()
+    protected function getCalculatedValues()
     {
         return ['licence' => null];
     }

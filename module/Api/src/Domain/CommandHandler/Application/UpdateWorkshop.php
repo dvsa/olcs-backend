@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -30,7 +30,7 @@ final class UpdateWorkshop extends AbstractCommandHandler implements Transaction
         $result->merge($this->handleSideEffect(WorkshopUpdateWorkshop::create($command->getArrayCopy())));
 
         $completionData = ['id' => $command->getApplication(), 'section' => 'safety'];
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($completionData)));
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
 
         return $result;
     }

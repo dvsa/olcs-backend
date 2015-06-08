@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -56,7 +56,7 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
         $data = ['id' => $command->getId(), 'section' => 'safety'];
 
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($data)));
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
 
         return $result;
     }
