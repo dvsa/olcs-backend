@@ -12,7 +12,6 @@ use Exception;
 use Doctrine\ORM\Query;
 
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Create a Note
@@ -22,7 +21,6 @@ final class Create extends CreateUpdateAbstract
 {
     /**
      * @param CreateCommand $command
-     * @throws Exception
      * @return Result
      */
     public function handleCommand(CommandInterface $command)

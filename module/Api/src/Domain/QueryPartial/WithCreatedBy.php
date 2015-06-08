@@ -1,7 +1,7 @@
 <?php
 
 /**
- * With User
+ * With CreatedBy
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
@@ -9,9 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * With User
+ * With CreatedBy
  */
-final class WithUser implements QueryPartialInterface
+final class WithCreatedBy implements QueryPartialInterface
 {
     /**
      * @var With
@@ -33,7 +33,7 @@ final class WithUser implements QueryPartialInterface
     {
         $alias = ((isset($arguments[0]) && isset($arguments[1])) ? $arguments[1] : $qb->getRootAliases()[0]);
 
-        $this->with->modifyQuery($qb, [$alias . '.user', 'u']);
+        $this->with->modifyQuery($qb, [$alias . '.createdBy', 'u']);
         $this->with->modifyQuery($qb, ['u.contactDetails', 'c']);
         $this->with->modifyQuery($qb, ['c.person', 'p']);
     }

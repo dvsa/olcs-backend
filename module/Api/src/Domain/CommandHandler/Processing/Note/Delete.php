@@ -8,11 +8,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Exception;
 use Doctrine\ORM\Query;
 
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Delete a Note
@@ -24,7 +22,6 @@ final class Delete extends AbstractCommandHandler
 
     /**
      * @param DeleteCommand $command
-     * @throws Exception
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
