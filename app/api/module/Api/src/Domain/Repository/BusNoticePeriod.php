@@ -5,7 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as Entity;
 
 /**
  * BusNoticePeriod
