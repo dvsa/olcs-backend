@@ -12,7 +12,9 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as UpdateServiceDetailsCmd;
+use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
 
 /**
  * Update Service Details
@@ -55,7 +57,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler
         $result = new Result();
 
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
+        $busRegId = $busReg->getId();
         $busNoticePeriod = $command->getBusNoticePeriod();
 
         //short notice rules
@@ -72,6 +74,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler
             $command->getFinishPoint(),
             $command->getVia(),
             $command->getBusServiceTypes(),
+            $command->getOtherDetails(),
             $command->getReceivedDate(),
             $command->getEffectiveDate(),
             $command->getEndDate(),
@@ -81,11 +84,45 @@ final class UpdateServiceDetails extends AbstractCommandHandler
 
         try {
 
+
+
             $this->getRepo()->save($busReg);
+
+            if ($this->shouldCreateFee($busRegId)) {
+                $result->merge($this->getCommandHandler()->handleCommand($this->createBusFeeCommand($busRegId)));
+            }
+
             $result->addMessage('Saved successfully');
             return $result;
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * Returns whether we should create a fee
+     * (basically this is down to whether there's already a fee in place for this busReg(
+     *
+     * @param $busRegId
+     * @return bool
+     */
+    private function shouldCreateFee($busRegId)
+    {
+        $latestFee = $this->feeRepo->getLatestFeeForBusReg($busRegId);
+
+        if (!empty($latestFee)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $busRegId
+     * @return Result
+     */
+    private function createBusFeeCommand($busRegId)
+    {
+        return $this->getCommandHandler()->handleCommand(CmdCreateBusFee::create(['id' => $busRegId]));
     }
 }
