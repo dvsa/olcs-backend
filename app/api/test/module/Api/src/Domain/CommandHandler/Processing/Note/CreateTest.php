@@ -62,8 +62,8 @@ class CreateTest extends CommandHandlerTestCase
             Entity\Organisation\Organisation::class => [
                 54 => m::mock(Entity\Organisation\Organisation::class)
             ],
-            Entity\TM\TransportManager::class => [
-                55 => m::mock(Entity\TM\TransportManager::class)
+            Entity\Tm\TransportManager::class => [
+                55 => m::mock(Entity\Tm\TransportManager::class)
             ],
             Entity\System\RefData::class => [
                 NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER => m::mock(Entity\System\RefData::class)

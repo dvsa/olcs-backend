@@ -94,7 +94,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         if ($command->getTransportManager() !== null) {
 
             $transportManager = $this->getRepo()->getReference(
-                Entity\TM\TransportManager::class,
+                Entity\Tm\TransportManager::class,
                 $command->getTransportManager()
             );
 
