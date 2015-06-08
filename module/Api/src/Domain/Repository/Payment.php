@@ -29,11 +29,12 @@ class Payment extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata();
+            ->withRefdata()
+            ->with('feePayments', 'fp')
+            ->with('fp.fee', 'f')
+            ;
 
         $qb
-            ->leftJoin('p.feePayments', 'fp')
-            ->leftJoin('fp.fee', 'f')
             ->andWhere($qb->expr()->eq('p.guid', ':reference'))
             ->setParameter('reference', $reference);
 
