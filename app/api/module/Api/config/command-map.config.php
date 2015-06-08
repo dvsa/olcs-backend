@@ -63,6 +63,9 @@ return [
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
 
+    // Domain - Bus
+    Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
+
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
 
