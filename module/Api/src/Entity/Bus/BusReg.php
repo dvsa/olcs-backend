@@ -213,7 +213,7 @@ class BusReg extends AbstractBusReg
                 return null;
             }
 
-            $lastDateTime = \DateTime::createFromFormat('Y-m-d', $parent->getEffectiveDate());
+            $lastDateTime = $parent->getEffectiveDate();
             $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
 
             if ($lastDateTime->add($interval) >= $effectiveDateTime) {
