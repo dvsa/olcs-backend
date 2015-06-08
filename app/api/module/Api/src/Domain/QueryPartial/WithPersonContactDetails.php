@@ -18,7 +18,7 @@ final class WithPersonContactDetails implements QueryPartialInterface
      */
     private $with;
 
-    public function __construct(With $with)
+    public function __construct(QueryPartialInterface $with)
     {
         $this->with = $with;
     }
@@ -31,10 +31,13 @@ final class WithPersonContactDetails implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        $alias = $qb->getRootAliases()[0];
-        $alias .= (isset($arguments[0])) ? '.' . $arguments[0] : 'contactDetails';
+        $column = (isset($arguments[0])) ? $arguments[0] : 'contactDetails';
 
-        $this->with->modifyQuery($qb, [$alias, 'c']);
+        if (strpos($column, '.') === false) {
+            $column = $qb->getRootAliases()[0] . '.' . $column;
+        }
+
+        $this->with->modifyQuery($qb, [$column, 'c']);
         $this->with->modifyQuery($qb, ['c.person', 'p']);
         $this->with->modifyQuery($qb, ['c.address', 'a']);
         $this->with->modifyQuery($qb, ['c.contactType', 'ct']);

@@ -78,8 +78,7 @@ class DeleteComplaintTest extends CommandHandlerTestCase
             ->shouldReceive('delete')
             ->with(m::type(ComplaintEntity::class))
             ->andReturnUsing(
-                function (ComplaintEntity $complaint) use (&$imp) {
-                    $imp = $complaint;
+                function (ComplaintEntity $complaint) use (&$complaint) {
                     $complaint->setId(99);
                 }
             )

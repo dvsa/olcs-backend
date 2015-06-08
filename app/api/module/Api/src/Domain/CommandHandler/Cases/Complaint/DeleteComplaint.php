@@ -37,7 +37,6 @@ final class DeleteComplaint extends AbstractCommandHandler implements Transactio
 
         $this->getRepo()->delete($complaint);
 
-
         $result->addMessage('Complaint deleted');
 
         return $result;

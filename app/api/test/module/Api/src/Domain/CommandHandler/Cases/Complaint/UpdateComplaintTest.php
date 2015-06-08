@@ -59,6 +59,7 @@ class UpdateComplaintTest extends CommandHandlerTestCase
                 "complainantFamilyName" => "Anthony",
                 "complainantForename" => "David",
                 "complaintDate" => "2015-01-16",
+                "closeDate" => "2015-02-26",
                 "complaintType" => "ct_cov",
                 "createdBy" => null,
                 "description" => "Some major complaint about condition of vehicle",
@@ -90,8 +91,7 @@ class UpdateComplaintTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(ComplaintEntity::class))
             ->andReturnUsing(
-                function (ComplaintEntity $complaint) use (&$imp) {
-                    $imp = $complaint;
+                function (ComplaintEntity $complaint) use (&$complaint) {
                     $complaint->setId(99);
                 }
             )
