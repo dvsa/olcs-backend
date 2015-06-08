@@ -32,6 +32,9 @@ class Payment extends AbstractRepository
             ->withRefdata()
             ->with('feePayments', 'fp')
             ->with('fp.fee', 'f')
+            ->with('f.licence', 'l')
+            ->with('f.application')
+            ->with('l.organisation')
             ;
 
         $qb
