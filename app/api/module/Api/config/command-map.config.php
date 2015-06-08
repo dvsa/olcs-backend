@@ -26,6 +26,11 @@ return [
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
 
+    // Transfer - Note
+    TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
+    TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
+    TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
+
     // Transfer - Bus
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
