@@ -105,5 +105,5 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
             }
         }
         return $hasLicences;
-    }    
+    }
 }

@@ -513,4 +513,16 @@ class ApplicationEntityTest extends EntityTester
         $this->entity->setOtherLicences($otherLicencesCollection);
         $this->assertEquals($expected, $this->entity->getOtherLicencesByType('type'));
     }
+
+    public function testUpdateLicenceHistory()
+    {
+        $this->entity->updateLicenceHistory('Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y');
+        $this->assertEquals($this->entity->getPrevHasLicence(), 'Y');
+        $this->assertEquals($this->entity->getPrevHadLicence(), 'Y');
+        $this->assertEquals($this->entity->getPrevBeenRefused(), 'Y');
+        $this->assertEquals($this->entity->getPrevBeenRevoked(), 'Y');
+        $this->assertEquals($this->entity->getPrevBeenAtPi(), 'Y');
+        $this->assertEquals($this->entity->getPrevBeenDisqualifiedTc(), 'Y');
+        $this->assertEquals($this->entity->getPrevPurchasedAssets(), 'Y');
+    }
 }

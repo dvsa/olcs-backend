@@ -41,26 +41,8 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
         $application = $this->getApplication()
             ->shouldReceive('getOtherLicences')
             ->andReturn($otherLicences)
-            ->shouldReceive('setPrevHasLicence')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevHadLicence')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenRefused')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenRevoked')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenAtPi')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenDisqualifiedTc')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevPurchasedAssets')
-            ->with('Y')
+            ->shouldReceive('updateLicenceHistory')
+            ->with('Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y')
             ->once()
             ->getMock();
 
@@ -106,31 +88,35 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandNotInProgressWithEmptyAnswer()
+    {
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+
+        $command = $this->getCommand(false, true);
+
+        $otherLicences = $this->getOtherLicences();
+
+        $application = $this->getApplication()
+            ->shouldReceive('getOtherLicences')
+            ->andReturn($otherLicences)
+            ->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->once()
+            ->getMock();
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandInProgress()
     {
         $command = $this->getCommand(true);
 
         $application = $this->getApplication()
-            ->shouldReceive('setPrevHasLicence')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevHadLicence')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenRefused')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenRevoked')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenAtPi')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevBeenDisqualifiedTc')
-            ->with('Y')
-            ->once()
-            ->shouldReceive('setPrevPurchasedAssets')
-            ->with('Y')
+            ->shouldReceive('updateLicenceHistory')
+            ->with('Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y')
             ->once()
             ->getMock();
 
@@ -154,7 +140,7 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    protected function getCommand($inProgress = false)
+    protected function getCommand($inProgress = false, $removeField = false)
     {
         $data = [
             'id' => 1,
@@ -168,6 +154,9 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
             'prevPurchasedAssets' => 'Y',
             'inProgress' => $inProgress
         ];
+        if ($removeField) {
+            unset($data['prevPurchasedAssets']);
+        }
 
         return Cmd::create($data);
     }
