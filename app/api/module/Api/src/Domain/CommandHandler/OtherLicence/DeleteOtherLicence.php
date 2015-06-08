@@ -11,13 +11,14 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Delete Other Licence
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class DeleteOtherLicence extends AbstractCommandHandler
+final class DeleteOtherLicence extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'OtherLicence';
 
