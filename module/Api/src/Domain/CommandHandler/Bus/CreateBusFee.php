@@ -8,8 +8,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
@@ -21,9 +19,8 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 /**
  * Create BusReg Fee
  */
-final class CreateBusFee extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateBusFee extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
 
     /**
      * @var FeeType
