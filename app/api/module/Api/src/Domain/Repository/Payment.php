@@ -24,6 +24,11 @@ class Payment extends AbstractRepository
 
     protected $alias = 'p';
 
+    /**
+     * @param string $reference
+     * @param int $hydrateMode
+     * @param null $version
+     */
     public function fetchByReference($reference, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         $qb = $this->createQueryBuilder();
