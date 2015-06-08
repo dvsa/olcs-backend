@@ -165,11 +165,9 @@ class BusReg extends AbstractBusReg
 
         $this->isShortNotice = 'N';
 
-        //if ($this->isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, $busRules)) {
-            //$this->shortNotice = 'Y';
-        //}
-
-        //$this->isShortNotice = $this->isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, $busRules);
+        if ($this->isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, $busRules)) {
+            $this->isShortNotice = 'Y';
+        }
 
         return true;
     }
