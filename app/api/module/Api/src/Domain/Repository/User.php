@@ -24,7 +24,7 @@ class User extends AbstractRepository
 
     /**
      * @param QueryBuilder $qb
-     * @param QryCmd $query
+     * @param int          $id
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
@@ -35,7 +35,7 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
+     * @param QueryBuilder   $qb
      * @param QueryInterface $query
      */
     protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
@@ -47,7 +47,7 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
+     * @param QueryBuilder   $qb
      * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)

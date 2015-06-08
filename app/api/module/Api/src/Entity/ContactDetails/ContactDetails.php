@@ -31,6 +31,7 @@ class ContactDetails extends AbstractContactDetails
     const TRANSPORT_MANAGER_STATUS_DISABLED = 'tm_st_disa';
     const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
     const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
     const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
     const CONTACT_TYPE_ESTABLISHMENT_ADDRESS = 'ct_est';

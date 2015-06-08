@@ -31,11 +31,11 @@ class TransportManagerLicence extends AbstractRepository
         $dqb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
-        $dqb->join('tml.transportManager', 'tm')->addSelect('tm')
+        $dqb->join($this->alias .'.transportManager', 'tm')->addSelect('tm')
             ->join('tm.homeCd', 'hcd')->addSelect('hcd')
             ->join('hcd.person', 'p')->addSelect('p');
 
-        $dqb->andWhere($dqb->expr()->eq('tml.licence', ':licenceId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias .'.licence', ':licenceId'))
             ->setParameter('licenceId', $licenceId);
 
         return $dqb->getQuery()->getResult();

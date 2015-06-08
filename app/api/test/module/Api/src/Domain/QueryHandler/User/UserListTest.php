@@ -34,7 +34,6 @@ class UserListTest extends QueryHandlerTestCase
         $this->repoMap['User']->shouldReceive('fetchList')->with($query)->andReturn('LIST');
         $this->repoMap['User']->shouldReceive('fetchCount')->with($query)->andReturn('COUNT');
 
-
         $result = $this->sut->handleQuery($query);
 
         $this->assertSame(['result' => 'LIST', 'count' => 'COUNT'], $result);
