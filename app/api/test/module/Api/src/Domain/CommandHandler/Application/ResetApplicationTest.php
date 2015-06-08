@@ -152,14 +152,10 @@ class ResetApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->with($application)
             ->shouldReceive('delete')
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once();
+            ->with($application);
 
         $this->repoMap['Licence']->shouldReceive('delete')
             ->with($licence);
@@ -183,52 +179,6 @@ class ResetApplicationTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandRequireConfirmationWithConfirmWithException()
-    {
-        $data = [
-            'niFlag' => 'N',
-            'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
-            'confirm' => true
-        ];
-        $command = Cmd::create($data);
-
-        $tasks = [
-            m::mock(TaskEntity::class)->makePartial()->shouldReceive('getIsClosed')
-                ->andReturn('N')->shouldReceive('setIsClosed')->with('Y')->getMock(),
-            m::mock(TaskEntity::class)->makePartial()->shouldReceive('getIsClosed')
-                ->andReturn('Y')->getMock()
-        ];
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(222);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setOrganisation($organisation);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setLicence($licence);
-        $application->setTasks($tasks);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
-            ->with($application)
-            ->andThrow('\Exception')
-            ->shouldReceive('rollback')
-            ->once();
-
-        $this->setExpectedException('\Exception');
-
-        $this->sut->handleCommand($command);
     }
 
     public function providerWithConfirm()

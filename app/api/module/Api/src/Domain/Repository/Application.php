@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 
 /**
@@ -25,5 +26,33 @@ class Application extends AbstractRepository
             ->with('previousConvictions');
 
         return $qb->getQuery()->getSingleResult();
+
+    }
+
+    public function fetchForOrganisation($organisationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('licence', 'l');
+
+        $qb
+            ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Extend the default resource bundle to include licence
+     *
+     * @param QueryBuilder $qb
+     * @param QryCmd $query
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
     }
 }
