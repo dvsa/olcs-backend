@@ -28,6 +28,20 @@ class OutstandingFees extends AbstractQueryHandler
         $data = $organisation->jsonSerialize();
 
         $fees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($organisation->getId());
+
+        // manually 'serialize' the feePayment and payment children
+        // (we have to do this to avoid fee->feePayment->payment->feePayment->fee recursion)
+        foreach ($fees as &$fee) {
+            $feePayments = $fee->getFeePayments();
+            $fpArray = array();
+            foreach ($feePayments as $key => $fp) {
+                $fpArray[$key] = $fp->jsonSerialize();
+                $fpArray[$key]['payment'] = $fp->getPayment()->jsonSerialize();
+            }
+            $fee = $fee->jsonSerialize();
+            $fee['feePayments'] = $fpArray;
+        }
+
         $data['outstandingFees'] = $fees;
 
         return $data;
