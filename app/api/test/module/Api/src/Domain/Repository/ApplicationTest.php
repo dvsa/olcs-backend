@@ -117,7 +117,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('blah', $this->sut->getRefdataReference($id));
     }
 
-    public function testGetCategpryReference()
+    public function testGetCategoryReference()
     {
         $id = 'foo';
 
@@ -128,7 +128,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('blah', $this->sut->getCategoryReference($id));
     }
 
-    public function testGetSubCategpryReference()
+    public function testGetSubCategoryReference()
     {
         $id = 'foo';
 
@@ -168,6 +168,10 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
             ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence')
             ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
@@ -210,6 +214,10 @@ class ApplicationTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')
             ->once()
             ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence')
+            ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
             ->with(111);
@@ -227,5 +235,51 @@ class ApplicationTest extends RepositoryTestCase
             ->with($result, LockMode::OPTIMISTIC, 1);
 
         $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT, 1);
+    }
+
+    public function testFetchForOrganisationId()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $where = m::mock();
+
+        $qb->shouldReceive('expr->eq')
+            ->with('l.organisation', ':organisationId')
+            ->andReturn($where);
+        $qb
+            ->shouldReceive('andWhere')
+            ->with($where)
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('organisationId', $organisationId)
+            ->shouldReceive('getQuery->execute')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence', 'l')
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchForOrganisation($organisationId);
+
+        $this->assertEquals('RESULT', $result);
     }
 }
