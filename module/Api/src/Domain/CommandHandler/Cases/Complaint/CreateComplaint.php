@@ -35,7 +35,7 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
         $person = $this->createPersonObject($command);
         $result->addMessage('Person created');
 
-        $contactDetails = $this->createContactDetailsObject($command, $person);
+        $contactDetails = $this->createContactDetailsObject($person);
         $result->addMessage('Contact details created');
 
         $complaint = $this->createComplaintObject($command, $contactDetails);
@@ -124,19 +124,11 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
      * @param Cmd $command
      * @return ContactDetails
      */
-    private function createContactDetailsObject(Cmd $command, Person $person)
+    private function createContactDetailsObject(Person $person)
     {
         $contactDetails = new ContactDetails();
 
         $contactDetails->setContactType($this->getRepo()->getRefdataReference(ContactDetails::CT_COMPLAINANT));
-
-        if ($command->getComplainantForename() !== null) {
-            $person->setForename($command->getComplainantForename());
-        }
-
-        if ($command->getComplainantFamilyName() !== null) {
-            $person->setFamilyName($command->getComplainantFamilyName());
-        }
 
         $contactDetails->setPerson($person);
 
