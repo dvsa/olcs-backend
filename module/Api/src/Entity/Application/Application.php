@@ -365,7 +365,7 @@ class Application extends AbstractApplication
         $prevBeenRevoked,
         $prevBeenAtPi,
         $prevBeenDisqualifiedTc,
-        $prevPurchasedAssets 
+        $prevPurchasedAssets
     ) {
         $this->prevHasLicence = $prevHasLicence;
         $this->prevHadLicence = $prevHadLicence;
