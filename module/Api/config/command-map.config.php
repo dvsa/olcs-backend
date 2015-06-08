@@ -75,6 +75,14 @@ return [
     TransferCommand\Cases\Impounding\DeleteImpounding::class =>
         CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
+    // Transfer - Complaint
+    TransferCommand\Cases\Complaint\CreateComplaint::class =>
+        CommandHandler\Cases\Complaint\CreateComplaint::class,
+    TransferCommand\Cases\Complaint\UpdateComplaint::class =>
+        CommandHandler\Cases\Complaint\UpdateComplaint::class,
+    TransferCommand\Cases\Complaint\DeleteComplaint::class =>
+        CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -124,5 +132,4 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
-
 ];
