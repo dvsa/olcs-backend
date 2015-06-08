@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 
 /**
  * Complaint Entity
@@ -22,11 +24,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Complaint extends AbstractComplaint
 {
-    public function __construct(Cases $case, $isCompliance)
+    /**
+     * Construct Complaint entity
+     * @param Cases $case
+     * @param $isCompliance
+     * @param $complaintType
+     * @param $contactDetails
+     * @param $complaintDate
+     */
+    public function __construct(Cases $case,
+                                RefData $complaintType,
+                                RefData $status,
+                                \DateTime $complaintDate,
+                                ContactDetails $contactDetails,
+                                $isCompliance
+
+    )
     {
         parent::__construct();
 
         $this->setCase($case);
         $this->setIsCompliance($isCompliance);
+        $this->setComplaintType($complaintType);
+        $this->setStatus($status);
+
+        $this->setComplainantContactDetails($contactDetails);
     }
 }

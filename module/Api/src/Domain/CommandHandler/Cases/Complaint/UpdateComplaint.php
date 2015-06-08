@@ -58,20 +58,12 @@ final class UpdateComplaint extends AbstractCommandHandler implements Transactio
      */
     private function updateComplaintObject(Cmd $command, Complaint $complaint)
     {
-        if ($command->getComplaintType() !== null) {
-            $complaint->setComplaintType($this->getRepo()->getRefdataReference($command->getComplaintType()));
-        }
-
-        if ($command->getStatus() !== null) {
-            $complaint->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-        }
+        $complaint->setComplaintType($this->getRepo()->getRefdataReference($command->getComplaintType()));
+        $complaint->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
+        $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
 
         if ($command->getClosedDate() !== null) {
             $complaint->setClosedDate(new \DateTime($command->getClosedDate()));
-        }
-
-        if ($command->getComplaintDate() !== null) {
-            $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
         }
 
         if ($command->getDescription() !== null) {
