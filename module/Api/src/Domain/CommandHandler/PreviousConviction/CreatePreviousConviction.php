@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\CreatePreviousConviction as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
@@ -20,36 +21,26 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-final class CreatePreviousConviction extends AbstractCommandHandler
+final class CreatePreviousConviction extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'PreviousConviction';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
+        $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
 
-            $conviction = $this->createPreviousConvictionObject($command, $application);
-            $result->addMessage('Previous conviction created');
+        $conviction = $this->createPreviousConvictionObject($command, $application);
+        $result->addMessage('Previous conviction created');
 
-            $this->getRepo()->save($conviction);
+        $this->getRepo()->save($conviction);
 
-            $result->addId('previousConviction', $conviction->getId());
+        $result->addId('previousConviction', $conviction->getId());
 
-            $result->merge($this->updateApplicationCompletion($application->getId()));
+        $result->merge($this->updateApplicationCompletion($application->getId()));
 
-            $this->getRepo()->commit();
-
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     private function updateApplicationCompletion($applicationId)
