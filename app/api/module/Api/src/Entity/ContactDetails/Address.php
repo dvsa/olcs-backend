@@ -22,5 +22,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Address extends AbstractAddress
 {
-
+    public function updateAddress(
+        $addressLine1 = null,
+        $addressLine2 = null,
+        $addressLine3 = null,
+        $addressLine4 = null,
+        $town = null,
+        $postcode = null,
+        Country $countryCode = null
+    ) {
+        $this->setAddressLine1($addressLine1);
+        $this->setAddressLine2($addressLine2);
+        $this->setAddressLine3($addressLine3);
+        $this->setAddressLine4($addressLine4);
+        $this->setTown($town);
+        $this->setPostcode($postcode);
+        $this->setCountryCode($countryCode);
+    }
 }

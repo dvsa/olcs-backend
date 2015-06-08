@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -26,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class ResetApplication extends AbstractCommandHandler
+final class ResetApplication extends AbstractCommandHandler implements TransactionedInterface
 {
     /**
      * @var LicenceRepo
@@ -60,27 +61,18 @@ final class ResetApplication extends AbstractCommandHandler
         // Need to grab this now before removing the licence
         $organisation = $application->getLicence()->getOrganisation();
 
-        try {
-            $this->getRepo()->beginTransaction();
+        $count = $this->closeTasks($application);
+        $result->addMessage($count . ' task(s) closed');
 
-            $count = $this->closeTasks($application);
-            $result->addMessage($count . ' task(s) closed');
+        $this->licenceRepo->delete($licence);
+        $result->addMessage('Licence removed');
 
-            $this->licenceRepo->delete($licence);
-            $result->addMessage('Licence removed');
+        $this->getRepo()->delete($application);
+        $result->addMessage('Application removed');
 
-            $this->getRepo()->delete($application);
-            $result->addMessage('Application removed');
+        $result->merge($this->createNewApplication($command, $organisation, $receivedDate, $trafficArea));
 
-            $result->merge($this->createNewApplication($command, $organisation, $receivedDate, $trafficArea));
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 
     private function createNewApplication(

@@ -106,30 +106,6 @@ class ApplicationTest extends RepositoryTestCase
         $this->sut->delete($entity);
     }
 
-    public function testBeginTransaction()
-    {
-        $this->em->shouldReceive('beginTransaction')
-            ->once();
-
-        $this->sut->beginTransaction();
-    }
-
-    public function testCommit()
-    {
-        $this->em->shouldReceive('commit')
-            ->once();
-
-        $this->sut->commit();
-    }
-
-    public function testRollback()
-    {
-        $this->em->shouldReceive('rollback')
-            ->once();
-
-        $this->sut->rollback();
-    }
-
     public function testGetRefdataReference()
     {
         $id = 'foo';

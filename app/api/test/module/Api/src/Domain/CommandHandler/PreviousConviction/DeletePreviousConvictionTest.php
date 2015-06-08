@@ -39,10 +39,6 @@ class DeletePreviousConvictionTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['PreviousConviction']
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('commit')
-            ->once()
             ->shouldReceive('fetchById')
             ->times(3)
             ->andReturn(m::mock(PreviousConvictionEntity::class))
