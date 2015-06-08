@@ -12,10 +12,10 @@ return [
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class
         => CommandHandler\Application\UpdateFinancialHistory::class,
-
     TransferCommand\Application\UpdatePreviousConvictions::class
         => CommandHandler\Application\UpdatePreviousConvictions::class,
-
+    TransferCommand\Application\UpdateFinancialEvidence::class
+        => CommandHandler\Application\UpdateFinancialEvidence::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
     TransferCommand\Application\UpdateBusinessDetails::class
         => CommandHandler\Application\UpdateBusinessDetails::class,
