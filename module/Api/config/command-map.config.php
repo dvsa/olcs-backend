@@ -79,6 +79,8 @@ return [
         CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
     TransferCommand\PreviousConviction\DeletePreviousConviction::class =>
         CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+    TransferCommand\PreviousConviction\CreateForTma::class
+        => CommandHandler\PreviousConviction\CreateForTma::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
@@ -221,4 +223,14 @@ return [
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
+
+    // TM Employment
+    TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
+    TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
+
+    // Other Licence
+    TransferCommand\OtherLicence\DeleteList::class => CommandHandler\OtherLicence\DeleteList::class,
+    TransferCommand\OtherLicence\Create::class => CommandHandler\OtherLicence\Create::class,
+    TransferCommand\OtherLicence\CreatePreviousLicence::class
+        => CommandHandler\OtherLicence\CreatePreviousLicence::class,
 ];

@@ -46,12 +46,19 @@ class TransportManagers extends AbstractQueryHandler
         $application = $this->getRepo()->fetchUsingId($query);
 
         $tmaResults = $this->tmaRepo->fetchWithContactDetailsByApplication($application->getId());
+        // prevent JSON recursion issue
+        foreach ($tmaResults as $tma) {
+            $tma->setApplication(null);
+        }
+        $application->setTransportManagers($tmaResults);
+
         $tmlResults = $this->tmlRepo->fetchWithContactDetailsByLicence($application->getLicence()->getId());
+        // prevent JSON recursion issue
+        foreach ($tmlResults as $tml) {
+            $tml->setLicence(null);
+        }
+        $application->getLicence()->setTmLicences($tmlResults);
 
-        $data = $application->jsonSerialize();
-        $data['transportManagers'] = $tmaResults;
-        $data['licence']['tmLicences'] = $tmlResults;
-
-        return $data;
+        return $application;
     }
 }

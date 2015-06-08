@@ -52,7 +52,7 @@ class GetDetails extends AbstractQueryHandler
         $this->pcRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('PreviousConviction');
         $this->olRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('OtherLicences');
+            ->get('OtherLicence');
         $this->tmeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('TmEmployment');
 

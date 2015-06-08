@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Tm\TmEmployment as Entity;
 
 /**
@@ -18,6 +19,18 @@ class TmEmployment extends AbstractRepository
 {
     protected $entity = Entity::class;
     protected $alias = 'te';
+
+    /**
+     * Override default query, joining on contact details
+     *
+     * @param QueryBuilder $qb
+     * @param int          $id
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        parent::buildDefaultQuery($qb, $id);
+        return $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.address');
+    }
 
     /**
      * Fetch a list of Employments for a Transport Manager
@@ -34,7 +47,7 @@ class TmEmployment extends AbstractRepository
             ->with('cd.address')
             ->withRefdata();
 
-        $dqb->andWhere($dqb->expr()->eq('te.transportManager', ':tmId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias .'.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();

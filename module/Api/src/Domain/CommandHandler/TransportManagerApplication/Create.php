@@ -20,7 +20,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class Create extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Domain\AuthAwareInterface
+final class Create extends AbstractCommandHandler implements
+    \Dvsa\Olcs\Api\Domain\AuthAwareInterface,
+    \Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface
 {
     use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
@@ -47,55 +49,45 @@ final class Create extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Doma
 
     public function handleCommand(CommandInterface $command)
     {
-        try {
-            $result = new Result();
+        $result = new Result();
 
-            $this->getRepo()->beginTransaction();
+        /* @var $user \Dvsa\Olcs\Api\Entity\User\User */
+        $user = $this->userRepo->fetchById($command->getUser());
 
-            /* @var $user \Dvsa\Olcs\Api\Entity\User\User */
-            $user = $this->userRepo->fetchById($command->getUser());
-
-            if (!$user->getTransportManager()) {
-                // create a Transport Manager
-                $transportManager = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
-                $transportManager->setHomeCd($user->getContactDetails());
-                $transportManager->setTmStatus(
-                    $this->getRepo()->getRefdataReference(ContactDetails::TRANSPORT_MANAGER_STATUS_CURRENT)
-                );
-                $this->tmRepo->save($transportManager);
-
-                $user->setTransportManager($transportManager);
-                $this->userRepo->save($user);
-            }
-
-            $tma = new TransportManagerApplication();
-            $tma->setAction($command->getAction());
-            $tma->setApplication($this->getRepo()->getReference(Application::class, $command->getApplication()));
-            $tma->setTmApplicationStatus(
-                $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_INCOMPLETE)
+        if (!$user->getTransportManager()) {
+            // create a Transport Manager
+            $transportManager = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+            $transportManager->setHomeCd($user->getContactDetails());
+            $transportManager->setTmStatus(
+                $this->getRepo()->getRefdataReference(ContactDetails::TRANSPORT_MANAGER_STATUS_CURRENT)
             );
-            $tma->setTransportManager($user->getTransportManager());
+            $this->tmRepo->save($transportManager);
 
-            $this->getRepo()->save($tma);
-
-            if ($this->getUser() !== $user) {
-                $result->merge(
-                    $this->getCommandHandler()->handleCommand(
-                        \Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication::create(['id' => $tma->getId()])
-                    )
-                );
-            }
-
-            $result->addId('transportManagerApplication', $tma->getId());
-            $result->addMessage('Transport Manager successfully created.');
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
+            $user->setTransportManager($transportManager);
+            $this->userRepo->save($user);
         }
+
+        $tma = new TransportManagerApplication();
+        $tma->setAction($command->getAction());
+        $tma->setApplication($this->getRepo()->getReference(Application::class, $command->getApplication()));
+        $tma->setTmApplicationStatus(
+            $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_INCOMPLETE)
+        );
+        $tma->setTransportManager($user->getTransportManager());
+
+        $this->getRepo()->save($tma);
+
+        if ($this->getUser() !== $user) {
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(
+                    \Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication::create(['id' => $tma->getId()])
+                )
+            );
+        }
+
+        $result->addId('transportManagerApplication', $tma->getId());
+        $result->addMessage('Transport Manager successfully created.');
+
+        return $result;
     }
 }

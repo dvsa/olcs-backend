@@ -33,7 +33,7 @@ class TransportManagerApplication extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
         $this->joinTransportManagerPerson($dqb);
 
-        $dqb->andWhere($dqb->expr()->eq('tma.application', ':applicationId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias .'.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
 
         return $dqb->getQuery()->getResult();
@@ -51,16 +51,16 @@ class TransportManagerApplication extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($dqb)
             ->withRefdata()
-            ->with('tma.application', 'a')
-            ->with('tma.operatingCentres')
-            ->with('tma.otherLicences', 'ol')
+            ->with($this->alias .'.application', 'a')
+            ->with($this->alias .'.operatingCentres')
+            ->with($this->alias .'.otherLicences', 'ol')
             ->with('ol.role')
             ->with('a.goodsOrPsv', 'gop')
             ->with('a.licence');
 
         $this->joinTransportManagerPerson($dqb);
 
-        $dqb->where($dqb->expr()->eq('tma.id', ':tmaId'))
+        $dqb->where($dqb->expr()->eq($this->alias .'.id', ':tmaId'))
             ->setParameter('tmaId', $tmaId);
 
         $results = $dqb->getQuery()->getResult();
@@ -79,7 +79,7 @@ class TransportManagerApplication extends AbstractRepository
      */
     protected function joinTransportManagerPerson($dqb)
     {
-        $dqb->join('tma.transportManager', 'tm')->addSelect('tm')
+        $dqb->join($this->alias .'.transportManager', 'tm')->addSelect('tm')
             ->join('tm.homeCd', 'hcd')->addSelect('hcd')
             ->join('hcd.person', 'p')->addSelect('p');
     }
