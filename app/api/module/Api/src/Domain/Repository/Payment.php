@@ -8,8 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Fee\Payment as Entity;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 
