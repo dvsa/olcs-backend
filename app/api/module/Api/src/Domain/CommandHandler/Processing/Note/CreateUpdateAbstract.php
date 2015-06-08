@@ -44,7 +44,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setApplication($application);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_APPLICATION));
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
         if ($command->getBusReg() !== null) {
@@ -55,7 +55,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->getBusReg($busReg);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_BUS));
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_BUS));
         }
 
         if ($command->getCase() !== null) {
@@ -66,7 +66,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setCase($case);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_CASE));
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_CASE));
         }
 
         if ($command->getLicence() !== null) {
@@ -77,7 +77,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setLicence($licence);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_LICENCE));
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_LICENCE));
         }
 
         if ($command->getOrganisation() !== null) {
@@ -88,7 +88,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             );
 
             $entity->setOrganisation($org);
-            $entity->setNoteType($this->getRepo()->getReference(RefData::class, NoteEntity::NOTE_TYPE_ORGANISATION));
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_ORGANISATION));
         }
 
         if ($command->getTransportManager() !== null) {

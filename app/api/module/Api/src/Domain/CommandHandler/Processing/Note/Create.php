@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  * Create a Note
  */
 final class Create extends CreateUpdateAbstract
+    implements TransactionedInterface
 {
     /**
      * @param CreateCommand $command
@@ -30,26 +32,15 @@ final class Create extends CreateUpdateAbstract
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
-        try {
+        $note = $this->getNoteEntity($command);
+        $note->setComment($command->getComment());
 
-            $repo->beginTransaction();
+        $this->getRepo()->save($note);
 
-            $note = $this->getNoteEntity($command);
-            $note->setComment($command->getComment());
+        $result->addId('note', $note->getId());
+        $result->addMessage('Note created');
 
-            $this->getRepo()->save($note);
-            $this->getRepo()->commit();
-
-            $result->addId('note', $note->getId());
-            $result->addMessage('Note created');
-
-            return $result;
-
-        } catch (\Exception $ex) {
-
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 
     /**
