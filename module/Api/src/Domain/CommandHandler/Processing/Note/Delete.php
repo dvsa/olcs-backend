@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Delete as DeleteCommand;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  * Delete a Note
  */
 final class Delete extends AbstractCommandHandler
+    implements TransactionedInterface
 {
     protected $repoServiceName = 'Note';
 
@@ -32,23 +34,11 @@ final class Delete extends AbstractCommandHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
-        try {
+        $note = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $this->getRepo()->delete($note);
 
-            $repo->beginTransaction();
+        $result->addMessage('Note deleted');
 
-            $note = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-            $this->getRepo()->delete($note);
-
-            $this->getRepo()->commit();
-
-            $result->addMessage('Note deleted');
-
-            return $result;
-
-        } catch (\Exception $ex) {
-
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 }

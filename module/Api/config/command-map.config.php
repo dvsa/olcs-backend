@@ -27,7 +27,7 @@ return [
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
 
     // Transfer - Note
-    TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Crxeate::class,
+    TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
     TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
     TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
 
