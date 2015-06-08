@@ -15,11 +15,12 @@ use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as UpdateServiceDetailsC
 use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Service Details
  */
-final class UpdateServiceDetails extends AbstractCommandHandler
+final class UpdateServiceDetails extends AbstractCommandHandler implements TransactionedInterface
 {
     /**
      * @var BusNoticePeriod
@@ -82,21 +83,13 @@ final class UpdateServiceDetails extends AbstractCommandHandler
             $busRules
         );
 
-        try {
+        $this->getRepo()->save($busReg);
 
-
-
-            $this->getRepo()->save($busReg);
-
-            if ($this->shouldCreateFee($busRegId)) {
-                $result->merge($this->getCommandHandler()->handleCommand($this->createBusFeeCommand($busRegId)));
-            }
-
-            $result->addMessage('Saved successfully');
-            return $result;
-        } catch (\Exception $ex) {
-            throw $ex;
+        if ($this->shouldCreateFee($busRegId)) {
+            $result->merge($this->getCommandHandler()->handleCommand($this->createBusFeeCommand($busRegId)));
         }
+
+        $result->addMessage('Saved successfully');
     }
 
     /**
