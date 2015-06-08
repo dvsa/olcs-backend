@@ -28,6 +28,12 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'Complaint';
 
+    /**
+     * Creates complaint and associated entities
+     *
+     * @param CommandInterface $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -51,6 +57,8 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     }
 
     /**
+     * Create the complaint object
+     *
      * @param Cmd $command
      * @param ContactDetails $contactDetails
      * @return Complaint
@@ -102,6 +110,7 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     }
 
     /**
+     * Create person object
      * @param Cmd $command
      * @return Person
      */
@@ -121,7 +130,8 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * @param Cmd $command
+     * Create ContactDetails object
+     * @param Person $person
      * @return ContactDetails
      */
     private function createContactDetailsObject(Person $person)
