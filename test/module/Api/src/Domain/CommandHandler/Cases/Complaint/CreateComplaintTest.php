@@ -34,7 +34,9 @@ class CreateComplaintTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'ct_complainant'
+            'ct_complainant',
+            'ct_cov',
+            'cs_ack'
         ];
 
         $this->references = [
