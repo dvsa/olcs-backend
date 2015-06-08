@@ -357,4 +357,22 @@ class Application extends AbstractApplication
             && in_array($this->getLicenceType()->getId(), $restrictedUpgrades)
         );
     }
+
+    public function updateLicenceHistory(
+        $prevHasLicence,
+        $prevHadLicence,
+        $prevBeenRefused,
+        $prevBeenRevoked,
+        $prevBeenAtPi,
+        $prevBeenDisqualifiedTc,
+        $prevPurchasedAssets 
+    ) {
+        $this->prevHasLicence = $prevHasLicence;
+        $this->prevHadLicence = $prevHadLicence;
+        $this->prevBeenRefused = $prevBeenRefused;
+        $this->prevBeenRevoked = $prevBeenRevoked;
+        $this->prevBeenAtPi = $prevBeenAtPi;
+        $this->prevBeenDisqualifiedTc = $prevBeenDisqualifiedTc;
+        $this->prevPurchasedAssets = $prevPurchasedAssets;
+    }
 }

@@ -35,25 +35,13 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
             $this->validateOtherLicences($command, $application);
         }
 
-        $application->setPrevHasLicence(
-            $command->getPrevHasLicence()
-        );
-        $application->setPrevHadLicence(
-            $command->getPrevHadLicence()
-        );
-        $application->setPrevBeenRefused(
-            $command->getPrevBeenRefused()
-        );
-        $application->setPrevBeenRevoked(
-            $command->getPrevBeenRevoked()
-        );
-        $application->setPrevBeenAtPi(
-            $command->getPrevBeenAtPi()
-        );
-        $application->setPrevBeenDisqualifiedTc(
-            $command->getPrevBeenDisqualifiedTc()
-        );
-        $application->setPrevPurchasedAssets(
+        $application->updateLicenceHistory(
+            $command->getPrevHasLicence(),
+            $command->getPrevHadLicence(),
+            $command->getPrevBeenRefused(),
+            $command->getPrevBeenRevoked(),
+            $command->getPrevBeenAtPi(),
+            $command->getPrevBeenDisqualifiedTc(),
             $command->getPrevPurchasedAssets()
         );
 
@@ -66,7 +54,7 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
     {
         $errors = [];
         $fields = [
-            OtherLicence::TYPE_CURRENT => 'prevHadLicence',
+            OtherLicence::TYPE_CURRENT => 'prevHasLicence',
             OtherLicence::TYPE_APPLIED => 'prevHadLicence',
             OtherLicence::TYPE_REFUSED => 'prevBeenRefused',
             OtherLicence::TYPE_REVOKED => 'prevBeenRevoked',
@@ -86,11 +74,19 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
     private function validateField($errors, $field, $type, $application, $command)
     {
         $method = 'get' . ucfirst($field);
-        if ($command->$method() === 'Y' &&
+        $value = $command->$method();
+        if ($value === 'Y' &&
             !$this->hasOtherLicences($application, $type)) {
             $errors[] = [
                 $field => [
                     'No licence added'
+                ]
+            ];
+        }
+        if (!in_array($value, ['Y', 'N'])) {
+            $errors[] = [
+                $field => [
+                    'Value is required'
                 ]
             ];
         }
@@ -109,5 +105,5 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
             }
         }
         return $hasLicences;
-    }
+    }    
 }
