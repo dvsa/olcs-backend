@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Bus;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Mockery as m;
 
 /**
@@ -16,6 +17,7 @@ class BusRegEntityTest extends EntityTester
 {
     public function setUp()
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Bus\BusReg entity */
         $this->entity = $this->instantiate($this->entityClass);
     }
 
@@ -119,4 +121,120 @@ class BusRegEntityTest extends EntityTester
 
         return true;
     }
+
+    /**
+     * @dataProvider provideUpdateServiceDetails
+     *
+     * @param $isSn
+     * @param $rules
+     * @param $variationNo
+     * @param $receivedDate
+     * @param $effectiveDate
+     * @param null $parent
+     */
+    public function testUpdateServiceDetails($isSn, $rules, $variationNo, $receivedDate, $effectiveDate, $parent = null)
+    {
+        $serviceNo = 12345;
+        $otherServices = [];
+        $startPoint = 'start point';
+        $finishPoint = 'finish point';
+        $via = 'via';
+        $busServiceTypes = [];
+        $otherDetails = 'other details';
+        $endDate = '2015-12-21';
+        $busNoticePeriod = 2;
+
+
+        $busRules = new BusNoticePeriod();
+        $busRules->setCancellationPeriod($rules['cancellationPeriod']);
+        $busRules->setStandardPeriod($rules['standardPeriod']);
+
+        $this->entity->setVariationNo($variationNo);
+        $this->entity->setParent($parent);
+
+        $this->entity->updateServiceDetails(
+            $serviceNo,
+            $otherServices,
+            $startPoint,
+            $finishPoint,
+            $via,
+            $busServiceTypes,
+            $otherDetails,
+            $receivedDate,
+            $effectiveDate,
+            $endDate,
+            $busNoticePeriod,
+            $busRules
+        );
+
+        $this->assertEquals($serviceNo, $this->entity->getServiceNo());
+        //$this->assertEquals($otherServices, $this->entity->getOtherServices());
+        $this->assertEquals($startPoint, $this->entity->getStartPoint());
+        $this->assertEquals($finishPoint, $this->entity->getFinishPoint());
+        $this->assertEquals($via, $this->entity->getVia());
+        $this->assertEquals($receivedDate, $this->entity->getReceivedDate());
+        $this->assertEquals($effectiveDate, $this->entity->getEffectiveDate());
+        $this->assertEquals($endDate, $this->entity->getEndDate());
+        $this->assertEquals($isSn, $this->entity->getIsShortNotice());
+    }
+
+    /**
+     * Data provider for updateServiceDetails
+     *
+     * @return array
+     */
+    public function provideUpdateServiceDetails()
+    {
+        $scotRules = [
+            'standardPeriod' => 56,
+            'cancellationPeriod' => 90
+        ];
+
+        $otherRules = [
+            'standardPeriod' => 56,
+            'cancellationPeriod' => 0
+        ];
+
+        $parent = new Entity();
+        $parent->setEffectiveDate(new \DateTime('2014-06-11'));
+
+        $sn = 'Y';
+        $notSn = 'N';
+
+        return [
+            [$sn, $otherRules, 0, '2014-05-31', '2014-07-01'],
+            [$sn, $otherRules, 0, '2014-05-31', '2014-07-26'],
+            [$notSn, $otherRules, 0, '2014-05-31', '2014-07-27'],
+            [$notSn, $otherRules, 0, '2014-05-31', '2014-08-28'],
+            [$sn, $otherRules, 1, '2014-05-31', '2014-07-01'],
+            [$sn, $otherRules, 1, '2014-05-31', '2014-07-26'],
+            [$notSn, $otherRules, 1, '2014-05-31', '2014-07-27'],
+            [$notSn, $otherRules, 1, '2014-05-31', '2014-08-28'],
+            //S2
+            [$sn, $scotRules, 0, '2014-05-31', '2014-07-01'],
+            [$sn, $scotRules, 0, '2014-05-31', '2014-07-26'],
+            [$notSn, $scotRules, 0, '2014-05-31', '2014-07-27'],
+            [$notSn, $scotRules, 0, '2014-05-31', '2014-08-28'],
+            //S3
+            [$sn, $scotRules, 1, '2014-07-15', '2014-07-21', $parent],
+            [$sn, $scotRules, 1, '2014-07-15', '2014-09-08', $parent],
+            [$sn, $scotRules, 1, '2014-07-15', '2014-09-09', $parent],
+            [$notSn, $scotRules, 1, '2014-07-15', '2014-09-10', $parent],
+            //S4
+            [$sn, $scotRules, 1, '2014-08-01', '2014-08-12', $parent],
+            [$sn, $scotRules, 1, '2014-08-01', '2014-09-25', $parent],
+            [$sn, $scotRules, 1, '2014-08-01', '2014-09-26', $parent],
+            [$notSn, $scotRules, 1, '2014-08-01', '2015-09-30', $parent],
+            //S5
+            [$sn, $scotRules, 1, '2014-07-01', '2014-08-12', $parent],
+            [$sn, $scotRules, 1, '2014-07-01', '2014-09-08', $parent],
+            [$sn, $scotRules, 1, '2014-07-01', '2014-09-09', $parent],
+            [$notSn, $scotRules, 1, '2014-07-01', '2015-09-30', $parent],
+            //error cases
+            [$notSn, $otherRules, 0, '2014-09-30', ''],
+            [$notSn, $scotRules, 1, '2015-02-09', '2016-09-30', $parent],
+            [$notSn, $scotRules, 1, '2014-06-11', '2014-08-11']
+        ];
+    }
+
 }
