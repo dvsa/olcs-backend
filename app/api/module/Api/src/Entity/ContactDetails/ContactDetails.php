@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 class ContactDetails extends AbstractContactDetails
 {
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
+    const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
 
     public function __construct(RefData $contactType)
     {
