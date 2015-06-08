@@ -128,7 +128,7 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     {
         $contactDetails = new ContactDetails();
 
-        $contactDetails->setContactType($this->getRepo()->getRefdataReference(ContactDetails::CT_COMPLAINANT));
+        $contactDetails->setContactType($this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_COMPLAINANT));
 
         $contactDetails->setPerson($person);
 
