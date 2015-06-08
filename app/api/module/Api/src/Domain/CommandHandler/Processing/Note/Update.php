@@ -8,11 +8,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Exception;
 use Doctrine\ORM\Query;
 
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Update a Note
@@ -22,7 +20,6 @@ final class Update extends CreateUpdateAbstract
 {
     /**
      * @param UpdateCommand $command
-     * @throws Exception
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -49,6 +46,6 @@ final class Update extends CreateUpdateAbstract
      */
     protected function retrieveEntity(CommandInterface $command)
     {
-        return $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        return $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
     }
 }

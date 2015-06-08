@@ -54,7 +54,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
                 $command->getBusReg()
             );
 
-            $entity->getBusReg($busReg);
+            $entity->setBusReg($busReg);
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_BUS));
         }
 
@@ -83,7 +83,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         if ($command->getOrganisation() !== null) {
 
             $org = $this->getRepo()->getReference(
-                Entity\Licence\Licence::class,
+                Entity\Organisation\Organisation::class,
                 $command->getOrganisation()
             );
 

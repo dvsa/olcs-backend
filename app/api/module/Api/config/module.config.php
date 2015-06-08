@@ -83,8 +83,9 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
-            'withRefdata' => QueryPartial\WithRefdataFactory::class,
-            'withUser' => QueryPartial\WithUserFactory::class,
+            'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
+            'withRefdata'        => QueryPartial\WithRefdataFactory::class,
+            'withUser'           => QueryPartial\WithUserFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
