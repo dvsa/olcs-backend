@@ -34,8 +34,7 @@ class Payment extends AbstractRepository
             ->with('fp.fee', 'f')
             ->with('f.licence', 'l')
             ->with('f.application')
-            ->with('l.organisation')
-            ;
+            ->with('l.organisation');
 
         $qb
             ->andWhere($qb->expr()->eq('p.guid', ':reference'))

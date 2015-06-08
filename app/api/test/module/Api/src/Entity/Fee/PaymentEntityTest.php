@@ -18,4 +18,13 @@ class PaymentEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetCollections()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $feePayments = $sut->getFeePayments();
+
+        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $feePayments);
+    }
 }
