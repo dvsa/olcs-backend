@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Workshop;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -30,7 +31,7 @@ final class UpdateWorkshop extends AbstractCommandHandler implements Transaction
         $result = new Result();
 
         /** @var Workshop $workshop */
-        $workshop = $this->getRepo()->fetchUsingId($command);
+        $workshop = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // Update the address
         $addressData = $command->getContactDetails()['address'];

@@ -2,11 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Repository\Complaint;
+use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
 
 /**
  * Complaint QueryHandler
@@ -17,7 +15,7 @@ final class ComplaintList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Complaint $repo */
+        /** @var ComplaintRepo $repo */
         $repo = $this->getRepo();
 
         return [
