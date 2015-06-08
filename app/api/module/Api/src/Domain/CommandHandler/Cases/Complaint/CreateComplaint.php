@@ -69,23 +69,15 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
 
         $complaint = new Complaint(
             $this->getRepo()->getReference(Cases::class, $command->getCase()),
+            $this->getRepo()->getRefdataReference($command->getComplaintType()),
+            $this->getRepo()->getRefdataReference($command->getStatus()),
+            new \DateTime($command->getComplaintDate()),
+            $contactDetails,
             $isCompliance
         );
 
-        if ($command->getComplaintType() !== null) {
-            $complaint->setComplaintType($this->getRepo()->getRefdataReference($command->getComplaintType()));
-        }
-
-        if ($command->getStatus() !== null) {
-            $complaint->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-        }
-
         if ($command->getClosedDate() !== null) {
             $complaint->setClosedDate(new \DateTime($command->getClosedDate()));
-        }
-
-        if ($command->getComplaintDate() !== null) {
-            $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
         }
 
         if ($command->getDescription() !== null) {
@@ -104,8 +96,6 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
             $complaint->setVrm($command->getVrm());
         }
 
-        $complaint->setComplainantContactDetails($contactDetails);
-
         return $complaint;
     }
 
@@ -118,13 +108,8 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     {
         $person = new Person();
 
-        if ($command->getComplainantForename() !== null) {
-            $person->setForename($command->getComplainantForename());
-        }
-
-        if ($command->getComplainantFamilyName() !== null) {
-            $person->setFamilyName($command->getComplainantFamilyName());
-        }
+        $person->setForename($command->getComplainantForename());
+        $person->setFamilyName($command->getComplainantFamilyName());
 
         return $person;
     }
