@@ -14,8 +14,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Transfer\Command\Cases\Complaint\UpdateComplaint as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -29,6 +27,11 @@ final class UpdateComplaint extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'Complaint';
 
+    /**
+     * Update complaint
+     * @param CommandInterface $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update Impounding
+ * Delete Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
