@@ -55,7 +55,7 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
                 'id' => 99,
                 'version' => 1,
                 'case' => 24,
-                "closedDate" => null,
+                "closedDate" => "2015-02-16",
                 "complainantFamilyName" => "Anthony",
                 "complainantForename" => "David",
                 "complaintDate" => "2015-01-16",
