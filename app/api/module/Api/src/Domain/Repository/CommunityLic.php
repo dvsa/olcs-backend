@@ -1,16 +1,16 @@
 <?php
 /**
- * CommunityLic
+ * Community Licence
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as CommunityLicDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
- * CommunityLic
+ * Community Licence
  */
 class CommunityLic extends AbstractRepository
 {
@@ -34,5 +34,19 @@ class CommunityLic extends AbstractRepository
             $qb->setParameter('licence', $query->getLicence());
         }
     }
-    
+
+    public function fetchOfficeCopy($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andWhere($qb->expr()->eq($this->alias . '.issueNo', ':issueNo'))
+            ->setParameter('licence', $licenceId)
+            ->setParameter('issueNo', 0);
+        $results = $qb->getQuery()->execute();
+        $retv = null;
+        if (count($results)) {
+            $retv = $results[0];
+        }
+        return $retv;
+    }
 }

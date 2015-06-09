@@ -29,7 +29,11 @@ class GenericController extends AbstractRestfulController
     {
         try {
             $result = $this->handleQuery();
-            return $this->response()->multipleResults($result['count'], $result['result']);
+            $count = $result['count'];
+            $results = $result['result'];
+            unset($result['count'], $result['result']);
+
+            return $this->response()->multipleResults($count, $results, $result);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\Exception $ex) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CommunityLic
+ * Community Licence
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicRepo;
 
 /**
- * CommunityLic
+ * Community Licence
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -24,10 +24,19 @@ class CommunityLic extends AbstractQueryHandler
     {
         /** @var CommunityLicRepo $repo */
         $repo = $this->getRepo();
+        $licence = $this->getQueryHandler()
+            ->getServiceLocator()
+            ->get('RepositoryServiceManager')
+            ->get('Licence')
+            ->fetchById($query->getLicence());
+
+        $officeCopy = $repo->fetchOfficeCopy($query->getLicence());
 
         return [
             'result' => $repo->fetchList($query),
-            'count' => $repo->fetchCount($query),
+            'count' =>  $repo->fetchCount($query),
+            'totCommunityLicences' => $licence->getTotCommunityLicences(),
+            'officeCopy' => $officeCopy
         ];
     }
 }
