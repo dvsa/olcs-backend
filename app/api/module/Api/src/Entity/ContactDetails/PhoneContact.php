@@ -22,5 +22,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PhoneContact extends AbstractPhoneContact
 {
-
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedValues()
+    {
+        return [
+            'contactDetails' => null,
+        ];
+    }
 }
