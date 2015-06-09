@@ -36,7 +36,7 @@ final class UpdateEnvironmentalComplaint extends AbstractCommandHandler implemen
     {
         $result = new Result();
 
-        $complaint = $this->getRepo()->fetchUsingCaseId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $complaint = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $person = $complaint->getComplainantContactDetails()->getPerson();
         $person = $this->updatePersonObject($command, $person);
