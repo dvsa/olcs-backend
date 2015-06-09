@@ -115,4 +115,56 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandWithoutActionDate()
+    {
+        $data = [
+            'category' => 1,
+            'subCategory' => 2,
+            'assignedToUser' => 11,
+            'assignedToTeam' => 22,
+            'application' => 111,
+            'licence' => 222,
+            'actionDate' => null,
+            'description' => 'Some task',
+            'isClosed' => false,
+            'urgent' => false
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Task']->shouldReceive('save')
+            ->once()
+            ->with(m::type(TaskEntity::class))
+            ->andReturnUsing(
+                function (TaskEntity $task) {
+                    $task->setId(123);
+
+                    $this->assertSame($this->categoryReferences[1], $task->getCategory());
+                    $this->assertSame($this->subCategoryReferences[2], $task->getSubCategory());
+                    $this->assertSame($this->references[User::class][11], $task->getAssignedToUser());
+                    $this->assertSame($this->references[Team::class][22], $task->getAssignedToTeam());
+                    $this->assertSame($this->references[Application::class][111], $task->getApplication());
+                    $this->assertSame($this->references[Licence::class][222], $task->getLicence());
+
+                    $this->assertEquals(date('Y-m-d'), $task->getActionDate()->format('Y-m-d'));
+                    $this->assertEquals('Some task', $task->getDescription());
+                    $this->assertEquals(false, $task->getIsClosed());
+                    $this->assertEquals(false, $task->getUrgent());
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'task' => 123
+            ],
+            'messages' => [
+                'Task created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
 }
